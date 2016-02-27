@@ -78,6 +78,6 @@ object Server {
     .settings(serverSettings: _*)
     .aggregate(projectToRef(Client.client))
     .aggregate(Shared.sharedJvm)
-    .aggregate(Database.dblib)
-    .dependsOn(Database.dblib)
+    .aggregate(Database.dblibs)
+    .dependsOn(Database.dblibs)
 }

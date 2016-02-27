@@ -13,11 +13,11 @@ object Database {
     import Dependencies._
     Seq(
       Logging.slf4jApi,
-      Jdbc.mysql, Jdbc.postgres
+      Jdbc.h2, Jdbc.mysql, Jdbc.postgres
     )
   }
 
-  private[this] lazy val dblibSettings = Seq(
+  private[this] lazy val dblibsSettings = Seq(
     name := "Database Library",
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
@@ -32,12 +32,12 @@ object Database {
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   ) ++ graphSettings ++ defaultScalariformSettings
 
-  lazy val dblib = Project(
-    id = "dblib",
-    base = file("dblib")
+  lazy val dblibs = Project(
+    id = "dblibs",
+    base = file("dblibs")
   )
     .enablePlugins(GitVersioning)
-    .settings(dblibSettings: _*)
+    .settings(dblibsSettings: _*)
     .aggregate(Shared.sharedJvm)
     .dependsOn(Shared.sharedJvm)
 }

@@ -12,6 +12,54 @@ main {
   clear: both;
 }
 
+// Side Nav
+nav {
+  a {
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+ul.side-nav {
+  overflow: hidden;
+
+  li {
+    line-height: 44px;
+
+    &.active {
+      background-color: rgba(0,0,0,.05);
+    }
+
+    a {
+      font-size: 13px;
+      line-height: 44px;
+      height: 44px;
+    }
+  }
+
+  ul.collapsible-accordion {
+    background-color: #FFF;
+  }
+
+  // Only show scrollbar on hover
+  &:hover {
+    overflow-y: auto;
+  }
+}
+
+.bold > a {
+  font-weight: bold;
+}
+
+nav.top-nav {
+  height: 122px;
+  box-shadow: none;
+
+  a.page-title {
+    line-height: 122px;
+    font-size: 48px;
+  }
+}
+
 // Footer
 footer.page-footer {
   margin: 0;

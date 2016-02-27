@@ -1,14 +1,15 @@
 package models.engine
 
-import models.engine.rdbms.{ Postgres, MySql }
+import models.engine.rdbms.{H2, Postgres, MySql}
 
 object EngineRegistry {
-  private[this] val standardEngines = Seq(
+  val rdbmsEngines = Seq(
+    H2.engine,
     MySql.engine,
     Postgres.engine
   )
 
-  val all = standardEngines
+  val all = rdbmsEngines
 
   private[this] val enginesById = all.map(x => x.id -> x).toMap
 

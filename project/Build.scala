@@ -6,6 +6,6 @@ object Build extends Build with UniversalKeys {
   lazy val client = Client.client
 
   lazy val sharedJvm = Shared.sharedJvm
-  lazy val dblib = Database.dblib
+  lazy val dblibs = Database.dblibs
   lazy val server = Server.server
 }
