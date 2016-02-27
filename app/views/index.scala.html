@@ -1,28 +1,50 @@
-@(theme: String, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.materialize(utils.Config.projectName) {
-  @layout.header(theme)
+@(theme: String, debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+) @layout.materialize(utils.Config.projectName) {
+  @layout.header(theme, "home")
 
   <main>
     <div class="container">
       <div class="row">
-        <div class="col s12 m12 l10">
-          <div class="section">
-            <h2 class="header">
-              Welcome
-            </h2>
-            <p class="flow-text">
-              I'm just getting started. Thanks for checking out my progress!
-            </p>
-              <i class="material-icons">add</i>
-              <i class="material-icons right">arrow_drop_down</i>
+        <div class="col s6">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+                I am convenient because I require little markup to use effectively.</p>
+            </div>
+            <div class="card-action">
+              <a href="#">This is a link</a>
+              <a href="#">This is a link</a>
+            </div>
           </div>
         </div>
+        <div class="col s8 m6 l4">
+          <div class="card-panel teal">
+            <span class="white-text">I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col s4">
+        3
+      </div>
+      <div class="col s4">
+        4
+      </div>
+      <div class="col s4">
+        5
+      </div>
+      <div class="col s4">
+        6
       </div>
     </div>
   </main>
 
   @layout.footer(theme)
 
-  <!-- Scala.js output -->
+    <!-- Scala.js output -->
   @if(debug) {
     <script src="@routes.Assets.versioned("client-fastopt.js")" type="text/javascript"></script>
   } else {

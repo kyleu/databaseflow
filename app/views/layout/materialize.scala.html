@@ -5,7 +5,7 @@
     routes.Assets.versioned("lib/materializecss/js/materialize.min.js").url
   ) ++ scripts,
   stylesheets = Seq(
-    "https://fonts.googleapis.com/icon?family=Material+Icons",
+    routes.Assets.versioned("stylesheets/init.min.css").url,
     routes.Assets.versioned("lib/materializecss/css/materialize.min.css").url
   ) ++ stylesheets
 )(content)
