@@ -1,4 +1,5 @@
 /* global requirejs:false */
+/* global $:false */
 requirejs.config({
   baseUrl: '/assets/javascripts',
   paths: {
@@ -8,4 +9,6 @@ requirejs.config({
 
 requirejs([], function() {
   'use strict';
+
+  $('.button-collapse').sideNav();
 });

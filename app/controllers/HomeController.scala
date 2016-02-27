@@ -18,8 +18,8 @@ object HomeController {
 @javax.inject.Singleton
 class HomeController @javax.inject.Inject() (override val messagesApi: MessagesApi) extends BaseController {
   def index() = act("index") { implicit request =>
-    //val theme = HomeController.themes(Random.nextInt(HomeController.themes.size))
-    val theme = "blue-grey"
+    val theme = HomeController.themes(Random.nextInt(HomeController.themes.size))
+    //val theme = "blue-grey"
     Future.successful(Ok(views.html.index(theme, Play.isDev(Play.current))))
   }
 
