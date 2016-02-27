@@ -1,0 +1,11 @@
+@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(implicit session: Session, flash: Flash)@basic(
+  title,
+  scripts = Seq(
+    routes.Assets.versioned("lib/jquery/jquery.min.js").url,
+    routes.Assets.versioned("lib/materializecss/js/materialize.min.js").url
+  ) ++ scripts,
+  stylesheets = Seq(
+    "https://fonts.googleapis.com/icon?family=Material+Icons",
+    routes.Assets.versioned("lib/materializecss/css/materialize.min.css").url
+  ) ++ stylesheets
+)(content)
