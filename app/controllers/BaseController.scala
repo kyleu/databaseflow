@@ -4,12 +4,15 @@ import nl.grons.metrics.scala.FutureMetrics
 import play.api.i18n.I18nSupport
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
-import utils.Logging
+import utils.{ApplicationContext, Logging}
 import utils.metrics.Instrumented
 
 import scala.concurrent.Future
 
 abstract class BaseController() extends Controller with I18nSupport with Instrumented with FutureMetrics with Logging {
+  def ctx: ApplicationContext
+  override def messagesApi = ctx.messagesApi
+
   def act(action: String)(block: (Request[AnyContent]) => Future[Result]) = Action.async { implicit request =>
     timing(action) {
       val startTime = System.currentTimeMillis

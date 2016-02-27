@@ -1,11 +1,14 @@
-GET         /                                  controllers.HomeController.index
-GET         /ping                              controllers.HomeController.ping(timestamp: Long)
+GET        /                            controllers.HomeController.index
+GET        /ping                        controllers.HomeController.ping(timestamp: Long)
+
+# Sandbox
+GET        /sandbox/:key                controllers.SandboxController.sandbox(key)
 
 # Utility
-GET         /*path/                            controllers.HomeController.untrail(path: String)
+GET        /*path/                      controllers.HomeController.untrail(path: String)
 
 # Assets
-GET         /favicon.ico                       controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
-GET         /apple-touch-icon.png              controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
+GET        /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
+GET        /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
 
-GET         /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)

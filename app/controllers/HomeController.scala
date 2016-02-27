@@ -3,6 +3,7 @@ package controllers
 import play.api.Play
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
+import utils.ApplicationContext
 
 import scala.concurrent.Future
 import scala.util.Random
@@ -16,7 +17,7 @@ object HomeController {
 }
 
 @javax.inject.Singleton
-class HomeController @javax.inject.Inject() (override val messagesApi: MessagesApi) extends BaseController {
+class HomeController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def index() = act("index") { implicit request =>
     val theme = HomeController.themes(Random.nextInt(HomeController.themes.size))
     //val theme = "blue-grey"
