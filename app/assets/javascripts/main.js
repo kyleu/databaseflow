@@ -10,5 +10,5 @@ requirejs.config({
 requirejs([], function() {
   'use strict';
 
-  $('.button-collapse').sideNav();
+  $('#nav-menu-button').sideNav();
 });
