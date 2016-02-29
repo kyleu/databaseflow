@@ -12,7 +12,7 @@ object Database {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Logging.slf4jApi, Jdbc.hikariCp,
+      Logging.slf4jApi, Jdbc.hibernateCore, Jdbc.hikariCp,
       Jdbc.h2, Jdbc.mysql, Jdbc.postgres
     )
   }

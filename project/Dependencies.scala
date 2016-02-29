@@ -13,6 +13,7 @@ object Dependencies {
 
   object Jdbc {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.3"
+    val hibernateCore = "org.hibernate" % "hibernate-core" % "5.1.0.Final" intransitive()
     val h2 = "com.h2database" % "h2" % "1.4.191"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
@@ -48,15 +49,15 @@ object Dependencies {
   }
 
   object Metrics {
-    val metrics = "nl.grons" %% "metrics-scala" % "3.5.2" withSources()
-    val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2" withSources()
-    val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" withSources() intransitive()
-    val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" withSources() intransitive()
+    val metrics = "nl.grons" %% "metrics-scala" % "3.5.2"
+    val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
+    val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
+    val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
 
-    val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2" withSources()
+    val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
 
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.7.v20160115" withSources()
-    val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" withSources() intransitive()
-    val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" withSources() intransitive()
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.7.v20160115"
+    val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
+    val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }
 }

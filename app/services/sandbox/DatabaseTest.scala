@@ -1,6 +1,6 @@
 package services.sandbox
 
-import models.database.ConnectionSettings
+import models.database.{SingleRowQuery, Row, Query, ConnectionSettings}
 import services.database.DatabaseService
 import utils.ApplicationContext
 
@@ -12,13 +12,23 @@ object DatabaseTest extends SandboxTask {
 
   override def description = ""
 
+  case object TestQuery extends SingleRowQuery[Int] {
+    override def sql = "select count(*) as c from users"
+    override def map(row: Row) = row.getObject("c").toString.toInt
+  }
+
   override def run(ctx: ApplicationContext) = {
+    DatabaseService.init()
+
     val cs = ConnectionSettings(
-      url = "jdbc:h2:./database.h2",
-      username = "",
-      password = ""
+      url = "jdbc:postgresql://localhost:5432/puzzlebrawl",
+      username = "databaseflow",
+      password = "flow"
     )
-    val ret = DatabaseService.connect(cs)
+    val db = DatabaseService.connect(cs)
+
+    val ret = db.query(TestQuery)
+
     Future.successful(ret.toString)
   }
 }

@@ -4,7 +4,7 @@ import java.net.{Socket, InetAddress}
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl._
 
-object ClientSideCertSslSocketFactoryFactory {
+object ClientSideCertSslSockets {
   val configs = new ConcurrentHashMap[String, SslParams]
 
   def configure(param: String, params: SslParams) {
@@ -27,8 +27,8 @@ object ClientSideCertSslSocketFactoryFactory {
   }
 }
 
-class ClientSideCertSslSocketFactoryFactory(param: String) extends SSLSocketFactory {
-  val delegate = ClientSideCertSslSocketFactoryFactory.factory(param)
+class ClientSideCertSslSockets(param: String) extends SSLSocketFactory {
+  val delegate = ClientSideCertSslSockets.factory(param)
 
   def getDefaultCipherSuites: Array[String] = delegate.getDefaultCipherSuites
   def getSupportedCipherSuites: Array[String] = delegate.getSupportedCipherSuites
