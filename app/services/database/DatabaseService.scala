@@ -1,28 +1,15 @@
 package services.database
 
-import java.util.UUID
+import models.engine.{DatabaseEngine, EngineRegistry}
 
-import models.engine.rdbms.{MySql, Postgres}
-import models.server.DatabaseServer
+object DatabaseService {
+  def init() = {
+    EngineRegistry.all.foreach { r =>
+      Class.forName(r.className)
+    }
+  }
 
-import scala.concurrent.Future
-
-@javax.inject.Singleton
-class DatabaseService @javax.inject.Inject() () {
-  def getServers = {
-    Future.successful(Seq(
-      DatabaseServer(
-        id = UUID.randomUUID,
-        name = "Local Postgres",
-        engine = Postgres.engine,
-        hostname = "localhost"
-      ),
-      DatabaseServer(
-        id = UUID.randomUUID,
-        name = "Local MySQL",
-        engine = MySql.engine,
-        hostname = "localhost"
-      )
-    ))
+  def openConnection(engine: DatabaseEngine, url: String) = {
+    engine.id
   }
 }
