@@ -12,6 +12,7 @@ object Config {
   val projectName = "Database Flow"
   val version = "0.1"
   val hostname = InetAddress.getLocalHost.getHostName
+  val pageSize = 100
 }
 
 @javax.inject.Singleton

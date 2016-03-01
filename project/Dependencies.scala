@@ -11,9 +11,12 @@ object Dependencies {
     val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.12"
   }
 
+  object Hibernate {
+    val core = "org.hibernate" % "hibernate-core" % "5.1.0.Final"
+  }
+
   object Jdbc {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.3"
-    val hibernateCore = "org.hibernate" % "hibernate-core" % "5.1.0.Final" intransitive()
     val h2 = "com.h2database" % "h2" % "1.4.191"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
@@ -59,5 +62,10 @@ object Dependencies {
     val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.7.v20160115"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
+  }
+
+  object Utils {
+    val enumeratum = "com.beachape" %% "enumeratum-play-json" % "1.3.7"
+    val commonsIo = "commons-io" % "commons-io" % "2.4"
   }
 }

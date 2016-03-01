@@ -5,6 +5,7 @@ import java.sql.ResultSet
 object Row {
   class Iter(rs: ResultSet) extends Iterator[Row] {
     private val row = new Row(rs)
+    private var currentRow = 0
     private var advanced, canAdvance = false
 
     def hasNext = {
@@ -25,6 +26,8 @@ object Row {
 }
 
 class Row(val rs: ResultSet) {
+  val rowNum = rs.getRow
+
   lazy val toMap = {
     val md = rs.getMetaData
     val colRange = 1 until (1 + md.getColumnCount)
@@ -33,13 +36,15 @@ class Row(val rs: ResultSet) {
     colNames.zip(colValues).toMap
   }
 
-  def getObject(idx: Int): AnyRef = rs.getObject(idx)
-  def getObject(key: String): AnyRef = rs.getObject(key)
+  def as[T](idx: Int): T = asOpt(idx).getOrElse(throw new IllegalArgumentException(s"Column [$idx] is null."))
+  def as[T](key: String): T = asOpt(key).getOrElse(throw new IllegalArgumentException(s"Column [$key] is null."))
+
+  def asOpt[T](idx: Int): Option[T] = Option(rs.getObject(idx)).map(_.asInstanceOf[T])
+  def asOpt[T](key: String): Option[T] = Option(rs.getObject(key)).map(_.asInstanceOf[T])
 
   private[this] def extract[A](f: A): Option[A] = if (rs.wasNull()) None else Some(f)
 
   def array[T: reflect.ClassTag](index: Int): Option[Array[T]] = extractArray[T](rs.getArray(index + 1))
-
   def array[T: reflect.ClassTag](name: String): Option[Array[T]] = extractArray[T](rs.getArray(name))
 
   private[this] def extractArray[T: reflect.ClassTag](sqlArray: java.sql.Array): Option[Array[T]] = {

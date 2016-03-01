@@ -1,14 +1,23 @@
-GET        /                            controllers.HomeController.index
-GET        /ping                        controllers.HomeController.ping(timestamp: Long)
+GET         /                            controllers.HomeController.index
+GET         /ping                        controllers.HomeController.ping(timestamp: Long)
+
+# DB Engines
+GET         /engines                     controllers.EngineController.list()
+GET         /engines/:key                controllers.EngineController.detail(key)
+
+# Ad-hoc Queries
+GET         /adhoc                       controllers.AdHocQueryController.queryList(query: Option[java.util.UUID] ?= None, action: Option[String] ?= None)
+POST        /adhoc/run                   controllers.AdHocQueryController.run()
+
 
 # Sandbox
-GET        /sandbox/:key                controllers.SandboxController.sandbox(key)
+GET         /sandbox/:key                controllers.SandboxController.sandbox(key)
 
 # Utility
-GET        /*path/                      controllers.HomeController.untrail(path: String)
+GET         /*path/                      controllers.HomeController.untrail(path: String)
 
 # Assets
-GET        /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
-GET        /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
+GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
+GET         /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
 
-GET        /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)

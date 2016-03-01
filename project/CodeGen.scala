@@ -1,24 +1,19 @@
-import sbt._
+import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
+import com.typesafe.sbt.GitVersioning
+import com.typesafe.sbt.SbtScalariform.{ScalariformKeys, defaultScalariformSettings}
+import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import sbt.Keys._
 import sbt.Project.projectToRef
+import sbt._
 
-import com.typesafe.sbt.GitVersioning
-
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, defaultScalariformSettings }
-import net.virtualvoid.sbt.graph.Plugin.graphSettings
-
-object Database {
+object CodeGen {
   private[this] val dependencies = {
     import Dependencies._
-    Seq(
-      Logging.slf4jApi, Jdbc.hikariCp,
-      Jdbc.h2, Jdbc.mysql, Jdbc.postgres
-    )
+    Seq(Utils.commonsIo, Utils.enumeratum, Hibernate.core)
   }
 
-  private[this] lazy val dblibsSettings = Seq(
-    name := "Database Library",
+  private[this] lazy val codegenSettings = Seq(
+    name := "Code Generator",
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
 
@@ -34,12 +29,12 @@ object Database {
     publishMavenStyle := false
   ) ++ graphSettings ++ defaultScalariformSettings
 
-  lazy val dblibs = Project(
-    id = "dblibs",
-    base = file("dblibs")
+  lazy val codegen = Project(
+    id = "codegen",
+    base = file("codegen")
   )
     .enablePlugins(GitVersioning)
-    .settings(dblibsSettings: _*)
-    .aggregate(Shared.sharedJvm)
-    .dependsOn(Shared.sharedJvm)
+    .settings(codegenSettings: _*)
+    .aggregate(Database.dblibs)
+    .dependsOn(Database.dblibs)
 }

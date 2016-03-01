@@ -6,17 +6,16 @@ import com.codahale.metrics.MetricRegistry
 import com.zaxxer.hikari.HikariDataSource
 import models.database._
 import services.database.transaction.{TransactionManager, TransactionProvider}
+import utils.metrics.Instrumented
 
-class Database(protected val source: DataSource, protected val metrics: Option[MetricRegistry]) extends Queryable {
+class Database(val source: DataSource) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
-    metrics.fold(f) { registry =>
-      val timer = registry.timer(MetricRegistry.name(klass))
-      val ctx = timer.time()
-      try {
-        f
-      } finally {
-        ctx.stop
-      }
+    val timer = Instrumented.metricRegistry.timer(MetricRegistry.name(klass))
+    val ctx = timer.time()
+    try {
+      f
+    } finally {
+      ctx.stop
     }
   }
 
@@ -80,16 +79,18 @@ class Database(protected val source: DataSource, protected val metrics: Option[M
     }
   }
 
-  def execute(statement: Statement) = if (transactionProvider.transactionExists) {
-    transactionProvider.currentTransaction.execute(statement)
-  } else {
-    val connection = source.getConnection
-    try {
-      time(statement.getClass) {
-        execute(connection, statement)
+  def execute(statement: Statement) = {
+    if (transactionProvider.transactionExists) {
+      transactionProvider.currentTransaction.execute(statement)
+    } else {
+      val connection = source.getConnection
+      try {
+        time(statement.getClass) {
+          execute(connection, statement)
+        }
+      } finally {
+        connection.close()
       }
-    } finally {
-      connection.close()
     }
   }
 

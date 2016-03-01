@@ -1,8 +1,8 @@
 package models.database
 
-import java.sql.{Types, PreparedStatement, Connection}
+import java.sql.{Connection, PreparedStatement, Types}
 
-import utils.{Formatter, Logging}
+import utils.{Logging, NullUtils}
 
 import scala.annotation.tailrec
 
@@ -13,7 +13,7 @@ trait Queryable extends Logging {
   private[this] def prepare(stmt: PreparedStatement, values: Seq[Any], index: Int = 1) {
     if (values.nonEmpty) {
       values.head match {
-        case v if Formatter.isNull(v) => stmt.setNull(index, Types.NULL)
+        case v if NullUtils.isNull(v) => stmt.setNull(index, Types.NULL)
 
         case ov: Option[_] if ov.isDefined => stmt.setObject(index, Conversions.convert(ov.get.asInstanceOf[AnyRef]))
         case ov: Option[_] if ov.isEmpty => stmt.setNull(index, Types.NULL)
