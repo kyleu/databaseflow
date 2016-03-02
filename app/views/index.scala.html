@@ -1,4 +1,4 @@
-@(theme: String, debug: Boolean)(
+@(theme: String, debug: Boolean, connections: Seq[models.flow.Connection])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.materialize(utils.Config.projectName) {
   @layout.header(theme, "home")
@@ -6,16 +6,15 @@
   <main>
     <div class="container">
       <div class="row">
-        @models.engine.DatabaseEngine.all.map { e =>
-          <div class="col s4">
+        @connections.map { c =>
+          <div class="col s12 m6 l4">
             <div class="card">
               <div class="card-content">
-                <p>
-                  @e.name
-                </p>
+                <h4>@c.name</h4>
+                <p>@c.id</p>
               </div>
               <div class="card-action">
-                <a href="#">New Connection</a>
+                <a href="">Connect</a>
               </div>
             </div>
           </div>

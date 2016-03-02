@@ -1,9 +1,10 @@
+@import models.queries.adhoc.AdHocQuery
 @(
   selectedQuery: Option[java.util.UUID],
   sql: String,
   data: (Seq[String], Seq[Seq[Any]]),
   executionTime: Int,
-  queries: Seq[models.queries.AdHocQuery]
+  queries: Seq[AdHocQuery]
 )(implicit session: Session, flash: Flash)
 @views.html.layout.materialize(utils.Config.projectName + " Ad-hoc Queries") {
   @defining(selectedQuery.flatMap(x => queries.find(_.id == x))) { q =>

@@ -3,9 +3,8 @@ package services.sandbox
 import java.sql.ResultSet
 
 import models.database.{Row, SingleRowQuery}
-import services.database.DatabaseService
-import services.history.HistoryDatabase
-import utils.ApplicationContext
+import services.database.{MasterDatabase, DatabaseService}
+import utils.{NullUtils, ApplicationContext}
 
 import scala.concurrent.Future
 
@@ -20,21 +19,27 @@ object DatabaseTest extends SandboxTask {
     override def map(row: Row) = row.as[Long]("c").toInt
   }
 
-  def rsToString(rs: ResultSet, indent: Int = 0) = {
+  def rsToString(rs: ResultSet, indent: Int = 0, showColumns: Boolean = false) = {
     val whitespace = (0 until indent).map(x => " ").mkString
     val ret = collection.mutable.ArrayBuffer.empty[String]
     val columns = rs.getMetaData
     while(rs.next()) {
-      val row = (1 to columns.getColumnCount).map(i => rs.getObject(i).toString)
+      val row = (1 to columns.getColumnCount).map(i => Option(rs.getObject(i)).map(_.toString).getOrElse("-null-"))
       ret += (whitespace + row.mkString(", "))
     }
-    ret.mkString("\n")
+    if(showColumns) {
+      val cols = (1 to columns.getColumnCount).map(columns.getColumnLabel)
+      val colsLabel = whitespace + cols.map(x => "[" + x + "]").mkString(", ")
+      colsLabel + "\n" + ret.mkString("\n")
+    } else {
+      ret.mkString("\n")
+    }
   }
 
   override def run(ctx: ApplicationContext) = {
     DatabaseService.init()
 
-    val conn = HistoryDatabase.db.source.getConnection()
+    val conn = MasterDatabase.db.source.getConnection()
 
     var ret = collection.mutable.ArrayBuffer.empty[String]
 
@@ -48,9 +53,9 @@ object DatabaseTest extends SandboxTask {
       ret += "Catalogs:"
       ret += rsToString(md.getCatalogs, 2)
       ret += "Schemas:"
-      ret += rsToString(md.getSchemas, 2)
-      ret += ""
-      ret += "   "
+      ret += rsToString(md.getSchemas, 2, showColumns = true)
+      ret += "Tables"
+      ret += rsToString(md.getTables(NullUtils.inst, NullUtils.inst, NullUtils.inst, NullUtils.inst), 2, showColumns = true)
       ret += ""
       ret += "   "
       ret += ""
@@ -59,7 +64,6 @@ object DatabaseTest extends SandboxTask {
       conn.close()
     }
 
-    HistoryDatabase.close()
     Future.successful(ret.mkString("\n"))
   }
 }

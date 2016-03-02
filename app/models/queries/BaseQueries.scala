@@ -43,6 +43,11 @@ trait BaseQueries[T] {
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
+  protected case class GetAll(orderBy: String = idColumns.mkString(", ")) extends Query[Seq[T]] {
+    override val sql = s"select ${columns.mkString(", ")} from $tableName order by $orderBy"
+    override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
+  }
+
   protected def getBySingleId(id: Any) = GetById(Seq(id))
 
   protected case class Insert(model: T) extends Statement {

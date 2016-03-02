@@ -1,4 +1,4 @@
-package models.queries
+package models.queries.adhoc
 
 import java.util.UUID
 

@@ -1,10 +1,9 @@
-package services.history
+package services.database
 
 import models.database.ConnectionSettings
-import services.database.{DatabaseService, Database}
 import utils.Logging
 
-object HistoryDatabase extends Logging {
+object MasterDatabase extends Logging {
   private[this] var dbOpt: Option[Database] = None
 
   def open() = {
@@ -18,7 +17,9 @@ object HistoryDatabase extends Logging {
     )
     val database = DatabaseService.connect(cs)
 
-    log.info(s"History database started as user [${cs.username}] against url [${cs.url}].")
+    log.info(s"Master database started as user [${cs.username}] against url [${cs.url}].")
+
+    Schema.update(database)
 
     dbOpt = Some(database)
   }
@@ -28,6 +29,6 @@ object HistoryDatabase extends Logging {
   def close() = {
     dbOpt.foreach(_.close())
     dbOpt = None
-    log.info(s"History database closed.")
+    log.info(s"Master database closed.")
   }
 }

@@ -1,14 +1,9 @@
 GET         /                            controllers.HomeController.index
 GET         /ping                        controllers.HomeController.ping(timestamp: Long)
 
-# DB Engines
-GET         /engines                     controllers.EngineController.list()
-GET         /engines/:key                controllers.EngineController.detail(key)
-
 # Ad-hoc Queries
 GET         /adhoc                       controllers.AdHocQueryController.queryList(query: Option[java.util.UUID] ?= None, action: Option[String] ?= None)
 POST        /adhoc/run                   controllers.AdHocQueryController.run()
-
 
 # Sandbox
 GET         /sandbox/:key                controllers.SandboxController.sandbox(key)

@@ -10,7 +10,7 @@ import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
-import services.history.HistoryDatabase
+import services.database.MasterDatabase
 import services.notification.NotificationService
 import utils.metrics.Instrumented
 
@@ -44,12 +44,12 @@ class ApplicationContext @javax.inject.Inject() (
   SharedMetricRegistries.remove("default")
   SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
-  HistoryDatabase.open()
+  MasterDatabase.open()
 
   lifecycle.addStopHook(() => Future.successful(stop()))
 
   private[this] def stop() = {
-    HistoryDatabase.close()
+    MasterDatabase.close()
     SharedMetricRegistries.remove("default")
   }
 }

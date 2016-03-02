@@ -1,15 +1,16 @@
-package models.queries
+package models.queries.adhoc
 
 import java.util.UUID
 
 import models.database.{Query, Row, Statement}
+import models.queries.BaseQueries
 import org.joda.time.LocalDateTime
 import utils.DateUtils
 
 object AdHocQueries extends BaseQueries[AdHocQuery] {
   override protected val tableName = "adhoc_queries"
   override protected val columns = Seq("id", "title", "sql", "created", "updated")
-  override protected val searchColumns = Seq("id", "title", "author", "sql")
+  override protected val searchColumns = Seq("id", "title", "sql")
 
   val insert = Insert
   val getById = GetById

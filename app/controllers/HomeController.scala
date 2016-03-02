@@ -1,8 +1,9 @@
 package controllers
 
+import models.queries.connection.ConnectionQueries
 import play.api.Play
-import play.api.i18n.MessagesApi
 import play.api.mvc.Action
+import services.database.MasterDatabase
 import utils.ApplicationContext
 
 import scala.concurrent.Future
@@ -21,7 +22,10 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
   def index() = act("index") { implicit request =>
     val theme = HomeController.themes(Random.nextInt(HomeController.themes.size))
     //val theme = "blue-grey"
-    Future.successful(Ok(views.html.index(theme, Play.isDev(Play.current))))
+
+    val connections = MasterDatabase.db.query(ConnectionQueries.getAll())
+
+    Future.successful(Ok(views.html.index(theme, Play.isDev(Play.current), connections)))
   }
 
   def untrail(path: String) = Action.async {

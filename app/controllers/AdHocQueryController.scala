@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.util.Timeout
 import models.database.ConnectionSettings
-import models.queries.{AdHocQuery, AdHocQueries}
+import models.queries.adhoc.{AdHocQuery, AdHocQueries}
 import org.joda.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
