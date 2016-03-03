@@ -3,7 +3,10 @@ package services.sandbox
 import java.sql.ResultSet
 
 import models.database.{Row, SingleRowQuery}
+import org.apache.ddlutils.PlatformFactory
+import play.api.libs.json.Json
 import services.database.{MasterDatabase, DatabaseService}
+import services.schema.SchemaConverter
 import utils.{NullUtils, ApplicationContext}
 
 import scala.concurrent.Future
@@ -37,33 +40,18 @@ object DatabaseTest extends SandboxTask {
   }
 
   override def run(ctx: ApplicationContext) = {
+    import utils.json.SchemaSerializers._
     DatabaseService.init()
 
-    val conn = MasterDatabase.db.source.getConnection()
+    val src = MasterDatabase.db.source
+    val platform = PlatformFactory.createNewPlatformInstance(src)
 
-    var ret = collection.mutable.ArrayBuffer.empty[String]
+    val javaModel = platform.readModelFromDatabase("model")
 
-    try {
-      val md = conn.getMetaData
+    val model = SchemaConverter.convert(javaModel)
 
-      ret += "Database:"
-      ret += "  " + md.getDatabaseProductName + " " + md.getDatabaseProductVersion
-      ret += "Catalog Name:"
-      ret += "  " + md.getCatalogTerm
-      ret += "Catalogs:"
-      ret += rsToString(md.getCatalogs, 2)
-      ret += "Schemas:"
-      ret += rsToString(md.getSchemas, 2, showColumns = true)
-      ret += "Tables"
-      ret += rsToString(md.getTables(NullUtils.inst, NullUtils.inst, NullUtils.inst, NullUtils.inst), 2, showColumns = true)
-      ret += ""
-      ret += "   "
-      ret += ""
-      ret += "   "
-    } finally {
-      conn.close()
-    }
+    val ret = Json.prettyPrint(Json.toJson(model))
 
-    Future.successful(ret.mkString("\n"))
+    Future.successful(ret)
   }
 }

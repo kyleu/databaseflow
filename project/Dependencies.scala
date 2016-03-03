@@ -67,5 +67,6 @@ object Dependencies {
   object Utils {
     val enumeratum = "com.beachape" %% "enumeratum-play-json" % "1.3.7"
     val commonsIo = "commons-io" % "commons-io" % "2.4"
+    val ddlUtils = "org.apache.ddlutils" % "ddlutils" % "1.0"
   }
 }

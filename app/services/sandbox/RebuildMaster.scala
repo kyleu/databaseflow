@@ -1,6 +1,6 @@
 package services.sandbox
 
-import services.database.{SeedData, MasterDatabase, Schema}
+import services.database.{SeedData, MasterDatabase, MasterSchema}
 import utils.ApplicationContext
 
 import scala.concurrent.Future
@@ -12,8 +12,8 @@ object RebuildMaster extends SandboxTask {
   override def description = ""
 
   override def run(ctx: ApplicationContext) = {
-    Schema.wipe(MasterDatabase.db)
-    Schema.update(MasterDatabase.db)
+    MasterSchema.wipe(MasterDatabase.db)
+    MasterSchema.update(MasterDatabase.db)
     SeedData.insert(MasterDatabase.db)
     Future.successful("Rebuilt!")
   }
