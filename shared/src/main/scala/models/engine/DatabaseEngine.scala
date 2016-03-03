@@ -20,4 +20,6 @@ case class DatabaseEngine(
 
   builtInFunctions: Seq[String] = Nil,
   columnTypes: Seq[String] = Nil
-)
+) {
+  override def toString = id
+}

@@ -1,9 +1,22 @@
 package services.database
 
+import java.util.UUID
+
 import models.database.ConnectionSettings
+import models.queries.connection.ConnectionQueries
 import utils.Logging
 
 object MasterDatabase extends Logging {
+  def connectionFor(connectionId: UUID) = {
+    val c = db.query(ConnectionQueries.getById(connectionId)).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
+    val cs = ConnectionSettings(
+      url = c.url,
+      username = c.username,
+      password = c.password
+    )
+    DatabaseService.connect(cs)
+  }
+
   private[this] var dbOpt: Option[Database] = None
 
   def open() = {

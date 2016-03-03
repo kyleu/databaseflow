@@ -1,5 +1,6 @@
 @import models.queries.adhoc.AdHocQuery
 @(
+  connectionId: java.util.UUID,
   selectedQuery: Option[java.util.UUID],
   sql: String,
   data: (Seq[String], Seq[Seq[Any]]),
@@ -11,7 +12,7 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="pull-right">
-          <form class="form-inline" action="@controllers.routes.AdHocQueryController.queryList(None)">
+          <form class="form-inline" action="@controllers.routes.AdHocQueryController.queryList(connectionId, None)">
             <select class="form-control" name="query">
               @if(queries.isEmpty) {
                 <option value="">No queries available</option>
@@ -32,7 +33,7 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <form class="form" action="@controllers.routes.AdHocQueryController.run" method="post">
+        <form class="form" action="@controllers.routes.AdHocQueryController.run(connectionId)" method="post">
           <textarea class="form-control" name="sql" rows="10" placeholder="select * from foo">@sql</textarea>
           <br />
           <div class="pull-right">

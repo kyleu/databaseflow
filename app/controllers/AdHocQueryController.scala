@@ -5,10 +5,11 @@ import java.util.UUID
 import akka.util.Timeout
 import models.database.ConnectionSettings
 import models.queries.adhoc.{AdHocQuery, AdHocQueries}
+import models.queries.connection.ConnectionQueries
 import org.joda.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
-import services.database.DatabaseService
+import services.database.{MasterDatabase, DatabaseService}
 import utils.{DateUtils, ApplicationContext}
 
 import scala.concurrent.Future
@@ -29,30 +30,22 @@ class AdHocQueryController @javax.inject.Inject() (override val ctx: Application
 
   implicit val timeout = Timeout(10.seconds)
 
-  val cs = ConnectionSettings(
-    name = Some("adhoc-temp"),
-    url = "jdbc:postgresql://localhost:5432/puzzlebrawl",
-    username = "databaseflow",
-    password = "flow"
-  )
-  val db = DatabaseService.connect(cs)
-
-  def queryList(query: Option[UUID], action: Option[String]) = act("list") { implicit request =>
+  def queryList(connectionId: UUID, query: Option[UUID], action: Option[String]) = act("list") { implicit request =>
     val ret = if (action.contains("load")) {
-      val queries = db.query(AdHocQueries.search("", "title", None))
+      val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
       val q = query.flatMap(x => queries.find(_.id == x))
-      Ok(views.html.adhoc.adhoc(query, q.map(_.sql).getOrElse(""), Seq.empty -> Seq.empty, 0, queries))
+      Ok(views.html.adhoc.adhoc(connectionId, query, q.map(_.sql).getOrElse(""), Seq.empty -> Seq.empty, 0, queries))
     } else if (action.contains("delete")) {
-      val ok = db.execute(AdHocQueries.removeById(Seq(query.getOrElse(throw new IllegalStateException()))))
-      Redirect(controllers.routes.AdHocQueryController.queryList(query, Some("load")))
+      val ok = MasterDatabase.db.execute(AdHocQueries.removeById(Seq(query.getOrElse(throw new IllegalStateException()))))
+      Redirect(controllers.routes.AdHocQueryController.queryList(connectionId, query, Some("load")))
     } else {
-      val queries = db.query(AdHocQueries.search("", "title", None))
-      Ok(views.html.adhoc.adhoc(query, "", Seq.empty -> Seq.empty, 0, queries))
+      val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
+      Ok(views.html.adhoc.adhoc(connectionId, query, "", Seq.empty -> Seq.empty, 0, queries))
     }
     Future.successful(ret)
   }
 
-  def run() = act("run") { implicit request =>
+  def run(connectionId: UUID) = act("run") { implicit request =>
     import DateUtils._
 
     val ret = executionForm.bindFromRequest.fold(
@@ -60,24 +53,26 @@ class AdHocQueryController @javax.inject.Inject() (override val ctx: Application
       form => form.action match {
         case "save" => if (form.id.isEmpty || form.id.getOrElse("").isEmpty) {
           val q = AdHocQuery(UUID.randomUUID, form.title, form.sql, new LocalDateTime, new LocalDateTime)
-          val ok = db.execute(AdHocQueries.insert(q))
-          val queries = db.query(AdHocQueries.search("", "title", None))
+          val ok = MasterDatabase.db.execute(AdHocQueries.insert(q))
+          val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
           val newId = queries.sortBy(_.created).headOption.map(_.id)
-          Ok(views.html.adhoc.adhoc(newId, form.sql, Seq.empty -> Seq.empty, 0, queries))
+          Ok(views.html.adhoc.adhoc(connectionId, newId, form.sql, Seq.empty -> Seq.empty, 0, queries))
         } else {
           val queryId = form.id.map(UUID.fromString)
           val q = AdHocQueries.UpdateAdHocQuery(queryId.getOrElse(throw new IllegalStateException()), form.title, form.sql)
-          val ok = db.execute(q)
-          val queries = db.query(AdHocQueries.search("", "title", None))
-          Ok(views.html.adhoc.adhoc(queryId, form.sql, Seq.empty -> Seq.empty, 0, queries))
+          val ok = MasterDatabase.db.execute(q)
+          val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
+          Ok(views.html.adhoc.adhoc(connectionId, queryId, form.sql, Seq.empty -> Seq.empty, 0, queries))
         }
         case "run" =>
-          val queries = db.query(AdHocQueries.search("", "title", None))
+          val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
+          val conn = MasterDatabase.connectionFor(connectionId)
           val startTime = System.nanoTime
-          val result = db.query(AdHocQueries.AdHocQueryExecute(form.sql, Seq.empty))
+          val result = conn.query(AdHocQueries.AdHocQueryExecute(form.sql, Seq.empty))
           val executionTime = ((System.nanoTime - startTime) / 1000000).toInt
+          conn.close()
           val queryId = form.id.map(UUID.fromString)
-          Ok(views.html.adhoc.adhoc(queryId, form.sql, result, executionTime, queries))
+          Ok(views.html.adhoc.adhoc(connectionId, queryId, form.sql, result, executionTime, queries))
         case x => throw new IllegalStateException(x)
       }
     )

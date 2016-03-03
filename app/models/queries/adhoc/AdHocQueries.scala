@@ -24,20 +24,17 @@ object AdHocQueries extends BaseQueries[AdHocQuery] {
 
   final case class AdHocQueryExecute(override val sql: String, override val values: Seq[Any]) extends Query[(Seq[String], Seq[Seq[Any]])] {
     override def reduce(rows: Iterator[Row]) = {
-      val rowsList = rows.toList
+      var columns = Seq.empty[String]
 
-      val columns = rowsList match {
-        case Nil => Seq.empty[String]
-        case head :: _ =>
-          val md = head.rs.getMetaData
-          (0 until md.getColumnCount).map { i =>
+      val result = rows.map { r =>
+        if(columns.isEmpty) {
+          val md = r.rs.getMetaData
+          (1 to md.getColumnCount).map { i =>
             md.getColumnName(i)
           }
-      }
-
-      val result = rowsList.map { r =>
+        }
         r.toMap.iterator.toSeq
-      }.toSeq
+      }.toList
 
       columns -> result
     }

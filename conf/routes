@@ -2,8 +2,8 @@ GET         /                            controllers.HomeController.index
 GET         /ping                        controllers.HomeController.ping(timestamp: Long)
 
 # Ad-hoc Queries
-GET         /adhoc                       controllers.AdHocQueryController.queryList(query: Option[java.util.UUID] ?= None, action: Option[String] ?= None)
-POST        /adhoc/run                   controllers.AdHocQueryController.run()
+GET         /adhoc/:conn                 controllers.AdHocQueryController.queryList(conn: java.util.UUID, query: Option[java.util.UUID] ?= None, action: Option[String] ?= None)
+POST        /adhoc/:conn/run             controllers.AdHocQueryController.run(conn: java.util.UUID)
 
 # Sandbox
 GET         /sandbox/:key                controllers.SandboxController.sandbox(key)

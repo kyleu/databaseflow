@@ -8,5 +8,7 @@ case class Connection(
   id: UUID,
   name: String,
   engine: DatabaseEngine,
-  url: String
+  url: String,
+  username: String,
+  password: String
 )

@@ -3,7 +3,7 @@ package services.database
 import models.ddl.{CreateAdHocQueriesTable, CreateConnectionsTable, DdlQueries}
 import utils.Logging
 
-object Schema extends Logging {
+object MasterSchema extends Logging {
   val tables = Seq(
     CreateConnectionsTable,
     CreateAdHocQueriesTable
