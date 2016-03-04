@@ -19,7 +19,7 @@ object HomeController {
 
 @javax.inject.Singleton
 class HomeController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
-  def index() = act("index") { implicit request =>
+  def index() = withSession("index") { implicit request =>
     val theme = HomeController.themes(Random.nextInt(HomeController.themes.size))
     //val theme = "blue-grey"
 
@@ -32,11 +32,11 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
     Future.successful(MovedPermanently(s"/$path"))
   }
 
-  def externalLink(url: String) = act("external.link") { implicit request =>
+  def externalLink(url: String) = withSession("external.link") { implicit request =>
     Future.successful(Redirect(if (url.startsWith("http")) { url } else { "http://" + url }))
   }
 
-  def ping(timestamp: Long) = act("ping") { implicit request =>
+  def ping(timestamp: Long) = withSession("ping") { implicit request =>
     Future.successful(Ok(timestamp.toString))
   }
 }

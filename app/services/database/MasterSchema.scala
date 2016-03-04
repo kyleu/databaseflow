@@ -1,10 +1,15 @@
 package services.database
 
-import models.ddl.{CreateAdHocQueriesTable, CreateConnectionsTable, DdlQueries}
+import models.ddl._
 import utils.Logging
 
 object MasterSchema extends Logging {
   val tables = Seq(
+    CreateUsersTable,
+    CreateUserProfilesTable,
+    CreateSessionInfoTable,
+    CreatePasswordInfoTable,
+
     CreateConnectionsTable,
     CreateAdHocQueriesTable
   )

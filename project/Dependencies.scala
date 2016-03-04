@@ -41,6 +41,10 @@ object Dependencies {
     val testkit = "com.typesafe.akka" %% "akka-testkit" % version
   }
 
+  object Authentication {
+    val silhouette = "com.mohiva" %% "play-silhouette" % "3.0.4"
+  }
+
   object WebJars {
     val requireJs = "org.webjars" % "requirejs" % "2.1.22"
     val jquery = "org.webjars" % "jquery" % "2.2.1"

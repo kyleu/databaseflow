@@ -3,14 +3,12 @@ package controllers
 import java.util.UUID
 
 import akka.util.Timeout
-import models.database.ConnectionSettings
-import models.queries.adhoc.{AdHocQuery, AdHocQueries}
-import models.queries.connection.ConnectionQueries
+import models.queries.adhoc.{AdHocQueries, AdHocQuery}
 import org.joda.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
-import services.database.{MasterDatabase, DatabaseService}
-import utils.{DateUtils, ApplicationContext}
+import services.database.MasterDatabase
+import utils.{ApplicationContext, DateUtils}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -30,7 +28,7 @@ class AdHocQueryController @javax.inject.Inject() (override val ctx: Application
 
   implicit val timeout = Timeout(10.seconds)
 
-  def queryList(connectionId: UUID, query: Option[UUID], action: Option[String]) = act("list") { implicit request =>
+  def queryList(connectionId: UUID, query: Option[UUID], action: Option[String]) = withSession("list") { implicit request =>
     val ret = if (action.contains("load")) {
       val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
       val q = query.flatMap(x => queries.find(_.id == x))
@@ -45,7 +43,7 @@ class AdHocQueryController @javax.inject.Inject() (override val ctx: Application
     Future.successful(ret)
   }
 
-  def run(connectionId: UUID) = act("run") { implicit request =>
+  def run(connectionId: UUID) = withSession("run") { implicit request =>
     import DateUtils._
 
     val ret = executionForm.bindFromRequest.fold(

@@ -12,7 +12,7 @@ import scala.concurrent.duration._
 class SandboxController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   implicit val timeout = Timeout(10.seconds)
 
-  def sandbox(key: String) = act(key) { implicit request =>
+  def sandbox(key: String) = withSession(key) { implicit request =>
     val sandbox = SandboxTask.byId.getOrElse(key, throw new IllegalStateException())
     if (sandbox == HtmlSandbox) {
       Future.successful(Ok(views.html.sandbox()))

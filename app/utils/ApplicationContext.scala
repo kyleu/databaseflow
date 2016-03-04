@@ -4,7 +4,6 @@ import java.util.TimeZone
 
 import com.codahale.metrics.SharedMetricRegistries
 import org.joda.time.DateTimeZone
-import play.api.Mode
 import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
@@ -12,6 +11,7 @@ import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
 import services.database.MasterDatabase
 import services.notification.NotificationService
+import services.user.AuthenticationEnvironment
 import utils.metrics.Instrumented
 
 import scala.concurrent.Future
@@ -31,6 +31,7 @@ object ApplicationContext {
 
 @javax.inject.Singleton
 class ApplicationContext @javax.inject.Inject() (
+    val env: AuthenticationEnvironment,
     val messagesApi: MessagesApi,
     val config: Config,
     val lifecycle: ApplicationLifecycle,
