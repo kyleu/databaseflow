@@ -2,16 +2,19 @@ package utils
 
 import java.util.TimeZone
 
+import akka.actor.Props
 import com.codahale.metrics.SharedMetricRegistries
 import org.joda.time.DateTimeZone
 import play.api.Environment
 import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
+import play.api.libs.concurrent.Akka
 import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
 import services.database.MasterDatabase
 import services.notification.NotificationService
+import services.supervisor.ActorSupervisor
 import services.user.AuthenticationEnvironment
 import utils.metrics.Instrumented
 
@@ -50,6 +53,13 @@ class ApplicationContext @javax.inject.Inject() (
   MasterDatabase.open()
 
   lifecycle.addStopHook(() => Future.successful(stop()))
+
+  lazy val supervisor = {
+    import play.api.Play.current
+    val instanceRef = Akka.system.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
+    log.info(s"Actor Supervisor [${instanceRef.path}] started for [${utils.Config.projectId}].")
+    instanceRef
+  }
 
   private[this] def stop() = {
     MasterDatabase.close()

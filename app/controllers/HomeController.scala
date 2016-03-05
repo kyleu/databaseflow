@@ -12,9 +12,7 @@ import scala.concurrent.Future
 class HomeController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def index() = withSession("index") { implicit request =>
     val connections = MasterDatabase.db.query(ConnectionQueries.getAll())
-
-    val debug = ctx.playEnv.mode == Mode.Dev
-    Future.successful(Ok(views.html.index(request.identity, debug, connections)))
+    Future.successful(Ok(views.html.index(request.identity, ctx.config.debug, connections)))
   }
 
   def untrail(path: String) = Action.async {

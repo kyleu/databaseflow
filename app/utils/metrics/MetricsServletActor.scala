@@ -3,12 +3,17 @@ package utils.metrics
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 
+import akka.actor.Props
 import com.codahale.metrics.graphite.{ Graphite, GraphiteReporter }
 import com.codahale.metrics.{ MetricFilter, JmxReporter }
 import com.codahale.metrics.servlets.AdminServlet
 import org.eclipse.jetty.server.{ ServerConnector, Server }
 import org.eclipse.jetty.servlet.ServletContextHandler
 import utils.{ Logging, Config }
+
+object MetricsServletActor {
+  def props(config: Config) = Props(classOf[MetricsServletActor], config)
+}
 
 class MetricsServletActor(config: Config) extends InstrumentedActor with Logging {
   private[this] var jmxReporter: Option[JmxReporter] = None
