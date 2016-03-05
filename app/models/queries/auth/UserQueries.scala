@@ -8,6 +8,7 @@ import models.database.{ SingleRowQuery, FlatSingleRowQuery, Row, Statement }
 import models.user.{ Role, User, UserPreferences }
 import org.joda.time.LocalDateTime
 import play.api.libs.json.{ JsObject, JsError, JsSuccess, Json }
+import utils.JdbcUtils
 import utils.json.UserSerializers
 import UserSerializers._
 
@@ -69,7 +70,7 @@ object UserQueries extends BaseQueries[User] {
 
   override protected def fromRow(row: Row) = {
     val id = row.as[UUID]("id")
-    val profiles = row.as[collection.mutable.ArrayBuffer[_]]("profiles").map { l =>
+    val profiles = JdbcUtils.toSeq[String](row, "profiles").map { l =>
       val info = l.toString
       val delimiter = info.indexOf(':')
       val provider = info.substring(0, delimiter)
@@ -83,8 +84,8 @@ object UserQueries extends BaseQueries[User] {
       case s: JsSuccess[UserPreferences] => s.get
       case e: JsError => throw new IllegalArgumentException(s"Error parsing [$prefsString] as preferences: $e")
     }
-    val roles = row.as[collection.mutable.ArrayBuffer[_]]("roles").map(x => Role(x.toString)).toSet
-    val created = row.as[LocalDateTime]("created")
+    val roles = JdbcUtils.toSeq[String](row, "roles").map(x => Role(x.toString)).toSet
+    val created = JdbcUtils.toLocalDateTime(row, "created")
     User(id, username, preferences, profiles, roles, created)
   }
 

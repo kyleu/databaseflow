@@ -23,7 +23,7 @@ object MasterDatabase extends Logging {
     dbOpt.foreach(x => throw new IllegalStateException("History database already open."))
 
     val cs = ConnectionSettings(
-      url = "jdbc:postgresql://localhost:5432/databaseflow",
+      url = "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified",
       username = "databaseflow",
       password = "flow",
       maxSize = 8
