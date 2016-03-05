@@ -137,5 +137,7 @@ object H2 extends DatabaseEngine(
     "binary($l)",
     "varchar($l)"
   )
-)
+) {
+  override val varchar = "varchar"
+}
 // scalastyle:on

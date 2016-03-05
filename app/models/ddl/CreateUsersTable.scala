@@ -4,10 +4,10 @@ case object CreateUsersTable extends CreateTableStatement("users") {
   override val sql = s"""
     create table $tableName (
       id uuid primary key,
-      username character varying(256),
+      username ${eng.varchar}(256),
       prefs text NOT NULL,
       profiles text[] not null,
-      roles character varying(64)[] not null,
+      roles ${eng.varchar}(64)[] not null,
       created timestamp not null
     ) with (oids=false);
 

@@ -3,13 +3,13 @@ package models.ddl
 case object CreateUserProfilesTable extends CreateTableStatement("user_profiles") {
   override val sql = s"""
     create table $tableName (
-      provider character varying(64) not null,
-      key text not null,
-      email character varying(256),
-      first_name character varying(512),
-      last_name character varying(512),
-      full_name character varying(512),
-      avatar_url character varying(512),
+      provider ${eng.varchar}(64) not null,
+      key ${eng.varchar}(1024) not null,
+      email ${eng.varchar}(256),
+      first_name ${eng.varchar}(512),
+      last_name ${eng.varchar}(512),
+      full_name ${eng.varchar}(512),
+      avatar_url ${eng.varchar}(512),
       created timestamp not null
     ) with (oids=false);
 

@@ -124,5 +124,7 @@ object PostgreSQL extends DatabaseEngine(
     "bytea",
     "varchar($l)"
   )
-)
+) {
+  override val varchar = "character varying"
+}
 // scalastyle:on

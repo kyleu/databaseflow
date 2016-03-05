@@ -21,5 +21,6 @@ case class DatabaseEngine(
   builtInFunctions: Seq[String] = Nil,
   columnTypes: Seq[String] = Nil
 ) {
+  def varchar: String = "?"
   override def toString = id
 }

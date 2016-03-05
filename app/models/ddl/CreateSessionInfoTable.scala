@@ -5,7 +5,7 @@ case object CreateSessionInfoTable extends CreateTableStatement("session_info") 
     create table $tableName
     (
       id text not null,
-      provider character varying(64) not null,
+      provider ${eng.varchar}(64) not null,
       key text not null,
       last_used timestamp without time zone not null,
       expiration timestamp without time zone not null,

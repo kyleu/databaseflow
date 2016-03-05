@@ -24,7 +24,7 @@ object CodeGenerator {
 
   def getTemplate(cap: Capabilities) = {
     val ret = collection.mutable.ArrayBuffer.empty[String]
-    val eng = cap.engine
+    implicit val eng = cap.engine
     val engName = eng.getClass.getSimpleName.stripSuffix("$")
     ret += "/* Generated Code */"
     ret += "// scalastyle:off"
@@ -47,7 +47,9 @@ object CodeGenerator {
     ret += "  columnTypes = Seq("
     ret += cap.columnTypes.flatMap(_._2.map(x => s"    ${q(x)}")).mkString(",\n")
     ret += "  )"
-    ret += ")"
+    ret += ") {"
+    ret += "  override val varchar = \"" + SqlProvider.varchar + "\""
+    ret += "}"
     ret += "// scalastyle:on"
     ret += ""
 

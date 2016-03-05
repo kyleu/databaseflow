@@ -148,5 +148,7 @@ object MySQL extends DatabaseEngine(
     "longblob",
     "longtext"
   )
-)
+) {
+  override val varchar = "varchar"
+}
 // scalastyle:on

@@ -8,9 +8,9 @@ object DdlQueries {
   val testUserId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
   final case class DoesTableExist(tableName: String) extends SingleRowQuery[Boolean] {
-    override val sql = "select exists (select * from information_schema.tables WHERE table_name = ?);"
+    override val sql = "select count(*) as c from information_schema.tables WHERE table_name = ?;"
     override val values = tableName :: Nil
-    override def map(row: Row) = row.as[Boolean]("exists")
+    override def map(row: Row) = row.as[Long]("c") > 0
   }
 
   case object DoesTestUserExist extends SingleRowQuery[Boolean] {
