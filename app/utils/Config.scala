@@ -3,7 +3,7 @@ package utils
 import java.net.InetAddress
 
 import com.typesafe.config.ConfigFactory
-import play.api.Play
+import play.api.{Mode, Environment, Play}
 
 object Config {
   private[this] val cnf = ConfigFactory.load()
@@ -16,8 +16,8 @@ object Config {
 }
 
 @javax.inject.Singleton
-class Config @javax.inject.Inject() (val cnf: play.api.Configuration) {
-  val debug = !Play.isProd(Play.current)
+class Config @javax.inject.Inject() (val cnf: play.api.Configuration, env: Environment) {
+  val debug = env.mode == Mode.Dev
 
   val fileCacheDir = cnf.getString("cache.dir").getOrElse("./cache")
 

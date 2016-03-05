@@ -1,7 +1,7 @@
 package controllers
 
 import models.queries.connection.ConnectionQueries
-import play.api.Play
+import play.api.{Mode, Play}
 import play.api.mvc.Action
 import services.database.MasterDatabase
 import utils.ApplicationContext
@@ -25,7 +25,8 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
 
     val connections = MasterDatabase.db.query(ConnectionQueries.getAll())
 
-    Future.successful(Ok(views.html.index(theme, Play.isDev(Play.current), connections)))
+    val debug = ctx.playEnv.mode == Mode.Dev
+    Future.successful(Ok(views.html.index(theme, debug, connections)))
   }
 
   def untrail(path: String) = Action.async {

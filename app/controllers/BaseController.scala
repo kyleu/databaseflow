@@ -18,7 +18,7 @@ abstract class BaseController() extends Silhouette[User, CookieAuthenticator] wi
   def ctx: ApplicationContext
 
   override def messagesApi = ctx.messagesApi
-  override def env = ctx.env
+  override def env = ctx.authEnv
 
   def withAdminSession(action: String)(block: (SecuredRequest[AnyContent]) => Future[Result]) = SecuredAction.async { implicit request =>
     timing(action) {
@@ -46,7 +46,7 @@ abstract class BaseController() extends Silhouette[User, CookieAuthenticator] wi
             created = DateUtils.now
           )
 
-          val u = ctx.env.userService.save(user)
+          val u = ctx.authEnv.userService.save(user)
           for {
             authenticator <- env.authenticatorService.create(LoginInfo("anonymous", u.id.toString))
             value <- env.authenticatorService.init(authenticator)

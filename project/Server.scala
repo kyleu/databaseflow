@@ -1,25 +1,21 @@
-import com.typesafe.sbt.jshint.Import.JshintKeys
-import sbt._
-import sbt.Keys._
-import sbt.Project.projectToRef
-
-import playscalajs.PlayScalaJS.autoImport._
-
-import com.typesafe.sbt.digest.Import._
+import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.GitVersioning
+import com.typesafe.sbt.SbtScalariform.{ScalariformKeys, defaultScalariformSettings}
+import com.typesafe.sbt.digest.Import._
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
+import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.rjs.Import._
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
-
+import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import play.routes.compiler.InjectedRoutesGenerator
 import play.sbt.routes.RoutesKeys.routesGenerator
-
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, defaultScalariformSettings }
-import net.virtualvoid.sbt.graph.Plugin.graphSettings
+import playscalajs.PlayScalaJS.autoImport._
+import sbt.Keys._
+import sbt.Project.projectToRef
+import sbt._
 
 object Server {
   private[this] val dependencies = {
@@ -40,9 +36,12 @@ object Server {
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
     resolvers += Resolver.jcenterRepo,
-    libraryDependencies ++= dependencies,
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/",
 
     routesGenerator := InjectedRoutesGenerator,
+
+    libraryDependencies ++= dependencies,
 
     scalaJSProjects := Seq(Client.client),
 

@@ -4,6 +4,7 @@ import java.util.TimeZone
 
 import com.codahale.metrics.SharedMetricRegistries
 import org.joda.time.DateTimeZone
+import play.api.Environment
 import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
@@ -31,10 +32,11 @@ object ApplicationContext {
 
 @javax.inject.Singleton
 class ApplicationContext @javax.inject.Inject() (
-    val env: AuthenticationEnvironment,
+    val authEnv: AuthenticationEnvironment,
     val messagesApi: MessagesApi,
     val config: Config,
     val lifecycle: ApplicationLifecycle,
+    val playEnv: Environment,
     val notificationService: NotificationService
 ) extends Logging {
   log.info(s"${Config.projectName} is starting.")

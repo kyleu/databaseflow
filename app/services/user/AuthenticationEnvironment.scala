@@ -8,12 +8,13 @@ import com.mohiva.play.silhouette.impl.repositories.DelegableAuthInfoRepository
 import com.mohiva.play.silhouette.impl.services.GravatarService
 import com.mohiva.play.silhouette.impl.util.{BCryptPasswordHasher, DefaultFingerprintGenerator, SecureRandomIDGenerator}
 import models.user.User
+import play.api.Configuration
 import play.api.libs.ws.WSClient
 
 import scala.concurrent.duration._
 
 @javax.inject.Singleton
-class AuthenticationEnvironment @javax.inject.Inject() (val wsClient: WSClient) extends Environment[User, CookieAuthenticator] {
+class AuthenticationEnvironment @javax.inject.Inject() (val wsClient: WSClient, config: Configuration) extends Environment[User, CookieAuthenticator] {
   override implicit val executionContext = play.api.libs.concurrent.Execution.Implicits.defaultContext
 
   private[this] val fingerprintGenerator = new DefaultFingerprintGenerator(false)
@@ -45,7 +46,7 @@ class AuthenticationEnvironment @javax.inject.Inject() (val wsClient: WSClient) 
   override val eventBus = EventBus()
 
   override val authenticatorService = {
-    val cfg = play.api.Play.current.configuration.getConfig("silhouette.authenticator.cookie").getOrElse {
+    val cfg = config.getConfig("silhouette.authenticator.cookie").getOrElse {
       throw new IllegalArgumentException("Missing cookie configuration.")
     }
     new CookieAuthenticatorService(CookieAuthenticatorSettings(

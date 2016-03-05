@@ -3,12 +3,4 @@
     <h1>@path</h1>
     <div class="text-large"><em>Exception Encountered</em></div>
   </div>
-  @if(play.api.Play.isDev(play.api.Play.current)) {
-    @ex.map { e =>
-      @defining(e.getCause.getStackTrace.map(x => s"  " + x + "\n")) { s =>
-<pre>@e.getClass.getName: @e.getMessage
-@s</pre>
-      }
-    }
-  }
 }

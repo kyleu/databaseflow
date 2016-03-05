@@ -8,7 +8,7 @@ object Dependencies {
   }
 
   object Logging {
-    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.12"
+    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.18"
   }
 
   object Hibernate {
@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.3"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.4"
     val h2 = "com.h2database" % "h2" % "1.4.191"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
