@@ -1,3 +1,5 @@
+package json
+
 import java.util.UUID
 
 import scala.scalajs.js

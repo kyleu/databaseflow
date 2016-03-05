@@ -1,4 +1,5 @@
 /* global requirejs:false */
+/* global DatabaseFlow:false */
 /* global $:false */
 requirejs.config({
   baseUrl: '/assets/javascripts',
@@ -11,4 +12,8 @@ requirejs([], function() {
   'use strict';
 
   $('#nav-menu-button').sideNav();
+
+  if(DatabaseFlow !== undefined) {
+    window.dbf = new DatabaseFlow();
+  }
 });

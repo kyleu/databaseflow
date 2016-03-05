@@ -20,8 +20,8 @@ class QueryController @javax.inject.Inject() (override val ctx: ApplicationConte
   val mff = new MessageFrameFormatter(ctx.config.debug)
   import mff.{ requestFormatter, responseFormatter }
   import play.api.Play.current
-  
-  def connect() = WebSocket.tryAcceptWithActor[RequestMessage, ResponseMessage] { request =>
+
+  def connect(connectionId: UUID) = WebSocket.tryAcceptWithActor[RequestMessage, ResponseMessage] { request =>
     implicit val req = Request(request, AnyContentAsEmpty)
     SecuredRequestHandler { securedRequest =>
       Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))

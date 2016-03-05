@@ -6,6 +6,7 @@ GET         /adhoc/:conn                 controllers.AdHocQueryController.queryL
 POST        /adhoc/:conn/run             controllers.AdHocQueryController.run(conn: java.util.UUID)
 
 # Query Interface
+GET         /q/:conn/websocket           controllers.QueryController.connect(conn: java.util.UUID)
 GET         /q/:conn                     controllers.QueryController.main(conn: java.util.UUID)
 
 # Sandbox

@@ -1,7 +1,8 @@
-import scala.scalajs.js.JSApp
+import utils.Logging
 
-object DatabaseFlow extends JSApp {
-  override def main(): Unit = {
-    println("Database Flow Started.")
-  }
+import scala.scalajs.js.annotation.JSExport
+
+@JSExport
+class DatabaseFlow extends NetworkHelper {
+  Logging.info("Database Flow Started.")
 }
