@@ -1,6 +1,6 @@
-@(theme: String, activeSection: String)(implicit messages: Messages)
+@(user: models.user.User, activeSection: String)(implicit messages: Messages)
 <header>
-  <nav class="@theme lighten-2">
+  <nav class="@user.preferences.theme lighten-2">
     <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
 
     <ul id="slide-out" class="side-nav">
@@ -13,5 +13,9 @@
     </ul>
 
     <a href="#" data-activates="slide-out" id="nav-menu-button"><i class="mdi-navigation-menu"></i></a>
+
+    <ul class="right hide-on-med-and-down">
+      <li><a href="/profile" title="@user.username.getOrElse("Guest") Profile">@user.username.getOrElse("Guest")</a></li>
+    </ul>
   </nav>
 </header>

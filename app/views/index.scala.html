@@ -1,7 +1,7 @@
-@(theme: String, debug: Boolean, connections: Seq[models.flow.Connection])(
+@(user: models.user.User, debug: Boolean, connections: Seq[models.flow.Connection])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.materialize(utils.Config.projectName) {
-  @layout.header(theme, "home")
+  @layout.header(user, "home")
 
   <main>
     <div class="container">
@@ -14,7 +14,7 @@
                 <p>@c.id</p>
               </div>
               <div class="card-action">
-                <a href="@routes.AdHocQueryController.queryList(c.id, None, None)">Connect</a>
+                <a href="@routes.QueryController.main(c.id)">Query</a>
               </div>
             </div>
           </div>
@@ -23,14 +23,7 @@
     </div>
   </main>
 
-  @layout.footer(theme)
-
-    <!-- Scala.js output -->
-  @if(debug) {
-    <script src="@routes.Assets.versioned("client-fastopt.js")" type="text/javascript"></script>
-  } else {
-    <script src="@routes.Assets.versioned("client-opt.js")" type="text/javascript"></script>
-  }
+  @layout.footer(user)
 
   <script data-main="@routes.Assets.versioned("javascripts/main.js")" src="@routes.Assets.versioned("lib/requirejs/require.min.js")"></script>
 }

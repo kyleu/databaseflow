@@ -9,8 +9,9 @@
 )(implicit session: Session, flash: Flash)
 @views.html.layout.materialize(utils.Config.projectName + " Ad-hoc Queries") {
   @defining(selectedQuery.flatMap(x => queries.find(_.id == x))) { q =>
-    <div class="panel panel-default">
-      <div class="panel-body">
+
+    <div class="row">
+      <div class="col s12">
         <div class="pull-right">
           <form class="form-inline" action="@controllers.routes.AdHocQueryController.queryList(connectionId, None)">
             <select class="form-control" name="query">
@@ -31,8 +32,8 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="row">
+      <div class="col s12">
         <form class="form" action="@controllers.routes.AdHocQueryController.run(connectionId)" method="post">
           <textarea class="form-control" name="sql" rows="10" placeholder="select * from foo">@sql</textarea>
           <br />
@@ -49,8 +50,8 @@
     </div>
 
     @if(data._2.nonEmpty) {
-      <div class="panel panel-default">
-        <div class="panel-body">
+      <div class="row">
+        <div class="col s12">
           <div>Returned [@data._2.size] row@if(data._2.size != 1) {s} in [@{executionTime}ms].</div>
           <table class="table table-bordered">
             <thead>

@@ -36,8 +36,6 @@ object Server {
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
     resolvers += Resolver.jcenterRepo,
-    resolvers += Resolver.sonatypeRepo("snapshots"),
-    resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/",
 
     routesGenerator := InjectedRoutesGenerator,
 

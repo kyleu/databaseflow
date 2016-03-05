@@ -1,0 +1,71 @@
+@(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@views.html.layout.materialize(utils.Config.projectName) {
+  @layout.header(user, "home")
+
+  <main>
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Card Title</span>
+            <p>
+              I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            </p>
+          </div>
+          <div class="card-action">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Card Title</span>
+            <p>
+              I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            </p>
+          </div>
+          <div class="card-action">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Card Title</span>
+            <p>
+              I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup to use effectively.
+            </p>
+          </div>
+          <div class="card-action">
+            <a href="#">This is a link</a>
+            <a href="#">This is a link</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  @layout.footer(user)
+
+  <!-- Scala.js output -->
+  @if(debug) {
+    <script src="@routes.Assets.versioned("client-fastopt.js")" type="text/javascript"></script>
+  } else {
+    <script src="@routes.Assets.versioned("client-opt.js")" type="text/javascript"></script>
+  }
+
+  <script data-main="@routes.Assets.versioned("javascripts/main.js")" src="@routes.Assets.versioned("lib/requirejs/require.min.js")"></script>
+}
