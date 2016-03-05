@@ -22,5 +22,6 @@ case class DatabaseEngine(
   columnTypes: Seq[String] = Nil
 ) {
   def varchar: String = "?"
+  def text: String = "?"
   override def toString = id
 }

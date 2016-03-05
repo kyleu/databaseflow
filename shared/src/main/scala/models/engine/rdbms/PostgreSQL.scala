@@ -126,5 +126,6 @@ object PostgreSQL extends DatabaseEngine(
   )
 ) {
   override val varchar = "character varying"
+  override val text = "text"
 }
 // scalastyle:on

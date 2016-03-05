@@ -5,8 +5,8 @@ case object CreateUsersTable extends CreateTableStatement("users") {
     create table $tableName (
       id uuid primary key,
       username ${eng.varchar}(256),
-      prefs text NOT NULL,
-      profiles text[] not null,
+      prefs ${eng.text} NOT NULL,
+      profiles ${eng.text}[] not null,
       roles ${eng.varchar}(64)[] not null,
       created timestamp not null
     ) with (oids=false);

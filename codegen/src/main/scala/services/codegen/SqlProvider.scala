@@ -5,7 +5,12 @@ import models.codegen.Engine._
 
 object SqlProvider {
   def varchar(implicit engine: Engine) = engine match {
-    case PostgreSQL => s"character varying"
-    case H2 | MySQL => s"varchar"
+    case PostgreSQL => "character varying"
+    case _ => "varchar"
+  }
+
+  def text(implicit engine: Engine) = engine match {
+    case H2 => "clob"
+    case _ => "text"
   }
 }

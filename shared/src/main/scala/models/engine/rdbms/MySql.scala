@@ -150,5 +150,6 @@ object MySQL extends DatabaseEngine(
   )
 ) {
   override val varchar = "varchar"
+  override val text = "text"
 }
 // scalastyle:on
