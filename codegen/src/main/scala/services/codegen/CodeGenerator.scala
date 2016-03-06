@@ -49,7 +49,6 @@ object CodeGenerator {
     ret += "  )"
     ret += ") {"
     ret += "  override val varchar = \"" + SqlProvider.varchar + "\""
-    ret += "  override val text = \"" + SqlProvider.text + "\""
     ret += "}"
     ret += "// scalastyle:on"
     ret += ""

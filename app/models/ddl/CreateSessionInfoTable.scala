@@ -5,13 +5,13 @@ case object CreateSessionInfoTable extends CreateTableStatement("session_info") 
     create table $tableName (
       id ${eng.varchar}(1024) not null,
       provider ${eng.varchar}(64) not null,
-      key ${eng.text} not null,
-      last_used timestamp without time zone not null,
-      expiration timestamp without time zone not null,
-      fingerprint ${eng.text},
-      created timestamp without time zone not null,
+      key ${eng.varchar}(2048) not null,
+      last_used timestamp not null,
+      expiration timestamp not null,
+      fingerprint ${eng.varchar}(65536),
+      created timestamp not null,
       constraint pk_session_info primary key (id)
-    ) with (oids = false);
+    );
 
     create index idx_session_info_provider_key on $tableName (provider, key);
   """

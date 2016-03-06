@@ -11,9 +11,9 @@ case object CreateUserProfilesTable extends CreateTableStatement("user_profiles"
       full_name ${eng.varchar}(512),
       avatar_url ${eng.varchar}(512),
       created timestamp not null
-    ) with (oids=false);
+    );
 
-    create index user_profiles_email_idx on $tableName using btree (email collate pg_catalog."default");
+    create index user_profiles_email_idx on $tableName (email);
 
     alter table $tableName add constraint ${tableName}_provider_key_idx unique (provider, key);
   """

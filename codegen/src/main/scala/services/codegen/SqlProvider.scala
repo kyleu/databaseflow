@@ -8,9 +8,4 @@ object SqlProvider {
     case PostgreSQL => "character varying"
     case _ => "varchar"
   }
-
-  def text(implicit engine: Engine) = engine match {
-    case H2 => "clob"
-    case _ => "text"
-  }
 }

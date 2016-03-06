@@ -139,6 +139,5 @@ object H2 extends DatabaseEngine(
   )
 ) {
   override val varchar = "varchar"
-  override val text = "clob"
 }
 // scalastyle:on

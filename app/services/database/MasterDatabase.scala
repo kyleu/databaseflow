@@ -8,8 +8,8 @@ import models.queries.connection.ConnectionQueries
 import utils.Logging
 
 object MasterDatabase extends Logging {
-  val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
-  //val (engine, url) = H2 -> "jdbc:h2:./db/databaseflow"
+  //val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
+  val (engine, url) = H2 -> "jdbc:h2:./db/databaseflow"
 
   def connectionFor(connectionId: UUID) = {
     val c = db.query(ConnectionQueries.getById(connectionId)).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))

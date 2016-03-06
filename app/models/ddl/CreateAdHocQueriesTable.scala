@@ -5,9 +5,9 @@ case object CreateAdHocQueriesTable extends CreateTableStatement("adhoc_queries"
     create table $tableName (
       id uuid not null primary key,
       title ${eng.varchar}(1024) not null,
-      sql ${eng.text} not null,
+      sql ${eng.varchar}(65536) not null,
       created timestamp not null,
       updated timestamp not null
-    ) with (oids=false);
+    );
   """
 }
