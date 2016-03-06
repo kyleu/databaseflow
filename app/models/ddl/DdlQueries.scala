@@ -8,8 +8,8 @@ object DdlQueries {
   val testUserId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
   final case class DoesTableExist(tableName: String) extends SingleRowQuery[Boolean] {
-    override val sql = "select count(*) as c from information_schema.tables WHERE table_name = ?;"
-    override val values = tableName :: Nil
+    override val sql = "select count(*) as c from information_schema.tables WHERE (table_name = ? or table_name = ?);"
+    override val values = tableName :: tableName.toUpperCase :: Nil
     override def map(row: Row) = row.as[Long]("c") > 0
   }
 
@@ -22,12 +22,12 @@ object DdlQueries {
     override def sql = s"""insert into users (
       id, username, prefs, profiles, roles, created
     ) values (
-      '$testUserId', 'Test User', '{ }', '{ }', '{ "user" }', '2015-01-01 00:00:00.000'
+      '$testUserId', 'Test User', '{ }', '', 'user', '2016-01-01 00:00:00.000'
     )"""
   }
 
-  final case class TruncateTables(tableNames: Seq[String]) extends Statement {
-    override val sql = s"truncate ${tableNames.mkString(", ")}"
+  final case class TruncateTable(tableName: String) extends Statement {
+    override val sql = s"truncate table $tableName"
   }
 
   def trim(s: String) = s.replaceAll("""[\s]+""", " ").trim

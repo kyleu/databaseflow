@@ -21,7 +21,6 @@ object MasterSchema extends Logging {
         Unit
       } else {
         log.info(s"Creating missing table [${t.tableName}].")
-        val name = s"CreateTable-${t.tableName}"
         db.execute(t)
       }
     }
@@ -30,6 +29,8 @@ object MasterSchema extends Logging {
   def wipe(db: Database) = {
     log.warn("Wiping database schema.")
     val tableNames = tables.reverse.map(_.tableName)
-    db.execute(DdlQueries.TruncateTables(tableNames))
+    tableNames.map { tableName =>
+      db.execute(DdlQueries.TruncateTable(tableName))
+    }
   }
 }
