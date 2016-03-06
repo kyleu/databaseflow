@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.4"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.3" // 2.4.4 has a weird sbt bug
     val h2 = "com.h2database" % "h2" % "1.4.191"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"

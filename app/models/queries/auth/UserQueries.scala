@@ -11,7 +11,7 @@ import utils.JdbcUtils
 import utils.json.UserSerializers._
 
 object UserQueries extends BaseQueries[User] {
-  override protected val tableName = "users"
+  override protected val tableName = "flow_users"
   override protected val columns = Seq("id", "username", "prefs", "profiles", "roles", "created")
   override protected val searchColumns = Seq("id::text", "username")
 
