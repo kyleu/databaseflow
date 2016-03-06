@@ -2,8 +2,7 @@ package models.ddl
 
 case object CreateSessionInfoTable extends CreateTableStatement("session_info") {
   override val sql = s"""
-    create table $tableName
-    (
+    create table $tableName (
       id ${eng.varchar}(1024) not null,
       provider ${eng.varchar}(64) not null,
       key ${eng.text} not null,

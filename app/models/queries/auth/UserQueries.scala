@@ -3,14 +3,12 @@ package models.queries.auth
 import java.util.UUID
 
 import com.mohiva.play.silhouette.api.LoginInfo
+import models.database.{FlatSingleRowQuery, Row, SingleRowQuery, Statement}
 import models.queries.BaseQueries
-import models.database.{ SingleRowQuery, FlatSingleRowQuery, Row, Statement }
-import models.user.{ Role, User, UserPreferences }
-import org.joda.time.LocalDateTime
-import play.api.libs.json.{ JsObject, JsError, JsSuccess, Json }
+import models.user.{Role, User, UserPreferences}
+import play.api.libs.json.{JsError, JsObject, JsSuccess, Json}
 import utils.JdbcUtils
-import utils.json.UserSerializers
-import UserSerializers._
+import utils.json.UserSerializers._
 
 object UserQueries extends BaseQueries[User] {
   override protected val tableName = "users"
@@ -70,12 +68,16 @@ object UserQueries extends BaseQueries[User] {
 
   override protected def fromRow(row: Row) = {
     val id = row.as[UUID]("id")
-    val profiles = JdbcUtils.toSeq[String](row, "profiles").map { l =>
-      val info = l.toString
-      val delimiter = info.indexOf(':')
-      val provider = info.substring(0, delimiter)
-      val key = info.substring(delimiter + 1)
-      LoginInfo(provider, key)
+    val profiles = row.as[String]("profiles").split(",").flatMap { l =>
+      val info = l.trim
+      if(info.nonEmpty) {
+        val delimiter = info.indexOf(':')
+        val provider = info.substring(0, delimiter)
+        val key = info.substring(delimiter + 1)
+        Some(LoginInfo(provider, key))
+      } else {
+        None
+      }
     }
     val username = row.asOpt[String]("username")
     val prefsString = row.as[String]("prefs")
@@ -84,15 +86,15 @@ object UserQueries extends BaseQueries[User] {
       case s: JsSuccess[UserPreferences] => s.get
       case e: JsError => throw new IllegalArgumentException(s"Error parsing [$prefsString] as preferences: $e")
     }
-    val roles = JdbcUtils.toSeq[String](row, "roles").map(x => Role(x.toString)).toSet
+    val roles = row.as[String]("roles").split(",").map(x => Role(x.trim)).toSet
     val created = JdbcUtils.toLocalDateTime(row, "created")
     User(id, username, preferences, profiles, roles, created)
   }
 
   override protected def toDataSeq(u: User) = {
     val prefs = Json.toJson(u.preferences).toString()
-    val profiles = "{" + u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(", ") + "}"
-    val roles = "{" + u.roles.map(_.toString).mkString(", ") + "}"
+    val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(", ")
+    val roles = u.roles.map(_.toString).mkString(",")
     Seq(u.id, u.username, prefs, profiles, roles, u.created)
   }
 }

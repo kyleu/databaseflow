@@ -9,7 +9,7 @@ case object CreatePasswordInfoTable extends CreateTableStatement("password_info"
        password ${eng.varchar}(256) not null,
        salt ${eng.varchar}(256),
        created timestamp without time zone not null,
-       constraint pk_password_info primary key (provider, key)
+       constraint pk_$tableName primary key (provider, key)
     ) with (oids = false);
   """
 }

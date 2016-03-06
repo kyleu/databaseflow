@@ -6,13 +6,12 @@ case object CreateUsersTable extends CreateTableStatement("users") {
       id uuid primary key,
       username ${eng.varchar}(256),
       prefs ${eng.text} NOT NULL,
-      profiles ${eng.text}[] not null,
-      roles ${eng.varchar}(64)[] not null,
+      profiles ${eng.varchar}(1024) not null,
+      roles ${eng.varchar}(512) not null,
       created timestamp not null
     ) with (oids=false);
 
-    create index users_profiles_idx on $tableName using gin (profiles);
-    create unique index users_username_idx on $tableName using btree (username collate pg_catalog."default");
-    create index users_roles_idx on $tableName using gin (roles);
+    create index ${tableName}_profiles_idx on $tableName using btree (profiles collate pg_catalog."default");
+    create unique index ${tableName}_username_idx on $tableName using btree (username collate pg_catalog."default");
   """
 }
