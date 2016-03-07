@@ -6,6 +6,12 @@
     <div class="container">
       <div class="row">
         <div class="col s12">
+          @metadata()
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
           <div class="card">
             <div class="card-content">
               <span class="card-title">SQL Query</span>
@@ -17,32 +23,101 @@
               <a href="#">Analyze</a>
             </div>
           </div>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col s12">
           <div class="card">
             <div class="card-content">
-              <span class="card-title">Card Title</span>
-              <p>
-                I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.
-              </p>
+              <span class="card-title">Query Plan</span>
+              <div class="tree-container">
+                <div class="tree">
+                  <ul>
+                    <li>
+                      <a href="#">Parent</a>
+                      <ul>
+                        <li>
+                          <a href="#">Child</a>
+                          <ul>
+                            <li>
+                              <a href="#">Grand Child</a>
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#">Child</a>
+                          <ul>
+                            <li><a href="#">Grand Child</a></li>
+                            <li>
+                              <a href="#">Grand Child</a>
+                              <ul>
+                                <li>
+                                  <a href="#">Great Grand Child</a>
+                                </li>
+                                <li>
+                                  <a href="#">Great Grand Child</a>
+                                </li>
+                                <li>
+                                  <a href="#">Great Grand Child</a>
+                                </li>
+                              </ul>
+                            </li>
+                            <li><a href="#">Grand Child</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="clear"></div>
             </div>
             <div class="card-action">
-              <a href="#">This is a link</a>
-              <a href="#">This is a link</a>
+              <a href="#">Download</a>
             </div>
           </div>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col s12">
           <div class="card">
             <div class="card-content">
-              <span class="card-title">Card Title</span>
-              <p>
-                I am a very simple card. I am good at containing small bits of information.
-                I am convenient because I require little markup to use effectively.
-              </p>
+              <span class="card-title">Results</span>
+              <table class="">
+                <thead>
+                  <tr>
+                    <th>Column A</th>
+                    <th>Column B</th>
+                    <th>Column C</th>
+                    <th>Column D</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+                    <td>D1</td>
+                  </tr>
+                  <tr>
+                    <td>A2</td>
+                    <td>B2</td>
+                    <td>C2</td>
+                    <td>D2</td>
+                  </tr>
+                  <tr>
+                    <td>A3</td>
+                    <td>B3</td>
+                    <td>C3</td>
+                    <td>D3</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div class="card-action">
-              <a href="#">This is a link</a>
-              <a href="#">This is a link</a>
+              <a href="#">Download</a>
             </div>
           </div>
         </div>

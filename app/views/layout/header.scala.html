@@ -8,8 +8,8 @@
       @services.sandbox.SandboxTask.all.map { st =>
         <li><a href="@routes.SandboxController.sandbox(st.id)" class="waves-effect waves-light">@st.name</a></li>
       }
+      <li><a href="@routes.HomeController.index()" class="waves-effect waves-light">Status</a></li>
       <li><a href="#" class="waves-effect waves-light">Stuff</a></li>
-      <li><a href="#" class="waves-effect waves-light">Other Stuff</a></li>
     </ul>
 
     <a href="#" data-activates="slide-out" id="nav-menu-button"><i class="mdi-navigation-menu"></i></a>
