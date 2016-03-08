@@ -2,16 +2,16 @@ package services.database
 
 import java.util.Properties
 
-import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
+import com.zaxxer.hikari.{ HikariConfig, HikariDataSource }
 import models.database.ConnectionSettings
 import models.engine.DatabaseEngine
 import services.database.ssl.SslInit
-import utils.metrics.{Checked, Instrumented}
+import utils.metrics.{ Checked, Instrumented }
 
 object DatabaseService {
   private[this] var initialized = false
 
-  def init() = if(!initialized) {
+  def init() = if (!initialized) {
     initialized = true
     DatabaseEngine.all.foreach { r =>
       Class.forName(r.driverClass)
@@ -19,7 +19,7 @@ object DatabaseService {
   }
 
   def connect(cs: ConnectionSettings): Database = {
-    if(!initialized) {
+    if (!initialized) {
       init()
     }
     val properties = new Properties
@@ -49,7 +49,7 @@ object DatabaseService {
       }
     }
 
-    val poolDataSource  = new HikariDataSource(poolConfig)
+    val poolDataSource = new HikariDataSource(poolConfig)
 
     new Database(poolDataSource)
   }

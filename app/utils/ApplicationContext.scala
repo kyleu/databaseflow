@@ -10,7 +10,7 @@ import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
 import play.api.libs.concurrent.Akka
-import play.api.mvc.{Action, RequestHeader, Results}
+import play.api.mvc.{ Action, RequestHeader, Results }
 import play.api.routing.Router
 import services.database.MasterDatabase
 import services.notification.NotificationService

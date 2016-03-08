@@ -3,7 +3,7 @@ package utils
 import java.net.InetAddress
 
 import com.typesafe.config.ConfigFactory
-import play.api.{Mode, Environment, Play}
+import play.api.{ Mode, Environment, Play }
 
 object Config {
   private[this] val cnf = ConfigFactory.load()

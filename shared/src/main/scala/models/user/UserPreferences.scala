@@ -1,6 +1,6 @@
 package models.user
 
-final case class UserPreferences(
+case class UserPreferences(
   avatar: Option[String] = None,
   theme: String = "blue-grey"
 )

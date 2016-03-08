@@ -2,7 +2,7 @@ package services.database
 
 import java.util.UUID
 
-import models.engine.rdbms.{H2, MySQL, PostgreSQL}
+import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
 import models.flow.Connection
 import models.queries.connection.ConnectionQueries
 

@@ -1,6 +1,6 @@
 package utils.json
 
-import models.plan.{PlanNode, QueryPlan}
+import models.plan.{ PlanNode, QueryPlan }
 import play.api.libs.json.Json
 
 object PlanSerializers {

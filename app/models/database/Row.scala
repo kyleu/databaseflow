@@ -31,7 +31,7 @@ class Row(val rs: ResultSet) {
   lazy val toMap = {
     val md = rs.getMetaData
     val colRange = 1 until (1 + md.getColumnCount)
-    val colNames =  colRange.map(md.getColumnName)
+    val colNames = colRange.map(md.getColumnName)
     val colValues = colRange.map(rs.getObject)
     colNames.zip(colValues).toMap
   }

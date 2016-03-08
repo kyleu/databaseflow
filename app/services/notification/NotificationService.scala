@@ -1,9 +1,9 @@
 package services.notification
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.{JsObject, JsString, Json}
+import play.api.libs.json.{ JsObject, JsString, Json }
 import play.api.libs.ws.WSClient
-import utils.{Config, Logging}
+import utils.{ Config, Logging }
 
 import scala.concurrent.Future
 

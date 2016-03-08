@@ -13,13 +13,13 @@ object DatabaseEngine {
 }
 
 case class DatabaseEngine(
-  id: String,
-  name: String,
-  driverClass: String,
-  exampleUrl: String,
+    id: String,
+    name: String,
+    driverClass: String,
+    exampleUrl: String,
 
-  builtInFunctions: Seq[String] = Nil,
-  columnTypes: Seq[String] = Nil
+    builtInFunctions: Seq[String] = Nil,
+    columnTypes: Seq[String] = Nil
 ) {
   def varchar: String = "?"
   override def toString = id

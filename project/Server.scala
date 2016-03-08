@@ -6,6 +6,13 @@ import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
+import com.typesafe.sbt.packager.Keys._
+import com.typesafe.sbt.packager.debian.DebianPlugin
+import com.typesafe.sbt.packager.docker.DockerPlugin
+import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
+import com.typesafe.sbt.packager.linux.LinuxPlugin
+import com.typesafe.sbt.packager.rpm.RpmPlugin
+import com.typesafe.sbt.packager.windows.WindowsPlugin
 import com.typesafe.sbt.rjs.Import._
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
@@ -58,6 +65,14 @@ object Server {
     LessKeys.compress in Assets := true,
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
+    // Native Packaging
+    description := "Database Flow is pretty great.",
+    packageSummary := "Database Flow is pretty great.",
+    packageDescription := "Database Flow helps you do all sorts of cool stuff.",
+    rpmVendor := "Database Flow",
+    wixProductId := "5fee44ae-0989-429b-9b1a-de8ec7dd9af5",
+    wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",
+
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Row.scala", ".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala"),
     scapegoatDisabledInspections := Seq("DuplicateImport"),
@@ -69,9 +84,8 @@ object Server {
     id = Shared.projectId,
     base = file(".")
   )
-    .enablePlugins(SbtWeb)
-    .enablePlugins(play.sbt.PlayScala)
-    .enablePlugins(GitVersioning)
+    .enablePlugins(SbtWeb, play.sbt.PlayScala, GitVersioning)
+    .enablePlugins(LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
     .settings(serverSettings: _*)
     .aggregate(projectToRef(Client.client))
     .aggregate(Shared.sharedJvm)

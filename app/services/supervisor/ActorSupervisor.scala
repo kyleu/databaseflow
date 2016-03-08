@@ -2,16 +2,16 @@ package services.supervisor
 
 import java.util.UUID
 
-import akka.actor.{ActorRef, SupervisorStrategy, OneForOneStrategy}
+import akka.actor.{ ActorRef, SupervisorStrategy, OneForOneStrategy }
 import akka.actor.SupervisorStrategy.Stop
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
-import utils.metrics.{InstrumentedActor, MetricsServletActor}
-import utils.{ApplicationContext, DateUtils, Logging}
+import utils.metrics.{ InstrumentedActor, MetricsServletActor }
+import utils.{ ApplicationContext, DateUtils, Logging }
 
 object ActorSupervisor {
-  final case class ConnectionRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
+  case class ConnectionRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
 }
 
 class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor with Logging {

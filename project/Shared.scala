@@ -20,7 +20,7 @@ object Shared {
   )
 
   object Versions {
-    val app = "0.1-SNAPSHOT"
+    val app = "1.0.0"
     val scala = "2.11.7"
   }
 

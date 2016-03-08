@@ -4,7 +4,7 @@ import java.util.UUID
 
 import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
 import models.queries.auth._
-import models.user.{Role, User}
+import models.user.{ Role, User }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.MasterDatabase
 import utils.Logging

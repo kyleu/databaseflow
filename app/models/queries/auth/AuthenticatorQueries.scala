@@ -5,7 +5,7 @@ import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import models.queries.BaseQueries
 import models.database.{ Row, Statement, FlatSingleRowQuery }
 import org.joda.time.LocalDateTime
-import utils.{JdbcUtils, DateUtils}
+import utils.{ JdbcUtils, DateUtils }
 
 object AuthenticatorQueries extends BaseQueries[CookieAuthenticator] {
   override protected val tableName = "session_info"
@@ -16,13 +16,13 @@ object AuthenticatorQueries extends BaseQueries[CookieAuthenticator] {
   val getById = GetById
   val removeById = RemoveById
 
-  final case class FindSessionInfoByLoginInfo(l: LoginInfo) extends FlatSingleRowQuery[CookieAuthenticator] {
+  case class FindSessionInfoByLoginInfo(l: LoginInfo) extends FlatSingleRowQuery[CookieAuthenticator] {
     override val sql = getSql(Some("provider = ? and key = ?"))
     override val values = Seq(l.providerID, l.providerKey)
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
-  final case class UpdateAuthenticator(ca: CookieAuthenticator) extends Statement {
+  case class UpdateAuthenticator(ca: CookieAuthenticator) extends Statement {
     override val sql = updateSql(Seq("provider", "key", "last_used", "expiration", "fingerprint"))
     override val values = Seq(
       ca.loginInfo.providerID,

@@ -2,12 +2,12 @@ package services.sandbox
 
 import java.sql.ResultSet
 
-import models.database.{Row, SingleRowQuery}
+import models.database.{ Row, SingleRowQuery }
 import org.apache.ddlutils.PlatformFactory
 import play.api.libs.json.Json
-import services.database.{MasterDatabase, DatabaseService}
+import services.database.{ MasterDatabase, DatabaseService }
 import services.schema.SchemaConverter
-import utils.{NullUtils, ApplicationContext}
+import utils.{ NullUtils, ApplicationContext }
 
 import scala.concurrent.Future
 
@@ -26,11 +26,11 @@ object DatabaseTest extends SandboxTask {
     val whitespace = (0 until indent).map(x => " ").mkString
     val ret = collection.mutable.ArrayBuffer.empty[String]
     val columns = rs.getMetaData
-    while(rs.next()) {
+    while (rs.next()) {
       val row = (1 to columns.getColumnCount).map(i => Option(rs.getObject(i)).map(_.toString).getOrElse("-null-"))
       ret += (whitespace + row.mkString(", "))
     }
-    if(showColumns) {
+    if (showColumns) {
       val cols = (1 to columns.getColumnCount).map(columns.getColumnLabel)
       val colsLabel = whitespace + cols.map(x => "[" + x + "]").mkString(", ")
       colsLabel + "\n" + ret.mkString("\n")

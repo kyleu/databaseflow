@@ -1,8 +1,8 @@
 package models.database
 
-import java.sql.{Connection, PreparedStatement, Types}
+import java.sql.{ Connection, PreparedStatement, Types }
 
-import utils.{Logging, NullUtils}
+import utils.{ Logging, NullUtils }
 
 import scala.annotation.tailrec
 

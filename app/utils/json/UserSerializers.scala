@@ -1,6 +1,6 @@
 package utils.json
 
-import models.user.{Role, User, UserPreferences}
+import models.user.{ Role, User, UserPreferences }
 import org.joda.time.LocalDateTime
 import play.api.libs.json._
 

@@ -10,7 +10,7 @@ import utils.Logging
 import scala.concurrent._
 
 class PlayErrorHandler @Inject() (
-  env: Environment, config: Configuration, sourceMapper: OptionalSourceMapper, router: Provider[Router]
+    env: Environment, config: Configuration, sourceMapper: OptionalSourceMapper, router: Provider[Router]
 ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with Logging {
 
   override def onProdServerError(request: RequestHeader, ex: UsefulException) = Future.successful(

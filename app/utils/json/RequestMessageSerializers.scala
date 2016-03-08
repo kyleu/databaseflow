@@ -6,8 +6,8 @@ import play.api.libs.json._
 object RequestMessageSerializers {
   private[this] val malformedRequestReads = Json.reads[MalformedRequest]
   private[this] val pingReads = Json.reads[Ping]
-  // case object [GetVersion]
   private[this] val debugInfoReads = Json.reads[DebugInfo]
+  private[this] val submitQueryReads = Json.reads[SubmitQuery]
 
   implicit val requestMessageReads = new Reads[RequestMessage] {
     override def reads(json: JsValue) = {
@@ -18,9 +18,8 @@ object RequestMessageSerializers {
         case "MalformedRequest" => malformedRequestReads.reads(v)
         case "Ping" => pingReads.reads(v)
         case "GetVersion" => JsSuccess(GetVersion)
-
         case "DebugInfo" => debugInfoReads.reads(v)
-
+        case "SubmitQuery" => submitQueryReads.reads(v)
         case _ => JsSuccess(MalformedRequest("UnknownType", s"c: $c, v: ${Json.stringify(v)}"))
       }
       jsResult match {

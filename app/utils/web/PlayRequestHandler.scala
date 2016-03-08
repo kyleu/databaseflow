@@ -7,10 +7,10 @@ import play.api.routing.Router
 import utils.Logging
 
 class PlayRequestHandler @Inject() (
-  errorHandler: HttpErrorHandler,
-  configuration: HttpConfiguration,
-  filters: HttpFilters,
-  router: Router
+    errorHandler: HttpErrorHandler,
+    configuration: HttpConfiguration,
+    filters: HttpFilters,
+    router: Router
 ) extends DefaultHttpRequestHandler(router, errorHandler, configuration, filters) with Logging {
 
   override def routeRequest(request: RequestHeader) = {

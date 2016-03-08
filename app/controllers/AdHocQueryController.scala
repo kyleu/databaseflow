@@ -3,12 +3,12 @@ package controllers
 import java.util.UUID
 
 import akka.util.Timeout
-import models.queries.adhoc.{AdHocQueries, AdHocQuery}
+import models.queries.adhoc.{ AdHocQueries, AdHocQuery }
 import org.joda.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
 import services.database.MasterDatabase
-import utils.{ApplicationContext, DateUtils}
+import utils.{ ApplicationContext, DateUtils }
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

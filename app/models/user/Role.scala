@@ -7,7 +7,7 @@ import play.api.mvc.Request
 
 import scala.concurrent.Future
 
-final case class WithRole(role: Role) extends Authorization[User, Authenticator] {
+case class WithRole(role: Role) extends Authorization[User, Authenticator] {
   override def isAuthorized[B](user: User, authenticator: Authenticator)(implicit request: Request[B], messages: Messages) = {
     Future.successful(user.roles match {
       case list: Set[Role] => list.contains(role)

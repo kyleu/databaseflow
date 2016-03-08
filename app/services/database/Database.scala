@@ -5,7 +5,7 @@ import javax.sql.DataSource
 import com.codahale.metrics.MetricRegistry
 import com.zaxxer.hikari.HikariDataSource
 import models.database._
-import services.database.transaction.{TransactionManager, TransactionProvider}
+import services.database.transaction.{ TransactionManager, TransactionProvider }
 import utils.metrics.Instrumented
 
 class Database(val source: DataSource) extends Queryable {
@@ -20,7 +20,6 @@ class Database(val source: DataSource) extends Queryable {
   }
 
   val transactionProvider: TransactionProvider = new TransactionManager
-
   def transaction[A](f: Transaction => A): A = transaction(logError = true, f)
   def quietTransaction[A](f: Transaction => A): A = transaction(logError = false, f)
   def transaction[A](logError: Boolean, f: Transaction => A): A = transaction(logError = false, forceNew = false, f)
@@ -85,9 +84,7 @@ class Database(val source: DataSource) extends Queryable {
     } else {
       val connection = source.getConnection
       try {
-        time(statement.getClass) {
-          execute(connection, statement)
-        }
+        time(statement.getClass) { execute(connection, statement) }
       } finally {
         connection.close()
       }

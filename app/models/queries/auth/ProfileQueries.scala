@@ -16,13 +16,13 @@ object ProfileQueries extends BaseQueries[CommonSocialProfile] {
   val insert = Insert
   val remove = RemoveById
 
-  final case class FindProfile(provider: String, key: String) extends FlatSingleRowQuery[CommonSocialProfile] {
+  case class FindProfile(provider: String, key: String) extends FlatSingleRowQuery[CommonSocialProfile] {
     override val sql = getSql(Some("provider = ? and key = ?"))
     override val values = Seq(provider, key)
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
-  final case class FindProfilesByUser(id: UUID) extends Query[List[CommonSocialProfile]] {
+  case class FindProfilesByUser(id: UUID) extends Query[List[CommonSocialProfile]] {
     override val sql = s"select ${columns.mkString(", ")} from $tableName p " +
       "where (p.provider || ':' || p.key) in (select unnest(profiles) from users where users.id = ?)"
     override val values = Seq(id)

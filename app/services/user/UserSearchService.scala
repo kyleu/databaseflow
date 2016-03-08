@@ -17,7 +17,6 @@ object UserSearchService extends IdentityService[User] with Logging {
     MasterDatabase.db.query(UserQueries.getById(Seq(id))).map(UserCache.cacheUser)
   }
 
-
   def retrieve(username: String): Option[User] = MasterDatabase.db.query(UserQueries.FindUserByUsername(username))
 
   override def retrieve(loginInfo: LoginInfo) = UserCache.getUserByLoginInfo(loginInfo) match {

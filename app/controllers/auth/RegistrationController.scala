@@ -1,9 +1,9 @@
 package controllers.auth
 
-import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
-import com.mohiva.play.silhouette.impl.providers.{CommonSocialProfile, CredentialsProvider}
+import com.mohiva.play.silhouette.api.{ LoginEvent, LoginInfo, SignUpEvent }
+import com.mohiva.play.silhouette.impl.providers.{ CommonSocialProfile, CredentialsProvider }
 import controllers.BaseController
-import models.user.{RegistrationData, UserForms}
+import models.user.{ RegistrationData, UserForms }
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.AnyContent

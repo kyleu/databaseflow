@@ -1,5 +1,5 @@
 import navigation.Navigation
-import utils.{Logging, NetworkSocket}
+import utils.{ Logging, NetworkSocket }
 
 import scala.scalajs.js.timers._
 

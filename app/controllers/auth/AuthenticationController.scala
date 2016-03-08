@@ -1,7 +1,7 @@
 package controllers.auth
 
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.{LoginEvent, LogoutEvent}
+import com.mohiva.play.silhouette.api.{ LoginEvent, LogoutEvent }
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import controllers.BaseController
 import models.user.UserForms

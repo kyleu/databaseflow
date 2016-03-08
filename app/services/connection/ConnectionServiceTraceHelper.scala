@@ -1,7 +1,7 @@
 package services.connection
 
 import models._
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{ JsObject, Json }
 import utils.metrics.InstrumentedActor
 
 trait ConnectionServiceTraceHelper extends InstrumentedActor { this: ConnectionService =>

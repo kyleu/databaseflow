@@ -5,7 +5,7 @@ import upickle._
 import upickle.legacy._
 
 object ResponseMessageSerializers {
-  private implicit val responseMessageReader: Reader[ResponseMessage] = Reader[ResponseMessage] {
+  private[this] implicit val responseMessageReader: Reader[ResponseMessage] = Reader[ResponseMessage] {
     case json: Js.Obj =>
       val c = json.value.find(_._1 == "c").getOrElse(throw new IllegalStateException())._2 match {
         case Js.Str(s) => s
@@ -34,32 +34,5 @@ object ResponseMessageSerializers {
       ret
   }
 
-  private implicit val responseMessageWriter: Writer[ResponseMessage] = Writer[ResponseMessage] {
-    case rm =>
-      val jsVal = rm match {
-        case se: ServerError => writeJs(se)
-        case vr: VersionResponse => writeJs(vr)
-        case is: InitialState => writeJs(is)
-
-        case p: Pong => writeJs(p)
-        case SendTrace => Js.Obj()
-        case dr: DebugResponse => writeJs(dr)
-        case d: Disconnected => writeJs(d)
-
-        case ms: MessageSet => writeJs(ms)
-      }
-      val jsArray = jsVal match { case arr: Js.Arr => arr; case _ => throw new IllegalArgumentException(jsVal.toString) }
-      jsArray.value.toList match {
-        case one :: two :: Nil =>
-          val oneStr = Js.Str(one match {
-            case s: Js.Str => s.value.replace("models.", "")
-            case _ => throw new IllegalStateException()
-          })
-          Js.Obj("c" -> oneStr, "v" -> two)
-        case _ => throw new IllegalStateException()
-      }
-  }
-
   def read(json: Js.Value) = readJs[ResponseMessage](json)
-  def write(rm: ResponseMessage) = writeJs(rm)
 }

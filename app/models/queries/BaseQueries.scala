@@ -1,6 +1,6 @@
 package models.queries
 
-import models.database.{FlatSingleRowQuery, Query, Row, Statement}
+import models.database.{ FlatSingleRowQuery, Query, Row, Statement }
 import utils.Config
 
 object BaseQueries {
@@ -27,7 +27,8 @@ trait BaseQueries[T] {
     groupBy: Option[String] = None,
     orderBy: Option[String] = None,
     limit: Option[Int] = None,
-    offset: Option[Int] = None) = {
+    offset: Option[Int] = None
+  ) = {
     BaseQueries.trim(s"""
       select ${columns.mkString(", ")} from $tableName
       ${whereClause.map(x => s" where $x").getOrElse("")}

@@ -2,7 +2,7 @@ package models.user
 
 import java.util.UUID
 
-import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
+import com.mohiva.play.silhouette.api.{ Identity, LoginInfo }
 import org.joda.time.LocalDateTime
 import utils.DateUtils
 
@@ -11,12 +11,12 @@ object User {
 }
 
 case class User(
-  id: UUID,
-  username: Option[String],
-  preferences: UserPreferences,
-  profiles: Seq[LoginInfo],
-  roles: Set[Role] = Set(Role.User),
-  created: LocalDateTime = DateUtils.now
+    id: UUID,
+    username: Option[String],
+    preferences: UserPreferences,
+    profiles: Seq[LoginInfo],
+    roles: Set[Role] = Set(Role.User),
+    created: LocalDateTime = DateUtils.now
 ) extends Identity {
   def isGuest = profiles.isEmpty
   def isAdmin = roles.contains(models.user.Role.Admin)

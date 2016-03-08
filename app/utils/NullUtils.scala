@@ -1,9 +1,7 @@
 package utils
 
 object NullUtils {
-  // scalastyle:off
-  val inst = null
-  // scalastyle:on
+  val inst = None.orNull
 
   def isNull(v: Any) = v == inst
 }

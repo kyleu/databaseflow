@@ -2,7 +2,7 @@ package models.queries.adhoc
 
 import java.util.UUID
 
-import models.database.{Query, Row, Statement}
+import models.database.{ Query, Row, Statement }
 import models.queries.BaseQueries
 import org.joda.time.LocalDateTime
 import utils.DateUtils
@@ -17,17 +17,17 @@ object AdHocQueries extends BaseQueries[AdHocQuery] {
   val search = Search
   val removeById = RemoveById
 
-  final case class UpdateAdHocQuery(id: UUID, title: String, sqlString: String) extends Statement {
+  case class UpdateAdHocQuery(id: UUID, title: String, sqlString: String) extends Statement {
     override val sql = updateSql(Seq("title", "sql", "updated"))
     override val values = Seq[Any](title, sqlString, DateUtils.now, id)
   }
 
-  final case class AdHocQueryExecute(override val sql: String, override val values: Seq[Any]) extends Query[(Seq[String], Seq[Seq[Any]])] {
+  case class AdHocQueryExecute(override val sql: String, override val values: Seq[Any]) extends Query[(Seq[String], Seq[Seq[Any]])] {
     override def reduce(rows: Iterator[Row]) = {
       var columns = Seq.empty[String]
 
       val result = rows.map { r =>
-        if(columns.isEmpty) {
+        if (columns.isEmpty) {
           val md = r.rs.getMetaData
           (1 to md.getColumnCount).map { i =>
             md.getColumnName(i)

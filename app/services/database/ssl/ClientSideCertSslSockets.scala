@@ -1,8 +1,10 @@
 package services.database.ssl
 
-import java.net.{Socket, InetAddress}
+import java.net.{ Socket, InetAddress }
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl._
+
+import utils.NullUtils
 
 object ClientSideCertSslSockets {
   val configs = new ConcurrentHashMap[String, SslParams]
@@ -13,7 +15,7 @@ object ClientSideCertSslSockets {
 
   def factory(param: String): SSLSocketFactory = {
     val params = configs.get(param)
-    if (params == null) {
+    if (params == NullUtils.inst) {
       throw new IllegalArgumentException(s"Unknown ssl socket factory params [$param].")
     }
 
@@ -22,7 +24,7 @@ object ClientSideCertSslSockets {
     val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm)
     trustManagerFactory.init(params.trustStore)
     val context = SSLContext.getInstance("TLS")
-    context.init(keyManagerFactory.getKeyManagers, trustManagerFactory.getTrustManagers, null)
+    context.init(keyManagerFactory.getKeyManagers, trustManagerFactory.getTrustManagers, NullUtils.inst)
     context.getSocketFactory
   }
 }

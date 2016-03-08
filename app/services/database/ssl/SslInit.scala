@@ -4,6 +4,8 @@ import java.io.FileInputStream
 import java.security.KeyStore
 import java.util.UUID
 
+import utils.NullUtils
+
 object SslInit {
   def initSsl(ssl: SslSettings): Map[String, String] = {
     val clientCertKeyStoreProvider = ssl.clientCertKeyStoreProvider.getOrElse(KeyStore.getDefaultType)
@@ -16,12 +18,14 @@ object SslInit {
     val trustKeyStore = KeyStore.getInstance(trustKeyStoreProvider)
 
     clientCertKeyStore.load(clientCertKeyStoreStream, clientCertKeyStorePassword)
-    trustKeyStore.load(trustKeyStoreStream, null)
+    trustKeyStore.load(trustKeyStoreStream, NullUtils.inst)
 
     val identifier = UUID.randomUUID().toString
-    val sslParams = SslParams(clientCertKeyStore,
+    val sslParams = SslParams(
+      clientCertKeyStore,
       ssl.clientCertKeyStorePassword.orNull,
-      trustKeyStore)
+      trustKeyStore
+    )
 
     ClientSideCertSslSockets.configure(identifier, sslParams)
 

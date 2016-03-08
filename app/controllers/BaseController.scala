@@ -4,13 +4,13 @@ import java.util.UUID
 
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
-import models.user.{Role, User, UserPreferences}
+import models.user.{ Role, User, UserPreferences }
 import nl.grons.metrics.scala.FutureMetrics
 import play.api.i18n.I18nSupport
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{ AnyContent, Result }
 import utils.metrics.Instrumented
-import utils.{ApplicationContext, DateUtils, Logging}
+import utils.{ ApplicationContext, DateUtils, Logging }
 
 import scala.concurrent.Future
 

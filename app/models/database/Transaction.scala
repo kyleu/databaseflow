@@ -1,6 +1,6 @@
 package models.database
 
-import java.sql.{Connection, Savepoint}
+import java.sql.{ Connection, Savepoint }
 import scala.collection.mutable.ListBuffer
 
 class Transaction(connection: Connection) extends Queryable {
