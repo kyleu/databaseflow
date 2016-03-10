@@ -17,7 +17,7 @@ object Client {
     unmanagedSourceDirectories in Compile := Seq((scalaSource in Compile).value),
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-      "com.lihaoyi" %%% "upickle" % "0.3.8"
+      "com.lihaoyi" %%% "upickle" % Dependencies.Serialization.version
     ),
     libraryDependencies ++= Seq("com.lihaoyi" %%% "upickle" % "0.3.8"),
     scalaJSStage in Global := FastOptStage,

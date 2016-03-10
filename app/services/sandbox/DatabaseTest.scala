@@ -2,12 +2,14 @@ package services.sandbox
 
 import java.sql.ResultSet
 
+import com.zaxxer.hikari.HikariDataSource
 import models.database.{ Row, SingleRowQuery }
 import org.apache.ddlutils.PlatformFactory
-import play.api.libs.json.Json
-import services.database.{ MasterDatabase, DatabaseService }
+import services.database.{ DatabaseService, MasterDatabase }
 import services.schema.SchemaConverter
-import utils.{ NullUtils, ApplicationContext }
+import utils.ApplicationContext
+
+import upickle.legacy._
 
 import scala.concurrent.Future
 
@@ -40,7 +42,8 @@ object DatabaseTest extends SandboxTask {
   }
 
   override def run(ctx: ApplicationContext) = {
-    import utils.json.SchemaSerializers._
+    import utils.json.JsonSerializers._
+
     DatabaseService.init()
 
     val src = MasterDatabase.db.source
@@ -50,7 +53,7 @@ object DatabaseTest extends SandboxTask {
 
     val model = SchemaConverter.convert(javaModel)
 
-    val ret = Json.prettyPrint(Json.toJson(model))
+    val ret = write(model)
 
     Future.successful(ret)
   }

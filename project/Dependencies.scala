@@ -26,8 +26,12 @@ object Dependencies {
     private[this] val version = "2.4.6"
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
-    val playJson = play.sbt.PlayImport.json
     val playTest = "com.typesafe.play" %% "play-test" % version
+  }
+
+  object Serialization {
+    val version = "0.3.8"
+    val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
   object Akka {

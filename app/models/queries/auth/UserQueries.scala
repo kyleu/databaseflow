@@ -6,9 +6,10 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import models.database.{ FlatSingleRowQuery, Row, SingleRowQuery, Statement }
 import models.queries.BaseQueries
 import models.user.{ Role, User, UserPreferences }
-import play.api.libs.json.{ JsError, JsObject, JsSuccess, Json }
+import upickle.legacy._
 import utils.JdbcUtils
-import utils.json.UserSerializers._
+
+import utils.json.JsonSerializers._
 
 object UserQueries extends BaseQueries[User] {
   override protected val tableName = "flow_users"
@@ -21,8 +22,6 @@ object UserQueries extends BaseQueries[User] {
   val search = Search
   val removeById = RemoveById
 
-  private[this] val defaultPreferencesJson = Json.toJson(UserPreferences()).as[JsObject]
-
   case class IsUsernameInUse(name: String) extends SingleRowQuery[Boolean] {
     override val sql = "select count(*) as c from users where username = ?"
     override val values = Seq(name)
@@ -34,14 +33,14 @@ object UserQueries extends BaseQueries[User] {
     override val values = {
       val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").toArray
       val roles = "{" + u.roles.map(_.toString).mkString(", ") + "}"
-      val prefs = Json.toJson(u.preferences).toString()
+      val prefs = write(u.preferences)
       Seq(u.username, prefs, profiles, roles, u.id)
     }
   }
 
   case class SetPreferences(userId: UUID, userPreferences: UserPreferences) extends Statement {
     override val sql = updateSql(Seq("prefs"))
-    override val values = Seq(Json.toJson(userPreferences).toString(), userId)
+    override val values = Seq(write(userPreferences), userId)
   }
 
   case class AddRole(id: UUID, role: Role) extends Statement {
@@ -81,18 +80,14 @@ object UserQueries extends BaseQueries[User] {
     }
     val username = row.asOpt[String]("username")
     val prefsString = row.as[String]("prefs")
-    val prefsJson = Json.parse(prefsString).as[JsObject]
-    val preferences = Json.fromJson[UserPreferences](defaultPreferencesJson ++ prefsJson) match {
-      case s: JsSuccess[UserPreferences] => s.get
-      case e: JsError => throw new IllegalArgumentException(s"Error parsing [$prefsString] as preferences: $e")
-    }
+    val preferences = read[UserPreferences](prefsString)
     val roles = row.as[String]("roles").split(",").map(x => Role(x.trim)).toSet
     val created = JdbcUtils.toLocalDateTime(row, "created")
     User(id, username, preferences, profiles, roles, created)
   }
 
   override protected def toDataSeq(u: User) = {
-    val prefs = Json.toJson(u.preferences).toString()
+    val prefs = write(u.preferences)
     val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(", ")
     val roles = u.roles.map(_.toString).mkString(",")
     Seq(u.id, u.username, prefs, profiles, roles, u.created)

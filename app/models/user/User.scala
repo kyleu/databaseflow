@@ -12,7 +12,7 @@ object User {
 
 case class User(
     id: UUID,
-    username: Option[String],
+    username: Option[String] = None,
     preferences: UserPreferences,
     profiles: Seq[LoginInfo],
     roles: Set[Role] = Set(Role.User),

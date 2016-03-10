@@ -1,15 +1,21 @@
+import models.{ Ping, RequestMessage }
 import navigation.Navigation
-import utils.{ Logging, NetworkSocket }
+import utils.{ JsonSerializers, Logging, NetworkSocket }
 
 import scala.scalajs.js.timers._
 
 trait NetworkHelper { this: DatabaseFlow =>
   protected[this] val socket = new NetworkSocket(onSocketConnect, onSocketMessage, onSocketError, onSocketClose)
-  socket.open(Navigation.socketUrl)
+
+  protected[this] var latencyMs: Option[Int] = None
+
+  protected def connect() = {
+    socket.open(Navigation.socketUrl)
+  }
 
   private def sendPing(): Unit = {
     if (socket.connected) {
-      socket.send(s"""{ "c": "Ping", "v": { "timestamp": ${System.currentTimeMillis} } }""")
+      sendMessage(Ping(System.currentTimeMillis))
     }
     setTimeout(10000)(sendPing())
   }
@@ -28,7 +34,18 @@ trait NetworkHelper { this: DatabaseFlow =>
     Logging.info("Socket closed.")
   }
 
-  protected[this] def onSocketMessage(s: String): Unit = {
-    Logging.info(s"Socket message [$s].")
+  protected[this] def sendMessage(rm: RequestMessage): Unit = {
+    //Logging.info(s"Sending [].")
+    if (socket.connected) {
+      val json = JsonSerializers.writeRequestMessage(rm, debug)
+      socket.send(json)
+    } else {
+      throw new IllegalStateException("Not connected.")
+    }
+  }
+
+  protected[this] def onSocketMessage(json: String): Unit = {
+    val msg = JsonSerializers.readResponseMessage(json)
+    handleMessage(msg)
   }
 }

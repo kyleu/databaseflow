@@ -1,5 +1,7 @@
 package controllers
 
+import java.util.UUID
+
 import akka.actor.ActorRef
 import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -7,8 +9,7 @@ import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
 import services.connection.ConnectionService
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
-import java.util.UUID
-import utils.ApplicationContext
+
 import scala.concurrent.Future
 
 @javax.inject.Singleton

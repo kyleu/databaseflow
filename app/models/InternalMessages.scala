@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models.user.User
-import play.api.libs.json.JsObject
+import upickle.Js
 
 sealed trait InternalMessage
 
@@ -18,4 +18,4 @@ case class SendConnectionTrace(id: UUID) extends InternalMessage
 case class ConnectionTraceResponse(id: UUID, userId: UUID, username: Option[String]) extends InternalMessage
 
 case class SendClientTrace(id: UUID) extends InternalMessage
-case class ClientTraceResponse(id: UUID, data: JsObject) extends InternalMessage
+case class ClientTraceResponse(id: UUID, data: Js.Value) extends InternalMessage
