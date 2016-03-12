@@ -36,7 +36,8 @@
                   <thead>
                     <tr>
                       <th style="width: 50%">Name</th>
-                      <th style="width: 50%">Type</th>
+                      <th style="width: 25%">Type</th>
+                      <th style="width: 25%">Primary Key</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -44,6 +45,7 @@
                       <tr>
                         <td>@col.name</td>
                         <td>@col.typeName</td>
+                        <td>@table.primaryKey.exists(k => k.columns.contains(col.name))</td>
                       </tr>
                     }
                   </tbody>
@@ -88,8 +90,8 @@
                   <thead>
                     <tr>
                       <th style="width: 50%">Name</th>
-                      <th style="width: 50%">Type</th>
-                      <th style="width: 50%">Param Type</th>
+                      <th style="width: 25%">Type</th>
+                      <th style="width: 25%">Param Type</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -122,8 +124,8 @@
                   <thead>
                     <tr>
                       <th style="width: 50%">Name</th>
-                      <th style="width: 50%">Type</th>
-                      <th style="width: 50%">Param Type</th>
+                      <th style="width: 25%">Type</th>
+                      <th style="width: 25%">Param Type</th>
                     </tr>
                   </thead>
                   <tbody>

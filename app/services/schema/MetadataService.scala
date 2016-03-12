@@ -22,9 +22,11 @@ object MetadataService {
     val tables = MetadataTables.getTables(metadata, catalog, schema)
 
     val tablesWithChildren = tables.map { t =>
+      val primaryKey = MetadataKeys.getPrimaryKey(metadata, t)
       val columns = MetadataColumns.getColumns(metadata, t)
       val indices = MetadataIndices.getIndices(metadata, t)
       t.copy(
+        primaryKey = primaryKey,
         columns = columns,
         indices = indices
       )
@@ -41,20 +43,16 @@ object MetadataService {
   }
 
   def getSchema(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
-    val name = schema.orElse(catalog).getOrElse("Unnamed")
-    val engine = metadata.getDatabaseProductName
-    val engineVersion = metadata.getDatabaseProductVersion
-    val driver = metadata.getDriverName
-    val driverVersion = metadata.getDriverVersion
-    val schemaTerm = metadata.getSchemaTerm
-
     Schema(
-      name = name,
-      engine = engine,
-      engineVersion = engineVersion,
-      driver = driver,
-      driverVersion = driverVersion,
-      schemaTerm = schemaTerm
+      name = schema.orElse(catalog).getOrElse("Unnamed"),
+      url = metadata.getURL,
+      username = metadata.getUserName,
+      engine = metadata.getDatabaseProductName,
+      engineVersion = metadata.getDatabaseProductVersion,
+      driver = metadata.getDriverName,
+      driverVersion = metadata.getDriverVersion,
+      schemaTerm = metadata.getSchemaTerm,
+      maxSqlLength = metadata.getMaxStatementLength
     )
   }
 }

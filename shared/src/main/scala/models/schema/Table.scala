@@ -8,6 +8,7 @@ case class Table(
   definition: Option[String],
   typeName: String,
 
+  primaryKey: Option[PrimaryKey] = None,
   columns: Seq[Column] = Nil,
   foreignKeys: Seq[ForeignKey] = Nil,
   indices: Seq[Index] = Nil

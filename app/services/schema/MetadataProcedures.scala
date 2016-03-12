@@ -10,21 +10,17 @@ object MetadataProcedures {
   def getProcedures(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getProcedures(catalog.orNull, schema.orNull, NullUtils.inst)
     val procedures = new Row.Iter(rs).map { row =>
-      val name = row.as[String]("procedure_name")
-      val description = row.asOpt[String]("remarks")
-      val returnsResult = row.as[Int]("procedure_type") match {
-        case DatabaseMetaData.procedureResultUnknown => None
-        case DatabaseMetaData.procedureReturnsResult => Some(true)
-        case DatabaseMetaData.procedureNoResult => Some(false)
-        case x => throw new IllegalArgumentException(x.toString)
-      }
       Procedure(
-        name = name,
-        description = description,
+        name = row.as[String]("procedure_name"),
+        description = row.asOpt[String]("remarks"),
         params = Nil,
-        returnsResult = returnsResult
+        returnsResult = row.as[Int]("procedure_type") match {
+          case DatabaseMetaData.procedureResultUnknown => None
+          case DatabaseMetaData.procedureReturnsResult => Some(true)
+          case DatabaseMetaData.procedureNoResult => Some(false)
+          case x => throw new IllegalArgumentException(x.toString)
+        }
       )
-
     }.toList
 
     val proceduresWithParams = procedures.map { p =>
