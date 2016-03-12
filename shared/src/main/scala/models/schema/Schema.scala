@@ -14,6 +14,5 @@ case class Schema(
   maxSqlLength: Int,
   tables: Seq[Table] = Nil,
   procedures: Seq[Procedure] = Nil,
-  functions: Seq[DatabaseFunction] = Nil,
   clientInfoProperties: Seq[ClientInfoProperty] = Nil
 )

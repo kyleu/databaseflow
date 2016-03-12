@@ -16,7 +16,6 @@
             <div class="card-action">
               <a href="#tables">Tables</a>
               <a href="#procs">Procedures</a>
-              <a href="#functions">Functions</a>
               <a href="#cip">Properties</a>
             </div>
           </div>
@@ -31,17 +30,39 @@
             <div class="card">
               <div class="card-content">
                 <span class="card-title">@table.name</span>
+                @table.description.map { d => <div><em>@d</em></div> }
 
-                <h5>Columns</h5>
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="width: 50%">Name</th>
-                      <th style="width: 25%">Type</th>
-                      <th style="width: 25%">Primary Key</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                @table.primaryKey.map { pk =>
+                  <h5>Primary Key</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width: 25%">Name</th>
+                        <th style="width: 25%">Columns</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @pk.columns.map { col =>
+                        <tr>
+                          <td>@pk.name</td>
+                          <td>@col</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                }
+
+                @if(table.columns.nonEmpty) {
+                  <h5>Columns</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width : 50%">Name</th>
+                        <th style="width : 25%">Type</th>
+                        <th style="width : 25%">Primary Key</th>
+                      </tr>
+                    </thead>
+                    <tbody>
                     @table.columns.map { col =>
                       <tr>
                         <td>@col.name</td>
@@ -49,28 +70,59 @@
                         <td>@table.primaryKey.exists(k => k.columns.contains(col.name))</td>
                       </tr>
                     }
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                }
 
-                <h5>Indexes</h5>
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="width: 50%">Index</th>
-                      <th style="width: 25%">Type</th>
-                      <th style="width: 25%">Size</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  @table.indices.map { idx =>
-                    <tr>
-                      <td>@idx.name</td>
-                      <td>@idx.indexType</td>
-                      <td>@idx.cardinality</td>
-                    </tr>
-                  }
-                  </tbody>
-                </table>
+                @if(table.indices.nonEmpty) {
+                  <h5>Indexes</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width : 30%">Index</th>
+                        <th style="width : 10%">Unique</th>
+                        <th style="width : 20%">Type</th>
+                        <th style="width : 10%">Size</th>
+                        <th style="width : 30%">Columns</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    @table.indices.map { idx =>
+                      <tr>
+                        <td>@idx.name</td>
+                        <td>@idx.unique</td>
+                        <td>@idx.indexType</td>
+                        <td>@idx.cardinality</td>
+                        <td>@idx.columns.map(_.name).mkString(", ")</td>
+                      </tr>
+                    }
+                    </tbody>
+                  </table>
+                }
+
+                @if(table.foreignKeys.nonEmpty) {
+                  <h5>Foreign Keys</h5>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width : 25%">Name</th>
+                        <th style="width : 25%">Source Columns</th>
+                        <th style="width : 25%">Target Table</th>
+                        <th style="width : 25%">Target Columns</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    @table.foreignKeys.map { fk =>
+                      <tr>
+                        <td>@fk.name</td>
+                        <td>@fk.references.map(r => r.source).mkString(", ")</td>
+                        <td>@fk.targetTable</td>
+                        <td>@fk.references.map(r => r.target).mkString(", ")</td>
+                      </tr>
+                    }
+                    </tbody>
+                  </table>
+                }
               </div>
             </div>
           </div>
@@ -97,40 +149,6 @@
                   </thead>
                   <tbody>
                   @p.params.map { p =>
-                    <tr>
-                      <td>@p.name</td>
-                      <td>@p.typeName</td>
-                      <td>@p.paramType</td>
-                    </tr>
-                  }
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        }
-      </div>
-
-      <div class="row">
-        <a name="functions"></a>
-        <h3>Functions</h3>
-        @schema.functions.map { f =>
-          <div class="col s12">
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title">@f.name</span>
-                @f.description.map { d => <div><em>@d</em></div> }
-                <h5>Parameters</h5>
-                <table>
-                  <thead>
-                    <tr>
-                      <th style="width: 50%">Name</th>
-                      <th style="width: 25%">Type</th>
-                      <th style="width: 25%">Param Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  @f.params.map { p =>
                     <tr>
                       <td>@p.name</td>
                       <td>@p.typeName</td>

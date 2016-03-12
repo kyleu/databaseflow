@@ -22,18 +22,21 @@ object MetadataService {
     val tables = MetadataTables.getTables(metadata, catalog, schema)
 
     val tablesWithChildren = tables.map { t =>
-      val primaryKey = MetadataKeys.getPrimaryKey(metadata, t)
       val columns = MetadataColumns.getColumns(metadata, t)
+      val identifier = MetadataIndentifiers.getRowIdentifier(metadata, t)
+      val primaryKey = MetadataKeys.getPrimaryKey(metadata, t)
+      val foreignKeys = MetadataKeys.getForeignKeys(metadata, t)
       val indices = MetadataIndices.getIndices(metadata, t)
       t.copy(
-        primaryKey = primaryKey,
         columns = columns,
+        rowIdentifier = identifier,
+        primaryKey = primaryKey,
+        foreignKeys = foreignKeys,
         indices = indices
       )
     }
 
     val procedures = MetadataProcedures.getProcedures(metadata, catalog, schema)
-    val functions = MetadataFunctions.getFunctions(metadata, catalog, schema)
     val clientInfoProperties = MetadataClientInfoProperties.getClientInfoProperties(metadata)
 
     conn.close()
@@ -41,7 +44,6 @@ object MetadataService {
     schemaModel.copy(
       tables = tablesWithChildren,
       procedures = procedures,
-      functions = functions,
       clientInfoProperties = clientInfoProperties
     )
   }
