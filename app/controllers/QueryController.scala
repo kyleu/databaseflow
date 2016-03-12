@@ -7,6 +7,8 @@ import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
 import services.connection.ConnectionService
+import services.database.MasterDatabase
+import services.schema.MetadataService
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
 
@@ -30,5 +32,11 @@ class QueryController @javax.inject.Inject() (override val ctx: ApplicationConte
       case HandlerResult(r, Some(user)) => Right(ConnectionService.props(None, ctx.supervisor, user, _: ActorRef, request.remoteAddress))
       case HandlerResult(r, None) => Left(r)
     }
+  }
+
+  def view(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
+    val database = MasterDatabase.databaseFor(connectionId)
+    val tables = MetadataService.getMetadata(database.source)
+    Future.successful(Ok(views.html.query.view(request.identity, tables)))
   }
 }

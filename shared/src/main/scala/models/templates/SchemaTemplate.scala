@@ -1,11 +1,11 @@
 package models.templates
 
-import models.schema.Table
+import models.schema.{ Schema, Table }
 import scalatags.Text.all._
 
 object SchemaTemplate {
-  def forTables(s: Seq[Table]) = {
-    div(cls := "schema")(s.map(forTable))
+  def forSchema(s: Schema) = {
+    div(cls := "schema")(s.tables.map(forTable))
   }
 
   def forTable(t: Table) = {

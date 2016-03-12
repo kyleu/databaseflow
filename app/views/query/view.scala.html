@@ -1,0 +1,107 @@
+@(user: models.user.User, schema: models.schema.Schema)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@views.html.layout.materialize(utils.Config.projectName) {
+  @layout.header(user, "home", showMenu = true)
+
+  <main xmlns="http://www.w3.org/1999/html">
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">@schema.name</span>
+              <div>
+                <em>This page shows the definition for the @schema.engine @schema.engineVersion @schema.schemaTerm</em>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <h3>Tables</h3>
+        @schema.tables.map { table =>
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">@table.name</span>
+
+                <h5>Columns</h5>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 50%">Name</th>
+                      <th style="width: 50%">Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @table.columns.map { col =>
+                      <tr>
+                        <td>@col.name</td>
+                        <td>@col.typeName</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+
+                <h5>Indexes</h5>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 50%">Index</th>
+                      <th style="width: 25%">Type</th>
+                      <th style="width: 25%">Size</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  @table.indices.map { idx =>
+                    <tr>
+                      <td>@idx.name</td>
+                      <td>@idx.indexType</td>
+                      <td>@idx.cardinality</td>
+                    </tr>
+                  }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="row">
+        <h3>Procedures</h3>
+        @schema.procedures.map { p =>
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">@p.name</span>
+                @p.description.map { d => <div><em>@d</em></div> }
+                <h5>Parameters</h5>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 50%">Name</th>
+                      <th style="width: 50%">Type</th>
+                      <th style="width: 50%">Param Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  @p.params.map { p =>
+                    <tr>
+                      <td>@p.name</td>
+                      <td>@p.typeName</td>
+                      <td>@p.paramType</td>
+                    </tr>
+                  }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </main>
+
+  @layout.footer(user)
+}

@@ -2,7 +2,6 @@ package services.sandbox
 
 import models.database.{ Row, SingleRowQuery }
 import models.queries.connection.ConnectionQueries
-import models.templates.SchemaTemplate
 import services.database.MasterDatabase
 import services.schema.MetadataService
 import upickle.json
@@ -29,16 +28,13 @@ object DatabaseTest extends SandboxTask {
       c -> metadata
     }
     val ret = connTables.map { t =>
-      import utils.JsonSerializers._
       import upickle.legacy._
 
-      val html = SchemaTemplate.forTables(t._2)
-
-      val tableStrings = t._2.map { x =>
+      val tableStrings = t._2.tables.map { x =>
         val j = writeJs(x)
         json.write(j, 2)
       }
-      html.toString + s"\n\n${t._1.id}\n${t._1.name}\n" + tableStrings.mkString("\n") + "\n\n"
+      s"${t._1.id}\n${t._1.name}\n" + tableStrings.mkString("\n") + "\n\n"
     }
     Future.successful(ret.mkString("\n"))
   }
