@@ -8,5 +8,6 @@ case class Schema(
   driverVersion: String,
   schemaTerm: String,
   tables: Seq[Table] = Nil,
-  procedures: Seq[Procedure] = Nil
+  procedures: Seq[Procedure] = Nil,
+  functions: Seq[DatabaseFunction] = Nil
 )

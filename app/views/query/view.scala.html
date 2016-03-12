@@ -13,11 +13,17 @@
                 <em>This page shows the definition for the @schema.engine @schema.engineVersion @schema.schemaTerm</em>
               </div>
             </div>
+            <div class="card-action">
+              <a href="#tables">Tables</a>
+              <a href="#procs">Procedures</a>
+              <a href="#functions">Functions</a>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="row">
+        <a name="tables"></a>
         <h3>Tables</h3>
         @schema.tables.map { table =>
           <div class="col s12">
@@ -69,6 +75,7 @@
       </div>
 
       <div class="row">
+        <a name="procs"></a>
         <h3>Procedures</h3>
         @schema.procedures.map { p =>
           <div class="col s12">
@@ -91,6 +98,40 @@
                       <td>@p.name</td>
                       <td>@p.typeName</td>
                       <td>@p.paramType</td>
+                    </tr>
+                  }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="row">
+        <a name="functions"></a>
+        <h3>Functions</h3>
+        @schema.functions.map { f =>
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">@f.name</span>
+                @f.description.map { d => <div><em>@d</em></div> }
+                <h5>Parameters</h5>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 50%">Name</th>
+                      <th style="width: 50%">Type</th>
+                      <th style="width: 50%">Param Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  @f.params.map { p =>
+                    <tr>
+                      <td>@p .name</td>
+                      <td>@p .typeName</td>
+                      <td>@p .paramType</td>
                     </tr>
                   }
                   </tbody>

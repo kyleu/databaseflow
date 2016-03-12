@@ -30,10 +30,15 @@ object MetadataProcedures {
     val proceduresWithParams = procedures.map { p =>
       val rs = metadata.getProcedureColumns(catalog.orNull, schema.orNull, p.name, NullUtils.inst)
       val columns = new Row.Iter(rs).map { row =>
+        val paramType = row.as[Any]("COLUMN_TYPE") match {
+          case i: Int => i
+          case s: String => s.toInt
+        }
+
         row.as[Int]("ORDINAL_POSITION") -> ProcedureParam(
           name = row.as[String]("COLUMN_NAME"),
           description = row.asOpt[String]("REMARKS"),
-          paramType = row.as[Int]("COLUMN_TYPE") match {
+          paramType = paramType match {
             case DatabaseMetaData.procedureColumnUnknown => "unknown"
             case DatabaseMetaData.procedureColumnIn => "in"
             case DatabaseMetaData.procedureColumnInOut => "inout"
