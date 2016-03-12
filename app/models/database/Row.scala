@@ -4,9 +4,9 @@ import java.sql.ResultSet
 
 object Row {
   class Iter(rs: ResultSet) extends Iterator[Row] {
-    private val row = new Row(rs)
-    private var currentRow = 0
-    private var advanced, canAdvance = false
+    private[this] val row = new Row(rs)
+    private[this] var advanced = false
+    private[this] var canAdvance = false
 
     def hasNext = {
       if (!advanced) {
@@ -41,8 +41,6 @@ class Row(val rs: ResultSet) {
 
   def asOpt[T](idx: Int): Option[T] = Option(rs.getObject(idx)).map(_.asInstanceOf[T])
   def asOpt[T](key: String): Option[T] = Option(rs.getObject(key)).map(_.asInstanceOf[T])
-
-  private[this] def extract[A](f: A): Option[A] = if (rs.wasNull()) None else Some(f)
 
   def array[T: reflect.ClassTag](index: Int): Option[Array[T]] = extractArray[T](rs.getArray(index + 1))
   def array[T: reflect.ClassTag](name: String): Option[Array[T]] = extractArray[T](rs.getArray(name))

@@ -3,7 +3,7 @@ package services.database
 import models.ddl._
 import utils.Logging
 
-object MasterSchema extends Logging {
+object MasterDdl extends Logging {
   val tables = Seq(
     CreateUsersTable,
     CreateUserProfilesTable,

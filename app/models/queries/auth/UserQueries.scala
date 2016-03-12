@@ -9,8 +9,6 @@ import models.user.{ Role, User, UserPreferences }
 import upickle.legacy._
 import utils.JdbcUtils
 
-import utils.json.JsonSerializers._
-
 object UserQueries extends BaseQueries[User] {
   override protected val tableName = "flow_users"
   override protected val columns = Seq("id", "username", "prefs", "profiles", "roles", "created")

@@ -10,11 +10,10 @@ case object CreateUserProfilesTable extends CreateTableStatement("user_profiles"
       last_name ${eng.varchar}(512),
       full_name ${eng.varchar}(512),
       avatar_url ${eng.varchar}(512),
-      created timestamp not null
+      created timestamp not null,
+      constraint ${tableName}_pkey primary key (provider, key)
     );
 
     create index user_profiles_email_idx on $tableName (email);
-
-    alter table $tableName add constraint ${tableName}_provider_key_idx unique (provider, key);
   """
 }

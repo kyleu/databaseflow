@@ -1,3 +1,3 @@
 package models.schema
 
-case class IndexColumn(name: String, size: Int)
+case class IndexColumn(name: String, ascending: Boolean)

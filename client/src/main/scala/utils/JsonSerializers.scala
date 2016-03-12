@@ -35,7 +35,8 @@ object JsonSerializers {
   }
 
   private[this] implicit val boolOptionWriter = Writer[Option[Boolean]] {
-    case Some(b) => if (b) { Js.True } else { Js.False }
+    case Some(b) if b => Js.True
+    case Some(b) => Js.False
     case None => Js.Null
   }
   private[this] implicit val boolOptionReader = Reader[Option[Boolean]] {
@@ -44,7 +45,7 @@ object JsonSerializers {
     case _ => None
   }
 
-  def writeRequestMessage(rm: RequestMessage, debug: Boolean = false) = if(debug) {
+  def writeRequestMessage(rm: RequestMessage, debug: Boolean = false) = if (debug) {
     write(rm, indent = 2)
   } else {
     write(rm)

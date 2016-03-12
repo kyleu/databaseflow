@@ -36,7 +36,7 @@ object MasterDatabase extends Logging {
 
     log.info(s"Master database started as user [${cs.username}] against url [${cs.url}].")
 
-    MasterSchema.update(database)
+    MasterDdl.update(database)
 
     dbOpt = Some(database)
   }

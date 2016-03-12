@@ -1,6 +1,6 @@
 @(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.materialize(utils.Config.projectName) {
-  @layout.header(user, "home")
+  @layout.header(user, "home", showMenu = true)
 
   <main>
     <div class="">

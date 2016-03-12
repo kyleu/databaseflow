@@ -1,7 +1,15 @@
-@(user: models.user.User, activeSection: String)(implicit messages: Messages)
+@(user: models.user.User, activeSection: String, showMenu: Boolean = false)(implicit messages: Messages)
 <header>
   <nav class="@user.preferences.theme lighten-2">
     <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+
+    @if(showMenu) {
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li id="query-menu-option" class="active"><a href="">Query</a></li>
+      <li id="explore-menu-option"><a href="">Explore</a></li>
+      <li id="manage-menu-option"><a href="">Manage</a></li>
+    </ul>
+    }
 
     <ul id="slide-out" class="side-nav">
       <li><a href="@routes.HomeController.index()" class="waves-effect waves-light">Databases</a></li>
@@ -13,9 +21,5 @@
     </ul>
 
     <a href="#" data-activates="slide-out" id="nav-menu-button"><i class="mdi-navigation-menu"></i></a>
-
-    <ul class="right hide-on-med-and-down">
-      <li><a href="/profile" title="@user.username.getOrElse("Guest") Profile">@user.username.getOrElse("Guest")</a></li>
-    </ul>
   </nav>
 </header>

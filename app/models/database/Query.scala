@@ -9,9 +9,7 @@ trait RawQuery[A] {
 }
 
 trait Query[A] extends RawQuery[A] {
-  def handle(results: ResultSet) = {
-    reduce(new Row.Iter(results))
-  }
+  def handle(results: ResultSet) = reduce(new Row.Iter(results))
   def reduce(rows: Iterator[Row]): A
 }
 
