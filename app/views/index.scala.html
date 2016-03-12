@@ -1,7 +1,7 @@
 @(user: models.user.User, debug: Boolean, connections: Seq[models.flow.Connection])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.materialize(utils.Config.projectName) {
-  @layout.header(user, "home")
+  @layout.header(user)
 
   <main>
     <div class="container">

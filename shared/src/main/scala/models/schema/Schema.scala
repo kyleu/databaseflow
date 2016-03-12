@@ -9,8 +9,11 @@ case class Schema(
   driver: String,
   driverVersion: String,
   schemaTerm: String,
+  procedureTerm: String,
+  catalogTerm: String,
   maxSqlLength: Int,
   tables: Seq[Table] = Nil,
   procedures: Seq[Procedure] = Nil,
-  functions: Seq[DatabaseFunction] = Nil
+  functions: Seq[DatabaseFunction] = Nil,
+  clientInfoProperties: Seq[ClientInfoProperty] = Nil
 )

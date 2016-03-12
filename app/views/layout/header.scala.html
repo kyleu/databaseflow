@@ -1,13 +1,13 @@
-@(user: models.user.User, activeSection: String, showMenu: Boolean = false)(implicit messages: Messages)
+@(user: models.user.User, showMenu: Boolean = false, activeSection: Option[String] = None)(implicit messages: Messages)
 <header>
   <nav class="@user.preferences.theme lighten-2">
     <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
 
     @if(showMenu) {
     <ul id="nav-mobile" class="right hide-on-med-and-down">
-      <li id="query-menu-option" class="active"><a href="">Query</a></li>
-      <li id="explore-menu-option"><a href="">Explore</a></li>
-      <li id="manage-menu-option"><a href="">Manage</a></li>
+      <li id="query-menu-option"@if(activeSection.contains("query")) { class="active" }><a href="">Query</a></li>
+      <li id="explore-menu-option"@if(activeSection.contains("explore")) { class="active" }><a href="">Explore</a></li>
+      <li id="manage-menu-option"@if(activeSection.contains("manage")) { class="active" }><a href="">Manage</a></li>
     </ul>
     }
 

@@ -1,6 +1,6 @@
 package models.database
 
-import java.sql.ResultSet
+import java.sql.{ SQLException, ResultSet }
 
 object Row {
   class Iter(rs: ResultSet) extends Iterator[Row] {
@@ -34,6 +34,12 @@ class Row(val rs: ResultSet) {
     val colNames = colRange.map(md.getColumnName)
     val colValues = colRange.map(rs.getObject)
     colNames.zip(colValues).toMap
+  }
+
+  def hasColumn(name: String) = try {
+    rs.findColumn(name) > -1
+  } catch {
+    case sqlEx: SQLException => false
   }
 
   def as[T](idx: Int): T = asOpt(idx).getOrElse(throw new IllegalArgumentException(s"Column [$idx] is null."))

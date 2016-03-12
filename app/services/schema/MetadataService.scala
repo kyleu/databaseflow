@@ -33,12 +33,16 @@ object MetadataService {
     }
 
     val procedures = MetadataProcedures.getProcedures(metadata, catalog, schema)
+    val functions = MetadataFunctions.getFunctions(metadata, catalog, schema)
+    val clientInfoProperties = MetadataClientInfoProperties.getClientInfoProperties(metadata)
 
     conn.close()
 
     schemaModel.copy(
       tables = tablesWithChildren,
-      procedures = procedures
+      procedures = procedures,
+      functions = functions,
+      clientInfoProperties = clientInfoProperties
     )
   }
 
@@ -51,7 +55,9 @@ object MetadataService {
       engineVersion = metadata.getDatabaseProductVersion,
       driver = metadata.getDriverName,
       driverVersion = metadata.getDriverVersion,
+      catalogTerm = metadata.getCatalogTerm,
       schemaTerm = metadata.getSchemaTerm,
+      procedureTerm = metadata.getProcedureTerm,
       maxSqlLength = metadata.getMaxStatementLength
     )
   }

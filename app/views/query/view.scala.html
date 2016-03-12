@@ -1,6 +1,6 @@
 @(user: models.user.User, schema: models.schema.Schema)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.materialize(utils.Config.projectName) {
-  @layout.header(user, "home", showMenu = true)
+  @layout.header(user, showMenu = true, activeSection = Some("explore"))
 
   <main xmlns="http://www.w3.org/1999/html">
     <div class="container">
@@ -17,6 +17,7 @@
               <a href="#tables">Tables</a>
               <a href="#procs">Procedures</a>
               <a href="#functions">Functions</a>
+              <a href="#cip">Properties</a>
             </div>
           </div>
         </div>
@@ -131,11 +132,40 @@
                   <tbody>
                   @f.params.map { p =>
                     <tr>
-                      <td>@p .name</td>
-                      <td>@p .typeName</td>
-                      <td>@p .paramType</td>
+                      <td>@p.name</td>
+                      <td>@p.typeName</td>
+                      <td>@p.paramType</td>
                     </tr>
                   }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="row">
+        <a name="cip"></a>
+        <h3>Properties</h3>
+        @schema.clientInfoProperties.map { ci =>
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">@ci.name</span>
+                @ci.description.map { d => <div><em>@d</em></div> }
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 25%">Max Length</th>
+                      <th style="width: 75%">Default Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>@ci.maxLength</td>
+                      <td>@ci.defaultValue</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
