@@ -30,7 +30,7 @@ object Server {
     Seq(
       Cache.ehCache, Mail.mailer, Akka.actor, Akka.logging, Akka.testkit, Authentication.silhouette, Play.playFilters, Play.playWs, Play.playTest,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
-      Serialization.uPickle, WebJars.requireJs, WebJars.jquery, WebJars.materialize, Utils.enumeratum
+      WebJars.requireJs, WebJars.jquery, WebJars.materialize, Utils.enumeratum
     )
   }
 

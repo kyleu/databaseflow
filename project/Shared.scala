@@ -25,7 +25,11 @@ object Shared {
   }
 
   lazy val sharedJs = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(
-    scalaVersion := Versions.scala
+    scalaVersion := Versions.scala,
+    libraryDependencies ++= Seq(
+      "com.lihaoyi" %%% "upickle" % Dependencies.Serialization.version,
+      "com.lihaoyi" %%% "scalatags" % Dependencies.Templating.version
+    )
   )
     .enablePlugins(ScalaJSPlay)
     .settings(
@@ -36,7 +40,11 @@ object Shared {
   lazy val sharedJvm = (project in file("shared")).settings(
     scalaVersion := Versions.scala,
     ScalariformKeys.preferences := ScalariformKeys.preferences.value,
-    scapegoatVersion := Dependencies.scapegoatVersion
+    scapegoatVersion := Dependencies.scapegoatVersion,
+    libraryDependencies ++= Seq(
+      Dependencies.Serialization.uPickle,
+      Dependencies.Templating.scalaTags
+    )
   )
     .enablePlugins(GitVersioning)
     .enablePlugins(GitBranchPrompt)

@@ -64,7 +64,7 @@ class AdHocQueryController @javax.inject.Inject() (override val ctx: Application
         }
         case "run" =>
           val queries = MasterDatabase.db.query(AdHocQueries.search("", "title", None))
-          val conn = MasterDatabase.connectionFor(connectionId)
+          val conn = MasterDatabase.databaseFor(connectionId)
           val startTime = System.nanoTime
           val result = conn.query(AdHocQueries.AdHocQueryExecute(form.sql, Seq.empty))
           val executionTime = ((System.nanoTime - startTime) / 1000000).toInt

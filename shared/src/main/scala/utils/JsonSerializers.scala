@@ -46,5 +46,12 @@ object JsonSerializers {
   }
 
   def readRequestMessage(json: Js.Value) = readJs[RequestMessage](json)
+  def writeRequestMessage(rm: RequestMessage, debug: Boolean = false) = if (debug) {
+    write(rm, indent = 2)
+  } else {
+    write(rm)
+  }
+
+  def readResponseMessage(json: String) = read[ResponseMessage](json)
   def writeResponseMessage(rm: ResponseMessage) = writeJs(rm)
 }

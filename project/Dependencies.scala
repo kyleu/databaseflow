@@ -34,6 +34,11 @@ object Dependencies {
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
+  object Templating {
+    val version = "0.5.4"
+    val scalaTags = "com.lihaoyi" %% "scalatags" % version
+  }
+
   object Akka {
     private[this] val version = "2.4.2"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
