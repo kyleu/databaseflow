@@ -10,8 +10,7 @@ import utils.metrics.Instrumented
 
 class Database(val source: DataSource) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
-    val timer = Instrumented.metricRegistry.timer(MetricRegistry.name(klass))
-    val ctx = timer.time()
+    val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
     try {
       f
     } finally {

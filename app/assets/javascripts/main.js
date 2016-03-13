@@ -12,11 +12,19 @@ requirejs.config({
 requirejs([], function() {
   'use strict';
 
-  $('#nav-menu-button').sideNav();
-
-  if(DatabaseFlow !== undefined) {
+  if(typeof DatabaseFlow !== 'undefined') {
     window.dbf = new DatabaseFlow();
   }
+
+  $('.button-collapse').sideNav();
+
+  var search = $('input#search');
+  search.focus(function() { $(this).parent().addClass('focused'); });
+  search.blur(function() {
+    if (!$(this).val()) {
+      $(this).parent().removeClass('focused');
+    }
+  });
 
   if(ace !== undefined) {
     ace.require('ace/ext/language_tools');

@@ -2,6 +2,7 @@ body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+  background-color: #fcfcfc;
 }
 
 main {
@@ -10,6 +11,26 @@ main {
 
 .clear {
   clear: both;
+}
+
+main.indent {
+  padding-left: 240px;
+}
+
+@media only screen and (max-width : 992px) {
+  main.indent {
+    padding-left: 0;
+  }
+}
+
+#main-menu {
+  margin-top: 64px;
+}
+
+@media only screen and (max-width : 992px) {
+  #main-menu {
+    margin-top: 0;
+  }
 }
 
 // Side Nav

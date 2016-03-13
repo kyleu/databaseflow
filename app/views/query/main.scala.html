@@ -1,8 +1,14 @@
 @(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.materialize(utils.Config.projectName) {
-  @layout.header(user, showMenu = true, activeSection = Some("query"))
+  <header>
+    <div class="navbar-fixed">
+      <nav class="@user.preferences.theme lighten-2">
+        <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+      </nav>
+    </div>
+  </header>
 
-  <main>
+  <main class="indent">
     <div class="">
       <div class="row">
         <div class="col s12">
@@ -78,8 +84,6 @@
       </div>
     </div>
   </main>
-
-  @layout.footer(user)
 
   @if(debug) {
     <script src="@routes.Assets.versioned("lib/ace/ace.js")" type="text/javascript" charset="utf-8"></script>

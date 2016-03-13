@@ -46,6 +46,8 @@ object MasterDatabase extends Logging {
   def db = dbOpt.getOrElse(throw new IllegalStateException("Not open."))
 
   def close() = {
+    databases.values.foreach(_.close())
+    databases.clear()
     dbOpt.foreach(_.close())
     dbOpt = None
     log.info(s"Master database closed.")

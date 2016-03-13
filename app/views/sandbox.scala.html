@@ -1,6 +1,35 @@
 @()(implicit session: Session, flash: Flash)
 @layout.materialize("Sandbox") {
-  <h3>Sandbox</h3>
-  <script>
-  </script>
+
+  <header>
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper">
+          <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+
+          <ul id="main-menu" class="side-nav fixed">
+            <li><a href="#">First Sidebar Link</a></li>
+            <li><a href="#">Second Sidebar Link</a></li>
+          </ul>
+          <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="indent">
+    @{(0 to 20).map { i =>
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              Hi there!
+            </div>
+          </div>
+        </div>
+      </div>
+    }}
+  </main>
+
+  <script data-main="@routes.Assets.versioned("javascripts/main.js")" src="@routes.Assets.versioned("lib/requirejs/require.min.js")"></script>
 }

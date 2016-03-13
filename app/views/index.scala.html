@@ -1,7 +1,11 @@
 @(user: models.user.User, debug: Boolean, connections: Seq[models.flow.Connection])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.materialize(utils.Config.projectName) {
-  @layout.header(user)
+  <header>
+    <nav class="@user.preferences.theme lighten-2">
+      <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+    </nav>
+  </header>
 
   <main>
     <div class="container">
@@ -24,7 +28,12 @@
     </div>
   </main>
 
-  @layout.footer(user)
+  <footer class="page-footer @user.preferences.theme lighten-2">
+    <div class="footer-copyright">
+      © 2016 Kyle Unverferth
+      <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>
+    </div>
+  </footer>
 
   <script data-main="@routes.Assets.versioned("javascripts/main.js")" src="@routes.Assets.versioned("lib/requirejs/require.min.js")"></script>
 }
