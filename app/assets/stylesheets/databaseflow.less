@@ -33,53 +33,7 @@ main.indent {
   }
 }
 
-// Side Nav
-nav {
-  a {
-    -webkit-font-smoothing: antialiased;
-  }
-}
-
-ul.side-nav {
-  overflow: hidden;
-
-  li {
-    line-height: 44px;
-    padding: 0;
-
-    a {
-      padding: 0 30px;
-      font-size: 13px;
-      line-height: 44px;
-      height: 44px;
-    }
-  }
-
-  ul.collapsible-accordion {
-    background-color: #FFF;
-  }
-
-  // Only show scrollbar on hover
-  &:hover {
-    overflow-y: auto;
-  }
-}
-
-#nav-menu-button {
-  height: 64px;
-  line-height: 64px;
-  margin-left: 10px;
-  float: left;
-  position: relative;
-  z-index: 1;
-
-  i {
-    height: 64px;
-    line-height: 64px;
-    font-size: 2.7rem;
-  }
-}
-
+@import url(_menu.less);
 @import url(_sqleditor.less);
 @import url(_queryplan.less);
 

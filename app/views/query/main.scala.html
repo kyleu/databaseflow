@@ -3,7 +3,58 @@
   <header>
     <div class="navbar-fixed">
       <nav class="@user.preferences.theme lighten-2">
-        <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+        <div class="nav-wrapper">
+          <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+
+          <ul id="main-menu" class="side-nav fixed">
+            <li class="search">
+              <div class="search-wrapper card">
+                <input id="search" placeholder="Search" /><i class="material-icons">search</i>
+              </div>
+            </li>
+            <li class="no-padding">
+              <ul class="collapsible collapsible-accordion">
+                <li class="bold"><a class="collapsible-header waves-effect">Saved Queries</a>
+                  <div class="collapsible-body">
+                    <ul class="submenu">
+                      <li><a href="">Query A</a></li>
+                      <li><a href="">Query B</a></li>
+                      <li><a href="">Query C</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="bold"><a class="collapsible-header waves-effect">Tables</a>
+                  <div class="collapsible-body">
+                    <ul class="submenu">
+                      <li><a href="">Table A</a></li>
+                      <li><a href="">Table B</a></li>
+                      <li><a href="">Table C</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="bold"><a class="collapsible-header waves-effect">Views</a>
+                  <div class="collapsible-body">
+                    <ul class="submenu">
+                      <li><a href="">View A</a></li>
+                      <li><a href="">View B</a></li>
+                      <li><a href="">View C</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="bold"><a class="collapsible-header waves-effect">Stored Procedures</a>
+                  <div class="collapsible-body">
+                    <ul class="submenu">
+                      <li><a href="">Proc A</a></li>
+                      <li><a href="">Proc B</a></li>
+                      <li><a href="">Proc C</a></li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+        </div>
       </nav>
     </div>
   </header>
