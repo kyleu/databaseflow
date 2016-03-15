@@ -58,6 +58,7 @@ object Dependencies {
     val requireJs = "org.webjars" % "requirejs" % "2.1.22"
     val jquery = "org.webjars" % "jquery" % "2.2.1"
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
+    val fontAwesome = "org.webjars" % "font-awesome" % "4.5.0"
   }
 
   object Mail {
