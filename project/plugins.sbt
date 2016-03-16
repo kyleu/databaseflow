@@ -21,8 +21,8 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.7")
 
 addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.2.8")
 
-// Source Control
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.4")
+// App Packaging
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.0-RC1")
 
 // Code Quality
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.7.0") // scalastyle

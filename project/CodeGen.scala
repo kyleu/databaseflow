@@ -1,5 +1,4 @@
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.GitVersioning
 import com.typesafe.sbt.SbtScalariform.{ScalariformKeys, defaultScalariformSettings}
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import sbt.Keys._
@@ -33,7 +32,6 @@ object CodeGen {
     id = "codegen",
     base = file("codegen")
   )
-    .enablePlugins(GitVersioning)
     .settings(codegenSettings: _*)
     .aggregate(Database.dblibs)
     .dependsOn(Database.dblibs)

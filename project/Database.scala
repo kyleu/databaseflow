@@ -2,7 +2,6 @@ import sbt._
 import sbt.Keys._
 import sbt.Project.projectToRef
 
-import com.typesafe.sbt.GitVersioning
 
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, defaultScalariformSettings }
@@ -38,7 +37,6 @@ object Database {
     id = "dblibs",
     base = file("dblibs")
   )
-    .enablePlugins(GitVersioning)
     .settings(dblibsSettings: _*)
     .aggregate(Shared.sharedJvm)
     .dependsOn(Shared.sharedJvm)

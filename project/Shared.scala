@@ -1,5 +1,4 @@
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.{ GitBranchPrompt, GitVersioning }
 import sbt._
 import sbt.Keys._
 
@@ -13,6 +12,7 @@ import playscalajs.ScalaJSPlay.autoImport._
 
 object Shared {
   val projectId = "databaseflow"
+  val projectName = "Database Flow"
 
   val compileOptions = Seq(
     "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
@@ -46,8 +46,6 @@ object Shared {
       Dependencies.Templating.scalaTags
     )
   )
-    .enablePlugins(GitVersioning)
-    .enablePlugins(GitBranchPrompt)
     .settings(graphSettings: _*)
     .settings(defaultScalariformSettings: _*)
 }

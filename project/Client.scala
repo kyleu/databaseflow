@@ -1,5 +1,4 @@
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.{ GitBranchPrompt, GitVersioning }
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, defaultScalariformSettings }
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import org.scalajs.sbtplugin.ScalaJSPlugin
@@ -21,8 +20,6 @@ object Client {
     scapegoatVersion := Dependencies.scapegoatVersion,
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   )
-    .enablePlugins(GitVersioning)
-    .enablePlugins(GitBranchPrompt)
     .settings(graphSettings: _*)
     .settings(defaultScalariformSettings: _*)
     .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
