@@ -3,12 +3,11 @@ package models.queries.connection
 import java.util.UUID
 
 import models.database.Row
-import models.engine.DatabaseEngine
+import models.engine.{ ConnectionSettings, DatabaseEngine }
 import models.queries.BaseQueries
-import models.flow.Connection
 import utils.EncryptUtils
 
-object ConnectionQueries extends BaseQueries[Connection] {
+object ConnectionQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
   override protected val columns = Seq("id", "name", "engine", "url", "username", "password")
   override protected val searchColumns = columns
@@ -28,10 +27,10 @@ object ConnectionQueries extends BaseQueries[Connection] {
     val password = row.as[String]("password")
     val decryptedPassword = EncryptUtils.decrypt(password)
 
-    Connection(id, name, engine, url, username, decryptedPassword)
+    ConnectionSettings(id, name, engine, url, username, decryptedPassword)
   }
 
-  override protected def toDataSeq(q: Connection) = {
+  override protected def toDataSeq(q: ConnectionSettings) = {
     Seq[Any](q.id, q.name, q.engine.toString, q.url, q.username, EncryptUtils.encrypt(q.password))
   }
 }

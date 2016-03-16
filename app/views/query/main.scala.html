@@ -21,7 +21,7 @@
                     Saved Queries
                   </a>
                   <div class="collapsible-body">
-                    <ul class="submenu">
+                    <ul id="saved-query-list" class="submenu">
                       <li><a href="">Query A</a></li>
                       <li><a href="">Query B</a></li>
                       <li><a href="">Query C</a></li>
@@ -35,7 +35,7 @@
                     Tables
                   </a>
                   <div class="collapsible-body">
-                    <ul class="submenu">
+                    <ul id="table-list" class="submenu">
                       <li><a href="">Table A</a></li>
                       <li><a href="">Table B</a></li>
                       <li><a href="">Table C</a></li>
@@ -49,7 +49,7 @@
                     Views
                   </a>
                   <div class="collapsible-body">
-                    <ul class="submenu">
+                    <ul id="view-list" class="submenu">
                       <li><a href="">View A</a></li>
                       <li><a href="">View B</a></li>
                       <li><a href="">View C</a></li>
@@ -63,7 +63,7 @@
                     Stored Procedures
                   </a>
                   <div class="collapsible-body">
-                    <ul class="submenu">
+                    <ul id="procedure-list" class="submenu">
                       <li><a href="">Proc A</a></li>
                       <li><a href="">Proc B</a></li>
                       <li><a href="">Proc C</a></li>
@@ -89,9 +89,9 @@
               <div id="sql-textarea" style="width: 100%;">select * from users;</div>
             </div>
             <div class="card-action">
-              <a href="#">Run</a>
-              <a href="#">Explain</a>
-              <a href="#">Analyze</a>
+              <a id="run-query-link" href="#">Run</a>
+              <a id="explain-query-link" href="#">Explain</a>
+              <a id="analyze-query-link" href="#">Analyze</a>
             </div>
           </div>
         </div>

@@ -2,13 +2,13 @@ package services.database
 
 import java.util.UUID
 
+import models.engine.ConnectionSettings
 import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
-import models.flow.Connection
 import models.queries.connection.ConnectionQueries
 
 object SeedData {
   def insert(db: Database) = {
-    db.execute(ConnectionQueries.insert(Connection(
+    db.execute(ConnectionQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "Master Database",
       engine = PostgreSQL,
@@ -17,7 +17,7 @@ object SeedData {
       password = "flow"
     )))
 
-    db.execute(ConnectionQueries.insert(Connection(
+    db.execute(ConnectionQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "PostgreSQL Sample",
       engine = PostgreSQL,
@@ -26,7 +26,7 @@ object SeedData {
       password = "flow"
     )))
 
-    db.execute(ConnectionQueries.insert(Connection(
+    db.execute(ConnectionQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "MySQL Sample",
       engine = MySQL,
@@ -35,7 +35,7 @@ object SeedData {
       password = ""
     )))
 
-    db.execute(ConnectionQueries.insert(Connection(
+    db.execute(ConnectionQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "Local H2",
       engine = H2,

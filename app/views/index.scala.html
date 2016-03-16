@@ -1,4 +1,4 @@
-@(user: models.user.User, debug: Boolean, connections: Seq[models.flow.Connection])(
+@(user: models.user.User, debug: Boolean, connections: Seq[models.engine.ConnectionSettings])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.materialize(utils.Config.projectName) {
   <header>

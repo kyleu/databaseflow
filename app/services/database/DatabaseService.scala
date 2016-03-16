@@ -3,7 +3,7 @@ package services.database
 import java.util.Properties
 
 import com.zaxxer.hikari.{ HikariConfig, HikariDataSource }
-import models.database.ConnectionSettings
+import models.database.PoolSettings
 import models.engine.DatabaseEngine
 import services.database.ssl.SslInit
 import utils.metrics.{ Checked, Instrumented }
@@ -18,7 +18,7 @@ object DatabaseService {
     }
   }
 
-  def connect(cs: ConnectionSettings): Database = {
+  def connect(cs: PoolSettings): Database = {
     if (!initialized) {
       init()
     }
