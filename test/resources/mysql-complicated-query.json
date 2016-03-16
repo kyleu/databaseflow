@@ -1,0 +1,659 @@
+{
+  "query_block": {
+    "union_result": {
+      "using_temporary_table": true,
+      "table_name": "<union1,6>",
+      "access_type": "ALL",
+      "query_specifications": [
+        {
+          "dependent": false,
+          "cacheable": true,
+          "query_block": {
+            "select_id": 1,
+            "table": {
+              "table_name": "non_transparent_network",
+              "access_type": "ALL",
+              "rows": 69955132,
+              "filtered": 100,
+              "materialized_from_subquery": {
+                "using_temporary_table": true,
+                "dependent": false,
+                "cacheable": true,
+                "query_block": {
+                  "select_id": 2,
+                  "nested_loop": [
+                    {
+                      "table": {
+                        "table_name": "ro",
+                        "access_type": "ALL",
+                        "rows": 2,
+                        "filtered": 100,
+                        "attached_condition": "((`ro`.`clicks_needed` > 0) and (`ro`.`conversions` > 0))",
+                        "materialized_from_subquery": {
+                          "using_temporary_table": true,
+                          "dependent": false,
+                          "cacheable": true,
+                          "query_block": {
+                            "select_id": 5,
+                            "table": {
+                              "message": "no matching row in const table"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "ol",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY",
+                          "uk_unique",
+                          "offer_id",
+                          "network_id",
+                          "country_iso",
+                          "active",
+                          "offer_pull",
+                          "idx_offer_link_user_id_network_id_active"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "ro.offer_link_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100,
+                        "attached_condition": "((`appthis_v2`.`ol`.`incent_allowed` = 0) and (`appthis_v2`.`ol`.`active` in (1,4)) and (`appthis_v2`.`ol`.`country_iso` is not null))"
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "n",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "appthis_v2.ol.network_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100,
+                        "attached_condition": "(`appthis_v2`.`n`.`override_network_source_distribution` = 0)"
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "td",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "appthis_v2.n.tracking_domain_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "o",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "appthis_v2.ol.offer_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100,
+                        "attached_condition": "(`appthis_v2`.`o`.`pay_method` = 'CPI')"
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "dma_offer_link",
+                        "access_type": "ref",
+                        "possible_keys": [
+                          "<auto_key1>"
+                        ],
+                        "key": "<auto_key1>",
+                        "used_key_parts": [
+                          "offer_link_id"
+                        ],
+                        "key_length": "5",
+                        "ref": [
+                          "ro.offer_link_id"
+                        ],
+                        "rows": 5914,
+                        "filtered": 100,
+                        "not_exists": true,
+                        "attached_condition": "<if>(found_match(dma_offer_link), isnull(`dma_offer_link`.`dma_code`), true)",
+                        "materialized_from_subquery": {
+                          "using_temporary_table": true,
+                          "dependent": false,
+                          "cacheable": true,
+                          "query_block": {
+                            "select_id": 3,
+                            "grouping_operation": {
+                              "using_temporary_table": true,
+                              "using_filesort": true,
+                              "nested_loop": [
+                                {
+                                  "table": {
+                                    "table_name": "at_child",
+                                    "access_type": "const",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "uk_key"
+                                    ],
+                                    "key": "uk_key",
+                                    "used_key_parts": [
+                                      "key"
+                                    ],
+                                    "key_length": "62",
+                                    "ref": [
+                                      "const"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "at_parent",
+                                    "access_type": "const",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "uk_key"
+                                    ],
+                                    "key": "uk_key",
+                                    "used_key_parts": [
+                                      "key"
+                                    ],
+                                    "key_length": "62",
+                                    "ref": [
+                                      "const"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "c",
+                                    "access_type": "index",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "fk_campaign_target_id"
+                                    ],
+                                    "key": "fk_campaign_target_id",
+                                    "used_key_parts": [
+                                      "target_id"
+                                    ],
+                                    "key_length": "4",
+                                    "rows": 42591,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "t",
+                                    "access_type": "eq_ref",
+                                    "possible_keys": [
+                                      "PRIMARY"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.c.target_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "AT",
+                                    "access_type": "ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "attribute_id"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "target_id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.c.target_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "a",
+                                    "access_type": "eq_ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "uk_attribute_type",
+                                      "key"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.AT.attribute_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "attached_condition": "(`appthis_v2`.`a`.`attribute_type_id` = 4)"
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "a_child",
+                                    "access_type": "eq_ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "uk_attribute_type",
+                                      "key"
+                                    ],
+                                    "key": "uk_attribute_type",
+                                    "used_key_parts": [
+                                      "attribute_type_id",
+                                      "key"
+                                    ],
+                                    "key_length": "306",
+                                    "ref": [
+                                      "const",
+                                      "appthis_v2.a.key"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "aa",
+                                    "access_type": "ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "parent_attribute_id"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "child_attribute_id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.a_child.id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "a_parent",
+                                    "access_type": "eq_ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "uk_attribute_type"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.aa.parent_attribute_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "attached_condition": "(`appthis_v2`.`a_parent`.`attribute_type_id` = '5')"
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "li",
+                                    "access_type": "ref",
+                                    "possible_keys": [
+                                      "campaign_id"
+                                    ],
+                                    "key": "campaign_id",
+                                    "used_key_parts": [
+                                      "campaign_id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.c.id"
+                                    ],
+                                    "rows": 7,
+                                    "filtered": 100
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "city_offer_link",
+                        "access_type": "ref",
+                        "possible_keys": [
+                          "<auto_key1>"
+                        ],
+                        "key": "<auto_key1>",
+                        "used_key_parts": [
+                          "offer_link_id"
+                        ],
+                        "key_length": "5",
+                        "ref": [
+                          "ro.offer_link_id"
+                        ],
+                        "rows": 5914,
+                        "filtered": 100,
+                        "not_exists": true,
+                        "attached_condition": "<if>(found_match(city_offer_link), isnull(`city_offer_link`.`city`), true)",
+                        "materialized_from_subquery": {
+                          "using_temporary_table": true,
+                          "dependent": false,
+                          "cacheable": true,
+                          "query_block": {
+                            "select_id": 4,
+                            "grouping_operation": {
+                              "using_temporary_table": true,
+                              "using_filesort": true,
+                              "nested_loop": [
+                                {
+                                  "table": {
+                                    "table_name": "c",
+                                    "access_type": "index",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "fk_campaign_target_id"
+                                    ],
+                                    "key": "fk_campaign_target_id",
+                                    "used_key_parts": [
+                                      "target_id"
+                                    ],
+                                    "key_length": "4",
+                                    "rows": 42591,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "t",
+                                    "access_type": "eq_ref",
+                                    "possible_keys": [
+                                      "PRIMARY"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.c.target_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "at",
+                                    "access_type": "ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "attribute_id"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "target_id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.c.target_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "using_index": true
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "a",
+                                    "access_type": "eq_ref",
+                                    "possible_keys": [
+                                      "PRIMARY",
+                                      "uk_attribute_type"
+                                    ],
+                                    "key": "PRIMARY",
+                                    "used_key_parts": [
+                                      "id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.at.attribute_id"
+                                    ],
+                                    "rows": 1,
+                                    "filtered": 100,
+                                    "attached_condition": "(`appthis_v2`.`a`.`attribute_type_id` = 4)"
+                                  }
+                                },
+                                {
+                                  "table": {
+                                    "table_name": "li",
+                                    "access_type": "ref",
+                                    "possible_keys": [
+                                      "campaign_id",
+                                      "fk_line_item_offer_link_id"
+                                    ],
+                                    "key": "campaign_id",
+                                    "used_key_parts": [
+                                      "campaign_id"
+                                    ],
+                                    "key_length": "4",
+                                    "ref": [
+                                      "appthis_v2.c.id"
+                                    ],
+                                    "rows": 7,
+                                    "filtered": 100,
+                                    "attached_condition": "(`appthis_v2`.`li`.`offer_link_id` is not null)"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "dependent": false,
+          "cacheable": true,
+          "query_block": {
+            "select_id": 6,
+            "table": {
+              "table_name": "transparent_network",
+              "access_type": "ALL",
+              "rows": 2,
+              "filtered": 100,
+              "materialized_from_subquery": {
+                "using_temporary_table": true,
+                "dependent": false,
+                "cacheable": true,
+                "query_block": {
+                  "select_id": 7,
+                  "nested_loop": [
+                    {
+                      "table": {
+                        "table_name": "ro",
+                        "access_type": "ALL",
+                        "rows": 2,
+                        "filtered": 100,
+                        "attached_condition": "((`ro`.`clicks_needed` > 0) and (`ro`.`conversions` > 0))",
+                        "materialized_from_subquery": {
+                          "using_temporary_table": true,
+                          "dependent": false,
+                          "cacheable": true,
+                          "query_block": {
+                            "select_id": 8,
+                            "table": {
+                              "message": "no matching row in const table",
+                              "materialized_from_subquery": {
+                                "using_temporary_table": true,
+                                "dependent": false,
+                                "cacheable": true,
+                                "query_block": {
+                                  "select_id": 9,
+                                  "table": {
+                                    "message": "no matching row in const table"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "ol",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY",
+                          "uk_unique",
+                          "offer_id",
+                          "network_id",
+                          "country_iso",
+                          "active",
+                          "offer_pull",
+                          "idx_offer_link_user_id_network_id_active"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "ro.offer_link_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100,
+                        "attached_condition": "((`appthis_v2`.`ol`.`incent_allowed` = 0) and (`appthis_v2`.`ol`.`active` in (1,3,4)) and (`appthis_v2`.`ol`.`country_iso` is not null))"
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "n",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "appthis_v2.ol.network_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100,
+                        "attached_condition": "(`appthis_v2`.`n`.`override_network_source_distribution` = 1)"
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "td",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "appthis_v2.n.tracking_domain_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100
+                      }
+                    },
+                    {
+                      "table": {
+                        "table_name": "o",
+                        "access_type": "eq_ref",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "id"
+                        ],
+                        "key_length": "4",
+                        "ref": [
+                          "appthis_v2.ol.offer_id"
+                        ],
+                        "rows": 1,
+                        "filtered": 100,
+                        "attached_condition": "(`appthis_v2`.`o`.`pay_method` = 'CPI')"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
