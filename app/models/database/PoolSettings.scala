@@ -4,7 +4,7 @@ import java.util.UUID
 
 import services.database.ssl.SslSettings
 
-case class ConnectionSettings(
+case class PoolSettings(
   id: UUID = UUID.randomUUID,
   url: String,
   username: String,

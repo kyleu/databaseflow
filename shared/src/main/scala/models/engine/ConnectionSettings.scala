@@ -1,10 +1,8 @@
-package models.flow
+package models.engine
 
 import java.util.UUID
 
-import models.engine.DatabaseEngine
-
-case class Connection(
+case class ConnectionSettings(
   id: UUID,
   name: String,
   engine: DatabaseEngine,
