@@ -11,10 +11,10 @@ case class DynamicQuery(override val sql: String) extends Query[(Seq[QueryResult
       val cc = md.getColumnCount
 
       if (columns.isEmpty) {
-        columns = Some((1 until cc).map(i => QueryResult.Col(md.getColumnLabel(i), md.getColumnTypeName(i))))
+        columns = Some((1 to cc).map(i => QueryResult.Col(md.getColumnLabel(i), md.getColumnTypeName(i))))
       }
 
-      (1 until cc).map(i => row._1.asOpt[Any](i).map(_.toString))
+      (1 to cc).map(i => row._1.asOpt[Any](i).map(_.toString))
     }.toList
 
     columns.getOrElse(Nil) -> data
