@@ -18,19 +18,20 @@ main.indent {
   margin-top: 8px;
 }
 
-@media only screen and (max-width : 992px) {
+#main-menu {
+  margin-top: 64px;
+  height: 100%;
+  height: calc(~'100% - 64px');
+  padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 992px) {
   main.indent {
     padding-left: 0;
   }
-}
-
-#main-menu {
-  margin-top: 64px;
-}
-
-@media only screen and (max-width : 992px) {
   #main-menu {
     margin-top: 0;
+    height: 100%;
   }
 }
 
