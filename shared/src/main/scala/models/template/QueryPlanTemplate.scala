@@ -1,4 +1,4 @@
-package models.templates
+package models.template
 
 import java.util.UUID
 

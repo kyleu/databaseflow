@@ -1,11 +1,11 @@
-package models.templates
+package models.template
 
-import models.QueryError
+import models.QueryErrorResponse
 
 import scalatags.Text.all._
 
 object QueryErrorTemplate {
-  def forError(qe: QueryError) = {
+  def forError(qe: QueryErrorResponse) = {
     val cardTitle = "Error"
 
     val card = div(cls := "card")(
@@ -15,7 +15,12 @@ object QueryErrorTemplate {
           i(cls := "right fa fa-close")
         ),
         p(s"Executed in [${qe.durationMs}ms]."),
-        "Shit went wrong, yo."
+        p(cls := "")(qe.error.message),
+        if (qe.error.position.isEmpty) {
+          ""
+        } else {
+          s"Error encountered at position [${qe.error.line.getOrElse(0)}:${qe.error.position.getOrElse(0)}]."
+        }
       )
     )
 

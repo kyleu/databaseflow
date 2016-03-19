@@ -1,4 +1,4 @@
-package models.templates
+package models.template
 
 import models.schema.{ Schema, Table }
 import scalatags.Text.all._

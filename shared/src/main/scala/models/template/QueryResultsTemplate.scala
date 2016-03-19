@@ -1,16 +1,16 @@
-package models.templates
+package models.template
 
-import models.QueryResult
+import models.QueryResultResponse
 
 import scalatags.Text.all._
 
 object QueryResultsTemplate {
-  def forResults(qr: QueryResult) = {
+  def forResults(qr: QueryResultResponse) = {
     val cardTitle = "Results"
 
-    val tableHeader = thead(tr(qr.columns.map(c => th(c.name))))
+    val tableHeader = thead(tr(qr.result.columns.map(c => th(title := c.t)(c.name))))
 
-    val tableBody = tbody(qr.data.map { r =>
+    val tableBody = tbody(qr.result.data.map { r =>
       tr(r.map {
         case Some(v) => td(v)
         case None => td("∅")
