@@ -13,16 +13,20 @@ object QueryResultsTemplate {
     val tableBody = tbody(qr.data.map { r =>
       tr(r.map {
         case Some(v) => td(v)
-        case None => td("")
+        case None => td("∅")
         case null => td("wtfhardnull")
       })
     })
 
-    val dataTable = table(tableHeader, tableBody)
+    val dataTable = table(cls := "bordered highlight")(tableHeader, tableBody)
 
-    val card = div(cls := "card")(
+    val card = div(id := qr.id.toString, cls := "card")(
       div(cls := "card-content")(
-        span(cls := "card-title")(cardTitle),
+        span(cls := "card-title")(
+          cardTitle,
+          i(cls := "right fa fa-close")
+        ),
+        p(s"Executed in [${qr.durationMs}ms]."),
         dataTable
       ),
       div(cls := "card-action")(

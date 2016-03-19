@@ -1,6 +1,7 @@
 import models.templates.{ QueryPlanTemplate, QueryResultsTemplate }
 import models._
 import utils.Logging
+import org.scalajs.jquery.{ jQuery => $, JQueryEventObject }
 
 trait MessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
@@ -15,6 +16,9 @@ trait MessageHelper { this: DatabaseFlow =>
     //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
     val html = QueryResultsTemplate.forResults(qr)
     workspace.append(html.toString)
+    $(s"#${qr.id} .fa-close").click((e: JQueryEventObject) => {
+      $(s"#${qr.id}").remove()
+    })
   }
 
   private[this] def handlePlanResult(pr: PlanResult) = {

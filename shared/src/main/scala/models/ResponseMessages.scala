@@ -21,7 +21,8 @@ case class Disconnected(reason: String) extends ResponseMessage
 object QueryResult {
   case class Col(name: String, t: String)
 }
-case class QueryResult(sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]]) extends ResponseMessage
+case class QueryResult(id: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]], durationMs: Int) extends ResponseMessage
+case class QueryError(sql: String, code: String, message: String, line: Int, position: Int, durationMs: Int) extends ResponseMessage
 case class PlanResult(id: UUID, name: String, sql: String, asText: String, node: PlanNode, created: Long) extends ResponseMessage
 
 case class MessageSet(messages: Seq[ResponseMessage]) extends ResponseMessage
