@@ -35,7 +35,6 @@ trait NetworkHelper { this: DatabaseFlow =>
   }
 
   protected[this] def sendMessage(rm: RequestMessage): Unit = {
-    //Logging.info(s"Sending [].")
     if (socket.connected) {
       val json = JsonSerializers.writeRequestMessage(rm, debug)
       socket.send(json)
