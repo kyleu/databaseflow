@@ -1,4 +1,4 @@
-import models.templates.{ QueryErrorTemplate, QueryPlanTemplate, QueryResultsTemplate }
+import models.template.{ QueryErrorTemplate, QueryPlanTemplate, QueryResultsTemplate }
 import models._
 import utils.Logging
 import org.scalajs.jquery.{ jQuery => $, JQueryEventObject }
@@ -7,13 +7,13 @@ trait MessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
     case p: Pong => latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
     case is: InitialState => onInitialState(is)
-    case qr: QueryResult => handleQueryResult(qr)
-    case qe: QueryError => handleQueryError(qe)
+    case qr: QueryResultResponse => handleQueryResult(qr)
+    case qe: QueryErrorResponse => handleQueryError(qe)
     case pr: PlanResult => handlePlanResult(pr)
     case _ => Logging.info("Received: " + rm.getClass.getSimpleName)
   }
 
-  private[this] def handleQueryResult(qr: QueryResult) = {
+  private[this] def handleQueryResult(qr: QueryResultResponse) = {
     //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
     val html = QueryResultsTemplate.forResults(qr)
     workspace.append(html.toString)
@@ -22,7 +22,7 @@ trait MessageHelper { this: DatabaseFlow =>
     })
   }
 
-  private[this] def handleQueryError(qe: QueryError) = {
+  private[this] def handleQueryError(qe: QueryErrorResponse) = {
     val html = QueryErrorTemplate.forError(qe)
     workspace.append(html.toString)
     $(s"#${qe.id} .fa-close").click((e: JQueryEventObject) => {

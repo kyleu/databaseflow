@@ -1,7 +1,7 @@
 package models.queries
 
-import models.QueryResult
-import models.database.{ Row, Query }
+import models.database.{ Query, Row }
+import models.query.QueryResult
 
 case class DynamicQuery(override val sql: String) extends Query[(Seq[QueryResult.Col], Seq[Seq[Option[String]]])] {
   override def reduce(rows: Iterator[Row]) = {

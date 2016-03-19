@@ -1,11 +1,14 @@
 package services.connection
 
+import java.sql.SQLSyntaxErrorException
 import java.util.UUID
 
 import akka.actor.{ ActorRef, Props }
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException
 import models._
 import models.queries.DynamicQuery
-import models.templates.QueryPlanTemplate
+import models.query.{ QueryError, QueryResult }
+import models.template.QueryPlanTemplate
 import models.user.User
 import org.postgresql.util.PSQLException
 import services.database.MasterDatabase
@@ -72,12 +75,15 @@ class ConnectionService(
       val result = db.query(DynamicQuery(sql))
       //log.info(s"Query result: [$result].")
       val durationMs = (DateUtils.nowMillis - startMs).toInt
-      out ! QueryResult(id, sql, result._1, result._2, durationMs)
+      out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
     } catch {
       case sqlEx: PSQLException =>
         val e = sqlEx.getServerErrorMessage
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        out ! QueryError(id, sql, e.getSQLState, e.getMessage, e.getLine, e.getPosition, durationMs)
+        out ! QueryErrorResponse(id, QueryError(sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition)), durationMs)
+      case sqlEx: SQLSyntaxErrorException =>
+        val durationMs = (DateUtils.nowMillis - startMs).toInt
+        out ! QueryErrorResponse(id, QueryError(sql, sqlEx.getSQLState, sqlEx.getMessage), durationMs)
       case NonFatal(x) =>
         log.warn(s"Error running sql [$sql].", x)
         val error = ServerError(x.getClass.getSimpleName, x.getMessage)

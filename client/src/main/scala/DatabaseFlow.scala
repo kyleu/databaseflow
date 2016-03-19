@@ -1,5 +1,5 @@
 import models.InitialState
-import models.templates.SidenavTemplate
+import models.template.SidenavTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 import utils.Logging
 
