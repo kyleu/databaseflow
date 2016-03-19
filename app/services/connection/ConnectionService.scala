@@ -80,18 +80,22 @@ class ConnectionService(
   }
 
   private[this] def handleExplainQuery(sql: String) = {
-    val explainSql = db.engine.explain(sql)
-    log.info(s"Performing query action [explain] for sql [$explainSql].")
+    if (db.engine.explainSupported) {
+      val explainSql = db.engine.explain(sql)
+      log.info(s"Performing query action [explain] for sql [$explainSql].")
 
-    val id = UUID.randomUUID
-    val startMs = DateUtils.nowMillis
-    try {
-      val result = db.query(DynamicQuery(explainSql))
-      //log.info(s"Query result: [$result].")
-      val durationMs = (DateUtils.nowMillis - startMs).toInt
-      out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
-    } catch {
-      case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
+      val id = UUID.randomUUID
+      val startMs = DateUtils.nowMillis
+      try {
+        val result = db.query(DynamicQuery(explainSql))
+        //log.info(s"Query result: [$result].")
+        val durationMs = (DateUtils.nowMillis - startMs).toInt
+        out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
+      } catch {
+        case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
+      }
+    } else {
+      out ! ServerError("explain-not-supported", s"Explain is not avaialble for [${db.engine}].")
     }
   }
 

@@ -150,5 +150,8 @@ object MySQL extends DatabaseEngine(
   )
 ) {
   override val varchar = "varchar"
+  override val explainSupported = true
+  override def explain(sql: String) = "explain format=json " + sql
+  override val analyzeSupported = false
 }
 // scalastyle:on

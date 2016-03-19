@@ -1,6 +1,6 @@
 package services.codegen
 
-import models.codegen.{Capabilities, Engine}
+import models.codegen.{ Capabilities, Engine }
 import org.apache.commons.io.FileUtils
 
 object CodeGenerator {
@@ -49,11 +49,13 @@ object CodeGenerator {
     ret += "  )"
     ret += ") {"
     ret += "  override val varchar = \"" + SqlProvider.varchar + "\""
-    eng.explain.foreach { explain =>
-      ret += "  override def explain(sql: String) = \"" + explain + "\" + sql"
+    ret += s"  override val explainSupported = ${PlanProvider.explainSupported}"
+    if (PlanProvider.explainSupported) {
+      ret += s"  override def explain(sql: String) = ${PlanProvider.explain}"
     }
-    eng.analyze.foreach { analyze =>
-      ret += "  override def analyze(sql: String) = Some(\"" + analyze + "\" + sql")
+    ret += s"  override val analyzeSupported = ${PlanProvider.analyzeSupported}"
+    if (PlanProvider.analyzeSupported) {
+      ret += s"  override def analyze(sql: String) = ${PlanProvider.analyze}"
     }
     ret += "}"
     ret += "// scalastyle:on"

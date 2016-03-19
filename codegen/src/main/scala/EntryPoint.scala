@@ -1,5 +1,5 @@
 import models.codegen.Engine
-import services.codegen.{CodeGenerator, CapabilitiesProvider}
+import services.codegen.{ CodeGenerator, CapabilitiesProvider }
 
 object EntryPoint {
   def main(args: Array[String]) {

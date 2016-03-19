@@ -3,11 +3,9 @@ package models.codegen
 import enumeratum._
 
 sealed abstract class Engine(
-  val id: String,
-  val driverClass: String,
-  val exampleUrl: String,
-  val explain: Option[String] = None,
-  val analyze: Option[String] = None
+    val id: String,
+    val driverClass: String,
+    val exampleUrl: String
 ) extends EnumEntry {
   override def toString = id
 }

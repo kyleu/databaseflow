@@ -2,7 +2,7 @@ package services.codegen
 
 import java.sql.JDBCType
 
-import models.codegen.{JdbcTypes, Capabilities, Engine}
+import models.codegen.{ JdbcTypes, Capabilities, Engine }
 import org.hibernate.dialect.Dialect
 import org.hibernate.dialect.function._
 

@@ -139,5 +139,7 @@ object H2 extends DatabaseEngine(
   )
 ) {
   override val varchar = "varchar"
+  override val explainSupported = false
+  override val analyzeSupported = false
 }
 // scalastyle:on
