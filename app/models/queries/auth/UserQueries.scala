@@ -6,7 +6,7 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import models.database.{ FlatSingleRowQuery, Row, SingleRowQuery, Statement }
 import models.queries.BaseQueries
 import models.user.{ Role, User, UserPreferences }
-import upickle.legacy._
+import upickle.default._
 import utils.JdbcUtils
 
 object UserQueries extends BaseQueries[User] {

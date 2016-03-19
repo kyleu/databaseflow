@@ -7,8 +7,8 @@ import models.schema.Table
 import utils.NullUtils
 
 object MetadataTables {
-  def getTables(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
-    val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
+  def getTables(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], tableType: String) = {
+    val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array(tableType))
     val tables = new Row.Iter(rs).map { row =>
       Table(
         name = row.as[String]("TABLE_NAME"),

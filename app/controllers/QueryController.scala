@@ -8,7 +8,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
 import services.connection.ConnectionService
 import services.database.MasterDatabase
-import services.schema.MetadataService
+import services.schema.SchemaService
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
 
@@ -36,7 +36,7 @@ class QueryController @javax.inject.Inject() (override val ctx: ApplicationConte
 
   def view(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
     val database = MasterDatabase.databaseFor(connectionId)
-    val tables = MetadataService.getMetadata(database.source)
-    Future.successful(Ok(views.html.query.view(request.identity, tables)))
+    val schema = SchemaService.getSchema(database.source)
+    Future.successful(Ok(views.html.query.view(request.identity, schema)))
   }
 }

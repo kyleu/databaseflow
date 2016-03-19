@@ -13,7 +13,7 @@ object MetadataKeys {
       (row.as[String]("PK_NAME"), row.as[String]("COLUMN_NAME"), row.as[Int]("KEY_SEQ"))
     }.toList.groupBy(_._1)
 
-    if(keys.size > 1) {
+    if (keys.size > 1) {
       throw new IllegalStateException("Multiple primary keys?")
     }
 

@@ -3,7 +3,7 @@ package services.sandbox
 import models.database.{ Row, SingleRowQuery }
 import models.queries.connection.ConnectionQueries
 import services.database.MasterDatabase
-import services.schema.MetadataService
+import services.schema.SchemaService
 import upickle.json
 import utils.ApplicationContext
 
@@ -24,11 +24,11 @@ object DatabaseTest extends SandboxTask {
 
     val connTables = connections.map { c =>
       val db = MasterDatabase.databaseFor(c.id)
-      val metadata = MetadataService.getMetadata(db.source)
+      val metadata = SchemaService.getSchema(db.source)
       c -> metadata
     }
     val ret = connTables.map { t =>
-      import upickle.legacy._
+      import upickle.default._
 
       val tableStrings = t._2.tables.map { x =>
         val j = writeJs(x)

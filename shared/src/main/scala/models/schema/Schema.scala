@@ -12,7 +12,8 @@ case class Schema(
   procedureTerm: String,
   catalogTerm: String,
   maxSqlLength: Int,
-  tables: Seq[Table] = Nil,
-  procedures: Seq[Procedure] = Nil,
-  clientInfoProperties: Seq[ClientInfoProperty] = Nil
+  tables: Seq[Table],
+  views: Seq[Table],
+  procedures: Seq[Procedure],
+  clientInfoProperties: Seq[ClientInfoProperty]
 )
