@@ -1,5 +1,5 @@
 import models.{ Ping, RequestMessage }
-import navigation.Navigation
+import services.NavigationService
 import utils.{ JsonSerializers, Logging, NetworkSocket }
 
 import scala.scalajs.js.timers._
@@ -10,7 +10,7 @@ trait NetworkHelper { this: DatabaseFlow =>
   protected[this] var latencyMs: Option[Int] = None
 
   protected def connect() = {
-    socket.open(Navigation.socketUrl)
+    socket.open(NavigationService.socketUrl)
   }
 
   private def sendPing(): Unit = {
