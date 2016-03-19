@@ -21,19 +21,22 @@ class DatabaseFlow extends NetworkHelper with MessageHelper with InitHelper {
 
   def onInitialState(is: InitialState) = {
     if (is.schema.tables.nonEmpty) {
-      $("#table-list").css("display", "block").html(SidenavTemplate.tables(is.schema).mkString("\n"))
+      $("#table-list-toggle").css("display", "block")
+      $("#table-list").html(SidenavTemplate.tables(is.schema).mkString("\n"))
     } else {
-      $("#table-list").css("display", "none")
+      $("#table-list-toggle").css("display", "None")
     }
     if (is.schema.tables.nonEmpty) {
-      $("#view-list").css("display", "block").html(SidenavTemplate.views(is.schema).mkString("\n"))
+      $("#view-list-toggle").css("display", "block")
+      $("#view-list").html(SidenavTemplate.views(is.schema).mkString("\n"))
     } else {
-      $("#view-list").css("display", "none")
+      $("#view-list-toggle").css("display", "none")
     }
     if (is.schema.tables.nonEmpty) {
-      $("#procedure-list").css("display", "block").html(SidenavTemplate.procedures(is.schema).mkString("\n"))
+      $("#procedure-list-toggle").css("display", "block")
+      $("#procedure-list").html(SidenavTemplate.procedures(is.schema).mkString("\n"))
     } else {
-      $("#procedure-list").css("display", "none")
+      $("#procedure-list-toggle").css("display", "none")
     }
   }
 }

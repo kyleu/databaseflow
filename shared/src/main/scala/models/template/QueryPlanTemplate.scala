@@ -35,11 +35,11 @@ object QueryPlanTemplate {
     )
   }
 
-  private[this] def forNode(node: PlanNode): Modifier = if (node.children.isEmpty) {
-    li(a(href := "#")(node.title))
+  private[this] def forNode(node: PlanNode, className: String): Modifier = if (node.children.isEmpty) {
+    li(cls := className)(a(href := "#")(node.title))
   } else {
-    val kids = node.children.map(forNode)
-    li(a(href := "#")(node.title), ul(kids: _*))
+    val kids = node.children.map(n => forNode(n, ""))
+    li(cls := className)(a(href := "#")(node.title), ul(kids: _*))
   }
 
   private[this] def cardFor(pr: PlanResult) = {
@@ -48,14 +48,15 @@ object QueryPlanTemplate {
         div(cls := "card")(
           div(cls := "card-content")(
             span(cls := "card-title")(
-              "Query Plan",
+              pr.name,
               i(cls := "right fa fa-close")
             ),
             div(
-              div(cls := "tree-container"),
-              div(cls := "tree")(ul(
-                forNode(pr.node)
-              ))
+              div(id := "", cls := "tree-container")(
+                div(cls := "tree")(
+                  ul(forNode(pr.node, "root-node"))
+                )
+              )
             ),
             div(cls := "clear")
           ),
