@@ -7,10 +7,13 @@ import models._
 import models.queries.DynamicQuery
 import models.templates.QueryPlanTemplate
 import models.user.User
+import org.postgresql.util.PSQLException
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
-import utils.{ Config, Logging }
+import utils.{ DateUtils, Config, Logging }
+
+import scala.util.control.NonFatal
 
 object ConnectionService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
@@ -63,9 +66,23 @@ class ConnectionService(
 
   private[this] def handleRunQuery(sql: String) = {
     log.info(s"Performing query action [run] for sql [$sql].")
-    val result = db.query(DynamicQuery(sql))
-    //log.info(s"Query result: [$result].")
-    out ! QueryResult(sql, result._1, result._2)
+    val startMs = DateUtils.nowMillis
+    try {
+      val result = db.query(DynamicQuery(sql))
+      //log.info(s"Query result: [$result].")
+      val id = UUID.randomUUID
+      val durationMs = (DateUtils.nowMillis - startMs).toInt
+      out ! QueryResult(id, sql, result._1, result._2, durationMs)
+    } catch {
+      case sqlEx: PSQLException =>
+        val e = sqlEx.getServerErrorMessage
+        val durationMs = (DateUtils.nowMillis - startMs).toInt
+        out ! QueryError(sql, e.getSQLState, e.getMessage, e.getLine, e.getPosition, durationMs)
+      case NonFatal(x) =>
+        log.warn(s"Error running sql [$sql].", x)
+        val error = ServerError(x.getClass.getSimpleName, x.getMessage)
+        out ! error
+    }
   }
 
   private[this] def handleExplainQuery(sql: String) = {
