@@ -42,11 +42,14 @@ object QueryPlanTemplate {
   }
 
   private[this] def cardFor(pr: PlanResult) = {
-    div(cls := "row")(
+    div(id := pr.id.toString, cls := "row")(
       div(cls := "col s12")(
         div(cls := "card")(
           div(cls := "card-content")(
-            span(cls := "card-title")("Query Plan"),
+            span(cls := "card-title")(
+              "Query Plan",
+              i(cls := "right fa fa-close")
+            ),
             div(
               div(cls := "tree-container"),
               div(cls := "tree")(ul(

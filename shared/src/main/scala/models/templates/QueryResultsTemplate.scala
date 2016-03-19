@@ -20,7 +20,7 @@ object QueryResultsTemplate {
 
     val dataTable = table(cls := "bordered highlight")(tableHeader, tableBody)
 
-    val card = div(id := qr.id.toString, cls := "card")(
+    val card = div(cls := "card")(
       div(cls := "card-content")(
         span(cls := "card-title")(
           cardTitle,
@@ -34,7 +34,7 @@ object QueryResultsTemplate {
       )
     )
 
-    val wrapper = div(cls := "row") {
+    val wrapper = div(id := qr.id.toString, cls := "row") {
       div(cls := "col s12")(card)
     }
 

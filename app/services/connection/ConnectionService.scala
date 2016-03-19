@@ -66,18 +66,18 @@ class ConnectionService(
 
   private[this] def handleRunQuery(sql: String) = {
     log.info(s"Performing query action [run] for sql [$sql].")
+    val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
     try {
       val result = db.query(DynamicQuery(sql))
       //log.info(s"Query result: [$result].")
-      val id = UUID.randomUUID
       val durationMs = (DateUtils.nowMillis - startMs).toInt
       out ! QueryResult(id, sql, result._1, result._2, durationMs)
     } catch {
       case sqlEx: PSQLException =>
         val e = sqlEx.getServerErrorMessage
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        out ! QueryError(sql, e.getSQLState, e.getMessage, e.getLine, e.getPosition, durationMs)
+        out ! QueryError(id, sql, e.getSQLState, e.getMessage, e.getLine, e.getPosition, durationMs)
       case NonFatal(x) =>
         log.warn(s"Error running sql [$sql].", x)
         val error = ServerError(x.getClass.getSimpleName, x.getMessage)
