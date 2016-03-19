@@ -1,154 +1,20 @@
 @(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.materialize(utils.Config.projectName) {
-  <header>
-    <div class="navbar-fixed">
-      <nav class="@user.preferences.theme lighten-2">
-        <div class="nav-wrapper">
-          <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
-
-          <ul id="main-menu" class="side-nav fixed">
-            <li class="search">
-              <div class="search-wrapper card">
-                <input id="search" placeholder="Search" /><i class="fa fa-search"></i>
-              </div>
-            </li>
-            <li class="no-padding">
-              <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
-                <li class="bold">
-                  <a class="collapsible-header waves-effect">
-                    <i class="fa fa-angle-right"></i>
-                    <i class="fa fa-angle-down"></i>
-                    Saved Queries
-                  </a>
-                  <div class="collapsible-body">
-                    <ul id="saved-query-list" class="submenu">
-                      <li><a href="">Query A</a></li>
-                      <li><a href="">Query B</a></li>
-                      <li><a href="">Query C</a></li>
-                    </ul>
-                  </div>
-                </li>
-                <li class="bold">
-                  <a class="collapsible-header waves-effect">
-                    <i class="fa fa-angle-right"></i>
-                    <i class="fa fa-angle-down"></i>
-                    Tables
-                  </a>
-                  <div class="collapsible-body">
-                    <ul id="table-list" class="submenu">
-                      <li><a href="">Table A</a></li>
-                      <li><a href="">Table B</a></li>
-                      <li><a href="">Table C</a></li>
-                    </ul>
-                  </div>
-                </li>
-                <li class="bold">
-                  <a class="collapsible-header waves-effect">
-                    <i class="fa fa-angle-right"></i>
-                    <i class="fa fa-angle-down"></i>
-                    Views
-                  </a>
-                  <div class="collapsible-body">
-                    <ul id="view-list" class="submenu">
-                      <li><a href="">View A</a></li>
-                      <li><a href="">View B</a></li>
-                      <li><a href="">View C</a></li>
-                    </ul>
-                  </div>
-                </li>
-                <li class="bold">
-                  <a class="collapsible-header waves-effect">
-                    <i class="fa fa-angle-right"></i>
-                    <i class="fa fa-angle-down"></i>
-                    Stored Procedures
-                  </a>
-                  <div class="collapsible-body">
-                    <ul id="procedure-list" class="submenu">
-                      <li><a href="">Proc A</a></li>
-                      <li><a href="">Proc B</a></li>
-                      <li><a href="">Proc C</a></li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-        </div>
-      </nav>
-    </div>
-  </header>
+  @sidenav(user)
 
   <main class="indent">
-    <div class="">
+    <div id="workspace">
       <div class="row">
         <div class="col s12">
           <div class="card">
             <div class="card-content">
               <span class="card-title">SQL Query</span>
-              <div id="sql-textarea" style="width: 100%;">select * from users;</div>
+              <div id="sql-textarea" style="width: 100%;">select * from actor limit 5;</div>
             </div>
             <div class="card-action">
               <a id="run-query-link" href="#">Run</a>
               <a id="explain-query-link" href="#">Explain</a>
               <a id="analyze-query-link" href="#">Analyze</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col s12">
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">Query Plan</span>
-              @queryplan()
-            </div>
-            <div class="card-action">
-              <a href="#">Download</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col s12">
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">Results</span>
-              <table class="">
-                <thead>
-                  <tr>
-                    <th>Column A</th>
-                    <th>Column B</th>
-                    <th>Column C</th>
-                    <th>Column D</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>A1</td>
-                    <td>B1</td>
-                    <td>C1</td>
-                    <td>D1</td>
-                  </tr>
-                  <tr>
-                    <td>A2</td>
-                    <td>B2</td>
-                    <td>C2</td>
-                    <td>D2</td>
-                  </tr>
-                  <tr>
-                    <td>A3</td>
-                    <td>B3</td>
-                    <td>C3</td>
-                    <td>D3</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="card-action">
-              <a href="#">Download</a>
             </div>
           </div>
         </div>
