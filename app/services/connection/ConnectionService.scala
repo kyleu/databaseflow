@@ -1,20 +1,17 @@
 package services.connection
 
-import java.sql.SQLSyntaxErrorException
 import java.util.UUID
 
 import akka.actor.{ ActorRef, Props }
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException
 import models._
 import models.queries.DynamicQuery
-import models.query.{ QueryError, QueryResult }
+import models.query.QueryResult
 import models.template.QueryPlanTemplate
 import models.user.User
-import org.postgresql.util.PSQLException
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
-import utils.{ DateUtils, Config, Logging }
+import utils.{ Config, DateUtils, Logging }
 
 import scala.util.control.NonFatal
 
@@ -78,22 +75,24 @@ class ConnectionService(
       val durationMs = (DateUtils.nowMillis - startMs).toInt
       out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
     } catch {
-      case sqlEx: PSQLException =>
-        val e = sqlEx.getServerErrorMessage
-        val durationMs = (DateUtils.nowMillis - startMs).toInt
-        out ! QueryErrorResponse(id, QueryError(sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition)), durationMs)
-      case sqlEx: SQLSyntaxErrorException =>
-        val durationMs = (DateUtils.nowMillis - startMs).toInt
-        out ! QueryErrorResponse(id, QueryError(sql, sqlEx.getSQLState, sqlEx.getMessage), durationMs)
-      case NonFatal(x) =>
-        log.warn(s"Error running sql [$sql].", x)
-        val error = ServerError(x.getClass.getSimpleName, x.getMessage)
-        out ! error
+      case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
     }
   }
 
   private[this] def handleExplainQuery(sql: String) = {
-    out ! QueryPlanTemplate.testPlan("explain")
+    val explainSql = db.engine.explain(sql)
+    log.info(s"Performing query action [explain] for sql [$explainSql].")
+
+    val id = UUID.randomUUID
+    val startMs = DateUtils.nowMillis
+    try {
+      val result = db.query(DynamicQuery(explainSql))
+      //log.info(s"Query result: [$result].")
+      val durationMs = (DateUtils.nowMillis - startMs).toInt
+      out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
+    } catch {
+      case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
+    }
   }
 
   private[this] def handleAnalyzeQuery(sql: String) = {
