@@ -49,6 +49,12 @@ object CodeGenerator {
     ret += "  )"
     ret += ") {"
     ret += "  override val varchar = \"" + SqlProvider.varchar + "\""
+    eng.explain.foreach { explain =>
+      ret += "  override def explain(sql: String) = \"" + explain + "\" + sql"
+    }
+    eng.analyze.foreach { analyze =>
+      ret += "  override def analyze(sql: String) = Some(\"" + analyze + "\" + sql")
+    }
     ret += "}"
     ret += "// scalastyle:on"
     ret += ""
