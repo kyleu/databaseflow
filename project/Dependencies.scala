@@ -1,8 +1,6 @@
 import sbt._
 
 object Dependencies {
-  val scapegoatVersion = "1.2.1"
-
   object Cache {
     val ehCache = "net.sf.ehcache" % "ehcache-core" % "2.6.11"
   }
@@ -79,7 +77,9 @@ object Dependencies {
   }
 
   object Utils {
-    val enumeratum = "com.beachape" %% "enumeratum-play-json" % "1.3.7"
+    val scapegoatVersion = "1.2.1"
+    val enumeratumVersion = "1.3.7"
+    val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.4"
   }
 }

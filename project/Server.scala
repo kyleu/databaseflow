@@ -1,5 +1,4 @@
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.SbtScalariform.{ScalariformKeys, defaultScalariformSettings}
 import com.typesafe.sbt.digest.Import._
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
@@ -17,7 +16,6 @@ import com.typesafe.sbt.packager.windows.WindowsPlugin
 import com.typesafe.sbt.rjs.Import._
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
-import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import play.routes.compiler.InjectedRoutesGenerator
 import play.sbt.routes.RoutesKeys.routesGenerator
 import playscalajs.PlayScalaJS.autoImport._
@@ -31,34 +29,21 @@ object Server {
     Seq(
       Cache.ehCache, Mail.mailer, Akka.actor, Akka.logging, Akka.testkit, Authentication.silhouette, Play.playFilters, Play.playWs, Play.playTest,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
-      WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, Utils.enumeratum
+      WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome
     )
   }
 
-  private[this] lazy val serverSettings = Seq(
+  private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
     name := Shared.projectName,
-    version := Shared.Versions.app,
-    scalaVersion := Shared.Versions.scala,
     maintainer := "Kyle Unverferth",
     description := "Database Flow is pretty great.",
 
-    scalacOptions ++= Shared.compileOptions,
-    scalacOptions in Test ++= Seq("-Yrangepos"),
-
     resolvers += Resolver.jcenterRepo,
-
-    routesGenerator := InjectedRoutesGenerator,
-
     libraryDependencies ++= dependencies,
 
     scalaJSProjects := Seq(Client.client),
 
-    publishMavenStyle := false,
-
-    // Prevent Scaladoc
-    doc in Compile <<= target.map(_ / "none"),
-    sources in (Compile, doc) := Seq.empty,
-    publishArtifact in (Compile, packageDoc) := false,
+    routesGenerator := InjectedRoutesGenerator,
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
@@ -82,12 +67,10 @@ object Server {
     jdkPackagerToolkit := SwingToolkit,
     jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value),
 
-  // Code Quality
+    // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Row.scala", ".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala"),
-    scapegoatDisabledInspections := Seq("DuplicateImport"),
-    scapegoatVersion := Dependencies.scapegoatVersion,
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  ) ++ graphSettings ++ defaultScalariformSettings
+    scapegoatDisabledInspections := Seq("DuplicateImport")
+  )
 
   lazy val iconGlob = sys.props("os.name").toLowerCase match {
     case os if os.contains("mac") ⇒ "*.icns"

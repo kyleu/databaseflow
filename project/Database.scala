@@ -1,11 +1,6 @@
-import sbt._
 import sbt.Keys._
 import sbt.Project.projectToRef
-
-
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, defaultScalariformSettings }
-import net.virtualvoid.sbt.graph.Plugin.graphSettings
+import sbt._
 
 object Database {
   private[this] val dependencies = {
@@ -16,22 +11,10 @@ object Database {
     )
   }
 
-  private[this] lazy val dblibsSettings = Seq(
+  private[this] lazy val dblibsSettings = Shared.commonSettings ++ Seq(
     name := "Database Library",
-    version := Shared.Versions.app,
-    scalaVersion := Shared.Versions.scala,
-
-    scalacOptions ++= Shared.compileOptions,
-    scalacOptions in Test ++= Seq("-Yrangepos"),
-
-    libraryDependencies ++= dependencies,
-
-    // Code Quality
-    scapegoatVersion := Dependencies.scapegoatVersion,
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value,
-
-    publishMavenStyle := false
-  ) ++ graphSettings ++ defaultScalariformSettings
+    libraryDependencies ++= dependencies
+  )
 
   lazy val dblibs = Project(
     id = "dblibs",

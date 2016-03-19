@@ -1,34 +1,50 @@
+import Dependencies._
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import sbt._
-import sbt.Keys._
-
+import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
-import com.typesafe.sbt.SbtScalariform.{ScalariformKeys, defaultScalariformSettings}
-
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-
 import playscalajs.ScalaJSPlay
 import playscalajs.ScalaJSPlay.autoImport._
+import sbt.Keys._
+import sbt._
 
 object Shared {
   val projectId = "databaseflow"
   val projectName = "Database Flow"
 
-  val compileOptions = Seq(
-    "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
-    "-Ywarn-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen"
-  )
+  lazy val commonSettings = Seq(
+    version := Shared.Versions.app,
+    scalaVersion := Shared.Versions.scala,
+
+    scalacOptions ++= Seq(
+      "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
+      "-Ywarn-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen"
+    ),
+    scalacOptions in Test ++= Seq("-Yrangepos"),
+
+    publishMavenStyle := false,
+
+    // Prevent Scaladoc
+    doc in Compile <<= target.map(_ / "none"),
+    sources in (Compile, doc) := Seq.empty,
+    publishArtifact in (Compile, packageDoc) := false,
+
+    // Code Quality
+    scapegoatVersion := Utils.scapegoatVersion,
+    ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  ) ++ graphSettings ++ scalariformSettings
+
 
   object Versions {
     val app = "1.0.0"
     val scala = "2.11.8"
   }
 
-  lazy val sharedJs = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(
-    scalaVersion := Versions.scala,
+  lazy val sharedJs = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %%% "upickle" % Dependencies.Serialization.version,
-      "com.lihaoyi" %%% "scalatags" % Dependencies.Templating.version
+      "com.lihaoyi" %%% "upickle" % Serialization.version,
+      "com.lihaoyi" %%% "scalatags" % Templating.version,
+      "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion
     )
   )
     .enablePlugins(ScalaJSPlay)
@@ -37,15 +53,11 @@ object Shared {
       scalaJSStage in Global := FastOptStage
     ).js
 
-  lazy val sharedJvm = (project in file("shared")).settings(
-    scalaVersion := Versions.scala,
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value,
-    scapegoatVersion := Dependencies.scapegoatVersion,
+  lazy val sharedJvm = (project in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
-      Dependencies.Serialization.uPickle,
-      Dependencies.Templating.scalaTags
+      Serialization.uPickle,
+      Templating.scalaTags,
+      Utils.enumeratum
     )
   )
-    .settings(graphSettings: _*)
-    .settings(defaultScalariformSettings: _*)
 }
