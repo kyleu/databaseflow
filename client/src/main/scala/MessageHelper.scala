@@ -11,7 +11,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case is: InitialState => onInitialState(is)
     case qr: QueryResultResponse => handleQueryResult(qr)
     case qe: QueryErrorResponse => handleQueryError(qe)
-    case pr: PlanResult => handlePlanResult(pr)
+    case pr: PlanResultResponse => handlePlanResult(pr)
     case _ => Logging.info("Received: " + rm.getClass.getSimpleName)
   }
 
@@ -32,7 +32,7 @@ trait MessageHelper { this: DatabaseFlow =>
     })
   }
 
-  private[this] def handlePlanResult(pr: PlanResult) = {
+  private[this] def handlePlanResult(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val html = QueryPlanTemplate.forPlan(pr)
     workspace.prepend(html.toString)
@@ -63,6 +63,5 @@ trait MessageHelper { this: DatabaseFlow =>
       }
     }
     tree.width(nodeWidth + 20)
-    Logging.info(s"Tree: ${tree.length}/$treeWidth, Root Node: ${rootNode.length}/$nodeWidth")
   }
 }

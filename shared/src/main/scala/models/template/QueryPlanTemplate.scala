@@ -2,8 +2,8 @@ package models.template
 
 import java.util.UUID
 
-import models.PlanResult
-import models.plan.PlanNode
+import models.PlanResultResponse
+import models.plan.{ PlanNode, PlanResult }
 
 import scalatags.Text.all._
 
@@ -24,13 +24,15 @@ object QueryPlanTemplate {
       ))
     ))
 
-    PlanResult(
+    PlanResultResponse(
       id = UUID.randomUUID,
-      name = "Test Query Plan",
-      action = action,
-      sql = "select * from something",
-      asText = "...",
-      node = node,
+      PlanResult(
+        name = "Test Query Plan",
+        action = action,
+        sql = "select * from something",
+        asText = "...",
+        node = node
+      ),
       created = 0L
     )
   }
@@ -42,19 +44,19 @@ object QueryPlanTemplate {
     li(cls := className)(a(href := "#")(node.title), ul(kids: _*))
   }
 
-  private[this] def cardFor(pr: PlanResult) = {
+  private[this] def cardFor(pr: PlanResultResponse) = {
     div(id := pr.id.toString, cls := "row")(
       div(cls := "col s12")(
         div(cls := "card")(
           div(cls := "card-content")(
             span(cls := "card-title")(
-              pr.name,
+              pr.result.name,
               i(cls := "right fa fa-close")
             ),
             div(
               div(id := "", cls := "tree-container")(
                 div(cls := "tree")(
-                  ul(forNode(pr.node, "root-node"))
+                  ul(forNode(pr.result.node, "root-node"))
                 )
               )
             ),
@@ -68,7 +70,7 @@ object QueryPlanTemplate {
     )
   }
 
-  def forPlan(pr: PlanResult) = {
+  def forPlan(pr: PlanResultResponse) = {
     cardFor(pr)
   }
 }

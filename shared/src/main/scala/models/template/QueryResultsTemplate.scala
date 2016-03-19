@@ -15,11 +15,15 @@ object QueryResultsTemplate {
         case Some(v) if v.isEmpty => td(em("empty string"))
         case Some(v) => td(v)
         case None => td("∅")
-        case null => td("wtfhardnull")
+        case null => td("null-bug")
       })
     })
 
-    val dataTable = table(cls := "bordered highlight responsive-table")(tableHeader, tableBody)
+    val data = if (qr.result.columns.isEmpty || qr.result.data.isEmpty) {
+      em("No rows returned.")
+    } else {
+      div(cls := "query-result-table")(table(cls := "bordered highlight responsive-table")(tableHeader, tableBody))
+    }
 
     val card = div(cls := "card")(
       div(cls := "card-content")(
@@ -28,7 +32,7 @@ object QueryResultsTemplate {
           i(cls := "right fa fa-close")
         ),
         p(s"Executed in [${qr.durationMs}ms]."),
-        dataTable
+        data
       ),
       div(cls := "card-action")(
         a(href := "#")("Download")
