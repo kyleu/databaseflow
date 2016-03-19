@@ -1,3 +1,20 @@
 .fa-close {
   cursor: pointer;
 }
+
+.query-result-table {
+  overflow-x: auto;
+
+  th, td {
+    max-width: 200px;
+    text-overflow: ellipsis;
+    white-space: pre;
+  }
+  td {
+    border-left: 1px solid #ddd;
+
+    &:first-child {
+      border-left: 0;
+    }
+  }
+}
