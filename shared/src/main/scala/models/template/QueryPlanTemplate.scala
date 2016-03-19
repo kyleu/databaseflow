@@ -8,7 +8,7 @@ import models.plan.PlanNode
 import scalatags.Text.all._
 
 object QueryPlanTemplate {
-  val testPlan = {
+  def testPlan(action: String) = {
     val node = PlanNode(title = "Parent", children = Seq(
       PlanNode(title = "Child A", children = Seq(
         PlanNode(title = "Grand Child A-1")
@@ -27,6 +27,7 @@ object QueryPlanTemplate {
     PlanResult(
       id = UUID.randomUUID,
       name = "Test Query Plan",
+      action = action,
       sql = "select * from something",
       asText = "...",
       node = node,

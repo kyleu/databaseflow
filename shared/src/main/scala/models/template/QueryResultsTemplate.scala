@@ -12,13 +12,14 @@ object QueryResultsTemplate {
 
     val tableBody = tbody(qr.result.data.map { r =>
       tr(r.map {
+        case Some(v) if v.isEmpty => td(em("empty string"))
         case Some(v) => td(v)
         case None => td("∅")
         case null => td("wtfhardnull")
       })
     })
 
-    val dataTable = table(cls := "bordered highlight")(tableHeader, tableBody)
+    val dataTable = table(cls := "bordered highlight responsive-table")(tableHeader, tableBody)
 
     val card = div(cls := "card")(
       div(cls := "card-content")(

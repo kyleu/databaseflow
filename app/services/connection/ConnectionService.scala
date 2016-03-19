@@ -64,6 +64,7 @@ class ConnectionService(
   private[this] def handleSubmitQuery(sql: String, action: String) = action match {
     case "run" => handleRunQuery(sql)
     case "explain" => handleExplainQuery(sql)
+    case "analyze" => handleAnalyzeQuery(sql)
     case _ => throw new IllegalArgumentException(action)
   }
 
@@ -92,7 +93,11 @@ class ConnectionService(
   }
 
   private[this] def handleExplainQuery(sql: String) = {
-    out ! QueryPlanTemplate.testPlan
+    out ! QueryPlanTemplate.testPlan("explain")
+  }
+
+  private[this] def handleAnalyzeQuery(sql: String) = {
+    out ! QueryPlanTemplate.testPlan("analyze")
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

@@ -21,6 +21,6 @@ case class Disconnected(reason: String) extends ResponseMessage
 
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
-case class PlanResult(id: UUID, name: String, sql: String, asText: String, node: PlanNode, created: Long) extends ResponseMessage
+case class PlanResult(id: UUID, name: String, action: String, sql: String, asText: String, node: PlanNode, created: Long) extends ResponseMessage
 
 case class MessageSet(messages: Seq[ResponseMessage]) extends ResponseMessage
