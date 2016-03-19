@@ -22,5 +22,8 @@ case class DatabaseEngine(
     columnTypes: Seq[String] = Nil
 ) {
   def varchar: String = "?"
+  def explain(sql: String) = "explain " + sql
+  def analyze(sql: String) = None
+  val analyzeSupported = analyze("select 1").isDefined
   override def toString = id
 }

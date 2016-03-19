@@ -2,10 +2,12 @@ package models.database
 
 import java.util.UUID
 
+import models.engine.DatabaseEngine
 import services.database.ssl.SslSettings
 
 case class PoolSettings(
   id: UUID = UUID.randomUUID,
+  engine: DatabaseEngine,
   url: String,
   username: String,
   password: String,

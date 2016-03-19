@@ -16,6 +16,7 @@ object MasterDatabase extends Logging {
   def databaseFor(connectionId: UUID) = databases.getOrElseUpdate(connectionId, {
     val c = db.query(ConnectionQueries.getById(connectionId)).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
     val cs = PoolSettings(
+      engine = c.engine,
       url = c.url,
       username = c.username,
       password = c.password
@@ -29,6 +30,7 @@ object MasterDatabase extends Logging {
     dbOpt.foreach(x => throw new IllegalStateException("History database already open."))
 
     val cs = PoolSettings(
+      engine = engine,
       url = url,
       username = "databaseflow",
       password = "flow",

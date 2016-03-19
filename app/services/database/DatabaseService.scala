@@ -51,6 +51,6 @@ object DatabaseService {
 
     val poolDataSource = new HikariDataSource(poolConfig)
 
-    new Database(poolDataSource)
+    new Database(poolDataSource, cs.engine)
   }
 }

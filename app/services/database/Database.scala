@@ -5,10 +5,11 @@ import javax.sql.DataSource
 import com.codahale.metrics.MetricRegistry
 import com.zaxxer.hikari.HikariDataSource
 import models.database._
+import models.engine.DatabaseEngine
 import services.database.transaction.{ TransactionManager, TransactionProvider }
 import utils.metrics.Instrumented
 
-class Database(val source: DataSource) extends Queryable {
+class Database(val source: DataSource, val engine: DatabaseEngine) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
     val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
     try {
