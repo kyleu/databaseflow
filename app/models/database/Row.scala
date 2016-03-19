@@ -26,20 +26,12 @@ object Row {
 }
 
 class Row(val rs: ResultSet) {
-  val rowNum = rs.getRow
-
   lazy val toMap = {
     val md = rs.getMetaData
     val colRange = 1 until (1 + md.getColumnCount)
     val colNames = colRange.map(md.getColumnName)
     val colValues = colRange.map(rs.getObject)
     colNames.zip(colValues).toMap
-  }
-
-  def hasColumn(name: String) = try {
-    rs.findColumn(name) > -1
-  } catch {
-    case sqlEx: SQLException => false
   }
 
   def as[T](idx: Int): T = asOpt(idx).getOrElse(throw new IllegalArgumentException(s"Column [$idx] is null."))
