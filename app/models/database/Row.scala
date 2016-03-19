@@ -37,9 +37,14 @@ class Row(val rs: ResultSet) {
   def as[T](idx: Int): T = asOpt(idx).getOrElse(throw new IllegalArgumentException(s"Column [$idx] is null."))
   def as[T](key: String): T = asOpt(key).getOrElse(throw new IllegalArgumentException(s"Column [$key] is null."))
 
-  def asOpt[T](idx: Int): Option[T] = Option(rs.getObject(idx)).map(_.asInstanceOf[T])
-  def asOpt[T](key: String): Option[T] = Option(rs.getObject(key)).map(_.asInstanceOf[T])
-
+  def asOpt[T](idx: Int): Option[T] = rs.getObject(idx) match {
+    case _ if rs.wasNull => None
+    case o => Option(o).map(_.asInstanceOf[T])
+  }
+  def asOpt[T](key: String): Option[T] = rs.getObject(key) match {
+    case _ if rs.wasNull => None
+    case o => Option(o).map(_.asInstanceOf[T])
+  }
   def array[T: reflect.ClassTag](index: Int): Option[Array[T]] = extractArray[T](rs.getArray(index + 1))
   def array[T: reflect.ClassTag](name: String): Option[Array[T]] = extractArray[T](rs.getArray(name))
 
