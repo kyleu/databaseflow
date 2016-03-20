@@ -2,8 +2,8 @@ package services.plan
 
 import models.plan.{ PlanNode, PlanResult }
 
-object MySqlParseService {
-  def parse(sql: String, plan: String) = {
+object MySqlParseService extends PlanParseService("mysql") {
+  override def parse(sql: String, plan: String) = {
     PlanResult(
       name = "",
       action = "",

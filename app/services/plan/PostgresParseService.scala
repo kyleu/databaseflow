@@ -2,8 +2,10 @@ package services.plan
 
 import models.plan.{ PlanNode, PlanResult }
 
-object PostgresParseService {
-  def parse(sql: String, plan: String) = {
+object PostgresParseService extends PlanParseService("postgres") {
+  override def parse(sql: String, plan: String) = {
+    val json = upickle.json.read(plan)
+
     PlanResult(
       name = "",
       action = "",

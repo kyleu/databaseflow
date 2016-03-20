@@ -1,6 +1,7 @@
 package test
 
-import models.engine.rdbms.PostgreSQL
+import models.engine.DatabaseEngine
+import models.engine.rdbms.{ MySQL, PostgreSQL }
 import models.plan.{ PlanNode, PlanResult }
 import org.scalatest.{ FlatSpec, Matchers }
 import services.plan.PlanParseService
@@ -18,10 +19,22 @@ class PlanParseTest extends FlatSpec with Matchers {
     sqlContents -> planContents
   }
 
-  "Plan Parser" should "construct without error" in {
-    val (sql, plan) = load("mysql-complicated-query")
-    val testVal = PlanParseService.parse("", "")(PostgreSQL)
+  def test(key: String, engine: DatabaseEngine) = {
+    val (sql, plan) = load(key)
+    val testVal = PlanParseService.parse(sql, plan)(engine)
     1 should be(1)
+  }
+
+  "Plan Parser" should "load basic PostgreSQL plan" in {
+    test("postgres-nested-join", PostgreSQL)
+  }
+
+  it should "load basic MySQL plan" in {
+    test("mysql-nested-loop", MySQL)
+  }
+
+  it should "load complex MySQL plan" in {
+    test("mysql-complicated-query", MySQL)
   }
 
   it should "throw IllegalArgumentException if invalid JSON is passed" in {
