@@ -1,0 +1,96 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Limit",
+      "Startup Cost": 0.00,
+      "Total Cost": 0.06,
+      "Plan Rows": 5,
+      "Plan Width": 109,
+      "Output": ["actor.actor_id", "actor.first_name", "actor.last_name", "actor.last_update", "address.address_id", "address.address", "address.address2", "address.district", "address.city_id", "address.postal_code", "address.phone", "address.last_update", "city.city_id", "city.city", "city.country_id", "city.last_update"],
+      "Plans": [
+        {
+          "Node Type": "Nested Loop",
+          "Parent Relationship": "Outer",
+          "Join Type": "Inner",
+          "Startup Cost": 0.00,
+          "Total Cost": 906031.04,
+          "Plan Rows": 72360000,
+          "Plan Width": 109,
+          "Output": ["actor.actor_id", "actor.first_name", "actor.last_name", "actor.last_update", "address.address_id", "address.address", "address.address2", "address.district", "address.city_id", "address.postal_code", "address.phone", "address.last_update", "city.city_id", "city.city", "city.country_id", "city.last_update"],
+          "Plans": [
+            {
+              "Node Type": "Nested Loop",
+              "Parent Relationship": "Outer",
+              "Join Type": "Inner",
+              "Startup Cost": 0.00,
+              "Total Cost": 1515.50,
+              "Plan Rows": 120000,
+              "Plan Width": 48,
+              "Output": ["actor.actor_id", "actor.first_name", "actor.last_name", "actor.last_update", "city.city_id", "city.city", "city.country_id", "city.last_update"],
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Relation Name": "city",
+                  "Schema": "public",
+                  "Alias": "city",
+                  "Startup Cost": 0.00,
+                  "Total Cost": 11.00,
+                  "Plan Rows": 600,
+                  "Plan Width": 23,
+                  "Output": ["city.city_id", "city.city", "city.country_id", "city.last_update"]
+                },
+                {
+                  "Node Type": "Materialize",
+                  "Parent Relationship": "Inner",
+                  "Startup Cost": 0.00,
+                  "Total Cost": 5.00,
+                  "Plan Rows": 200,
+                  "Plan Width": 25,
+                  "Output": ["actor.actor_id", "actor.first_name", "actor.last_name", "actor.last_update"],
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Relation Name": "actor",
+                      "Schema": "public",
+                      "Alias": "actor",
+                      "Startup Cost": 0.00,
+                      "Total Cost": 4.00,
+                      "Plan Rows": 200,
+                      "Plan Width": 25,
+                      "Output": ["actor.actor_id", "actor.first_name", "actor.last_name", "actor.last_update"]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Node Type": "Materialize",
+              "Parent Relationship": "Inner",
+              "Startup Cost": 0.00,
+              "Total Cost": 17.05,
+              "Plan Rows": 603,
+              "Plan Width": 61,
+              "Output": ["address.address_id", "address.address", "address.address2", "address.district", "address.city_id", "address.postal_code", "address.phone", "address.last_update"],
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Relation Name": "address",
+                  "Schema": "public",
+                  "Alias": "address",
+                  "Startup Cost": 0.00,
+                  "Total Cost": 14.03,
+                  "Plan Rows": 603,
+                  "Plan Width": 61,
+                  "Output": ["address.address_id", "address.address", "address.address2", "address.district", "address.city_id", "address.postal_code", "address.phone", "address.last_update"]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

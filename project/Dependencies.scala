@@ -82,4 +82,8 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.4"
   }
+
+  object Testing {
+    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+  }
 }

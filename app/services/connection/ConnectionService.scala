@@ -4,16 +4,11 @@ import java.util.UUID
 
 import akka.actor.{ ActorRef, Props }
 import models._
-import models.queries.DynamicQuery
-import models.query.QueryResult
-import models.template.QueryPlanTemplate
 import models.user.User
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
-import utils.{ Config, DateUtils, Logging }
-
-import scala.util.control.NonFatal
+import utils.{ Config, Logging }
 
 object ConnectionService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
@@ -59,48 +54,10 @@ class ConnectionService(
   }
 
   private[this] def handleSubmitQuery(sql: String, action: String) = action match {
-    case "run" => handleRunQuery(sql)
-    case "explain" => handleExplainQuery(sql)
-    case "analyze" => handleAnalyzeQuery(sql)
+    case "run" => ConnectionQueryHelper.handleRunQuery(db, sql, out)
+    case "explain" => ConnectionQueryHelper.handleExplainQuery(db, sql, out)
+    case "analyze" => ConnectionQueryHelper.handleAnalyzeQuery(db, sql, out)
     case _ => throw new IllegalArgumentException(action)
-  }
-
-  private[this] def handleRunQuery(sql: String) = {
-    log.info(s"Performing query action [run] for sql [$sql].")
-    val id = UUID.randomUUID
-    val startMs = DateUtils.nowMillis
-    try {
-      val result = db.query(DynamicQuery(sql))
-      //log.info(s"Query result: [$result].")
-      val durationMs = (DateUtils.nowMillis - startMs).toInt
-      out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
-    } catch {
-      case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
-    }
-  }
-
-  private[this] def handleExplainQuery(sql: String) = {
-    if (db.engine.explainSupported) {
-      val explainSql = db.engine.explain(sql)
-      log.info(s"Performing query action [explain] for sql [$explainSql].")
-
-      val id = UUID.randomUUID
-      val startMs = DateUtils.nowMillis
-      try {
-        val result = db.query(DynamicQuery(explainSql))
-        //log.info(s"Query result: [$result].")
-        val durationMs = (DateUtils.nowMillis - startMs).toInt
-        out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
-      } catch {
-        case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
-      }
-    } else {
-      out ! ServerError("explain-not-supported", s"Explain is not avaialble for [${db.engine}].")
-    }
-  }
-
-  private[this] def handleAnalyzeQuery(sql: String) = {
-    out ! QueryPlanTemplate.testPlan("analyze")
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
