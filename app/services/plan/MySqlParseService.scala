@@ -9,7 +9,7 @@ object MySqlParseService extends PlanParseService("mysql") {
       action = "",
       sql = sql,
       asText = plan,
-      node = PlanNode("TODO")
+      node = PlanNode(title = "TODO", nodeType = "?")
     )
   }
 }

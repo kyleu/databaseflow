@@ -17,6 +17,7 @@ object PlanNode {
 
 case class PlanNode(
   title: String,
+  nodeType: String,
   costs: PlanNode.Costs = PlanNode.Costs(),
   properties: Map[String, String] = Map.empty,
   tags: Seq[String] = Nil,

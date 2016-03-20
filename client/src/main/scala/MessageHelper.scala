@@ -3,7 +3,8 @@ import java.util.UUID
 import models.template.{ QueryErrorTemplate, QueryPlanTemplate, QueryResultsTemplate }
 import models._
 import utils.Logging
-import org.scalajs.jquery.{ jQuery => $, JQueryEventObject }
+import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import services.NotificationService
 
 trait MessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
@@ -12,6 +13,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case qr: QueryResultResponse => handleQueryResult(qr)
     case qe: QueryErrorResponse => handleQueryError(qe)
     case pr: PlanResultResponse => handlePlanResult(pr)
+    case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.info("Received: " + rm.getClass.getSimpleName)
   }
 
@@ -42,6 +44,10 @@ trait MessageHelper { this: DatabaseFlow =>
     $(s"#${pr.id} .fa-close").click((e: JQueryEventObject) => {
       $(s"#${pr.id}").remove()
     })
+  }
+
+  private[this] def handleServerError(reason: String, content: String) = {
+    NotificationService.error(reason, content)
   }
 
   private[this] def workOutPlanWidth(id: UUID) = {

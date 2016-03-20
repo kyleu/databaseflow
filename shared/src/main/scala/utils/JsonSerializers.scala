@@ -10,6 +10,7 @@ object JsonSerializers {
   private[this] def readPlanNode(x: Js.Value): PlanNode = {
     PlanNode(
       title = readJs[String](x("title")),
+      nodeType = readJs[String](x("nodeType")),
       costs = readJs[PlanNode.Costs](x("costs")),
       properties = readJs[Map[String, String]](x("properties")),
       tags = readJs[Seq[String]](x("tags")),
@@ -26,6 +27,7 @@ object JsonSerializers {
   private[this] def writePlanNode(node: PlanNode): Js.Value = {
     Js.Obj(
       "title" -> writeJs(node.title),
+      "nodeType" -> writeJs(node.nodeType),
       "costs" -> writeJs(node.costs),
       "properties" -> writeJs(node.properties),
       "tags" -> writeJs(node.tags),

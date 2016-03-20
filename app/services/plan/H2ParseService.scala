@@ -9,7 +9,7 @@ object H2ParseService extends PlanParseService("h2") {
       action = "",
       sql = sql,
       asText = plan,
-      node = PlanNode("TODO")
+      node = PlanNode(title = "TODO", nodeType = "?")
     )
   }
 }

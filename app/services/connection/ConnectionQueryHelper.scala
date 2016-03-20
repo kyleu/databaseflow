@@ -6,11 +6,12 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models.queries.DynamicQuery
 import models.template.QueryPlanTemplate
-import models.{ QueryResultResponse, ServerError, QueryErrorResponse }
-import models.query.{ QueryResult, QueryError }
+import models.{ PlanResultResponse, QueryErrorResponse, QueryResultResponse, ServerError }
+import models.query.{ QueryError, QueryResult }
 import org.postgresql.util.PSQLException
 import services.database.Database
-import utils.{ Logging, DateUtils }
+import services.plan.PlanParseService
+import utils.{ DateUtils, Logging }
 
 import scala.util.control.NonFatal
 
@@ -37,10 +38,12 @@ object ConnectionQueryHelper extends Logging {
       val id = UUID.randomUUID
       val startMs = DateUtils.nowMillis
       try {
+        implicit val engine = db.engine
         val result = db.query(DynamicQuery(explainSql))
         //log.info(s"Query result: [$result].")
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
+        val planResponse = PlanParseService.parse(sql, PlanParseService.resultPlanString(result))
+        out ! PlanResultResponse(id, planResponse, durationMs)
       } catch {
         case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
       }

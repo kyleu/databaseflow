@@ -5,7 +5,15 @@ import scala.scalajs.js
 object NotificationService {
   private[this] val materialize = js.Dynamic.global.Materialize
 
-  def info(message: String, duration: Int = 2500) = {
-    materialize.toast(message, duration)
+  def info(reason: String, content: String, duration: Int = 2500) = {
+    materialize.toast(reason + ": " + content, duration)
+  }
+
+  def warn(reason: String, content: String, duration: Int = 2500) = {
+    materialize.toast(reason + ": " + content, duration)
+  }
+
+  def error(reason: String, content: String, duration: Int = 2500) = {
+    materialize.toast(reason + ": " + content, duration)
   }
 }

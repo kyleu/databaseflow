@@ -9,18 +9,18 @@ import scalatags.Text.all._
 
 object QueryPlanTemplate {
   def testPlan(action: String) = {
-    val node = PlanNode(title = "Parent", children = Seq(
-      PlanNode(title = "Child A", children = Seq(
-        PlanNode(title = "Grand Child A-1")
+    val node = PlanNode(title = "Parent", nodeType = "?", children = Seq(
+      PlanNode(title = "Child A", nodeType = "?", children = Seq(
+        PlanNode(title = "Grand Child A-1", nodeType = "?")
       )),
-      PlanNode(title = "Child B", children = Seq(
-        PlanNode(title = "Grand Child B-1"),
-        PlanNode(title = "Grand Child B-2", children = Seq(
-          PlanNode(title = "Great Grand Child B-2-1"),
-          PlanNode(title = "Great Grand Child B-2-2"),
-          PlanNode(title = "Great Grand Child B-2-3")
+      PlanNode(title = "Child B", nodeType = "?", children = Seq(
+        PlanNode(title = "Grand Child B-1", nodeType = "?"),
+        PlanNode(title = "Grand Child B-2", nodeType = "?", children = Seq(
+          PlanNode(title = "Great Grand Child B-2-1", nodeType = "?"),
+          PlanNode(title = "Great Grand Child B-2-2", nodeType = "?"),
+          PlanNode(title = "Great Grand Child B-2-3", nodeType = "?")
         )),
-        PlanNode(title = "Grand Child B-3")
+        PlanNode(title = "Grand Child B-3", nodeType = "?")
       ))
     ))
 
@@ -33,7 +33,7 @@ object QueryPlanTemplate {
         asText = "...",
         node = node
       ),
-      created = 0L
+      durationMs = 1000
     )
   }
 
