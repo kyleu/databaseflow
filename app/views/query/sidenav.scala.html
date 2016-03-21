@@ -1,9 +1,19 @@
-@(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: models.user.User, dbName: String, dbs: Seq[(String, java.util.UUID)])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 <header>
+  <ul id="dropdown-connection" class="dropdown-content">
+    @dbs.map { db =>
+      <li><a href="@routes.QueryController.main(db._2)">@db._1</a></li>
+    }
+  </ul>
+
   <div class="navbar-fixed">
     <nav class="@user.preferences.theme lighten-2">
       <div class="nav-wrapper">
         <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+
+        <ul class="right">
+          <li><a class="dropdown-button" href="#" data-activates="dropdown-connection">@dbName <i class="fa fa-angle-down right"></i></a></li>
+        </ul>
 
         <ul id="main-menu" class="side-nav fixed">
           <li class="search">

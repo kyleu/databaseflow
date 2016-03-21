@@ -1,6 +1,6 @@
-@(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: models.user.User, debug: Boolean, dbName: String, dbs: Seq[(String, java.util.UUID)])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.materialize(utils.Config.projectName) {
-  @sidenav(user)
+  @sidenav(user, dbName, dbs)
 
   <main class="indent">
     <div class="row">
@@ -14,6 +14,8 @@
             <a id="run-query-link" href="#">Run</a>
             <a id="explain-query-link" href="#">Explain</a>
             <a id="analyze-query-link" href="#">Analyze</a>
+            <a id="save-query-link" class="right" href="#">Save</a>
+            <a id="load-query-link" class="right" href="#">Load</a>
           </div>
         </div>
       </div>

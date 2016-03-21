@@ -14,7 +14,7 @@ object QueryResultsTemplate {
       tr(r.map {
         case Some(v) if v.isEmpty => td(em("empty string"))
         case Some(v) => td(v)
-        case None => td("∅")
+        case None => td(title := "Null")("∅")
         case null => td("null-bug")
       })
     })
