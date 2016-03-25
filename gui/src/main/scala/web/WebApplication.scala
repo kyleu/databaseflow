@@ -1,17 +1,13 @@
 package web
 
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.routing.Router
 import play.api.{ Mode, Play }
 import play.core.server.{ NettyServer, ServerConfig }
 
 class WebApplication() {
-  val app = new GuiceApplicationBuilder().build()
-  Play.start(app)
+  private[this] lazy val app = new GuiceApplicationBuilder().build()
 
-  println(app.injector.instanceOf[Router].documentation.mkString("\n"))
-
-  val server = NettyServer.fromApplication(
+  private[this] lazy val server = NettyServer.fromApplication(
     application = app,
     config = ServerConfig(
       port = Some(9000),
@@ -19,4 +15,16 @@ class WebApplication() {
       mode = Mode.Prod
     )
   )
+
+  var _started = false
+
+  def started = _started
+
+  def start() = {
+    Play.start(app)
+  }
+
+  def stop() = if (started) {
+    Play.stop(app)
+  }
 }
