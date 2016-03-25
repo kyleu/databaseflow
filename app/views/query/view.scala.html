@@ -70,7 +70,7 @@
                     @table.columns.map { col =>
                       <tr>
                         <td>@col.name</td>
-                        <td>@col.typeName</td>
+                        <td>@col.sqlTypeName</td>
                         <td>@table.primaryKey.exists(k => k.columns.contains(col.name))</td>
                       </tr>
                     }

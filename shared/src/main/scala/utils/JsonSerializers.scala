@@ -1,11 +1,17 @@
 package utils
 
+import enumeratum.UPickler
 import models.plan.PlanNode
+import models.schema.ColumnType
 import models.{ RequestMessage, ResponseMessage }
 import upickle.Js
 import upickle.default._
 
 object JsonSerializers {
+  // Enumerations
+  private[this] implicit val columnTypeReader = UPickler.reader(ColumnType)
+  private[this] implicit val columnTypeWriter = UPickler.writer(ColumnType)
+
   // Recursive structures
   private[this] def readPlanNode(x: Js.Value): PlanNode = {
     PlanNode(

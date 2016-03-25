@@ -3,20 +3,26 @@ package models.queries
 import models.database.{ Query, Row }
 import models.query.QueryResult
 
-case class DynamicQuery(override val sql: String) extends Query[(Seq[QueryResult.Col], Seq[Seq[Option[Any]]])] {
+case class DynamicQuery(override val sql: String) extends Query[(Seq[QueryResult.Col], Seq[Seq[Option[String]]])] {
   override def reduce(rows: Iterator[Row]) = {
-    var columns: Option[Seq[QueryResult.Col]] = None
-    val data = rows.zipWithIndex.map { row =>
-      val md = row._1.rs.getMetaData
+    if (rows.hasNext) {
+      val firstRow = rows.next()
+      val md = firstRow.rs.getMetaData
       val cc = md.getColumnCount
-
-      if (columns.isEmpty) {
-        columns = Some((1 to cc).map(i => QueryResult.Col(md.getColumnLabel(i), md.getColumnTypeName(i))))
+      val columns = (1 to cc).map { i =>
+        val columnType = QueryTranslations.forType(md.getColumnType(i))
+        QueryResult.Col(md.getColumnLabel(i), columnType)
       }
+      val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).map(_.toString))
+      val remainingData = rows.map { row =>
+        (1 to cc).map(i => row.asOpt[Any](i).map(_.toString))
+      }.toList
 
-      (1 to cc).map(i => row._1.asOpt[Any](i))
-    }.toList
+      val data = firstRowData +: remainingData
 
-    columns.getOrElse(Nil) -> data
+      columns -> data
+    } else {
+      Nil -> Nil
+    }
   }
 }
