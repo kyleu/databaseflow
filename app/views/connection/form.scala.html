@@ -1,0 +1,66 @@
+@(user: models.user.User, conn: models.engine.ConnectionSettings)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+) @layout.materialize(utils.Config.projectName) {
+  <header>
+    <nav class="@user.preferences.theme lighten-2">
+      <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="row">
+        <form class="col s12" method="post" action="@routes.ConnectionController.save()">
+          <input id="form-url" type="hidden" value="@conn.id" />
+          <div class="card">
+            <div class="card-content">
+              <h4 class="truncate">New Connection</h4>
+              <div class="row">
+                <div class="input-field col s12 m6">
+                  <input id="form-name" type="text" class="validate" value="@conn.name" />
+                  <label for="form-name">Connection Name</label>
+                </div>
+
+                <div class="input-field col s12 m6">
+                  <select id="form-engine">
+                    @models.engine.DatabaseEngine.all.map { e =>
+                      <option value="@e.id" @if(e == conn.engine) { selected }>@e.name</option>
+                    }
+                  </select>
+                  <label for="form-engine">Database Engine</label>
+                </div>
+
+                <div class="input-field col s12">
+                  <input id="form-url" type="text" class="validate" value="@conn.url" />
+                  <label for="form-url">Jdbc Url</label>
+                </div>
+
+                <div class="input-field col s12 m6">
+                  <input id="form-username" type="text" class="validate" value="@conn.username" />
+                  <label for="form-username">Username</label>
+                </div>
+
+                <div class="input-field col s12 m6">
+                  <input id="form-password" type="password" class="validate" value="" />
+                  <label for="form-password">Password</label>
+                </div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn waves-effect waves-light" type="submit">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer @user.preferences.theme lighten-2">
+    <div class="footer-copyright">
+      © 2016 Kyle Unverferth
+      <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>
+    </div>
+  </footer>
+
+  <script data-main="@routes.Assets.versioned("javascripts/main.js")" src="@routes.Assets.versioned("lib/requirejs/require.min.js")"></script>
+}

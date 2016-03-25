@@ -11,19 +11,19 @@
     <div class="container">
       <div class="row">
         @connections.map { c =>
-          <div class="col s12 m6 l4">
-            <div class="card">
-              <div class="card-content">
-                <h4 class="truncate">@c.name</h4>
-                <p class="truncate">@c.id</p>
-              </div>
-              <div class="card-action">
-                <a href="@routes.QueryController.main(c.id)">Query</a>
-                <a href="@routes.QueryController.view(c.id)">Explore</a>
-              </div>
+          @views.html.connection.card(c)
+        }
+        <div class="col s12 m6">
+          <div class="card">
+            <div class="card-content">
+              <h4 class="truncate">Add New</h4>
+              <p class="truncate">Add an additional connection</p>
+            </div>
+            <div class="card-action">
+              <a href="@routes.ConnectionController.addNew">New Connection</a>
             </div>
           </div>
-        }
+        </div>
       </div>
     </div>
   </main>

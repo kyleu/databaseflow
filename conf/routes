@@ -1,9 +1,10 @@
 GET         /                            controllers.HomeController.index
 GET         /ping                        controllers.HomeController.ping(timestamp: Long)
 
-# Ad-hoc Queries
-GET         /adhoc/:conn                 controllers.AdHocQueryController.queryList(conn: java.util.UUID, query: Option[java.util.UUID] ?= None, action: Option[String] ?= None)
-POST        /adhoc/:conn/run             controllers.AdHocQueryController.run(conn: java.util.UUID)
+# Connection Management
+GET         /c/new                       controllers.ConnectionController.addNew()
+POST        /c/new                       controllers.ConnectionController.save()
+GET         /c/:id                       controllers.ConnectionController.editForm(id: java.util.UUID)
 
 # Query Interface
 GET         /v/:conn                     controllers.QueryController.view(conn: java.util.UUID)

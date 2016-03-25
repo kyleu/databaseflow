@@ -1,0 +1,14 @@
+@(c: models.engine.ConnectionSettings)
+<div class="col s12 m6">
+  <div class="card">
+    <div class="card-content">
+      <h4 class="truncate">@c.name</h4>
+      <p class="truncate">@c.id</p>
+    </div>
+    <div class="card-action">
+      <a href="@routes.QueryController.main(c.id)">Query</a>
+      <a href="@routes.QueryController.view(c.id)">Explore</a>
+      <a href="@routes.ConnectionController.editForm(c.id)">Settings</a>
+    </div>
+  </div>
+</div>
