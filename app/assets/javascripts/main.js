@@ -14,14 +14,17 @@ requirejs([], function() {
   if(typeof DatabaseFlow !== 'undefined') {
     window.dbf = new DatabaseFlow();
   }
+  
+  $(document).ready(function() {
+    $('.button-collapse').sideNav();
+    $('select').material_select();
 
-  $('.button-collapse').sideNav();
-
-  var search = $('input#search');
-  search.focus(function() { $(this).parent().addClass('focused'); });
-  search.blur(function() {
-    if (!$(this).val()) {
-      $(this).parent().removeClass('focused');
-    }
+    var search = $('input#search');
+    search.focus(function() { $(this).parent().addClass('focused'); });
+    search.blur(function() {
+      if (!$(this).val()) {
+        $(this).parent().removeClass('focused');
+      }
+    });
   });
 });

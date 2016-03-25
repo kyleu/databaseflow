@@ -62,10 +62,14 @@ ul#main-menu {
 
     a, em {
       margin: 0;
-      padding: 0 10px;
+      padding: 0;
       font-size: 13px;
       line-height: 44px;
       height: 44px;
+    }
+
+    .top-nav-link {
+      padding-left: 10px;
     }
   }
 
@@ -86,12 +90,16 @@ ul#main-menu {
   }
 
   ul.submenu a {
-    padding-left: 30px;
+    padding-left: 20px;
   }
 
   // Only show scrollbar on hover
   &:hover {
     overflow-y: auto;
+  }
+
+  .list-toggle {
+    display: none;
   }
 }
 
@@ -103,17 +111,6 @@ ul#main-menu {
   background-color: #ddd;
 }
 
-#nav-menu-button {
-  height: 64px;
-  line-height: 64px;
-  margin-left: 10px;
-  float: left;
-  position: relative;
-  z-index: 1;
-
-  i {
-    height: 64px;
-    line-height: 64px;
-    font-size: 2.7rem;
-  }
+.mdi-navigation-menu {
+  padding: 0 10px;
 }

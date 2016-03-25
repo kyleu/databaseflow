@@ -6,14 +6,16 @@
     }
   </ul>
 
+  <ul id="dropdown-user" class="dropdown-content">
+    <li><a href="">Profile</a></li>
+    <li><a href="">Settings</a></li>
+    <li><a href="">Sign Out</a></li>
+  </ul>
+
   <div class="navbar-fixed">
     <nav class="@user.preferences.theme lighten-2">
       <div class="nav-wrapper">
         <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
-
-        <ul class="right">
-          <li><a class="dropdown-button" href="#" data-activates="dropdown-connection">@dbName <i class="fa fa-angle-down right"></i></a></li>
-        </ul>
 
         <ul id="main-menu" class="side-nav fixed">
           <li class="search">
@@ -21,9 +23,12 @@
               <input id="search" placeholder="Search" /><i class="fa fa-search"></i>
             </div>
           </li>
+          <li>
+            <a class="top-nav-link waves-effect" href="#">New Query</a>
+          </li>
           <li class="no-padding">
             <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
-              <li id="saved-query-list-toggle" class="bold">
+              <li id="saved-query-list-toggle" class="bold list-toggle">
                 <a class="collapsible-header waves-effect">
                   <i class="fa fa-angle-right"></i>
                   <i class="fa fa-angle-down"></i>
@@ -35,7 +40,7 @@
                   </ul>
                 </div>
               </li>
-              <li id="table-list-toggle" class="bold">
+              <li id="table-list-toggle" class="bold list-toggle">
                 <a class="collapsible-header waves-effect">
                   <i class="fa fa-angle-right"></i>
                   <i class="fa fa-angle-down"></i>
@@ -47,7 +52,7 @@
                   </ul>
                 </div>
               </li>
-              <li id="view-list-toggle" class="bold">
+              <li id="view-list-toggle" class="bold list-toggle">
                 <a class="collapsible-header waves-effect">
                   <i class="fa fa-angle-right"></i>
                   <i class="fa fa-angle-down"></i>
@@ -59,7 +64,7 @@
                   </ul>
                 </div>
               </li>
-              <li id="procedure-list-toggle" class="bold">
+              <li id="procedure-list-toggle" class="bold list-toggle">
                 <a class="collapsible-header waves-effect">
                   <i class="fa fa-angle-right"></i>
                   <i class="fa fa-angle-down"></i>
@@ -74,7 +79,20 @@
             </ul>
           </li>
         </ul>
+
         <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+
+        <ul class="left hide-on-med-and-down">
+          <li><a class="dropdown-button" href="#" data-activates="dropdown-connection">
+            @dbName <i class="fa fa-angle-down right"></i>
+          </a></li>
+        </ul>
+
+        <ul class="right hide-on-small-only">
+          <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
+            @user.username.getOrElse("Guest") <i class="fa fa-angle-down right"></i>
+          </a></li>
+        </ul>
       </div>
     </nav>
   </div>

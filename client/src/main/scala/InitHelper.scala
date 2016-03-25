@@ -17,7 +17,6 @@ trait InitHelper { this: DatabaseFlow =>
 
     Logging.info("Database Flow Started.")
     connect()
-
   }
 
   private[this] def initSqlEditor() = {
