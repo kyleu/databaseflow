@@ -6,6 +6,7 @@ import akka.actor.{ ActorRef, Props }
 import models._
 import models.user.User
 import services.database.MasterDatabase
+import services.query.SavedQueryService
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
 import utils.{ Config, Logging }
@@ -28,13 +29,15 @@ class ConnectionService(
   protected[this] var currentUsername = user.username
   protected[this] var userPreferences = user.preferences
   protected[this] val db = MasterDatabase.databaseFor(connectionId)
+
+  protected[this] val savedQueries = SavedQueryService.getSavedQueries(user)
   protected[this] val schema = SchemaService.getSchema(db.source)
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
   override def preStart() = {
     supervisor ! ConnectionStarted(user, id, self)
-    out ! InitialState(user.id, currentUsername, userPreferences, schema)
+    out ! InitialState(user.id, currentUsername, userPreferences, savedQueries, schema)
   }
 
   override def receiveRequest = {
@@ -44,6 +47,7 @@ class ConnectionService(
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.sql, sq.action.getOrElse("run")) }
+    case vt: ViewTable => timeReceive(vt) { handleViewTable(vt.name) }
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
     case x => throw new IllegalArgumentException(s"Unhandled message [${x.getClass.getSimpleName}].")
@@ -58,6 +62,13 @@ class ConnectionService(
     case "explain" => ConnectionQueryHelper.handleExplainQuery(db, sql, out)
     case "analyze" => ConnectionQueryHelper.handleAnalyzeQuery(db, sql, out)
     case _ => throw new IllegalArgumentException(action)
+  }
+
+  private[this] def handleViewTable(name: String) = schema.tables.find(_.name == name) match {
+    case Some(table) => ConnectionQueryHelper.handleViewTable(db, name, out)
+    case None =>
+      log.warn(s"Attempted to view invalid table [$name].")
+      out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
