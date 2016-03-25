@@ -24,7 +24,7 @@ object ConnectionQueryHelper extends Logging {
       val result = db.query(DynamicQuery(sql))
       //log.info(s"Query result: [$result].")
       val durationMs = (DateUtils.nowMillis - startMs).toInt
-      out ! QueryResultResponse(id, QueryResult(sql, result._1, result._2), durationMs)
+      out ! QueryResultResponse(id, QueryResult("Ad-hoc Query", sql, result._1, result._2, startMs), durationMs)
     } catch {
       case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
     }
@@ -54,6 +54,21 @@ object ConnectionQueryHelper extends Logging {
 
   def handleAnalyzeQuery(db: Database, sql: String, out: ActorRef) = {
     out ! QueryPlanTemplate.testPlan("analyze")
+  }
+
+  def handleViewTable(db: Database, name: String, out: ActorRef) = {
+    log.info(s"Viewing table [$name].")
+    val id = UUID.randomUUID
+    val startMs = DateUtils.nowMillis
+    val sql = s"select * from $name limit 1001"
+    try {
+      val result = db.query(DynamicQuery(sql))
+      //log.info(s"Query result: [$result].")
+      val durationMs = (DateUtils.nowMillis - startMs).toInt
+      out ! QueryResultResponse(id, QueryResult(name, sql, result._1, result._2, startMs), durationMs)
+    } catch {
+      case x: Throwable => ConnectionQueryHelper.handleSqlException(id, sql, x, startMs, out)
+    }
   }
 
   def handleSqlException(id: UUID, sql: String, t: Throwable, startMs: Long, out: ActorRef) = t match {

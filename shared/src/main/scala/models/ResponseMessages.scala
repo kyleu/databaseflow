@@ -2,8 +2,8 @@ package models
 
 import java.util.UUID
 
-import models.plan.{ PlanResult, PlanNode }
-import models.query.{ QueryResult, QueryError }
+import models.plan.{ PlanNode, PlanResult }
+import models.query.{ QueryError, QueryResult, SavedQuery }
 import models.schema.Schema
 import models.user.UserPreferences
 
@@ -12,7 +12,13 @@ sealed trait ResponseMessage
 case class ServerError(reason: String, content: String) extends ResponseMessage
 case class VersionResponse(version: String) extends ResponseMessage
 
-case class InitialState(userId: UUID, username: Option[String], preferences: UserPreferences, schema: Schema) extends ResponseMessage
+case class InitialState(
+  userId: UUID,
+  username: Option[String],
+  preferences: UserPreferences,
+  savedQueries: Seq[SavedQuery],
+  schema: Schema
+) extends ResponseMessage
 
 case class Pong(timestamp: Long) extends ResponseMessage
 case object SendTrace extends ResponseMessage
