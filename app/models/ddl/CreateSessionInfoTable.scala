@@ -9,8 +9,7 @@ case object CreateSessionInfoTable extends CreateTableStatement("session_info") 
       last_used timestamp not null,
       expiration timestamp not null,
       fingerprint ${eng.varchar}(65536),
-      created timestamp not null,
-      constraint pk_session_info primary key (id)
+      created timestamp not null
     );
 
     create index idx_session_info_provider_key on $tableName (provider, key);
