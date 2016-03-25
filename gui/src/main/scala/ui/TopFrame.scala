@@ -6,6 +6,7 @@ import scala.swing._
 
 class TopFrame(app: WebApplication) extends MainFrame {
   title = "Database Flow"
+  resizable = false
 
   private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Center) {
     font = RobotoFont.titleText
@@ -25,7 +26,7 @@ class TopFrame(app: WebApplication) extends MainFrame {
 
   private[this] val borderPanel = new BorderPanel {
     layout(detailPanel) = BorderPanel.Position.Center
-    border = Swing.EmptyBorder(20, 0, 0, 0)
+    border = Swing.EmptyBorder(15, 0, 0, 0)
     background = Colors.background
   }
 
