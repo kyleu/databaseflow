@@ -1,7 +1,7 @@
 {
   "bitwise": true,
   "browser": true,
-  "camelcase": true,
+  //"camelcase": true, // Frickin' Materialize.
   "curly": true,
   "devel": true,
   "eqeqeq": true,
