@@ -13,8 +13,8 @@ object PlanParseService {
     case H2 => H2ParseService.parse(sql, plan)
   }
 
-  def resultPlanString(result: (scala.Seq[QueryResult.Col], scala.Seq[scala.Seq[Option[String]]]))(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => result._2.map(_.head.getOrElse("")).mkString("\n")
+  def resultPlanString(result: (scala.Seq[QueryResult.Col], scala.Seq[scala.Seq[Option[Any]]]))(implicit engine: DatabaseEngine) = engine match {
+    case PostgreSQL => result._2.map(_.head.map(_.toString).getOrElse("")).mkString("\n")
     case _ => throw new IllegalArgumentException("Parse result error.")
   }
 }

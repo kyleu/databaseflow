@@ -13,7 +13,7 @@ case class QueryResult(
   title: String,
   sql: String,
   columns: Seq[QueryResult.Col],
-  data: Seq[Seq[Option[String]]],
+  data: Seq[Seq[Option[Any]]],
   occurred: Long
 )
 
