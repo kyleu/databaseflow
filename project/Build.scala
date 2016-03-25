@@ -10,4 +10,5 @@ object Build extends Build with UniversalKeys {
   lazy val sharedJvm = Shared.sharedJvm
   lazy val dblibs = Database.dblibs
   lazy val server = Server.server
+  lazy val gui = Gui.gui
 }

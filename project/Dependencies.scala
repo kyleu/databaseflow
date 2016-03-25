@@ -63,6 +63,10 @@ object Dependencies {
     val mailer = "com.typesafe.play" %% "play-mailer" % "3.0.1"
   }
 
+  object Ui {
+    val swing = "org.scala-lang" % "scala-swing" % "2.11.0-M7"
+  }
+
   object Metrics {
     val metrics = "nl.grons" %% "metrics-scala" % "3.5.2"
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
