@@ -13,7 +13,7 @@ object ConnectionQueries extends BaseQueries[ConnectionSettings] {
   override protected val searchColumns = columns
 
   val insert = Insert
-  def getAll(orderBy: String = "name") = GetAll(orderBy)
+  def getAll(orderBy: String = "name") = GetAll(orderBy = orderBy)
   def getById(id: UUID) = GetById(Seq(id))
   val search = Search
   val removeById = RemoveById
