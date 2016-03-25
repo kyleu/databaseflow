@@ -43,5 +43,14 @@ object SeedData {
       username = "",
       password = ""
     )))
+
+    db.execute(ConnectionQueries.insert(ConnectionSettings(
+      id = UUID.randomUUID,
+      name = "AppThis Local",
+      engine = MySQL,
+      url = "jdbc:mysql://localhost/appthis_local",
+      username = "appthis",
+      password = "Mah14Mah1"
+    )))
   }
 }
