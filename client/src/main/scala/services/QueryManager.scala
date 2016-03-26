@@ -1,5 +1,0 @@
-package services
-
-object QueryManager {
-
-}

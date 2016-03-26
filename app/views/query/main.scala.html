@@ -1,26 +1,16 @@
 @(user: models.user.User, debug: Boolean, dbName: String, initialQuery: java.util.UUID)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@views.html.layout.materialize(utils.Config.projectName) {
+@views.html.layout.materialize(utils.Config.projectName, debug = debug) {
   @sidenav(user, dbName)
 
   <main class="indent">
     <div class="tab-container z-depth-1">
-      <ul class="tabs">
-        <li class="tab col s3">
-          <a class="active" href="#panel-@initialQuery">Untitled Query</a>
-        </li>
-        <li class="tab col s3">
-          <a href="#panel-b">Untitled Query B</a>
-        </li>
-        <li class="tab col s3">
-          <a href="#panel-c">Untitled Query C</a>
-        </li>
-        <li class="tab col s3">
-          <a href="#panel-d">Untitled Query D</a>
-        </li>
+      <ul id="query-tabs">
       </ul>
     </div>
 
-    @Html(models.template.SqlEditorTemplate.forQuery(initialQuery).toString)
+    <div id="workspace">
+
+    </div>
   </main>
 
   @if(debug) {

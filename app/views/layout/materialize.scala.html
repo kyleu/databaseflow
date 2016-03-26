@@ -1,11 +1,25 @@
-@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(implicit session: Session, flash: Flash)@basic(
+@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil, debug: Boolean)(content: Html)(implicit session: Session, flash: Flash)@basic(
   title,
-  scripts = Seq(
-    routes.Assets.versioned("lib/jquery/jquery.min.js").url,
-    routes.Assets.versioned("lib/materializecss/js/materialize.min.js").url
-  ) ++ scripts,
-  stylesheets = Seq(
-    routes.Assets.versioned("lib/font-awesome/css/font-awesome.min.css").url,
-    routes.Assets.versioned("lib/materializecss/css/materialize.min.css").url
-  ) ++ stylesheets
+  scripts = (if(debug) {
+    Seq(
+      routes.Assets.versioned("lib/jquery/jquery.js").url,
+      routes.Assets.versioned("lib/materializecss/js/materialize.js").url
+    )
+  } else {
+    Seq(
+      routes.Assets.versioned("lib/jquery/jquery.min.js").url,
+      routes.Assets.versioned("lib/materializecss/js/materialize.min.js").url
+    )
+  }) ++ scripts,
+  stylesheets = (if(debug) {
+    Seq(
+      routes.Assets.versioned("lib/font-awesome/css/font-awesome.css").url,
+      routes.Assets.versioned("lib/materializecss/css/materialize.css").url
+    )
+  } else {
+    Seq(
+      routes.Assets.versioned("lib/font-awesome/css/font-awesome.min.css").url,
+      routes.Assets.versioned("lib/materializecss/css/materialize.min.css").url
+    )
+  }) ++ stylesheets
 )(content)

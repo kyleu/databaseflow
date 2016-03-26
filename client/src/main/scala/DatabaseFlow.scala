@@ -5,7 +5,7 @@ import utils.Logging
 import scala.scalajs.js.annotation.JSExport
 
 @JSExport
-class DatabaseFlow extends NetworkHelper with MessageHelper with InitHelper with MetadataHelper {
+class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper with MetadataHelper with QueryHelper {
   val debug = true
 
   lazy val workspace = {
@@ -17,6 +17,8 @@ class DatabaseFlow extends NetworkHelper with MessageHelper with InitHelper with
   }
 
   init()
+
+  addNewQuery()
 
   def onInitialState(is: InitialState) = {
     Logging.info(s"Initial state received containing [${is.savedQueries.size}] saved queries, " +
