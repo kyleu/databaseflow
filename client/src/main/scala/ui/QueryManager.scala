@@ -14,12 +14,12 @@ object QueryManager {
   var activeQueries = Seq.empty[UUID]
   private[this] lazy val workspace = $("#workspace")
 
-  def addQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String, onClose: () => Unit): Unit = {
+  def addQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String, icon: String, onClose: () => Unit): Unit = {
     TabManager.initIfNeeded()
 
-    workspace.append(SqlEditorTemplate.forQuery(queryId, queryName, sql).toString)
+    workspace.append(SqlEditorTemplate.forQuery(queryId, queryName, sql, icon).toString)
 
-    TabManager.addTab(queryId, queryName, "pencil-square-o")
+    TabManager.addTab(queryId, queryName, icon)
 
     val sqlEditor = EditorManager.initSqlEditor(queryId)
 

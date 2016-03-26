@@ -19,7 +19,7 @@ object AdHocQueryManager {
     val sql = MetadataManager.schema.map { s =>
       if (s.tables.isEmpty) { "" } else { s"select * from ${s.tables(Random.nextInt(s.tables.size)).name} limit 5;" }
     }.getOrElse("")
-    QueryManager.addQuery(sendMessage, queryId, queryName, sql, () => Unit)
+    QueryManager.addQuery(sendMessage, queryId, queryName, sql, "pencil-square-o", () => Unit)
     lastNum += 1
   }
 }

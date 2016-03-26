@@ -19,6 +19,6 @@ object SavedQueryManager {
   }
 
   private[this] def addSavedQuery(savedQuery: SavedQuery, sendMessage: (RequestMessage) => Unit, onClose: () => Unit) = {
-    QueryManager.addQuery(sendMessage, savedQuery.id, savedQuery.title, savedQuery.sql, onClose)
+    QueryManager.addQuery(sendMessage, savedQuery.id, savedQuery.title, savedQuery.sql, "envelope-o", onClose)
   }
 }

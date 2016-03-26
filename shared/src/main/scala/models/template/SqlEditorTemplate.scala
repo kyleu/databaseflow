@@ -5,14 +5,14 @@ import java.util.UUID
 import scalatags.Text.all._
 
 object SqlEditorTemplate {
-  def forQuery(queryId: UUID, queryName: String, sql: String) = {
+  def forQuery(queryId: UUID, queryName: String, sql: String, icon: String) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       div(cls := "row")(
         div(cls := "col s12")(
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
-                i(cls := "title-icon fa fa-pencil-square-o"),
+                i(cls := "title-icon fa fa-" + icon),
                 queryName,
                 i(cls := "right fa fa-close")
               ),
