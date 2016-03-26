@@ -1,4 +1,5 @@
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import ui.QueryManager
 import utils.Logging
 
 import scala.scalajs.js
@@ -15,7 +16,7 @@ trait InitHelper { this: DatabaseFlow =>
     js.Dynamic.global.ace.require("ace/ext/language_tools")
 
     $("#new-query-link").click({ (e: JQueryEventObject) =>
-      addNewQuery()
+      QueryManager.addNewQuery(sendMessage)
       false
     })
   }

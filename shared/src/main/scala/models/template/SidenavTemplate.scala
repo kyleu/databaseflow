@@ -18,19 +18,19 @@ object SidenavTemplate {
 
   def tables(schema: Schema) = {
     schema.tables.map { t =>
-      li(a(id := "table-" + t.name, cls := "table-link", title := t.description.getOrElse(""), href := "#table-" + t.name)(t.name))
+      li(a(id := "table-" + t.name, cls := "table-link waves-effect", title := t.description.getOrElse(""), href := "#table-" + t.name)(t.name))
     }
   }
 
   def procedures(schema: Schema) = {
     schema.procedures.map { p =>
-      li(a(id := "procedure-" + p.name, cls := "procedure-link", title := p.description.getOrElse(""), href := "#procedure-" + p.name)(p.name))
+      li(a(id := "procedure-" + p.name, cls := "procedure-link waves-effect", title := p.description.getOrElse(""), href := "#procedure-" + p.name)(p.name))
     }
   }
 
   def views(schema: Schema) = {
     schema.views.map { v =>
-      li(a(id := "view-" + v.name, cls := "view-link", title := v.description.getOrElse(""), href := "#view-" + v.name)(v.name))
+      li(a(id := "view-" + v.name, cls := "view-link waves-effect", title := v.description.getOrElse(""), href := "#view-" + v.name)(v.name))
     }
   }
 }

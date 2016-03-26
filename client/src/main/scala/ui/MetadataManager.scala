@@ -1,10 +1,11 @@
-import models.ViewTable
+package ui
+
 import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
-trait MetadataHelper { this: DatabaseFlow =>
+object MetadataManager {
   var savedQueries: Option[Seq[SavedQuery]] = None
   var schema: Option[Schema] = None
 
@@ -18,15 +19,14 @@ trait MetadataHelper { this: DatabaseFlow =>
     }
   }
 
-  def setSchema(sch: Schema) = {
+  def setSchema(sch: Schema, onClick: (String) => Unit) = {
     schema = Some(sch)
     if (sch.tables.nonEmpty) {
       $("#table-list-toggle").css("display", "block")
       $("#table-list").html(SidenavTemplate.tables(sch).mkString("\n"))
       $(".table-link").click { (e: JQueryEventObject) =>
         val name = e.delegateTarget.id.stripPrefix("table-")
-        // TODO
-        //sendMessage(ViewTable(name))
+        onClick(name)
         false
       }
     } else {
@@ -45,4 +45,6 @@ trait MetadataHelper { this: DatabaseFlow =>
       $("#procedure-list-toggle").css("display", "none")
     }
   }
+
+  def getTable(name: String) = schema.flatMap(_.tables.find(_.name == name))
 }
