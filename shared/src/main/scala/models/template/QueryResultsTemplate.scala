@@ -12,12 +12,12 @@ object QueryResultsTemplate {
     val card = div(cls := "card")(
       div(cls := "card-content")(
         span(cls := "card-title")(
-          i(cls := "title-icon fa fa-gift"),
+          i(cls := "title-icon fa fa-file-text-o"),
           cardTitle,
           i(cls := "right fa fa-close")
         ),
         p(s"${qr.result.data.size} rows returned in [${qr.durationMs}ms]."),
-        DataTableTemplate.forResults(res.columns, res.data)
+        DataTableTemplate.forResults(res)
       ),
       div(cls := "card-action")(
         a(href := "#")("Download")

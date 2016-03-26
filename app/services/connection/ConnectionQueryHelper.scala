@@ -30,6 +30,7 @@ object ConnectionQueryHelper extends Logging {
         sql = sql,
         columns = result._1,
         data = result._2,
+        sortable = false,
         occurred = startMs
       ), durationMs)
     } catch {
@@ -78,6 +79,7 @@ object ConnectionQueryHelper extends Logging {
         sql = sql,
         columns = result._1,
         data = result._2,
+        sortable = true,
         occurred = startMs
       ), durationMs)
     } catch {

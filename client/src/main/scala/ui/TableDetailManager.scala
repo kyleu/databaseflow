@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.RequestMessage
+import models.{ RequestMessage, ViewTable }
 import models.schema.Table
 import models.template.TableViewTemplate
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
@@ -25,7 +25,7 @@ object TableDetailManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, table)
+        viewData(queryId, table, sendMessage)
         false
       })
 
@@ -48,7 +48,8 @@ object TableDetailManager {
       openTables = openTables + (table.name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, table: Table) = {
+  private[this] def viewData(queryId: UUID, table: Table, sendMessage: (RequestMessage) => Unit) = {
+    sendMessage(ViewTable(queryId = queryId, name = table.name))
   }
 
   private[this] def viewForeignKeys(queryId: UUID, table: Table) = {

@@ -19,6 +19,9 @@ case class QueryResult(
   sql: String,
   columns: Seq[QueryResult.Col],
   data: Seq[Seq[Option[String]]],
+  sortable: Boolean,
+  sortedColumn: Option[String] = None,
+  sortedAscending: Option[Boolean] = None,
   occurred: Long
 )
 

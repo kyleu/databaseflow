@@ -6,7 +6,23 @@ import models.schema.ColumnType._
 import scalatags.Text.all._
 
 object DataTableTemplate {
-  private[this] def tableHeader(columns: Seq[QueryResult.Col]) = thead(tr(columns.map(c => th(title := c.t.toString)(c.name))))
+  private[this] def tableHeader(res: QueryResult) = {
+    def str(name: String) = if (res.sortable) {
+      val icon = if (res.sortedColumn.contains(name)) {
+        if (res.sortedAscending.contains(false)) {
+          "sort-up"
+        } else {
+          "sort-down"
+        }
+      } else {
+        "sort"
+      }
+      Seq(i(cls := s"sort-icon fa fa-$icon"), span(cls := "sorted-title")(name))
+    } else {
+      Seq(span(name))
+    }
+    thead(tr(res.columns.map(c => th(title := c.t.toString)(str(c.name): _*))))
+  }
 
   private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = v match {
     case Some(x) => col.t match {
@@ -20,18 +36,18 @@ object DataTableTemplate {
     case null => td("null-bug")
   }
 
-  private[this] def tableBody(columns: Seq[QueryResult.Col], rows: Seq[Seq[Option[String]]]) = {
-    tbody(rows.map(r => tr(columns.zip(r).map(x => cellValue(x._1, x._2)))))
+  private[this] def tableBody(res: QueryResult) = {
+    tbody(res.data.map(r => tr(res.columns.zip(r).map(x => cellValue(x._1, x._2)))))
   }
 
-  def forResults(columns: Seq[QueryResult.Col], rows: Seq[Seq[Option[String]]]) = {
-    val data = if (columns.isEmpty || rows.isEmpty) {
+  def forResults(res: QueryResult) = {
+    val data = if (res.columns.isEmpty || res.data.isEmpty) {
       em("No rows returned.")
     } else {
       div(cls := "query-result-table")(
         table(cls := "bordered highlight responsive-table")(
-          tableHeader(columns),
-          tableBody(columns, rows)
+          tableHeader(res),
+          tableBody(res)
         )
       )
     }
