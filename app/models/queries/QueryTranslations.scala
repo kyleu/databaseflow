@@ -3,8 +3,9 @@ package models.queries
 import java.sql.Types._
 
 import models.schema.ColumnType._
+import utils.Logging
 
-object QueryTranslations {
+object QueryTranslations extends Logging {
   def forType(i: Int) = i match {
     case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => StringType
     case NUMERIC | DECIMAL => BigDecimalType
@@ -19,12 +20,17 @@ object QueryTranslations {
     case DATE => DateType
     case TIME | TIME_WITH_TIMEZONE => TimeType
     case TIMESTAMP | TIMESTAMP_WITH_TIMEZONE => TimestampType
+    case REF | REF_CURSOR => RefType
+    case SQLXML => XmlType
+    case OTHER => UuidType
+
     case NULL => NullType
     case JAVA_OBJECT => ObjectType
     case STRUCT => StructType
     case ARRAY => ArrayType
-    case REF | REF_CURSOR => RefType
-    case SQLXML => XmlType
-    case _ => UnknownType
+
+    case x =>
+      log.warn(s"Encountered unknown columm type [$i].")
+      UnknownType
   }
 }

@@ -5,8 +5,8 @@ import java.sql.DatabaseMetaData
 import models.database.Row
 import models.schema.{ Index, IndexColumn, Table }
 
-object MetadataIndices {
-  def getIndices(metadata: DatabaseMetaData, t: Table) = {
+object MetadataIndexes {
+  def getIndexes(metadata: DatabaseMetaData, t: Table) = {
     val rs = metadata.getIndexInfo(t.catalog.orNull, t.schema.orNull, t.name, false, false)
     val indexColumns = new Row.Iter(rs).map { row =>
       // [index_qualifier], [pages], [filter_condition]
@@ -31,7 +31,7 @@ object MetadataIndices {
       (name, unique, typ, cardinality, position, columnName, ascending)
     }.toList
 
-    val indices = indexColumns.groupBy(_._1).map { cols =>
+    val indexes = indexColumns.groupBy(_._1).map { cols =>
       val idxCols = cols._2.sortBy(_._5).map { col =>
         IndexColumn(name = col._6, ascending = col._7)
       }
@@ -45,6 +45,6 @@ object MetadataIndices {
       )
     }.toSeq
 
-    indices.sortBy(_.name)
+    indexes.sortBy(_.name)
   }
 }

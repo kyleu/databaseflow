@@ -24,7 +24,7 @@ object SchemaService {
       rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, t),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, t),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, t),
-      indices = MetadataIndices.getIndices(metadata, t)
+      indexes = MetadataIndexes.getIndexes(metadata, t)
     )
 
     val tables = MetadataTables.getTables(metadata, catalog, schema, "TABLE")

@@ -11,5 +11,5 @@ case class Table(
   rowIdentifier: Seq[String] = Nil,
   primaryKey: Option[PrimaryKey] = None,
   foreignKeys: Seq[ForeignKey] = Nil,
-  indices: Seq[Index] = Nil
+  indexes: Seq[Index] = Nil
 )

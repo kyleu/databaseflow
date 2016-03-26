@@ -20,13 +20,14 @@ object ColumnType extends Enum[ColumnType] {
   case object DateType extends ColumnType("date")
   case object TimeType extends ColumnType("time")
   case object TimestampType extends ColumnType("timestamp")
+  case object RefType extends ColumnType("ref")
+  case object XmlType extends ColumnType("xml")
+  case object UuidType extends ColumnType("uuid")
 
   case object NullType extends ColumnType("null")
   case object ObjectType extends ColumnType("object")
   case object StructType extends ColumnType("struct")
   case object ArrayType extends ColumnType("array")
-  case object RefType extends ColumnType("ref")
-  case object XmlType extends ColumnType("xml")
 
   case object UnknownType extends ColumnType("unknown")
 

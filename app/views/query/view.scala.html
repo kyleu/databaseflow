@@ -78,7 +78,7 @@
                   </table>
                 }
 
-                @if(table.indices.nonEmpty) {
+                @if(table.indexes.nonEmpty) {
                   <h5>Indexes</h5>
                   <table>
                     <thead>
@@ -91,7 +91,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                    @table.indices.map { idx =>
+                    @table.indexes.map { idx =>
                       <tr>
                         <td>@idx.name</td>
                         <td>@idx.unique</td>

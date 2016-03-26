@@ -25,18 +25,17 @@ object TableDetailManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        false
-      })
-
-      $(".definition-link", queryPanel).click({ (e: JQueryEventObject) =>
+        viewData(queryId, table)
         false
       })
 
       $(".foreign-keys-link", queryPanel).click({ (e: JQueryEventObject) =>
+        viewForeignKeys(queryId, table)
         false
       })
 
       $(".indexes-link", queryPanel).click({ (e: JQueryEventObject) =>
+        viewIndexes(queryId, table)
         false
       })
 
@@ -47,5 +46,28 @@ object TableDetailManager {
       })
 
       openTables = openTables + (table.name -> queryId)
+  }
+
+  private[this] def viewData(queryId: UUID, table: Table) = {
+  }
+
+  private[this] def viewForeignKeys(queryId: UUID, table: Table) = {
+    val id = UUID.randomUUID
+    val html = TableViewTemplate.foreignKeysForTable(id, queryId, table)
+    $(s"#workspace-$queryId").prepend(html.toString)
+    $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
+      $(s"#$id").remove()
+      false
+    })
+  }
+
+  private[this] def viewIndexes(queryId: UUID, table: Table) = {
+    val id = UUID.randomUUID
+    val html = TableViewTemplate.indexesForTable(id, queryId, table)
+    $(s"#workspace-$queryId").prepend(html.toString)
+    $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
+      $(s"#$id").remove()
+      false
+    })
   }
 }
