@@ -12,7 +12,7 @@ object DataTableTemplate {
     case Some(x) => col.t match {
       case StringType if x.isEmpty => td(em("empty string"))
       case StringType => td(x)
-      case IntegerType => td(x.toLong.toString)
+      case IntegerType => td(x)
       case TimestampType => td(x)
       case _ => td(s"$x (${col.t})")
     }

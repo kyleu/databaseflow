@@ -21,5 +21,14 @@ object ColumnType extends Enum[ColumnType] {
   case object TimeType extends ColumnType("time")
   case object TimestampType extends ColumnType("timestamp")
 
+  case object NullType extends ColumnType("null")
+  case object ObjectType extends ColumnType("object")
+  case object StructType extends ColumnType("struct")
+  case object ArrayType extends ColumnType("array")
+  case object RefType extends ColumnType("ref")
+  case object XmlType extends ColumnType("xml")
+
+  case object UnknownType extends ColumnType("unknown")
+
   override def values = findValues
 }

@@ -7,6 +7,7 @@ case class Column(
   primaryKey: Boolean,
   notNull: Boolean,
   autoIncrement: Boolean,
+  columnType: ColumnType,
   sqlTypeCode: Int,
   sqlTypeName: String,
   size: String,
