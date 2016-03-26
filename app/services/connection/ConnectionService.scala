@@ -46,8 +46,8 @@ class ConnectionService(
     case p: Ping => timeReceive(p) { out ! Pong(p.timestamp) }
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
-    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.sql, sq.action.getOrElse("run")) }
-    case vt: ViewTable => timeReceive(vt) { handleViewTable(vt.name) }
+    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
+    case vt: ViewTable => timeReceive(vt) { handleViewTable(vt.queryId, vt.name) }
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
     case x => throw new IllegalArgumentException(s"Unhandled message [${x.getClass.getSimpleName}].")
@@ -57,15 +57,15 @@ class ConnectionService(
     supervisor ! ConnectionStopped(id)
   }
 
-  private[this] def handleSubmitQuery(sql: String, action: String) = action match {
-    case "run" => ConnectionQueryHelper.handleRunQuery(db, sql, out)
-    case "explain" => ConnectionQueryHelper.handleExplainQuery(db, sql, out)
-    case "analyze" => ConnectionQueryHelper.handleAnalyzeQuery(db, sql, out)
+  private[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String) = action match {
+    case "run" => ConnectionQueryHelper.handleRunQuery(db, queryId, sql, out)
+    case "explain" => ConnectionQueryHelper.handleExplainQuery(db, queryId, sql, out)
+    case "analyze" => ConnectionQueryHelper.handleAnalyzeQuery(db, queryId, sql, out)
     case _ => throw new IllegalArgumentException(action)
   }
 
-  private[this] def handleViewTable(name: String) = schema.tables.find(_.name == name) match {
-    case Some(table) => ConnectionQueryHelper.handleViewTable(db, name, out)
+  private[this] def handleViewTable(queryId: UUID, name: String) = schema.tables.find(_.name == name) match {
+    case Some(table) => ConnectionQueryHelper.handleViewTable(db, queryId, name, out)
     case None =>
       log.warn(s"Attempted to view invalid table [$name].")
       out ! ServerError("Invalid Table", s"[$name] is not a valid table.")

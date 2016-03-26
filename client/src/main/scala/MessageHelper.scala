@@ -20,6 +20,7 @@ trait MessageHelper { this: DatabaseFlow =>
   private[this] def handleQueryResult(qr: QueryResultResponse) = {
     //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
     val html = QueryResultsTemplate.forResults(qr)
+    val workspace = $(s"#workspace-${qr.result.queryId}")
     workspace.prepend(html.toString)
     $(s"#${qr.id} .fa-close").click((e: JQueryEventObject) => {
       $(s"#${qr.id}").remove()
@@ -28,6 +29,7 @@ trait MessageHelper { this: DatabaseFlow =>
 
   private[this] def handleQueryError(qe: QueryErrorResponse) = {
     val html = QueryErrorTemplate.forError(qe)
+    val workspace = $(s"#workspace-${qe.error.queryId}")
     workspace.prepend(html.toString)
     $(s"#${qe.id} .fa-close").click((e: JQueryEventObject) => {
       $(s"#${qe.id}").remove()
@@ -37,6 +39,7 @@ trait MessageHelper { this: DatabaseFlow =>
   private[this] def handlePlanResult(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val html = QueryPlanTemplate.forPlan(pr)
+    val workspace = $(s"#workspace-${pr.result.queryId}")
     workspace.prepend(html.toString)
 
     workOutPlanWidth(pr.id)

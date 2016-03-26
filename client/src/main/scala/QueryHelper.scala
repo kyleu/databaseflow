@@ -5,6 +5,7 @@ import models.template.SqlEditorTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
 import scala.scalajs.js
+import scala.util.Random
 
 trait QueryHelper { this: DatabaseFlow =>
   var activeQueries = Seq.empty[(UUID, js.Dynamic, JQuery)]
@@ -50,12 +51,20 @@ trait QueryHelper { this: DatabaseFlow =>
 
     if (lastNum == 1) {
       tabBar.addClass("tabs")
-      tabBar.show()
     }
 
     lastNum += 1
 
-    workspace.append(SqlEditorTemplate.forQuery(queryId, queryName).toString)
+    val sql = schema.map { s =>
+      if (s.tables.isEmpty) {
+        ""
+      } else {
+        val table = s.tables(Random.nextInt(s.tables.size)).name
+        s"select * from $table limit 5;"
+      }
+    }.getOrElse("")
+
+    workspace.append(SqlEditorTemplate.forQuery(queryId, queryName, sql).toString)
 
     addTab(queryId, queryName)
 

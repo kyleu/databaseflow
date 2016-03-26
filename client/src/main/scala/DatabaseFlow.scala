@@ -8,14 +8,6 @@ import scala.scalajs.js.annotation.JSExport
 class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper with MetadataHelper with QueryHelper {
   val debug = true
 
-  lazy val workspace = {
-    val r = $("#workspace")
-    if (r.length == 0) {
-      throw new IllegalStateException("No workspace.")
-    }
-    r
-  }
-
   init()
 
   addNewQuery()

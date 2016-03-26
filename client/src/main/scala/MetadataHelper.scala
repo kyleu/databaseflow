@@ -25,7 +25,8 @@ trait MetadataHelper { this: DatabaseFlow =>
       $("#table-list").html(SidenavTemplate.tables(sch).mkString("\n"))
       $(".table-link").click { (e: JQueryEventObject) =>
         val name = e.delegateTarget.id.stripPrefix("table-")
-        sendMessage(ViewTable(name))
+        // TODO
+        //sendMessage(ViewTable(name))
         false
       }
     } else {

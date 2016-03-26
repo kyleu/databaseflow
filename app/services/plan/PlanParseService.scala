@@ -1,5 +1,7 @@
 package services.plan
 
+import java.util.UUID
+
 import models.engine.DatabaseEngine
 import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
 import models.plan.PlanResult
@@ -7,10 +9,10 @@ import models.query.QueryResult
 import utils.Logging
 
 object PlanParseService {
-  def parse(sql: String, plan: String)(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => PostgresParseService.parse(sql, plan)
-    case MySQL => MySqlParseService.parse(sql, plan)
-    case H2 => H2ParseService.parse(sql, plan)
+  def parse(sql: String, queryId: UUID, plan: String)(implicit engine: DatabaseEngine) = engine match {
+    case PostgreSQL => PostgresParseService.parse(sql, queryId, plan)
+    case MySQL => MySqlParseService.parse(sql, queryId, plan)
+    case H2 => H2ParseService.parse(sql, queryId, plan)
   }
 
   def resultPlanString(result: (scala.Seq[QueryResult.Col], scala.Seq[scala.Seq[Option[String]]]))(implicit engine: DatabaseEngine) = engine match {
@@ -20,7 +22,7 @@ object PlanParseService {
 }
 
 abstract class PlanParseService(name: String) extends Logging {
-  def parse(sql: String, plan: String): PlanResult
+  def parse(sql: String, queryId: UUID, plan: String): PlanResult
 
   def debug() = {
     log.info(s"Started [$name] plan parse service.")

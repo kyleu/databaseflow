@@ -1,5 +1,7 @@
 package models.query
 
+import java.util.UUID
+
 import models.schema.ColumnType
 
 object QueryResult {
@@ -12,6 +14,7 @@ object QueryResult {
 }
 
 case class QueryResult(
+  queryId: UUID,
   title: String,
   sql: String,
   columns: Seq[QueryResult.Col],
