@@ -11,7 +11,10 @@ object SqlEditorTemplate {
         div(cls := "col s12")(
           div(cls := "card")(
             div(cls := "card-content")(
-              span(cls := "card-title")(queryName),
+              span(cls := "card-title")(
+                queryName,
+                i(cls := "right fa fa-close")
+              ),
               div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql)
             ),
             div(cls := "card-action")(

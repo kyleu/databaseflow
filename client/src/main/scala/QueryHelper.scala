@@ -7,8 +7,12 @@ import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import scala.scalajs.js
 import scala.util.Random
 
+object QueryHelper {
+  case class QueryRecord(queryId: UUID, sqlEditor: js.Dynamic, panel: JQuery, workspace: JQuery)
+}
+
 trait QueryHelper { this: DatabaseFlow =>
-  var activeQueries = Seq.empty[(UUID, js.Dynamic, JQuery)]
+  var activeQueries = Seq.empty[QueryHelper.QueryRecord]
 
   private[this] var lastNum = 1
 
@@ -17,8 +21,8 @@ trait QueryHelper { this: DatabaseFlow =>
   private[this] lazy val workspace = $("#workspace")
 
   private[this] def addTab(id: UUID, title: String) = {
-    tabBar.append(s"""<li class="tab col s3">
-      <a href="#panel-$id">$title</a>
+    tabBar.append(s"""<li id="tab-$id" class="tab col s3">
+      <a href="#panel-$id"><i class="fa fa-pencil-square-o"></i> $title</a>
     </li>""")
     dynamicTabBar.tabs()
     dynamicTabBar.tabs("select_tab", s"panel-$id")
@@ -41,7 +45,25 @@ trait QueryHelper { this: DatabaseFlow =>
     editor
   }
 
-  def addNewQuery() = {
+  private[this] def closeQuery(queryId: UUID): Unit = {
+    if (activeQueries.size == 1) {
+      addNewQuery()
+    }
+    utils.Logging.info(s"Closing [$queryId].")
+
+    val originalIndex = activeQueries.indexWhere(_.queryId == queryId)
+    activeQueries = activeQueries.filterNot(_.queryId == queryId)
+
+    $(s"#panel-$queryId").remove()
+    $(s"#tab-$queryId").remove()
+
+    dynamicTabBar.tabs()
+
+    val newId = activeQueries(if (originalIndex == 0) { 0 } else { originalIndex - 1 }).queryId
+    dynamicTabBar.tabs("select_tab", s"panel-$newId")
+  }
+
+  def addNewQuery(): Unit = {
     val queryId = UUID.randomUUID
     val queryName = if (lastNum == 1) {
       "Untitled Query"
@@ -79,10 +101,18 @@ trait QueryHelper { this: DatabaseFlow =>
       false
     })
 
-    wire($(".run-query-link"), "run")
-    wire($(".explain-query-link"), "explain")
-    wire($(".analyze-query-link"), "analyze")
+    val queryPanel = $(s"#panel-$queryId")
 
-    activeQueries = (queryId, sqlEditor, queryWorkspace) +: activeQueries
+    wire($(".run-query-link", queryPanel), "run")
+    wire($(".explain-query-link", queryPanel), "explain")
+    wire($(".analyze-query-link", queryPanel), "analyze")
+
+    $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
+      closeQuery(queryId)
+      false
+    })
+
+    val record = QueryHelper.QueryRecord(queryId, sqlEditor, queryPanel, queryWorkspace)
+    activeQueries = activeQueries :+ record
   }
 }

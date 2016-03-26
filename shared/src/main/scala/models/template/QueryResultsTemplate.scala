@@ -15,7 +15,7 @@ object QueryResultsTemplate {
           cardTitle,
           i(cls := "right fa fa-close")
         ),
-        p(s"Executed in [${qr.durationMs}ms]."),
+        p(s"${qr.result.data.size} rows returned in [${qr.durationMs}ms]."),
         DataTableTemplate.forResults(res.columns, res.data)
       ),
       div(cls := "card-action")(
