@@ -1,11 +1,5 @@
-@(user: models.user.User, dbName: String, dbs: Seq[(String, java.util.UUID)])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: models.user.User, dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 <header>
-  <ul id="dropdown-connection" class="dropdown-content">
-    @dbs.map { db =>
-      <li><a href="@routes.QueryController.main(db._2)">@db._1</a></li>
-    }
-  </ul>
-
   <ul id="dropdown-user" class="dropdown-content">
     <li><a href="">Profile</a></li>
     <li><a href="">Settings</a></li>
@@ -81,12 +75,6 @@
         </ul>
 
         <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-
-        <ul class="left hide-on-med-and-down">
-          <li><a class="dropdown-button" href="#" data-activates="dropdown-connection">
-            @dbName <i class="fa fa-angle-down right"></i>
-          </a></li>
-        </ul>
 
         <ul class="right hide-on-small-only">
           <li><a class="dropdown-button" href="#" data-activates="dropdown-user">

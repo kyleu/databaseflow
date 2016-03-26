@@ -1,13 +1,17 @@
-@(user: models.user.User, debug: Boolean, dbName: String, dbs: Seq[(String, java.util.UUID)])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: models.user.User, debug: Boolean, dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.materialize(utils.Config.projectName) {
-  @sidenav(user, dbName, dbs)
+  @sidenav(user, dbName)
 
   <main class="indent">
+    <ul class="tabs">
+      <li class="tab col s3"><a class="active" href="#panel-">Untitled Query</a></li>
+    </ul>
+
     <div class="row">
       <div class="col s12">
         <div class="card">
           <div class="card-content">
-            <span class="card-title">SQL Query</span>
+            <span class="card-title">Untitled Query</span>
             <div id="sql-textarea" style="width: 100%;">select * from actor limit 5;</div>
           </div>
           <div class="card-action">

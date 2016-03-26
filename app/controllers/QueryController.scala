@@ -18,9 +18,8 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class QueryController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
-    val dbs = MasterDatabase.db.query(ConnectionQueries.getAll()).map(c => c.name -> c.id)
-    val activeDb = dbs.find(_._2 == connectionId)
-    Future.successful(Ok(views.html.query.main(request.identity, ctx.config.debug, activeDb.map(_._1).getOrElse("..."), dbs)))
+    val activeDb = MasterDatabase.db.query(ConnectionQueries.getById(connectionId)).map(c => c.name -> c.id)
+    Future.successful(Ok(views.html.query.main(request.identity, ctx.config.debug, activeDb.map(_._1).getOrElse("..."))))
   }
 
   val mff = new MessageFrameFormatter(ctx.config.debug)
