@@ -5,6 +5,9 @@ import java.util.UUID
 import models.engine.ConnectionSettings
 import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
 import models.queries.connection.ConnectionQueries
+import models.queries.query.SavedQueryQueries
+import models.query.SavedQuery
+import utils.DateUtils
 
 object SeedData {
   def insert(db: Database) = {
@@ -51,6 +54,36 @@ object SeedData {
       url = "jdbc:mysql://localhost/appthis_local",
       username = "appthis",
       password = "Mah14Mah1"
+    )))
+
+    db.execute(SavedQueryQueries.insert(SavedQuery(
+      id = UUID.randomUUID,
+      owner = None,
+      title = "Saved Query 1",
+      sql = "select * from stuff",
+      lastRan = None,
+      created = DateUtils.nowMillis,
+      updated = DateUtils.nowMillis
+    )))
+
+    db.execute(SavedQueryQueries.insert(SavedQuery(
+      id = UUID.randomUUID,
+      owner = None,
+      title = "Saved Query 2",
+      sql = "select * from stuff2",
+      lastRan = None,
+      created = DateUtils.nowMillis,
+      updated = DateUtils.nowMillis
+    )))
+
+    db.execute(SavedQueryQueries.insert(SavedQuery(
+      id = UUID.randomUUID,
+      owner = None,
+      title = "Saved Query 3",
+      sql = "select * from stuff3",
+      lastRan = None,
+      created = DateUtils.nowMillis,
+      updated = DateUtils.nowMillis
     )))
   }
 }

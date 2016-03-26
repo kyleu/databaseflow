@@ -6,7 +6,7 @@ import models.schema.Table
 
 import scalatags.Text.all._
 
-object TableViewTemplate {
+object TableDetailTemplate {
   def forTable(queryId: UUID, table: Table) = {
     val description = table.description.getOrElse("")
     val links = Seq(

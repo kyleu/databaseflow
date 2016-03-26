@@ -1,5 +1,7 @@
 package ui
 
+import java.util.UUID
+
 import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
@@ -9,11 +11,16 @@ object MetadataManager {
   var savedQueries: Option[Seq[SavedQuery]] = None
   var schema: Option[Schema] = None
 
-  def setSavedQueries(sq: Seq[SavedQuery]) = {
+  def setSavedQueries(sq: Seq[SavedQuery], onClick: (UUID) => Unit) = {
     savedQueries = Some(sq)
     if (sq.nonEmpty) {
       $("#saved-query-list-toggle").css("display", "block")
       $("#saved-query-list").html(SidenavTemplate.savedQueries(sq).mkString("\n"))
+      $(".saved-query-link").click { (e: JQueryEventObject) =>
+        val id = UUID.fromString(e.delegateTarget.id.stripPrefix("saved-query-"))
+        onClick(id)
+        true
+      }
     } else {
       $("#saved-query-list-toggle").css("display", "none")
     }
@@ -56,6 +63,7 @@ object MetadataManager {
     }
   }
 
+  def getSavedQuery(id: UUID) = savedQueries.flatMap(_.find(_.id == id))
   def getTable(name: String) = schema.flatMap(_.tables.find(_.name == name))
   def getView(name: String) = schema.flatMap(_.views.find(_.name == name))
   def getProcedure(name: String) = schema.flatMap(_.procedures.find(_.name == name))

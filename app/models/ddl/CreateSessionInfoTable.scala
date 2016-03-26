@@ -12,6 +12,6 @@ case object CreateSessionInfoTable extends CreateTableStatement("session_info") 
       created timestamp not null
     );
 
-    create index idx_session_info_provider_key on $tableName (provider, key);
+    create index idx_${tableName}_provider_key on $tableName (provider, key);
   """
 }

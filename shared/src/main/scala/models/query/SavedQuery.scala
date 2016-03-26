@@ -4,7 +4,7 @@ import java.util.UUID
 
 case class SavedQuery(
   id: UUID,
-  owner: UUID,
+  owner: Option[UUID],
   title: String,
   sql: String,
   lastRan: Option[Long] = None,

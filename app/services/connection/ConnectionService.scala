@@ -2,14 +2,14 @@ package services.connection
 
 import java.util.UUID
 
-import akka.actor.{ ActorRef, Props }
+import akka.actor.{ActorRef, Props}
 import models._
+import models.queries.query.SavedQueryQueries
 import models.user.User
 import services.database.MasterDatabase
-import services.query.SavedQueryService
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
-import utils.{ Config, Logging }
+import utils.{Config, Logging}
 
 object ConnectionService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
@@ -30,7 +30,7 @@ class ConnectionService(
   protected[this] var userPreferences = user.preferences
   protected[this] val db = MasterDatabase.databaseFor(connectionId)
 
-  protected[this] val savedQueries = SavedQueryService.getSavedQueries(user)
+  protected[this] val savedQueries = MasterDatabase.db.query(SavedQueryQueries.getByOwner(user.id))
   protected[this] val schema = SchemaService.getSchema(db.source)
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
