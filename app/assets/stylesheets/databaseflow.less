@@ -7,42 +7,20 @@ body {
 
 main {
   flex: 1 0 auto;
-  .tabs {
-    margin-bottom: 8px;
-    box-shadow: 0 0 5px 0 rgba(0,0,0,0.16), 0 0 10px 0 rgba(0,0,0,0.12);
-    .tab {
-      text-transform: none;
-    }
-  }
-}
-
-.clear {
-  clear: both;
 }
 
 main.indent {
-  padding-left: 241px;
-  //margin-top: 8px;
-}
-
-#main-menu {
-  margin-top: 64px;
-  height: 100%;
-  height: calc(~'100% - 64px');
-  padding-bottom: 20px;
+  padding-left: 244px;
 }
 
 @media only screen and (max-width: 992px) {
   main.indent {
     padding-left: 0;
   }
-  #main-menu {
-    margin-top: 0;
-    height: 100%;
-  }
 }
 
 @import url(_menu.less);
+@import url(_tabs.less);
 @import url(_sqleditor.less);
 @import url(_queryplan.less);
 @import url(_results.less);

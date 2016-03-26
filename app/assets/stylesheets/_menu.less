@@ -4,7 +4,22 @@ nav {
   }
 }
 
-#main-menu li.search {
+ul#main-menu {
+  margin-top: 64px;
+  height: 100%;
+  height: calc(~'100% - 64px');
+  padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 992px) {
+  ul#main-menu {
+    margin-top: 0;
+    height: 100%;
+  }
+}
+
+
+ul#main-menu li.search {
   &:hover { background-color: #fff; }
 
   margin-top: 1px;
@@ -51,6 +66,15 @@ ul#main-menu {
     line-height: 44px;
     padding: 0;
 
+    .new-query-icon {
+      display: block;
+      float: left;
+      font-size: 1.5rem;
+      width: 26px;
+      margin-top: -9px;
+      margin-left: 5px;
+    }
+
     .fa-angle-right {
       font-size: 1.5rem;
       display: block;
@@ -67,10 +91,6 @@ ul#main-menu {
       line-height: 44px;
       height: 44px;
     }
-
-    .top-nav-link {
-      padding-left: 10px;
-    }
   }
 
   li.active {
@@ -85,7 +105,7 @@ ul#main-menu {
   ul.collapsible-accordion {
     background-color: #FFF;
     i {
-      margin-right: 0;
+      margin-right: 2px;
     }
   }
 
