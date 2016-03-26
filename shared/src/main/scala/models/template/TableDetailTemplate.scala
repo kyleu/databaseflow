@@ -7,12 +7,12 @@ import models.schema.Table
 import scalatags.Text.all._
 
 object TableDetailTemplate {
-  def forTable(queryId: UUID, table: Table) = {
-    val description = table.description.getOrElse("")
+  def forTable(queryId: UUID, t: Table) = {
+    val description = t.description.getOrElse("")
     val links = Seq(
       Some(a(cls := "view-data-link", href := "#")("View Data")),
-      table.indexes.headOption.map(i => a(cls := "right indexes-link", href := "#")("Indexes")),
-      table.foreignKeys.headOption.map(fk => a(cls := "right foreign-keys-link", href := "#")("Foreign Keys"))
+      t.indexes.headOption.map(i => a(cls := "right indexes-link", href := "#")("Indexes")),
+      t.foreignKeys.headOption.map(fk => a(cls := "right foreign-keys-link", href := "#")("Foreign Keys"))
     ).flatten
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
@@ -22,7 +22,7 @@ object TableDetailTemplate {
             div(cls := "card-content")(
               span(cls := "card-title")(
                 i(cls := "title-icon fa fa-folder-open-o"),
-                table.name,
+                t.name,
                 i(cls := "right fa fa-close")
               ),
               div(description)

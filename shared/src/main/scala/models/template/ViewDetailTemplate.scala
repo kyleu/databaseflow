@@ -2,24 +2,27 @@ package models.template
 
 import java.util.UUID
 
-import models.query.SavedQuery
+import models.schema.Table
 
 import scalatags.Text.all._
 
-object SavedQueryDetailTemplate {
-  def forSavedQuery(queryId: UUID, savedQuery: SavedQuery) = {
+object ViewDetailTemplate {
+  def forView(queryId: UUID, v: Table) = {
+    val description = v.description.getOrElse("")
+
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       div(cls := "row")(
         div(cls := "col s12")(
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
-                i(cls := "title-icon fa fa-envelope-o"),
-                savedQuery.title,
+                i(cls := "title-icon fa fa-bar-chart"),
+                v.name,
                 i(cls := "right fa fa-close")
-              )
+              ),
+              div(description)
             ),
-            div(cls := "card-action")()
+            div(cls := "card-action")(a(cls := "view-data-link", href := "#")("View Data"))
           )
         )
       ),

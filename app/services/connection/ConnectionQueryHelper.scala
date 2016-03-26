@@ -64,8 +64,8 @@ object ConnectionQueryHelper extends Logging {
     out ! QueryPlanTemplate.testPlan("analyze", queryId)
   }
 
-  def handleViewTable(db: Database, queryId: UUID, name: String, out: ActorRef) = {
-    log.info(s"Viewing table [$name].")
+  def handleShowTable(db: Database, queryId: UUID, name: String, out: ActorRef) = {
+    log.info(s"Showing table [$name].")
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
     val sql = s"select * from $name limit 1001"

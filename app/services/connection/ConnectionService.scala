@@ -2,14 +2,14 @@ package services.connection
 
 import java.util.UUID
 
-import akka.actor.{ActorRef, Props}
+import akka.actor.{ ActorRef, Props }
 import models._
 import models.queries.query.SavedQueryQueries
 import models.user.User
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
-import utils.{Config, Logging}
+import utils.{ Config, Logging }
 
 object ConnectionService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
@@ -47,7 +47,7 @@ class ConnectionService(
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
-    case vt: ViewTable => timeReceive(vt) { handleViewTable(vt.queryId, vt.name) }
+    case st: ShowTable => timeReceive(st) { handleShowTable(st.queryId, st.name) }
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
     case x => throw new IllegalArgumentException(s"Unhandled message [${x.getClass.getSimpleName}].")
@@ -64,11 +64,14 @@ class ConnectionService(
     case _ => throw new IllegalArgumentException(action)
   }
 
-  private[this] def handleViewTable(queryId: UUID, name: String) = schema.tables.find(_.name == name) match {
-    case Some(table) => ConnectionQueryHelper.handleViewTable(db, queryId, name, out)
-    case None =>
-      log.warn(s"Attempted to view invalid table [$name].")
-      out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
+  private[this] def handleShowTable(queryId: UUID, name: String) = schema.tables.find(_.name == name) match {
+    case Some(table) => ConnectionQueryHelper.handleShowTable(db, queryId, name, out)
+    case None => schema.views.find(_.name == name) match {
+      case Some(table) => ConnectionQueryHelper.handleShowTable(db, queryId, name, out)
+      case None =>
+        log.warn(s"Attempted to view invalid table or view [$name].")
+        out ! ServerError("Invalid Table", s"[$name] is not a valid table or view.")
+    }
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

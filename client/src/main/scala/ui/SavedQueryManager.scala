@@ -4,8 +4,9 @@ import java.util.UUID
 
 import models.RequestMessage
 import models.query.SavedQuery
+import models.schema.Table
 import models.template.SavedQueryDetailTemplate
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{JQueryEventObject, jQuery => $}
 
 object SavedQueryManager {
   var openSavedQueries = Map.empty[UUID, UUID]
@@ -18,7 +19,7 @@ object SavedQueryManager {
       TabManager.initIfNeeded()
       WorkspaceManager.append(SavedQueryDetailTemplate.forSavedQuery(queryId, savedQuery).toString)
 
-      TabManager.addTab(queryId, savedQuery.title, "folder-open-o")
+      TabManager.addTab(queryId, savedQuery.title, "envelope-o")
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -31,5 +32,9 @@ object SavedQueryManager {
       })
 
       openSavedQueries = openSavedQueries + (savedQuery.id -> queryId)
+  }
+
+  private[this] def viewData(queryId: UUID, view: Table, sendMessage: (RequestMessage) => Unit) = {
+    //sendMessage(???)
   }
 }
