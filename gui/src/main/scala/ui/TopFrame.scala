@@ -30,6 +30,10 @@ class TopFrame(app: WebApplication) extends MainFrame {
     background = Colors.background
   }
 
+  def setStatus(status: String) = {
+    statusLabel.text = status
+  }
+
   contents = new BorderPanel {
     layout(titleLabel) = BorderPanel.Position.North
     layout(borderPanel) = BorderPanel.Position.Center
@@ -43,10 +47,11 @@ class TopFrame(app: WebApplication) extends MainFrame {
 
   background = Colors.background
 
-  override def close() = {
+  peer.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE)
+  override def closeOperation() = {
     if (app.started) {
       app.stop()
     }
-    super.close()
+    sys.exit(0)
   }
 }

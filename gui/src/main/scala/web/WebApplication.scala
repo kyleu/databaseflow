@@ -7,14 +7,7 @@ import play.core.server.{ NettyServer, ServerConfig }
 class WebApplication() {
   private[this] lazy val app = new GuiceApplicationBuilder().build()
 
-  private[this] lazy val server = NettyServer.fromApplication(
-    application = app,
-    config = ServerConfig(
-      port = Some(9000),
-      sslPort = Some(9443),
-      mode = Mode.Prod
-    )
-  )
+  private[this] var server: Option[NettyServer] = None
 
   var _started = false
 
@@ -22,9 +15,21 @@ class WebApplication() {
 
   def start() = {
     Play.start(app)
+    server = Some(NettyServer.fromApplication(
+      application = app,
+      config = ServerConfig(
+        port = Some(9000),
+        sslPort = Some(9443),
+        mode = Mode.Prod
+      )
+    ))
+    _started = true
   }
 
   def stop() = if (started) {
     Play.stop(app)
+    server.foreach(_.stop)
+    server = None
+    _started = false
   }
 }
