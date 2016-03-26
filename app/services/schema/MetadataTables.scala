@@ -15,7 +15,6 @@ object MetadataTables {
         catalog = row.asOpt[String]("TABLE_CAT"),
         schema = row.asOpt[String]("TABLE_SCHEM"),
         description = row.asOpt[String]("REMARKS"),
-        definition = None,
         typeName = row.as[String]("TABLE_TYPE")
       )
     }.toList

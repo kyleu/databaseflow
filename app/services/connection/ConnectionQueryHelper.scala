@@ -26,7 +26,7 @@ object ConnectionQueryHelper extends Logging {
       val durationMs = (DateUtils.nowMillis - startMs).toInt
       out ! QueryResultResponse(id, QueryResult(
         queryId = queryId,
-        title = "Ad-hoc Query",
+        title = "Query Results",
         sql = sql,
         columns = result._1,
         data = result._2,

@@ -51,6 +51,7 @@ object QueryPlanTemplate {
         div(cls := "card")(
           div(cls := "card-content")(
             span(cls := "card-title")(
+              i(cls := "title-icon fa fa-sitemap"),
               pr.result.name,
               i(cls := "right fa fa-close")
             ),

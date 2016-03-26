@@ -5,7 +5,6 @@ case class Table(
   catalog: Option[String],
   schema: Option[String],
   description: Option[String],
-  definition: Option[String],
   typeName: String,
 
   columns: Seq[Column] = Nil,

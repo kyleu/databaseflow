@@ -12,6 +12,7 @@ object SqlEditorTemplate {
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
+                i(cls := "title-icon fa fa-pencil-square-o"),
                 queryName,
                 i(cls := "right fa fa-close")
               ),
@@ -22,7 +23,7 @@ object SqlEditorTemplate {
               a(cls := "explain-query-link", href := "#")("Explain"),
               a(cls := "analyze-query-link", href := "#")("Analyze"),
               a(cls := "save-query-link right", href := "#")("Save"),
-              a(cls := "load-query-link right", href := "#")("Load")
+              a(cls := "save-query-link right", href := "#")("Clone")
             )
           )
         )

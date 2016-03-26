@@ -12,6 +12,7 @@ object QueryResultsTemplate {
     val card = div(cls := "card")(
       div(cls := "card-content")(
         span(cls := "card-title")(
+          i(cls := "title-icon fa fa-gift"),
           cardTitle,
           i(cls := "right fa fa-close")
         ),

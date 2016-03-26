@@ -1,5 +1,6 @@
-@(user: models.user.User, debug: Boolean, dbName: String, initialQuery: java.util.UUID)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@views.html.layout.materialize(utils.Config.projectName, debug = debug) {
+@(user: models.user.User, debug: Boolean, dbName: String, initialQuery: java.util.UUID)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@views.html.layout.materialize(utils.Config.projectName, debug = debug) {
   @sidenav(user, dbName)
 
   <main class="indent">
@@ -9,7 +10,19 @@
     </div>
 
     <div id="workspace">
-
+      <div id="loading-panel">
+        <div class="row">
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title">
+                  Loading @dbName...
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 

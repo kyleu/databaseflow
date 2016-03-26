@@ -19,15 +19,15 @@ object MetadataManager {
     }
   }
 
-  def setSchema(sch: Schema, onClick: (String) => Unit) = {
+  def setSchema(sch: Schema, onClick: (String, String) => Unit) = {
     schema = Some(sch)
     if (sch.tables.nonEmpty) {
       $("#table-list-toggle").css("display", "block")
       $("#table-list").html(SidenavTemplate.tables(sch).mkString("\n"))
       $(".table-link").click { (e: JQueryEventObject) =>
         val name = e.delegateTarget.id.stripPrefix("table-")
-        onClick(name)
-        false
+        onClick("table", name)
+        true
       }
     } else {
       $("#table-list-toggle").css("display", "none")
@@ -35,16 +35,28 @@ object MetadataManager {
     if (sch.views.nonEmpty) {
       $("#view-list-toggle").css("display", "block")
       $("#view-list").html(SidenavTemplate.views(sch).mkString("\n"))
+      $(".view-link").click { (e: JQueryEventObject) =>
+        val name = e.delegateTarget.id.stripPrefix("view-")
+        onClick("view", name)
+        true
+      }
     } else {
       $("#view-list-toggle").css("display", "none")
     }
     if (sch.procedures.nonEmpty) {
       $("#procedure-list-toggle").css("display", "block")
       $("#procedure-list").html(SidenavTemplate.procedures(sch).mkString("\n"))
+      $(".procedure-link").click { (e: JQueryEventObject) =>
+        val name = e.delegateTarget.id.stripPrefix("procedure-")
+        onClick("procedure", name)
+        true
+      }
     } else {
       $("#procedure-list-toggle").css("display", "none")
     }
   }
 
   def getTable(name: String) = schema.flatMap(_.tables.find(_.name == name))
+  def getView(name: String) = schema.flatMap(_.views.find(_.name == name))
+  def getProcedure(name: String) = schema.flatMap(_.procedures.find(_.name == name))
 }
