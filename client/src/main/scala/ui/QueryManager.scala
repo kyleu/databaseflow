@@ -2,9 +2,9 @@ package ui
 
 import java.util.UUID
 
-import models.{ RequestMessage, SubmitQuery }
-import models.schema.Schema
+import models.query.SavedQuery
 import models.template.SqlEditorTemplate
+import models.{ RequestMessage, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
 import scala.scalajs.js
@@ -15,20 +15,26 @@ object QueryManager {
   private[this] var lastNum = 1
   private[this] lazy val workspace = $("#workspace")
 
-  def addNewQuery(sendMessage: (RequestMessage) => Unit): Unit = {
-    TabManager.initIfNeeded()
-
+  def addNewQuery(sendMessage: (RequestMessage) => Unit) = {
     val queryId = UUID.randomUUID
     val queryName = if (lastNum == 1) {
       "Untitled Query"
     } else {
       "Untitled Query " + lastNum
     }
-    lastNum += 1
-
     val sql = MetadataManager.schema.map { s =>
       if (s.tables.isEmpty) { "" } else { s"select * from ${s.tables(Random.nextInt(s.tables.size)).name} limit 5;" }
     }.getOrElse("")
+    addQuery(sendMessage, queryId, queryName, sql, () => Unit)
+    lastNum += 1
+  }
+
+  def addSavedQuery(savedQuery: SavedQuery, sendMessage: (RequestMessage) => Unit, onClose: () => Unit) = {
+    addQuery(sendMessage, savedQuery.id, savedQuery.title, savedQuery.sql, onClose)
+  }
+
+  private[this] def addQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String, onClose: () => Unit): Unit = {
+    TabManager.initIfNeeded()
 
     workspace.append(SqlEditorTemplate.forQuery(queryId, queryName, sql).toString)
 
@@ -51,6 +57,7 @@ object QueryManager {
 
     $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
       QueryManager.closeQuery(queryId, Some(sqlEditor), sendMessage)
+      onClose()
       false
     })
 

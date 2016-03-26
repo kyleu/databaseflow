@@ -29,10 +29,11 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
         ViewDetailManager.viewDetail(view, sendMessage)
       case "procedure" =>
         val procedure = MetadataManager.getProcedure(name).getOrElse(throw new IllegalStateException(s"Unknown procedure [$name]."))
-      //ProcedureDetailManager.procedureDetail(procedure, sendMessage)
+        ProcedureDetailManager.procedureDetail(procedure, sendMessage)
     })
 
     $("#loading-panel").hide()
     QueryManager.addNewQuery(sendMessage)
+
   }
 }

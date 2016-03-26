@@ -21,6 +21,7 @@ object TabManager {
     tabBar.append(s"""<li id="tab-$id" class="tab col s3">
       <a href="#panel-$id"><i class="fa fa-$icon"></i> $title</a>
     </li>""")
+    $(s".tab .indicator").remove()
     dynamicTabBar.tabs()
     dynamicTabBar.tabs("select_tab", s"panel-$id")
   }

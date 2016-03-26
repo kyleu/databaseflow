@@ -30,6 +30,5 @@ object SqlEditorTemplate {
       ),
       div(id := s"workspace-$queryId")
     )
-
   }
 }

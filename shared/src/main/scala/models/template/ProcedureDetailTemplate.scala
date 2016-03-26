@@ -2,20 +2,20 @@ package models.template
 
 import java.util.UUID
 
-import models.query.SavedQuery
+import models.schema.Procedure
 
 import scalatags.Text.all._
 
-object SavedQueryDetailTemplate {
-  def forSavedQuery(queryId: UUID, savedQuery: SavedQuery) = {
+object ProcedureDetailTemplate {
+  def forProcedure(queryId: UUID, procedure: Procedure) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       div(cls := "row")(
         div(cls := "col s12")(
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
-                i(cls := "title-icon fa fa-envelope-o"),
-                savedQuery.title,
+                i(cls := "title-icon fa fa-code"),
+                procedure.name,
                 i(cls := "right fa fa-close")
               )
             ),
