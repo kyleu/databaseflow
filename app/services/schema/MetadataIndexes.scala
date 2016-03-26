@@ -8,29 +8,7 @@ import models.schema.{ Index, IndexColumn, Table }
 object MetadataIndexes {
   def getIndexes(metadata: DatabaseMetaData, t: Table) = {
     val rs = metadata.getIndexInfo(t.catalog.orNull, t.schema.orNull, t.name, false, false)
-    val indexColumns = new Row.Iter(rs).map { row =>
-      // [index_qualifier], [pages], [filter_condition]
-      val name = row.as[String]("index_name")
-      val unique = !row.as[Boolean]("non_unique")
-      val position = row.as[Int]("ordinal_position")
-      val ascending = row.asOpt[String]("asc_or_desc").getOrElse("A") == "A"
-
-      val columnName = row.as[String]("column_name")
-      val typ = row.as[Int]("type") match {
-        case DatabaseMetaData.tableIndexStatistic => "statistic"
-        case DatabaseMetaData.tableIndexClustered => "clustered"
-        case DatabaseMetaData.tableIndexHashed => "hashed"
-        case DatabaseMetaData.tableIndexOther => "other"
-        case x => throw new IllegalArgumentException(x.toString)
-      }
-      val cardinality = row.as[Any]("cardinality") match {
-        case l: Long => l
-        case f: Float => f.toLong
-        case x => throw new IllegalArgumentException(x.getClass.getName)
-      }
-      (name, unique, typ, cardinality, position, columnName, ascending)
-    }.toList
-
+    val indexColumns = new Row.Iter(rs).map(fromRow).toList
     val indexes = indexColumns.groupBy(_._1).map { cols =>
       val idxCols = cols._2.sortBy(_._5).map { col =>
         IndexColumn(name = col._6, ascending = col._7)
@@ -46,5 +24,28 @@ object MetadataIndexes {
     }.toSeq
 
     indexes.sortBy(_.name)
+  }
+
+  private[this] def fromRow(row: Row) = {
+    // [index_qualifier], [pages], [filter_condition]
+    val name = row.as[String]("index_name")
+    val unique = !row.as[Boolean]("non_unique")
+    val position = row.as[Int]("ordinal_position")
+    val ascending = row.asOpt[String]("asc_or_desc").getOrElse("A") == "A"
+
+    val columnName = row.as[String]("column_name")
+    val typ = row.as[Int]("type") match {
+      case DatabaseMetaData.tableIndexStatistic => "statistic"
+      case DatabaseMetaData.tableIndexClustered => "clustered"
+      case DatabaseMetaData.tableIndexHashed => "hashed"
+      case DatabaseMetaData.tableIndexOther => "other"
+      case x => throw new IllegalArgumentException(x.toString)
+    }
+    val cardinality = row.as[Any]("cardinality") match {
+      case l: Long => l
+      case f: Float => f.toLong
+      case x => throw new IllegalArgumentException(x.getClass.getName)
+    }
+    (name, unique, typ, cardinality, position, columnName, ascending)
   }
 }

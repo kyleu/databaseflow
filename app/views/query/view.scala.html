@@ -146,16 +146,18 @@
                 <table>
                   <thead>
                     <tr>
-                      <th style="width: 50%">Name</th>
-                      <th style="width: 25%">Type</th>
-                      <th style="width: 25%">Param Type</th>
+                      <th style="width: 40%">Name</th>
+                      <th style="width: 20%">Type</th>
+                      <th style="width: 20%">SQL Type</th>
+                      <th style="width: 20%">Param Type</th>
                     </tr>
                   </thead>
                   <tbody>
                   @p.params.map { p =>
                     <tr>
                       <td>@p.name</td>
-                      <td>@p.typeName</td>
+                      <td>@p.columnType</td>
+                      <td>@p.sqlTypeName</td>
                       <td>@p.paramType</td>
                     </tr>
                   }

@@ -4,7 +4,8 @@ case class ProcedureParam(
   name: String,
   description: Option[String],
   paramType: String,
-  typeName: String,
-  typeCode: Int,
+  columnType: ColumnType,
+  sqlTypeCode: Int,
+  sqlTypeName: String,
   nullable: Boolean
 )

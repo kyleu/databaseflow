@@ -25,13 +25,9 @@ object SearchManager {
 
   }
 
-  def onTextChange(search: String) = {
-    if (currentSearch == search) {
-      Logging.info(s"Skipping search.")
-    } else {
-      Logging.info(s"Searching [$search]...")
+  def onTextChange(search: String) = if (currentSearch != search) {
+    Logging.info(s"Searching [$search]...")
 
-      currentSearch = search
-    }
+    currentSearch = search
   }
 }

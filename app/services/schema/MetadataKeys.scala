@@ -28,17 +28,7 @@ object MetadataKeys {
   def getForeignKeys(metadata: DatabaseMetaData, table: Table) = {
     val rs = metadata.getImportedKeys(table.catalog.orNull, table.schema.orNull, table.name)
 
-    val rows = new Row.Iter(rs).map { row =>
-      val name = row.as[String]("fk_name")
-      val targetTable = row.as[String]("pktable_name")
-      val targetColumn = row.as[String]("pkcolumn_name")
-      val sourceColumn = row.as[String]("fkcolumn_name")
-      val order = row.as[Int]("key_seq")
-      val updateRule = ruleFor(row.as[Int]("update_rule"))
-      val deleteRule = ruleFor(row.as[Int]("delete_rule"))
-      (name, sourceColumn, targetTable, targetColumn, order, updateRule, deleteRule)
-    }.toList.groupBy(_._1)
-
+    val rows = new Row.Iter(rs).map(fromRow).toList.groupBy(_._1)
     rows.map { row =>
       val first = row._2.head
       ForeignKey(
@@ -57,5 +47,16 @@ object MetadataKeys {
     case DatabaseMetaData.importedKeySetNull => "null"
     case DatabaseMetaData.importedKeySetDefault => "default"
     case _ => throw new IllegalArgumentException(i.toString)
+  }
+
+  private[this] def fromRow(row: Row) = {
+    val name = row.as[String]("fk_name")
+    val targetTable = row.as[String]("pktable_name")
+    val targetColumn = row.as[String]("pkcolumn_name")
+    val sourceColumn = row.as[String]("fkcolumn_name")
+    val order = row.as[Int]("key_seq")
+    val updateRule = ruleFor(row.as[Int]("update_rule"))
+    val deleteRule = ruleFor(row.as[Int]("delete_rule"))
+    (name, sourceColumn, targetTable, targetColumn, order, updateRule, deleteRule)
   }
 }
