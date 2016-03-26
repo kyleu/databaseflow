@@ -33,7 +33,7 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
     })
 
     $("#loading-panel").hide()
-    QueryManager.addNewQuery(sendMessage)
+    AdHocQueryManager.addNewQuery(sendMessage)
 
   }
 }

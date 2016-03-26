@@ -12,28 +12,9 @@ import scala.util.Random
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
-  private[this] var lastNum = 1
   private[this] lazy val workspace = $("#workspace")
 
-  def addNewQuery(sendMessage: (RequestMessage) => Unit) = {
-    val queryId = UUID.randomUUID
-    val queryName = if (lastNum == 1) {
-      "Untitled Query"
-    } else {
-      "Untitled Query " + lastNum
-    }
-    val sql = MetadataManager.schema.map { s =>
-      if (s.tables.isEmpty) { "" } else { s"select * from ${s.tables(Random.nextInt(s.tables.size)).name} limit 5;" }
-    }.getOrElse("")
-    addQuery(sendMessage, queryId, queryName, sql, () => Unit)
-    lastNum += 1
-  }
-
-  def addSavedQuery(savedQuery: SavedQuery, sendMessage: (RequestMessage) => Unit, onClose: () => Unit) = {
-    addQuery(sendMessage, savedQuery.id, savedQuery.title, savedQuery.sql, onClose)
-  }
-
-  private[this] def addQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String, onClose: () => Unit): Unit = {
+  def addQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String, onClose: () => Unit): Unit = {
     TabManager.initIfNeeded()
 
     workspace.append(SqlEditorTemplate.forQuery(queryId, queryName, sql).toString)
@@ -66,7 +47,7 @@ object QueryManager {
 
   def closeQuery(queryId: UUID, editor: Option[js.Dynamic], sendMessage: (RequestMessage) => Unit): Unit = {
     if (activeQueries.size == 1) {
-      addNewQuery(sendMessage)
+      AdHocQueryManager.addNewQuery(sendMessage)
     }
 
     utils.Logging.info(s"Closing [$queryId].")

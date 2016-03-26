@@ -39,6 +39,11 @@ object TableDetailManager {
         false
       })
 
+      $(".columns-link", queryPanel).click({ (e: JQueryEventObject) =>
+        viewColumns(queryId, table)
+        false
+      })
+
       $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
         openTables = openTables - table.name
         QueryManager.closeQuery(queryId, None, sendMessage)
@@ -65,6 +70,16 @@ object TableDetailManager {
   private[this] def viewIndexes(queryId: UUID, table: Table) = {
     val id = UUID.randomUUID
     val html = TableDetailTemplate.indexesForTable(id, queryId, table)
+    $(s"#workspace-$queryId").prepend(html.toString)
+    $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
+      $(s"#$id").remove()
+      false
+    })
+  }
+
+  private[this] def viewColumns(queryId: UUID, table: Table) = {
+    val id = UUID.randomUUID
+    val html = TableDetailTemplate.columnsForTable(id, queryId, table)
     $(s"#workspace-$queryId").prepend(html.toString)
     $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()
