@@ -1,5 +1,8 @@
 package utils
 
+import org.scalajs.dom
+import org.scalajs.dom.raw.Event
+
 import scala.scalajs.js.Dynamic.global
 
 object Logging {
@@ -16,4 +19,14 @@ object Logging {
   def info(msg: String) = global.console.info(msg)
   def warn(msg: String) = global.console.warn(msg)
   def error(msg: String) = global.console.error(msg)
+
+  def installErrorHandler() = {
+    dom.document.onerror = (e: Event) => {
+      info("Script Error Encountered")
+      error(e.toString)
+      if (showDebug) {
+        // rethrow
+      }
+    }
+  }
 }

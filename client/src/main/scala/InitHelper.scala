@@ -7,6 +7,8 @@ import scala.scalajs.js
 
 trait InitHelper { this: DatabaseFlow =>
   protected[this] def init() {
+    utils.Logging.installErrorHandler()
+
     $("#new-query-link").click({ (e: JQueryEventObject) =>
       AdHocQueryManager.addNewQuery(sendMessage)
       false
