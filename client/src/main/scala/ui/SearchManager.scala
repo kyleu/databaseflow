@@ -8,10 +8,10 @@ object SearchManager {
   private[this] lazy val searchInput = $("input#search", searchContainer)
   private[this] lazy val searchIcon = $(".fa", searchContainer)
 
-  private[this] lazy val savedQueriesToggle = $("#saved-query-list-toggle")
-  private[this] lazy val tablesToggle = $("#table-list-toggle")
-  private[this] lazy val viewsToggle = $("#view-list-toggle")
-  private[this] lazy val proceduresToggle = $("#procedure-list-toggle")
+  lazy val savedQueriesToggle = $("#saved-query-list-toggle")
+  lazy val tablesToggle = $("#table-list-toggle")
+  lazy val viewsToggle = $("#view-list-toggle")
+  lazy val proceduresToggle = $("#procedure-list-toggle")
 
   private[this] var currentSearch = ""
 
@@ -53,20 +53,20 @@ object SearchManager {
       if (searchIcon.hasClass("fa-search")) {
         searchIcon.removeClass("fa-search").addClass("fa-close").css("pointer", "cursor")
       }
-      filterSchema(searches)
+      SearchFilterManager.filterSchema(searches)
     }
     currentSearch = search
   }
 
-  private[this] def openIfClosed(j: JQuery) = if (!j.hasClass("active")) {
+  def openIfClosed(j: JQuery) = if (!j.hasClass("active")) {
     $(".collapsible-header", j).trigger("click")
   }
 
-  private[this] def closeIfOpen(j: JQuery) = if (j.hasClass("active")) {
+  def closeIfOpen(j: JQuery) = if (j.hasClass("active")) {
     $(".collapsible-header", j).trigger("click")
   }
 
-  private[this] def clearSearchEntries(o: Option[scala.Seq[(String, JQuery, JQuery)]], toggle: JQuery) = {
+  def clearSearchEntries(o: Option[scala.Seq[(String, JQuery, JQuery)]], toggle: JQuery) = {
     closeIfOpen(toggle)
     o.foreach(_.foreach { x =>
       x._3.text(x._1)
@@ -91,30 +91,5 @@ object SearchManager {
     }
     val html = replaced.replaceAllLiterally("[[", "<strong class=\"search-matched-text\">").replaceAllLiterally("]]", "</strong>")
     j.html(html)
-  }
-
-  private[this] def filterObjects(key: String, seq: Seq[(String, JQuery, JQuery)], searches: Seq[String], toggle: JQuery) = {
-    val (matched, notMatched) = seq.partition(t => matchName(searches, t._1))
-    matched.foreach { o =>
-      highlightMatches(o._1, searches, o._3)
-      o._2.show()
-    }
-    notMatched.foreach(_._2.hide())
-    if (matched.isEmpty) { closeIfOpen(toggle) } else { openIfClosed(toggle) }
-    Logging.info(s"Matched [${matched.size}] and skipped [${notMatched.size}] ${key}s.")
-  }
-
-  private[this] def matchName(searches: Seq[String], name: String) = {
-    val lcn = name.toLowerCase
-    searches.forall(s => lcn.contains(s))
-  }
-
-  private[this] def filterSchema(searches: Seq[String]) = {
-    MetadataManager.savedQueries.foreach { savedQueries =>
-      filterObjects("saved-query", savedQueries.map(x => (x._1.id.toString, x._2, x._3)), searches, savedQueriesToggle)
-    }
-    MetadataManager.tables.foreach(tables => filterObjects("table", tables, searches, tablesToggle))
-    MetadataManager.views.foreach(views => filterObjects("view", views, searches, viewsToggle))
-    MetadataManager.procedures.foreach(procedures => filterObjects("procedure", procedures, searches, proceduresToggle))
   }
 }

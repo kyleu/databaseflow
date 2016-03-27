@@ -1,11 +1,11 @@
 import java.util.UUID
 
-import models.template.{ QueryErrorTemplate, QueryPlanTemplate, QueryResultsTemplate }
 import models._
-import utils.Logging
+import models.template.{ QueryErrorTemplate, QueryPlanTemplate, QueryResultsTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
-import ui.TableDetailManager
+import ui.TableManager
+import utils.Logging
 
 trait MessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
@@ -56,7 +56,7 @@ trait MessageHelper { this: DatabaseFlow =>
   }
 
   private[this] def handleTableResultResponse(tr: TableResultResponse) = {
-    TableDetailManager.addTable(tr.table)
+    TableManager.addTable(tr.table)
   }
 
   private[this] def handleServerError(reason: String, content: String) = {

@@ -2,6 +2,7 @@ package models.template
 
 import models.query.QueryResult
 import models.schema.ColumnType._
+import utils.NullUtils
 
 import scalatags.Text.all._
 
@@ -33,7 +34,9 @@ object DataTableTemplate {
       case _ => td(s"$x (${col.t})")
     }
     case None => td(title := "Null")("∅")
+    // scalastyle:off
     case null => td("null-bug")
+    // scalastyle:on
   }
 
   private[this] def tableBody(res: QueryResult) = {
