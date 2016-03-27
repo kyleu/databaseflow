@@ -5,19 +5,25 @@ import models._
 import utils.Logging
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
+import ui.TableDetailManager
 
 trait MessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
     case p: Pong => latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
     case is: InitialState => onInitialState(is)
-    case qr: QueryResultResponse => handleQueryResult(qr)
-    case qe: QueryErrorResponse => handleQueryError(qe)
-    case pr: PlanResultResponse => handlePlanResult(pr)
+
+    case qr: QueryResultResponse => handleQueryResultResponse(qr)
+    case qe: QueryErrorResponse => handleQueryErrorResponse(qe)
+
+    case pr: PlanResultResponse => handlePlanResultResponse(pr)
+
+    case tr: TableResultResponse => handleTableResultResponse(tr)
+
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.info("Received: " + rm.getClass.getSimpleName)
   }
 
-  private[this] def handleQueryResult(qr: QueryResultResponse) = {
+  private[this] def handleQueryResultResponse(qr: QueryResultResponse) = {
     //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
     val html = QueryResultsTemplate.forResults(qr)
     val workspace = $(s"#workspace-${qr.result.queryId}")
@@ -27,7 +33,7 @@ trait MessageHelper { this: DatabaseFlow =>
     })
   }
 
-  private[this] def handleQueryError(qe: QueryErrorResponse) = {
+  private[this] def handleQueryErrorResponse(qe: QueryErrorResponse) = {
     val html = QueryErrorTemplate.forError(qe)
     val workspace = $(s"#workspace-${qe.error.queryId}")
     workspace.prepend(html.toString)
@@ -36,7 +42,7 @@ trait MessageHelper { this: DatabaseFlow =>
     })
   }
 
-  private[this] def handlePlanResult(pr: PlanResultResponse) = {
+  private[this] def handlePlanResultResponse(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val html = QueryPlanTemplate.forPlan(pr)
     val workspace = $(s"#workspace-${pr.result.queryId}")
@@ -47,6 +53,10 @@ trait MessageHelper { this: DatabaseFlow =>
     $(s"#${pr.id} .fa-close").click((e: JQueryEventObject) => {
       $(s"#${pr.id}").remove()
     })
+  }
+
+  private[this] def handleTableResultResponse(tr: TableResultResponse) = {
+    TableDetailManager.addTable(tr.table)
   }
 
   private[this] def handleServerError(reason: String, content: String) = {

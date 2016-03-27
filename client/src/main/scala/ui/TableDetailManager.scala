@@ -2,22 +2,27 @@ package ui
 
 import java.util.UUID
 
-import models.{ RequestMessage, ShowTableData }
+import models.{ GetTableDetail, RequestMessage, ShowTableData }
 import models.schema.Table
 import models.template.TableDetailTemplate
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
 object TableDetailManager {
-  var tables = Map.empty[String, Table]
-  var openTables = Map.empty[String, UUID]
+  private[this] var tables = Map.empty[String, Table]
+  private[this] var openTables = Map.empty[String, UUID]
+
+  def addTable(table: Table) = {
+    utils.Logging.info("Done.")
+    tables = tables + (table.name -> table)
+  }
 
   def tableDetail(name: String, sendMessage: (RequestMessage) => Unit) = openTables.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
       if (!tables.isDefinedAt(name)) {
-        //sendMessage(???)
+        sendMessage(GetTableDetail(name))
       }
 
       val queryId = UUID.randomUUID
@@ -33,10 +38,7 @@ object TableDetailManager {
       def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        tables.get(name) match {
-          case Some(table) => viewData(queryId, table, sendMessage)
-          case None => crash()
-        }
+        viewData(queryId, name, sendMessage)
         false
       })
 
@@ -73,8 +75,8 @@ object TableDetailManager {
       openTables = openTables + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, table: Table, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(ShowTableData(queryId = queryId, name = table.name))
+  private[this] def viewData(queryId: UUID, name: String, sendMessage: (RequestMessage) => Unit) = {
+    sendMessage(ShowTableData(queryId = queryId, name = name))
   }
 
   private[this] def viewForeignKeys(queryId: UUID, table: Table) = {

@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.plan.{ PlanNode, PlanResult }
 import models.query.{ QueryError, QueryResult, SavedQuery }
-import models.schema.Schema
+import models.schema.{ Procedure, Schema, Table }
 import models.user.UserPreferences
 
 sealed trait ResponseMessage
@@ -27,6 +27,11 @@ case class Disconnected(reason: String) extends ResponseMessage
 
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
+
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
+
+case class TableResultResponse(table: Table, durationMs: Int) extends ResponseMessage
+case class ViewResultResponse(table: Table, durationMs: Int) extends ResponseMessage
+case class ProcedureResultResponse(procedure: Procedure, durationMs: Int) extends ResponseMessage
 
 case class MessageSet(messages: Seq[ResponseMessage]) extends ResponseMessage

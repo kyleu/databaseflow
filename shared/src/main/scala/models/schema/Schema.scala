@@ -1,7 +1,11 @@
 package models.schema
 
+import java.util.UUID
+
 case class Schema(
-  name: String,
+  connectionId: UUID,
+  schemaName: Option[String],
+  catalog: Option[String],
   url: String,
   username: String,
   engine: String,
@@ -14,6 +18,5 @@ case class Schema(
   maxSqlLength: Int,
   tables: Seq[String],
   views: Seq[String],
-  procedures: Seq[String],
-  clientInfoProperties: Seq[ClientInfoProperty]
+  procedures: Seq[String]
 )
