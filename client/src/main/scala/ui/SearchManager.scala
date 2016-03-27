@@ -22,9 +22,6 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
-    searchInput.focus { (e: JQueryEventObject) =>
-      searchIcon.removeClass("fa-search").addClass("fa-close").css("pointer", "cursor")
-    }
     searchIcon.click { (e: JQueryEventObject) =>
       searchInput.value("")
       clearSearch()
@@ -35,7 +32,6 @@ object SearchManager {
       onTextChange(searchInput.value().toString)
     }
     searchInput.blur { (e: JQueryEventObject) =>
-      searchIcon.removeClass("fa-close").addClass("fa-search").css("pointer", "default")
       onTextChange(searchInput.value().toString)
     }
   }
@@ -43,9 +39,15 @@ object SearchManager {
   def onTextChange(search: String) = if (currentSearch != search && MetadataManager.schema.isDefined) {
     val searches = search.toLowerCase.split(" ").map(_.trim).filter(_.nonEmpty)
     if (searches.isEmpty) {
+      if (searchIcon.hasClass("fa-close")) {
+        searchIcon.removeClass("fa-close").addClass("fa-search").css("pointer", "default")
+      }
       clearSearch()
     } else {
       Logging.info(s"Searching [$search]...")
+      if (searchIcon.hasClass("fa-search")) {
+        searchIcon.removeClass("fa-search").addClass("fa-close").css("pointer", "cursor")
+      }
       filterSchema(searches)
     }
     currentSearch = search
@@ -84,10 +86,19 @@ object SearchManager {
   }
 
   private[this] def highlightMatches(title: String, matches: Seq[String], j: JQuery) = {
-    val html = matches.foldLeft(title) { (x, y) =>
-      x.replaceAllLiterally(y, s"""<strong class="search-matched-text">$y</strong>""")
+    val replaced = matches.foldLeft(title) { (x, y) =>
+      val titleLc = title.toLowerCase
+      val idx = titleLc.indexOf(y)
+      if (idx == -1) {
+        title
+      } else {
+        val pre = title.substring(0, idx)
+        val chunk = title.substring(idx, idx + y.length)
+        val post = title.substring(idx + y.length)
+        s"""$pre[[$y]]$post"""
+      }
     }
-    Logging.info(html)
+    val html = replaced.replaceAllLiterally("[[", "<strong class=\"search-matched-text\">").replaceAllLiterally("]]", "</strong>")
     j.html(html)
   }
 
