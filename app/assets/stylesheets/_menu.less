@@ -4,6 +4,29 @@ nav {
   }
 }
 
+// Navbar
+.brand-logo {
+  margin: 0 14px;
+}
+@media only screen and (max-width: 992px) {
+  .brand-logo {
+    margin: 0;
+  }
+}
+
+.mdi-navigation-menu {
+  padding: 0 10px;
+}
+
+// Sidenav
+.side-nav li.active {
+  background-color: #fff;
+}
+
+.side-nav li.active:hover {
+  background-color: #ddd;
+}
+
 ul#main-menu {
   margin-top: 64px;
   height: 100%;
@@ -124,16 +147,4 @@ ul#main-menu {
   .list-toggle {
     display: none;
   }
-}
-
-.side-nav li.active {
-  background-color: #fff;
-}
-
-.side-nav li.active:hover {
-  background-color: #ddd;
-}
-
-.mdi-navigation-menu {
-  padding: 0 10px;
 }

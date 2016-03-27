@@ -1,7 +1,7 @@
 @(user: models.user.User, debug: Boolean, dbName: String, initialQuery: java.util.UUID)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.materialize(utils.Config.projectName, debug = debug) {
-  @sidenav(user, dbName)
+  @navbar(user, dbName)
 
   <main class="indent">
     <div class="tab-container z-depth-1">

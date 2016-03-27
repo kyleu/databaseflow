@@ -1,90 +1,65 @@
-@(user: models.user.User, dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-<header>
-  <ul id="dropdown-user" class="dropdown-content">
-    <li><a href="">Profile</a></li>
-    <li><a href="">Settings</a></li>
-    <li><a href="">Sign Out</a></li>
-  </ul>
-
-  <div class="navbar-fixed">
-    <nav class="@user.preferences.theme lighten-2">
-      <div class="nav-wrapper">
-        <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
-
-        <ul id="main-menu" class="side-nav fixed">
-          <li class="search">
-            <div class="search-wrapper card">
-              <input id="search" placeholder="Search" /><i class="fa fa-search"></i></i>
-            </div>
-          </li>
-          <li>
-            <a id="new-query-link" class="top-nav-link waves-effect" href="#">
-              <i class="fa fa-plus-square-o new-query-icon"></i>
-              New Query
-            </a>
-          </li>
-          <li class="no-padding">
-            <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
-              <li id="saved-query-list-toggle" class="bold list-toggle">
-                <a class="collapsible-header waves-effect">
-                  <i class="fa fa-angle-right"></i>
-                  <i class="fa fa-angle-down"></i>
-                  Saved Queries
-                </a>
-                <div class="collapsible-body">
-                  <ul id="saved-query-list" class="submenu">
-                    <li class="black-text"><em>Loading...</em></li>
-                  </ul>
-                </div>
-              </li>
-              <li id="table-list-toggle" class="bold list-toggle">
-                <a class="collapsible-header waves-effect">
-                  <i class="fa fa-angle-right"></i>
-                  <i class="fa fa-angle-down"></i>
-                  Tables
-                </a>
-                <div class="collapsible-body">
-                  <ul id="table-list" class="submenu">
-                    <li class="black-text"><em>Loading...</em></li>
-                  </ul>
-                </div>
-              </li>
-              <li id="view-list-toggle" class="bold list-toggle">
-                <a class="collapsible-header waves-effect">
-                  <i class="fa fa-angle-right"></i>
-                  <i class="fa fa-angle-down"></i>
-                  Views
-                </a>
-                <div class="collapsible-body">
-                  <ul id="view-list" class="submenu">
-                    <li class="black-text"><em>Loading...</em></li>
-                  </ul>
-                </div>
-              </li>
-              <li id="procedure-list-toggle" class="bold list-toggle">
-                <a class="collapsible-header waves-effect">
-                  <i class="fa fa-angle-right"></i>
-                  <i class="fa fa-angle-down"></i>
-                  Stored Procedures
-                </a>
-                <div class="collapsible-body">
-                  <ul id="procedure-list" class="submenu">
-                    <li class="black-text"><em>Loading...</em></li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-
-        <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-
-        <ul class="right hide-on-small-only">
-          <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
-            @user.username.getOrElse("Guest") <i class="fa fa-angle-down right"></i>
-          </a></li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-</header>
+@()<ul id="main-menu" class="side-nav fixed">
+  <li class="search">
+    <div class="search-wrapper card">
+      <input id="search" placeholder="Search" autocomplete="off" /><i class="fa fa-search"></i>
+    </div>
+  </li>
+  <li>
+    <a id="new-query-link" class="top-nav-link waves-effect" href="#">
+      <i class="fa fa-plus-square-o new-query-icon"></i>
+      New Query
+    </a>
+  </li>
+  <li class="no-padding">
+    <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
+      <li id="saved-query-list-toggle" class="bold list-toggle">
+        <a class="collapsible-header waves-effect">
+          <i class="fa fa-angle-right"></i>
+          <i class="fa fa-angle-down"></i>
+          Saved Queries
+        </a>
+        <div class="collapsible-body">
+          <ul id="saved-query-list" class="submenu">
+            <li class="black-text"><em>Loading...</em></li>
+          </ul>
+        </div>
+      </li>
+      <li id="table-list-toggle" class="bold list-toggle">
+        <a class="collapsible-header waves-effect">
+          <i class="fa fa-angle-right"></i>
+          <i class="fa fa-angle-down"></i>
+          Tables
+        </a>
+        <div class="collapsible-body">
+          <ul id="table-list" class="submenu">
+            <li class="black-text"><em>Loading...</em></li>
+          </ul>
+        </div>
+      </li>
+      <li id="view-list-toggle" class="bold list-toggle">
+        <a class="collapsible-header waves-effect">
+          <i class="fa fa-angle-right"></i>
+          <i class="fa fa-angle-down"></i>
+          Views
+        </a>
+        <div class="collapsible-body">
+          <ul id="view-list" class="submenu">
+            <li class="black-text"><em>Loading...</em></li>
+          </ul>
+        </div>
+      </li>
+      <li id="procedure-list-toggle" class="bold list-toggle">
+        <a class="collapsible-header waves-effect">
+          <i class="fa fa-angle-right"></i>
+          <i class="fa fa-angle-down"></i>
+          Stored Procedures
+        </a>
+        <div class="collapsible-body">
+          <ul id="procedure-list" class="submenu">
+            <li class="black-text"><em>Loading...</em></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
