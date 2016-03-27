@@ -20,13 +20,6 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
-    searchInput.focus { (e: JQueryEventObject) =>
-      searchInput.parent().addClass("focused")
-    }
-    searchInput.blur { (e: JQueryEventObject) =>
-      searchInput.parent().removeClass("focused")
-    }
-
     searchIcon.click { (e: JQueryEventObject) =>
       searchInput.value("")
       clearSearch()
