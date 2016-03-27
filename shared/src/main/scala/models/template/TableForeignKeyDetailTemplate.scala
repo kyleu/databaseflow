@@ -13,10 +13,10 @@ object TableForeignKeyDetailTemplate {
         div(cls := "card")(
           div(cls := "card-content")(
             span(cls := "card-title")(
-              i(cls := "title-icon fa fa-sign-out"),
+              i(cls := s"title-icon fa ${Icons.foreignKeys}"),
               "Foreign Keys for ",
               em(t.name),
-              i(cls := "right fa fa-close")
+              i(cls := s"right fa ${Icons.close}")
             ),
             if (t.foreignKeys.isEmpty) {
               div("No foreign keys are available for this table.")

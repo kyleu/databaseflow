@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.RequestMessage
 import models.query.SavedQuery
+import models.template.Icons
 
 object SavedQueryManager {
   var openSavedQueries = Set.empty[UUID]
@@ -19,6 +20,6 @@ object SavedQueryManager {
   }
 
   private[this] def addSavedQuery(savedQuery: SavedQuery, sendMessage: (RequestMessage) => Unit, onClose: () => Unit) = {
-    QueryManager.addQuery(sendMessage, savedQuery.id, savedQuery.title, savedQuery.sql, "envelope-o", onClose)
+    QueryManager.addQuery(sendMessage, savedQuery.id, savedQuery.title, savedQuery.sql, Icons.savedQuery, onClose)
   }
 }

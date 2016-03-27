@@ -12,9 +12,9 @@ object TableDetailTemplate {
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
-                i(cls := "title-icon fa fa-folder-open-o"),
+                i(cls := s"title-icon fa ${Icons.table}"),
                 tableName,
-                i(cls := "right fa fa-close")
+                i(cls := s"right fa ${Icons.close}")
               )
             ),
             div(cls := "card-action")(

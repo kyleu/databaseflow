@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.template.SqlEditorTemplate
+import models.template.{ Icons, SqlEditorTemplate }
 import models.{ RequestMessage, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import utils.Logging
@@ -36,7 +36,7 @@ object QueryManager {
     wire($(".explain-query-link", queryPanel), "explain")
     wire($(".analyze-query-link", queryPanel), "analyze")
 
-    $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
+    $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
       QueryManager.closeQuery(queryId, Some(sqlEditor), sendMessage)
       onClose()
       false

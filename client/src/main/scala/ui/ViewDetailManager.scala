@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.schema.Table
-import models.template.ViewDetailTemplate
+import models.template.{ Icons, ViewDetailTemplate }
 import models.{ RequestMessage, ShowTableData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
@@ -20,7 +20,7 @@ object ViewDetailManager {
       TabManager.initIfNeeded()
       WorkspaceManager.append(ViewDetailTemplate.forView(queryId, name).toString)
 
-      TabManager.addTab(queryId, name, "bar-chart")
+      TabManager.addTab(queryId, name, Icons.view)
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -34,7 +34,7 @@ object ViewDetailManager {
         false
       })
 
-      $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
+      $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openViews = openViews - name
         QueryManager.closeQuery(queryId, None, sendMessage)
         false

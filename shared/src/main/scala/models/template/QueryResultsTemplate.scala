@@ -12,9 +12,9 @@ object QueryResultsTemplate {
     val card = div(cls := "card")(
       div(cls := "card-content")(
         span(cls := "card-title")(
-          i(cls := "title-icon fa fa-file-text-o"),
+          i(cls := s"title-icon fa ${Icons.queryResults}"),
           cardTitle,
-          i(cls := "right fa fa-close")
+          i(cls := s"right fa ${Icons.close}")
         ),
         p(s"${qr.result.data.size} rows returned in [${qr.durationMs}ms]."),
         DataTableTemplate.forResults(res)

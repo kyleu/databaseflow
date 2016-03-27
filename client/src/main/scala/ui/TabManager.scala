@@ -19,7 +19,7 @@ object TabManager {
 
   def addTab(id: UUID, title: String, icon: String) = {
     tabBar.append(s"""<li id="tab-$id" class="tab col s3">
-      <a href="#panel-$id"><i class="fa fa-$icon"></i> $title</a>
+      <a href="#panel-$id"><i class="fa $icon"></i> $title</a>
     </li>""")
     $(s".tabs .indicator").remove()
     dynamicTabBar.tabs()

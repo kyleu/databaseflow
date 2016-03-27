@@ -14,7 +14,7 @@ object SqlEditorTemplate {
               span(cls := "card-title")(
                 i(cls := "title-icon fa fa-" + icon),
                 queryName,
-                i(cls := "right fa fa-close")
+                i(cls := s"right fa ${Icons.close}")
               ),
               div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql)
             ),

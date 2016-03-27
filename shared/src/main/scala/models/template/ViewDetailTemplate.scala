@@ -12,9 +12,9 @@ object ViewDetailTemplate {
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
-                i(cls := "title-icon fa fa-bar-chart"),
+                i(cls := s"title-icon fa ${Icons.view}"),
                 viewName,
-                i(cls := "right fa fa-close")
+                i(cls := s"right fa ${Icons.close}")
               )
             ),
             div(cls := "card-action")(a(cls := "view-data-link", href := "#")("View Data"))

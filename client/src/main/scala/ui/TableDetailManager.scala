@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.RequestMessage
 import models.schema.Table
-import models.template.{ TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate }
+import models.template.{ Icons, TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
@@ -41,7 +41,7 @@ object TableDetailManager {
     val id = UUID.randomUUID
     val html = TableForeignKeyDetailTemplate.foreignKeysForTable(id, queryId, table)
     $(s"#workspace-$queryId").prepend(html.toString)
-    $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
+    $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()
       false
     })
@@ -51,7 +51,7 @@ object TableDetailManager {
     val id = UUID.randomUUID
     val html = TableIndexDetailTemplate.indexesForTable(id, queryId, table)
     $(s"#workspace-$queryId").prepend(html.toString)
-    $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
+    $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()
       false
     })
@@ -61,7 +61,7 @@ object TableDetailManager {
     val id = UUID.randomUUID
     val html = TableColumnDetailTemplate.columnsForTable(id, queryId, table)
     $(s"#workspace-$queryId").prepend(html.toString)
-    $(s"#$id .fa-close").click({ (e: JQueryEventObject) =>
+    $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()
       false
     })

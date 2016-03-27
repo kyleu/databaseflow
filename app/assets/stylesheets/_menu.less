@@ -5,17 +5,38 @@ nav {
 }
 
 // Navbar
-.brand-logo {
-  margin: 0 14px;
-}
-@media only screen and (max-width: 992px) {
-  .brand-logo {
-    margin: 0;
-  }
+.navbar-fixed {
+  height: 48px;
 }
 
-.mdi-navigation-menu {
-  padding: 0 10px;
+#topnav {
+  height: 48px;
+  line-height: 48px;
+
+  #user-dropdown-toggle {
+    height: 48px;
+    line-height: 48px;
+  }
+
+  .button-collapse i {
+    height: 48px;
+    line-height: 48px;
+  }
+
+  .brand-logo {
+    margin: 0 14px;
+    font-size: 1.6rem;
+  }
+
+  @media only screen and (max-width: 992px) {
+    .brand-logo {
+      margin: 0;
+    }
+  }
+
+  .mdi-navigation-menu {
+    padding: 0 10px;
+  }
 }
 
 // Sidenav
@@ -28,9 +49,9 @@ nav {
 }
 
 ul#main-menu {
-  margin-top: 64px;
+  margin-top: 48px;
   height: 100%;
-  height: calc(~'100% - 64px');
+  height: calc(~'100% - 48px');
   padding-bottom: 20px;
   overflow: hidden;
 
@@ -114,6 +135,7 @@ ul#main-menu li.search {
   &:hover { background-color: #fff; }
 
   margin-top: 1px;
+  margin-bottom: 18px;
   padding: 1px 0 0 0;
   z-index: 2;
 

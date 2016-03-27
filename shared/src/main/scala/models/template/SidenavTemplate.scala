@@ -8,7 +8,7 @@ object SidenavTemplate {
   def savedQueries(sqs: Seq[SavedQuery]) = {
     sqs.map { sq =>
       li(a(id := "saved-query-" + sq.id, cls := "saved-query-link waves-effect waves-light", title := sq.title, href := "#saved-query-" + sq.id)(
-        em(cls := "fa fa-envelope-o"),
+        em(cls := s"fa ${Icons.savedQuery}"),
         span(sq.title)
       ))
     }
@@ -17,7 +17,7 @@ object SidenavTemplate {
   def tables(tables: Seq[String]) = {
     tables.map { t =>
       li(a(id := "table-" + t, cls := "table-link waves-effect waves-light", href := "#table-" + t)(
-        em(cls := "fa fa-folder-o"),
+        em(cls := s"fa ${Icons.table}"),
         span(t)
       ))
     }
@@ -26,7 +26,7 @@ object SidenavTemplate {
   def views(views: Seq[String]) = {
     views.map { v =>
       li(a(id := "view-" + v, cls := "view-link waves-effect waves-light", href := "#view-" + v)(
-        em(cls := "fa fa-bar-chart"),
+        em(cls := s"fa ${Icons.view}"),
         span(v)
       ))
     }
@@ -35,7 +35,7 @@ object SidenavTemplate {
   def procedures(procedures: Seq[String]) = {
     procedures.map { p =>
       li(a(id := "procedure-" + p, cls := "procedure-link waves-effect waves-light", href := "#procedure-" + p)(
-        em(cls := "fa fa-code"),
+        em(cls := s"fa ${Icons.procedure}"),
         span(p)
       ))
     }

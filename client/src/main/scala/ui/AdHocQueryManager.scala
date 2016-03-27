@@ -3,6 +3,7 @@ package ui
 import java.util.UUID
 
 import models.RequestMessage
+import models.template.Icons
 
 import scala.util.Random
 
@@ -23,7 +24,7 @@ object AdHocQueryManager {
         s"select * from ${s.tables(Random.nextInt(s.tables.size))} limit 5;"
       }
     }.getOrElse("")
-    QueryManager.addQuery(sendMessage, queryId, queryName, sql, "pencil-square-o", () => Unit)
+    QueryManager.addQuery(sendMessage, queryId, queryName, sql, Icons.adHocQuery, () => Unit)
     lastNum += 1
   }
 }

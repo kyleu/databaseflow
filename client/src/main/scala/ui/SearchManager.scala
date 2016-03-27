@@ -1,5 +1,6 @@
 package ui
 
+import models.template.Icons
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import utils.Logging
 
@@ -44,14 +45,14 @@ object SearchManager {
   def onTextChange(search: String) = if (currentSearch != search && MetadataManager.schema.isDefined) {
     val searches = search.toLowerCase.split(" ").map(_.trim).filter(_.nonEmpty)
     if (searches.isEmpty) {
-      if (searchIcon.hasClass("fa-close")) {
-        searchIcon.removeClass("fa-close").addClass("fa-search").css("pointer", "default")
+      if (searchIcon.hasClass(Icons.close)) {
+        searchIcon.removeClass(Icons.close).addClass(Icons.search).css("pointer", "default")
       }
       clearSearch()
     } else {
       Logging.info(s"Searching [$search]...")
-      if (searchIcon.hasClass("fa-search")) {
-        searchIcon.removeClass("fa-search").addClass("fa-close").css("pointer", "cursor")
+      if (searchIcon.hasClass(Icons.search)) {
+        searchIcon.removeClass(Icons.search).addClass(Icons.close).css("pointer", "cursor")
       }
       SearchFilterManager.filterSchema(searches)
     }

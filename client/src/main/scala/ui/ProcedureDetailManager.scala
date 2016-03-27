@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.RequestMessage
 import models.schema.Procedure
-import models.template.ProcedureDetailTemplate
+import models.template.{ Icons, ProcedureDetailTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
@@ -20,7 +20,7 @@ object ProcedureDetailManager {
       TabManager.initIfNeeded()
       WorkspaceManager.append(ProcedureDetailTemplate.forProcedure(queryId, name).toString)
 
-      TabManager.addTab(queryId, name, "code")
+      TabManager.addTab(queryId, name, Icons.procedure)
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -34,7 +34,7 @@ object ProcedureDetailManager {
         false
       })
 
-      $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
+      $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openProcedures = openProcedures - name
         QueryManager.closeQuery(queryId, None, sendMessage)
         false

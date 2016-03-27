@@ -11,13 +11,13 @@
   </ul>
 
   <div class="navbar-fixed">
-    <nav class="@user.preferences.theme lighten-2">
+    <nav id="topnav" class="@user.preferences.theme lighten-2">
       <div class="nav-wrapper">
         <a href="@routes.HomeController.index()" class="brand-logo">@dbName</a>
         <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
         <ul class="right hide-on-small-only">
           <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
-            @user.username.getOrElse("Guest") <i class="fa fa-angle-down right"></i>
+            @user.username.getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdown right"></i>
           </a></li>
         </ul>
 

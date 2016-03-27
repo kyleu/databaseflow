@@ -12,7 +12,7 @@ object QueryErrorTemplate {
       div(cls := "card-content")(
         span(cls := "card-title")(
           cardTitle,
-          i(cls := "right fa fa-close")
+          i(cls := s"right fa ${Icons.close}")
         ),
         p(s"Executed in [${qe.durationMs}ms]."),
         p(cls := "")(qe.error.message),

@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.schema.Table
-import models.template.TableDetailTemplate
+import models.template.{ Icons, TableDetailTemplate }
 import models.{ GetTableDetail, RequestMessage, ShowTableData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
@@ -28,7 +28,7 @@ object TableManager {
       TabManager.initIfNeeded()
       WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
-      TabManager.addTab(queryId, name, "folder-open-o")
+      TabManager.addTab(queryId, name, Icons.table)
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -41,7 +41,7 @@ object TableManager {
 
       TableDetailManager.wire(queryPanel, queryId, name, sendMessage)
 
-      $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
+      $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openTables = openTables - name
         QueryManager.closeQuery(queryId, None, sendMessage)
         false

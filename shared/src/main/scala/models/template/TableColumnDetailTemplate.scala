@@ -13,10 +13,10 @@ object TableColumnDetailTemplate {
         div(cls := "card")(
           div(cls := "card-content")(
             span(cls := "card-title")(
-              i(cls := "title-icon fa fa-sign-in"),
+              i(cls := s"title-icon fa ${Icons.columns}"),
               "Columns for ",
               em(t.name),
-              i(cls := "right fa fa-close")
+              i(cls := s"right fa ${Icons.close}")
             ),
             if (t.columns.isEmpty) {
               div("No columns are available for this table.")

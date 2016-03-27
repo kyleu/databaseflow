@@ -1,7 +1,7 @@
 import java.util.UUID
 
 import models._
-import models.template.{ QueryErrorTemplate, QueryPlanTemplate, QueryResultsTemplate }
+import models.template._
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 import ui.TableManager
@@ -28,7 +28,7 @@ trait MessageHelper { this: DatabaseFlow =>
     val html = QueryResultsTemplate.forResults(qr)
     val workspace = $(s"#workspace-${qr.result.queryId}")
     workspace.prepend(html.toString)
-    $(s"#${qr.id} .fa-close").click((e: JQueryEventObject) => {
+    $(s"#${qr.id} .${Icons.close}").click((e: JQueryEventObject) => {
       $(s"#${qr.id}").remove()
     })
   }
@@ -37,7 +37,7 @@ trait MessageHelper { this: DatabaseFlow =>
     val html = QueryErrorTemplate.forError(qe)
     val workspace = $(s"#workspace-${qe.error.queryId}")
     workspace.prepend(html.toString)
-    $(s"#${qe.id} .fa-close").click((e: JQueryEventObject) => {
+    $(s"#${qe.id} .${Icons.close}").click((e: JQueryEventObject) => {
       $(s"#${qe.id}").remove()
     })
   }
@@ -50,7 +50,7 @@ trait MessageHelper { this: DatabaseFlow =>
 
     workOutPlanWidth(pr.id)
 
-    $(s"#${pr.id} .fa-close").click((e: JQueryEventObject) => {
+    $(s"#${pr.id} .${Icons.close}").click((e: JQueryEventObject) => {
       $(s"#${pr.id}").remove()
     })
   }
