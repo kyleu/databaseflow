@@ -3,7 +3,7 @@ package services.connection
 import models._
 import utils.metrics.InstrumentedActor
 
-trait ConnectionServiceTraceHelper extends InstrumentedActor { this: ConnectionService =>
+trait TraceHelper extends InstrumentedActor { this: ConnectionService =>
   protected[this] def handleConnectionTrace() {
     val ret = ConnectionTraceResponse(id, user.id, currentUsername)
     sender() ! ret

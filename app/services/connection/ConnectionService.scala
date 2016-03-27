@@ -24,14 +24,14 @@ class ConnectionService(
     val user: User,
     val out: ActorRef,
     val sourceAddress: String
-) extends InstrumentedActor with ConnectionServiceTraceHelper with Logging {
+) extends InstrumentedActor with TraceHelper with DetailHelper with QueryHelper with PlanHelper with SqlHelper with Logging {
 
   protected[this] var currentUsername = user.username
   protected[this] var userPreferences = user.preferences
   protected[this] val db = MasterDatabase.databaseFor(connectionId)
 
   protected[this] val savedQueries = MasterDatabase.db.query(SavedQueryQueries.getByOwner(user.id))
-  protected[this] val schema = SchemaService.getSchema(db.source)
+  protected[this] val schema = SchemaService.getSchema(connectionId, db)
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
@@ -46,8 +46,14 @@ class ConnectionService(
     case p: Ping => timeReceive(p) { out ! Pong(p.timestamp) }
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
+
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
     case st: ShowTableData => timeReceive(st) { handleShowTableData(st.queryId, st.name) }
+
+    case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
+    case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
+    case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
+
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
     case x => throw new IllegalArgumentException(s"Unhandled message [${x.getClass.getSimpleName}].")
@@ -57,21 +63,11 @@ class ConnectionService(
     supervisor ! ConnectionStopped(id)
   }
 
-  private[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String) = action match {
-    case "run" => ConnectionQueryHelper.handleRunQuery(db, queryId, sql, out)
-    case "explain" => ConnectionQueryHelper.handleExplainQuery(db, queryId, sql, out)
-    case "analyze" => ConnectionQueryHelper.handleAnalyzeQuery(db, queryId, sql, out)
+  protected[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String) = action match {
+    case "run" => handleRunQuery(queryId, sql)
+    case "explain" => handleExplainQuery(queryId, sql)
+    case "analyze" => handleAnalyzeQuery(queryId, sql)
     case _ => throw new IllegalArgumentException(action)
-  }
-
-  private[this] def handleShowTableData(queryId: UUID, name: String) = schema.tables.find(_ == name) match {
-    case Some(table) => ConnectionQueryHelper.handleShowTableData(db, queryId, name, out)
-    case None => schema.views.find(_ == name) match {
-      case Some(table) => ConnectionQueryHelper.handleShowTableData(db, queryId, name, out)
-      case None =>
-        log.warn(s"Attempted to view invalid table or view [$name].")
-        out ! ServerError("Invalid Table", s"[$name] is not a valid table or view.")
-    }
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
