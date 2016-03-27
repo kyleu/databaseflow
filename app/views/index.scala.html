@@ -2,7 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.materialize(utils.Config.projectName, debug = debug) {
   <header>
-    <nav class="@user.preferences.theme lighten-2">
+    <nav id="topnav" class="@user.preferences.theme lighten-2">
       <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
     </nav>
   </header>
