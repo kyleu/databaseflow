@@ -2,13 +2,13 @@ package ui
 
 import java.util.UUID
 
-import models.query.SavedQuery
 import models.template.SqlEditorTemplate
 import models.{ RequestMessage, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import utils.Logging
 
 import scala.scalajs.js
-import scala.util.Random
+import scala.scalajs.js.timers.setTimeout
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
@@ -41,6 +41,13 @@ object QueryManager {
       onClose()
       false
     })
+
+    sqlEditor.selection.selectAll()
+    Logging.log(sqlEditor)
+
+    setTimeout(1000) {
+      sqlEditor.focus()
+    }
 
     activeQueries = activeQueries :+ queryId
   }

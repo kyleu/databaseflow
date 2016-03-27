@@ -95,7 +95,7 @@ object SearchManager {
         val pre = title.substring(0, idx)
         val chunk = title.substring(idx, idx + y.length)
         val post = title.substring(idx + y.length)
-        s"""$pre[[$y]]$post"""
+        s"""$pre[[$chunk]]$post"""
       }
     }
     val html = replaced.replaceAllLiterally("[[", "<strong class=\"search-matched-text\">").replaceAllLiterally("]]", "</strong>")
