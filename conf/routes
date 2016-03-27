@@ -7,7 +7,6 @@ POST        /c/new                       controllers.ConnectionController.save()
 GET         /c/:id                       controllers.ConnectionController.editForm(id: java.util.UUID)
 
 # Query Interface
-GET         /v/:conn                     controllers.QueryController.view(conn: java.util.UUID)
 GET         /q/:conn                     controllers.QueryController.main(conn: java.util.UUID)
 GET         /q/:conn/websocket           controllers.QueryController.connect(conn: java.util.UUID)
 

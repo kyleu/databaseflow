@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.query.SavedQuery
-import models.schema.{ Procedure, Schema, Table }
+import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
@@ -11,9 +11,9 @@ object MetadataManager {
   var savedQueries: Option[Seq[(SavedQuery, JQuery, JQuery)]] = None
 
   var schema: Option[Schema] = None
-  var tables: Option[Seq[(Table, JQuery, JQuery)]] = None
-  var views: Option[Seq[(Table, JQuery, JQuery)]] = None
-  var procedures: Option[Seq[(Procedure, JQuery, JQuery)]] = None
+  var tables: Option[Seq[(String, JQuery, JQuery)]] = None
+  var views: Option[Seq[(String, JQuery, JQuery)]] = None
+  var procedures: Option[Seq[(String, JQuery, JQuery)]] = None
 
   def setSavedQueries(sq: Seq[SavedQuery], onClick: (UUID) => Unit) = {
     if (sq.nonEmpty) {
@@ -36,7 +36,7 @@ object MetadataManager {
   def setSchema(sch: Schema, onClick: (String, String) => Unit) = {
     if (sch.tables.nonEmpty) {
       $("#table-list-toggle").css("display", "block")
-      $("#table-list").html(SidenavTemplate.tables(sch).mkString("\n"))
+      $("#table-list").html(SidenavTemplate.tables(sch.tables).mkString("\n"))
       $(".table-link").click { (e: JQueryEventObject) =>
         val name = e.delegateTarget.id.stripPrefix("table-")
         onClick("table", name)
@@ -46,13 +46,13 @@ object MetadataManager {
       $("#table-list-toggle").css("display", "none")
     }
     tables = Some(sch.tables.map { x =>
-      val el = $("#table-" + x.name)
+      val el = $("#table-" + x)
       (x, el, $("span", el))
     })
 
     if (sch.views.nonEmpty) {
       $("#view-list-toggle").css("display", "block")
-      $("#view-list").html(SidenavTemplate.views(sch).mkString("\n"))
+      $("#view-list").html(SidenavTemplate.views(sch.views).mkString("\n"))
       $(".view-link").click { (e: JQueryEventObject) =>
         val name = e.delegateTarget.id.stripPrefix("view-")
         onClick("view", name)
@@ -62,13 +62,13 @@ object MetadataManager {
       $("#view-list-toggle").css("display", "none")
     }
     views = Some(sch.views.map { x =>
-      val el = $("#view-" + x.name)
+      val el = $("#view-" + x)
       (x, el, $("span", el))
     })
 
     if (sch.procedures.nonEmpty) {
       $("#procedure-list-toggle").css("display", "block")
-      $("#procedure-list").html(SidenavTemplate.procedures(sch).mkString("\n"))
+      $("#procedure-list").html(SidenavTemplate.procedures(sch.procedures).mkString("\n"))
       $(".procedure-link").click { (e: JQueryEventObject) =>
         val name = e.delegateTarget.id.stripPrefix("procedure-")
         onClick("procedure", name)
@@ -78,15 +78,15 @@ object MetadataManager {
       $("#procedure-list-toggle").css("display", "none")
     }
     procedures = Some(sch.procedures.map { x =>
-      val el = $("#procedure-" + x.name)
+      val el = $("#procedure-" + x)
       (x, el, $("span", el))
     })
 
     schema = Some(sch)
   }
 
-  def getSavedQuery(id: UUID) = savedQueries.flatMap(_.find(_._1.id == id)).map(_._1)
-  def getTable(name: String) = schema.flatMap(_.tables.find(_.name == name))
-  def getView(name: String) = schema.flatMap(_.views.find(_.name == name))
-  def getProcedure(name: String) = schema.flatMap(_.procedures.find(_.name == name))
+  def getSavedQuery(id: UUID) = savedQueries.flatMap(_.find(_._1 == id)).map(_._1)
+  def getTable(name: String) = tables.flatMap(_.find(_._1 == name))
+  def getView(name: String) = views.flatMap(_.find(_._1 == name))
+  def getProcedure(name: String) = procedures.flatMap(_.find(_._1 == name))
 }

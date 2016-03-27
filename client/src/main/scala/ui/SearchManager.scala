@@ -1,7 +1,5 @@
 package ui
 
-import models.query.SavedQuery
-import models.schema.{ Procedure, Table }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import utils.Logging
 
@@ -20,6 +18,13 @@ object SearchManager {
   def init() = {
     if (searchContainer.length != 1 || searchInput.length != 1) {
       throw new IllegalStateException("Missing search input field.")
+    }
+
+    searchInput.focus { (e: JQueryEventObject) =>
+      searchInput.parent().addClass("focused")
+    }
+    searchInput.blur { (e: JQueryEventObject) =>
+      searchInput.parent().removeClass("focused")
     }
 
     searchIcon.click { (e: JQueryEventObject) =>
@@ -61,94 +66,55 @@ object SearchManager {
     $(".collapsible-header", j).trigger("click")
   }
 
+  private[this] def clearSearchEntries(o: Option[scala.Seq[(String, JQuery, JQuery)]], toggle: JQuery) = {
+    closeIfOpen(toggle)
+    o.foreach(_.foreach { x =>
+      x._3.text(x._1)
+      x._2.show()
+    })
+  }
+
   private[this] def clearSearch() = {
     $(".saved-query-link, .table-link, .view-link, .procedure-link").removeClass("search-ignored")
     closeIfOpen(savedQueriesToggle)
-    closeIfOpen(tablesToggle)
-    closeIfOpen(viewsToggle)
-    closeIfOpen(proceduresToggle)
-    MetadataManager.savedQueries.foreach(_.foreach { x =>
-      x._3.text(x._1.title)
-      x._2.show()
-    })
-    MetadataManager.tables.foreach(_.foreach { x =>
-      x._3.text(x._1.name)
-      x._2.show()
-    })
-    MetadataManager.views.foreach(_.foreach { x =>
-      x._3.text(x._1.name)
-      x._2.show()
-    })
-    MetadataManager.procedures.foreach(_.foreach { x =>
-      x._3.text(x._1.name)
-      x._2.show()
-    })
+    clearSearchEntries(MetadataManager.savedQueries.map(_.map(x => (x._1.id.toString, x._2, x._3))), savedQueriesToggle)
+    clearSearchEntries(MetadataManager.tables, tablesToggle)
+    clearSearchEntries(MetadataManager.views, viewsToggle)
+    clearSearchEntries(MetadataManager.procedures, proceduresToggle)
   }
 
   private[this] def highlightMatches(title: String, matches: Seq[String], j: JQuery) = {
     val replaced = matches.foldLeft(title) { (x, y) =>
       val titleLc = title.toLowerCase
       val idx = titleLc.indexOf(y)
-      if (idx == -1) {
-        title
-      } else {
-        val pre = title.substring(0, idx)
-        val chunk = title.substring(idx, idx + y.length)
-        val post = title.substring(idx + y.length)
-        s"""$pre[[$chunk]]$post"""
-      }
+      if (idx == -1) { title } else { s"""${title.substring(0, idx)}[[${title.substring(idx, idx + y.length)}]]${title.substring(idx + y.length)}""" }
     }
     val html = replaced.replaceAllLiterally("[[", "<strong class=\"search-matched-text\">").replaceAllLiterally("]]", "</strong>")
     j.html(html)
   }
 
-  private[this] def filterObjects[T](
-    key: String, seq: Seq[(T, JQuery, JQuery)], searches: Seq[String],
-    matchFunc: (Seq[String], T) => Boolean, titleFunc: (T) => String, toggle: JQuery
-  ) = {
-    val (matched, notMatched) = seq.partition { t =>
-      matchFunc(searches, t._1)
-    }
+  private[this] def filterObjects(key: String, seq: Seq[(String, JQuery, JQuery)], searches: Seq[String], toggle: JQuery) = {
+    val (matched, notMatched) = seq.partition(t => matchName(searches, t._1))
     matched.foreach { o =>
-      highlightMatches(titleFunc(o._1), searches, o._3)
+      highlightMatches(o._1, searches, o._3)
       o._2.show()
     }
-    notMatched.foreach { o =>
-      o._2.hide()
-    }
-    if (matched.isEmpty) {
-      closeIfOpen(toggle)
-    } else {
-      openIfClosed(toggle)
-    }
+    notMatched.foreach(_._2.hide())
+    if (matched.isEmpty) { closeIfOpen(toggle) } else { openIfClosed(toggle) }
     Logging.info(s"Matched [${matched.size}] and skipped [${notMatched.size}] ${key}s.")
   }
 
-  private[this] def matchSavedQuery(searches: Seq[String], sq: SavedQuery) = {
-    val lct = sq.title.toLowerCase
-    searches.forall(s => lct.contains(s))
-  }
-  private[this] def matchTable(searches: Seq[String], t: Table) = {
-    val lcn = t.name.toLowerCase
-    searches.forall(s => lcn.contains(s))
-  }
-  private[this] def matchProcedure(searches: Seq[String], p: Procedure) = {
-    val lcn = p.name.toLowerCase
+  private[this] def matchName(searches: Seq[String], name: String) = {
+    val lcn = name.toLowerCase
     searches.forall(s => lcn.contains(s))
   }
 
   private[this] def filterSchema(searches: Seq[String]) = {
     MetadataManager.savedQueries.foreach { savedQueries =>
-      filterObjects("saved-query", savedQueries, searches, matchSavedQuery, (x: SavedQuery) => x.title, savedQueriesToggle)
+      filterObjects("saved-query", savedQueries.map(x => (x._1.id.toString, x._2, x._3)), searches, savedQueriesToggle)
     }
-    MetadataManager.tables.map { tables =>
-      filterObjects("table", tables, searches, matchTable, (x: Table) => x.name, tablesToggle)
-    }
-    MetadataManager.views.map { views =>
-      filterObjects("view", views, searches, matchTable, (x: Table) => x.name, viewsToggle)
-    }
-    MetadataManager.procedures.map { procedures =>
-      filterObjects("procedure", procedures, searches, matchProcedure, (x: Procedure) => x.name, proceduresToggle)
-    }
+    MetadataManager.tables.foreach(tables => filterObjects("table", tables, searches, tablesToggle))
+    MetadataManager.views.foreach(views => filterObjects("view", views, searches, viewsToggle))
+    MetadataManager.procedures.foreach(procedures => filterObjects("procedure", procedures, searches, proceduresToggle))
   }
 }

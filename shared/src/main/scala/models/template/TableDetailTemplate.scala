@@ -7,15 +7,7 @@ import models.schema.Table
 import scalatags.Text.all._
 
 object TableDetailTemplate {
-  def forTable(queryId: UUID, t: Table) = {
-    val description = t.description.getOrElse("")
-    val links = Seq(
-      Some(a(cls := "view-data-link", href := "#")("View Data")),
-      t.indexes.headOption.map(i => a(cls := "right indexes-link", href := "#")("Indexes")),
-      t.foreignKeys.headOption.map(fk => a(cls := "right foreign-keys-link", href := "#")("Foreign Keys")),
-      t.columns.headOption.map(i => a(cls := "right columns-link", href := "#")("Columns"))
-    ).flatten
-
+  def forTable(queryId: UUID, tableName: String) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       div(cls := "row")(
         div(cls := "col s12")(
@@ -23,12 +15,16 @@ object TableDetailTemplate {
             div(cls := "card-content")(
               span(cls := "card-title")(
                 i(cls := "title-icon fa fa-folder-open-o"),
-                t.name,
+                tableName,
                 i(cls := "right fa fa-close")
-              ),
-              div(description)
+              )
             ),
-            div(cls := "card-action")(links: _*)
+            div(cls := "card-action")(
+              a(cls := "view-data-link", href := "#")("View Data"),
+              a(cls := "right indexes-link", href := "#")("Indexes"),
+              a(cls := "right foreign-keys-link", href := "#")("Foreign Keys"),
+              a(cls := "right columns-link", href := "#")("Columns")
+            )
           )
         )
       ),

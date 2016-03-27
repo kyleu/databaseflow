@@ -64,7 +64,7 @@ object ConnectionQueryHelper extends Logging {
     out ! QueryPlanTemplate.testPlan("analyze", queryId)
   }
 
-  def handleShowTable(db: Database, queryId: UUID, name: String, out: ActorRef) = {
+  def handleShowTableData(db: Database, queryId: UUID, name: String, out: ActorRef) = {
     log.info(s"Showing table [$name].")
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis

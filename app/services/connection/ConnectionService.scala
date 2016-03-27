@@ -47,7 +47,7 @@ class ConnectionService(
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
-    case st: ShowTable => timeReceive(st) { handleShowTable(st.queryId, st.name) }
+    case st: ShowTableData => timeReceive(st) { handleShowTableData(st.queryId, st.name) }
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
     case x => throw new IllegalArgumentException(s"Unhandled message [${x.getClass.getSimpleName}].")
@@ -64,10 +64,10 @@ class ConnectionService(
     case _ => throw new IllegalArgumentException(action)
   }
 
-  private[this] def handleShowTable(queryId: UUID, name: String) = schema.tables.find(_.name == name) match {
-    case Some(table) => ConnectionQueryHelper.handleShowTable(db, queryId, name, out)
-    case None => schema.views.find(_.name == name) match {
-      case Some(table) => ConnectionQueryHelper.handleShowTable(db, queryId, name, out)
+  private[this] def handleShowTableData(queryId: UUID, name: String) = schema.tables.find(_ == name) match {
+    case Some(table) => ConnectionQueryHelper.handleShowTableData(db, queryId, name, out)
+    case None => schema.views.find(_ == name) match {
+      case Some(table) => ConnectionQueryHelper.handleShowTableData(db, queryId, name, out)
       case None =>
         log.warn(s"Attempted to view invalid table or view [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid table or view.")

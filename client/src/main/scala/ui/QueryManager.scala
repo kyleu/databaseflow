@@ -43,9 +43,8 @@ object QueryManager {
     })
 
     sqlEditor.selection.selectAll()
-    Logging.log(sqlEditor)
 
-    setTimeout(1000) {
+    setTimeout(500) {
       sqlEditor.focus()
     }
 

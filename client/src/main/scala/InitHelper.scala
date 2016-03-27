@@ -13,6 +13,9 @@ trait InitHelper { this: DatabaseFlow =>
       false
     })
 
+    js.Dynamic.global.$(".button-collapse").sideNav()
+    js.Dynamic.global.$("select").material_select()
+
     SearchManager.init()
 
     Logging.info("Database Flow Started.")

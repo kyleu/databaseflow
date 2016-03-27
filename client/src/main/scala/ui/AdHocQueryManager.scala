@@ -17,7 +17,11 @@ object AdHocQueryManager {
       "Untitled Query " + lastNum
     }
     val sql = MetadataManager.schema.map { s =>
-      if (s.tables.isEmpty) { "" } else { s"select * from ${s.tables(Random.nextInt(s.tables.size)).name} limit 5;" }
+      if (s.tables.isEmpty) {
+        ""
+      } else {
+        s"select * from ${s.tables(Random.nextInt(s.tables.size))} limit 5;"
+      }
     }.getOrElse("")
     QueryManager.addQuery(sendMessage, queryId, queryName, sql, "pencil-square-o", () => Unit)
     lastNum += 1

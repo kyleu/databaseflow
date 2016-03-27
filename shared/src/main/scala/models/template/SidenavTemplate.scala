@@ -1,7 +1,6 @@
 package models.template
 
 import models.query.SavedQuery
-import models.schema.Schema
 
 import scalatags.Text.all._
 
@@ -15,29 +14,29 @@ object SidenavTemplate {
     }
   }
 
-  def tables(schema: Schema) = {
-    schema.tables.map { t =>
-      li(a(id := "table-" + t.name, cls := "table-link waves-effect waves-light", title := t.description.getOrElse(""), href := "#table-" + t.name)(
+  def tables(tables: Seq[String]) = {
+    tables.map { t =>
+      li(a(id := "table-" + t, cls := "table-link waves-effect waves-light", href := "#table-" + t)(
         em(cls := "fa fa-folder-o"),
-        span(t.name)
+        span(t)
       ))
     }
   }
 
-  def procedures(schema: Schema) = {
-    schema.procedures.map { p =>
-      li(a(id := "procedure-" + p.name, cls := "procedure-link waves-effect waves-light", title := p.description.getOrElse(""), href := "#procedure-" + p.name)(
-        em(cls := "fa fa-code"),
-        span(p.name)
-      ))
-    }
-  }
-
-  def views(schema: Schema) = {
-    schema.views.map { v =>
-      li(a(id := "view-" + v.name, cls := "view-link waves-effect waves-light", title := v.description.getOrElse(""), href := "#view-" + v.name)(
+  def views(views: Seq[String]) = {
+    views.map { v =>
+      li(a(id := "view-" + v, cls := "view-link waves-effect waves-light", href := "#view-" + v)(
         em(cls := "fa fa-bar-chart"),
-        span(v.name)
+        span(v)
+      ))
+    }
+  }
+
+  def procedures(procedures: Seq[String]) = {
+    procedures.map { p =>
+      li(a(id := "procedure-" + p, cls := "procedure-link waves-effect waves-light", href := "#procedure-" + p)(
+        em(cls := "fa fa-code"),
+        span(p)
       ))
     }
   }

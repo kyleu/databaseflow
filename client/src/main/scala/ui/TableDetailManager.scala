@@ -2,59 +2,79 @@ package ui
 
 import java.util.UUID
 
-import models.{ RequestMessage, ShowTable }
+import models.{ RequestMessage, ShowTableData }
 import models.schema.Table
 import models.template.TableDetailTemplate
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import services.NotificationService
 
 object TableDetailManager {
+  var tables = Map.empty[String, Table]
   var openTables = Map.empty[String, UUID]
 
-  def tableDetail(table: Table, sendMessage: (RequestMessage) => Unit) = openTables.get(table.name) match {
+  def tableDetail(name: String, sendMessage: (RequestMessage) => Unit) = openTables.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
+      if (!tables.isDefinedAt(name)) {
+        //sendMessage(???)
+      }
+
       val queryId = UUID.randomUUID
       TabManager.initIfNeeded()
-      WorkspaceManager.append(TableDetailTemplate.forTable(queryId, table).toString)
+      WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
-      TabManager.addTab(queryId, table.name, "folder-open-o")
+      TabManager.addTab(queryId, name, "folder-open-o")
 
       val queryPanel = $(s"#panel-$queryId")
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
+      def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
+
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, table, sendMessage)
+        tables.get(name) match {
+          case Some(table) => viewData(queryId, table, sendMessage)
+          case None => crash()
+        }
         false
       })
 
       $(".foreign-keys-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewForeignKeys(queryId, table)
+        tables.get(name) match {
+          case Some(table) => viewForeignKeys(queryId, table)
+          case None => crash()
+        }
         false
       })
 
       $(".indexes-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewIndexes(queryId, table)
+        tables.get(name) match {
+          case Some(table) => viewIndexes(queryId, table)
+          case None => crash()
+        }
         false
       })
 
       $(".columns-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewColumns(queryId, table)
+        tables.get(name) match {
+          case Some(table) => viewColumns(queryId, table)
+          case None => crash()
+        }
         false
       })
 
       $(".fa-close", queryPanel).click({ (e: JQueryEventObject) =>
-        openTables = openTables - table.name
+        openTables = openTables - name
         QueryManager.closeQuery(queryId, None, sendMessage)
         false
       })
 
-      openTables = openTables + (table.name -> queryId)
+      openTables = openTables + (name -> queryId)
   }
 
   private[this] def viewData(queryId: UUID, table: Table, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(ShowTable(queryId = queryId, name = table.name))
+    sendMessage(ShowTableData(queryId = queryId, name = table.name))
   }
 
   private[this] def viewForeignKeys(queryId: UUID, table: Table) = {

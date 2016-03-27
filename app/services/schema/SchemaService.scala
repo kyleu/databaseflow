@@ -19,30 +19,16 @@ object SchemaService {
 
     val schemaModel = getSchemaModel(metadata, catalog, schema)
 
-    def fixTable(t: Table) = t.copy(
-      columns = MetadataColumns.getColumns(metadata, t),
-      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, t),
-      primaryKey = MetadataKeys.getPrimaryKey(metadata, t),
-      foreignKeys = MetadataKeys.getForeignKeys(metadata, t),
-      indexes = MetadataIndexes.getIndexes(metadata, t)
-    )
-
-    val tables = MetadataTables.getTables(metadata, catalog, schema, "TABLE")
-    val tablesWithChildren = tables.map(fixTable)
-
-    val views = MetadataTables.getTables(metadata, catalog, schema, "VIEW")
-    val viewsWithChildren = views.map(fixTable)
-
-    val procedures = MetadataProcedures.getProcedures(metadata, catalog, schema)
-    val clientInfoProperties = MetadataClientInfoProperties.getClientInfoProperties(metadata)
+    val tables = MetadataTables.getTableNames(metadata, catalog, schema, "TABLE")
+    val views = MetadataTables.getTableNames(metadata, catalog, schema, "VIEW")
+    val procedures = MetadataProcedures.getProcedureNames(metadata, catalog, schema)
 
     conn.close()
 
     schemaModel.copy(
-      tables = tablesWithChildren,
-      views = viewsWithChildren,
-      procedures = procedures,
-      clientInfoProperties = clientInfoProperties
+      tables = tables,
+      views = views,
+      procedures = procedures
     )
   }
 

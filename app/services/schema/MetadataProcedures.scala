@@ -8,17 +8,20 @@ import models.schema.{ Procedure, ProcedureParam }
 import utils.NullUtils
 
 object MetadataProcedures {
-  def getProcedures(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+  def getProcedureNames(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getProcedures(catalog.orNull, schema.orNull, NullUtils.inst)
-    val procedures = new Row.Iter(rs).map(procedureFromRow).toList
+    val procedureNames = new Row.Iter(rs).map(row => row.as[String]("procedure_name")).toList
+    procedureNames.sorted
+  }
 
-    val proceduresWithParams = procedures.map { p =>
-      val rs = metadata.getProcedureColumns(catalog.orNull, schema.orNull, p.name, NullUtils.inst)
-      val columns = new Row.Iter(rs).map(columnFromRow).toList.sortBy(_._1).map(_._2)
-      p.copy(params = columns)
-    }
+  def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], name: String) = {
+    val rs1 = metadata.getProcedures(catalog.orNull, schema.orNull, name)
+    val procedures = new Row.Iter(rs1).map(procedureFromRow).toList
+    val p = procedures.headOption.getOrElse(throw new IllegalArgumentException(s"Cannot find procedure [$name]."))
 
-    proceduresWithParams.sortBy(_.name)
+    val rs2 = metadata.getProcedureColumns(catalog.orNull, schema.orNull, p.name, NullUtils.inst)
+    val columns = new Row.Iter(rs2).map(columnFromRow).toList.sortBy(_._1).map(_._2)
+    p.copy(params = columns)
   }
 
   private[this] def procedureFromRow(row: Row) = Procedure(

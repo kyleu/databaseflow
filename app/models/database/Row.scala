@@ -1,6 +1,6 @@
 package models.database
 
-import java.sql.{ SQLException, ResultSet }
+import java.sql.ResultSet
 
 object Row {
   class Iter(rs: ResultSet) extends Iterator[Row] {
@@ -23,7 +23,6 @@ object Row {
       Iterator.empty.next()
     }
   }
-
 }
 
 class Row(val rs: ResultSet) {

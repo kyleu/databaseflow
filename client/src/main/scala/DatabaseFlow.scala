@@ -21,15 +21,9 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
     })
 
     MetadataManager.setSchema(is.schema, (key, name) => key match {
-      case "table" =>
-        val table = MetadataManager.getTable(name).getOrElse(throw new IllegalStateException(s"Unknown table [$name]."))
-        TableDetailManager.tableDetail(table, sendMessage)
-      case "view" =>
-        val view = MetadataManager.getView(name).getOrElse(throw new IllegalStateException(s"Unknown view [$name]."))
-        ViewDetailManager.viewDetail(view, sendMessage)
-      case "procedure" =>
-        val procedure = MetadataManager.getProcedure(name).getOrElse(throw new IllegalStateException(s"Unknown procedure [$name]."))
-        ProcedureDetailManager.procedureDetail(procedure, sendMessage)
+      case "table" => TableDetailManager.tableDetail(name, sendMessage)
+      case "view" => ViewDetailManager.viewDetail(name, sendMessage)
+      case "procedure" => ProcedureDetailManager.procedureDetail(name, sendMessage)
     })
 
     $("#loading-panel").hide()

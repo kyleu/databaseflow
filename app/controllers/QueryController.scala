@@ -35,10 +35,4 @@ class QueryController @javax.inject.Inject() (override val ctx: ApplicationConte
       case HandlerResult(r, None) => Left(r)
     }
   }
-
-  def view(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
-    val database = MasterDatabase.databaseFor(connectionId)
-    val schema = SchemaService.getSchema(database.source)
-    Future.successful(Ok(views.html.query.view(request.identity, schema)))
-  }
 }
