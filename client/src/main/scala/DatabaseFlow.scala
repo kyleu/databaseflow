@@ -1,7 +1,6 @@
 import models.InitialState
-import ui._
-import utils.Logging
 import org.scalajs.jquery.{ jQuery => $ }
+import ui._
 
 import scala.scalajs.js.annotation.JSExport
 
@@ -12,8 +11,8 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
   init()
 
   def onInitialState(is: InitialState) = {
-    Logging.info(s"Initial state received containing [${is.savedQueries.size}] saved queries, " +
-      s"[${is.schema.tables.size}] tables, [${is.schema.procedures.size}] procedures, and [${is.schema.views.size}] views.")
+    //utils.Logging.info(s"Initial state received containing [${is.savedQueries.size}] saved queries, " +
+    //  s"[${is.schema.tables.size}] tables, [${is.schema.procedures.size}] procedures, and [${is.schema.views.size}] views.")
 
     MetadataManager.setSavedQueries(is.savedQueries, (id) => {
       val savedQuery = MetadataManager.getSavedQuery(id).getOrElse(throw new IllegalStateException(s"Unknown saved query [$id]."))

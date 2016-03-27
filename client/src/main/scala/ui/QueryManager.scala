@@ -5,7 +5,6 @@ import java.util.UUID
 import models.template.{ Icons, SqlEditorTemplate }
 import models.{ RequestMessage, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
-import utils.Logging
 
 import scala.scalajs.js
 import scala.scalajs.js.timers.setTimeout
@@ -25,7 +24,7 @@ object QueryManager {
 
     def wire(q: JQuery, action: String) = q.click({ (e: JQueryEventObject) =>
       val sql = sqlEditor.getValue().toString
-      utils.Logging.info(s"Performing [$action] for sql [$sql].")
+      //utils.Logging.info(s"Performing [$action] for sql [$sql].")
       sendMessage(SubmitQuery(queryId, sql, Some(action)))
       false
     })
@@ -56,7 +55,7 @@ object QueryManager {
       AdHocQueryManager.addNewQuery(sendMessage)
     }
 
-    utils.Logging.info(s"Closing [$queryId].")
+    //utils.Logging.info(s"Closing [$queryId].")
 
     val originalIndex = activeQueries.indexOf(queryId)
     activeQueries = activeQueries.filterNot(_ == queryId)

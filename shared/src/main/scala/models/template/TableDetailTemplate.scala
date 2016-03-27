@@ -15,13 +15,15 @@ object TableDetailTemplate {
                 i(cls := s"title-icon fa ${Icons.table}"),
                 tableName,
                 i(cls := s"right fa ${Icons.close}")
-              )
+              ),
+              div(cls := "description")(""),
+              div(cls := "summary")("")
             ),
             div(cls := "card-action")(
               a(cls := "view-data-link", href := "#")("View Data"),
-              a(cls := "right indexes-link", href := "#")("Indexes"),
-              a(cls := "right foreign-keys-link", href := "#")("Foreign Keys"),
-              a(cls := "right columns-link", href := "#")("Columns")
+              a(cls := "right foreign-keys-link initially-hidden", href := "#")("Foreign Keys"),
+              a(cls := "right indexes-link initially-hidden", href := "#")("Indexes"),
+              a(cls := "right columns-link initially-hidden", href := "#")("Columns")
             )
           )
         )

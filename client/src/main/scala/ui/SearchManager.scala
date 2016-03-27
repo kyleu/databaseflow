@@ -2,7 +2,6 @@ package ui
 
 import models.template.Icons
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
-import utils.Logging
 
 object SearchManager {
   private[this] lazy val searchContainer = $(".search-wrapper")
@@ -50,7 +49,7 @@ object SearchManager {
       }
       clearSearch()
     } else {
-      Logging.info(s"Searching [$search]...")
+      //utils.Logging.info(s"Searching [$search]...")
       if (searchIcon.hasClass(Icons.search)) {
         searchIcon.removeClass(Icons.search).addClass(Icons.close).css("pointer", "cursor")
       }

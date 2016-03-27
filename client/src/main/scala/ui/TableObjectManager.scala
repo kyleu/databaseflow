@@ -8,7 +8,7 @@ import models.template.{ Icons, TableColumnDetailTemplate, TableForeignKeyDetail
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
-object TableDetailManager {
+object TableObjectManager {
   def wire(queryPanel: JQuery, queryId: UUID, name: String, sendMessage: (RequestMessage) => Unit) = {
     def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 

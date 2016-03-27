@@ -1,6 +1,6 @@
 import models.{ Ping, RequestMessage }
 import services.NavigationService
-import utils.{ JsonSerializers, Logging, NetworkSocket }
+import utils.{ JsonSerializers, NetworkSocket }
 
 import scala.scalajs.js.timers._
 
@@ -23,15 +23,15 @@ trait NetworkHelper { this: DatabaseFlow =>
   setTimeout(1000)(sendPing())
 
   protected[this] def onSocketConnect(): Unit = {
-    Logging.info(s"Socket connected.")
+    //utils.Logging.info(s"Socket connected.")
   }
 
   protected[this] def onSocketError(error: String): Unit = {
-    Logging.info(s"Socket error [$error].")
+    utils.Logging.info(s"Socket error [$error].")
   }
 
   protected[this] def onSocketClose(): Unit = {
-    Logging.info("Socket closed.")
+    utils.Logging.info("Socket closed.")
   }
 
   def sendMessage(rm: RequestMessage): Unit = {

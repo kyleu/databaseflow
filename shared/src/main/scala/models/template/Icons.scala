@@ -3,6 +3,9 @@ package models.template
 object Icons {
   val search = "fa-search"
 
+  val help = "fa-key"
+  val about = "fa-heart-o"
+
   val dropdown = "fa-angle-down"
   val close = "fa-close"
 

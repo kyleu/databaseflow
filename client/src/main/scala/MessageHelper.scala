@@ -20,7 +20,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case tr: TableResultResponse => handleTableResultResponse(tr)
 
     case se: ServerError => handleServerError(se.reason, se.content)
-    case _ => Logging.info("Received: " + rm.getClass.getSimpleName)
+    case _ => Logging.info(s"Received unknown message of type [${rm.getClass.getSimpleName}")
   }
 
   private[this] def handleQueryResultResponse(qr: QueryResultResponse) = {

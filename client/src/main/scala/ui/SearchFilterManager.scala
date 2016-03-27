@@ -1,7 +1,6 @@
 package ui
 
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import utils.Logging
+import org.scalajs.jquery.JQuery
 
 object SearchFilterManager {
   def filterSchema(searches: Seq[String]) = {
@@ -31,7 +30,7 @@ object SearchFilterManager {
     }
     notMatched.foreach(_._2.hide())
     if (matched.isEmpty) { SearchManager.closeIfOpen(toggle) } else { SearchManager.openIfClosed(toggle) }
-    Logging.info(s"Matched [${matched.size}] and skipped [${notMatched.size}] ${key}s.")
+    //utils.Logging.info(s"Matched [${matched.size}] and skipped [${notMatched.size}] ${key}s.")
   }
 
   private[this] def matchName(searches: Seq[String], name: String) = {
