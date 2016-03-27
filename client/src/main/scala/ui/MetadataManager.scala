@@ -8,12 +8,12 @@ import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
 object MetadataManager {
-  var savedQueries: Option[Seq[(SavedQuery, JQuery)]] = None
+  var savedQueries: Option[Seq[(SavedQuery, JQuery, JQuery)]] = None
 
   var schema: Option[Schema] = None
-  var tables: Option[Seq[(Table, JQuery)]] = None
-  var views: Option[Seq[(Table, JQuery)]] = None
-  var procedures: Option[Seq[(Procedure, JQuery)]] = None
+  var tables: Option[Seq[(Table, JQuery, JQuery)]] = None
+  var views: Option[Seq[(Table, JQuery, JQuery)]] = None
+  var procedures: Option[Seq[(Procedure, JQuery, JQuery)]] = None
 
   def setSavedQueries(sq: Seq[SavedQuery], onClick: (UUID) => Unit) = {
     if (sq.nonEmpty) {
@@ -27,8 +27,10 @@ object MetadataManager {
     } else {
       $("#saved-query-list-toggle").css("display", "none")
     }
-    val ret = sq.map(x => x -> $("#saved-query-" + x.id))
-    savedQueries = Some(ret)
+    savedQueries = Some(sq.map { x =>
+      val el = $("#saved-query-" + x.id)
+      (x, el, $("span", el))
+    })
   }
 
   def setSchema(sch: Schema, onClick: (String, String) => Unit) = {
@@ -43,7 +45,10 @@ object MetadataManager {
     } else {
       $("#table-list-toggle").css("display", "none")
     }
-    tables = Some(sch.tables.map(x => x -> $("#table-" + x.name)))
+    tables = Some(sch.tables.map { x =>
+      val el = $("#table-" + x.name)
+      (x, el, $("span", el))
+    })
 
     if (sch.views.nonEmpty) {
       $("#view-list-toggle").css("display", "block")
@@ -56,7 +61,10 @@ object MetadataManager {
     } else {
       $("#view-list-toggle").css("display", "none")
     }
-    views = Some(sch.views.map(x => x -> $("#view-" + x.name)))
+    views = Some(sch.views.map { x =>
+      val el = $("#view-" + x.name)
+      (x, el, $("span", el))
+    })
 
     if (sch.procedures.nonEmpty) {
       $("#procedure-list-toggle").css("display", "block")
@@ -69,7 +77,10 @@ object MetadataManager {
     } else {
       $("#procedure-list-toggle").css("display", "none")
     }
-    procedures = Some(sch.procedures.map(x => x -> $("#procedure-" + x.name)))
+    procedures = Some(sch.procedures.map { x =>
+      val el = $("#procedure-" + x.name)
+      (x, el, $("span", el))
+    })
 
     schema = Some(sch)
   }
