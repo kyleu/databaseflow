@@ -8,6 +8,7 @@ import utils.Logging
 object SearchManager {
   private[this] lazy val searchContainer = $(".search-wrapper")
   private[this] lazy val searchInput = $("input#search", searchContainer)
+  private[this] lazy val searchIcon = $(".fa", searchContainer)
 
   private[this] lazy val savedQueriesToggle = $("#saved-query-list-toggle")
   private[this] lazy val tablesToggle = $("#table-list-toggle")
@@ -21,10 +22,20 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
+    searchInput.focus { (e: JQueryEventObject) =>
+      searchIcon.removeClass("fa-search").addClass("fa-close").css("pointer", "cursor")
+    }
+    searchIcon.click { (e: JQueryEventObject) =>
+      searchInput.value("")
+      clearSearch()
+      searchInput.trigger("focus")
+      searchInput.trigger("blur")
+    }
     searchInput.keyup { (e: JQueryEventObject) =>
       onTextChange(searchInput.value().toString)
     }
     searchInput.blur { (e: JQueryEventObject) =>
+      searchIcon.removeClass("fa-close").addClass("fa-search").css("pointer", "default")
       onTextChange(searchInput.value().toString)
     }
   }
@@ -54,15 +65,26 @@ object SearchManager {
     closeIfOpen(tablesToggle)
     closeIfOpen(viewsToggle)
     closeIfOpen(proceduresToggle)
-    MetadataManager.savedQueries.foreach(_.foreach(x => x._3.text(x._1.title).show()))
-    MetadataManager.tables.foreach(_.foreach(x => x._3.text(x._1.name).show()))
-    MetadataManager.views.foreach(_.foreach(x => x._3.text(x._1.name).show()))
-    MetadataManager.procedures.foreach(_.foreach(x => x._3.text(x._1.name).show()))
+    MetadataManager.savedQueries.foreach(_.foreach { x =>
+      x._3.text(x._1.title)
+      x._2.show()
+    })
+    MetadataManager.tables.foreach(_.foreach { x =>
+      x._3.text(x._1.name)
+      x._2.show()
+    })
+    MetadataManager.views.foreach(_.foreach { x =>
+      x._3.text(x._1.name)
+      x._2.show()
+    })
+    MetadataManager.procedures.foreach(_.foreach { x =>
+      x._3.text(x._1.name)
+      x._2.show()
+    })
   }
 
   private[this] def highlightMatches(title: String, matches: Seq[String], j: JQuery) = {
-    val htmlEncoded = title
-    val html = matches.foldLeft(htmlEncoded) { (x, y) =>
+    val html = matches.foldLeft(title) { (x, y) =>
       x.replaceAllLiterally(y, s"""<strong class="search-matched-text">$y</strong>""")
     }
     Logging.info(html)
@@ -70,12 +92,8 @@ object SearchManager {
   }
 
   private[this] def filterObjects[T](
-    key: String,
-    seq: Seq[(T, JQuery, JQuery)],
-    searches: Seq[String],
-    matchFunc: (Seq[String], T) => Boolean,
-    titleFunc: (T) => String,
-    toggle: JQuery
+    key: String, seq: Seq[(T, JQuery, JQuery)], searches: Seq[String],
+    matchFunc: (Seq[String], T) => Boolean, titleFunc: (T) => String, toggle: JQuery
   ) = {
     val (matched, notMatched) = seq.partition { t =>
       matchFunc(searches, t._1)
