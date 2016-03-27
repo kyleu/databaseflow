@@ -49,7 +49,6 @@ object Shared {
   )
     .enablePlugins(ScalaJSPlay)
     .settings(
-      sourceMapsBase := baseDirectory.value / "..",
       scalaJSStage in Global := FastOptStage
     ).js
 
