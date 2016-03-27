@@ -79,6 +79,6 @@ object TableManager {
       $(".foreign-keys-link", panel).removeClass("initially-hidden")
     }
 
-    utils.Logging.info(s"Table [${table.name}] loaded.")
+    utils.Logging.debug(s"Table [${table.name}] loaded.")
   }
 }

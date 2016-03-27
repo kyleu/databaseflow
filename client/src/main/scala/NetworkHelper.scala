@@ -27,11 +27,11 @@ trait NetworkHelper { this: DatabaseFlow =>
   }
 
   protected[this] def onSocketError(error: String): Unit = {
-    utils.Logging.info(s"Socket error [$error].")
+    utils.Logging.error(s"Socket error [$error].")
   }
 
   protected[this] def onSocketClose(): Unit = {
-    utils.Logging.info("Socket closed.")
+    utils.Logging.warn("Socket closed.")
   }
 
   def sendMessage(rm: RequestMessage): Unit = {
