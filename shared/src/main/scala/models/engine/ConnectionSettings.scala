@@ -6,6 +6,7 @@ import models.engine.rdbms.PostgreSQL
 
 object ConnectionSettings {
   val defaultEngine = PostgreSQL
+  val empty = ConnectionSettings()
 }
 
 case class ConnectionSettings(

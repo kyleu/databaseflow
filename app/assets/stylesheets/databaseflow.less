@@ -8,17 +8,8 @@ body {
 
 main {
   flex: 1 0 auto;
-  &.indent {
-    padding-left: 240px;
-  }
   .static-container {
     margin-top: 16px;
-  }
-}
-
-@media only screen and (max-width: 992px) {
-  main.indent {
-    padding-left: 0;
   }
 }
 
@@ -37,24 +28,11 @@ main {
   margin-bottom: 24px;
 }
 
-// Query page
-#workspace {
-  padding-top: 15px;
-}
-
-.workspace-panel {
-  margin-left: 4px;
-}
-
-.title-icon {
-  margin-right: 6px;
-  width: 24px;
-}
-
 // Includes
 @import url(_static.less);
 @import url(_menu.less);
 @import url(_tabs.less);
+@import url(_query.less);
 @import url(_sqleditor.less);
 @import url(_queryplan.less);
 @import url(_results.less);

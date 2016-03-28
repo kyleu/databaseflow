@@ -28,7 +28,8 @@ class ConnectionService(
 
   protected[this] var currentUsername = user.username
   protected[this] var userPreferences = user.preferences
-  protected[this] val db = MasterDatabase.databaseFor(connectionId)
+  protected[this] var dbOpt = attemptConnect()
+  protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
   protected[this] val savedQueries = MasterDatabase.db.query(SavedQueryQueries.getByOwner(user.id))
   protected[this] val schema = SchemaService.getSchema(connectionId, db)

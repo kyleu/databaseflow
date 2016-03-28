@@ -7,22 +7,32 @@ import models.engine.rdbms._
 import models.queries.connection.ConnectionQueries
 import utils.Logging
 
+import scala.util.control.NonFatal
+
 object MasterDatabase extends Logging {
   val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
   //val (engine, url) = H2 -> "jdbc:h2:./db/databaseflow"
 
   private[this] val databases = collection.mutable.HashMap.empty[UUID, Database]
 
-  def databaseFor(connectionId: UUID) = databases.getOrElseUpdate(connectionId, {
-    val c = db.query(ConnectionQueries.getById(connectionId)).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
-    val cs = PoolSettings(
-      engine = c.engine,
-      url = c.url,
-      username = c.username,
-      password = c.password
-    )
-    DatabaseService.connect(cs)
-  })
+  def databaseFor(connectionId: UUID) = databases.get(connectionId) match {
+    case Some(c) => Right(c)
+    case None =>
+      val c = db.query(ConnectionQueries.getById(connectionId)).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
+      val cs = PoolSettings(
+        engine = c.engine,
+        url = c.url,
+        username = c.username,
+        password = c.password
+      )
+      try {
+        val ret = DatabaseService.connect(cs)
+        databases(connectionId) = ret
+        Right(ret)
+      } catch {
+        case NonFatal(x) => Left(x)
+      }
+  }
 
   private[this] var dbOpt: Option[Database] = None
 

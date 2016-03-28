@@ -3,7 +3,7 @@ GET         /ping                        controllers.HomeController.ping(timesta
 
 # Connection Management
 GET         /c/new                       controllers.ConnectionController.addNew()
-POST        /c/new                       controllers.ConnectionController.save()
+POST        /c/:id                       controllers.ConnectionController.save(id: java.util.UUID)
 GET         /c/:id                       controllers.ConnectionController.editForm(id: java.util.UUID)
 
 # Query Interface

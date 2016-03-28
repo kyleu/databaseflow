@@ -8,7 +8,7 @@ object PostgreSQL extends DatabaseEngine(
   id = "postgres",
   name = "PostgreSQL",
   driverClass = "org.postgresql.Driver",
-  exampleUrl = "jdbc:postgresql://hostname:port/dbname",
+  exampleUrl = "jdbc:postgresql://hostname:5432/dbname",
 
   builtInFunctions = Seq(
     "abs",

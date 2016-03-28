@@ -1,19 +1,19 @@
-@(user: models.user.User, conn: models.engine.ConnectionSettings)(
+@(user: models.user.User, conn: models.engine.ConnectionSettings, title: String, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-) @layout.simple(user, "New Connection", debug = false) {
-  <form class="col s12" method="post" action="@routes.ConnectionController.save()">
-    <input id="form-url" type="hidden" value="@conn.id" />
+) @layout.simple(user, "Edit " + title, debug = false) {
+  @layout.formErrors(errors)
+  <form class="col s12" method="post" action="@routes.ConnectionController.save(conn.id)">
     <div class="card">
       <div class="card-content">
-        <h4 class="truncate">New Connection</h4>
+        <h4 class="truncate">@title</h4>
         <div class="row">
           <div class="input-field col s12 m6">
-            <input id="form-name" type="text" class="validate" value="@conn.name" />
+            <input id="form-name" name="name" type="text" class="validate" value="@conn.name" />
             <label for="form-name">Connection Name</label>
           </div>
 
           <div class="input-field col s12 m6">
-            <select id="form-engine">
+            <select id="form-engine" name="engine">
               @models.engine.DatabaseEngine.all.map { e =>
                 <option value="@e.id" @if(e == conn.engine) { selected }>@e.name</option>
               }
@@ -22,17 +22,17 @@
           </div>
 
           <div class="input-field col s12">
-            <input id="form-url" type="text" class="validate" value="@conn.url" />
+            <input id="form-url" name="url" type="text" class="validate" value="@conn.url" />
             <label for="form-url">Jdbc Url</label>
           </div>
 
           <div class="input-field col s12 m6">
-            <input id="form-username" type="text" class="validate" value="@conn.username" />
+            <input id="form-username" name="username" type="text" class="validate" value="@conn.username" />
             <label for="form-username">Username</label>
           </div>
 
           <div class="input-field col s12 m6">
-            <input id="form-password" type="password" class="validate" value="" />
+            <input id="form-password" name="password" type="password" class="validate" value="" />
             <label for="form-password">Password</label>
           </div>
         </div>
