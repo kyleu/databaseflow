@@ -2,8 +2,15 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(title, debug = false) {
   <header>
+    @views.html.components.userDropdown(isGuest = user.isGuest)
+
     <nav id="topnav" class="@user.preferences.theme lighten-2">
       <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+      <ul class="right hide-on-small-only">
+        <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
+          @user.username.getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdown right"></i>
+        </a></li>
+      </ul>
     </nav>
   </header>
 
@@ -21,8 +28,4 @@
       <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>
     </div>
   </footer>
-
-  <script>
-      $("select").material_select();
-  </script>
 }

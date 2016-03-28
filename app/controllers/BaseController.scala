@@ -41,7 +41,7 @@ abstract class BaseController() extends Silhouette[User, CookieAuthenticator] wi
           val user = User(
             id = UUID.randomUUID(),
             username = None,
-            preferences = UserPreferences(),
+            preferences = UserPreferences.empty,
             profiles = Nil,
             created = DateUtils.now
           )

@@ -6,7 +6,6 @@ import models.schema.Table
 import models.template.{ Icons, ViewDetailTemplate }
 import models.{ RequestMessage, ShowTableData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
-import services.NotificationService
 
 object ViewDetailManager {
   var views = Map.empty[String, Table]
@@ -27,10 +26,7 @@ object ViewDetailManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        views.get(name) match {
-          case Some(view) => viewData(queryId, view, sendMessage)
-          case None => NotificationService.info("View Not Loaded", "Please retry in a moment.")
-        }
+        viewData(queryId, name, sendMessage)
         false
       })
 
@@ -43,7 +39,7 @@ object ViewDetailManager {
       openViews = openViews + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, view: Table, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(ShowTableData(queryId = queryId, name = view.name))
+  private[this] def viewData(queryId: UUID, view: String, sendMessage: (RequestMessage) => Unit) = {
+    sendMessage(ShowTableData(queryId = queryId, name = view))
   }
 }

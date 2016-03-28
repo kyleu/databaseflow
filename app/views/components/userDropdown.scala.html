@@ -1,0 +1,12 @@
+@(isGuest: Boolean)
+<ul id="dropdown-user" class="dropdown-content">
+  @if(isGuest) {
+    <li><a href="">Sign Up</a></li>
+    <li><a href="">Sign In</a></li>
+    <li><a href="http://databaseflow.com">About</a></li>
+  } else {
+    <li><a href="">Profile</a></li>
+    <li><a href="">Sign Out</a></li>
+    <li><a href="http://databaseflow.com">About</a></li>
+  }
+</ul>

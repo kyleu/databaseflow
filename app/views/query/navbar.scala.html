@@ -1,14 +1,6 @@
 @(user: models.user.User, dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 <header>
-  <ul id="dropdown-user" class="dropdown-content">
-    <li><a href="http://databaseflow.com">About</a></li>
-    @if(user.isGuest) {
-      <li><a href="">Sign Up</a></li>
-    } else {
-      <li><a href="">Profile</a></li>
-      <li><a href="">Sign Out</a></li>
-    }
-  </ul>
+  @views.html.components.userDropdown(isGuest = user.isGuest)
 
   <div class="nb-container navbar-fixed">
     <nav id="topnav" class="@user.preferences.theme lighten-2">

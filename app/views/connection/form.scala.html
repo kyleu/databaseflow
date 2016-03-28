@@ -1,7 +1,7 @@
 @(user: models.user.User, conn: models.engine.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
-  @layout.formErrors(errors)
+  @components.formErrors(errors)
   <form class="col s12" method="post" action="@routes.ConnectionController.save(conn.id)">
     <div class="card">
       <div class="card-content">
@@ -53,5 +53,7 @@
       }
       return false;
     }
+
+    $("#form-engine").material_select();
   </script>
 }

@@ -17,7 +17,7 @@ object SidenavTemplate {
   def tables(tables: Seq[String]) = {
     tables.map { t =>
       li(a(id := "table-" + t, cls := "table-link waves-effect waves-light", href := "#table-" + t)(
-        em(cls := s"fa ${Icons.table}"),
+        em(cls := s"fa ${Icons.tableClosed}"),
         span(t)
       ))
     }

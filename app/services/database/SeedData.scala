@@ -11,9 +11,12 @@ import utils.DateUtils
 
 object SeedData {
   def insert(db: Database) = {
+
+    // ConnectionSettings
     db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "PostgreSQL Sample",
+      description = "The pagila sample database provided by the community.",
       engine = PostgreSQL,
       url = "jdbc:postgresql://localhost:5432/pagila",
       username = "databaseflow",
@@ -23,6 +26,7 @@ object SeedData {
     db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "MySQL Sample",
+      description = "The salika sample database provided by the community.",
       engine = MySQL,
       url = "jdbc:mysql://localhost/sakila",
       username = "root",
@@ -32,6 +36,7 @@ object SeedData {
     db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "Local H2",
+      description = "A scratchpad database to play around in.",
       engine = H2,
       url = "jdbc:h2:~/database.h2db",
       username = "",
@@ -41,12 +46,14 @@ object SeedData {
     db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "AppThis Local",
+      description = "The local database for AppThis v2.",
       engine = MySQL,
       url = "jdbc:mysql://localhost/appthis_local",
       username = "appthis",
       password = "Mah14Mah1"
     )))
 
+    // Saved Queries
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
       owner = None,

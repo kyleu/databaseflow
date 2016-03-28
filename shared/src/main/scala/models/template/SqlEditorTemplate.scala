@@ -12,7 +12,7 @@ object SqlEditorTemplate {
           div(cls := "card")(
             div(cls := "card-content")(
               span(cls := "card-title")(
-                i(cls := "title-icon fa fa-" + icon),
+                i(cls := "title-icon fa " + icon),
                 queryName,
                 i(cls := s"right fa ${Icons.close}")
               ),

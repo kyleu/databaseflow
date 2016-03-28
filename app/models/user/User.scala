@@ -7,7 +7,7 @@ import org.joda.time.LocalDateTime
 import utils.DateUtils
 
 object User {
-  val mock = User(UUID.fromString("11111111-1111-1111-1111-111111111111"), Some("Test User"), UserPreferences(), Seq.empty)
+  val mock = User(UUID.fromString("11111111-1111-1111-1111-111111111111"), Some("Test User"), UserPreferences.empty, Seq.empty)
 }
 
 case class User(

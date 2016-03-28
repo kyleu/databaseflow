@@ -8,11 +8,12 @@
       @c.name
     </div>
     <div class="collapsible-body">
-      <p>
-        <em style="display: block; margin-bottom: 10px;">@c.url</em><br>
-        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn">Query</a>
+      <div style="padding: 25px;">
+        <div>@c.description</div>
+        <em style="display: block;">@c.url</em>
+        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn" style="margin: 10px 0;">Query</a>
         <a href="@routes.ConnectionController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
-      </p>
+      </div>
     </div>
   </li>
 }
