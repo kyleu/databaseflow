@@ -6,7 +6,7 @@ import models.engine.{ ConnectionSettings, DatabaseEngine }
 import models.forms.ConnectionForm
 import models.queries.connection.ConnectionQueries
 import services.database.MasterDatabase
-import utils.ApplicationContext
+import utils.{ ApplicationContext, EncryptUtils }
 
 import scala.concurrent.Future
 
@@ -41,9 +41,9 @@ class ConnectionController @javax.inject.Inject() (override val ctx: Application
           password = cf.password
         )
         val updated = if (cf.password.isEmpty) {
-          almostUpdated
+          almostUpdated.copy(password = EncryptUtils.encrypt(almostUpdated.password))
         } else {
-          almostUpdated.copy(password = cf.password)
+          almostUpdated.copy(password = EncryptUtils.encrypt(cf.password))
         }
         connOpt match {
           case Some(existing) => MasterDatabase.db.execute(ConnectionQueries.Update(updated))
