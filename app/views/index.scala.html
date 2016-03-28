@@ -1,37 +1,5 @@
 @(user: models.user.User, debug: Boolean, connections: Seq[models.engine.ConnectionSettings])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-) @layout.materialize(utils.Config.projectName, debug = debug) {
-  <header>
-    <nav id="topnav" class="@user.preferences.theme lighten-2">
-      <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
-    </nav>
-  </header>
-
-  <main>
-    <div class="container">
-      <div class="row">
-        @connections.map { c =>
-          @views.html.connection.card(c)
-        }
-        <div class="col s12 m6">
-          <div class="card">
-            <div class="card-content">
-              <h4 class="truncate">Add New</h4>
-              <p class="truncate">Add an additional connection</p>
-            </div>
-            <div class="card-action">
-              <a href="@routes.ConnectionController.addNew">New Connection</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="page-footer @user.preferences.theme lighten-2">
-    <div class="footer-copyright">
-      © 2016 Kyle Unverferth
-      <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>
-    </div>
-  </footer>
+)@layout.simple(user, utils.Config.projectName, debug = debug) {
+  @views.html.connection.list(connections)
 }

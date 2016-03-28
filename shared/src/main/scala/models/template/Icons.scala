@@ -12,6 +12,8 @@ object Icons {
   val sectionClosed = "fa-angle-right"
   val sectionOpen = "fa-angle-down"
 
+  val database = "fa-database"
+
   val newQuery = "fa-plus-square-o"
 
   val queryResults = "fa-file-text-o"

@@ -1,0 +1,28 @@
+@(user: models.user.User, title: String, debug: Boolean)(content: Html)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.materialize(title, debug = false) {
+  <header>
+    <nav id="topnav" class="@user.preferences.theme lighten-2">
+      <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="static-container container">
+      <div class="row">
+        @content
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer @user.preferences.theme lighten-2">
+    <div class="footer-copyright">
+      © 2016 Kyle Unverferth
+      <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>
+    </div>
+  </footer>
+
+  <script>
+      $("select").material_select();
+  </script>
+}
