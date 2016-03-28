@@ -1,5 +1,22 @@
 @(user: models.user.User, debug: Boolean, connections: Seq[models.engine.ConnectionSettings])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(user, utils.Config.projectName, debug = debug) {
-  @views.html.connection.list(connections)
+  <div class="col s12">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">Database Flow</span>
+        <p>Here's a few words about the app. Maybe a slogan or something.</p>
+
+        @if(connections.isEmpty) {
+          <h5>Add your first connection by clicking below.</h5>
+        } else {
+          <div>@views.html.connection.list(connections)</div>
+        }
+      </div>
+      <div class="card-action">
+        <a href="@routes.ConnectionController.addNew()">New Connection</a>
+      </div>
+    </div>
+  </div>
+
 }

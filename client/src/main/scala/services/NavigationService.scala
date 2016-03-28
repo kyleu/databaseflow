@@ -2,8 +2,6 @@ package services
 
 import java.util.UUID
 
-import utils.NullUtils
-
 object NavigationService {
   private[this] lazy val loc = org.scalajs.dom.document.location
 

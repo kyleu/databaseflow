@@ -60,6 +60,10 @@ trait BaseQueries[T] {
     override val values = toDataSeq(model)
   }
 
+  protected case class Delete(override val values: Seq[Any]) extends Statement {
+    override val sql = s"delete from $tableName where ${idColumns.map(_ + " = ?").mkString(" and ")}"
+  }
+
   protected case class InsertBatch(models: Seq[T]) extends Statement {
     private[this] val valuesClause = models.map(m => s"(${columns.map(x => "?").mkString(", ")})").mkString(", ")
     override val sql = s"insert into $tableName (${columns.mkString(", ")}) values $valuesClause"

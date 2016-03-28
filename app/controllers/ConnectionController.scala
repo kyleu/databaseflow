@@ -4,8 +4,7 @@ import java.util.UUID
 
 import models.engine.{ ConnectionSettings, DatabaseEngine }
 import models.forms.ConnectionForm
-import models.queries.connection.ConnectionQueries
-import services.database.MasterDatabase
+import services.engine.ConnectionSettingsService
 import utils.{ ApplicationContext, EncryptUtils }
 
 import scala.concurrent.Future
@@ -14,23 +13,24 @@ import scala.concurrent.Future
 class ConnectionController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
     val conn = ConnectionSettings.empty
-    Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection")))
+    Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection", isNew = true)))
   }
 
   def editForm(id: UUID) = withSession("edit-form-" + id) { implicit request =>
-    val conn = MasterDatabase.db.query(ConnectionQueries.getById(id)).getOrElse {
+    val conn = ConnectionSettingsService.getById(id).getOrElse {
       throw new IllegalArgumentException(s"Invalid connection [$id].")
     }
-    Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name)))
+    val isMaster = id == ConnectionSettingsService.masterId
+    Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
   }
 
   def save(connectionId: UUID) = withSession("save") { implicit request =>
-    val connOpt = MasterDatabase.db.query(ConnectionQueries.getById(connectionId))
+    val connOpt = ConnectionSettingsService.getById(connectionId)
     val conn = connOpt.getOrElse(ConnectionSettings.empty.copy(id = connectionId))
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
         val title = ConnectionForm.form.value.map(_.name).getOrElse("New Connection")
-        BadRequest(views.html.connection.form(request.identity, conn, title, formWithErrors.errors))
+        BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
       },
       cf => {
         val almostUpdated = conn.copy(
@@ -46,12 +46,17 @@ class ConnectionController @javax.inject.Inject() (override val ctx: Application
           almostUpdated.copy(password = EncryptUtils.encrypt(cf.password))
         }
         connOpt match {
-          case Some(existing) => MasterDatabase.db.execute(ConnectionQueries.Update(updated))
-          case None => MasterDatabase.db.execute(ConnectionQueries.insert(updated))
+          case Some(existing) => ConnectionSettingsService.update(updated)
+          case None => ConnectionSettingsService.insert(updated)
         }
         Redirect(routes.QueryController.main(connectionId))
       }
     )
     Future.successful(result)
+  }
+
+  def delete(connectionId: UUID) = withSession("delete") { implicit request =>
+    ConnectionSettingsService.delete(connectionId)
+    Future.successful(Redirect(routes.HomeController.index()))
   }
 }

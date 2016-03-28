@@ -3,22 +3,18 @@ package services.database
 import java.util.UUID
 
 import models.database.PoolSettings
-import models.engine.rdbms._
-import models.queries.connection.ConnectionQueries
+import services.engine.ConnectionSettingsService
 import utils.Logging
 
 import scala.util.control.NonFatal
 
 object MasterDatabase extends Logging {
-  val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
-  //val (engine, url) = H2 -> "jdbc:h2:./db/databaseflow"
-
   private[this] val databases = collection.mutable.HashMap.empty[UUID, Database]
 
   def databaseFor(connectionId: UUID) = databases.get(connectionId) match {
     case Some(c) => Right(c)
     case None =>
-      val c = db.query(ConnectionQueries.getById(connectionId)).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
+      val c = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
       val cs = PoolSettings(
         engine = c.engine,
         url = c.url,
@@ -39,16 +35,12 @@ object MasterDatabase extends Logging {
   def open() = {
     dbOpt.foreach(x => throw new IllegalStateException("History database already open."))
 
-    val cs = PoolSettings(
-      engine = engine,
-      url = url,
-      username = "databaseflow",
-      password = "flow",
-      maxSize = 8
-    )
-    val database = DatabaseService.connect(cs)
+    val database = databaseFor(ConnectionSettingsService.masterId) match {
+      case Right(db) => db
+      case Left(x) => throw x
+    }
 
-    log.info(s"Master database started as user [${cs.username}] against url [${cs.url}].")
+    log.info(s"Master database started as user [${ConnectionSettingsService.masterUsername}] against url [${ConnectionSettingsService.masterUrl}].")
 
     MasterDdl.update(database)
 

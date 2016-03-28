@@ -5,6 +5,7 @@ GET         /ping                        controllers.HomeController.ping(timesta
 GET         /c/new                       controllers.ConnectionController.addNew()
 POST        /c/:id                       controllers.ConnectionController.save(id: java.util.UUID)
 GET         /c/:id                       controllers.ConnectionController.editForm(id: java.util.UUID)
+GET         /c/:id/delete                controllers.ConnectionController.delete(id: java.util.UUID)
 
 # Query Interface
 GET         /q/:conn                     controllers.QueryController.main(conn: java.util.UUID)

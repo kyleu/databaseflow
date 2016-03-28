@@ -1,7 +1,7 @@
 package services.sandbox
 
 import models.database.{ Row, SingleRowQuery }
-import models.queries.connection.ConnectionQueries
+import models.queries.connection.ConnectionSettingsQueries
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import upickle.json
@@ -20,7 +20,7 @@ object DatabaseTest extends SandboxTask {
   }
 
   override def run(ctx: ApplicationContext) = {
-    val connections = MasterDatabase.db.query(ConnectionQueries.getAll())
+    val connections = MasterDatabase.db.query(ConnectionSettingsQueries.getAll())
 
     val connTables = connections.map { c =>
       val db = MasterDatabase.databaseFor(c.id) match {

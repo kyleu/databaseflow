@@ -7,12 +7,13 @@ import models.engine.{ ConnectionSettings, DatabaseEngine }
 import models.queries.BaseQueries
 import utils.EncryptUtils
 
-object ConnectionQueries extends BaseQueries[ConnectionSettings] {
+object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
   override protected val columns = Seq("id", "name", "engine", "url", "username", "password")
   override protected val searchColumns = columns
 
   val insert = Insert
+  def delete(id: UUID) = Delete(Seq(id))
   def getAll(orderBy: String = "name") = GetAll(orderBy = orderBy)
   def getById(id: UUID) = GetById(Seq(id))
   val search = Search

@@ -1,34 +1,19 @@
 @(connections: Seq[models.engine.ConnectionSettings])
-<div class="col s12">
-  <div class="card">
-    <div class="card-content">
-      <span class="card-title">Database Flow</span>
-      <p>Here's a few words about the app. Maybe a slogan or something.</p>
-
-      <div>
-        <ul class="collapsible popout connection-list" data-collapsible="expandable">
-        @connections.map { c =>
-          <li>
-            <div class="collapsible-header">
-              <i class="fa @models.template.Icons.database"></i> @c.name
-            </div>
-            <div class="collapsible-body">
-              <p>
-                @c.engine.name<br/>
-                <em>@c.url</em>
-              </p>
-              <p>
-                <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn">Query</a>
-                <a href="@routes.ConnectionController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
-              </p>
-            </div>
-          </li>
-        }
-        </ul>
-      </div>
+<ul class="collapsible popout connection-list" data-collapsible="expandable">
+@connections.map { c =>
+  <li>
+    <div class="collapsible-header">
+      <em class="right">@c.engine.name</em>
+      <i class="fa @models.template.Icons.database"></i>
+      @c.name
     </div>
-    <div class="card-action">
-      <a href="@routes.ConnectionController.addNew()">New Connection</a>
+    <div class="collapsible-body">
+      <p>
+        <em style="display: block; margin-bottom: 10px;">@c.url</em><br>
+        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn">Query</a>
+        <a href="@routes.ConnectionController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
+      </p>
     </div>
-  </div>
-</div>
+  </li>
+}
+</ul>

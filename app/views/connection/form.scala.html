@@ -1,11 +1,11 @@
-@(user: models.user.User, conn: models.engine.ConnectionSettings, title: String, errors: Seq[FormError] = Nil)(
+@(user: models.user.User, conn: models.engine.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
   @layout.formErrors(errors)
   <form class="col s12" method="post" action="@routes.ConnectionController.save(conn.id)">
     <div class="card">
       <div class="card-content">
-        <h4 class="truncate">@title</h4>
+        <span class="card-title">@title</span>
         <div class="row">
           <div class="input-field col s12 m6">
             <input id="form-name" name="name" type="text" class="validate" value="@conn.name" />
@@ -38,8 +38,20 @@
         </div>
       </div>
       <div class="card-action">
-        <button class="btn waves-effect waves-light" type="submit">Save</button>
+        <button class="btn waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
+        @if((!isNew) && conn.id != services.engine.ConnectionSettingsService.masterId) {
+          <button class="right btn waves-effect waves-light btn-flat" onclick="onDelete();return false;">Delete</button>
+        }
       </div>
     </div>
   </form>
+  <script>
+    function onDelete() {
+      var confirmed = confirm('Are you certain you\'d like to delete this connection?');
+      if(confirmed) {
+        window.location = '@routes.ConnectionController.delete(conn.id) ';
+      }
+      return false;
+    }
+  </script>
 }

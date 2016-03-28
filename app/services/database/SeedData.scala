@@ -4,23 +4,14 @@ import java.util.UUID
 
 import models.engine.ConnectionSettings
 import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
-import models.queries.connection.ConnectionQueries
+import models.queries.connection.ConnectionSettingsQueries
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import utils.DateUtils
 
 object SeedData {
   def insert(db: Database) = {
-    db.execute(ConnectionQueries.insert(ConnectionSettings(
-      id = UUID.randomUUID,
-      name = "Master Database",
-      engine = PostgreSQL,
-      url = "jdbc:postgresql://localhost:5432/databaseflow",
-      username = "databaseflow",
-      password = "flow"
-    )))
-
-    db.execute(ConnectionQueries.insert(ConnectionSettings(
+    db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "PostgreSQL Sample",
       engine = PostgreSQL,
@@ -29,7 +20,7 @@ object SeedData {
       password = "flow"
     )))
 
-    db.execute(ConnectionQueries.insert(ConnectionSettings(
+    db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "MySQL Sample",
       engine = MySQL,
@@ -38,7 +29,7 @@ object SeedData {
       password = ""
     )))
 
-    db.execute(ConnectionQueries.insert(ConnectionSettings(
+    db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "Local H2",
       engine = H2,
@@ -47,7 +38,7 @@ object SeedData {
       password = ""
     )))
 
-    db.execute(ConnectionQueries.insert(ConnectionSettings(
+    db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
       id = UUID.randomUUID,
       name = "AppThis Local",
       engine = MySQL,

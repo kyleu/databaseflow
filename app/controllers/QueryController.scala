@@ -3,13 +3,11 @@ package controllers
 import java.util.UUID
 
 import akka.actor.ActorRef
-import models.queries.connection.ConnectionQueries
 import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
 import services.connection.ConnectionService
-import services.database.MasterDatabase
-import services.schema.SchemaService
+import services.engine.ConnectionSettingsService
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
 
@@ -18,7 +16,7 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class QueryController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
-    val activeDb = MasterDatabase.db.query(ConnectionQueries.getById(connectionId)).map(c => c.name -> c.id)
+    val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
     Future.successful(Ok(views.html.query.main(request.identity, ctx.config.debug, activeDb.map(_._1).getOrElse("..."), UUID.randomUUID)))
   }
 
