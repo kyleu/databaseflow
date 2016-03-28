@@ -44,6 +44,7 @@ object EditorManager {
       minLines = 4,
       maxLines = 1000
     ))
+    editor.$blockScrolling = Double.PositiveInfinity
     editor
   }
 }
