@@ -25,7 +25,7 @@ object ConnectionSettingsService {
     password = masterPassword
   )
 
-  def getAll = masterConnectionSettings +: MasterDatabase.db.query(ConnectionSettingsQueries.getAll())
+  def getAll = MasterDatabase.db.query(ConnectionSettingsQueries.getAll()) :+ masterConnectionSettings
 
   def getById(id: UUID) = if (id == masterId) {
     Some(masterConnectionSettings)
