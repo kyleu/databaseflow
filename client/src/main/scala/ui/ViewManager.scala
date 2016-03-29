@@ -4,10 +4,10 @@ import java.util.UUID
 
 import models.schema.Table
 import models.template.{ Icons, ViewDetailTemplate }
-import models.{ RequestMessage, ShowTableData }
+import models.{ RequestMessage, GetTableRowData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
-object ViewDetailManager {
+object ViewManager {
   var views = Map.empty[String, Table]
   var openViews = Map.empty[String, UUID]
 
@@ -40,6 +40,6 @@ object ViewDetailManager {
   }
 
   private[this] def viewData(queryId: UUID, view: String, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(ShowTableData(queryId = queryId, name = view))
+    sendMessage(ShowViewData(queryId = queryId, name = view))
   }
 }

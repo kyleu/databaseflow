@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.schema.Table
 import models.template.{ Icons, TableDetailTemplate }
-import models.{ GetTableDetail, RequestMessage, ShowTableData }
+import models.{ GetTableDetail, RequestMessage, GetTableRowData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
 object TableManager {
@@ -53,7 +53,7 @@ object TableManager {
   }
 
   private[this] def viewData(queryId: UUID, name: String, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(ShowTableData(queryId = queryId, name = name))
+    sendMessage(GetTableRowData(queryId = queryId, name = name))
   }
 
   private[this] def setTableDetails(uuid: UUID, table: Table) = {

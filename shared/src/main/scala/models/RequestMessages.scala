@@ -17,4 +17,4 @@ case class GetTableDetail(name: String) extends RequestMessage
 case class GetViewDetail(name: String) extends RequestMessage
 case class GetProcedureDetail(name: String) extends RequestMessage
 
-case class ShowTableData(queryId: UUID, name: String) extends RequestMessage
+case class GetTableRowData(queryId: UUID, name: String) extends RequestMessage

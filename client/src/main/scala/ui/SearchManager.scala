@@ -54,7 +54,6 @@ object SearchManager {
   def openIfClosed(j: JQuery) = if (!j.hasClass("active")) {
     $(".collapsible-header", j).trigger("click")
   }
-
   def closeIfOpen(j: JQuery) = if (j.hasClass("active")) {
     $(".collapsible-header", j).trigger("click")
   }

@@ -21,8 +21,8 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
 
     MetadataManager.setSchema(is.schema, (key, name) => key match {
       case "table" => TableManager.tableDetail(name, sendMessage)
-      case "view" => ViewDetailManager.viewDetail(name, sendMessage)
-      case "procedure" => ProcedureDetailManager.procedureDetail(name, sendMessage)
+      case "view" => ViewManager.viewDetail(name, sendMessage)
+      case "procedure" => ProcedureManager.procedureDetail(name, sendMessage)
     })
 
     $("#loading-panel").hide()

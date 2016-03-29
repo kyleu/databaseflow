@@ -2,21 +2,19 @@ package models.template
 
 import models.query.QueryResult
 import models.schema.ColumnType._
-import utils.NullUtils
 
 import scalatags.Text.all._
 
 object DataTableTemplate {
   private[this] def tableHeader(res: QueryResult) = {
+
     def str(name: String) = if (res.sortable) {
       val icon = if (res.sortedColumn.contains(name)) {
         if (res.sortedAscending.contains(false)) {
-          "sort-up"
+          Icons.sortedAsc
         } else {
-          "sort-down"
+          Icons.sortedDesc
         }
-      } else {
-        "sort"
       }
       Seq(i(cls := s"sort-icon fa fa-$icon"), span(cls := "sorted-title")(name))
     } else {
@@ -25,18 +23,33 @@ object DataTableTemplate {
     thead(tr(res.columns.map(c => th(title := c.t.toString)(str(c.name): _*))))
   }
 
-  private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = v match {
-    case Some(x) => col.t match {
-      case StringType if x.isEmpty => td(em("empty string"))
-      case StringType => td(x)
-      case IntegerType => td(x)
-      case TimestampType => td(x)
-      case _ => td(s"$x (${col.t})")
+  private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = {
+    val contentEl = v match {
+      case Some(x) => (col.t match {
+        case StringType if x.isEmpty => em("empty string")
+        case StringType => span(x)
+        case IntegerType => span(x)
+        case TimestampType => span(x)
+        case BooleanType => span(x)
+        case _ => span(s"$x (${col.t})")
+      }) -> true
+      case None => span(title := "Null")("∅") -> false
+      // scalastyle:off
+      case null => span("null-bug") -> false
+      // scalastyle:on
     }
-    case None => td(title := "Null")("∅")
-    // scalastyle:off
-    case null => td("null-bug")
-    // scalastyle:on
+    col.relationTable match {
+      case Some(relTable) if contentEl._2 => td(
+        i(
+          cls := s"query-rel-link right fa ${Icons.relation}",
+          title := s"Open [$relTable] table filtered with [${col.relationColumn.getOrElse("")} ${v.getOrElse("0")}]",
+          data("rel-table") := relTable,
+          data("rel-id") := v.getOrElse("")
+        ),
+        span(cls := "query-rel-title")(contentEl._1)
+      )
+      case _ => td(contentEl._1)
+    }
   }
 
   private[this] def tableBody(res: QueryResult) = {

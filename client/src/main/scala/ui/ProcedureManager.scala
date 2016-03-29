@@ -8,7 +8,7 @@ import models.template.{ Icons, ProcedureDetailTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
-object ProcedureDetailManager {
+object ProcedureManager {
   var procedures = Map.empty[String, Procedure]
   var openProcedures = Map.empty[String, UUID]
 

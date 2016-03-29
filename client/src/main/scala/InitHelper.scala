@@ -27,8 +27,8 @@ trait InitHelper { this: DatabaseFlow =>
   protected[this] def performInitialAction() = NavigationService.initialMessage match {
     case ("new", None) => AdHocQueryManager.addNewQuery(sendMessage)
     case ("table", Some(id)) => TableManager.tableDetail(id, sendMessage)
-    case ("view", Some(id)) => ViewDetailManager.viewDetail(id, sendMessage)
-    case ("procedure", Some(id)) => ProcedureDetailManager.procedureDetail(id, sendMessage)
+    case ("view", Some(id)) => ViewManager.viewDetail(id, sendMessage)
+    case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id, sendMessage)
     case (key, id) => utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
   }
 }
