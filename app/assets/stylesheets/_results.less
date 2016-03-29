@@ -23,13 +23,33 @@
     }
   }
 
+  .sorted-title {
+    margin-right: 10px;
+  }
+
   .sort-icon {
     float: right;
     margin-top: 3px;
     cursor: pointer;
+    color: white;
   }
 
-  .sorted-title {
-    margin-right: 10px;
+  th:hover {
+    .sort-icon {
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+
+  .query-rel-link {
+    float: right;
+    margin-top: 3px;
+    cursor: pointer;
+    &:hover {
+      color: #ffab40;
+    }
+  }
+
+  .query-rel-title {
+    margin-right: 22px;
   }
 }

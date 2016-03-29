@@ -5,19 +5,22 @@ object Icons {
 
   val help = "fa-key"
   val about = "fa-heart-o"
-
-  val dropdown = "fa-angle-down"
   val close = "fa-close"
+
+  val dropdownToggle = "fa-angle-down"
 
   val sectionClosed = "fa-angle-right"
   val sectionOpen = "fa-angle-down"
+
+  val sortedAsc = "fa-sorted"
+  val sortedDesc = "fa-chevron-down"
 
   val database = "fa-database"
 
   val newQuery = "fa-plus-square-o"
 
-  val queryResults = "fa-file-text-o"
   val queryPlan = "fa-sitemap"
+  val queryResults = "fa-file-text-o"
 
   val adHocQuery = "fa-pencil-square-o"
   val savedQuery = "fa-envelope-o"
@@ -26,9 +29,11 @@ object Icons {
   val table = "fa-folder-open-o"
   val view = "fa-bar-chart"
 
-  val procedure = "fa-code"
-
   val columns = "fa-sign-in"
   val foreignKeys = "fa-sign-out"
   val indexes = "fa-location-arrow"
+
+  val relation = "fa-external-link"
+
+  val procedure = "fa-code"
 }
