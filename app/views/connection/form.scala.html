@@ -2,7 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
   @components.formErrors(errors)
-  <form class="col s12" method="post" action="@routes.ConnectionController.save(conn.id)">
+  <form class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
     <div class="card">
       <div class="card-content">
         <span class="card-title">@title</span>
@@ -49,7 +49,7 @@
     function onDelete() {
       var confirmed = confirm('Are you certain you\'d like to delete this connection?');
       if(confirmed) {
-        window.location = '@routes.ConnectionController.delete(conn.id) ';
+        window.location = '@routes.ConnectionSettingsController.delete(conn.id) ';
       }
       return false;
     }

@@ -2,10 +2,10 @@ GET         /                            controllers.HomeController.index
 GET         /ping                        controllers.HomeController.ping(timestamp: Long)
 
 # Connection Management
-GET         /c/new                       controllers.ConnectionController.addNew()
-POST        /c/:id                       controllers.ConnectionController.save(id: java.util.UUID)
-GET         /c/:id                       controllers.ConnectionController.editForm(id: java.util.UUID)
-GET         /c/:id/delete                controllers.ConnectionController.delete(id: java.util.UUID)
+GET         /c/new                       controllers.ConnectionSettingsController.addNew()
+POST        /c/:id                       controllers.ConnectionSettingsController.save(id: java.util.UUID)
+GET         /c/:id                       controllers.ConnectionSettingsController.editForm(id: java.util.UUID)
+GET         /c/:id/delete                controllers.ConnectionSettingsController.delete(id: java.util.UUID)
 
 # Query Interface
 GET         /q/:conn                     controllers.QueryController.main(conn: java.util.UUID)

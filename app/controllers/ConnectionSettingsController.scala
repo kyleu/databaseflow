@@ -10,7 +10,7 @@ import utils.{ ApplicationContext, EncryptUtils }
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ConnectionController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
+class ConnectionSettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
     val conn = ConnectionSettings.empty
     Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection", isNew = true)))

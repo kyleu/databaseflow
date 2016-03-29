@@ -50,7 +50,7 @@ class ConnectionService(
 
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
 
-    case st: GetTableRowData => timeReceive(st) { handleShowTableData(st.queryId, st.name) }
+    case trd: GetTableRowData => timeReceive(trd) { handleGetTableData(trd.queryId, trd.name) }
 
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
@@ -72,10 +72,10 @@ class ConnectionService(
     case _ => throw new IllegalArgumentException(action)
   }
 
-  private[this] def handleShowTableData(queryId: UUID, name: String) = schema.tables.find(_ == name) match {
-    case Some(table) => handleShowTableData(queryId, name)
+  private[this] def handleGetTableData(queryId: UUID, name: String) = schema.tables.find(_ == name) match {
+    case Some(table) => handleGetTableDetail(name)
     case None => schema.views.find(_ == name) match {
-      case Some(table) => handleShowTableData(queryId, name)
+      case Some(table) => handleGetViewDetail(name)
       case None =>
         log.warn(s"Attempted to view invalid table or view [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid table or view.")

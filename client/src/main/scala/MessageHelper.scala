@@ -4,7 +4,7 @@ import models._
 import models.template._
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
-import ui.TableManager
+import ui.{ TableManager, ViewManager }
 import utils.Logging
 
 trait MessageHelper { this: DatabaseFlow =>
@@ -18,6 +18,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case pr: PlanResultResponse => handlePlanResultResponse(pr)
 
     case tr: TableResultResponse => handleTableResultResponse(tr)
+    case vrr: ViewResultResponse => handleViewResultResponse(vrr)
 
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}")
@@ -57,6 +58,10 @@ trait MessageHelper { this: DatabaseFlow =>
 
   private[this] def handleTableResultResponse(tr: TableResultResponse) = {
     TableManager.addTable(tr.table)
+  }
+
+  private[this] def handleViewResultResponse(vrr: ViewResultResponse) = {
+    ViewManager.addView(vrr.table)
   }
 
   private[this] def handleServerError(reason: String, content: String) = {
