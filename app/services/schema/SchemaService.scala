@@ -41,7 +41,7 @@ object SchemaService {
       catalog = catalog,
       url = metadata.getURL,
       username = metadata.getUserName,
-      engine = metadata.getDatabaseProductName,
+      engine = db.engine.id,
       engineVersion = metadata.getDatabaseProductVersion,
       driver = metadata.getDriverName,
       driverVersion = metadata.getDriverVersion,

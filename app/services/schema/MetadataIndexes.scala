@@ -26,15 +26,21 @@ object MetadataIndexes {
     indexes.sortBy(_.name)
   }
 
+  private[this] def toInt(x: Any) = x match {
+    case i: Int => i
+    case s: Short => s.toInt
+    case _ => throw new IllegalStateException(x.getClass.getSimpleName)
+  }
+
   private[this] def fromRow(row: Row) = {
     // [index_qualifier], [pages], [filter_condition]
     val name = row.as[String]("index_name")
     val unique = !row.as[Boolean]("non_unique")
-    val position = row.as[Int]("ordinal_position")
+    val position = toInt(row.as[Any]("ordinal_position"))
     val ascending = row.asOpt[String]("asc_or_desc").getOrElse("A") == "A"
 
     val columnName = row.as[String]("column_name")
-    val typ = row.as[Int]("type") match {
+    val typ = toInt(row.as[Int]("type")) match {
       case DatabaseMetaData.tableIndexStatistic => "statistic"
       case DatabaseMetaData.tableIndexClustered => "clustered"
       case DatabaseMetaData.tableIndexHashed => "hashed"
@@ -44,6 +50,7 @@ object MetadataIndexes {
     val cardinality = row.as[Any]("cardinality") match {
       case l: Long => l
       case f: Float => f.toLong
+      case i: Int => i.toLong
       case x => throw new IllegalArgumentException(x.getClass.getName)
     }
     (name, unique, typ, cardinality, position, columnName, ascending)
