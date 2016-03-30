@@ -27,7 +27,6 @@ class MessageFrameFormatter(debug: Boolean) extends Logging {
 
   private[this] def jsValueToString(v: Js.Value) =
     if (debug) {
-      log.info(s"Decoding to json from source [${json.write(v, indent = 2)}].")
       json.write(v, indent = 2)
     } else {
       json.write(v)

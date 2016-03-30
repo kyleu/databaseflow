@@ -38,7 +38,7 @@ class ConnectionService(
 
   override def preStart() = {
     supervisor ! ConnectionStarted(user, id, self)
-    out ! InitialState(user.id, currentUsername, userPreferences, savedQueries, schema)
+    out ! InitialState(user.id, currentUsername, userPreferences, schema, savedQueries)
   }
 
   override def receiveRequest = {
@@ -50,7 +50,7 @@ class ConnectionService(
 
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
 
-    case trd: GetTableRowData => timeReceive(trd) { handleGetTableData(trd.queryId, trd.name) }
+    case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name) }
 
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
@@ -70,16 +70,6 @@ class ConnectionService(
     case "explain" => handleExplainQuery(queryId, sql)
     case "analyze" => handleAnalyzeQuery(queryId, sql)
     case _ => throw new IllegalArgumentException(action)
-  }
-
-  private[this] def handleGetTableData(queryId: UUID, name: String) = schema.tables.find(_ == name) match {
-    case Some(table) => handleGetTableDetail(name)
-    case None => schema.views.find(_ == name) match {
-      case Some(table) => handleGetViewDetail(name)
-      case None =>
-        log.warn(s"Attempted to view invalid table or view [$name].")
-        out ! ServerError("Invalid Table", s"[$name] is not a valid table or view.")
-    }
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

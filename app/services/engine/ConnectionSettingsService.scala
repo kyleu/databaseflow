@@ -19,7 +19,8 @@ object ConnectionSettingsService {
   val masterConnectionSettings = ConnectionSettings(
     id = masterId,
     engine = masterEngine,
-    name = "Database Flow Storage",
+    name = s"${utils.Config.projectName} Storage",
+    description = s"Internal storage used by ${utils.Config.projectName}.",
     url = masterUrl,
     username = masterUsername,
     password = masterPassword
