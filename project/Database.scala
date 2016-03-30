@@ -21,6 +21,4 @@ object Database {
     base = file("dblibs")
   )
     .settings(dblibsSettings: _*)
-    .aggregate(Shared.sharedJvm)
-    .dependsOn(Shared.sharedJvm)
 }

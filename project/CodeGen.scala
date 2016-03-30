@@ -20,4 +20,6 @@ object CodeGen {
     .settings(codegenSettings: _*)
     .aggregate(Database.dblibs)
     .dependsOn(Database.dblibs)
+    .aggregate(Shared.sharedJvm)
+    .dependsOn(Shared.sharedJvm)
 }

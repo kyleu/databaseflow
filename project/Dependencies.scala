@@ -15,9 +15,13 @@ object Dependencies {
 
   object Jdbc {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.5"
+
+    val db2 = "?" % "?" % "?"
     val h2 = "com.h2database" % "h2" % "1.4.191"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
+    val oracle = "?" % "?" % "?"
+    val sqlServer = "?" % "?" % "?"
   }
 
   object Play {
