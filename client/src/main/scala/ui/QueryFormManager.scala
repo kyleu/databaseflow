@@ -1,7 +1,8 @@
 package ui
 
 import models.query.SavedQuery
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import services.NavigationService
 
 import scala.scalajs.js
 
@@ -18,7 +19,14 @@ object QueryFormManager {
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
   def init() = {
-    $("", modal)
+    $("#input-query-cancel-link", modal).click { (e: JQueryEventObject) =>
+      modal.closeModal()
+      false
+    }
+    $("#input-query-save-link", modal).click { (e: JQueryEventObject) =>
+      save()
+      false
+    }
   }
 
   def show(savedQuery: SavedQuery) = {
@@ -39,5 +47,22 @@ object QueryFormManager {
 
     modal.openModal()
     inputName.focus()
+  }
+
+  private[this] def save() = {
+    val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
+      title = inputName.value().toString,
+      description = inputDescription.value().trim().toString match {
+      case d if d.isEmpty => None
+      case d => Some(d)
+    },
+      connection = if (inputConnectionTrue.is(":checked")) {
+      None
+    } else {
+      Some(NavigationService.connectionId)
+    },
+      public = inputPublicTrue.is(":checked")
+    )
+    utils.Logging.info(updated.toString)
   }
 }
