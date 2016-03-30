@@ -56,19 +56,19 @@ object SeedData {
     // Saved Queries
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
-      title = "Saved Query 1",
+      name = "Saved Query 1",
       sql = "select * from stuff"
     )))
 
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
-      title = "Saved Query 2",
+      name = "Saved Query 2",
       sql = "select * from stuff2"
     )))
 
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
-      title = "Saved Query 3",
+      name = "Saved Query 3",
       sql = "select * from stuff3"
     )))
   }

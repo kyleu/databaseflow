@@ -6,7 +6,7 @@ import org.scalajs.jquery.JQuery
 
 object SearchFilterManager {
   private[this] def savedQueryFields(id: String) = SavedQueryManager.savedQueries.get(UUID.fromString(id)) match {
-    case Some(sq) => Seq(id, sq.title, sq.description.getOrElse(""), sq.sql)
+    case Some(sq) => Seq(id, sq.name, sq.description.getOrElse(""), sq.sql)
     case None => Seq(id)
   }
   private[this] def tableFields(id: String) = TableManager.tables.get(id) match {

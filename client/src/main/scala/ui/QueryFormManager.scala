@@ -30,7 +30,7 @@ object QueryFormManager {
   }
 
   def show(savedQuery: SavedQuery) = {
-    inputName.value(savedQuery.title)
+    inputName.value(savedQuery.name)
     inputDescription.value(savedQuery.description.getOrElse(""))
 
     if (savedQuery.public) {
@@ -51,7 +51,7 @@ object QueryFormManager {
 
   private[this] def save() = {
     val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
-      title = inputName.value().toString,
+      name = inputName.value().toString,
       description = inputDescription.value().trim().toString match {
       case d if d.isEmpty => None
       case d => Some(d)

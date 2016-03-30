@@ -20,13 +20,16 @@ object SavedQueryManager {
   }
 
   private[this] def addSavedQuery(savedQuery: SavedQuery) = {
-    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery.id, savedQuery.title, savedQuery.description, savedQuery.sql).toString)
-    TabManager.addTab(savedQuery.id, savedQuery.title, Icons.savedQuery)
+    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery.id, savedQuery.name, savedQuery.description, savedQuery.sql).toString)
+    TabManager.addTab(savedQuery.id, savedQuery.name, Icons.savedQuery)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
+
     $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      val sq = savedQuery.copy(sql = "???")
-      QueryFormManager.show(SavedQuery(sql = "???"))
+      QueryFormManager.show(savedQuery.copy(
+        name = "Copy of " + savedQuery.name,
+        sql = "???"
+      ))
       false
     })
 

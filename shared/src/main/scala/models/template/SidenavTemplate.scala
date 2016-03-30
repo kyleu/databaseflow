@@ -7,9 +7,9 @@ import scalatags.Text.all._
 object SidenavTemplate {
   def savedQueries(sqs: Seq[SavedQuery]) = {
     sqs.map { sq =>
-      li(a(id := "saved-query-" + sq.id, cls := "saved-query-link waves-effect waves-light", title := sq.title, href := "#saved-query-" + sq.id)(
+      li(a(id := "saved-query-" + sq.id, cls := "saved-query-link waves-effect waves-light", title := sq.name, href := "#saved-query-" + sq.id)(
         em(cls := s"fa ${Icons.savedQuery}"),
-        span(title := sq.title)(sq.title)
+        span(title := sq.name)(sq.name)
       ))
     }
   }

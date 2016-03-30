@@ -35,7 +35,9 @@ object AdHocQueryManager {
     val queryPanel = $(s"#panel-$queryId")
 
     $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      QueryFormManager.show(SavedQuery(sql = "???"))
+      QueryFormManager.show(SavedQuery(
+        sql = "???"
+      ))
       false
     })
 

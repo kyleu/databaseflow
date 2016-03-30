@@ -5,7 +5,7 @@ case object CreateSavedQueriesTable extends CreateTableStatement("saved_queries"
     create table $tableName (
       id uuid not null primary key,
 
-      title ${eng.varchar}(1024) not null,
+      name ${eng.varchar}(1024) not null,
       description ${eng.varchar}(4096),
       sql ${eng.varchar}(65536) not null,
 

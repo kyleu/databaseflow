@@ -9,29 +9,29 @@ import utils.DateUtils
 
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val tableName = "saved_queries"
-  override protected val columns = Seq("id", "title", "description", "sql", "owner", "connection", "public", "last_ran", "created", "updated")
-  override protected val searchColumns = Seq("id", "owner", "connection", "title", "sql")
+  override protected val columns = Seq("id", "name", "description", "sql", "owner", "connection", "public", "last_ran", "created", "updated")
+  override protected val searchColumns = Seq("id", "name", "description", "sql", "owner", "connection")
 
   val insert = Insert
   def getById(id: UUID) = GetById(Seq(id))
   def getByOwner(userId: UUID) = GetAll(
     whereClause = Some("owner = ? or owner is null"),
-    orderBy = "title",
+    orderBy = "name",
     values = Seq(userId)
   )
   val search = Search
   val removeById = RemoveById
 
-  case class UpdateSavedQuery(id: UUID, title: String, sqlString: String) extends Statement {
-    override val sql = updateSql(Seq("title", "sql", "updated"))
-    override val values = Seq[Any](title, sqlString, DateUtils.now, id)
+  case class UpdateSavedQuery(sq: SavedQuery) extends Statement {
+    override val sql = updateSql(Seq("name", "sql", "updated"))
+    override val values = Seq[Any](sq.name, sq.sql, DateUtils.now, sq.id)
   }
 
   override protected def fromRow(row: Row) = {
     SavedQuery(
       id = row.as[UUID]("id"),
 
-      title = row.as[String]("title"),
+      name = row.as[String]("name"),
       description = row.asOpt[String]("description"),
       sql = row.as[String]("sql"),
 
@@ -46,6 +46,6 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   }
 
   override protected def toDataSeq(q: SavedQuery) = Seq[Any](
-    q.id, q.title, q.description, q.sql, q.owner, q.connection, q.public, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
+    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.public, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
   )
 }

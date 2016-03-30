@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.GetViewDetail
+import models.{ GetTableRowData, GetViewDetail }
 import models.schema.Table
 import models.template.{ Icons, ViewDetailTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
@@ -47,7 +47,7 @@ object ViewManager {
   }
 
   private[this] def viewData(queryId: UUID, viewName: String) = {
-    utils.NetworkMessage.sendMessage(GetViewDetail(name = viewName))
+    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = viewName))
   }
 
   private[this] def setViewDetails(uuid: UUID, view: Table) = {

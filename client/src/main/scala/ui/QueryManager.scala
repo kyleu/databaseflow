@@ -27,10 +27,6 @@ object QueryManager {
     wire($(".explain-query-link", queryPanel), "explain")
     wire($(".analyze-query-link", queryPanel), "analyze")
 
-    $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      false
-    })
-
     $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
       QueryManager.closeQuery(queryId, Some(sqlEditor))
       false
