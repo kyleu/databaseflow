@@ -11,6 +11,8 @@ import scala.scalajs.js.timers.setTimeout
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
+  var sqlEditors = Map.empty[UUID, js.Dynamic]
+
   lazy val workspace = $("#workspace")
 
   def addQuery(queryId: UUID, queryPanel: JQuery, onChange: (String) => Unit, onClose: () => Unit): Unit = {
@@ -38,6 +40,12 @@ object QueryManager {
     }
 
     activeQueries = activeQueries :+ queryId
+    sqlEditors = sqlEditors + (queryId -> sqlEditor)
+  }
+
+  def getSql(queryId: UUID) = sqlEditors.get(queryId) match {
+    case Some(editor) => editor.getValue().toString
+    case None => ""
   }
 
   def closeQuery(queryId: UUID, editor: Option[js.Dynamic]): Unit = {
@@ -49,6 +57,7 @@ object QueryManager {
 
     val originalIndex = activeQueries.indexOf(queryId)
     activeQueries = activeQueries.filterNot(_ == queryId)
+    sqlEditors = sqlEditors - queryId
 
     editor.map(_.destroy())
     $(s"#panel-$queryId").remove()
