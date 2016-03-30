@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.template.{ Icons, SqlEditorTemplate }
+import models.template.Icons
 import models.{ RequestMessage, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
@@ -11,16 +11,16 @@ import scala.scalajs.js.timers.setTimeout
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
-  private[this] lazy val workspace = $("#workspace")
+  lazy val workspace = $("#workspace")
 
-  def addQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String, icon: String, onClose: () => Unit): Unit = {
-    TabManager.initIfNeeded()
-
-    workspace.append(SqlEditorTemplate.forQuery(queryId, queryName, sql, icon).toString)
-
-    TabManager.addTab(queryId, queryName, icon)
-
-    val sqlEditor = EditorManager.initSqlEditor(queryId)
+  def addQuery(
+    queryId: UUID,
+    queryPanel: JQuery,
+    sendMessage: (RequestMessage) => Unit,
+    onChange: (String) => Unit,
+    onClose: () => Unit
+  ): Unit = {
+    val sqlEditor = EditorManager.initSqlEditor(queryId, onChange)
 
     def wire(q: JQuery, action: String) = q.click({ (e: JQueryEventObject) =>
       val sql = sqlEditor.getValue().toString
@@ -29,20 +29,20 @@ object QueryManager {
       false
     })
 
-    val queryPanel = $(s"#panel-$queryId")
-
     wire($(".run-query-link", queryPanel), "run")
     wire($(".explain-query-link", queryPanel), "explain")
     wire($(".analyze-query-link", queryPanel), "analyze")
 
+    $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+      false
+    })
+
     $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
       QueryManager.closeQuery(queryId, Some(sqlEditor), sendMessage)
-      onClose()
       false
     })
 
     sqlEditor.selection.selectAll()
-
     setTimeout(500) {
       sqlEditor.focus()
     }
@@ -52,7 +52,7 @@ object QueryManager {
 
   def closeQuery(queryId: UUID, editor: Option[js.Dynamic], sendMessage: (RequestMessage) => Unit): Unit = {
     if (activeQueries.size == 1) {
-      AdHocQueryManager.addNewQuery(sendMessage)
+      AdHocQueryManager.addNewQuery(sendMessage = sendMessage)
     }
 
     //utils.Logging.info(s"Closing [$queryId].")

@@ -12,10 +12,12 @@ object Icons {
   val sectionClosed = "fa-angle-right"
   val sectionOpen = "fa-angle-down"
 
+  val sortable = "fa-sort"
   val sortedAsc = "fa-sorted"
   val sortedDesc = "fa-chevron-down"
 
   val database = "fa-database"
+  val user = "fa-user"
 
   val newQuery = "fa-plus-square-o"
 

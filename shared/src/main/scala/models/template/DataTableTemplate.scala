@@ -9,14 +9,12 @@ object DataTableTemplate {
   private[this] def tableHeader(res: QueryResult) = {
 
     def str(name: String) = if (res.sortable) {
-      val icon = if (res.sortedColumn.contains(name)) {
-        if (res.sortedAscending.contains(false)) {
-          Icons.sortedAsc
-        } else {
-          Icons.sortedDesc
-        }
+      if (res.sortedColumn.contains(name)) {
+        val icon = if (res.sortedAscending.contains(false)) { Icons.sortedDesc } else { Icons.sortedAsc }
+        Seq(i(cls := s"right fa $icon"), span(cls := "sorted-title")(name))
+      } else {
+        Seq(i(cls := s"sort-icon fa ${Icons.sortable}"), span(cls := "sorted-title")(name))
       }
-      Seq(i(cls := s"sort-icon fa fa-$icon"), span(cls := "sorted-title")(name))
     } else {
       Seq(span(name))
     }
@@ -40,13 +38,16 @@ object DataTableTemplate {
     }
     col.relationTable match {
       case Some(relTable) if contentEl._2 => td(
-        i(
-          cls := s"query-rel-link right fa ${Icons.relation}",
+        a(
+          cls := "query-rel-link",
+          href := "#",
           title := s"Open [$relTable] table filtered with [${col.relationColumn.getOrElse("")} ${v.getOrElse("0")}]",
           data("rel-table") := relTable,
           data("rel-id") := v.getOrElse("")
-        ),
-        span(cls := "query-rel-title")(contentEl._1)
+        )(
+            i(cls := s"fa ${Icons.relation}"),
+            span(contentEl._1)
+          )
       )
       case _ => td(contentEl._1)
     }

@@ -2,16 +2,17 @@ package ui
 
 import java.util.UUID
 
-import models.RequestMessage
-import models.template.Icons
+import models.{ RequestMessage, SubmitQuery }
+import models.template.{ Icons, QueryEditorTemplate }
+import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
+import scala.scalajs.js
 import scala.util.Random
 
 object AdHocQueryManager {
   private[this] var lastNum = 1
 
-  def addNewQuery(sendMessage: (RequestMessage) => Unit) = {
-    val queryId = UUID.randomUUID
+  def addNewQuery(queryId: UUID = UUID.randomUUID, sendMessage: (RequestMessage) => Unit) = {
     val queryName = if (lastNum == 1) {
       "Untitled Query"
     } else {
@@ -24,7 +25,32 @@ object AdHocQueryManager {
         s"select * from ${s.tables(Random.nextInt(s.tables.size))} limit 5;"
       }
     }.getOrElse("")
-    QueryManager.addQuery(sendMessage, queryId, queryName, sql, Icons.adHocQuery, () => Unit)
+    addAdHocQuery(sendMessage, queryId, queryName, sql)
     lastNum += 1
   }
+
+  def addAdHocQuery(sendMessage: (RequestMessage) => Unit, queryId: UUID, queryName: String, sql: String): Unit = {
+    QueryManager.workspace.append(QueryEditorTemplate.forAdHocQuery(queryId, queryName, sql).toString)
+    TabManager.addTab(queryId, queryName, Icons.adHocQuery)
+
+    val queryPanel = $(s"#panel-$queryId")
+
+    $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+      val modal = js.Dynamic.global.$("#save-query-modal")
+      utils.Logging.info(modal.length.toString)
+      modal.openModal()
+      false
+    })
+
+    def onChange(s: String): Unit = {
+      if (s == sql) {
+        $(".unsaved-status", queryPanel).css("display", "none")
+      } else {
+        $(".unsaved-status", queryPanel).css("display", "inline")
+      }
+    }
+
+    QueryManager.addQuery(queryId, queryPanel, sendMessage, onChange, () => Unit)
+  }
+
 }
