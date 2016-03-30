@@ -1,3 +1,5 @@
+import java.util.UUID
+
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NavigationService
 import ui._
@@ -10,7 +12,7 @@ trait InitHelper { this: DatabaseFlow =>
     utils.Logging.installErrorHandler()
 
     $("#new-query-link").click({ (e: JQueryEventObject) =>
-      AdHocQueryManager.addNewQuery(sendMessage)
+      AdHocQueryManager.addNewQuery(sendMessage = sendMessage)
       false
     })
 
@@ -24,11 +26,16 @@ trait InitHelper { this: DatabaseFlow =>
     connect()
   }
 
-  protected[this] def performInitialAction() = NavigationService.initialMessage match {
-    case ("new", None) => AdHocQueryManager.addNewQuery(sendMessage)
-    case ("table", Some(id)) => TableManager.tableDetail(id, sendMessage)
-    case ("view", Some(id)) => ViewManager.viewDetail(id, sendMessage)
-    case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id, sendMessage)
-    case (key, id) => utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
+  protected[this] def performInitialAction() = {
+    TabManager.initIfNeeded()
+    NavigationService.initialMessage match {
+      case ("new", None) => AdHocQueryManager.addNewQuery(sendMessage = sendMessage)
+      case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id), sendMessage = sendMessage)
+      case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id), sendMessage)
+      case ("table", Some(id)) => TableManager.tableDetail(id, sendMessage)
+      case ("view", Some(id)) => ViewManager.viewDetail(id, sendMessage)
+      case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id, sendMessage)
+      case (key, id) => utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
+    }
   }
 }

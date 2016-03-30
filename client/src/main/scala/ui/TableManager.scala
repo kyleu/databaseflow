@@ -27,7 +27,6 @@ object TableManager {
       }
 
       val queryId = UUID.randomUUID
-      TabManager.initIfNeeded()
       WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
       TabManager.addTab(queryId, name, Icons.table)

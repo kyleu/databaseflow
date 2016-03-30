@@ -1,5 +1,7 @@
 package ui
 
+import java.util.UUID
+
 import models.template.Icons
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
@@ -61,15 +63,14 @@ object SearchManager {
   def clearSearchEntries(o: Option[scala.Seq[(String, JQuery, JQuery)]], toggle: JQuery) = {
     closeIfOpen(toggle)
     o.foreach(_.foreach { x =>
-      x._3.text(x._1)
+      x._3.text(x._3.attr("title").getOrElse(x._1))
       x._2.show()
     })
   }
 
   private[this] def clearSearch() = {
     $(".saved-query-link, .table-link, .view-link, .procedure-link").removeClass("search-ignored")
-    closeIfOpen(savedQueriesToggle)
-    clearSearchEntries(MetadataManager.savedQueries.map(_.map(x => (x._1.id.toString, x._2, x._3))), savedQueriesToggle)
+    clearSearchEntries(MetadataManager.savedQueries, savedQueriesToggle)
     clearSearchEntries(MetadataManager.tables, tablesToggle)
     clearSearchEntries(MetadataManager.views, viewsToggle)
     clearSearchEntries(MetadataManager.procedures, proceduresToggle)

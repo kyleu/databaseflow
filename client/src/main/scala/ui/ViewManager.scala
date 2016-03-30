@@ -23,7 +23,7 @@ object ViewManager {
       TabManager.selectTab(queryId)
     case None =>
       val queryId = UUID.randomUUID
-      TabManager.initIfNeeded()
+
       WorkspaceManager.append(ViewDetailTemplate.forView(queryId, name).toString)
 
       TabManager.addTab(queryId, name, Icons.view)

@@ -2,20 +2,24 @@ package ui
 
 import java.util.UUID
 
+import models.engine.DatabaseEngine
 import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
 object MetadataManager {
-  var savedQueries: Option[Seq[(SavedQuery, JQuery, JQuery)]] = None
-
+  var engine: Option[DatabaseEngine] = None
   var schema: Option[Schema] = None
+
+  var savedQueries: Option[Seq[(String, JQuery, JQuery)]] = None
   var tables: Option[Seq[(String, JQuery, JQuery)]] = None
   var views: Option[Seq[(String, JQuery, JQuery)]] = None
   var procedures: Option[Seq[(String, JQuery, JQuery)]] = None
 
   def setSavedQueries(sq: Seq[SavedQuery], onClick: (UUID) => Unit) = {
+    SavedQueryManager.savedQueries = sq.map(s => s.id -> s).toMap
+
     if (sq.nonEmpty) {
       $("#saved-query-list-toggle").css("display", "block")
       $("#saved-query-list").html(SidenavTemplate.savedQueries(sq).mkString("\n"))
@@ -27,9 +31,10 @@ object MetadataManager {
     } else {
       $("#saved-query-list-toggle").css("display", "none")
     }
+
     savedQueries = Some(sq.map { x =>
       val el = $("#saved-query-" + x.id)
-      (x, el, $("span", el))
+      (x.id.toString, el, $("span", el))
     })
   }
 
@@ -83,9 +88,10 @@ object MetadataManager {
     })
 
     schema = Some(sch)
+    engine = Some(DatabaseEngine.get(sch.engine))
   }
 
-  def getSavedQuery(id: UUID) = savedQueries.flatMap(_.find(_._1 == id)).map(_._1)
+  def getSavedQuery(id: String) = savedQueries.flatMap(_.find(_._1 == id)).map(_._1)
   def getTable(name: String) = tables.flatMap(_.find(_._1 == name))
   def getView(name: String) = views.flatMap(_.find(_._1 == name))
   def getProcedure(name: String) = procedures.flatMap(_.find(_._1 == name))

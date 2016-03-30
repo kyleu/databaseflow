@@ -17,7 +17,6 @@ object ProcedureManager {
       TabManager.selectTab(queryId)
     case None =>
       val queryId = UUID.randomUUID
-      TabManager.initIfNeeded()
       WorkspaceManager.append(ProcedureDetailTemplate.forProcedure(queryId, name).toString)
 
       TabManager.addTab(queryId, name, Icons.procedure)

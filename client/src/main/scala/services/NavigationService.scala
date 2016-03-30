@@ -22,6 +22,7 @@ object NavigationService {
 
   def initialMessage = Option(loc.hash).getOrElse("").stripPrefix("#") match {
     case x if x.isEmpty || x == "new" => "new" -> None
+    case x if x.startsWith("saved-query-") => "saved-query" -> Some(x.substring(12))
     case x if x.startsWith("table-") => "table" -> Some(x.substring(6))
     case x if x.startsWith("view-") => "view" -> Some(x.substring(5))
     case x if x.startsWith("procedure-") => "procedure" -> Some(x.substring(10))

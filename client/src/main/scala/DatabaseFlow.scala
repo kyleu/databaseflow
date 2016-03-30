@@ -1,4 +1,5 @@
 import models.InitialState
+import models.engine.DatabaseEngine
 import org.scalajs.jquery.{ jQuery => $ }
 import ui._
 
@@ -15,8 +16,7 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
     //  s"[${is.schema.tables.size}] tables, [${is.schema.procedures.size}] procedures, and [${is.schema.views.size}] views.")
 
     MetadataManager.setSavedQueries(is.savedQueries, (id) => {
-      val savedQuery = MetadataManager.getSavedQuery(id).getOrElse(throw new IllegalStateException(s"Unknown saved query [$id]."))
-      SavedQueryManager.savedQueryDetail(savedQuery, sendMessage)
+      SavedQueryManager.savedQueryDetail(id, sendMessage)
     })
 
     MetadataManager.setSchema(is.schema, (key, name) => key match {

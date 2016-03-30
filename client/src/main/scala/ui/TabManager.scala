@@ -13,7 +13,7 @@ object TabManager {
   private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
 
   def initIfNeeded() = if (!initialized) {
-    tabBar.addClass("tabs")
+    $("#tab-loading").remove()
     initialized = true
   }
 
