@@ -7,11 +7,11 @@ import services.database.ssl.SslSettings
 
 case class PoolSettings(
   id: UUID = UUID.randomUUID,
+  name: Option[String] = None,
   engine: DatabaseEngine,
   url: String,
   username: String,
   password: String,
-  name: Option[String] = None,
   maxWait: Long = 1000,
   maxSize: Int = 1,
   jdbcProperties: Map[String, String] = Map.empty,

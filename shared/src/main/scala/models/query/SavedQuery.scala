@@ -4,10 +4,15 @@ import java.util.UUID
 
 case class SavedQuery(
   id: UUID,
-  owner: Option[UUID],
-  title: String,
-  sql: String,
+  title: String = "Untitled Query",
+  sql: String = "",
+
+  owner: Option[UUID] = None,
+  connection: Option[UUID] = None,
+  public: Boolean = false,
+
   lastRan: Option[Long] = None,
-  created: Long,
-  updated: Long
+
+  created: Long = System.currentTimeMillis,
+  updated: Long = System.currentTimeMillis
 )

@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import models.plan.{ PlanNode, PlanResult }
+import models.plan.PlanResult
 import models.query.{ QueryError, QueryResult, SavedQuery }
 import models.schema.{ Procedure, Schema, Table }
 import models.user.UserPreferences
@@ -16,8 +16,8 @@ case class InitialState(
   userId: UUID,
   username: Option[String],
   preferences: UserPreferences,
-  savedQueries: Seq[SavedQuery],
-  schema: Schema
+  schema: Schema,
+  savedQueries: Seq[SavedQuery]
 ) extends ResponseMessage
 
 case class Pong(timestamp: Long) extends ResponseMessage

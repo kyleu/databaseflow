@@ -56,32 +56,20 @@ object SeedData {
     // Saved Queries
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
-      owner = None,
       title = "Saved Query 1",
-      sql = "select * from stuff",
-      lastRan = None,
-      created = DateUtils.nowMillis,
-      updated = DateUtils.nowMillis
+      sql = "select * from stuff"
     )))
 
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
-      owner = None,
       title = "Saved Query 2",
-      sql = "select * from stuff2",
-      lastRan = None,
-      created = DateUtils.nowMillis,
-      updated = DateUtils.nowMillis
+      sql = "select * from stuff2"
     )))
 
     db.execute(SavedQueryQueries.insert(SavedQuery(
       id = UUID.randomUUID,
-      owner = None,
       title = "Saved Query 3",
-      sql = "select * from stuff3",
-      lastRan = None,
-      created = DateUtils.nowMillis,
-      updated = DateUtils.nowMillis
+      sql = "select * from stuff3"
     )))
   }
 }
