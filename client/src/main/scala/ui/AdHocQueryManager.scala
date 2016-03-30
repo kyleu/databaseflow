@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.query.SavedQuery
 import models.{ RequestMessage, SubmitQuery }
 import models.template.{ Icons, QueryEditorTemplate }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
@@ -36,9 +37,7 @@ object AdHocQueryManager {
     val queryPanel = $(s"#panel-$queryId")
 
     $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      val modal = js.Dynamic.global.$("#save-query-modal")
-      utils.Logging.info(modal.length.toString)
-      modal.openModal()
+      QueryFormManager.show(SavedQuery(sql = "???"))
       false
     })
 

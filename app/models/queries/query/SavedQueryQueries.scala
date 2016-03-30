@@ -9,7 +9,7 @@ import utils.DateUtils
 
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val tableName = "saved_queries"
-  override protected val columns = Seq("id", "title", "sql", "owner", "connection", "public", "last_ran", "created", "updated")
+  override protected val columns = Seq("id", "title", "description", "sql", "owner", "connection", "public", "last_ran", "created", "updated")
   override protected val searchColumns = Seq("id", "owner", "connection", "title", "sql")
 
   val insert = Insert
@@ -32,6 +32,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
       id = row.as[UUID]("id"),
 
       title = row.as[String]("title"),
+      description = row.asOpt[String]("description"),
       sql = row.as[String]("sql"),
 
       owner = row.asOpt[UUID]("owner"),
@@ -44,7 +45,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
     )
   }
 
-  override protected def toDataSeq(q: SavedQuery) = {
-    Seq[Any](q.id, q.title, q.sql, q.owner, q.connection, q.public, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated))
-  }
+  override protected def toDataSeq(q: SavedQuery) = Seq[Any](
+    q.id, q.title, q.description, q.sql, q.owner, q.connection, q.public, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
+  )
 }

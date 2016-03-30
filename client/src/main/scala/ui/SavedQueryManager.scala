@@ -7,8 +7,6 @@ import models.query.SavedQuery
 import models.template.{ Icons, QueryEditorTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
-import scala.scalajs.js
-
 object SavedQueryManager {
   var savedQueries = Map.empty[UUID, SavedQuery]
   var openSavedQueries = Set.empty[UUID]
@@ -23,22 +21,21 @@ object SavedQueryManager {
   }
 
   private[this] def addSavedQuery(savedQuery: SavedQuery, sendMessage: (RequestMessage) => Unit) = {
-    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery.id, savedQuery.title, savedQuery.sql).toString)
+    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery.id, savedQuery.title, savedQuery.description, savedQuery.sql).toString)
     TabManager.addTab(savedQuery.id, savedQuery.title, Icons.savedQuery)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
     $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      val modal = js.Dynamic.global.$("#save-query-modal")
-      utils.Logging.info(modal.length.toString)
-      modal.openModal()
+      val sq = savedQuery.copy(sql = "???")
+      QueryFormManager.show(SavedQuery(sql = "???"))
       false
     })
 
     def onChange(s: String): Unit = {
       if (s == savedQuery.sql) {
-        $(".unsaved-status", queryPanel).hide()
+        $(".unsaved-status", queryPanel).css("display", "none")
       } else {
-        $(".unsaved-status", queryPanel).show()
+        $(".unsaved-status", queryPanel).css("display", "inline")
       }
     }
 

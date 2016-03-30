@@ -3,8 +3,9 @@ package models.query
 import java.util.UUID
 
 case class SavedQuery(
-  id: UUID,
+  id: UUID = UUID.randomUUID,
   title: String = "Untitled Query",
+  description: Option[String] = None,
   sql: String = "",
 
   owner: Option[UUID] = None,
