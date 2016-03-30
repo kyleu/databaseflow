@@ -2,9 +2,9 @@ package ui
 
 import java.util.UUID
 
+import models.GetViewDetail
 import models.schema.Table
 import models.template.{ Icons, ViewDetailTemplate }
-import models.{ GetViewDetail, RequestMessage }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
 object ViewManager {
@@ -18,7 +18,7 @@ object ViewManager {
     }
   }
 
-  def viewDetail(name: String, sendMessage: (RequestMessage) => Unit) = openViews.get(name) match {
+  def viewDetail(name: String) = openViews.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
@@ -33,21 +33,21 @@ object ViewManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, name, sendMessage)
+        viewData(queryId, name)
         false
       })
 
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openViews = openViews - name
-        QueryManager.closeQuery(queryId, None, sendMessage)
+        QueryManager.closeQuery(queryId, None)
         false
       })
 
       openViews = openViews + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, viewName: String, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(GetViewDetail(name = viewName))
+  private[this] def viewData(queryId: UUID, viewName: String) = {
+    utils.NetworkMessage.sendMessage(GetViewDetail(name = viewName))
   }
 
   private[this] def setViewDetails(uuid: UUID, view: Table) = {

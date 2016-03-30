@@ -2,14 +2,13 @@ package ui
 
 import java.util.UUID
 
-import models.RequestMessage
 import models.schema.Table
 import models.template.{ Icons, TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
 object TableObjectManager {
-  def wire(queryPanel: JQuery, queryId: UUID, name: String, sendMessage: (RequestMessage) => Unit) = {
+  def wire(queryPanel: JQuery, queryId: UUID, name: String) = {
     def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 
     $(".foreign-keys-link", queryPanel).click({ (e: JQueryEventObject) =>

@@ -15,7 +15,7 @@ trait NetworkHelper { this: DatabaseFlow =>
 
   private def sendPing(): Unit = {
     if (socket.connected) {
-      sendMessage(Ping(System.currentTimeMillis))
+      utils.NetworkMessage.sendMessage(Ping(System.currentTimeMillis))
     }
     setTimeout(10000)(sendPing())
   }

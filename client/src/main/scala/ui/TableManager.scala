@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.schema.Table
 import models.template.{ Icons, TableDetailTemplate }
-import models.{ GetTableDetail, RequestMessage, GetTableRowData }
+import models.{ GetTableDetail, GetTableRowData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
 object TableManager {
@@ -18,12 +18,12 @@ object TableManager {
     }
   }
 
-  def tableDetail(name: String, sendMessage: (RequestMessage) => Unit) = openTables.get(name) match {
+  def tableDetail(name: String) = openTables.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
       if (!tables.isDefinedAt(name)) {
-        sendMessage(GetTableDetail(name))
+        utils.NetworkMessage.sendMessage(GetTableDetail(name))
       }
 
       val queryId = UUID.randomUUID
@@ -36,23 +36,23 @@ object TableManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, name, sendMessage)
+        viewData(queryId, name)
         false
       })
 
-      TableObjectManager.wire(queryPanel, queryId, name, sendMessage)
+      TableObjectManager.wire(queryPanel, queryId, name)
 
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openTables = openTables - name
-        QueryManager.closeQuery(queryId, None, sendMessage)
+        QueryManager.closeQuery(queryId, None)
         false
       })
 
       openTables = openTables + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, name: String, sendMessage: (RequestMessage) => Unit) = {
-    sendMessage(GetTableRowData(queryId = queryId, name = name))
+  private[this] def viewData(queryId: UUID, name: String) = {
+    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name))
   }
 
   private[this] def setTableDetails(uuid: UUID, table: Table) = {

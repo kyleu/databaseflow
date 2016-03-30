@@ -1,5 +1,4 @@
-import models.InitialState
-import models.engine.DatabaseEngine
+import models.{ InitialState, RequestMessage }
 import org.scalajs.jquery.{ jQuery => $ }
 import ui._
 
@@ -16,13 +15,13 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
     //  s"[${is.schema.tables.size}] tables, [${is.schema.procedures.size}] procedures, and [${is.schema.views.size}] views.")
 
     MetadataManager.setSavedQueries(is.savedQueries, (id) => {
-      SavedQueryManager.savedQueryDetail(id, sendMessage)
+      SavedQueryManager.savedQueryDetail(id)
     })
 
     MetadataManager.setSchema(is.schema, (key, name) => key match {
-      case "table" => TableManager.tableDetail(name, sendMessage)
-      case "view" => ViewManager.viewDetail(name, sendMessage)
-      case "procedure" => ProcedureManager.procedureDetail(name, sendMessage)
+      case "table" => TableManager.tableDetail(name)
+      case "view" => ViewManager.viewDetail(name)
+      case "procedure" => ProcedureManager.procedureDetail(name)
     })
 
     $("#loading-panel").hide()

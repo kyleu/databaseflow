@@ -1,0 +1,17 @@
+package utils
+
+import models.RequestMessage
+
+object NetworkMessage {
+  private[this] var sendF: Option[(RequestMessage) => Unit] = None
+
+  def register(f: (RequestMessage) => Unit) = sendF match {
+    case Some(dbf) => throw new IllegalStateException("Double registration.")
+    case None => sendF = Some(f)
+  }
+
+  def sendMessage(requestMessage: RequestMessage) = sendF match {
+    case Some(f) => f(requestMessage)
+    case None => throw new IllegalStateException("Message send before start.")
+  }
+}

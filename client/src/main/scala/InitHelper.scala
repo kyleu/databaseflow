@@ -3,7 +3,7 @@ import java.util.UUID
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NavigationService
 import ui._
-import utils.Logging
+import utils.{ Logging, NetworkMessage }
 
 import scala.scalajs.js
 
@@ -11,8 +11,10 @@ trait InitHelper { this: DatabaseFlow =>
   protected[this] def init() {
     utils.Logging.installErrorHandler()
 
+    NetworkMessage.register(sendMessage)
+
     $("#new-query-link").click({ (e: JQueryEventObject) =>
-      AdHocQueryManager.addNewQuery(sendMessage = sendMessage)
+      AdHocQueryManager.addNewQuery()
       false
     })
 
@@ -21,6 +23,7 @@ trait InitHelper { this: DatabaseFlow =>
 
     EditorManager.initEditorFramework()
     SearchManager.init()
+    QueryFormManager.init()
 
     Logging.debug("Database Flow has started.")
     connect()
@@ -29,12 +32,12 @@ trait InitHelper { this: DatabaseFlow =>
   protected[this] def performInitialAction() = {
     TabManager.initIfNeeded()
     NavigationService.initialMessage match {
-      case ("new", None) => AdHocQueryManager.addNewQuery(sendMessage = sendMessage)
-      case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id), sendMessage = sendMessage)
-      case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id), sendMessage)
-      case ("table", Some(id)) => TableManager.tableDetail(id, sendMessage)
-      case ("view", Some(id)) => ViewManager.viewDetail(id, sendMessage)
-      case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id, sendMessage)
+      case ("new", None) => AdHocQueryManager.addNewQuery()
+      case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
+      case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))
+      case ("table", Some(id)) => TableManager.tableDetail(id)
+      case ("view", Some(id)) => ViewManager.viewDetail(id)
+      case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
       case (key, id) => utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
     }
   }
