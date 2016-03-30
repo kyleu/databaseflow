@@ -12,7 +12,9 @@
         <div>@c.description</div>
         <em style="display: block;">@c.url</em>
         <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn" style="margin: 10px 0;">Query</a>
-        <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
+        @if(c.id != services.engine.ConnectionSettingsService.masterId) {
+          <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
+        }
       </div>
     </div>
   </li>

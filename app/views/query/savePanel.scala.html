@@ -1,0 +1,53 @@
+@()
+<div id="save-query-modal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <form class="col s12">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="input-query-name" name="name" type="text" class="validate">
+            <label for="input-query-name">Query Name</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="input-query-description" name="description" type="text" class="validate">
+            <label for="input-query-description">Description</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <div class="card-panel option-panel">
+              <h6><i class="fa @models.template.Icons.user"></i> Available To</h6>
+              <p>
+                <input id="input-public-true" name="public" type="radio" value="true" checked="checked" />
+                <label for="input-public-true">Everyone</label>
+              </p>
+              <p>
+                <input id="input-public-false" name="public" type="radio" value="false" />
+                <label for="input-public-false">Only Myself</label>
+              </p>
+              <div class="clear"></div>
+            </div>
+          </div>
+          <div class="input-field col s12 m6">
+            <div class="card-panel option-panel">
+              <h6><i class="fa @models.template.Icons.database"></i> Available From</h6>
+              <p>
+                <input id="input-connection-true" name="connection" type="radio" value="true" checked="checked" />
+                <label for="input-connection-true">All Databases</label>
+              </p>
+              <p>
+                <input id="input-connection-false" name="connection" type="radio" value="false" />
+                <label for="input-connection-false">This Database Only</label>
+              </p>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="modal-action modal-close waves-effect waves-light btn-flat">Cancel</a>
+    <a href="#" class="modal-action modal-close waves-effect waves-light btn-flat">Save</a>
+  </div>
+</div>

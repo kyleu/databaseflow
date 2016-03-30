@@ -5,7 +5,10 @@
 
   <main class="indent">
     <div class="tab-container z-depth-1">
-      <ul id="query-tabs">
+      <ul id="query-tabs" class="tabs">
+        <li id="tab-loading" class="tab col s3">
+          <a href="#loading-panel"><i class="fa @models.template.Icons.database"></i> Loading @dbName</a>
+        </li>
       </ul>
     </div>
 
@@ -24,6 +27,8 @@
         </div>
       </div>
     </div>
+
+    @views.html.query.savePanel()
   </main>
 
   @if(debug) {
