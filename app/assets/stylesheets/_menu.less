@@ -105,6 +105,22 @@ ul#main-menu {
     i {
       margin-right: 2px;
     }
+    a:hover, li.active {
+      .show-list-link {
+        display: block;
+      }
+    }
+    .show-list-link {
+      display: none;
+      float: right;
+      height: 32px;
+      line-height: 32px;
+      color: #aaa;
+      cursor: pointer;
+      margin-right: 6px;
+      margin-top: 8px;
+      font-size: 1.3rem;
+    }
   }
 
   ul.submenu a {

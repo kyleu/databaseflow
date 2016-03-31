@@ -11,6 +11,7 @@ object Icons {
 
   val sectionClosed = "fa-angle-right"
   val sectionOpen = "fa-angle-down"
+  val sectionDetails = "fa-share-square-o"
 
   val sortable = "fa-sort"
   val sortedAsc = "fa-sorted"
@@ -31,6 +32,7 @@ object Icons {
   val table = "fa-folder-open-o"
   val view = "fa-bar-chart"
 
+  val definition = "fa-at"
   val columns = "fa-sign-in"
   val foreignKeys = "fa-sign-out"
   val indexes = "fa-location-arrow"

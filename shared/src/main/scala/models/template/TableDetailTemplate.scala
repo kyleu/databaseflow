@@ -21,6 +21,7 @@ object TableDetailTemplate {
             ),
             div(cls := "card-action")(
               a(cls := "view-data-link", href := "#")("View Data"),
+              a(cls := "right definition-link initially-hidden", href := "#")("Definition"),
               a(cls := "right foreign-keys-link initially-hidden", href := "#")("Foreign Keys"),
               a(cls := "right indexes-link initially-hidden", href := "#")("Indexes"),
               a(cls := "right columns-link initially-hidden", href := "#")("Columns")

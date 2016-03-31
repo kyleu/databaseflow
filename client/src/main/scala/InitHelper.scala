@@ -13,12 +13,8 @@ trait InitHelper { this: DatabaseFlow =>
 
     NetworkMessage.register(sendMessage)
 
-    $("#new-query-link").click({ (e: JQueryEventObject) =>
-      AdHocQueryManager.addNewQuery()
-      false
-    })
+    wireSideNav()
 
-    js.Dynamic.global.$(".button-collapse").sideNav()
     js.Dynamic.global.$("select").material_select()
 
     EditorManager.initEditorFramework()
@@ -27,6 +23,21 @@ trait InitHelper { this: DatabaseFlow =>
 
     Logging.debug("Database Flow has started.")
     connect()
+  }
+
+  private[this] def wireSideNav() = {
+    $("#new-query-link").click({ (e: JQueryEventObject) =>
+      AdHocQueryManager.addNewQuery()
+      false
+    })
+
+    $(".show-list-link").click({ (e: JQueryEventObject) =>
+      val key = $(e.delegateTarget).data("key").toString
+      ModelListManager.showList(key)
+      false
+    })
+
+    js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
   protected[this] def performInitialAction() = {
