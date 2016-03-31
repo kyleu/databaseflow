@@ -39,7 +39,7 @@
       </div>
       <div class="card-action">
         <button class="btn waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
-        @if((!isNew) && conn.id != services.engine.ConnectionSettingsService.masterId) {
+        @if((!isNew) && conn.id != services.database.ConnectionSettingsService.masterId) {
           <button class="right btn waves-effect waves-light btn-flat" onclick="onDelete();return false;">Delete</button>
         }
       </div>

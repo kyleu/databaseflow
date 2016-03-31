@@ -3,7 +3,6 @@ package services.database
 import java.util.UUID
 
 import models.database.PoolSettings
-import services.engine.ConnectionSettingsService
 import utils.Logging
 
 import scala.util.control.NonFatal

@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.Action
-import services.engine.ConnectionSettingsService
+import services.database.ConnectionSettingsService
 import utils.ApplicationContext
 
 import scala.concurrent.Future

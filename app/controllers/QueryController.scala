@@ -7,7 +7,7 @@ import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
 import services.connection.ConnectionService
-import services.engine.ConnectionSettingsService
+import services.database.ConnectionSettingsService
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
 

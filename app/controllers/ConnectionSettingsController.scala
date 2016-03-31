@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.engine.{ ConnectionSettings, DatabaseEngine }
 import models.forms.ConnectionForm
-import services.engine.ConnectionSettingsService
+import services.database.ConnectionSettingsService
 import utils.{ ApplicationContext, EncryptUtils }
 
 import scala.concurrent.Future
