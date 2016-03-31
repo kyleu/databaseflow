@@ -57,6 +57,10 @@ object CodeGenerator {
     if (PlanProvider.analyzeSupported) {
       ret += s"  override def analyze(sql: String) = ${PlanProvider.analyze}"
     }
+    ret += s"  override val showCreateTableSupported = ${SqlProvider.showCreateTableSupported}"
+    if (SqlProvider.showCreateTableSupported) {
+      ret += s"  override def showCreateTable(tableName: String) = ${SqlProvider.showCreateTable}"
+    }
     ret += "}"
     ret += "// scalastyle:on"
     ret += ""

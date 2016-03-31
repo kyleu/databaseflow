@@ -5,8 +5,8 @@ import models.codegen.Engine._
 
 object PlanProvider {
   def explainSupported(implicit engine: Engine) = engine match {
-    case H2 => false
-    case _ => true
+    case MySQL | PostgreSQL => true
+    case _ => false
   }
 
   def explain(implicit engine: Engine) = engine match {
@@ -16,8 +16,8 @@ object PlanProvider {
   }
 
   def analyzeSupported(implicit engine: Engine) = engine match {
-    case H2 | MySQL => false
-    case _ => true
+    case PostgreSQL => true
+    case _ => false
   }
 
   def analyze(implicit engine: Engine) = engine match {

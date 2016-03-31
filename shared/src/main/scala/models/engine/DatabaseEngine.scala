@@ -22,10 +22,15 @@ case class DatabaseEngine(
     columnTypes: Seq[String] = Nil
 ) {
   def varchar: String = "?"
+
   val explainSupported = true
-  def explain(sql: String) = "explain " + sql
+  def explain(sql: String) = ""
+
   val analyzeSupported = true
-  def analyze(sql: String) = "explain analyze " + sql
+  def analyze(sql: String) = ""
+
+  val showCreateTableSupported = true
+  def showCreateTable(name: String) = ""
 
   override def toString = id
 }

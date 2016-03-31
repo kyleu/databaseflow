@@ -68,6 +68,9 @@ object TableManager {
     val summary = s"Table contains ${table.columns.size} columns, ${table.indexes.size} indexes, and ${table.foreignKeys.size} foreign keys."
     $(".summary", panel).text(summary)
 
+    if (table.definition.nonEmpty) {
+      $(".definition-link", panel).removeClass("initially-hidden")
+    }
     if (table.columns.nonEmpty) {
       $(".columns-link", panel).removeClass("initially-hidden")
     }

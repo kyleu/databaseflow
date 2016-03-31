@@ -27,6 +27,7 @@ object DataTableTemplate {
         case StringType if x.isEmpty => em("empty string")
         case StringType => span(x)
         case IntegerType => span(x)
+        case ShortType => span(x)
         case TimestampType => span(x)
         case BooleanType => span(x)
         case _ => span(s"$x (${col.t})")

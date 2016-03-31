@@ -21,4 +21,4 @@ case class GetViewDetail(name: String) extends RequestMessage
 
 case class GetTableRowData(queryId: UUID, name: String) extends RequestMessage
 
-case class SaveQuery(savedQuery: SavedQuery) extends RequestMessage
+case class QuerySaveRequest(query: SavedQuery) extends RequestMessage

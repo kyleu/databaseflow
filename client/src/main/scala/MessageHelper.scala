@@ -1,6 +1,7 @@
 import java.util.UUID
 
 import models._
+import models.query.SavedQuery
 import models.template._
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
@@ -15,13 +16,15 @@ trait MessageHelper { this: DatabaseFlow =>
     case qr: QueryResultResponse => handleQueryResultResponse(qr)
     case qe: QueryErrorResponse => handleQueryErrorResponse(qe)
 
-    case pr: PlanResultResponse => handlePlanResultResponse(pr)
-
     case tr: TableResultResponse => handleTableResultResponse(tr)
     case vrr: ViewResultResponse => handleViewResultResponse(vrr)
 
+    case pr: PlanResultResponse => handlePlanResultResponse(pr)
+
+    case qsr: QuerySaveResponse => handleQuerySaveResponse(qsr.status, qsr.savedQuery)
+
     case se: ServerError => handleServerError(se.reason, se.content)
-    case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}")
+    case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")
   }
 
   private[this] def handleQueryResultResponse(qr: QueryResultResponse) = {
@@ -62,6 +65,10 @@ trait MessageHelper { this: DatabaseFlow =>
 
   private[this] def handleViewResultResponse(vrr: ViewResultResponse) = {
     ViewManager.addView(vrr.table)
+  }
+
+  private[this] def handleQuerySaveResponse(status: String, sq: SavedQuery) = {
+    utils.Logging.info(s"Received save query response with status [$status] for saved query [$sq].")
   }
 
   private[this] def handleServerError(reason: String, content: String) = {

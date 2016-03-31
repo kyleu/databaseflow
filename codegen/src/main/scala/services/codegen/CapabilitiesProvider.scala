@@ -2,7 +2,7 @@ package services.codegen
 
 import java.sql.JDBCType
 
-import models.codegen.{ JdbcTypes, Capabilities, Engine }
+import models.codegen.{ Capabilities, Engine }
 import org.hibernate.dialect.Dialect
 import org.hibernate.dialect.function._
 
@@ -18,7 +18,11 @@ object CapabilitiesProvider {
 
     val types = JDBCType.values.sortBy(_.toString).map { x =>
       try {
-        x.toString -> Option(dialect.getTypeName(x.getVendorTypeNumber))
+        val name = Option(dialect.getTypeName(x.getVendorTypeNumber)) match {
+          case Some(t) if t.indexOf('(') > -1 => Some(t.toString.substring(0, t.indexOf('(')))
+          case o => o
+        }
+        x.toString -> name
       } catch {
         case NonFatal(ex) => x.toString -> None
       }

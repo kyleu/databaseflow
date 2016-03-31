@@ -8,4 +8,14 @@ object SqlProvider {
     case PostgreSQL => "character varying"
     case _ => "varchar"
   }
+
+  def showCreateTableSupported(implicit engine: Engine) = engine match {
+    case MySQL => true
+    case _ => false
+  }
+
+  def showCreateTable(implicit engine: Engine) = engine match {
+    case MySQL => "\"show create table \" + tableName"
+    case _ => false
+  }
 }

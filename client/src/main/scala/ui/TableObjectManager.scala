@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.schema.Table
-import models.template.{ Icons, TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate }
+import models.template._
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
@@ -34,6 +34,14 @@ object TableObjectManager {
       }
       false
     })
+
+    $(".definition-link", queryPanel).click({ (e: JQueryEventObject) =>
+      TableManager.tables.get(name) match {
+        case Some(table) => viewDefinition(queryId, table)
+        case None => crash()
+      }
+      false
+    })
   }
 
   private[this] def viewForeignKeys(queryId: UUID, table: Table) = {
@@ -59,6 +67,16 @@ object TableObjectManager {
   private[this] def viewColumns(queryId: UUID, table: Table) = {
     val id = UUID.randomUUID
     val html = TableColumnDetailTemplate.columnsForTable(id, queryId, table)
+    $(s"#workspace-$queryId").prepend(html.toString)
+    $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
+      $(s"#$id").remove()
+      false
+    })
+  }
+
+  private[this] def viewDefinition(queryId: UUID, table: Table) = {
+    val id = UUID.randomUUID
+    val html = TableDefinitionTemplate.definitionForTable(id, queryId, table)
     $(s"#workspace-$queryId").prepend(html.toString)
     $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()

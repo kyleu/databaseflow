@@ -123,27 +123,27 @@ object MySQL extends DatabaseEngine(
 
   columnTypes = Seq(
     "bigint",
-    "binary($l)",
+    "binary",
     "bit",
     "longblob",
     "bit",
-    "char(1)",
+    "char",
     "longtext",
     "date",
     "double precision",
     "float",
     "integer",
-    "nvarchar($l)",
+    "nvarchar",
     "longblob",
     "longtext",
-    "nchar($l)",
+    "nchar",
     "nclob",
-    "decimal($p,$s)",
-    "nvarchar($l)",
+    "decimal",
+    "nvarchar",
     "real",
     "smallint",
     "time",
-    "datetime(6)",
+    "datetime",
     "tinyint",
     "longblob",
     "longtext"
@@ -153,5 +153,7 @@ object MySQL extends DatabaseEngine(
   override val explainSupported = true
   override def explain(sql: String) = "explain format=json " + sql
   override val analyzeSupported = false
+  override val showCreateTableSupported = true
+  override def showCreateTable(tableName: String) = "show create table " + tableName
 }
 // scalastyle:on

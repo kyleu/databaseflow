@@ -30,8 +30,11 @@ case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) exte
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 
+case class SavedQueryResultResponse(table: Table, durationMs: Int) extends ResponseMessage
 case class TableResultResponse(table: Table, durationMs: Int) extends ResponseMessage
 case class ViewResultResponse(table: Table, durationMs: Int) extends ResponseMessage
 case class ProcedureResultResponse(procedure: Procedure, durationMs: Int) extends ResponseMessage
+
+case class QuerySaveResponse(error: Option[String] = None, savedQuery: SavedQuery) extends ResponseMessage
 
 case class MessageSet(messages: Seq[ResponseMessage]) extends ResponseMessage

@@ -3,9 +3,9 @@ package services.connection
 import java.util.UUID
 
 import models.queries.DynamicQuery
-import models.query.QueryResult
+import models.query.{ QueryResult, SavedQuery }
 import models.schema.Table
-import models.{ QueryResultResponse, ServerError }
+import models.{ QueryResultResponse, QuerySaveResponse, ServerError }
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import utils.{ DateUtils, Logging }
@@ -20,7 +20,13 @@ trait QueryHelper extends Logging { this: ConnectionService =>
       None
   }
 
-  def handleRunQuery(queryId: UUID, sql: String) = {
+  protected[this] def handleQuerySaveRequest(query: SavedQuery) = {
+    log.info(s"Saving query [${query.id}].")
+    //SavedQueryService.save(query)
+    out ! QuerySaveResponse(savedQuery = query)
+  }
+
+  protected[this] def handleRunQuery(queryId: UUID, sql: String) = {
     log.info(s"Performing query action [run] for sql [$sql].")
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis

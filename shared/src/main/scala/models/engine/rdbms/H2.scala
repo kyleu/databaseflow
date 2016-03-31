@@ -115,31 +115,32 @@ object H2 extends DatabaseEngine(
     "boolean",
     "blob",
     "boolean",
-    "char($l)",
+    "char",
     "clob",
     "date",
-    "decimal($p,$s)",
+    "decimal",
     "double",
     "float",
     "integer",
-    "nvarchar($l)",
+    "nvarchar",
     "longvarbinary",
     "longvarchar",
-    "nchar($l)",
+    "nchar",
     "nclob",
-    "decimal($p,$s)",
-    "nvarchar($l)",
+    "decimal",
+    "nvarchar",
     "real",
     "smallint",
     "time",
     "timestamp",
     "tinyint",
-    "binary($l)",
-    "varchar($l)"
+    "binary",
+    "varchar"
   )
 ) {
   override val varchar = "varchar"
   override val explainSupported = false
   override val analyzeSupported = false
+  override val showCreateTableSupported = false
 }
 // scalastyle:on

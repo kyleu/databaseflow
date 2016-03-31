@@ -8,7 +8,7 @@ object PostgreSQL extends DatabaseEngine(
   id = "postgres",
   name = "PostgreSQL",
   driverClass = "org.postgresql.Driver",
-  exampleUrl = "jdbc:postgresql://hostname:5432/dbname",
+  exampleUrl = "jdbc:postgresql://hostname/dbname",
 
   builtInFunctions = Seq(
     "abs",
@@ -101,20 +101,20 @@ object PostgreSQL extends DatabaseEngine(
     "bool",
     "oid",
     "boolean",
-    "char(1)",
+    "char",
     "text",
     "date",
     "float8",
     "float4",
     "int4",
     "json",
-    "nvarchar($l)",
+    "nvarchar",
     "bytea",
     "text",
-    "nchar($l)",
+    "nchar",
     "nclob",
-    "numeric($p, $s)",
-    "nvarchar($l)",
+    "numeric",
+    "nvarchar",
     "uuid",
     "real",
     "int2",
@@ -122,7 +122,7 @@ object PostgreSQL extends DatabaseEngine(
     "timestamp",
     "int2",
     "bytea",
-    "varchar($l)"
+    "varchar"
   )
 ) {
   override val varchar = "character varying"
@@ -130,5 +130,6 @@ object PostgreSQL extends DatabaseEngine(
   override def explain(sql: String) = "explain (costs, verbose, format json) " + sql
   override val analyzeSupported = true
   override def analyze(sql: String) = "explain (analyze, costs, verbose, buffers, format json) " + sql
+  override val showCreateTableSupported = false
 }
 // scalastyle:on

@@ -31,7 +31,7 @@ class ConnectionService(
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] val savedQueries = MasterDatabase.db.query(SavedQueryQueries.getByOwner(user.id))
+  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getByOwner(user.id))
   protected[this] val schema = SchemaService.getSchema(connectionId, db)
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
@@ -55,6 +55,8 @@ class ConnectionService(
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
+
+    case qsr: QuerySaveRequest => timeReceive(qsr) { handleQuerySaveRequest(qsr.query) }
 
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm

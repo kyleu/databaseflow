@@ -22,8 +22,11 @@ object ViewManager {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
-      val queryId = UUID.randomUUID
+      if (!views.isDefinedAt(name)) {
+        utils.NetworkMessage.sendMessage(GetViewDetail(name))
+      }
 
+      val queryId = UUID.randomUUID
       WorkspaceManager.append(ViewDetailTemplate.forView(queryId, name).toString)
 
       TabManager.addTab(queryId, name, Icons.view)

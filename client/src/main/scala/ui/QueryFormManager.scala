@@ -1,8 +1,10 @@
 package ui
 
+import models.{ QuerySaveRequest, QuerySaveResponse }
 import models.query.SavedQuery
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NavigationService
+import utils.NetworkMessage
 
 import scala.scalajs.js
 
@@ -49,6 +51,10 @@ object QueryFormManager {
     inputName.focus()
   }
 
+  def handleResponse(r: QuerySaveResponse) = {
+    utils.Logging.info(s"Received save response [$r].")
+  }
+
   private[this] def save() = {
     val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
       name = inputName.value().toString,
@@ -63,6 +69,7 @@ object QueryFormManager {
     },
       public = inputPublicTrue.is(":checked")
     )
-    utils.Logging.info(updated.toString)
+
+    NetworkMessage.sendMessage(QuerySaveRequest(updated))
   }
 }

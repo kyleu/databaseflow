@@ -4,20 +4,25 @@ import java.sql.Connection
 import java.util.UUID
 
 import models.schema.{ Procedure, Schema, Table }
-import services.database.Database
+import services.database.DatabaseConnection
 
 object SchemaService {
-  private[this] var schemas = Map.empty[UUID, Schema]
+  private[this] var schema: Option[Schema] = None
   private[this] var tables = Map.empty[String, Table]
   private[this] var views = Map.empty[String, Table]
   private[this] var procedures = Map.empty[String, Procedure]
 
-  def getSchema(id: UUID) = schemas.get(id)
   def getTable(name: String) = tables.get(name)
   def getView(name: String) = views.get(name)
   def getProcedure(name: String) = procedures.get(name)
+  def getKeys = Map(
+    "schema" -> schema.toSeq,
+    "tables" -> tables.keys.toSeq,
+    "views" -> views.keys.toSeq,
+    "procedures" -> procedures.keys.toSeq
+  )
 
-  private[this] def withConnection[T](db: Database)(f: (Connection) => T) = {
+  private[this] def withConnection[T](db: DatabaseConnection)(f: (Connection) => T) = {
     val conn = db.source.getConnection()
     try {
       f(conn)
@@ -26,9 +31,9 @@ object SchemaService {
     }
   }
 
-  def getSchema(connectionId: UUID, db: Database) = withConnection(db) { conn =>
-    val catalog = Option(conn.getCatalog)
-    val schema = try {
+  def getSchema(connectionId: UUID, db: DatabaseConnection) = withConnection(db) { conn =>
+    val catalogName = Option(conn.getCatalog)
+    val schemaName = try {
       Option(conn.getSchema)
     } catch {
       case _: AbstractMethodError => None
@@ -37,8 +42,8 @@ object SchemaService {
 
     val schemaModel = Schema(
       connectionId = connectionId,
-      schemaName = schema,
-      catalog = catalog,
+      schemaName = schemaName,
+      catalog = catalogName,
       url = metadata.getURL,
       username = metadata.getUserName,
       engine = db.engine.id,
@@ -55,51 +60,49 @@ object SchemaService {
       procedures = Nil
     )
 
-    val tables = MetadataTables.getTableNames(metadata, catalog, schema, "TABLE")
-    val views = MetadataTables.getTableNames(metadata, catalog, schema, "VIEW")
-    val procedures = MetadataProcedures.getProcedureNames(metadata, catalog, schema)
+    val tables = MetadataTables.getTableNames(metadata, catalogName, schemaName, "TABLE")
+    val views = MetadataTables.getTableNames(metadata, catalogName, schemaName, "VIEW")
+    val procedures = MetadataProcedures.getProcedureNames(metadata, catalogName, schemaName)
 
     val ret = schemaModel.copy(
       tables = tables,
       views = views,
       procedures = procedures
     )
-
-    schemas = schemas + (ret.connectionId -> ret)
-
+    schema = Some(ret)
     ret
   }
 
-  def getTableDetail(connectionId: UUID, db: Database, name: String, forceRefresh: Boolean = false) = {
-    val schema = schemas.getOrElse(connectionId, getSchema(connectionId, db))
+  def getTableDetail(connectionId: UUID, db: DatabaseConnection, name: String, forceRefresh: Boolean = false) = {
+    val sch = schema.getOrElse(getSchema(connectionId, db))
     tables.get(name) match {
       case Some(p) if !forceRefresh => p
       case _ => withConnection(db) { conn =>
-        val ret = MetadataTables.getTableDetails(conn.getMetaData, schema.catalog, schema.schemaName, name)
+        val ret = MetadataTables.getTableDetails(db, conn, conn.getMetaData, sch.catalog, sch.schemaName, name)
         tables = tables + (name -> ret)
         ret
       }
     }
   }
 
-  def getViewDetail(connectionId: UUID, db: Database, name: String, forceRefresh: Boolean = false) = {
-    val schema = schemas.getOrElse(connectionId, getSchema(connectionId, db))
+  def getViewDetail(connectionId: UUID, db: DatabaseConnection, name: String, forceRefresh: Boolean = false) = {
+    val sch = schema.getOrElse(getSchema(connectionId, db))
     views.get(name) match {
       case Some(p) if !forceRefresh => p
       case _ => withConnection(db) { conn =>
-        val ret = MetadataTables.getTableDetails(conn.getMetaData, schema.catalog, schema.schemaName, name)
+        val ret = MetadataTables.getTableDetails(db, conn, conn.getMetaData, sch.catalog, sch.schemaName, name)
         views = views + (name -> ret)
         ret
       }
     }
   }
 
-  def getProcedureDetail(connectionId: UUID, db: Database, name: String, forceRefresh: Boolean = false) = {
-    val schema = schemas.getOrElse(connectionId, getSchema(connectionId, db))
+  def getProcedureDetail(connectionId: UUID, db: DatabaseConnection, name: String, forceRefresh: Boolean = false) = {
+    val sch = schema.getOrElse(getSchema(connectionId, db))
     procedures.get(name) match {
       case Some(p) if !forceRefresh => p
       case _ => withConnection(db) { conn =>
-        val ret = MetadataProcedures.getProcedureDetails(conn.getMetaData, schema.catalog, schema.schemaName, name)
+        val ret = MetadataProcedures.getProcedureDetails(conn.getMetaData, sch.catalog, sch.schemaName, name)
         procedures = procedures + (name -> ret)
         ret
       }
