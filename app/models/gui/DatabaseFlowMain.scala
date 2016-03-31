@@ -1,10 +1,12 @@
-import ui.TopFrame
-import utils.{ InitialProperties, Logging }
-import web.WebApplication
+package models.gui
+
+import models.gui.ui.TopFrame
+import models.gui.utils.InitialProperties
+import models.gui.web.WebApplication
 
 import scala.swing._
 
-object DatabaseFlowMain extends SimpleSwingApplication with Logging {
+object DatabaseFlowMain extends SimpleSwingApplication {
   InitialProperties.set()
   val app = new WebApplication()
   override def top = new TopFrame(app)

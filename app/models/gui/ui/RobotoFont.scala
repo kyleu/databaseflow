@@ -1,4 +1,4 @@
-package ui
+package models.gui.ui
 
 object RobotoFont {
   val font = {

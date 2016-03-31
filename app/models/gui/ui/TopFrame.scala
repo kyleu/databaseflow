@@ -1,6 +1,6 @@
-package ui
+package models.gui.ui
 
-import web.WebApplication
+import models.gui.web.WebApplication
 
 import scala.swing._
 

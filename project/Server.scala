@@ -5,6 +5,7 @@ import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.packager.Keys._
+import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.debian.DebianPlugin
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import com.typesafe.sbt.packager.docker.DockerPlugin
@@ -30,7 +31,7 @@ object Server {
       Cache.ehCache, Mail.mailer, Akka.actor, Akka.logging, Akka.testkit, Authentication.silhouette, Play.playFilters, Play.playWs, Play.playTest,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome,
-      Testing.scalaTest
+      Ui.swing, Testing.scalaTest
     )
   }
 
@@ -55,6 +56,8 @@ object Server {
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
     // Native Packaging
+    mainClass in Compile := Some("models.gui.DatabaseFlowMain"),
+
     topLevelDirectory := Some("DatabaseFlow"),
     packageSummary := description.value,
     packageDescription := "Database Flow helps you do all sorts of cool stuff.",

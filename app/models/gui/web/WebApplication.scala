@@ -1,4 +1,4 @@
-package web
+package models.gui.web
 
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{ Mode, Play }

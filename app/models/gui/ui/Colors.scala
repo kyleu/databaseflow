@@ -1,4 +1,4 @@
-package ui
+package models.gui.ui
 
 import scala.swing._
 

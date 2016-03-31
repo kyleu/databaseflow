@@ -1,4 +1,4 @@
-package utils
+package models.gui.utils
 
 object InitialProperties {
   def set() = {
