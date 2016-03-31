@@ -20,7 +20,7 @@ object DatabaseTest extends SandboxTask {
   }
 
   override def run(ctx: ApplicationContext) = {
-    val connections = MasterDatabase.db.query(ConnectionSettingsQueries.getAll())
+    val connections = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll())
 
     val connTables = connections.map { c =>
       val db = MasterDatabase.databaseFor(c.id) match {

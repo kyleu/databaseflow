@@ -14,15 +14,15 @@ import scala.concurrent.Future
 
 object UserSearchService extends IdentityService[User] with Logging {
   def retrieve(id: UUID): Option[User] = UserCache.getUser(id).orElse {
-    MasterDatabase.db.query(UserQueries.getById(Seq(id))).map(UserCache.cacheUser)
+    MasterDatabase.conn.query(UserQueries.getById(Seq(id))).map(UserCache.cacheUser)
   }
 
-  def retrieve(username: String): Option[User] = MasterDatabase.db.query(UserQueries.FindUserByUsername(username))
+  def retrieve(username: String): Option[User] = MasterDatabase.conn.query(UserQueries.FindUserByUsername(username))
 
   override def retrieve(loginInfo: LoginInfo) = UserCache.getUserByLoginInfo(loginInfo) match {
     case Some(u) => Future.successful(Some(u))
     case None => if (loginInfo.providerID == "anonymous") {
-      MasterDatabase.db.query(UserQueries.getById(Seq(UUID.fromString(loginInfo.providerKey)))) match {
+      MasterDatabase.conn.query(UserQueries.getById(Seq(UUID.fromString(loginInfo.providerKey)))) match {
         case Some(dbUser) => if (dbUser.profiles.nonEmpty) {
           log.warn(s"Attempt to authenticate as anonymous for user with profiles [${dbUser.profiles}].")
           Future.successful(None)
@@ -33,7 +33,7 @@ object UserSearchService extends IdentityService[User] with Logging {
         case None => Future.successful(None)
       }
     } else {
-      Future.successful(MasterDatabase.db.query(UserQueries.FindUserByProfile(loginInfo)).map(UserCache.cacheUser))
+      Future.successful(MasterDatabase.conn.query(UserQueries.FindUserByProfile(loginInfo)).map(UserCache.cacheUser))
     }
   }
 }

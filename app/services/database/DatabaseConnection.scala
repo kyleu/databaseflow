@@ -9,7 +9,7 @@ import models.engine.DatabaseEngine
 import services.database.transaction.{ TransactionManager, TransactionProvider }
 import utils.metrics.Instrumented
 
-class Database(val source: DataSource, val engine: DatabaseEngine) extends Queryable {
+class DatabaseConnection(val source: DataSource, val engine: DatabaseEngine) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
     val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
     try {

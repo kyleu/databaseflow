@@ -14,7 +14,7 @@ object MasterDdl extends Logging {
     CreateSavedQueriesTable
   )
 
-  def update(db: Database) = {
+  def update(db: DatabaseConnection) = {
     tables.foreach { t =>
       val exists = db.query(DdlQueries.DoesTableExist(t.tableName))
       if (exists) {
@@ -26,7 +26,7 @@ object MasterDdl extends Logging {
     }
   }
 
-  def wipe(db: Database) = {
+  def wipe(db: DatabaseConnection) = {
     log.warn("Wiping database schema.")
     val tableNames = tables.reverse.map(_.tableName)
     tableNames.map { tableName =>

@@ -8,7 +8,7 @@ import models.engine.DatabaseEngine
 import services.database.ssl.SslInit
 import utils.metrics.{ Checked, Instrumented }
 
-object DatabaseService {
+object DatabaseConnectionService {
   private[this] var initialized = false
 
   def init() = if (!initialized) {
@@ -18,7 +18,7 @@ object DatabaseService {
     }
   }
 
-  def connect(cs: PoolSettings): Database = {
+  def connect(cs: PoolSettings): DatabaseConnection = {
     if (!initialized) {
       init()
     }
@@ -51,6 +51,6 @@ object DatabaseService {
 
     val poolDataSource = new HikariDataSource(poolConfig)
 
-    new Database(poolDataSource, cs.engine)
+    new DatabaseConnection(poolDataSource, cs.engine)
   }
 }

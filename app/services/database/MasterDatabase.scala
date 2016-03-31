@@ -8,7 +8,7 @@ import utils.Logging
 import scala.util.control.NonFatal
 
 object MasterDatabase extends Logging {
-  private[this] val databases = collection.mutable.HashMap.empty[UUID, Database]
+  private[this] val databases = collection.mutable.HashMap.empty[UUID, DatabaseConnection]
 
   def databaseFor(connectionId: UUID) = databases.get(connectionId) match {
     case Some(c) => Right(c)
@@ -22,7 +22,7 @@ object MasterDatabase extends Logging {
         password = c.password
       )
       try {
-        val ret = DatabaseService.connect(cs)
+        val ret = DatabaseConnectionService.connect(cs)
         databases(connectionId) = ret
         Right(ret)
       } catch {
@@ -30,10 +30,10 @@ object MasterDatabase extends Logging {
       }
   }
 
-  private[this] var dbOpt: Option[Database] = None
+  private[this] var connOpt: Option[DatabaseConnection] = None
 
   def open() = {
-    dbOpt.foreach(x => throw new IllegalStateException("History database already open."))
+    connOpt.foreach(x => throw new IllegalStateException("History database already open."))
 
     val database = databaseFor(ConnectionSettingsService.masterId) match {
       case Right(db) => db
@@ -44,16 +44,16 @@ object MasterDatabase extends Logging {
 
     MasterDdl.update(database)
 
-    dbOpt = Some(database)
+    connOpt = Some(database)
   }
 
-  def db = dbOpt.getOrElse(throw new IllegalStateException("Not open."))
+  def conn = connOpt.getOrElse(throw new IllegalStateException("Master database connection not open."))
 
   def close() = {
     databases.values.foreach(_.close())
     databases.clear()
-    dbOpt.foreach(_.close())
-    dbOpt = None
+    connOpt.foreach(_.close())
+    connOpt = None
     log.info(s"Master database closed.")
   }
 }

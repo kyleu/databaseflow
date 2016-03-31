@@ -24,7 +24,7 @@ object UserService extends Logging {
         existingUser
       }
       case None =>
-        MasterDatabase.db.execute(ProfileQueries.insert(profile))
+        MasterDatabase.conn.execute(ProfileQueries.insert(profile))
         val u = currentUser.copy(
           profiles = currentUser.profiles.filterNot(_.providerID == profile.loginInfo.providerID) :+ profile.loginInfo
         )
@@ -39,17 +39,17 @@ object UserService extends Logging {
     } else {
       UserQueries.insert(user)
     }
-    MasterDatabase.db.execute(statement)
+    MasterDatabase.conn.execute(statement)
     UserCache.cacheUser(user)
   }
 
-  def isUsernameInUse(name: String) = MasterDatabase.db.query(UserQueries.IsUsernameInUse(name))
+  def isUsernameInUse(name: String) = MasterDatabase.conn.query(UserQueries.IsUsernameInUse(name))
 
   def remove(userId: UUID) = {
     val startTime = System.nanoTime
-    MasterDatabase.db.transaction { conn =>
+    MasterDatabase.conn.transaction { conn =>
       val profiles = removeProfiles(userId).length
-      val users = MasterDatabase.db.execute(UserQueries.removeById(Seq(userId)))
+      val users = MasterDatabase.conn.execute(UserQueries.removeById(Seq(userId)))
       UserCache.removeUser(userId)
       val timing = ((System.nanoTime - startTime) / 1000000).toInt
       Map("users" -> users, "profiles" -> profiles, "timing" -> timing)
@@ -57,9 +57,9 @@ object UserService extends Logging {
   }
 
   def enableAdmin(user: User) = {
-    val adminCount = MasterDatabase.db.query(UserQueries.CountAdmins)
+    val adminCount = MasterDatabase.conn.query(UserQueries.CountAdmins)
     if (adminCount == 0) {
-      MasterDatabase.db.execute(UserQueries.AddRole(user.id, Role.Admin))
+      MasterDatabase.conn.execute(UserQueries.AddRole(user.id, Role.Admin))
       UserCache.removeUser(user.id)
     } else {
       throw new IllegalStateException("An admin already exists.")
@@ -67,13 +67,13 @@ object UserService extends Logging {
   }
 
   private[this] def removeProfiles(userId: UUID) = {
-    val profiles = MasterDatabase.db.query(ProfileQueries.FindProfilesByUser(userId))
+    val profiles = MasterDatabase.conn.query(ProfileQueries.FindProfilesByUser(userId))
     profiles.map { profile =>
       profile.loginInfo.providerID match {
-        case "credentials" => MasterDatabase.db.execute(PasswordInfoQueries.removeById(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
+        case "credentials" => MasterDatabase.conn.execute(PasswordInfoQueries.removeById(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
         case p => throw new IllegalArgumentException(s"Unknown provider [$p].")
       }
-      MasterDatabase.db.execute(ProfileQueries.remove(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
+      MasterDatabase.conn.execute(ProfileQueries.remove(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
     }
     profiles
   }

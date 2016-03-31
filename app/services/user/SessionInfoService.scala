@@ -11,23 +11,23 @@ import scala.concurrent.Future
 object SessionInfoService extends AuthenticatorDAO[CookieAuthenticator] {
   override def find(id: String) = UserCache.getSession(id) match {
     case Some(sess) => Future.successful(Some(sess))
-    case None => Future.successful(MasterDatabase.db.query(AuthenticatorQueries.getById(Seq(id))).map(UserCache.cacheSession))
+    case None => Future.successful(MasterDatabase.conn.query(AuthenticatorQueries.getById(Seq(id))).map(UserCache.cacheSession))
   }
 
   override def add(session: CookieAuthenticator) = {
-    MasterDatabase.db.execute(AuthenticatorQueries.insert(session))
+    MasterDatabase.conn.execute(AuthenticatorQueries.insert(session))
     UserCache.cacheSession(session)
     Future.successful(session)
   }
 
   override def update(session: CookieAuthenticator) = {
-    MasterDatabase.db.execute(AuthenticatorQueries.UpdateAuthenticator(session))
+    MasterDatabase.conn.execute(AuthenticatorQueries.UpdateAuthenticator(session))
     UserCache.cacheSession(session)
     Future.successful(session)
   }
 
   override def remove(id: String) = {
-    MasterDatabase.db.execute(AuthenticatorQueries.removeById(Seq(id)))
+    MasterDatabase.conn.execute(AuthenticatorQueries.removeById(Seq(id)))
     UserCache.removeSession(id)
     Future.successful(Unit)
   }

@@ -10,7 +10,7 @@ import models.query.SavedQuery
 import utils.DateUtils
 
 object SeedData {
-  def insert(db: Database) = {
+  def insert(db: DatabaseConnection) = {
 
     // ConnectionSettings
     db.execute(ConnectionSettingsQueries.insert(ConnectionSettings(
@@ -55,21 +55,21 @@ object SeedData {
 
     // Saved Queries
     db.execute(SavedQueryQueries.insert(SavedQuery(
-      id = UUID.randomUUID,
       name = "Saved Query 1",
-      sql = "select * from stuff"
+      sql = "select * from stuff",
+      public = true
     )))
 
     db.execute(SavedQueryQueries.insert(SavedQuery(
-      id = UUID.randomUUID,
       name = "Saved Query 2",
-      sql = "select * from stuff2"
+      sql = "select * from stuff2",
+      public = true
     )))
 
     db.execute(SavedQueryQueries.insert(SavedQuery(
-      id = UUID.randomUUID,
       name = "Saved Query 3",
-      sql = "select * from stuff3"
+      sql = "select * from stuff3",
+      public = true
     )))
   }
 }
