@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.template.Icons
+import models.template.{ Icons, ModelListTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
 object ModelListManager {
@@ -14,8 +14,19 @@ object ModelListManager {
     case None =>
       val queryId = UUID.randomUUID
 
-      //WorkspaceManager.append(ProcedureDetailTemplate.forProcedure(queryId, name).toString)
-      //TabManager.addTab(queryId, name, Icons.procedure)
+      val name = key match {
+        case "saved-query" => "Saved Queries"
+        case "table" => "Tables"
+        case "view" => "Views"
+        case "procedure" => "Stored Procedures"
+        case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
+      }
+
+      val html = ModelListTemplate.forModels(queryId, key, name).toString
+
+      WorkspaceManager.append(html)
+      TabManager.addTab(queryId, name, Icons.list)
+      QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -29,13 +40,6 @@ object ModelListManager {
   }
 
   private def closeList(queryId: UUID): Unit = {
-    if (QueryManager.activeQueries.isEmpty) {
-      AdHocQueryManager.addNewQuery()
-    }
-
-    $(s"#panel-$queryId").remove()
-    TabManager.removeTab(queryId)
-
-    TabManager.selectTab(QueryManager.activeQueries.head)
+    QueryManager.closeQuery(queryId)
   }
 }
