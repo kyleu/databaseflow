@@ -20,7 +20,8 @@ object Themes {
     "deep-orange" -> "#ff5722",
     "brown" -> "#795548",
     "grey" -> "#9e9e9e",
-    "blue-grey" -> "#607d8b"
+    "blue-grey" -> "#607d8b",
+    "black" -> "#333333"
   )
 
   val map = all.toMap

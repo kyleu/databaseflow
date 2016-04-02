@@ -2,9 +2,10 @@ package ui
 
 import java.util.UUID
 
+import models.query.SavedQuery
 import models.{ GetTableRowData, GetViewDetail }
 import models.schema.Table
-import models.template.{ Icons, ViewDetailTemplate }
+import models.template.{ Icons, QueryEditorTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
 object ViewManager {
@@ -27,18 +28,22 @@ object ViewManager {
       }
 
       val queryId = UUID.randomUUID
-      WorkspaceManager.append(ViewDetailTemplate.forView(queryId, name).toString)
+      WorkspaceManager.append(QueryEditorTemplate.forView(queryId, name, None, s"select * from $name").toString)
 
       TabManager.addTab(queryId, name, Icons.view)
 
       val queryPanel = $(s"#panel-$queryId")
 
-      QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
-
-      $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, name)
+      $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+        QueryFormManager.show(SavedQuery(
+          id = queryId,
+          name = s"Untitled $name Query",
+          sql = QueryManager.getSql(queryId)
+        ))
         false
       })
+
+      QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openViews = openViews - name
@@ -47,6 +52,7 @@ object ViewManager {
       })
 
       openViews = openViews + (name -> queryId)
+      QueryManager.addQuery(queryId, queryPanel, (s) => Unit, () => Unit)
   }
 
   private[this] def viewData(queryId: UUID, viewName: String) = {

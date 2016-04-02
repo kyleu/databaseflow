@@ -40,6 +40,7 @@ object EditorManager {
     editor.setShowPrintMargin(false)
     editor.setHighlightActiveLine(false)
     editor.setAutoScrollEditorIntoView(false)
+    editor.setFontSize(14)
     editor.setOptions(js.Dynamic.literal(
       enableBasicAutocompletion = true,
       enableLiveAutocompletion = true,

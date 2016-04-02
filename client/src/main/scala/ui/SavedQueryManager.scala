@@ -25,15 +25,13 @@ object SavedQueryManager {
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
-    val sqlEditor =
-
-      $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-        QueryFormManager.show(savedQuery.copy(
-          name = "Copy of " + savedQuery.name,
-          sql = QueryManager.getSql(savedQuery.id)
-        ))
-        false
-      })
+    $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+      QueryFormManager.show(savedQuery.copy(
+        name = "Copy of " + savedQuery.name,
+        sql = QueryManager.getSql(savedQuery.id)
+      ))
+      false
+    })
 
     def onChange(s: String): Unit = {
       if (s == savedQuery.sql) {
