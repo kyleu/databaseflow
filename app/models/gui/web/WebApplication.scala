@@ -1,5 +1,7 @@
 package models.gui.web
 
+import java.net.URI
+
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{ Mode, Play }
 import play.core.server.{ NettyServer, ServerConfig }
@@ -24,6 +26,9 @@ class WebApplication() {
       )
     ))
     _started = true
+    if (java.awt.Desktop.isDesktopSupported) {
+      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:9000"))
+    }
   }
 
   def stop() = if (started) {
