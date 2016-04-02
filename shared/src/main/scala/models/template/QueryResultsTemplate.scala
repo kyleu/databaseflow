@@ -17,10 +17,14 @@ object QueryResultsTemplate {
           i(cls := s"right fa ${Icons.close}")
         ),
         p(s"${qr.result.data.size} rows returned in [${qr.durationMs}ms]."),
-        DataTableTemplate.forResults(res)
+        DataTableTemplate.forResults(res),
+        div(cls := "z-depth-1 query-result-sql")(
+          pre(res.sql)
+        )
       ),
       div(cls := "card-action")(
-        a(href := "#")("Download")
+        a(cls := "right results-sql-link", href := "#")("Show SQL"),
+        a(cls := "results-download-link", href := "#")("Download")
       )
     )
 

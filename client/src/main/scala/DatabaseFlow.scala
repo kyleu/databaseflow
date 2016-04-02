@@ -1,11 +1,12 @@
 import models.InitialState
 import org.scalajs.jquery.{ jQuery => $ }
+import services.NotificationService
 import ui._
 
 import scala.scalajs.js.annotation.JSExport
 
 @JSExport
-class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
+class DatabaseFlow extends NetworkHelper with InitHelper with ResultsHelper with PlanHelper with MessageHelper {
   val debug = true
 
   init()
@@ -31,5 +32,9 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
     $("#loading-panel").hide()
 
     performInitialAction()
+  }
+
+  protected[this] def handleServerError(reason: String, content: String) = {
+    NotificationService.error(reason, content)
   }
 }
