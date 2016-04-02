@@ -1,6 +1,6 @@
 @(user: models.user.User, title: String, debug: Boolean)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.materialize(title, debug = false) {
+)@layout.materialize(Some(user), title, debug = false) {
   <header>
     @views.html.components.userDropdown(isGuest = user.isGuest)
 

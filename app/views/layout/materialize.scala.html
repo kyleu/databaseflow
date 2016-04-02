@@ -1,4 +1,5 @@
-@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil, debug: Boolean)(content: Html)(implicit session: Session, flash: Flash)@basic(
+@(user: Option[models.user.User], title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil, debug: Boolean = false)(content: Html)(implicit session: Session, flash: Flash)@basic(
+  user,
   title,
   scripts = (if(debug) {
     Seq(

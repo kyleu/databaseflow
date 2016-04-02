@@ -1,4 +1,5 @@
 @(
+  user: Option[models.user.User],
   title: String,
   scripts: Seq[String] = Nil,
   stylesheets: Seq[String] = Nil
@@ -9,7 +10,14 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link id="favicon" rel="shortcut icon" type="image/png" href="/assets/images/ui/favicon/favicon.png" />
+
+    <meta property="og:site_name" content="@utils.Config.projectName" />
+    <meta property="og:title" content="@title" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+
+    <link id="favicon-link" rel="shortcut icon" type="image/png" href="@routes.Assets.versioned(s"images/ui/favicon/icon-${user.map(_.preferences.theme).getOrElse("black")}@2x.png")">
+
     @for(script <- scripts) {<script src="@script"></script>}
     @for(stylesheet <- stylesheets) {<link rel="stylesheet" media="screen" href="@stylesheet" />}
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/databaseflow.min.css")" />
