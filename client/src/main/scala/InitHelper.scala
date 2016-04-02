@@ -19,6 +19,7 @@ trait InitHelper { this: DatabaseFlow =>
 
     EditorManager.initEditorFramework()
     SearchManager.init()
+    ConfirmManager.init()
     QueryFormManager.init()
 
     Logging.debug("Database Flow has started.")

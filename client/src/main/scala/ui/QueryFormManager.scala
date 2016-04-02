@@ -51,8 +51,12 @@ object QueryFormManager {
     inputName.focus()
   }
 
-  def handleResponse(r: QuerySaveResponse) = {
-    utils.Logging.info(s"Received save response [$r].")
+  def handleResponse(sq: SavedQuery, error: Option[String]) = {
+    if (activeQuery.exists(_.id == sq.id)) {
+      utils.Logging.info(s"Received save response with ${error.map("error [" + _ + "]").getOrElse("no error")} for query [$sq].")
+    } else {
+      utils.Logging.warn(s"Received unhandled save response for unknown query [$sq].")
+    }
   }
 
   private[this] def save() = {

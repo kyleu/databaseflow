@@ -5,7 +5,7 @@ import models.query.SavedQuery
 import models.template._
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
-import ui.{ TableManager, ViewManager }
+import ui.{ QueryFormManager, TableManager, ViewManager }
 import utils.Logging
 
 trait MessageHelper { this: DatabaseFlow =>
@@ -68,7 +68,7 @@ trait MessageHelper { this: DatabaseFlow =>
   }
 
   private[this] def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = {
-    utils.Logging.info(s"Received save query response with error [$error] for saved query [$sq].")
+    QueryFormManager.handleResponse(sq, error)
   }
 
   private[this] def handleServerError(reason: String, content: String) = {

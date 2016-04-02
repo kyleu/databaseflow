@@ -2,9 +2,11 @@ package ui
 
 import java.util.UUID
 
+import models.QueryDeleteRequest
 import models.query.SavedQuery
 import models.template.{ Icons, QueryEditorTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import utils.NetworkMessage
 
 object SavedQueryManager {
   var savedQueries = Map.empty[UUID, SavedQuery]
@@ -20,7 +22,8 @@ object SavedQueryManager {
   }
 
   private[this] def addSavedQuery(savedQuery: SavedQuery) = {
-    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery.id, savedQuery.name, savedQuery.description, savedQuery.sql).toString)
+    val userId = UserManager.userId.getOrElse(throw new IllegalStateException("Not signed in."))
+    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery, userId).toString)
     TabManager.addTab(savedQuery.id, savedQuery.name, Icons.savedQuery)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
@@ -30,6 +33,18 @@ object SavedQueryManager {
         name = "Copy of " + savedQuery.name,
         sql = QueryManager.getSql(savedQuery.id)
       ))
+      false
+    })
+
+    $(s".delete-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+      def callback(b: Boolean): Unit = {
+        if (b) {
+          NetworkMessage.sendMessage(QueryDeleteRequest(savedQuery.id))
+        }
+        ConfirmManager.close()
+      }
+      val msg = "Are you sure you want to delete this saved query?"
+      ConfirmManager.show(callback = callback, content = msg, trueButton = "Delete")
       false
     })
 
