@@ -1,27 +1,62 @@
 @(user: models.user.User, form: Form[models.user.RegistrationData])(
-  implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.basic(title = Messages("registration.title", utils.Config.projectName)) {
-  <div class="sign-up">
-    @flash.get("error").map { e =>
-      <div class="error">@e</div>
-    }
-
-    <h4>@Messages("registration.call.to.action")</h4>
-    <form method="post" action="@controllers.auth.routes.RegistrationController.register()">
-      <input type="text" class="form-control" name="username" value="@form("username").value" placeholder="Username" />
-      @form.error("username").map { e =>
-        <em>@Messages(e.message)</em>
-      }
-      <input type="email" class="form-control" name="email" value="@form("email").value" placeholder="Email" />
-      @form.error("email").map  { e =>
-        <em>@Messages(e.message)</em>
-      }
-      <input type="password" class="form-control" name="password" value="" placeholder="Password" />
-      @form.error("password").map { e =>
-        <em>@e.message)</em>
-      }
-      <br/>
-      <input type="submit" class="submit" value="Register" />
-    </form>
-  </div>
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.simple(user = user, title = Messages("registration.title", utils.Config.projectName), debug = false) {
+  <form method="post" action="@controllers.auth.routes.RegistrationController.register()">
+    <div class="row">
+      <div class="col s6 offset-s3">
+        <div class="card">
+          <div class="card-content">
+            @if(flash.get("error").isDefined) {
+              <div class="flash-error">@flash("error")</div>
+            }
+            <span class="card-title">
+            @Messages("registration.call.to.action", utils.Config.projectName)
+            </span>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="input-username" type="text" class="form-control validate" name="username" value="@form("username").value" />
+                <label for="input-username">@Messages("registration.form.username")</label>
+              </div>
+              @form.error("email").map { e =>
+                <div><em>@Messages(e.message)</em></div>
+              }
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="input-email" type="email" class="form-control validate" name="email" value="@form("email").value" />
+                <label for="input-email">@Messages("registration.form.email")</label>
+              </div>
+              @form.error("email").map { e =>
+                <div><em>@Messages(e.message)</em></div>
+              }
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="input-password" type="password" class="form-control validate" name="password" value="@form("password").value" />
+                <label for="input-password">@Messages("registration.form.password")</label>
+              </div>
+              @form.error("password").map { e =>
+                <div><em>@Messages(e.message)</em></div>
+              }
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="input-passwordConfirm" type="password" class="form-control validate" name="passwordConfirm" value="@form("password").value" />
+                <label for="input-passwordConfirm">@Messages("registration.form.password.confirm")</label>
+              </div>
+              @form.error("password").map { e =>
+                <div><em>@Messages(e.message)</em></div>
+              }
+            </div>
+          </div>
+          <div class="card-action">
+            <button class="right btn waves-effect waves-light" type="submit" name="action">@Messages("registration.register")</button>
+            <div>
+              <p>Already a member? <a href="@controllers.auth.routes.AuthenticationController.signInForm()">Sign In</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 }

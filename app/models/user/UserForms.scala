@@ -16,7 +16,8 @@ object UserForms {
     mapping(
       "username" -> nonEmptyText,
       "email" -> nonEmptyText,
-      "password" -> nonEmptyText
+      "password" -> nonEmptyText,
+      "passwordConfirm" -> nonEmptyText
     )(RegistrationData.apply)(RegistrationData.unapply)
   )
 }

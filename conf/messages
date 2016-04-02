@@ -1,2 +1,19 @@
 # Index Page
 index.welcome = Welcome to Database Flow!
+
+# Registration
+registration.call.to.action = Register for {0}
+registration.register = Sign Up
+
+registration.form.username = Name
+registration.form.email = Email Address
+registration.form.password = Password
+registration.form.password.confirm = Confirm Password
+
+registration.passwords.do.not.match = Passwords do not match
+
+# Authentication
+authentication.call.to.action = Sign in to {0}
+authentication.sign.in = Sign In
+authentication.form.email = Email Address
+authentication.form.password = Password

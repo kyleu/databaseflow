@@ -29,8 +29,8 @@ object UserQueries extends BaseQueries[User] {
   case class UpdateUser(u: User) extends Statement {
     override val sql = updateSql(Seq("username", "prefs", "profiles", "roles"))
     override val values = {
-      val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").toArray
-      val roles = "{" + u.roles.map(_.toString).mkString(", ") + "}"
+      val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
+      val roles = u.roles.map(_.toString).mkString(",")
       val prefs = write(u.preferences)
       Seq(u.username, prefs, profiles, roles, u.id)
     }
@@ -53,8 +53,8 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class FindUserByProfile(loginInfo: LoginInfo) extends FlatSingleRowQuery[User] {
-    override val sql = getSql(Some("profiles @> ARRAY[?]::text[]"))
-    override val values = Seq(s"${loginInfo.providerID}:${loginInfo.providerKey}")
+    override val sql = getSql(Some("profiles like ?"))
+    override val values = Seq(s"%${loginInfo.providerID}:${loginInfo.providerKey}%")
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
@@ -86,7 +86,7 @@ object UserQueries extends BaseQueries[User] {
 
   override protected def toDataSeq(u: User) = {
     val prefs = write(u.preferences)
-    val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(", ")
+    val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
     val roles = u.roles.map(_.toString).mkString(",")
     Seq(u.id, u.username, prefs, profiles, roles, u.created)
   }
