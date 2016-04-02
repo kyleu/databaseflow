@@ -21,7 +21,7 @@ trait MessageHelper { this: DatabaseFlow =>
 
     case pr: PlanResultResponse => handlePlanResultResponse(pr)
 
-    case qsr: QuerySaveResponse => handleQuerySaveResponse(qsr.status, qsr.savedQuery)
+    case qsr: QuerySaveResponse => handleQuerySaveResponse(qsr.savedQuery, qsr.error)
 
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")
@@ -67,8 +67,8 @@ trait MessageHelper { this: DatabaseFlow =>
     ViewManager.addView(vrr.table)
   }
 
-  private[this] def handleQuerySaveResponse(status: String, sq: SavedQuery) = {
-    utils.Logging.info(s"Received save query response with status [$status] for saved query [$sq].")
+  private[this] def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = {
+    utils.Logging.info(s"Received save query response with error [$error] for saved query [$sq].")
   }
 
   private[this] def handleServerError(reason: String, content: String) = {

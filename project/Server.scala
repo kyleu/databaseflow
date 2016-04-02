@@ -56,7 +56,7 @@ object Server {
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
     // Native Packaging
-    mainClass in Compile := Some("models.gui.DatabaseFlowMain"),
+    mainClass in Compile := Some("DatabaseFlow"),
 
     topLevelDirectory := Some("DatabaseFlow"),
     packageSummary := description.value,

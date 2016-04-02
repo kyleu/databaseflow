@@ -36,6 +36,8 @@ object AdHocQueryManager {
 
     $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
       QueryFormManager.show(SavedQuery(
+        id = queryId,
+        name = queryName,
         sql = QueryManager.getSql(queryId)
       ))
       false

@@ -35,6 +35,6 @@ case class TableResultResponse(table: Table, durationMs: Int) extends ResponseMe
 case class ViewResultResponse(table: Table, durationMs: Int) extends ResponseMessage
 case class ProcedureResultResponse(procedure: Procedure, durationMs: Int) extends ResponseMessage
 
-case class QuerySaveResponse(error: Option[String] = None, savedQuery: SavedQuery) extends ResponseMessage
+case class QuerySaveResponse(savedQuery: SavedQuery, error: Option[String] = None) extends ResponseMessage
 
 case class MessageSet(messages: Seq[ResponseMessage]) extends ResponseMessage

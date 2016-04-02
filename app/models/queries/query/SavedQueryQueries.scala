@@ -22,9 +22,14 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   val search = Search
   val removeById = RemoveById
 
+  case class UpdateLastRan(id: UUID, lastRan: Option[Long]) extends Statement {
+    override val sql = updateSql(Seq("last_ran"))
+    override val values = Seq[Any](lastRan)
+  }
+
   case class UpdateSavedQuery(sq: SavedQuery) extends Statement {
-    override val sql = updateSql(Seq("name", "sql", "updated"))
-    override val values = Seq[Any](sq.name, sq.sql, DateUtils.now, sq.id)
+    override val sql = updateSql(Seq("name", "description", "sql", "owner", "connection", "public", "updated"))
+    override val values = Seq[Any](sq.name, sq.description, sq.sql, sq.owner, sq.connection, sq.public, DateUtils.now, sq.id)
   }
 
   override protected def fromRow(row: Row) = {

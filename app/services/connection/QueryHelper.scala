@@ -7,6 +7,7 @@ import models.query.{ QueryResult, SavedQuery }
 import models.schema.Table
 import models.{ QueryResultResponse, QuerySaveResponse, ServerError }
 import services.database.MasterDatabase
+import services.query.SavedQueryService
 import services.schema.SchemaService
 import utils.{ DateUtils, Logging }
 
@@ -21,8 +22,9 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   }
 
   protected[this] def handleQuerySaveRequest(query: SavedQuery) = {
-    log.info(s"Saving query [${query.id}].")
-    //SavedQueryService.save(query)
+    val updated = query.copy()
+    log.info(s"Saving query as [${updated.id}].")
+    SavedQueryService.save(updated)
     out ! QuerySaveResponse(savedQuery = query)
   }
 
