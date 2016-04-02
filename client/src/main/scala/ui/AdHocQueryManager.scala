@@ -52,6 +52,7 @@ object AdHocQueryManager {
     }
 
     QueryManager.addQuery(queryId, queryPanel, onChange, () => Unit)
+    org.scalajs.dom.document.location.hash = "adhoc-" + queryId
   }
 
 }

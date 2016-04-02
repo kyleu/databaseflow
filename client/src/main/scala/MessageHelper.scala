@@ -1,5 +1,4 @@
 import models._
-import org.scalajs.jquery.{ jQuery => $ }
 import utils.Logging
 
 trait MessageHelper { this: DatabaseFlow =>
@@ -16,6 +15,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case pr: PlanResultResponse => handlePlanResultResponse(pr)
 
     case qsr: QuerySaveResponse => handleQuerySaveResponse(qsr.savedQuery, qsr.error)
+    case qdr: QueryDeleteResponse => handleQueryDeleteResponse(qdr.id, qdr.error)
 
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")

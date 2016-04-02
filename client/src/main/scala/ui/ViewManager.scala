@@ -47,7 +47,7 @@ object ViewManager {
 
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openViews = openViews - name
-        QueryManager.closeQuery(queryId, None)
+        QueryManager.closeQuery(queryId)
         false
       })
 

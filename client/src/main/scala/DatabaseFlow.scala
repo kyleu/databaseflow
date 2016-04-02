@@ -19,7 +19,7 @@ class DatabaseFlow extends NetworkHelper with InitHelper with ResultsHelper with
     UserManager.username = is.username
     UserManager.preferences = Some(is.preferences)
 
-    MetadataManager.setSavedQueries(is.savedQueries, (id) => {
+    MetadataManager.setSavedQueries(is.savedQueries.sortBy(_.name), (id) => {
       SavedQueryManager.savedQueryDetail(id)
     })
 

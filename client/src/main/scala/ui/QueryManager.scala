@@ -30,7 +30,8 @@ object QueryManager {
     wire($(".analyze-query-link", queryPanel), "analyze")
 
     $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
-      QueryManager.closeQuery(queryId, Some(sqlEditor))
+      QueryManager.closeQuery(queryId)
+      onClose()
       false
     })
 
@@ -48,7 +49,7 @@ object QueryManager {
     case None => ""
   }
 
-  def closeQuery(queryId: UUID, editor: Option[js.Dynamic]): Unit = {
+  def closeQuery(queryId: UUID): Unit = {
     if (activeQueries.size == 1) {
       AdHocQueryManager.addNewQuery()
     }
@@ -59,11 +60,11 @@ object QueryManager {
     activeQueries = activeQueries.filterNot(_ == queryId)
     sqlEditors = sqlEditors - queryId
 
-    editor.map(_.destroy())
+    sqlEditors.get(queryId).foreach(_.destroy())
     $(s"#panel-$queryId").remove()
     TabManager.removeTab(queryId)
 
-    val newId = activeQueries(if (originalIndex == 0) { 0 } else { originalIndex - 1 })
+    val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
     TabManager.selectTab(newId)
   }
 }

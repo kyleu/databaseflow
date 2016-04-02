@@ -12,6 +12,25 @@ object SavedQueryManager {
   var savedQueries = Map.empty[UUID, SavedQuery]
   var openSavedQueries = Set.empty[UUID]
 
+  def deleteQuery(id: UUID) = {
+    openSavedQueries = openSavedQueries - id
+    savedQueries = savedQueries - id
+    org.scalajs.dom.document.location.hash = ""
+    QueryManager.closeQuery(id)
+    $("#saved-query-" + id).remove()
+  }
+
+  def updateQuery(sq: SavedQuery) = {
+    utils.Logging.info(s"Closing query [${sq.id}].")
+    openSavedQueries = openSavedQueries - sq.id
+    QueryManager.closeQuery(sq.id)
+    savedQueries = savedQueries + (sq.id -> sq)
+    MetadataManager.setSavedQueries(savedQueries.values.toSeq.sortBy(_.name), (id) => {
+      savedQueryDetail(id)
+    })
+    savedQueryDetail(sq.id)
+  }
+
   def savedQueryDetail(id: UUID) = openSavedQueries.find(_ == id) match {
     case Some(queryId) =>
       TabManager.selectTab(id)

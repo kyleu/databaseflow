@@ -50,7 +50,9 @@ trait InitHelper { this: DatabaseFlow =>
       case ("table", Some(id)) => TableManager.tableDetail(id)
       case ("view", Some(id)) => ViewManager.viewDetail(id)
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
-      case (key, id) => utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
+      case (key, id) =>
+        utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
+        AdHocQueryManager.addNewQuery()
     }
   }
 }

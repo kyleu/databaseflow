@@ -1,6 +1,6 @@
 package ui
 
-import models.{ QuerySaveRequest, QuerySaveResponse }
+import models.QuerySaveRequest
 import models.query.SavedQuery
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NavigationService
@@ -11,7 +11,6 @@ import scala.scalajs.js
 object QueryFormManager {
   private[this] var activeQuery: Option[SavedQuery] = None
   private[this] val modal = js.Dynamic.global.$("#save-query-modal")
-  private[this] val form = $("form", modal)
 
   private[this] val inputName = $("#input-query-name", modal)
   private[this] val inputDescription = $("#input-query-description", modal)
@@ -51,9 +50,13 @@ object QueryFormManager {
     inputName.focus()
   }
 
-  def handleResponse(sq: SavedQuery, error: Option[String]) = {
+  def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = {
     if (activeQuery.exists(_.id == sq.id)) {
-      utils.Logging.info(s"Received save response with ${error.map("error [" + _ + "]").getOrElse("no error")} for query [$sq].")
+      error match {
+        case Some(err) => utils.Logging.error("Cannot save query: " + err)
+        case None => SavedQueryManager.updateQuery(sq)
+      }
+      modal.closeModal()
     } else {
       utils.Logging.warn(s"Received unhandled save response for unknown query [$sq].")
     }
@@ -75,7 +78,6 @@ object QueryFormManager {
       connection = conn,
       public = inputPublicTrue.is(":checked")
     )
-
     NetworkMessage.sendMessage(QuerySaveRequest(updated))
   }
 }

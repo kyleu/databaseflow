@@ -16,9 +16,15 @@ object Logging {
   def debug(msg: String) = if (showDebug) {
     global.console.log(msg)
   }
-  def info(msg: String) = global.console.info(msg)
-  def warn(msg: String) = global.console.warn(msg)
-  def error(msg: String) = global.console.error(msg)
+  def info(msg: String) = {
+    global.console.info(msg)
+  }
+  def warn(msg: String) = {
+    global.console.warn(msg)
+  }
+  def error(msg: String) = {
+    global.console.error(msg)
+  }
 
   def installErrorHandler() = {
     dom.document.onerror = (e: Event) => {

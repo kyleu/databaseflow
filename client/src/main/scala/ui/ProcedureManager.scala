@@ -34,7 +34,7 @@ object ProcedureManager {
 
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openProcedures = openProcedures - name
-        QueryManager.closeQuery(queryId, None)
+        QueryManager.closeQuery(queryId)
         false
       })
 
