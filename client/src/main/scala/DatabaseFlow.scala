@@ -1,7 +1,4 @@
-import java.util.UUID
-
-import models.user.UserPreferences
-import models.{ InitialState, RequestMessage }
+import models.InitialState
 import org.scalajs.jquery.{ jQuery => $ }
 import ui._
 
@@ -10,9 +7,6 @@ import scala.scalajs.js.annotation.JSExport
 @JSExport
 class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
   val debug = true
-  var userId: Option[UUID] = None
-  var username: Option[String] = None
-  var preferences: Option[UserPreferences] = None
 
   init()
 
@@ -20,9 +14,9 @@ class DatabaseFlow extends NetworkHelper with InitHelper with MessageHelper {
     //utils.Logging.info(s"Initial state received containing [${is.savedQueries.size}] saved queries, " +
     //  s"[${is.schema.tables.size}] tables, [${is.schema.procedures.size}] procedures, and [${is.schema.views.size}] views.")
 
-    userId = Some(is.userId)
-    username = is.username
-    preferences = Some(is.preferences)
+    UserManager.userId = Some(is.userId)
+    UserManager.username = is.username
+    UserManager.preferences = Some(is.preferences)
 
     MetadataManager.setSavedQueries(is.savedQueries, (id) => {
       SavedQueryManager.savedQueryDetail(id)
