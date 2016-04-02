@@ -43,6 +43,7 @@
 
         $('footer, nav').removeClass(activeSwatch).addClass(newSwatch);
         $('#input-theme').val(newSwatch);
+        $('#favicon-link').attr('href', '/assets/images/ui/favicon/icon-' + newSwatch + '@@2x.png');
         activeSwatch = newSwatch;
       });
       $('#swatch-' + activeSwatch).addClass('active');
