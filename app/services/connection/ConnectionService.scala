@@ -31,7 +31,7 @@ class ConnectionService(
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getByOwner(user.id))
+  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
   protected[this] val schema = SchemaService.getSchema(connectionId, db)
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None

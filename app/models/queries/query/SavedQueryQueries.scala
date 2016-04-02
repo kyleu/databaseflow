@@ -14,10 +14,10 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
 
   val insert = Insert
   def getById(id: UUID) = GetById(Seq(id))
-  def getByOwner(userId: UUID) = GetAll(
-    whereClause = Some("owner = ? or owner is null"),
+  def getForUser(userId: UUID, connectionId: UUID) = GetAll(
+    whereClause = Some("(owner = ? or owner is null) and (connection = ? or connection is null)"),
     orderBy = "name",
-    values = Seq(userId)
+    values = Seq(userId, connectionId)
   )
   val search = Search
   val removeById = RemoveById

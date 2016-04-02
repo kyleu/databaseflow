@@ -24,6 +24,9 @@ GET         /signin                      controllers.auth.AuthenticationControll
 POST        /signin                      controllers.auth.AuthenticationController.authenticateCredentials
 GET         /signout                     controllers.auth.AuthenticationController.signOut
 
+GET         /profile                     controllers.ProfileController.view()
+POST        /profile                     controllers.ProfileController.save()
+
 # Assets
 GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
 GET         /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")

@@ -17,3 +17,8 @@ authentication.call.to.action = Sign in to {0}
 authentication.sign.in = Sign In
 authentication.form.email = Email Address
 authentication.form.password = Password
+
+# Profile
+profile.save = Save Changes
+profile.form.username = Name
+profile.form.theme = Theme

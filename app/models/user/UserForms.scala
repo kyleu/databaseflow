@@ -20,4 +20,11 @@ object UserForms {
       "passwordConfirm" -> nonEmptyText
     )(RegistrationData.apply)(RegistrationData.unapply)
   )
+
+  val profileForm = Form(
+    mapping(
+      "username" -> nonEmptyText,
+      "theme" -> nonEmptyText
+    )(ProfileData.apply)(ProfileData.unapply)
+  )
 }
