@@ -61,7 +61,7 @@ trait BaseQueries[T] {
   }
 
   protected case class Delete(override val values: Seq[Any]) extends Statement {
-    override val sql = s"delete from $tableName where $idWhereClause}"
+    override val sql = s"delete from $tableName where $idWhereClause"
   }
 
   protected case class InsertBatch(models: Seq[T]) extends Statement {

@@ -60,17 +60,19 @@ object QueryFormManager {
   }
 
   private[this] def save() = {
-    val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
-      name = inputName.value().toString,
-      description = inputDescription.value().trim().toString match {
+    val desc = inputDescription.value().trim().toString match {
       case d if d.isEmpty => None
       case d => Some(d)
-    },
-      connection = if (inputConnectionTrue.is(":checked")) {
+    }
+    val conn = if (inputConnectionTrue.is(":checked")) {
       None
     } else {
       Some(NavigationService.connectionId)
-    },
+    }
+    val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
+      name = inputName.value().toString,
+      description = desc,
+      connection = conn,
       public = inputPublicTrue.is(":checked")
     )
 

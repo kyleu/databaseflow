@@ -30,6 +30,7 @@ object SavedQueryManager {
 
     $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
       QueryFormManager.show(savedQuery.copy(
+        id = UUID.randomUUID,
         name = "Copy of " + savedQuery.name,
         sql = QueryManager.getSql(savedQuery.id)
       ))

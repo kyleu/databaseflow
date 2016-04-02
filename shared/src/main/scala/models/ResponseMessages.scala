@@ -36,5 +36,6 @@ case class ViewResultResponse(table: Table, durationMs: Int) extends ResponseMes
 case class ProcedureResultResponse(procedure: Procedure, durationMs: Int) extends ResponseMessage
 
 case class QuerySaveResponse(savedQuery: SavedQuery, error: Option[String] = None) extends ResponseMessage
+case class QueryDeleteResponse(id: UUID, error: Option[String] = None) extends ResponseMessage
 
 case class MessageSet(messages: Seq[ResponseMessage]) extends ResponseMessage

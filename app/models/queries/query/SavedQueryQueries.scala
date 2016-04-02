@@ -13,6 +13,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val searchColumns = Seq("id", "name", "description", "sql", "owner", "connection")
 
   val insert = Insert
+  def delete(id: UUID) = Delete(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
   def getForUser(userId: UUID, connectionId: UUID) = GetAll(
     whereClause = Some("(owner = ? or owner is null) and (connection = ? or connection is null)"),

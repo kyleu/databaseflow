@@ -5,11 +5,13 @@ import java.util.UUID
 import models.queries.DynamicQuery
 import models.query.{ QueryResult, SavedQuery }
 import models.schema.Table
-import models.{ QueryResultResponse, QuerySaveResponse, ServerError }
+import models.{ QueryDeleteResponse, QueryResultResponse, QuerySaveResponse, ServerError }
 import services.database.MasterDatabase
 import services.query.SavedQueryService
 import services.schema.SchemaService
 import utils.{ DateUtils, Logging }
+
+import scala.util.control.NonFatal
 
 trait QueryHelper extends Logging { this: ConnectionService =>
   def attemptConnect() = MasterDatabase.databaseFor(connectionId) match {
@@ -21,11 +23,24 @@ trait QueryHelper extends Logging { this: ConnectionService =>
       None
   }
 
-  protected[this] def handleQuerySaveRequest(query: SavedQuery) = {
-    val updated = query.copy()
-    log.info(s"Saving query as [${updated.id}].")
-    SavedQueryService.save(updated)
-    out ! QuerySaveResponse(savedQuery = query)
+  protected[this] def handleQuerySaveRequest(sq: SavedQuery) = {
+    log.info(s"Saving query as [${sq.id}].")
+    try {
+      val result = SavedQueryService.save(sq, Some(user.id))
+      out ! QuerySaveResponse(savedQuery = result)
+    } catch {
+      case NonFatal(x) => out ! QuerySaveResponse(error = Some(x.getMessage), savedQuery = sq)
+    }
+  }
+
+  protected[this] def handleQueryDeleteRequest(id: UUID) = {
+    log.info(s"Deleting query [$id].")
+    try {
+      val result = SavedQueryService.delete(id, Some(user.id))
+      out ! QueryDeleteResponse(id = id)
+    } catch {
+      case NonFatal(x) => out ! QueryDeleteResponse(id = id, error = Some(x.getMessage))
+    }
   }
 
   protected[this] def handleRunQuery(queryId: UUID, sql: String) = {

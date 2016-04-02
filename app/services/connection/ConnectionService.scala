@@ -57,6 +57,7 @@ class ConnectionService(
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { handleQuerySaveRequest(qsr.query) }
+    case qdr: QueryDeleteRequest => timeReceive(qdr) { handleQueryDeleteRequest(qdr.id) }
 
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
