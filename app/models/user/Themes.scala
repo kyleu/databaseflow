@@ -15,8 +15,6 @@ object Themes {
     "teal" -> "#009688",
     "green" -> "#4caf50",
     "light-green" -> "#8bc34a",
-    "lime" -> "#cddc39",
-    "yellow" -> "#ffeb3b",
     "amber" -> "#ffc107",
     "orange" -> "#ff9800",
     "deep-orange" -> "#ff5722",

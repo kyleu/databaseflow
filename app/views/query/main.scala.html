@@ -44,4 +44,13 @@
   <script>
     window.dbf = new DatabaseFlow();
   </script>
+
+  <style type="text/css">@defining(models.user.Themes.map(user.preferences.theme)) { themeColor =>
+    .tabs .tab a { color: @themeColor; }
+    .tabs .tab a:hover { color: @themeColor; }
+    .tabs .tab.disabled a { color: @themeColor; }
+    .tabs .indicator { background-color: @themeColor; }
+
+    ul#main-menu li.search .search-wrapper input#search:focus { border-bottom: 2px solid @themeColor !important; }
+  }</style>
 }
