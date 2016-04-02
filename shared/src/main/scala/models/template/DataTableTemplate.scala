@@ -30,6 +30,7 @@ object DataTableTemplate {
         case ShortType => span(x)
         case TimestampType => span(x)
         case BooleanType => span(x)
+        case ByteArrayType => em("byte array")
         case _ => span(s"$x (${col.t})")
       }) -> true
       case None => span(title := "Null")("∅") -> false

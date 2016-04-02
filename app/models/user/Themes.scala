@@ -25,5 +25,7 @@ object Themes {
     "blue-grey" -> "#607d8b"
   )
 
+  val map = all.toMap
+
   def getRandom = all(Random.nextInt(all.size))
 }

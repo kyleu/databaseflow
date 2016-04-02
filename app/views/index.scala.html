@@ -10,7 +10,7 @@
         @if(connections.isEmpty) {
           <h5>Add your first connection by clicking below.</h5>
         } else {
-          <div>@views.html.connection.list(connections)</div>
+          <div>@views.html.connection.list(user, connections)</div>
         }
       </div>
       <div class="card-action">
