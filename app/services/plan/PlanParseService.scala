@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
-import models.plan.PlanResult
+import models.plan.{ PlanError, PlanResult }
 import models.query.QueryResult
 import utils.Logging
 
@@ -22,7 +22,7 @@ object PlanParseService {
 }
 
 abstract class PlanParseService(name: String) extends Logging {
-  def parse(sql: String, queryId: UUID, plan: String): PlanResult
+  def parse(sql: String, queryId: UUID, plan: String): Either[PlanError, PlanResult]
 
   def debug() = {
     log.info(s"Started [$name] plan parse service.")

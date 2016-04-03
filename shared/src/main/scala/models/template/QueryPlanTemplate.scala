@@ -31,12 +31,14 @@ object QueryPlanTemplate {
         name = "Test Query Plan",
         action = action,
         sql = "select * from something",
-        asText = "...",
+        raw = "{ 'plan': 'test' }",
         node = node
       ),
       durationMs = 1000
     )
   }
+
+  def forPlan(pr: PlanResultResponse) = cardFor(pr)
 
   private[this] def forNode(node: PlanNode, className: String): Modifier = if (node.children.isEmpty) {
     li(cls := className)(a(href := "#")(node.title))
@@ -55,24 +57,22 @@ object QueryPlanTemplate {
               pr.result.name,
               i(cls := s"right fa ${Icons.close}")
             ),
-            div(
+            div(cls := "plan-chart")(
               div(id := "", cls := "tree-container")(
                 div(cls := "tree")(
                   ul(forNode(pr.result.node, "root-node"))
                 )
-              )
+              ),
+              div(cls := "clear")
             ),
-            div(cls := "clear")
+            pre(cls := "plan-raw")(pr.result.raw)
           ),
           div(cls := "card-action")(
-            a(href := "#")("Download")
+            a(href := "#")("Download"),
+            a(cls := "right plan-view-toggle", href := "#")("View Raw Plan")
           )
         )
       )
     )
-  }
-
-  def forPlan(pr: PlanResultResponse) = {
-    cardFor(pr)
   }
 }

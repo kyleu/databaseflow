@@ -2,7 +2,7 @@ package services.plan
 
 import java.util.UUID
 
-import models.plan.{ PlanNode, PlanResult }
+import models.plan.{ PlanError, PlanNode, PlanResult }
 import upickle.Js
 import upickle.json
 
@@ -21,24 +21,30 @@ object PostgresParseService extends PlanParseService("postgres") {
       } else {
         throw new IllegalStateException(s"Source has [${a.value.length}] elements, which is more than the expected one.")
       }
-      case _ => throw new IllegalStateException("Not a Json object.")
+      case _ => throw new IllegalStateException("Not a Json array.")
     }
     ret
   }
 
-  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value): PlanResult = plan match {
+  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value) = plan match {
     case o: Js.Obj =>
       val params = o.value.toMap
 
       log.info(params.map(x => x._1 + " = " + x._2.toString).mkString("\n"))
-      PlanResult(
+      Right(PlanResult(
         queryId = queryId,
         name = "Test Plan",
         action = "Action",
         sql = sql,
-        asText = json.write(plan, 2),
+        raw = json.write(plan, 2),
         node = PlanNode(title = "TODO", nodeType = "?")
-      )
-    case x => throw new IllegalStateException(x.toString)
+      ))
+    case x => Left(PlanError(
+      queryId = queryId,
+      sql = sql,
+      code = x.getClass.getSimpleName,
+      message = s"Invalid JSON [${json.write(plan)}].",
+      raw = Some(json.write(plan, 2))
+    ))
   }
 }

@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import models.plan.PlanResult
+import models.plan.{ PlanError, PlanResult }
 import models.query.{ QueryError, QueryResult, SavedQuery }
 import models.schema.{ Procedure, Schema, Table }
 import models.user.UserPreferences
@@ -28,6 +28,7 @@ case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) e
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
+case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage
 
 case class SavedQueryResultResponse(savedQueries: Seq[SavedQuery], durationMs: Int) extends ResponseMessage
 case class TableResultResponse(tables: Seq[Table], durationMs: Int) extends ResponseMessage

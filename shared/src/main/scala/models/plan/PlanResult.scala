@@ -7,6 +7,6 @@ case class PlanResult(
   name: String,
   action: String,
   sql: String,
-  asText: String,
+  raw: String,
   node: PlanNode
 )

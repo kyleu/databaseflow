@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.queries.DynamicQuery
 import models.template.QueryPlanTemplate
-import models.{ PlanResultResponse, ServerError }
+import models.{ PlanErrorResponse, PlanResultResponse, ServerError }
 import services.plan.PlanParseService
 import utils.{ DateUtils, Logging }
 
@@ -21,8 +21,10 @@ trait PlanHelper extends Logging { this: ConnectionService =>
         val result = db.query(DynamicQuery(explainSql))
         //log.info(s"Query result: [$result].")
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        val planResponse = PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(result))
-        out ! PlanResultResponse(id, planResponse, durationMs)
+        PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(result)) match {
+          case Left(err) => out ! PlanErrorResponse(id, err, durationMs)
+          case Right(planResponse) => out ! PlanResultResponse(id, planResponse, durationMs)
+        }
       }
     } else {
       out ! ServerError("explain-not-supported", s"Explain is not avaialble for [${db.engine}].")

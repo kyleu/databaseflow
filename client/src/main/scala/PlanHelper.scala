@@ -13,8 +13,28 @@ trait PlanHelper { this: DatabaseFlow =>
 
     workOutPlanWidth(pr.id)
 
-    $(s"#${pr.id} .${Icons.close}").click((e: JQueryEventObject) => {
-      $(s"#${pr.id}").remove()
+    val panel = $(s"#${pr.id}")
+    val planViewToggle = $(s".plan-view-toggle", panel)
+    val chart = $(s".plan-chart", panel)
+    val raw = $(s".plan-raw", panel)
+    var showingChart = true
+
+    planViewToggle.click((e: JQueryEventObject) => {
+      if (showingChart) {
+        planViewToggle.text("View Plan Chart")
+        chart.hide()
+        raw.show()
+      } else {
+        planViewToggle.text("View Raw Plan")
+        chart.show()
+        raw.hide()
+      }
+      showingChart = !showingChart
+      false
+    })
+
+    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
+      panel.remove()
     })
   }
 
