@@ -69,7 +69,7 @@ object SearchManager {
   }
 
   private[this] def clearSearch() = {
-    $(".saved-query-link, .table-link, .view-link, .procedure-link").removeClass("search-ignored")
+    $(".sidenav-link").removeClass("search-ignored")
     clearSearchEntries(MetadataManager.savedQueries, savedQueriesToggle)
     clearSearchEntries(MetadataManager.tables, tablesToggle)
     clearSearchEntries(MetadataManager.views, viewsToggle)

@@ -22,18 +22,19 @@ object MetadataManager {
 
     if (sq.nonEmpty) {
       $("#saved-query-list-toggle").css("display", "block")
-      $("#saved-query-list").html(SidenavTemplate.savedQueries(sq).mkString("\n"))
-      $(".saved-query-link").click { (e: JQueryEventObject) =>
-        val id = UUID.fromString(e.delegateTarget.id.stripPrefix("saved-query-"))
+      val savedQueryList = $("#saved-query-list")
+      savedQueryList.html(SidenavTemplate.savedQueries(sq).mkString("\n"))
+      $(".sidenav-link", savedQueryList).click { (e: JQueryEventObject) =>
+        val id = UUID.fromString(e.delegateTarget.id.stripPrefix("sidenav-saved-query-"))
         onClick(id)
-        true
+        false
       }
     } else {
       $("#saved-query-list-toggle").css("display", "none")
     }
 
     savedQueries = Some(sq.map { x =>
-      val el = $("#saved-query-" + x.id)
+      val el = $("#sidenav-saved-query-" + x.id)
       (x.id.toString, el, $("span", el))
     })
   }
@@ -41,49 +42,52 @@ object MetadataManager {
   def setSchema(sch: Schema, onClick: (String, String) => Unit) = {
     if (sch.tables.nonEmpty) {
       $("#table-list-toggle").css("display", "block")
-      $("#table-list").html(SidenavTemplate.tables(sch.tables).mkString("\n"))
-      $(".table-link").click { (e: JQueryEventObject) =>
-        val name = e.delegateTarget.id.stripPrefix("table-")
+      val tableList = $("#table-list")
+      tableList.html(SidenavTemplate.tables(sch.tables).mkString("\n"))
+      $(".sidenav-link", tableList).click { (e: JQueryEventObject) =>
+        val name = e.delegateTarget.id.stripPrefix("sidenav-table-")
         onClick("table", name)
-        true
+        false
       }
     } else {
       $("#table-list-toggle").css("display", "none")
     }
     tables = Some(sch.tables.map { x =>
-      val el = $("#table-" + x)
+      val el = $("#sidenav-table-" + x)
       (x, el, $("span", el))
     })
 
     if (sch.views.nonEmpty) {
       $("#view-list-toggle").css("display", "block")
-      $("#view-list").html(SidenavTemplate.views(sch.views).mkString("\n"))
-      $(".view-link").click { (e: JQueryEventObject) =>
-        val name = e.delegateTarget.id.stripPrefix("view-")
+      val viewList = $("#view-list")
+      viewList.html(SidenavTemplate.views(sch.views).mkString("\n"))
+      $(".sidenav-link", viewList).click { (e: JQueryEventObject) =>
+        val name = e.delegateTarget.id.stripPrefix("sidenav-view-")
         onClick("view", name)
-        true
+        false
       }
     } else {
       $("#view-list-toggle").css("display", "none")
     }
     views = Some(sch.views.map { x =>
-      val el = $("#view-" + x)
+      val el = $("#sidenav-view-" + x)
       (x, el, $("span", el))
     })
 
     if (sch.procedures.nonEmpty) {
       $("#procedure-list-toggle").css("display", "block")
-      $("#procedure-list").html(SidenavTemplate.procedures(sch.procedures).mkString("\n"))
-      $(".procedure-link").click { (e: JQueryEventObject) =>
-        val name = e.delegateTarget.id.stripPrefix("procedure-")
+      val procedureList = $("#procedure-list")
+      procedureList.html(SidenavTemplate.procedures(sch.procedures).mkString("\n"))
+      $(".sidenav-link", procedureList).click { (e: JQueryEventObject) =>
+        val name = e.delegateTarget.id.stripPrefix("sidenav-procedure-")
         onClick("procedure", name)
-        true
+        false
       }
     } else {
       $("#procedure-list-toggle").css("display", "none")
     }
     procedures = Some(sch.procedures.map { x =>
-      val el = $("#procedure-" + x)
+      val el = $("#sidenav-procedure-" + x)
       (x, el, $("span", el))
     })
 

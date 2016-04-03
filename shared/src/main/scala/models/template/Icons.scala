@@ -17,7 +17,7 @@ object Icons {
   val sortedAsc = "fa-sorted"
   val sortedDesc = "fa-chevron-down"
 
-  val list = "fa-sort-alpha-asc"
+  val list = "fa-list"
 
   val database = "fa-database"
   val user = "fa-user"

@@ -30,7 +30,7 @@ object ViewManager {
       val queryId = UUID.randomUUID
       WorkspaceManager.append(QueryEditorTemplate.forView(queryId, name, None, s"select * from $name").toString)
 
-      TabManager.addTab(queryId, name, Icons.view)
+      TabManager.addTab(queryId, "view-" + name, name, Icons.view)
 
       val queryPanel = $(s"#panel-$queryId")
 

@@ -11,6 +11,10 @@ object ProcedureManager {
   var procedures = Map.empty[String, Procedure]
   var openProcedures = Map.empty[String, UUID]
 
+  def addProcedure(p: Procedure) = {
+    procedures = procedures + (p.name -> p)
+  }
+
   def procedureDetail(name: String) = openProcedures.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
@@ -18,7 +22,7 @@ object ProcedureManager {
       val queryId = UUID.randomUUID
       WorkspaceManager.append(ProcedureDetailTemplate.forProcedure(queryId, name).toString)
 
-      TabManager.addTab(queryId, name, Icons.procedure)
+      TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure)
 
       val queryPanel = $(s"#panel-$queryId")
 

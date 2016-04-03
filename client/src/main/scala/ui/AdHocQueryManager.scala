@@ -30,7 +30,7 @@ object AdHocQueryManager {
 
   def addAdHocQuery(queryId: UUID, queryName: String, sql: String): Unit = {
     QueryManager.workspace.append(QueryEditorTemplate.forAdHocQuery(queryId, queryName, sql).toString)
-    TabManager.addTab(queryId, queryName, Icons.adHocQuery)
+    TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery)
 
     val queryPanel = $(s"#panel-$queryId")
 
@@ -52,7 +52,6 @@ object AdHocQueryManager {
     }
 
     QueryManager.addQuery(queryId, queryPanel, onChange, () => Unit)
-    org.scalajs.dom.document.location.hash = "adhoc-" + queryId
   }
 
 }

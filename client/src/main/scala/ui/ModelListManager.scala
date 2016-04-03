@@ -25,7 +25,7 @@ object ModelListManager {
       val html = ModelListTemplate.forModels(queryId, key, name).toString
 
       WorkspaceManager.append(html)
-      TabManager.addTab(queryId, name, Icons.list)
+      TabManager.addTab(queryId, "list-" + key, name, Icons.list)
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")

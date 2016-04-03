@@ -9,8 +9,10 @@ trait MessageHelper { this: DatabaseFlow =>
     case qr: QueryResultResponse => handleQueryResultResponse(qr)
     case qe: QueryErrorResponse => handleQueryErrorResponse(qe)
 
-    case tr: TableResultResponse => handleTableResultResponse(tr)
+    case sqrr: SavedQueryResultResponse => handleSavedQueryResponse(sqrr)
+    case trr: TableResultResponse => handleTableResultResponse(trr)
     case vrr: ViewResultResponse => handleViewResultResponse(vrr)
+    case prr: ProcedureResultResponse => handleProcedureResultResponse(prr)
 
     case pr: PlanResultResponse => handlePlanResultResponse(pr)
 

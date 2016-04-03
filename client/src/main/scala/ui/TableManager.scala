@@ -29,7 +29,7 @@ object TableManager {
       val queryId = UUID.randomUUID
       WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
-      TabManager.addTab(queryId, name, Icons.table)
+      TabManager.addTab(queryId, "table-" + name, name, Icons.table)
 
       val queryPanel = $(s"#panel-$queryId")
 

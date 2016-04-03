@@ -54,7 +54,7 @@ object QueryFormManager {
     if (activeQuery.exists(_.id == sq.id)) {
       error match {
         case Some(err) => utils.Logging.error("Cannot save query: " + err)
-        case None => SavedQueryManager.updateQuery(sq)
+        case None => SavedQueryManager.updateSavedQueries(Seq(sq))
       }
       modal.closeModal()
     } else {

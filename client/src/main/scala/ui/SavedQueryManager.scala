@@ -15,20 +15,24 @@ object SavedQueryManager {
   def deleteQuery(id: UUID) = {
     openSavedQueries = openSavedQueries - id
     savedQueries = savedQueries - id
-    org.scalajs.dom.document.location.hash = ""
     QueryManager.closeQuery(id)
     $("#saved-query-" + id).remove()
   }
 
-  def updateQuery(sq: SavedQuery) = {
-    utils.Logging.info(s"Closing query [${sq.id}].")
-    openSavedQueries = openSavedQueries - sq.id
-    QueryManager.closeQuery(sq.id)
-    savedQueries = savedQueries + (sq.id -> sq)
+  def updateSavedQueries(sqs: Seq[SavedQuery]) = {
+    sqs.foreach { sq =>
+      savedQueries = savedQueries + (sq.id -> sq)
+
+      if (openSavedQueries(sq.id)) {
+        utils.Logging.info(s"Closing query [${sq.id}].")
+        openSavedQueries = openSavedQueries - sq.id
+        QueryManager.closeQuery(sq.id)
+        savedQueryDetail(sq.id)
+      }
+    }
     MetadataManager.setSavedQueries(savedQueries.values.toSeq.sortBy(_.name), (id) => {
       savedQueryDetail(id)
     })
-    savedQueryDetail(sq.id)
   }
 
   def savedQueryDetail(id: UUID) = openSavedQueries.find(_ == id) match {
@@ -43,7 +47,7 @@ object SavedQueryManager {
   private[this] def addSavedQuery(savedQuery: SavedQuery) = {
     val userId = UserManager.userId.getOrElse(throw new IllegalStateException("Not signed in."))
     QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(savedQuery, userId).toString)
-    TabManager.addTab(savedQuery.id, savedQuery.name, Icons.savedQuery)
+    TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
