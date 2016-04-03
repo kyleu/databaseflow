@@ -29,16 +29,20 @@ class ConnectionService(
   protected[this] var currentUsername = user.username
   protected[this] var userPreferences = user.preferences
   protected[this] var dbOpt = attemptConnect()
-  protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
+  protected[this] lazy val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
   protected[this] val schema = SchemaService.getSchema(connectionId, db)
+  protected[this] val savedQueries = {
+    val sqs = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
+    out ! SavedQueryResultResponse(sqs, 0)
+    sqs
+  }
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
   override def preStart() = {
     supervisor ! ConnectionStarted(user, id, self)
-    out ! InitialState(user.id, currentUsername, userPreferences, schema, savedQueries)
+    out ! InitialState(user.id, currentUsername, userPreferences, schema)
   }
 
   override def receiveRequest = {

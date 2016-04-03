@@ -16,8 +16,7 @@ case class InitialState(
   userId: UUID,
   username: Option[String],
   preferences: UserPreferences,
-  schema: Schema,
-  savedQueries: Seq[SavedQuery]
+  schema: Schema
 ) extends ResponseMessage
 
 case class Pong(timestamp: Long) extends ResponseMessage

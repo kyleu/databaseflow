@@ -8,10 +8,6 @@ trait CacheHelper { this: DatabaseFlow =>
     UserManager.username = is.username
     UserManager.preferences = Some(is.preferences)
 
-    MetadataManager.setSavedQueries(is.savedQueries.sortBy(_.name), (id) => {
-      SavedQueryManager.savedQueryDetail(id)
-    })
-
     MetadataManager.setSchema(is.schema, (key, name) => key match {
       case "table" => TableManager.tableDetail(name)
       case "view" => ViewManager.viewDetail(name)
