@@ -9,6 +9,12 @@ object SqlProvider {
     case _ => "varchar"
   }
 
+  def quoteIdentifier(implicit engine: Engine) = engine match {
+    case PostgreSQL | H2 => "\\\""
+    case MySQL => "`"
+    case _ => "varchar"
+  }
+
   def showCreateTableSupported(implicit engine: Engine) = engine match {
     case MySQL => true
     case _ => false

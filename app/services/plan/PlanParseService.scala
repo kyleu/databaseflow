@@ -17,6 +17,7 @@ object PlanParseService {
 
   def resultPlanString(result: (scala.Seq[QueryResult.Col], scala.Seq[scala.Seq[Option[String]]]))(implicit engine: DatabaseEngine) = engine match {
     case PostgreSQL => result._2.map(_.head.getOrElse("")).mkString("\n")
+    case MySQL => result._2.map(_.head.getOrElse("")).mkString("\n")
     case _ => throw new IllegalArgumentException("Parse result error.")
   }
 }

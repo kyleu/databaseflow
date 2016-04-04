@@ -20,9 +20,7 @@ object TabManager {
     $("ul.tabs").on("click", "a", (e: JQueryEventObject) => {
       val queryId = UUID.fromString($(e.currentTarget).data("query").toString)
       openTabs.find(_._1 == queryId) match {
-        case Some(x) =>
-          org.scalajs.dom.document.location.hash = x._2
-          utils.Logging.info("..." + queryId)
+        case Some(x) => org.scalajs.dom.document.location.hash = x._2
         case None => throw new IllegalStateException(s"No open tab [$queryId] from choices [${openTabs.mkString(", ")}].")
       }
     })

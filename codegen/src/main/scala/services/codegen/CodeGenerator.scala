@@ -49,6 +49,7 @@ object CodeGenerator {
     ret += "  )"
     ret += ") {"
     ret += "  override val varchar = \"" + SqlProvider.varchar + "\""
+    ret += "  override val quoteIdentifier = \"" + SqlProvider.quoteIdentifier + "\""
     ret += s"  override val explainSupported = ${PlanProvider.explainSupported}"
     if (PlanProvider.explainSupported) {
       ret += s"  override def explain(sql: String) = ${PlanProvider.explain}"

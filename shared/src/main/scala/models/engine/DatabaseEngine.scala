@@ -22,6 +22,7 @@ case class DatabaseEngine(
     columnTypes: Seq[String] = Nil
 ) {
   def varchar: String = "?"
+  def quoteIdentifier: String = ""
 
   val explainSupported = true
   def explain(sql: String) = ""

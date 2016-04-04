@@ -76,10 +76,10 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   }
 
   private[this] def handleShowTableDataResponse(queryId: UUID, table: Table) {
-    log.info(s"Showing data for [${table.name}].")
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
-    val sql = s"select * from ${table.name} limit 1001"
+    val sql = s"""select * from ${db.engine.quoteIdentifier}${table.name}${db.engine.quoteIdentifier} limit 1001"""
+    log.info(s"Showing data for [${table.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
       val (columns, data) = db.query(DynamicQuery(sql))
       val columnsWithRelations = columns.map { col =>
