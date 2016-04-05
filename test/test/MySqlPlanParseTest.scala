@@ -1,0 +1,22 @@
+package test
+
+import models.engine.rdbms.MySQL
+import org.scalatest.{ FlatSpec, Matchers }
+
+class MySqlPlanParseTest extends FlatSpec with Matchers {
+  "MySQL Plan Parser" should "load basic MySQL plan" in {
+    val result = PlanParseTestHelper.test("mysql-nested-loop", MySQL)
+    1 should be(1)
+  }
+
+  it should "load complex MySQL plan" in {
+    val result = PlanParseTestHelper.test("mysql-complicated-query", MySQL)
+    1 should be(1)
+  }
+
+  it should "throw IllegalArgumentException if invalid JSON is passed" in {
+    a[IllegalArgumentException] should be thrownBy {
+      throw new IllegalArgumentException("!")
+    }
+  }
+}

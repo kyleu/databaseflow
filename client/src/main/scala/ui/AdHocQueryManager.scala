@@ -21,7 +21,8 @@ object AdHocQueryManager {
       if (s.tables.isEmpty) {
         ""
       } else {
-        s"select * from ${s.tables(Random.nextInt(s.tables.size))} limit 5;"
+        val qi = MetadataManager.engine.getOrElse(throw new IllegalStateException()).quoteIdentifier
+        s"select * from $qi${s.tables(Random.nextInt(s.tables.size))}$qi limit 5;"
       }
     }.getOrElse("")
     addAdHocQuery(queryId, queryName, sql)

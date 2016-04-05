@@ -46,19 +46,24 @@ object PostgresParseService extends PlanParseService("postgres") {
     ))
   }
 
-  private[this] def nodeFor(json: Js.Value): PlanNode = json match {
+  private[this] def nodeFor(jsVal: Js.Value): PlanNode = jsVal match {
     case o: Js.Obj =>
       val params = o.value.toMap
-      log.info(params.map(x => x._1 + " = " + x._2.toString).mkString("\n"))
+      //log.info(params.map(x => x._1 + " = " + x._2.toString).mkString("\n"))
 
       val children = params.get(keyPlans).map {
         case plans: Js.Arr => plans.value.map(nodeFor)
         case x => throw new IllegalStateException(s"Unable to parse plans from [$x]")
       }.getOrElse(Nil)
 
+      val props = params.filter { p =>
+        p._1 == keyPlans
+      }.map(p => p._1 -> json.write(p._2))
+
       PlanNode(
         title = params.get(keyNodeType).map(_.asInstanceOf[Js.Str].value).getOrElse("?"),
         nodeType = "?",
+        properties = props,
         children = children
       )
     case x => throw new IllegalStateException(s"Invalid node type [${x.getClass.getName}]")
