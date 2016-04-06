@@ -14,9 +14,15 @@ trait PlanHelper { this: DatabaseFlow =>
     workOutPlanWidth(pr.id)
 
     val panel = $(s"#${pr.id}")
-    val planViewToggle = $(s".plan-view-toggle", panel)
     val chart = $(s".plan-chart", panel)
     val raw = $(s".plan-raw", panel)
+
+    $("a", panel).click { (e: JQueryEventObject) =>
+      $(e.currentTarget).toggleClass("open")
+      false
+    }
+
+    val planViewToggle = $(s".plan-view-toggle", panel)
     var showingChart = true
 
     planViewToggle.click((e: JQueryEventObject) => {

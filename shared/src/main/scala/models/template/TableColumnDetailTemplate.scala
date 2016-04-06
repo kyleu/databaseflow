@@ -24,11 +24,11 @@ object TableColumnDetailTemplate {
               table(cls := "bordered highlight responsive-table")(
                 thead(
                   tr(
-                    td("Name"),
-                    td("PK"),
-                    td("NN"),
-                    td("Type"),
-                    td("Default")
+                    th("Name"),
+                    th(title := "Primary Key")("PK"),
+                    th(title := "Not Null")("NN"),
+                    th("Type"),
+                    th("Default")
                   )
                 ),
                 tbody(

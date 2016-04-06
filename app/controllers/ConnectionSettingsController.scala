@@ -26,7 +26,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
 
   def save(connectionId: UUID) = withSession("save") { implicit request =>
     val connOpt = ConnectionSettingsService.getById(connectionId)
-    val conn = connOpt.getOrElse(ConnectionSettings.empty.copy(id = connectionId))
+    val conn = connOpt.getOrElse(ConnectionSettings(id = connectionId))
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
         val title = ConnectionForm.form.value.map(_.name).getOrElse("New Connection")
@@ -35,6 +35,8 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       cf => {
         val almostUpdated = conn.copy(
           name = cf.name,
+          owner = conn.owner.orElse(Some(request.identity.id)),
+          public = cf.public,
           engine = DatabaseEngine.get(cf.engine),
           url = cf.url,
           username = cf.username,

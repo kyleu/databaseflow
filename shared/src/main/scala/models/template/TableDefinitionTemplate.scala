@@ -19,7 +19,7 @@ object TableDefinitionTemplate {
               i(cls := s"right fa ${Icons.close}")
             ),
             t.definition match {
-              case Some(definition) => pre(definition)
+              case Some(definition) => pre(cls := "pre-wrap")(definition)
               case None => div("No definition is available for this table.")
             }
           )

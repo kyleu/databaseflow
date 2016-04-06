@@ -5,6 +5,8 @@ object CreateConnectionsTable extends CreateTableStatement("connections") {
     create table $tableName (
       id uuid not null primary key,
       name ${eng.varchar}(256) not null,
+      owner uuid,
+      public boolean not null,
       description ${eng.varchar}(4096) not null,
       engine ${eng.varchar}(128) not null,
       url ${eng.varchar}(2048) not null,

@@ -142,6 +142,6 @@ object H2 extends DatabaseEngine(
   override val quoteIdentifier = "\""
   override val explainSupported = false
   override val analyzeSupported = false
-  override val showCreateTableSupported = false
+  override val showCreateSupported = false
 }
 // scalastyle:on

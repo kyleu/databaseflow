@@ -64,9 +64,9 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   }
 
   protected[this] def handleGetTableRowData(queryId: UUID, name: String) = {
-    SchemaService.getTable(name) match {
+    SchemaService.getTable(connectionId, name) match {
       case Some(table) => handleShowTableDataResponse(queryId, table)
-      case None => SchemaService.getView(name) match {
+      case None => SchemaService.getView(connectionId, name) match {
         case Some(view) => handleShowTableDataResponse(queryId, view)
         case None =>
           log.warn(s"Attempted to view invalid table or view [$name].")

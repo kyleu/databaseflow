@@ -30,7 +30,8 @@ object AdHocQueryManager {
   }
 
   def addAdHocQuery(queryId: UUID, queryName: String, sql: String): Unit = {
-    QueryManager.workspace.append(QueryEditorTemplate.forAdHocQuery(queryId, queryName, sql).toString)
+    val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
+    QueryManager.workspace.append(QueryEditorTemplate.forAdHocQuery(engine, queryId, queryName, sql).toString)
     TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery)
 
     val queryPanel = $(s"#panel-$queryId")

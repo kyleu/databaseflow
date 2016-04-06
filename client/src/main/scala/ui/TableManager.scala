@@ -22,12 +22,13 @@ object TableManager {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
-      if (!tables.isDefinedAt(name)) {
-        utils.NetworkMessage.sendMessage(GetTableDetail(name))
-      }
-
       val queryId = UUID.randomUUID
       WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
+
+      tables.get(name) match {
+        case Some(table) => setTableDetails(queryId, table)
+        case None => utils.NetworkMessage.sendMessage(GetTableDetail(name))
+      }
 
       TabManager.addTab(queryId, "table-" + name, name, Icons.table)
 

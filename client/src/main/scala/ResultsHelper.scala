@@ -18,9 +18,17 @@ trait ResultsHelper { this: DatabaseFlow =>
     workspace.prepend(html.toString)
 
     val panel = $(s"#${qr.id}", workspace)
-    val resultEl = $(".query-result-table", workspace)
-    val sqlEl = $(".query-result-sql", workspace)
+    val resultEl = $(".query-result-table", panel)
+    val sqlEl = $(".query-result-sql", panel)
     val sqlLink = $(s".results-sql-link", panel)
+
+    $(".query-rel-link", panel).click { (e: JQueryEventObject) =>
+      val jq = $(e.currentTarget)
+      val table = jq.data("rel-table").toString
+      val id = jq.data("rel-id").toString
+      TableManager.tableDetail(table)
+      false
+    }
 
     var sqlShown = false
 

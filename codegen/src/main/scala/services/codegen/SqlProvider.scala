@@ -15,13 +15,18 @@ object SqlProvider {
     case _ => "varchar"
   }
 
-  def showCreateTableSupported(implicit engine: Engine) = engine match {
+  def showCreateSupported(implicit engine: Engine) = engine match {
     case MySQL => true
     case _ => false
   }
 
   def showCreateTable(implicit engine: Engine) = engine match {
     case MySQL => "\"show create table \" + tableName"
+    case _ => false
+  }
+
+  def showCreateView(implicit engine: Engine) = engine match {
+    case MySQL => "\"show create view \" + viewName"
     case _ => false
   }
 }

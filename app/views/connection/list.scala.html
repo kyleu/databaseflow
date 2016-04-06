@@ -13,7 +13,9 @@
         <em style="display: block;">@c.url</em>
         <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn" style="margin: 10px 0;">Query</a>
         @if(c.id != services.database.ConnectionSettingsService.masterId) {
-          <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
+          @if(c.owner.isEmpty || c.owner.contains(user.id)) {
+            <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
+          }
         }
       </div>
     </div>

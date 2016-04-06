@@ -30,8 +30,9 @@ case class DatabaseEngine(
   val analyzeSupported = true
   def analyze(sql: String) = ""
 
-  val showCreateTableSupported = true
+  val showCreateSupported = true
   def showCreateTable(name: String) = ""
+  def showCreateView(name: String) = ""
 
   override def toString = id
 }

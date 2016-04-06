@@ -131,6 +131,6 @@ object PostgreSQL extends DatabaseEngine(
   override def explain(sql: String) = "explain (costs, verbose, format json) " + sql
   override val analyzeSupported = true
   override def analyze(sql: String) = "explain (analyze, costs, verbose, buffers, format json) " + sql
-  override val showCreateTableSupported = false
+  override val showCreateSupported = false
 }
 // scalastyle:on

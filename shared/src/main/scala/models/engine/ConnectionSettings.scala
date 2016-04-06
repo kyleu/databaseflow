@@ -12,6 +12,8 @@ object ConnectionSettings {
 case class ConnectionSettings(
   id: UUID = UUID.randomUUID,
   name: String = "",
+  owner: Option[UUID] = None,
+  public: Boolean = true,
   description: String = "",
   engine: DatabaseEngine = ConnectionSettings.defaultEngine,
   url: String = ConnectionSettings.defaultEngine.exampleUrl,

@@ -154,7 +154,8 @@ object MySQL extends DatabaseEngine(
   override val explainSupported = true
   override def explain(sql: String) = "explain format=json " + sql
   override val analyzeSupported = false
-  override val showCreateTableSupported = true
+  override val showCreateSupported = true
   override def showCreateTable(tableName: String) = "show create table " + tableName
+  override def showCreateView(viewName: String) = "show create view " + viewName
 }
 // scalastyle:on

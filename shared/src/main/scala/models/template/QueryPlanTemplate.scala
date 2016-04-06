@@ -41,10 +41,10 @@ object QueryPlanTemplate {
   def forPlan(pr: PlanResultResponse) = cardFor(pr)
 
   private[this] def forNode(node: PlanNode, className: String): Modifier = if (node.children.isEmpty) {
-    li(cls := className)(a(href := "#")(node.title))
+    li(cls := className)(a(cls := "z-depth-1", href := "#")(node.title))
   } else {
     val kids = node.children.map(n => forNode(n, ""))
-    li(cls := className)(a(href := "#")(node.title), ul(kids: _*))
+    li(cls := className)(a(cls := "z-depth-1", href := "#")(node.title), ul(kids: _*))
   }
 
   private[this] def cardFor(pr: PlanResultResponse) = {
@@ -65,7 +65,7 @@ object QueryPlanTemplate {
               ),
               div(cls := "clear")
             ),
-            pre(cls := "plan-raw")(pr.result.raw)
+            pre(cls := "plan-raw pre-wrap")(pr.result.raw)
           ),
           div(cls := "card-action")(
             a(href := "#")("Download"),

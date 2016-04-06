@@ -19,7 +19,7 @@ object QueryResultsTemplate {
         p(s"${qr.result.data.size} rows returned in [${qr.durationMs}ms]."),
         DataTableTemplate.forResults(res),
         div(cls := "z-depth-1 query-result-sql")(
-          pre(res.sql)
+          pre(cls := "pre-wrap")(res.sql)
         )
       ),
       div(cls := "card-action")(

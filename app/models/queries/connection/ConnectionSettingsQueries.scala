@@ -9,24 +9,31 @@ import utils.EncryptUtils
 
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
-  override protected val columns = Seq("id", "name", "description", "engine", "url", "username", "password")
+  override protected val columns = Seq("id", "name", "owner", "public", "description", "engine", "url", "username", "password")
   override protected val searchColumns = columns
 
   val insert = Insert
   def delete(id: UUID) = Delete(Seq(id))
   def getAll(orderBy: String = "name") = GetAll(orderBy = orderBy)
+  def getVisible(owner: UUID, orderBy: String = "name") = GetAll(
+    whereClause = Some("public = true or owner = ?"),
+    orderBy = orderBy,
+    values = Seq(owner)
+  )
   def getById(id: UUID) = GetById(Seq(id))
   val search = Search
   val removeById = RemoveById
 
   case class Update(cs: ConnectionSettings) extends Statement {
-    override def sql = s"update $tableName set name = ?, description = ?, engine = ?, url = ?, username = ?, password = ? where id = ?"
-    override def values = Seq(cs.name, cs.description, cs.engine.id, cs.url, cs.username, cs.password, cs.id)
+    override def sql = s"update $tableName set name = ?, owner = ?, public = ?, description = ?, engine = ?, url = ?, username = ?, password = ? where id = ?"
+    override def values = Seq(cs.name, cs.owner, cs.public, cs.description, cs.engine.id, cs.url, cs.username, cs.password, cs.id)
   }
 
   override protected def fromRow(row: Row) = ConnectionSettings(
     id = row.as[UUID]("id"),
     name = row.as[String]("name"),
+    owner = row.asOpt[UUID]("owner"),
+    public = row.as[Boolean]("public"),
     description = row.as[String]("description"),
     engine = DatabaseEngine.get(row.as[String]("engine")),
     url = row.as[String]("url"),
@@ -35,6 +42,6 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = {
-    Seq[Any](q.id, q.name, q.description, q.engine.toString, q.url, q.username, EncryptUtils.encrypt(q.password))
+    Seq[Any](q.id, q.name, q.owner, q.public, q.description, q.engine.toString, q.url, q.username, EncryptUtils.encrypt(q.password))
   }
 }
