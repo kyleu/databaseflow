@@ -8,11 +8,9 @@ import models.{ GetTableDetail, GetTableRowData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
 object TableManager {
-  var tables = Map.empty[String, Table]
   private[this] var openTables = Map.empty[String, UUID]
 
   def addTable(table: Table) = {
-    tables = tables + (table.name -> table)
     openTables.get(table.name).foreach { uuid =>
       setTableDetails(uuid, table)
     }
@@ -25,7 +23,7 @@ object TableManager {
       val queryId = UUID.randomUUID
       WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
-      tables.get(name) match {
+      MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
         case Some(table) => setTableDetails(queryId, table)
         case None => utils.NetworkMessage.sendMessage(GetTableDetail(name))
       }

@@ -9,11 +9,9 @@ import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
 object ViewManager {
-  var views = Map.empty[String, Table]
   var openViews = Map.empty[String, UUID]
 
   def addView(view: Table) = {
-    views = views + (view.name -> view)
     openViews.get(view.name).foreach { uuid =>
       setViewDetails(uuid, view)
     }
@@ -27,7 +25,7 @@ object ViewManager {
       val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
       WorkspaceManager.append(QueryEditorTemplate.forView(engine, queryId, name, None, s"select * from $name").toString)
 
-      views.get(name) match {
+      MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
         case Some(view) => setViewDetails(queryId, view)
         case None => utils.NetworkMessage.sendMessage(GetViewDetail(name))
       }
@@ -38,7 +36,7 @@ object ViewManager {
       def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 
       $(".columns-link", queryPanel).click({ (e: JQueryEventObject) =>
-        views.get(name) match {
+        MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
           case Some(view) => viewColumns(queryId, view)
           case None => crash()
         }
@@ -46,7 +44,7 @@ object ViewManager {
       })
 
       $(".definition-link", queryPanel).click({ (e: JQueryEventObject) =>
-        views.get(name) match {
+        MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
           case Some(view) => viewDefinition(queryId, view)
           case None => crash()
         }

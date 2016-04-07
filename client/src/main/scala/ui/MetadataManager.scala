@@ -53,8 +53,8 @@ object MetadataManager {
       $("#table-list-toggle").css("display", "none")
     }
     tables = Some(sch.tables.map { x =>
-      val el = $("#sidenav-table-" + x)
-      (x, el, $("span", el))
+      val el = $("#sidenav-table-" + x.name)
+      (x.name, el, $("span", el))
     })
 
     if (sch.views.nonEmpty) {
@@ -70,8 +70,8 @@ object MetadataManager {
       $("#view-list-toggle").css("display", "none")
     }
     views = Some(sch.views.map { x =>
-      val el = $("#sidenav-view-" + x)
-      (x, el, $("span", el))
+      val el = $("#sidenav-view-" + x.name)
+      (x.name, el, $("span", el))
     })
 
     if (sch.procedures.nonEmpty) {
@@ -87,8 +87,8 @@ object MetadataManager {
       $("#procedure-list-toggle").css("display", "none")
     }
     procedures = Some(sch.procedures.map { x =>
-      val el = $("#sidenav-procedure-" + x)
-      (x, el, $("span", el))
+      val el = $("#sidenav-procedure-" + x.name)
+      (x.name, el, $("span", el))
     })
 
     schema = Some(sch)

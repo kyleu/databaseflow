@@ -9,17 +9,17 @@ object SearchFilterManager {
     case Some(sq) => Seq(id, sq.name, sq.description.getOrElse(""), sq.sql)
     case None => Seq(id)
   }
-  private[this] def tableFields(id: String) = TableManager.tables.get(id) match {
-    case Some(t) => Seq(id, t.description.getOrElse("")) ++ t.columns.map(_.name)
-    case None => Seq(id)
+  private[this] def tableFields(name: String) = MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
+    case Some(t) => Seq(name, t.description.getOrElse("")) ++ t.columns.map(_.name)
+    case None => Seq(name)
   }
-  private[this] def viewFields(id: String) = ViewManager.views.get(id) match {
-    case Some(v) => Seq(id, v.description.getOrElse("")) ++ v.columns.map(_.name)
-    case None => Seq(id)
+  private[this] def viewFields(name: String) = MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
+    case Some(v) => Seq(name, v.description.getOrElse("")) ++ v.columns.map(_.name)
+    case None => Seq(name)
   }
-  private[this] def procedureFields(id: String) = ProcedureManager.procedures.get(id) match {
-    case Some(p) => Seq(id, p.description.getOrElse("")) ++ p.params.map(_.name)
-    case None => Seq(id)
+  private[this] def procedureFields(name: String) = MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
+    case Some(p) => Seq(name, p.description.getOrElse("")) ++ p.params.map(_.name)
+    case None => Seq(name)
   }
 
   def filterSchema(searches: Seq[String]) = {

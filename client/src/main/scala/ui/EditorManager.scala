@@ -15,7 +15,7 @@ object EditorManager {
 
   private[this] def completionsFor(editor: js.Any, session: js.Any, pos: js.Any, prefix: String, callback: js.Dynamic) {
     val schemaMatches = MetadataManager.schema.map { sch =>
-      convertToJs(sch.tables, "table") ++ convertToJs(sch.views, "view") ++ convertToJs(sch.procedures, "procedure")
+      convertToJs(sch.tables.map(_.name), "table") ++ convertToJs(sch.views.map(_.name), "view") ++ convertToJs(sch.procedures.map(_.name), "procedure")
     }.getOrElse(Nil)
     val engineMatches = MetadataManager.engine.map { eng =>
       convertToJs(eng.builtInFunctions, "function") ++ convertToJs(eng.columnTypes, "type")

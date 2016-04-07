@@ -12,7 +12,7 @@ object TableObjectManager {
     def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 
     $(".foreign-keys-link", queryPanel).click({ (e: JQueryEventObject) =>
-      TableManager.tables.get(name) match {
+      MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
         case Some(table) => viewForeignKeys(queryId, table)
         case None => crash()
       }
@@ -20,7 +20,7 @@ object TableObjectManager {
     })
 
     $(".indexes-link", queryPanel).click({ (e: JQueryEventObject) =>
-      TableManager.tables.get(name) match {
+      MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
         case Some(table) => viewIndexes(queryId, table)
         case None => crash()
       }
@@ -28,7 +28,7 @@ object TableObjectManager {
     })
 
     $(".columns-link", queryPanel).click({ (e: JQueryEventObject) =>
-      TableManager.tables.get(name) match {
+      MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
         case Some(table) => viewColumns(queryId, table)
         case None => crash()
       }
@@ -36,7 +36,7 @@ object TableObjectManager {
     })
 
     $(".definition-link", queryPanel).click({ (e: JQueryEventObject) =>
-      TableManager.tables.get(name) match {
+      MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
         case Some(table) => viewDefinition(queryId, table)
         case None => crash()
       }

@@ -8,71 +8,59 @@ import services.database.DatabaseConnection
 import utils.NullUtils
 
 object MetadataTables {
-  def getTableNames(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], tableType: String) = {
-    val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array(tableType))
-    val tableNames = new Row.Iter(rs).map(row => row.as[String]("TABLE_NAME")).toList
-    tableNames.sorted
+  def getTables(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+    val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
+    val tables = new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
+    tables.map { table =>
+      getTableDetails(db, conn, metadata, table)
+    }
   }
 
-  def getTableDetails(
-    db: DatabaseConnection,
-    conn: Connection,
-    metadata: DatabaseMetaData,
-    catalog: Option[String],
-    schema: Option[String],
-    tableName: String
-  ) = {
-    val rs = metadata.getTables(catalog.orNull, schema.orNull, tableName, NullUtils.inst)
-    val tables = new Row.Iter(rs).map(fromRow).toList
-    val t = tables.headOption.getOrElse(throw new IllegalArgumentException(s"Cannot find table [$tableName]."))
-
+  private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
     val definition = if (db.engine.showCreateSupported) {
       Some(db(conn, new Query[String] {
-        override def sql = db.engine.showCreateTable(tableName)
+        override def sql = db.engine.showCreateTable(table.name)
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.head
       }))
     } else {
       None
     }
 
-    t.copy(
+    table.copy(
       definition = definition,
-      columns = MetadataColumns.getColumns(metadata, t),
-      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, t),
-      primaryKey = MetadataKeys.getPrimaryKey(metadata, t),
-      foreignKeys = MetadataKeys.getForeignKeys(metadata, t),
-      indexes = MetadataIndexes.getIndexes(metadata, t)
+      columns = MetadataColumns.getColumns(metadata, table),
+      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table),
+      primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
+      foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
+      indexes = MetadataIndexes.getIndexes(metadata, table)
     )
   }
 
-  def getViewDetails(
-    db: DatabaseConnection,
-    conn: Connection,
-    metadata: DatabaseMetaData,
-    catalog: Option[String],
-    schema: Option[String],
-    viewName: String
-  ) = {
-    val rs = metadata.getTables(catalog.orNull, schema.orNull, viewName, NullUtils.inst)
-    val tables = new Row.Iter(rs).map(fromRow).toList
-    val t = tables.headOption.getOrElse(throw new IllegalArgumentException(s"Cannot find view [$viewName]."))
+  def getViews(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+    val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("VIEW"))
+    val views = new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
+    views.map { table =>
+      getViewDetails(db, conn, metadata, table)
+    }
+  }
 
+  private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: Table) = {
     val definition = if (db.engine.showCreateSupported) {
       Some(db(conn, new Query[String] {
-        override def sql = db.engine.showCreateView(viewName)
+        override def sql = db.engine.showCreateView(view.name)
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.head
       }))
     } else {
       None
     }
 
-    t.copy(
+    view.copy(
       definition = definition,
-      columns = MetadataColumns.getColumns(metadata, t),
-      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, t),
-      primaryKey = MetadataKeys.getPrimaryKey(metadata, t),
-      foreignKeys = MetadataKeys.getForeignKeys(metadata, t),
-      indexes = MetadataIndexes.getIndexes(metadata, t)
+      columns = MetadataColumns.getColumns(metadata, view),
+      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, view),
+      primaryKey = MetadataKeys.getPrimaryKey(metadata, view),
+      foreignKeys = MetadataKeys.getForeignKeys(metadata, view),
+      indexes = MetadataIndexes.getIndexes(metadata, view)
     )
   }
 

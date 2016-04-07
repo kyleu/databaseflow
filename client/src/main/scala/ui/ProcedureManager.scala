@@ -8,11 +8,9 @@ import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
 object ProcedureManager {
-  var procedures = Map.empty[String, Procedure]
   var openProcedures = Map.empty[String, UUID]
 
   def addProcedure(p: Procedure) = {
-    procedures = procedures + (p.name -> p)
   }
 
   def procedureDetail(name: String) = openProcedures.get(name) match {
@@ -29,7 +27,7 @@ object ProcedureManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".call-link", queryPanel).click({ (e: JQueryEventObject) =>
-        procedures.get(name) match {
+        MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")
         }

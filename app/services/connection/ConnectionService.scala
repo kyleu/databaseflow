@@ -32,26 +32,15 @@ class ConnectionService(
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
   protected[this] val schema = SchemaService.getSchema(connectionId, db)
-  protected[this] val savedQueries = {
-    val sqs = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
-    out ! SavedQueryResultResponse(sqs, 0)
-    sqs
-  }
+  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
   override def preStart() = {
     supervisor ! ConnectionStarted(user, id, self)
-    out ! InitialState(user.id, currentUsername, userPreferences, schema)
-
-    SchemaService.getMissingTableDetails(connectionId, db, Some(out))
-    SchemaService.getMissingViewDetails(connectionId, db, Some(out))
-    SchemaService.getMissingTableDetails(connectionId, db, Some(out))
-
-    val connectionDetails = SchemaService.getConnectionDetails(connectionId)
-    out ! TableResultResponse(connectionDetails.tables.values.toSeq.sortBy(_.name), 0)
-    out ! ViewResultResponse(connectionDetails.views.values.toSeq.sortBy(_.name), 0)
-    out ! ProcedureResultResponse(connectionDetails.procedures.values.toSeq.sortBy(_.name), 0)
+    out ! SavedQueryResultResponse(savedQueries, 0)
+    val is = InitialState(user.id, currentUsername, userPreferences, schema)
+    out ! is
   }
 
   override def receiveRequest = {
