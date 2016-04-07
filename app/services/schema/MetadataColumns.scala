@@ -8,6 +8,14 @@ import models.schema.{ Column, Table }
 import utils.NullUtils
 
 object MetadataColumns {
+  def getAllColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+    val rs = metadata.getColumns(catalog.orNull, schema.orNull, NullUtils.inst, NullUtils.inst)
+    val columns = new Row.Iter(rs).map { row =>
+      row.as[String]("TABLE_NAME") -> fromRow(row)
+    }.toList
+    columns.sortBy(_._1).map(_._2)
+  }
+
   def getColumns(metadata: DatabaseMetaData, t: Table) = {
     val rs = metadata.getColumns(t.catalog.orNull, t.schema.orNull, t.name, NullUtils.inst)
     val columns = new Row.Iter(rs).map(fromRow).toList

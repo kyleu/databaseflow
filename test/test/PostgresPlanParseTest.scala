@@ -1,6 +1,9 @@
 package test
 
-import models.engine.rdbms.{ MySQL, PostgreSQL }
+import java.util.UUID
+
+import models.PlanResultResponse
+import models.engine.rdbms.PostgreSQL
 import org.scalatest.{ FlatSpec, Matchers }
 
 class PostgresPlanParseTest extends FlatSpec with Matchers {
@@ -11,6 +14,8 @@ class PostgresPlanParseTest extends FlatSpec with Matchers {
 
   it should "load complex PostgreSQL plan" in {
     val result = PlanParseTestHelper.test("postgres-complicated-query", PostgreSQL)
+    println(utils.JsonSerializers.writeResponseMessage(PlanResultResponse(UUID.randomUUID, result, 0), debug = true))
+
     1 should be(1)
   }
 

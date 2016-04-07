@@ -19,7 +19,7 @@ class MessageFrameFormatter(debug: Boolean) extends Logging {
     case NonFatal(x) => MalformedRequest(s"Invalid Request [${x.getClass.getSimpleName}]", json.toString)
   }
 
-  private[this] def responseToJsValue(r: ResponseMessage): Js.Value = JsonSerializers.writeResponseMessage(r)
+  private[this] def responseToJsValue(r: ResponseMessage): Js.Value = JsonSerializers.writeResponseMessageJs(r)
 
   private[this] def responseFromJsValue(json: Js.Value): ResponseMessage = {
     throw new IllegalArgumentException(s"Attempted to deserialize ResponseMessage [$json] on server.")
