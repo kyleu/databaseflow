@@ -1,7 +1,7 @@
 package utils.web
 
 import models.{ MalformedRequest, RequestMessage, ResponseMessage }
-import play.api.mvc.WebSocket.MessageFlowTransformer
+import play.api.mvc.WebSocket.FrameFormatter
 import upickle.{ Js, json }
 import utils.{ JsonSerializers, Logging }
 
@@ -42,9 +42,8 @@ class MessageFrameFormatter(debug: Boolean) extends Logging {
     }
   }
 
-  implicit val transformer = MessageFlowTransformer.stringMessageFlowTransformer.map { s =>
-    requestFromJsValue(jsValueFromString(s))
-  }.contramap { m: ResponseMessage =>
-    jsValueToString(responseToJsValue(m))
-  }
+  private[this] val jsValueFrame: FrameFormatter[Js.Value] = FrameFormatter.stringFrame.transform(jsValueToString, jsValueFromString)
+
+  implicit val requestFormatter = jsValueFrame.transform(requestToJsValue, requestFromJsValue)
+  implicit val responseFormatter = jsValueFrame.transform(responseToJsValue, responseFromJsValue)
 }
