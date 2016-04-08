@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec
 import org.apache.commons.codec.binary.Base64
 
 object EncryptUtils {
+<<<<<<< HEAD
   private[this] val key: String = "DmNB6cZ6aOtYO8WxhdDW1poREkXm7swKCcOVmbsB"
 
   private[this] val encryptCipher = {
