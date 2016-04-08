@@ -53,9 +53,7 @@ object Dependencies {
   }
 
   object Authentication {
-    val version = "4.0.0-BETA1"
-    val silhouette = "com.mohiva" %% "play-silhouette" % version
-    val bCrypt = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
+    val silhouette = "com.mohiva" %% "play-silhouette" % "3.0.4"
   }
 
   object WebJars {
