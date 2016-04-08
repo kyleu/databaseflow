@@ -1,6 +1,5 @@
 package services.schema
 
-import java.sql.Connection
 import java.util.UUID
 
 import models.schema.Schema
@@ -14,20 +13,26 @@ object SchemaService {
     case None => calculateSchema(connectionId, db)
   }
 
+  def refreshSchema(connectionId: UUID, db: DatabaseConnection) = schemaMap.get(connectionId) match {
+    case Some(schema) => db.withConnection { conn =>
+      val metadata = conn.getMetaData
+      val updated = schema.copy(
+        tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
+        views = MetadataTables.withViewDetails(db, conn, metadata, schema.views),
+        procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures),
+        detailsLoadedAt = Some(System.currentTimeMillis)
+      )
+      schemaMap = schemaMap + (connectionId -> updated)
+      updated
+    }
+    case None => throw new IllegalStateException(s"Attempted to refresh schema [$connectionId], which is not loaded.")
+  }
+
   def getTable(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.tables.find(_.name == name))
   def getView(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.views.find(_.name == name))
   def getProcedure(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.procedures.find(_.name == name))
 
-  private[this] def withConnection[T](db: DatabaseConnection)(f: (Connection) => T) = {
-    val conn = db.source.getConnection()
-    try {
-      f(conn)
-    } finally {
-      conn.close()
-    }
-  }
-
-  private[this] def calculateSchema(connectionId: UUID, db: DatabaseConnection) = withConnection(db) { conn =>
+  private[this] def calculateSchema(connectionId: UUID, db: DatabaseConnection) = db.withConnection { conn =>
     val catalogName = Option(conn.getCatalog)
     val schemaName = try {
       Option(conn.getSchema)

@@ -18,5 +18,7 @@ case class Schema(
   maxSqlLength: Int,
   tables: Seq[Table],
   views: Seq[Table],
-  procedures: Seq[Procedure]
+  procedures: Seq[Procedure],
+
+  detailsLoadedAt: Option[Long] = None
 )

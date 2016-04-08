@@ -26,13 +26,13 @@ object SearchFilterManager {
     MetadataManager.savedQueries.foreach { savedQueries =>
       filterObjects("saved-query", savedQueries, searches, SearchManager.savedQueriesToggle, savedQueryFields)
     }
-    MetadataManager.tables.foreach { tables =>
+    MetadataUpdates.tables.foreach { tables =>
       filterObjects("table", tables, searches, SearchManager.tablesToggle, tableFields)
     }
-    MetadataManager.views.foreach { views =>
+    MetadataUpdates.views.foreach { views =>
       filterObjects("view", views, searches, SearchManager.viewsToggle, viewFields)
     }
-    MetadataManager.procedures.foreach { procedures =>
+    MetadataUpdates.procedures.foreach { procedures =>
       filterObjects("procedure", procedures, searches, SearchManager.proceduresToggle, procedureFields)
     }
   }

@@ -12,5 +12,7 @@ case class Table(
   rowIdentifier: Seq[String] = Nil,
   primaryKey: Option[PrimaryKey] = None,
   foreignKeys: Seq[ForeignKey] = Nil,
-  indexes: Seq[Index] = Nil
+  indexes: Seq[Index] = Nil,
+
+  loadedAt: Long = System.currentTimeMillis
 )

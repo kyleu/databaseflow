@@ -60,10 +60,21 @@ trait ResultsHelper { this: DatabaseFlow =>
     })
   }
 
-  protected[this] def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = SavedQueryManager.updateSavedQueries(sqrr.savedQueries)
-  protected[this] def handleTableResultResponse(tr: TableResultResponse) = tr.tables.foreach(TableManager.addTable)
-  protected[this] def handleViewResultResponse(vrr: ViewResultResponse) = vrr.views.foreach(ViewManager.addView)
-  protected[this] def handleProcedureResultResponse(prr: ProcedureResultResponse) = prr.procedures.foreach(ProcedureManager.addProcedure)
+  protected[this] def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = {
+    SavedQueryManager.updateSavedQueries(sqrr.savedQueries)
+  }
+  protected[this] def handleTableResultResponse(tr: TableResultResponse) = {
+    MetadataUpdates.updateTables(tr.tables)
+    tr.tables.foreach(TableManager.addTable)
+  }
+  protected[this] def handleViewResultResponse(vrr: ViewResultResponse) = {
+    MetadataUpdates.updateViews(vrr.views)
+    vrr.views.foreach(ViewManager.addView)
+  }
+  protected[this] def handleProcedureResultResponse(prr: ProcedureResultResponse) = {
+    MetadataUpdates.updateProcedures(prr.procedures)
+    prr.procedures.foreach(ProcedureManager.addProcedure)
+  }
 
   protected[this] def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Save Error", err)

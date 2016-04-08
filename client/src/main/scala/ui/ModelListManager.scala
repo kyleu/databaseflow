@@ -14,18 +14,18 @@ object ModelListManager {
     case None =>
       val queryId = UUID.randomUUID
 
-      val name = key match {
-        case "saved-query" => "Saved Queries"
-        case "table" => "Tables"
-        case "view" => "Views"
-        case "procedure" => "Stored Procedures"
+      val schema = MetadataManager.schema.getOrElse(throw new IllegalStateException("Schema not available."))
+
+      val template = key match {
+        case "saved-query" => ModelListTemplate.forSavedQueries(queryId, SavedQueryManager.savedQueries.values.toSeq.sortBy(_.name))
+        case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))
+        case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))
+        case "procedure" => ModelListTemplate.forProcedures(queryId, schema.procedures.sortBy(_.name))
         case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
       }
 
-      val html = ModelListTemplate.forModels(queryId, key, name).toString
-
-      WorkspaceManager.append(html)
-      TabManager.addTab(queryId, "list-" + key, name, Icons.list)
+      WorkspaceManager.append(template._2.toString)
+      TabManager.addTab(queryId, "list-" + key, template._1, Icons.list)
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")

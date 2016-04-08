@@ -30,9 +30,7 @@ object SavedQueryManager {
         savedQueryDetail(sq.id)
       }
     }
-    MetadataManager.setSavedQueries(savedQueries.values.toSeq.sortBy(_.name), (id) => {
-      savedQueryDetail(id)
-    })
+    MetadataManager.updateSavedQueries(savedQueries.values.toSeq.sortBy(_.name))
   }
 
   def savedQueryDetail(id: UUID) = openSavedQueries.find(_ == id) match {

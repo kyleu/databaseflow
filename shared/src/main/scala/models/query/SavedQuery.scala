@@ -15,5 +15,6 @@ case class SavedQuery(
   lastRan: Option[Long] = None,
 
   created: Long = System.currentTimeMillis,
-  updated: Long = System.currentTimeMillis
+  updated: Long = System.currentTimeMillis,
+  loadedAt: Long = System.currentTimeMillis
 )

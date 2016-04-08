@@ -1,5 +1,6 @@
 package services.database
 
+import java.sql.Connection
 import javax.sql.DataSource
 
 import com.codahale.metrics.MetricRegistry
@@ -95,5 +96,14 @@ class DatabaseConnection(val source: DataSource, val engine: DatabaseEngine) ext
 
   def close() = if (source.isWrapperFor(classOf[HikariDataSource])) {
     source.unwrap(classOf[HikariDataSource]).close()
+  }
+
+  def withConnection[T](f: (Connection) => T) = {
+    val conn = source.getConnection()
+    try {
+      f(conn)
+    } finally {
+      conn.close()
+    }
   }
 }

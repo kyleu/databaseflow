@@ -22,7 +22,7 @@ object AdHocQueryManager {
         ""
       } else {
         val qi = MetadataManager.engine.getOrElse(throw new IllegalStateException()).quoteIdentifier
-        s"select * from $qi${s.tables(Random.nextInt(s.tables.size))}$qi limit 5;"
+        s"select * from $qi${s.tables(Random.nextInt(s.tables.size)).name}$qi limit 5;"
       }
     }.getOrElse("")
     addAdHocQuery(queryId, queryName, sql)

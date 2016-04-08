@@ -1,7 +1,5 @@
 package ui
 
-import java.util.UUID
-
 import models.template.Icons
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
@@ -71,9 +69,9 @@ object SearchManager {
   private[this] def clearSearch() = {
     $(".sidenav-link").removeClass("search-ignored")
     clearSearchEntries(MetadataManager.savedQueries, savedQueriesToggle)
-    clearSearchEntries(MetadataManager.tables, tablesToggle)
-    clearSearchEntries(MetadataManager.views, viewsToggle)
-    clearSearchEntries(MetadataManager.procedures, proceduresToggle)
+    clearSearchEntries(MetadataUpdates.tables, tablesToggle)
+    clearSearchEntries(MetadataUpdates.views, viewsToggle)
+    clearSearchEntries(MetadataUpdates.procedures, proceduresToggle)
   }
 
   private[this] def highlightMatches(title: String, matches: Seq[String], j: JQuery) = {

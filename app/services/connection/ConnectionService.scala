@@ -31,7 +31,7 @@ class ConnectionService(
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] val schema = SchemaService.getSchema(connectionId, db)
+  protected[this] var schema = SchemaService.getSchema(connectionId, db)
   protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
@@ -41,6 +41,12 @@ class ConnectionService(
     out ! SavedQueryResultResponse(savedQueries, 0)
     val is = InitialState(user.id, currentUsername, userPreferences, schema)
     out ! is
+    if (schema.detailsLoadedAt.isEmpty) {
+      schema = SchemaService.refreshSchema(connectionId, db)
+      out ! TableResultResponse(schema.tables, 0)
+      out ! ViewResultResponse(schema.views, 0)
+      out ! ProcedureResultResponse(schema.procedures, 0)
+    }
   }
 
   override def receiveRequest = {

@@ -1,7 +1,6 @@
 package utils.web
 
 import models.{ MalformedRequest, RequestMessage, ResponseMessage }
-import play.api.libs.json.Json
 import play.api.mvc.WebSocket.FrameFormatter
 import upickle.{ Js, json }
 import utils.{ JsonSerializers, Logging }

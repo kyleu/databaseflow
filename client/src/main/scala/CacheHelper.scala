@@ -8,11 +8,7 @@ trait CacheHelper { this: DatabaseFlow =>
     UserManager.username = is.username
     UserManager.preferences = Some(is.preferences)
 
-    MetadataManager.setSchema(is.schema, (key, name) => key match {
-      case "table" => TableManager.tableDetail(name)
-      case "view" => ViewManager.viewDetail(name)
-      case "procedure" => ProcedureManager.procedureDetail(name)
-    })
+    MetadataManager.updateSchema(is.schema)
 
     $("#loading-panel").hide()
 

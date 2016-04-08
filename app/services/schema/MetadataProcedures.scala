@@ -1,6 +1,6 @@
 package services.schema
 
-import java.sql.DatabaseMetaData
+import java.sql.{ Connection, DatabaseMetaData }
 
 import models.database.Row
 import models.queries.QueryTranslations
@@ -10,10 +10,11 @@ import utils.NullUtils
 object MetadataProcedures {
   def getProcedures(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getProcedures(catalog.orNull, schema.orNull, NullUtils.inst)
-    val procedures = new Row.Iter(rs).map(procedureFromRow).toList.sortBy(_.name)
-    procedures.map { p =>
-      getProcedureDetails(metadata, catalog, schema, p)
-    }
+    new Row.Iter(rs).map(procedureFromRow).toList.sortBy(_.name)
+  }
+
+  def withProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedures: Seq[Procedure]) = procedures.map { p =>
+    getProcedureDetails(metadata, catalog, schema, p)
   }
 
   def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedure: Procedure) = {

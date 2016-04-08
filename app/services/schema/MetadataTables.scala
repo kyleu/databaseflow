@@ -10,10 +10,11 @@ import utils.NullUtils
 object MetadataTables {
   def getTables(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
-    val tables = new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
-    tables.map { table =>
-      getTableDetails(db, conn, metadata, table)
-    }
+    new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
+  }
+
+  def withTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table]) = tables.map { table =>
+    getTableDetails(db, conn, metadata, table)
   }
 
   private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
@@ -38,10 +39,11 @@ object MetadataTables {
 
   def getViews(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("VIEW"))
-    val views = new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
-    views.map { table =>
-      getViewDetails(db, conn, metadata, table)
-    }
+    new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
+  }
+
+  def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[Table]) = views.map { view =>
+    getViewDetails(db, conn, metadata, view)
   }
 
   private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: Table) = {

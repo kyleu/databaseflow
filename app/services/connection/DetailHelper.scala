@@ -6,19 +6,25 @@ import services.schema.SchemaService
 trait DetailHelper { this: ConnectionService =>
   protected[this] def handleGetTableDetail(name: String) = {
     val startMs = System.currentTimeMillis
-    val table = SchemaService.getTableDetail(connectionId, db, name)
-    out ! TableResultResponse(Seq(table), (System.currentTimeMillis - startMs).toInt)
+    val table = SchemaService.getTable(connectionId, name)
+    table.foreach { t =>
+      out ! TableResultResponse(Seq(t), (System.currentTimeMillis - startMs).toInt)
+    }
   }
 
   protected[this] def handleGetViewDetail(name: String) = {
     val startMs = System.currentTimeMillis
-    val view = SchemaService.getViewDetail(connectionId, db, name)
-    out ! ViewResultResponse(Seq(view), (System.currentTimeMillis - startMs).toInt)
+    val view = SchemaService.getView(connectionId, name)
+    view.foreach { v =>
+      out ! ViewResultResponse(Seq(v), (System.currentTimeMillis - startMs).toInt)
+    }
   }
 
   protected[this] def handleGetProcedureDetail(name: String) = {
     val startMs = System.currentTimeMillis
-    val procedure = SchemaService.getProcedureDetail(connectionId, db, name)
-    out ! ProcedureResultResponse(Seq(procedure), (System.currentTimeMillis - startMs).toInt)
+    val procedure = SchemaService.getProcedure(connectionId, name)
+    procedure.foreach { p =>
+      out ! ProcedureResultResponse(Seq(p), (System.currentTimeMillis - startMs).toInt)
+    }
   }
 }
