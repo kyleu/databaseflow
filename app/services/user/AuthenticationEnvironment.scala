@@ -6,7 +6,9 @@ import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers.{ BasicAuthProvider, CredentialsProvider }
 import com.mohiva.play.silhouette.impl.repositories.DelegableAuthInfoRepository
 import com.mohiva.play.silhouette.impl.services.GravatarService
-import com.mohiva.play.silhouette.impl.util.{ BCryptPasswordHasher, DefaultFingerprintGenerator, SecureRandomIDGenerator }
+import com.mohiva.play.silhouette.impl.util.{ DefaultFingerprintGenerator, SecureRandomIDGenerator }
+import com.mohiva.play.silhouette.password.BCryptPasswordHasher
+import controllers.DefaultEnv
 import models.user.User
 import play.api.Configuration
 import play.api.libs.ws.WSClient
@@ -14,12 +16,12 @@ import play.api.libs.ws.WSClient
 import scala.concurrent.duration._
 
 @javax.inject.Singleton
-class AuthenticationEnvironment @javax.inject.Inject() (val wsClient: WSClient, config: Configuration) extends Environment[User, CookieAuthenticator] {
-  override implicit val executionContext = play.api.libs.concurrent.Execution.Implicits.defaultContext
+class AuthenticationEnvironment @javax.inject.Inject() (val wsClient: WSClient, config: Configuration) extends DefaultEnv {
+  implicit val executionContext = play.api.libs.concurrent.Execution.Implicits.defaultContext
 
   private[this] val fingerprintGenerator = new DefaultFingerprintGenerator(false)
 
-  override val identityService = UserSearchService
+  val identityService = UserSearchService
 
   val userService = UserService
 

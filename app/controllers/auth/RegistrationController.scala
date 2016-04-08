@@ -21,7 +21,7 @@ class RegistrationController @javax.inject.Inject() (override val ctx: Applicati
     UserForms.registrationForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.auth.register(request.identity, form))),
       data => {
-        val futureUserOpt = env.identityService.retrieve(LoginInfo(CredentialsProvider.ID, data.email))
+        val futureUserOpt = ctx.silhouette.env.identityService.retrieve(LoginInfo(CredentialsProvider.ID, data.email))
         futureUserOpt.flatMap {
           case Some(user) => Future.successful {
             Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data))).flashing("error" -> Messages("registration.email.taken"))
@@ -44,7 +44,7 @@ class RegistrationController @javax.inject.Inject() (override val ctx: Applicati
       })
     } else {
       val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
-      val authInfo = env.hasher.hash(data.password)
+      val authInfo = ctx.silhouette.env.hasher.hash(data.password)
       val user = request.identity.copy(
         username = if (data.username.isEmpty) { request.identity.username } else { Some(data.username) },
         profiles = request.identity.profiles :+ loginInfo
@@ -55,19 +55,19 @@ class RegistrationController @javax.inject.Inject() (override val ctx: Applicati
       )
       val r = Redirect(controllers.routes.HomeController.index())
       for {
-        avatar <- env.avatarService.retrieveURL(data.email)
-        profile <- env.userService.create(user, profile.copy(avatarURL = avatar.orElse(Some("default"))))
-        u <- Future.successful(env.userService.save(
+        avatar <- ctx.silhouette.env.avatarService.retrieveURL(data.email)
+        profile <- ctx.silhouette.env.userService.create(user, profile.copy(avatarURL = avatar.orElse(Some("default"))))
+        u <- Future.successful(ctx.silhouette.env.userService.save(
           user.copy(preferences = user.preferences.copy(avatar = avatar.orElse(user.preferences.avatar))),
           update = true
         ))
-        authInfo <- env.authInfoService.save(loginInfo, authInfo)
-        authenticator <- env.authenticatorService.create(loginInfo)
-        value <- env.authenticatorService.init(authenticator)
-        result <- env.authenticatorService.embed(value, r)
+        authInfo <- ctx.silhouette.env.authInfoService.save(loginInfo, authInfo)
+        authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
+        value <- ctx.silhouette.env.authenticatorService.init(authenticator)
+        result <- ctx.silhouette.env.authenticatorService.embed(value, r)
       } yield {
-        env.eventBus.publish(SignUpEvent(u, request, request2Messages))
-        env.eventBus.publish(LoginEvent(u, request, request2Messages))
+        ctx.silhouette.env.eventBus.publish(SignUpEvent(u, request))
+        ctx.silhouette.env.eventBus.publish(LoginEvent(u, request))
         result
       }
     }

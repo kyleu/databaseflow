@@ -20,51 +20,54 @@ trait DefaultEnv extends Env {
   type A = CookieAuthenticator
 }
 
-abstract class BaseController() extends Silhouette[DefaultEnv] with I18nSupport with Instrumented with FutureMetrics with Logging {
+abstract class BaseController() extends I18nSupport with Instrumented with FutureMetrics with Logging {
   def ctx: ApplicationContext
 
   override def messagesApi = ctx.messagesApi
-  override def env = ctx.authEnv
 
-  def withAdminSession(action: String)(block: (SecuredRequest[DefaultEnv, AnyContent]) => Future[Result]) = SecuredAction.async { implicit request =>
-    timing(action) {
-      val startTime = System.nanoTime
-      if (request.identity.roles.contains(Role.Admin)) {
-        block(request)
-      } else {
-        Future.successful(NotFound("404 Not Found"))
+  def withAdminSession(action: String)(block: (SecuredRequest[DefaultEnv, AnyContent]) => Future[Result]) = {
+    ctx.silhouette.SecuredAction.async { implicit request =>
+      timing(action) {
+        val startTime = System.nanoTime
+        if (request.identity.roles.contains(Role.Admin)) {
+          block(request)
+        } else {
+          Future.successful(NotFound("404 Not Found"))
+        }
       }
     }
   }
 
-  def withSession(action: String)(block: (SecuredRequest[DefaultEnv, AnyContent]) => Future[Result]) = UserAwareAction.async { implicit request =>
-    timing(action) {
-      val response = request.identity match {
-        case Some(user) =>
-          val secured = SecuredRequest(user, request.authenticator.getOrElse(throw new IllegalStateException()), request)
-          block(secured)
-        case None =>
-          val user = User(
-            id = UUID.randomUUID(),
-            username = None,
-            preferences = UserPreferences.empty,
-            profiles = Nil,
-            created = DateUtils.now
-          )
+  def withSession(action: String)(block: (SecuredRequest[DefaultEnv, AnyContent]) => Future[Result]) = {
+    ctx.silhouette.UserAwareAction.async { implicit request =>
+      timing(action) {
+        val response = request.identity match {
+          case Some(user) =>
+            val secured = SecuredRequest(user, request.authenticator.getOrElse(throw new IllegalStateException()), request)
+            block(secured)
+          case None =>
+            val user = User(
+              id = UUID.randomUUID(),
+              username = None,
+              preferences = UserPreferences.empty,
+              profiles = Nil,
+              created = DateUtils.now
+            )
 
-          val u = ctx.authEnv.userService.save(user)
-          for {
-            authenticator <- env.authenticatorService.create(LoginInfo("anonymous", u.id.toString))
-            value <- env.authenticatorService.init(authenticator)
-            result <- block(SecuredRequest(u, authenticator, request))
-            authedResponse <- env.authenticatorService.embed(value, result)
-          } yield {
-            env.eventBus.publish(SignUpEvent(u, request))
-            env.eventBus.publish(LoginEvent(u, request))
-            authedResponse
-          }
+            val u = ctx.authEnv.userService.save(user)
+            for {
+              authenticator <- ctx.silhouette.env.authenticatorService.create(LoginInfo("anonymous", u.id.toString))
+              value <- ctx.silhouette.env.authenticatorService.init(authenticator)
+              result <- block(SecuredRequest(u, authenticator, request))
+              authedResponse <- ctx.silhouette.env.authenticatorService.embed(value, result)
+            } yield {
+              ctx.silhouette.env.eventBus.publish(SignUpEvent(u, request))
+              ctx.silhouette.env.eventBus.publish(LoginEvent(u, request))
+              authedResponse
+            }
+        }
+        response
       }
-      response
     }
   }
 }
