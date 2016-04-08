@@ -2,14 +2,13 @@ package utils
 
 import java.util.TimeZone
 
-import akka.actor.Props
+import akka.actor.{ ActorSystem, Props }
 import com.codahale.metrics.SharedMetricRegistries
 import org.joda.time.DateTimeZone
 import play.api.Environment
 import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
-import play.api.libs.concurrent.Akka
 import play.api.mvc.{ Action, RequestHeader, Results }
 import play.api.routing.Router
 import services.database.MasterDatabase
@@ -40,6 +39,7 @@ class ApplicationContext @javax.inject.Inject() (
     val config: Config,
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
+    val actorSystem: ActorSystem,
     val notificationService: NotificationService
 ) extends Logging {
   log.info(s"${Config.projectName} is starting.")
@@ -55,8 +55,7 @@ class ApplicationContext @javax.inject.Inject() (
   lifecycle.addStopHook(() => Future.successful(stop()))
 
   lazy val supervisor = {
-    import play.api.Play.current
-    val instanceRef = Akka.system.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
+    val instanceRef = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
     log.info(s"Actor Supervisor [${instanceRef.path}] started for [${utils.Config.projectId}].")
     instanceRef
   }

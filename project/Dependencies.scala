@@ -25,7 +25,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.4.6"
+    private[this] val version = "2.5.1"
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
     val playTest = "com.typesafe.play" %% "play-test" % version

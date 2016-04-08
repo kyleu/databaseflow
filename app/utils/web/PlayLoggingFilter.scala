@@ -2,6 +2,7 @@ package utils.web
 
 import javax.inject.Inject
 
+import akka.stream.Materializer
 import com.codahale.metrics.Meter
 import play.api.http.Status
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -11,7 +12,7 @@ import utils.metrics.Instrumented
 
 import scala.concurrent.Future
 
-class PlayLoggingFilter @Inject() () extends Filter with Logging with Instrumented {
+class PlayLoggingFilter @Inject() (override implicit val mat: Materializer) extends Filter with Logging with Instrumented {
   val prefix = "databaseflow.requests."
 
   val knownStatuses = Seq(
