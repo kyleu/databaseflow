@@ -3,6 +3,7 @@ package controllers
 import java.util.UUID
 
 import com.mohiva.play.silhouette.api._
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import models.user.{ Role, User, UserPreferences }
 import nl.grons.metrics.scala.FutureMetrics
@@ -14,13 +15,18 @@ import utils.{ ApplicationContext, DateUtils, Logging }
 
 import scala.concurrent.Future
 
-abstract class BaseController() extends Silhouette[User, CookieAuthenticator] with I18nSupport with Instrumented with FutureMetrics with Logging {
+trait DefaultEnv extends Env {
+  type I = User
+  type A = CookieAuthenticator
+}
+
+abstract class BaseController() extends Silhouette[DefaultEnv] with I18nSupport with Instrumented with FutureMetrics with Logging {
   def ctx: ApplicationContext
 
   override def messagesApi = ctx.messagesApi
   override def env = ctx.authEnv
 
-  def withAdminSession(action: String)(block: (SecuredRequest[AnyContent]) => Future[Result]) = SecuredAction.async { implicit request =>
+  def withAdminSession(action: String)(block: (SecuredRequest[DefaultEnv, AnyContent]) => Future[Result]) = SecuredAction.async { implicit request =>
     timing(action) {
       val startTime = System.nanoTime
       if (request.identity.roles.contains(Role.Admin)) {
@@ -31,7 +37,7 @@ abstract class BaseController() extends Silhouette[User, CookieAuthenticator] wi
     }
   }
 
-  def withSession(action: String)(block: (SecuredRequest[AnyContent]) => Future[Result]) = UserAwareAction.async { implicit request =>
+  def withSession(action: String)(block: (SecuredRequest[DefaultEnv, AnyContent]) => Future[Result]) = UserAwareAction.async { implicit request =>
     timing(action) {
       val response = request.identity match {
         case Some(user) =>
@@ -53,8 +59,8 @@ abstract class BaseController() extends Silhouette[User, CookieAuthenticator] wi
             result <- block(SecuredRequest(u, authenticator, request))
             authedResponse <- env.authenticatorService.embed(value, result)
           } yield {
-            env.eventBus.publish(SignUpEvent(u, request, request2Messages))
-            env.eventBus.publish(LoginEvent(u, request, request2Messages))
+            env.eventBus.publish(SignUpEvent(u, request))
+            env.eventBus.publish(LoginEvent(u, request))
             authedResponse
           }
       }
