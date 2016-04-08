@@ -70,7 +70,9 @@ object UserService extends Logging {
     val profiles = MasterDatabase.conn.query(ProfileQueries.FindProfilesByUser(userId))
     profiles.map { profile =>
       profile.loginInfo.providerID match {
-        case "credentials" => MasterDatabase.conn.executeUpdate(PasswordInfoQueries.removeById(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
+        case "credentials" => MasterDatabase.conn.executeUpdate(
+          PasswordInfoQueries.removeById(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey))
+        )
         case p => throw new IllegalArgumentException(s"Unknown provider [$p].")
       }
       MasterDatabase.conn.executeUpdate(ProfileQueries.remove(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))

@@ -21,7 +21,7 @@ object EditorManager {
       convertToJs(eng.builtInFunctions, "function") ++ convertToJs(eng.columnTypes, "type")
     }.getOrElse(Nil)
 
-    callback(null, js.Array(schemaMatches ++ engineMatches: _*))
+    callback(utils.NullUtils.inst, js.Array(schemaMatches ++ engineMatches: _*))
   }
 
   def initEditorFramework() = {

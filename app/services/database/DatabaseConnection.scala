@@ -14,11 +14,7 @@ import utils.metrics.Instrumented
 case class DatabaseConnection(connectionId: UUID, name: String, source: DataSource, engine: DatabaseEngine) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
     val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
-    try {
-      f
-    } finally {
-      ctx.stop
-    }
+    try { f } finally { ctx.stop }
   }
 
   val transactionProvider: TransactionProvider = new TransactionManager
@@ -51,20 +47,12 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
 
   def transactionScope[A](f: => A): A = transaction(logError = true, forceNew = false, (txn: Transaction) => {
     transactionProvider.begin(txn)
-    try {
-      f
-    } finally {
-      transactionProvider.end()
-    }
+    try { f } finally { transactionProvider.end() }
   })
 
   def newTransactionScope[A](f: => A): A = transaction(logError = true, forceNew = true, (txn: Transaction) => {
     transactionProvider.begin(txn)
-    try {
-      f
-    } finally {
-      transactionProvider.end()
-    }
+    try { f } finally { transactionProvider.end() }
   })
 
   def currentTransaction = transactionProvider.currentTransaction
@@ -73,22 +61,14 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
     transactionProvider.currentTransaction(query)
   } else {
     val connection = source.getConnection
-    try {
-      time(query.getClass) { apply(connection, query) }
-    } finally {
-      connection.close()
-    }
+    try { time(query.getClass) { apply(connection, query) } } finally { connection.close() }
   }
 
   def executeUnknown[A](query: Query[Either[A, Int]]): Either[A, Int] = if (transactionProvider.transactionExists) {
     transactionProvider.currentTransaction.executeUnknown(query)
   } else {
     val connection = source.getConnection
-    try {
-      time(query.getClass) { executeUnknown(connection, query) }
-    } finally {
-      connection.close()
-    }
+    try { time(query.getClass) { executeUnknown(connection, query) } } finally { connection.close() }
   }
 
   def executeUpdate(statement: Statement) = {
@@ -96,11 +76,7 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
       transactionProvider.currentTransaction.executeUpdate(statement)
     } else {
       val connection = source.getConnection
-      try {
-        time(statement.getClass) { executeUpdate(connection, statement) }
-      } finally {
-        connection.close()
-      }
+      try { time(statement.getClass) { executeUpdate(connection, statement) } } finally { connection.close() }
     }
   }
 
@@ -112,10 +88,6 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
 
   def withConnection[T](f: (Connection) => T) = {
     val conn = source.getConnection()
-    try {
-      f(conn)
-    } finally {
-      conn.close()
-    }
+    try { f(conn) } finally { conn.close() }
   }
 }

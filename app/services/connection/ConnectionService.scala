@@ -27,7 +27,7 @@ class ConnectionService(
     val user: User,
     val out: ActorRef,
     val sourceAddress: String
-) extends InstrumentedActor with TraceHelper with DetailHelper with QueryHelper with PlanHelper with SqlHelper with Logging {
+) extends InstrumentedActor with StartHelper with DataHelper with TraceHelper with DetailHelper with QueryHelper with PlanHelper with SqlHelper with Logging {
 
   protected[this] var currentUsername = user.username
   protected[this] var userPreferences = user.preferences
@@ -45,28 +45,7 @@ class ConnectionService(
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
-  override def preStart() = {
-    supervisor ! ConnectionStarted(user, id, self)
-    out ! SavedQueryResultResponse(savedQueries, 0)
-    schema.foreach { s =>
-      val is = InitialState(user.id, currentUsername, userPreferences, s)
-      out ! is
-    }
-    if (schema.forall(_.detailsLoadedAt.isEmpty)) {
-      schema = SchemaService.refreshSchema(db) match {
-        case Success(s) => Some(s)
-        case Failure(x) =>
-          log.error("Unable to refresh schema.", x)
-          out ! ServerError("SchemaDetailError", s"${x.getClass.getSimpleName} - ${x.getMessage}")
-          None
-      }
-      schema.foreach { s =>
-        out ! TableResultResponse(s.tables, 0)
-        out ! ViewResultResponse(s.views, 0)
-        out ! ProcedureResultResponse(s.procedures, 0)
-      }
-    }
-  }
+  override def preStart() = onStart()
 
   override def receiveRequest = {
     // Incoming basic messages
