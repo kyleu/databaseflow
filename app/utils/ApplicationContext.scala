@@ -4,8 +4,6 @@ import java.util.TimeZone
 
 import akka.actor.{ ActorSystem, Props }
 import com.codahale.metrics.SharedMetricRegistries
-import com.mohiva.play.silhouette.api.Silhouette
-import controllers.DefaultEnv
 import org.joda.time.DateTimeZone
 import play.api.Environment
 import play.api.http.HttpRequestHandler
@@ -42,8 +40,7 @@ class ApplicationContext @javax.inject.Inject() (
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
     val actorSystem: ActorSystem,
-    val notificationService: NotificationService,
-    val silhouette: Silhouette[DefaultEnv]
+    val notificationService: NotificationService
 ) extends Logging {
   log.info(s"${Config.projectName} is starting.")
 

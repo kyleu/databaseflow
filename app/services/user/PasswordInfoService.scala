@@ -1,7 +1,6 @@
 package services.user
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import models.queries.auth.PasswordInfoQueries
@@ -9,8 +8,8 @@ import services.database.MasterDatabase
 
 import scala.concurrent.Future
 
-object PasswordInfoService extends AuthInfoRepository {
-  override def find[PasswordInfo](loginInfo: LoginInfo) = {
+object PasswordInfoService extends DelegableAuthInfoDAO[PasswordInfo] {
+  override def find(loginInfo: LoginInfo) = {
     Future.successful(MasterDatabase.conn.query(PasswordInfoQueries.getById(Seq(loginInfo.providerID, loginInfo.providerKey))))
   }
 
