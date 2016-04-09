@@ -39,6 +39,7 @@ object MetadataUpdates {
     })
 
     MetadataManager.schema = MetadataManager.schema.map(s => s.copy(tables = ts))
+    ModelListManager.updatePanel("table")
   }
 
   def updateViews(updates: Seq[Table]) = {
@@ -64,6 +65,7 @@ object MetadataUpdates {
     })
 
     MetadataManager.schema = MetadataManager.schema.map(s => s.copy(views = vs))
+    ModelListManager.updatePanel("view")
   }
 
   def updateProcedures(updates: Seq[Procedure]) = {
@@ -89,5 +91,6 @@ object MetadataUpdates {
     })
 
     MetadataManager.schema = MetadataManager.schema.map(s => s.copy(procedures = ps))
+    ModelListManager.updatePanel("procedure")
   }
 }

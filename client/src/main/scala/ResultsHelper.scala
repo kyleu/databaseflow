@@ -25,7 +25,8 @@ trait ResultsHelper { this: DatabaseFlow =>
     $(".query-rel-link", panel).click { (e: JQueryEventObject) =>
       val jq = $(e.currentTarget)
       val table = jq.data("rel-table").toString
-      val id = jq.data("rel-id").toString
+      val col = jq.data("rel-col").toString
+      val v = jq.data("rel-val").toString
       TableManager.tableDetail(table)
       false
     }

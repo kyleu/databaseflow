@@ -16,7 +16,7 @@ object TableManager {
     }
   }
 
-  def tableDetail(name: String) = openTables.get(name) match {
+  def tableDetail(name: String, initialFilter: Option[(String, String, String)] = None) = openTables.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>
@@ -35,7 +35,7 @@ object TableManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, name)
+        viewData(queryId, name, None)
         false
       })
 
@@ -50,8 +50,8 @@ object TableManager {
       openTables = openTables + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, name: String) = {
-    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name))
+  private[this] def viewData(queryId: UUID, name: String, filter: Option[(String, String, String)]) = {
+    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, filter = filter))
   }
 
   private[this] def setTableDetails(uuid: UUID, table: Table) = {

@@ -2,8 +2,11 @@ package ui
 
 import java.util.UUID
 
+import models.schema.Schema
 import models.template.{ Icons, ModelListTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+
+import scalatags.Text.all._
 
 object ModelListManager {
   var openLists = Map.empty[String, UUID]
@@ -13,19 +16,13 @@ object ModelListManager {
       TabManager.selectTab(queryId)
     case None =>
       val queryId = UUID.randomUUID
-
       val schema = MetadataManager.schema.getOrElse(throw new IllegalStateException("Schema not available."))
+      val (name, template) = getTemplate(key, queryId, schema)
 
-      val template = key match {
-        case "saved-query" => ModelListTemplate.forSavedQueries(queryId, SavedQueryManager.savedQueries.values.toSeq.sortBy(_.name))
-        case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))
-        case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))
-        case "procedure" => ModelListTemplate.forProcedures(queryId, schema.procedures.sortBy(_.name))
-        case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
-      }
+      val panelHtml = div(id := s"panel-$queryId", cls := "workspace-panel")(template)
 
-      WorkspaceManager.append(template._2.toString)
-      TabManager.addTab(queryId, "list-" + key, template._1, Icons.list)
+      WorkspaceManager.append(panelHtml.toString)
+      TabManager.addTab(queryId, "list-" + key, name, Icons.list)
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")
@@ -39,7 +36,24 @@ object ModelListManager {
       openLists = openLists + (key -> queryId)
   }
 
-  private def closeList(queryId: UUID): Unit = {
+  def updatePanel(key: String) = openLists.get(key) match {
+    case Some(queryId) =>
+      val schema = MetadataManager.schema.getOrElse(throw new IllegalStateException("Schema not available."))
+      val (name, template) = getTemplate(key, queryId, schema)
+      val queryPanel = $(s"#panel-$queryId")
+      queryPanel.html(template.toString)
+    case None => // no op
+  }
+
+  private[this] def getTemplate(key: String, queryId: UUID, schema: Schema) = key match {
+    case "saved-query" => ModelListTemplate.forSavedQueries(queryId, SavedQueryManager.savedQueries.values.toSeq.sortBy(_.name))
+    case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))
+    case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))
+    case "procedure" => ModelListTemplate.forProcedures(queryId, schema.procedures.sortBy(_.name))
+    case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
+  }
+
+  private[this] def closeList(queryId: UUID): Unit = {
     QueryManager.closeQuery(queryId)
   }
 }

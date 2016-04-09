@@ -45,7 +45,8 @@ object DataTableTemplate {
           href := "#",
           title := s"Open [$relTable] table filtered with [${col.relationColumn.getOrElse("")} ${v.getOrElse("0")}]",
           data("rel-table") := relTable,
-          data("rel-id") := v.getOrElse("")
+          data("rel-col") := col.relationColumn.getOrElse(""),
+          data("rel-val") := v.getOrElse("")
         )(
             i(cls := s"fa ${Icons.relation}"),
             span(contentEl._1)

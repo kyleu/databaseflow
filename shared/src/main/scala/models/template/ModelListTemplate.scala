@@ -64,7 +64,7 @@ object ModelListTemplate {
   }
 
   private[this] def forModels(queryId: UUID, key: String, name: String, t: TypedTag[String]) = {
-    val ret = div(id := s"panel-$queryId", cls := "workspace-panel")(
+    val ret = div(
       div(cls := "row")(
         div(cls := "col s12")(
           div(cls := "card")(

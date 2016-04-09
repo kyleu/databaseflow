@@ -37,6 +37,7 @@ object MetadataManager {
       val el = $("#sidenav-saved-query-" + x.id)
       (x.id.toString, el, $("span", el))
     })
+    ModelListManager.updatePanel("saved-query")
   }
 
   def updateSchema(sch: Schema) = {

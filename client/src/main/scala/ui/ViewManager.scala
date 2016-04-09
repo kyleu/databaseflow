@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.{ GetTableRowData, GetViewDetail }
+import models.GetViewDetail
 import models.schema.Table
 import models.template.{ Icons, QueryEditorTemplate, TableColumnDetailTemplate, TableDefinitionTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
@@ -23,7 +23,8 @@ object ViewManager {
     case None =>
       val queryId = UUID.randomUUID
       val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-      WorkspaceManager.append(QueryEditorTemplate.forView(engine, queryId, name, None, s"select * from $name").toString)
+      val template = QueryEditorTemplate.forView(engine, queryId, name, None, s"select * from $name")
+      WorkspaceManager.append(template.toString)
 
       MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
         case Some(view) => setViewDetails(queryId, view)
@@ -61,10 +62,6 @@ object ViewManager {
 
       openViews = openViews + (name -> queryId)
       QueryManager.addQuery(queryId, queryPanel, (s) => Unit, () => Unit)
-  }
-
-  private[this] def viewData(queryId: UUID, viewName: String) = {
-    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = viewName))
   }
 
   private[this] def setViewDetails(uuid: UUID, view: Table) = {
