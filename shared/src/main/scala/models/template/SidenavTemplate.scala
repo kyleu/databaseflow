@@ -14,20 +14,20 @@ object SidenavTemplate {
   )
   def savedQueries(sqs: Seq[SavedQuery]) = sqs.map(savedQuery)
 
-  private[this] def table(t: Table) = li(a(id := "sidenav-table-" + t.name, cls := "sidenav-link waves-effect waves-light", href := "#table-" + t)(
+  private[this] def table(t: Table) = li(a(id := "sidenav-table-" + t.name, cls := "sidenav-link waves-effect waves-light", href := "#table-" + t.name)(
     em(cls := s"fa ${Icons.tableClosed}"),
     span(title := t.name)(t.name)
   ))
   def tables(tables: Seq[Table]) = tables.map(table)
 
-  private[this] def view(v: View) = li(a(id := "sidenav-view-" + v.name, cls := "sidenav-link waves-effect waves-light", href := "#view-" + v)(
+  private[this] def view(v: View) = li(a(id := "sidenav-view-" + v.name, cls := "sidenav-link waves-effect waves-light", href := "#view-" + v.name)(
     em(cls := s"fa ${Icons.view}"),
     span(title := v.name)(v.name)
   ))
   def views(views: Seq[View]) = views.map(view)
 
   private[this] def procedure(p: Procedure) = li(
-    a(id := "sidenav-procedure-" + p.name, cls := "sidenav-link waves-effect waves-light", href := "#procedure-" + p)(
+    a(id := "sidenav-procedure-" + p.name, cls := "sidenav-link waves-effect waves-light", href := "#procedure-" + p.name)(
       em(cls := s"fa ${Icons.procedure}"),
       span(title := p.name)(p.name)
     )

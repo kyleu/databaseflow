@@ -3,6 +3,7 @@ package ui
 import java.util.UUID
 
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import utils.NullUtils
 
 import scala.scalajs.js
 
@@ -20,7 +21,7 @@ object TabManager {
     $("ul.tabs").on("click", "a", (e: JQueryEventObject) => {
       val queryId = UUID.fromString($(e.currentTarget).data("query").toString)
       openTabs.find(_._1 == queryId) match {
-        case Some(x) => org.scalajs.dom.document.location.hash = x._2
+        case Some(x) => org.scalajs.dom.window.history.replaceState(NullUtils.inst, x._2, "#" + x._2)
         case None => throw new IllegalStateException(s"No open tab [$queryId] from choices [${openTabs.mkString(", ")}].")
       }
     })
