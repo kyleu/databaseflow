@@ -6,7 +6,7 @@ object Dependencies {
   }
 
   object Logging {
-    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.19"
+    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
   }
 
   object Hibernate {
@@ -42,7 +42,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.2"
+    private[this] val version = "2.4.3"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -58,7 +58,7 @@ object Dependencies {
 
   object WebJars {
     val requireJs = "org.webjars" % "requirejs" % "2.2.0"
-    val jquery = "org.webjars" % "jquery" % "2.2.2"
+    val jquery = "org.webjars" % "jquery" % "2.2.3"
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
     val fontAwesome = "org.webjars" % "font-awesome" % "4.5.0"
   }
@@ -79,7 +79,7 @@ object Dependencies {
 
     val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
 
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.8.v20160314"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.9.M0"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }

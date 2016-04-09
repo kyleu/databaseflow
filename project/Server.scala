@@ -5,9 +5,7 @@ import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.packager.Keys._
-import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.debian.DebianPlugin
-import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
 import com.typesafe.sbt.packager.linux.LinuxPlugin
@@ -38,7 +36,7 @@ object Server {
   private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
     name := Shared.projectName,
     maintainer := "Kyle Unverferth",
-    description := "Database Flow is pretty great.",
+    description := "Database Flow is a modern sql client.",
 
     resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= dependencies,
@@ -55,32 +53,10 @@ object Server {
     LessKeys.compress in Assets := true,
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
-    // Native Packaging
-    mainClass in Compile := Some("DatabaseFlow"),
-
-    topLevelDirectory := Some("DatabaseFlow"),
-    packageSummary := description.value,
-    packageDescription := "Database Flow helps you do all sorts of cool stuff.",
-    rpmVendor := "Database Flow",
-    wixProductId := "5fee44ae-0989-429b-9b1a-de8ec7dd9af5",
-    wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",
-    //sourceDirectories in JDKPackager += "",
-    jdkAppIcon := (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file),
-    jdkPackagerType := "installer",
-    jdkPackagerJVMArgs := Seq("-Xmx2g"),
-    jdkPackagerToolkit := SwingToolkit,
-    jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value),
-
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Row.scala", ".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala"),
     scapegoatDisabledInspections := Seq("DuplicateImport")
   )
-
-  lazy val iconGlob = sys.props("os.name").toLowerCase match {
-    case os if os.contains("mac") ⇒ "*.icns"
-    case os if os.contains("win") ⇒ "*.ico"
-    case _ ⇒ "*.png"
-  }
 
   lazy val server = Project(
     id = Shared.projectId,
@@ -89,6 +65,7 @@ object Server {
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .enablePlugins(UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
     .settings(serverSettings: _*)
+    .settings(Packaging.teamSettings: _*)
     .aggregate(projectToRef(Client.client))
     .aggregate(Shared.sharedJvm)
     .dependsOn(Shared.sharedJvm)
