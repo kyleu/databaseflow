@@ -47,6 +47,20 @@ trait PlanHelper { this: DatabaseFlow =>
     })
   }
 
+  protected[this] def handlePlanErrorResponse(per: PlanErrorResponse) = {
+    val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
+    val html = ErrorTemplate.forPlanError(per, occurred.toISOString, occurred.toString)
+    val workspace = $(s"#workspace-${per.error.queryId}")
+    workspace.prepend(html.toString)
+
+    val panel = $(s"#${per.id}")
+    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
+
+    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
+      $(s"#${per.id}").remove()
+    })
+  }
+
   private[this] def workOutPlanWidth(id: UUID) = {
     val container = $("#" + id)
     val tree = $(".tree", container)

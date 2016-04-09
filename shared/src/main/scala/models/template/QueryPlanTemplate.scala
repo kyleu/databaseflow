@@ -58,7 +58,7 @@ object QueryPlanTemplate {
               pr.result.name,
               i(cls := s"right fa ${Icons.close}")
             ),
-            div(em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString))),
+            div(em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pr.durationMs}ms]")),
             div(cls := "plan-chart")(
               div(id := "", cls := "tree-container")(
                 div(cls := "tree")(

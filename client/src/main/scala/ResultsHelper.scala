@@ -56,10 +56,14 @@ trait ResultsHelper { this: DatabaseFlow =>
   }
 
   protected[this] def handleQueryErrorResponse(qe: QueryErrorResponse) = {
-    val html = QueryErrorTemplate.forError(qe)
+    val occurred = new scalajs.js.Date(qe.error.occurred.toDouble)
+    val html = ErrorTemplate.forQueryError(qe, occurred.toISOString, occurred.toString)
     val workspace = $(s"#workspace-${qe.error.queryId}")
     workspace.prepend(html.toString)
-    $(s"#${qe.id} .${Icons.close}").click((e: JQueryEventObject) => {
+
+    val panel = $(s"#${qe.id}")
+    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
+    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
       $(s"#${qe.id}").remove()
     })
   }

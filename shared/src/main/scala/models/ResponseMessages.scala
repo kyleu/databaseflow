@@ -28,7 +28,6 @@ case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) e
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 
 case class RowDataResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
-case class RowDataErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage

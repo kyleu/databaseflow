@@ -17,7 +17,7 @@ object QueryResultsTemplate {
           cardTitle,
           i(cls := s"right fa ${Icons.close}")
         ),
-        p(s"${qr.result.data.size} rows returned in [${qr.durationMs}ms] ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), "."),
+        p(s"${qr.result.data.size} rows returned ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qr.durationMs}ms]."),
         DataTableTemplate.forResults(res),
         div(cls := "z-depth-1 query-result-sql")(
           pre(cls := "pre-wrap")(res.sql)
