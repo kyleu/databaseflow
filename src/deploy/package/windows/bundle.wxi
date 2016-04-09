@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Include>
+ <Directory Id="TARGETDIR" Name="SourceDir">
+  <Directory Id="ProgramFiles64Folder" Name="PFiles">
+   <Directory Id="APPLICATIONFOLDER" Name="databaseflow">
+     <Component Id="comp0" DiskId="1" Guid="a0c90b9f-1d63-46d6-ac69-3af1a38d1e6f" Win64="yes">
+      <CreateFolder/>
+      <RemoveFolder Id="RemoveDir0" On="uninstall" />
+        <RegistryKey Root="HKCU"  Key="Software\Kyle Unverferth\databaseflow" Action="createAndRemoveOnUninstall">
+         <RegistryValue Name="Version" Value="1.0.0" Type="string" KeyPath="yes"/>
+       </RegistryKey>
+       <File Id="LauncherId" Name="databaseflow.exe"  Source="databaseflow.exe" ProcessorArchitecture="x64">
+      <Shortcut Id="desktopShortcut" Directory="DesktopFolder" Name="databaseflow" WorkingDirectory="INSTALLDIR" Advertise="no" Icon="DesktopIcon.exe" IconIndex="0" />
+         <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="databaseflow" Advertise="no" Icon="StartMenuIcon.exe" IconIndex="0" />
+       </File>
+       <File Id="FileId1" Name="databaseflow.ico"  Source="databaseflow.ico" ProcessorArchitecture="x64">
+       </File>
+       <File Id="FileId2" Name="msvcp120.dll"  Source="msvcp120.dll" ProcessorArchitecture="x64">
+       </File>
+       <File Id="FileId3" Name="msvcr100.dll"  Source="msvcr100.dll" ProcessorArchitecture="x64">
+       </File>
+       <File Id="FileId4" Name="msvcr120.dll"  Source="msvcr120.dll" ProcessorArchitecture="x64">
+       </File>
+       <File Id="FileId5" Name="packager.dll"  Source="packager.dll" ProcessorArchitecture="x64">
+       </File>
+     </Component>
+     <Directory Id="dirid6" Name="app">
+      <Component Id="comp1" DiskId="1" Guid="91760ce1-fca1-4cbb-86fe-b30a8ae73e86" Win64="yes">
+       <CreateFolder/>
+       <RemoveFolder Id="RemoveDir7" On="uninstall" />
+        <File Id="FileId8" Name="databaseflow.cfg"  Source="app\databaseflow.cfg" ProcessorArchitecture="x64">
+        </File>
+        <File Id="FileId9" Name="README.md"  Source="app\README.md" ProcessorArchitecture="x64">
+        </File>
+      </Component>
+      <Directory Id="dirid10" Name="bin">
+       <Component Id="comp2" DiskId="1" Guid="5bc8daf3-cfcc-4dba-9114-2dcb9975ec1c" Win64="yes">
+        <CreateFolder/>
+        <RemoveFolder Id="RemoveDir11" On="uninstall" />
+         <File Id="FileId12" Name="databaseflow"  Source="app\bin\databaseflow" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId13" Name="databaseflow.bat"  Source="app\bin\databaseflow.bat" ProcessorArchitecture="x64">
+         </File>
+       </Component>
+      </Directory>
+      <Directory Id="dirid14" Name="conf">
+       <Component Id="comp3" DiskId="1" Guid="68bd933e-8037-4f7e-8b0b-a2f2f5078fc0" Win64="yes">
+        <CreateFolder/>
+        <RemoveFolder Id="RemoveDir15" On="uninstall" />
+         <File Id="FileId16" Name="application.conf"  Source="app\conf\application.conf" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId17" Name="logback.prod.xml"  Source="app\conf\logback.prod.xml" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId18" Name="logback.xml"  Source="app\conf\logback.xml" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId19" Name="messages"  Source="app\conf\messages" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId20" Name="routes"  Source="app\conf\routes" ProcessorArchitecture="x64">
+         </File>
+       </Component>
+       <Directory Id="dirid21" Name="sampledb">
+        <Component Id="comp4" DiskId="1" Guid="eafce4c3-271b-41d7-b29d-b5aa64cc7be8" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir22" On="uninstall" />
+          <File Id="FileId23" Name="Chinook_Db2.sql"  Source="app\conf\sampledb\Chinook_Db2.sql" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId24" Name="Chinook_MySql.sql"  Source="app\conf\sampledb\Chinook_MySql.sql" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId25" Name="Chinook_Oracle.sql"  Source="app\conf\sampledb\Chinook_Oracle.sql" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId26" Name="Chinook_PostgreSql.sql"  Source="app\conf\sampledb\Chinook_PostgreSql.sql" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId27" Name="Chinook_Sqlite.sql"  Source="app\conf\sampledb\Chinook_Sqlite.sql" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId28" Name="Chinook_SqlServer.sql"  Source="app\conf\sampledb\Chinook_SqlServer.sql" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+      </Directory>
+      <Directory Id="dirid29" Name="lib">
+       <Component Id="comp5" DiskId="1" Guid="54c1e72d-94bd-4c4c-afc8-bcc86c16cbaf" Win64="yes">
+        <CreateFolder/>
+        <RemoveFolder Id="RemoveDir30" On="uninstall" />
+         <File Id="FileId31" Name="aopalliance.aopalliance-1.0.jar"  Source="app\lib\aopalliance.aopalliance-1.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId32" Name="cglib.cglib-nodep-2.1_3.jar"  Source="app\lib\cglib.cglib-nodep-2.1_3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId33" Name="ch.qos.logback.logback-classic-1.1.3.jar"  Source="app\lib\ch.qos.logback.logback-classic-1.1.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId34" Name="ch.qos.logback.logback-core-1.1.3.jar"  Source="app\lib\ch.qos.logback.logback-core-1.1.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId35" Name="com.atlassian.jwt.jwt-api-1.2.4.jar"  Source="app\lib\com.atlassian.jwt.jwt-api-1.2.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId36" Name="com.atlassian.jwt.jwt-core-1.2.4.jar"  Source="app\lib\com.atlassian.jwt.jwt-core-1.2.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId37" Name="com.beachape.enumeratum-macros_2.11-1.3.7.jar"  Source="app\lib\com.beachape.enumeratum-macros_2.11-1.3.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId38" Name="com.beachape.enumeratum-upickle_2.11-1.3.7.jar"  Source="app\lib\com.beachape.enumeratum-upickle_2.11-1.3.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId39" Name="com.beachape.enumeratum_2.11-1.3.7.jar"  Source="app\lib\com.beachape.enumeratum_2.11-1.3.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId40" Name="com.fasterxml.jackson.core.jackson-annotations-2.5.4.jar"  Source="app\lib\com.fasterxml.jackson.core.jackson-annotations-2.5.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId41" Name="com.fasterxml.jackson.core.jackson-core-2.5.4.jar"  Source="app\lib\com.fasterxml.jackson.core.jackson-core-2.5.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId42" Name="com.fasterxml.jackson.core.jackson-databind-2.5.4.jar"  Source="app\lib\com.fasterxml.jackson.core.jackson-databind-2.5.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId43" Name="com.fasterxml.jackson.datatype.jackson-datatype-jdk8-2.5.4.jar"  Source="app\lib\com.fasterxml.jackson.datatype.jackson-datatype-jdk8-2.5.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId44" Name="com.fasterxml.jackson.datatype.jackson-datatype-jsr310-2.5.4.jar"  Source="app\lib\com.fasterxml.jackson.datatype.jackson-datatype-jsr310-2.5.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId45" Name="com.google.code.findbugs.jsr305-2.0.3.jar"  Source="app\lib\com.google.code.findbugs.jsr305-2.0.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId46" Name="com.google.code.gson.gson-2.3.jar"  Source="app\lib\com.google.code.gson.gson-2.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId47" Name="com.google.guava.guava-18.0.jar"  Source="app\lib\com.google.guava.guava-18.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId48" Name="com.google.inject.extensions.guice-assistedinject-4.0.jar"  Source="app\lib\com.google.inject.extensions.guice-assistedinject-4.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId49" Name="com.google.inject.guice-4.0.jar"  Source="app\lib\com.google.inject.guice-4.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId50" Name="com.h2database.h2-1.4.191.jar"  Source="app\lib\com.h2database.h2-1.4.191.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId51" Name="com.lihaoyi.derive_2.11-0.3.9.jar"  Source="app\lib\com.lihaoyi.derive_2.11-0.3.9.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId52" Name="com.lihaoyi.scalatags_2.11-0.5.4.jar"  Source="app\lib\com.lihaoyi.scalatags_2.11-0.5.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId53" Name="com.lihaoyi.upickle_2.11-0.3.9.jar"  Source="app\lib\com.lihaoyi.upickle_2.11-0.3.9.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId54" Name="com.mohiva.play-silhouette_2.11-3.0.4.jar"  Source="app\lib\com.mohiva.play-silhouette_2.11-3.0.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId55" Name="com.nimbusds.nimbus-jose-jwt-2.16.jar"  Source="app\lib\com.nimbusds.nimbus-jose-jwt-2.16.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId56" Name="com.ning.async-http-client-1.9.21.jar"  Source="app\lib\com.ning.async-http-client-1.9.21.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId57" Name="com.novocode.junit-interface-0.11.jar"  Source="app\lib\com.novocode.junit-interface-0.11.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId58" Name="com.sksamuel.scapegoat.scalac-scapegoat-plugin_2.11-1.2.1.jar"  Source="app\lib\com.sksamuel.scapegoat.scalac-scapegoat-plugin_2.11-1.2.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId59" Name="com.sun.mail.javax.mail-1.5.2.jar"  Source="app\lib\com.sun.mail.javax.mail-1.5.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId60" Name="com.typesafe.akka.akka-actor_2.11-2.4.3.jar"  Source="app\lib\com.typesafe.akka.akka-actor_2.11-2.4.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId61" Name="com.typesafe.akka.akka-slf4j_2.11-2.4.3.jar"  Source="app\lib\com.typesafe.akka.akka-slf4j_2.11-2.4.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId62" Name="com.typesafe.akka.akka-testkit_2.11-2.4.3.jar"  Source="app\lib\com.typesafe.akka.akka-testkit_2.11-2.4.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId63" Name="com.typesafe.config-1.3.0.jar"  Source="app\lib\com.typesafe.config-1.3.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId64" Name="com.typesafe.netty.netty-http-pipelining-1.1.4.jar"  Source="app\lib\com.typesafe.netty.netty-http-pipelining-1.1.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId65" Name="com.typesafe.play.build-link-2.4.6.jar"  Source="app\lib\com.typesafe.play.build-link-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId66" Name="com.typesafe.play.filters-helpers_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.filters-helpers_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId67" Name="com.typesafe.play.play-cache_2.11-2.4.2.jar"  Source="app\lib\com.typesafe.play.play-cache_2.11-2.4.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId68" Name="com.typesafe.play.play-datacommons_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-datacommons_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId69" Name="com.typesafe.play.play-exceptions-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-exceptions-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId70" Name="com.typesafe.play.play-functional_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-functional_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId71" Name="com.typesafe.play.play-iteratees_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-iteratees_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId72" Name="com.typesafe.play.play-json_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-json_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId73" Name="com.typesafe.play.play-mailer_2.11-4.0.0.jar"  Source="app\lib\com.typesafe.play.play-mailer_2.11-4.0.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId74" Name="com.typesafe.play.play-netty-server_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-netty-server_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId75" Name="com.typesafe.play.play-netty-utils-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-netty-utils-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId76" Name="com.typesafe.play.play-server_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-server_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId77" Name="com.typesafe.play.play-test_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-test_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId78" Name="com.typesafe.play.play-ws_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play-ws_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId79" Name="com.typesafe.play.play_2.11-2.4.6.jar"  Source="app\lib\com.typesafe.play.play_2.11-2.4.6.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId80" Name="com.typesafe.play.twirl-api_2.11-1.1.1.jar"  Source="app\lib\com.typesafe.play.twirl-api_2.11-1.1.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId81" Name="com.zaxxer.HikariCP-2.4.5.jar"  Source="app\lib\com.zaxxer.HikariCP-2.4.5.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId82" Name="commons-codec.commons-codec-1.10.jar"  Source="app\lib\commons-codec.commons-codec-1.10.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId83" Name="commons-collections.commons-collections-3.2.1.jar"  Source="app\lib\commons-collections.commons-collections-3.2.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId84" Name="commons-io.commons-io-2.4.jar"  Source="app\lib\commons-io.commons-io-2.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId85" Name="commons-logging.commons-logging-1.1.3.jar"  Source="app\lib\commons-logging.commons-logging-1.1.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId86" Name="database-library.database-library-1.0.0.jar"  Source="app\lib\database-library.database-library-1.0.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId87" Name="databaseflow.databaseflow-1.0.0-assets.jar"  Source="app\lib\databaseflow.databaseflow-1.0.0-assets.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId88" Name="databaseflow.databaseflow-1.0.0-launcher.jar"  Source="app\lib\databaseflow.databaseflow-1.0.0-launcher.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId89" Name="databaseflow.databaseflow-1.0.0-sans-externalized.jar"  Source="app\lib\databaseflow.databaseflow-1.0.0-sans-externalized.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId90" Name="gui.gui-1.0.0.jar"  Source="app\lib\gui.gui-1.0.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId91" Name="io.dropwizard.metrics.metrics-core-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-core-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId92" Name="io.dropwizard.metrics.metrics-ehcache-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-ehcache-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId93" Name="io.dropwizard.metrics.metrics-graphite-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-graphite-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId94" Name="io.dropwizard.metrics.metrics-healthchecks-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-healthchecks-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId95" Name="io.dropwizard.metrics.metrics-json-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-json-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId96" Name="io.dropwizard.metrics.metrics-jvm-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-jvm-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId97" Name="io.dropwizard.metrics.metrics-servlets-3.1.2.jar"  Source="app\lib\io.dropwizard.metrics.metrics-servlets-3.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId98" Name="io.netty.netty-3.10.4.Final.jar"  Source="app\lib\io.netty.netty-3.10.4.Final.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId99" Name="javax.activation.activation-1.1.1.jar"  Source="app\lib\javax.activation.activation-1.1.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId100" Name="javax.inject.javax.inject-1.jar"  Source="app\lib\javax.inject.javax.inject-1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId101" Name="javax.mail.mail-1.4.7.jar"  Source="app\lib\javax.mail.mail-1.4.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId102" Name="javax.servlet.javax.servlet-api-3.1.0.jar"  Source="app\lib\javax.servlet.javax.servlet-api-3.1.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId103" Name="javax.transaction.jta-1.1.jar"  Source="app\lib\javax.transaction.jta-1.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId104" Name="joda-time.joda-time-2.8.1.jar"  Source="app\lib\joda-time.joda-time-2.8.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId105" Name="junit.junit-4.12.jar"  Source="app\lib\junit.junit-4.12.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId106" Name="mysql.mysql-connector-java-5.1.38.jar"  Source="app\lib\mysql.mysql-connector-java-5.1.38.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId107" Name="net.java.dev.jna.jna-3.4.0.jar"  Source="app\lib\net.java.dev.jna.jna-3.4.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId108" Name="net.java.dev.jna.platform-3.4.0.jar"  Source="app\lib\net.java.dev.jna.platform-3.4.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId109" Name="net.jcip.jcip-annotations-1.0.jar"  Source="app\lib\net.jcip.jcip-annotations-1.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId110" Name="net.minidev.json-smart-1.1.1.jar"  Source="app\lib\net.minidev.json-smart-1.1.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId111" Name="net.sf.ehcache.ehcache-core-2.6.11.jar"  Source="app\lib\net.sf.ehcache.ehcache-core-2.6.11.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId112" Name="net.sourceforge.cssparser.cssparser-0.9.14.jar"  Source="app\lib\net.sourceforge.cssparser.cssparser-0.9.14.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId113" Name="net.sourceforge.htmlunit.htmlunit-2.15.jar"  Source="app\lib\net.sourceforge.htmlunit.htmlunit-2.15.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId114" Name="net.sourceforge.htmlunit.htmlunit-core-js-2.15.jar"  Source="app\lib\net.sourceforge.htmlunit.htmlunit-core-js-2.15.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId115" Name="net.sourceforge.nekohtml.nekohtml-1.9.21.jar"  Source="app\lib\net.sourceforge.nekohtml.nekohtml-1.9.21.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId116" Name="nl.grons.metrics-scala_2.11-3.5.3.jar"  Source="app\lib\nl.grons.metrics-scala_2.11-3.5.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId117" Name="oauth.signpost.signpost-commonshttp4-1.2.1.2.jar"  Source="app\lib\oauth.signpost.signpost-commonshttp4-1.2.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId118" Name="oauth.signpost.signpost-core-1.2.1.2.jar"  Source="app\lib\oauth.signpost.signpost-core-1.2.1.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId119" Name="org.apache.commons.commons-email-1.4.jar"  Source="app\lib\org.apache.commons.commons-email-1.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId120" Name="org.apache.commons.commons-exec-1.1.jar"  Source="app\lib\org.apache.commons.commons-exec-1.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId121" Name="org.apache.commons.commons-lang3-3.4.jar"  Source="app\lib\org.apache.commons.commons-lang3-3.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId122" Name="org.apache.httpcomponents.httpclient-4.3.4.jar"  Source="app\lib\org.apache.httpcomponents.httpclient-4.3.4.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId123" Name="org.apache.httpcomponents.httpcore-4.3.2.jar"  Source="app\lib\org.apache.httpcomponents.httpcore-4.3.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId124" Name="org.apache.httpcomponents.httpmime-4.3.3.jar"  Source="app\lib\org.apache.httpcomponents.httpmime-4.3.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId125" Name="org.bouncycastle.bcprov-jdk15on-1.47.jar"  Source="app\lib\org.bouncycastle.bcprov-jdk15on-1.47.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId126" Name="org.eclipse.jetty.jetty-http-9.3.9.M0.jar"  Source="app\lib\org.eclipse.jetty.jetty-http-9.3.9.M0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId127" Name="org.eclipse.jetty.jetty-io-9.3.9.M0.jar"  Source="app\lib\org.eclipse.jetty.jetty-io-9.3.9.M0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId128" Name="org.eclipse.jetty.jetty-security-9.3.9.M0.jar"  Source="app\lib\org.eclipse.jetty.jetty-security-9.3.9.M0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId129" Name="org.eclipse.jetty.jetty-server-9.3.9.M0.jar"  Source="app\lib\org.eclipse.jetty.jetty-server-9.3.9.M0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId130" Name="org.eclipse.jetty.jetty-servlet-9.3.9.M0.jar"  Source="app\lib\org.eclipse.jetty.jetty-servlet-9.3.9.M0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId131" Name="org.eclipse.jetty.jetty-util-9.3.9.M0.jar"  Source="app\lib\org.eclipse.jetty.jetty-util-9.3.9.M0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId132" Name="org.eclipse.jetty.jetty-websocket-8.1.15.v20140411.jar"  Source="app\lib\org.eclipse.jetty.jetty-websocket-8.1.15.v20140411.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId133" Name="org.fluentlenium.fluentlenium-core-0.10.3.jar"  Source="app\lib\org.fluentlenium.fluentlenium-core-0.10.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId134" Name="org.hamcrest.hamcrest-core-1.3.jar"  Source="app\lib\org.hamcrest.hamcrest-core-1.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId135" Name="org.javassist.javassist-3.19.0-GA.jar"  Source="app\lib\org.javassist.javassist-3.19.0-GA.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId136" Name="org.joda.joda-convert-1.7.jar"  Source="app\lib\org.joda.joda-convert-1.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId137" Name="org.mindrot.jbcrypt-0.3m.jar"  Source="app\lib\org.mindrot.jbcrypt-0.3m.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId138" Name="org.postgresql.postgresql-9.4.1208.jar"  Source="app\lib\org.postgresql.postgresql-9.4.1208.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId139" Name="org.scala-lang.modules.scala-java8-compat_2.11-0.7.0.jar"  Source="app\lib\org.scala-lang.modules.scala-java8-compat_2.11-0.7.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId140" Name="org.scala-lang.modules.scala-parser-combinators_2.11-1.0.1.jar"  Source="app\lib\org.scala-lang.modules.scala-parser-combinators_2.11-1.0.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId141" Name="org.scala-lang.modules.scala-swing_2.11-2.0.0-M2.jar"  Source="app\lib\org.scala-lang.modules.scala-swing_2.11-2.0.0-M2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId142" Name="org.scala-lang.modules.scala-xml_2.11-1.0.2.jar"  Source="app\lib\org.scala-lang.modules.scala-xml_2.11-1.0.2.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId143" Name="org.scala-lang.scala-library-2.11.8.jar"  Source="app\lib\org.scala-lang.scala-library-2.11.8.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId144" Name="org.scala-lang.scala-reflect-2.11.7.jar"  Source="app\lib\org.scala-lang.scala-reflect-2.11.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId145" Name="org.scala-sbt.test-interface-1.0.jar"  Source="app\lib\org.scala-sbt.test-interface-1.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId146" Name="org.scala-stm.scala-stm_2.11-0.7.jar"  Source="app\lib\org.scala-stm.scala-stm_2.11-0.7.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId147" Name="org.seleniumhq.selenium.selenium-api-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-api-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId148" Name="org.seleniumhq.selenium.selenium-chrome-driver-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-chrome-driver-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId149" Name="org.seleniumhq.selenium.selenium-firefox-driver-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-firefox-driver-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId150" Name="org.seleniumhq.selenium.selenium-htmlunit-driver-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-htmlunit-driver-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId151" Name="org.seleniumhq.selenium.selenium-ie-driver-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-ie-driver-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId152" Name="org.seleniumhq.selenium.selenium-java-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-java-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId153" Name="org.seleniumhq.selenium.selenium-remote-driver-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-remote-driver-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId154" Name="org.seleniumhq.selenium.selenium-safari-driver-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-safari-driver-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId155" Name="org.seleniumhq.selenium.selenium-support-2.44.0.jar"  Source="app\lib\org.seleniumhq.selenium.selenium-support-2.44.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId156" Name="org.slf4j.jcl-over-slf4j-1.7.12.jar"  Source="app\lib\org.slf4j.jcl-over-slf4j-1.7.12.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId157" Name="org.slf4j.jul-to-slf4j-1.7.12.jar"  Source="app\lib\org.slf4j.jul-to-slf4j-1.7.12.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId158" Name="org.slf4j.slf4j-api-1.7.21.jar"  Source="app\lib\org.slf4j.slf4j-api-1.7.21.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId159" Name="org.spire-math.jawn-parser_2.11-0.8.3.jar"  Source="app\lib\org.spire-math.jawn-parser_2.11-0.8.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId160" Name="org.w3c.css.sac-1.3.jar"  Source="app\lib\org.w3c.css.sac-1.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId161" Name="org.webbitserver.webbit-0.4.14.jar"  Source="app\lib\org.webbitserver.webbit-0.4.14.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId162" Name="org.webjars.font-awesome-4.5.0.jar"  Source="app\lib\org.webjars.font-awesome-4.5.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId163" Name="org.webjars.jquery-2.2.3.jar"  Source="app\lib\org.webjars.jquery-2.2.3.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId164" Name="org.webjars.materializecss-0.97.5.jar"  Source="app\lib\org.webjars.materializecss-0.97.5.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId165" Name="org.webjars.requirejs-2.2.0.jar"  Source="app\lib\org.webjars.requirejs-2.2.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId166" Name="sharedjvm.sharedjvm-1.0.0.jar"  Source="app\lib\sharedjvm.sharedjvm-1.0.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId167" Name="xalan.serializer-2.7.1.jar"  Source="app\lib\xalan.serializer-2.7.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId168" Name="xalan.xalan-2.7.1.jar"  Source="app\lib\xalan.xalan-2.7.1.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId169" Name="xerces.xercesImpl-2.11.0.jar"  Source="app\lib\xerces.xercesImpl-2.11.0.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId170" Name="xml-apis.xml-apis-1.4.01.jar"  Source="app\lib\xml-apis.xml-apis-1.4.01.jar" ProcessorArchitecture="x64">
+         </File>
+       </Component>
+      </Directory>
+     </Directory>
+     <Directory Id="dirid171" Name="runtime">
+      <Component Id="comp6" DiskId="1" Guid="8277476a-038b-4819-899d-1c5b6a924ed9" Win64="yes">
+       <CreateFolder/>
+       <RemoveFolder Id="RemoveDir172" On="uninstall" />
+        <File Id="FileId173" Name="COPYRIGHT"  Source="runtime\COPYRIGHT" ProcessorArchitecture="x64">
+        </File>
+        <File Id="FileId174" Name="LICENSE"  Source="runtime\LICENSE" ProcessorArchitecture="x64">
+        </File>
+        <File Id="FileId175" Name="README.txt"  Source="runtime\README.txt" ProcessorArchitecture="x64">
+        </File>
+        <File Id="FileId176" Name="THIRDPARTYLICENSEREADME-JAVAFX.txt"  Source="runtime\THIRDPARTYLICENSEREADME-JAVAFX.txt" ProcessorArchitecture="x64">
+        </File>
+        <File Id="FileId177" Name="THIRDPARTYLICENSEREADME.txt"  Source="runtime\THIRDPARTYLICENSEREADME.txt" ProcessorArchitecture="x64">
+        </File>
+        <File Id="FileId178" Name="Welcome.html"  Source="runtime\Welcome.html" ProcessorArchitecture="x64">
+        </File>
+      </Component>
+      <Directory Id="dirid179" Name="bin">
+       <Component Id="comp7" DiskId="1" Guid="79e6fe47-739e-4cdc-805b-d88e2b277ed9" Win64="yes">
+        <CreateFolder/>
+        <RemoveFolder Id="RemoveDir180" On="uninstall" />
+         <File Id="FileId181" Name="attach.dll"  Source="runtime\bin\attach.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId182" Name="awt.dll"  Source="runtime\bin\awt.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId183" Name="bci.dll"  Source="runtime\bin\bci.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId184" Name="dcpr.dll"  Source="runtime\bin\dcpr.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId185" Name="decora_sse.dll"  Source="runtime\bin\decora_sse.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId186" Name="deploy.dll"  Source="runtime\bin\deploy.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId187" Name="dt_shmem.dll"  Source="runtime\bin\dt_shmem.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId188" Name="dt_socket.dll"  Source="runtime\bin\dt_socket.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId189" Name="fontmanager.dll"  Source="runtime\bin\fontmanager.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId190" Name="fxplugins.dll"  Source="runtime\bin\fxplugins.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId191" Name="glass.dll"  Source="runtime\bin\glass.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId192" Name="glib-lite.dll"  Source="runtime\bin\glib-lite.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId193" Name="gstreamer-lite.dll"  Source="runtime\bin\gstreamer-lite.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId194" Name="hprof.dll"  Source="runtime\bin\hprof.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId195" Name="instrument.dll"  Source="runtime\bin\instrument.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId196" Name="j2pcsc.dll"  Source="runtime\bin\j2pcsc.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId197" Name="j2pkcs11.dll"  Source="runtime\bin\j2pkcs11.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId198" Name="jaas_nt.dll"  Source="runtime\bin\jaas_nt.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId199" Name="java.dll"  Source="runtime\bin\java.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId200" Name="JavaAccessBridge-64.dll"  Source="runtime\bin\JavaAccessBridge-64.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId201" Name="javafx_font.dll"  Source="runtime\bin\javafx_font.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId202" Name="javafx_font_t2k.dll"  Source="runtime\bin\javafx_font_t2k.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId203" Name="javafx_iio.dll"  Source="runtime\bin\javafx_iio.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId204" Name="java_crw_demo.dll"  Source="runtime\bin\java_crw_demo.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId205" Name="jawt.dll"  Source="runtime\bin\jawt.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId206" Name="JAWTAccessBridge-64.dll"  Source="runtime\bin\JAWTAccessBridge-64.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId207" Name="jdwp.dll"  Source="runtime\bin\jdwp.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId208" Name="jfr.dll"  Source="runtime\bin\jfr.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId209" Name="jfxmedia.dll"  Source="runtime\bin\jfxmedia.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId210" Name="jfxwebkit.dll"  Source="runtime\bin\jfxwebkit.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId211" Name="jli.dll"  Source="runtime\bin\jli.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId212" Name="jpeg.dll"  Source="runtime\bin\jpeg.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId213" Name="jsdt.dll"  Source="runtime\bin\jsdt.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId214" Name="jsound.dll"  Source="runtime\bin\jsound.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId215" Name="jsoundds.dll"  Source="runtime\bin\jsoundds.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId216" Name="kcms.dll"  Source="runtime\bin\kcms.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId217" Name="lcms.dll"  Source="runtime\bin\lcms.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId218" Name="management.dll"  Source="runtime\bin\management.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId219" Name="mlib_image.dll"  Source="runtime\bin\mlib_image.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId220" Name="msvcp120.dll"  Source="runtime\bin\msvcp120.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId221" Name="msvcr100.dll"  Source="runtime\bin\msvcr100.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId222" Name="msvcr120.dll"  Source="runtime\bin\msvcr120.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId223" Name="net.dll"  Source="runtime\bin\net.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId224" Name="nio.dll"  Source="runtime\bin\nio.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId225" Name="npt.dll"  Source="runtime\bin\npt.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId226" Name="prism_common.dll"  Source="runtime\bin\prism_common.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId227" Name="prism_d3d.dll"  Source="runtime\bin\prism_d3d.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId228" Name="prism_sw.dll"  Source="runtime\bin\prism_sw.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId229" Name="resource.dll"  Source="runtime\bin\resource.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId230" Name="sawindbg.dll"  Source="runtime\bin\sawindbg.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId231" Name="splashscreen.dll"  Source="runtime\bin\splashscreen.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId232" Name="sunec.dll"  Source="runtime\bin\sunec.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId233" Name="sunmscapi.dll"  Source="runtime\bin\sunmscapi.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId234" Name="t2k.dll"  Source="runtime\bin\t2k.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId235" Name="unpack.dll"  Source="runtime\bin\unpack.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId236" Name="verify.dll"  Source="runtime\bin\verify.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId237" Name="w2k_lsa_auth.dll"  Source="runtime\bin\w2k_lsa_auth.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId238" Name="WindowsAccessBridge-64.dll"  Source="runtime\bin\WindowsAccessBridge-64.dll" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId239" Name="zip.dll"  Source="runtime\bin\zip.dll" ProcessorArchitecture="x64">
+         </File>
+       </Component>
+       <Directory Id="dirid240" Name="plugin2">
+        <Component Id="comp8" DiskId="1" Guid="0f22e703-3f93-4bb0-8758-4c09c6c627db" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir241" On="uninstall" />
+          <File Id="FileId242" Name="msvcr100.dll"  Source="runtime\bin\plugin2\msvcr100.dll" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId243" Name="npjp2.dll"  Source="runtime\bin\plugin2\npjp2.dll" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid244" Name="server">
+        <Component Id="comp9" DiskId="1" Guid="e956aa32-8d66-440d-a60a-a98a0a0752f9" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir245" On="uninstall" />
+          <File Id="FileId246" Name="classes.jsa"  Source="runtime\bin\server\classes.jsa" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId247" Name="jvm.dll"  Source="runtime\bin\server\jvm.dll" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId248" Name="Xusage.txt"  Source="runtime\bin\server\Xusage.txt" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+      </Directory>
+      <Directory Id="dirid249" Name="lib">
+       <Component Id="comp10" DiskId="1" Guid="0f075b8e-7334-4cc7-8d53-73d12acf9d43" Win64="yes">
+        <CreateFolder/>
+        <RemoveFolder Id="RemoveDir250" On="uninstall" />
+         <File Id="FileId251" Name="accessibility.properties"  Source="runtime\lib\accessibility.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId252" Name="calendars.properties"  Source="runtime\lib\calendars.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId253" Name="charsets.jar"  Source="runtime\lib\charsets.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId254" Name="classlist"  Source="runtime\lib\classlist" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId255" Name="content-types.properties"  Source="runtime\lib\content-types.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId256" Name="currency.data"  Source="runtime\lib\currency.data" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId257" Name="flavormap.properties"  Source="runtime\lib\flavormap.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId258" Name="fontconfig.bfc"  Source="runtime\lib\fontconfig.bfc" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId259" Name="fontconfig.properties.src"  Source="runtime\lib\fontconfig.properties.src" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId260" Name="hijrah-config-umalqura.properties"  Source="runtime\lib\hijrah-config-umalqura.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId261" Name="javafx.properties"  Source="runtime\lib\javafx.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId262" Name="javaws.jar"  Source="runtime\lib\javaws.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId263" Name="jce.jar"  Source="runtime\lib\jce.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId264" Name="jfr.jar"  Source="runtime\lib\jfr.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId265" Name="jfxswt.jar"  Source="runtime\lib\jfxswt.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId266" Name="jsse.jar"  Source="runtime\lib\jsse.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId267" Name="jvm.hprof.txt"  Source="runtime\lib\jvm.hprof.txt" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId268" Name="logging.properties"  Source="runtime\lib\logging.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId269" Name="management-agent.jar"  Source="runtime\lib\management-agent.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId270" Name="meta-index"  Source="runtime\lib\meta-index" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId271" Name="net.properties"  Source="runtime\lib\net.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId272" Name="plugin.jar"  Source="runtime\lib\plugin.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId273" Name="psfont.properties.ja"  Source="runtime\lib\psfont.properties.ja" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId274" Name="psfontj2d.properties"  Source="runtime\lib\psfontj2d.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId275" Name="resources.jar"  Source="runtime\lib\resources.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId276" Name="rt.jar"  Source="runtime\lib\rt.jar" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId277" Name="sound.properties"  Source="runtime\lib\sound.properties" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId278" Name="tzdb.dat"  Source="runtime\lib\tzdb.dat" ProcessorArchitecture="x64">
+         </File>
+         <File Id="FileId279" Name="tzmappings"  Source="runtime\lib\tzmappings" ProcessorArchitecture="x64">
+         </File>
+       </Component>
+       <Directory Id="dirid280" Name="amd64">
+        <Component Id="comp11" DiskId="1" Guid="e0216040-496b-4543-b2f0-28d8af74f69a" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir281" On="uninstall" />
+          <File Id="FileId282" Name="jvm.cfg"  Source="runtime\lib\amd64\jvm.cfg" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid283" Name="cmm">
+        <Component Id="comp12" DiskId="1" Guid="817d8b26-7822-4ee3-8399-707d7928f270" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir284" On="uninstall" />
+          <File Id="FileId285" Name="CIEXYZ.pf"  Source="runtime\lib\cmm\CIEXYZ.pf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId286" Name="GRAY.pf"  Source="runtime\lib\cmm\GRAY.pf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId287" Name="LINEAR_RGB.pf"  Source="runtime\lib\cmm\LINEAR_RGB.pf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId288" Name="PYCC.pf"  Source="runtime\lib\cmm\PYCC.pf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId289" Name="sRGB.pf"  Source="runtime\lib\cmm\sRGB.pf" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid290" Name="ext">
+        <Component Id="comp13" DiskId="1" Guid="0be95553-627c-428c-ac68-ace1ebf2b1f6" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir291" On="uninstall" />
+          <File Id="FileId292" Name="access-bridge-64.jar"  Source="runtime\lib\ext\access-bridge-64.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId293" Name="cldrdata.jar"  Source="runtime\lib\ext\cldrdata.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId294" Name="dnsns.jar"  Source="runtime\lib\ext\dnsns.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId295" Name="jaccess.jar"  Source="runtime\lib\ext\jaccess.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId296" Name="jfxrt.jar"  Source="runtime\lib\ext\jfxrt.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId297" Name="localedata.jar"  Source="runtime\lib\ext\localedata.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId298" Name="meta-index"  Source="runtime\lib\ext\meta-index" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId299" Name="nashorn.jar"  Source="runtime\lib\ext\nashorn.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId300" Name="sunec.jar"  Source="runtime\lib\ext\sunec.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId301" Name="sunjce_provider.jar"  Source="runtime\lib\ext\sunjce_provider.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId302" Name="sunmscapi.jar"  Source="runtime\lib\ext\sunmscapi.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId303" Name="sunpkcs11.jar"  Source="runtime\lib\ext\sunpkcs11.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId304" Name="zipfs.jar"  Source="runtime\lib\ext\zipfs.jar" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid305" Name="fonts">
+        <Component Id="comp14" DiskId="1" Guid="718c70c1-884b-40ee-b1f8-3203d3391451" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir306" On="uninstall" />
+          <File Id="FileId307" Name="LucidaBrightDemiBold.ttf"  Source="runtime\lib\fonts\LucidaBrightDemiBold.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId308" Name="LucidaBrightDemiItalic.ttf"  Source="runtime\lib\fonts\LucidaBrightDemiItalic.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId309" Name="LucidaBrightItalic.ttf"  Source="runtime\lib\fonts\LucidaBrightItalic.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId310" Name="LucidaBrightRegular.ttf"  Source="runtime\lib\fonts\LucidaBrightRegular.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId311" Name="LucidaSansDemiBold.ttf"  Source="runtime\lib\fonts\LucidaSansDemiBold.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId312" Name="LucidaSansRegular.ttf"  Source="runtime\lib\fonts\LucidaSansRegular.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId313" Name="LucidaTypewriterBold.ttf"  Source="runtime\lib\fonts\LucidaTypewriterBold.ttf" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId314" Name="LucidaTypewriterRegular.ttf"  Source="runtime\lib\fonts\LucidaTypewriterRegular.ttf" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid315" Name="images">
+        <Component Id="comp15" DiskId="1" Guid="8599a0e3-8091-4853-ab9f-74e6a05dfb7d" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir316" On="uninstall" />
+        </Component>
+        <Directory Id="dirid317" Name="cursors">
+         <Component Id="comp16" DiskId="1" Guid="d8a61e8c-f1be-4ac7-b142-eabc4b5afa05" Win64="yes">
+          <CreateFolder/>
+          <RemoveFolder Id="RemoveDir318" On="uninstall" />
+           <File Id="FileId319" Name="cursors.properties"  Source="runtime\lib\images\cursors\cursors.properties" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId320" Name="invalid32x32.gif"  Source="runtime\lib\images\cursors\invalid32x32.gif" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId321" Name="win32_CopyDrop32x32.gif"  Source="runtime\lib\images\cursors\win32_CopyDrop32x32.gif" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId322" Name="win32_CopyNoDrop32x32.gif"  Source="runtime\lib\images\cursors\win32_CopyNoDrop32x32.gif" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId323" Name="win32_LinkDrop32x32.gif"  Source="runtime\lib\images\cursors\win32_LinkDrop32x32.gif" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId324" Name="win32_LinkNoDrop32x32.gif"  Source="runtime\lib\images\cursors\win32_LinkNoDrop32x32.gif" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId325" Name="win32_MoveDrop32x32.gif"  Source="runtime\lib\images\cursors\win32_MoveDrop32x32.gif" ProcessorArchitecture="x64">
+           </File>
+           <File Id="FileId326" Name="win32_MoveNoDrop32x32.gif"  Source="runtime\lib\images\cursors\win32_MoveNoDrop32x32.gif" ProcessorArchitecture="x64">
+           </File>
+         </Component>
+        </Directory>
+       </Directory>
+       <Directory Id="dirid327" Name="jfr">
+        <Component Id="comp17" DiskId="1" Guid="67b09eda-b2af-4e20-992e-0e476a37b6bc" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir328" On="uninstall" />
+          <File Id="FileId329" Name="default.jfc"  Source="runtime\lib\jfr\default.jfc" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId330" Name="profile.jfc"  Source="runtime\lib\jfr\profile.jfc" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid331" Name="management">
+        <Component Id="comp18" DiskId="1" Guid="eaf0695c-16f5-495d-bddb-d24a2f2b27ac" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir332" On="uninstall" />
+          <File Id="FileId333" Name="jmxremote.access"  Source="runtime\lib\management\jmxremote.access" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId334" Name="jmxremote.password.template"  Source="runtime\lib\management\jmxremote.password.template" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId335" Name="management.properties"  Source="runtime\lib\management\management.properties" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId336" Name="snmp.acl.template"  Source="runtime\lib\management\snmp.acl.template" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+       <Directory Id="dirid337" Name="security">
+        <Component Id="comp19" DiskId="1" Guid="5b38a741-2a46-4122-b239-894ae01d5a49" Win64="yes">
+         <CreateFolder/>
+         <RemoveFolder Id="RemoveDir338" On="uninstall" />
+          <File Id="FileId339" Name="blacklist"  Source="runtime\lib\security\blacklist" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId340" Name="blacklisted.certs"  Source="runtime\lib\security\blacklisted.certs" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId341" Name="cacerts"  Source="runtime\lib\security\cacerts" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId342" Name="java.policy"  Source="runtime\lib\security\java.policy" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId343" Name="java.security"  Source="runtime\lib\security\java.security" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId344" Name="javaws.policy"  Source="runtime\lib\security\javaws.policy" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId345" Name="local_policy.jar"  Source="runtime\lib\security\local_policy.jar" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId346" Name="trusted.libraries"  Source="runtime\lib\security\trusted.libraries" ProcessorArchitecture="x64">
+          </File>
+          <File Id="FileId347" Name="US_export_policy.jar"  Source="runtime\lib\security\US_export_policy.jar" ProcessorArchitecture="x64">
+          </File>
+        </Component>
+       </Directory>
+      </Directory>
+     </Directory>
+   </Directory>
+  </Directory>
+  <Directory Id="DesktopFolder" />
+  <Directory Id="ProgramMenuFolder">
+    <Directory Id="ProgramMenuDir" Name="Kyle Unverferth">
+      <Component Id="comp20" Guid="41d8b63b-f46c-4ef1-9514-4e4e2875708e" Win64="yes">
+        <RemoveFolder Id="ProgramMenuDir" On="uninstall" />
+         <RegistryValue Root="HKCU" Key="Software\Kyle Unverferth\databaseflow" Type="string" Value="" />
+      </Component>
+    </Directory>
+ </Directory>
+ </Directory>
+ <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
+    <ComponentRef Id="comp0" />
+    <ComponentRef Id="comp1" />
+    <ComponentRef Id="comp2" />
+    <ComponentRef Id="comp3" />
+    <ComponentRef Id="comp4" />
+    <ComponentRef Id="comp5" />
+    <ComponentRef Id="comp6" />
+    <ComponentRef Id="comp7" />
+    <ComponentRef Id="comp8" />
+    <ComponentRef Id="comp9" />
+    <ComponentRef Id="comp10" />
+    <ComponentRef Id="comp11" />
+    <ComponentRef Id="comp12" />
+    <ComponentRef Id="comp13" />
+    <ComponentRef Id="comp14" />
+    <ComponentRef Id="comp15" />
+    <ComponentRef Id="comp16" />
+    <ComponentRef Id="comp17" />
+    <ComponentRef Id="comp18" />
+    <ComponentRef Id="comp19" />
+    <ComponentRef Id="comp20" />
+    <ComponentRef Id="CleanupMainApplicationFolder" />
+ </Feature>
+</Include>

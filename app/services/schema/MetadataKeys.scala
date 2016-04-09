@@ -10,7 +10,10 @@ object MetadataKeys {
     val rs = metadata.getPrimaryKeys(table.catalog.orNull, table.schema.orNull, table.name)
 
     val keys = new Row.Iter(rs).map { row =>
-      (row.as[String]("PK_NAME"), row.as[String]("COLUMN_NAME"), row.as[Int]("KEY_SEQ"))
+      (row.as[String]("PK_NAME"), row.as[String]("COLUMN_NAME"), row.as[Any]("KEY_SEQ") match {
+        case i: Int => i
+        case s: Short => s.toInt
+      })
     }.toList.groupBy(_._1)
 
     if (keys.size > 1) {
@@ -54,7 +57,10 @@ object MetadataKeys {
     val targetTable = row.as[String]("pktable_name")
     val targetColumn = row.as[String]("pkcolumn_name")
     val sourceColumn = row.as[String]("fkcolumn_name")
-    val order = row.as[Int]("key_seq")
+    val order = row.as[Any]("key_seq") match {
+      case i: Int => i
+      case s: Short => s.toInt
+    }
     val updateRule = ruleFor(row.as[Int]("update_rule"))
     val deleteRule = ruleFor(row.as[Int]("delete_rule"))
     (name, sourceColumn, targetTable, targetColumn, order, updateRule, deleteRule)
