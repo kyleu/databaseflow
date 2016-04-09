@@ -1,12 +1,13 @@
-package models.gui.web
+package utils.web
 
 import java.net.URI
 
+import gui.web.WebApp
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{ Mode, Play }
 import play.core.server.{ NettyServer, ServerConfig }
 
-class WebApplication() {
+class WebApplication() extends WebApp {
   private[this] lazy val app = new GuiceApplicationBuilder().build()
 
   private[this] var server: Option[NettyServer] = None

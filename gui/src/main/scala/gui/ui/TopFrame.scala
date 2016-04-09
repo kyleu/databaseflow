@@ -1,10 +1,10 @@
-package models.gui.ui
+package gui.ui
 
-import models.gui.web.WebApplication
+import gui.web.WebApp
 
 import scala.swing._
 
-class TopFrame(app: WebApplication) extends MainFrame {
+class TopFrame(app: WebApp) extends MainFrame {
   title = "Database Flow"
   resizable = false
 

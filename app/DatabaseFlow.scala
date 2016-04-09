@@ -1,6 +1,6 @@
-import models.gui.ui.TopFrame
-import models.gui.utils.InitialProperties
-import models.gui.web.WebApplication
+import gui.ui.TopFrame
+import gui.utils.InitialProperties
+import utils.web.WebApplication
 
 import scala.swing._
 
