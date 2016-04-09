@@ -2,16 +2,17 @@ package ui
 
 import java.util.UUID
 
-import models.{ GetViewDetail, GetViewRowData }
-import models.schema.Table
+import models.query.RowDataOptions
+import models.schema.View
 import models.template._
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import models.{ GetViewDetail, GetViewRowData, SubmitQuery }
+import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
 object ViewManager {
   var openViews = Map.empty[String, UUID]
 
-  def addView(view: Table) = {
+  def addView(view: View) = {
     openViews.get(view.name).foreach { uuid =>
       setViewDetails(uuid, view)
     }
@@ -22,7 +23,8 @@ object ViewManager {
       TabManager.selectTab(queryId)
     case None =>
       val queryId = UUID.randomUUID
-      WorkspaceManager.append(ViewDetailTemplate.forView(queryId, name).toString)
+      val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
+      WorkspaceManager.append(ViewDetailTemplate.forView(engine, queryId, name).toString)
 
       MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
         case Some(view) => setViewDetails(queryId, view)
@@ -36,9 +38,18 @@ object ViewManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, name, None)
+        viewData(queryId, name, RowDataOptions.empty)
         false
       })
+
+      def wire(q: JQuery, action: String) = q.click({ (e: JQueryEventObject) =>
+        val sql = s"select * from ${engine.quoteIdentifier}$name${engine.quoteIdentifier}"
+        utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
+        false
+      })
+
+      wire($(".explain-view-link", queryPanel), "explain")
+      wire($(".analyze-view-link", queryPanel), "analyze")
 
       def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 
@@ -67,11 +78,11 @@ object ViewManager {
       openViews = openViews + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, name: String, filter: Option[(String, String, String)]) = {
-    utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, filter = filter))
+  private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
+    utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, options = options))
   }
 
-  private[this] def setViewDetails(uuid: UUID, view: Table) = {
+  private[this] def setViewDetails(uuid: UUID, view: View) = {
     val panel = $(s"#panel-$uuid")
     if (panel.length != 1) {
       throw new IllegalStateException(s"Missing view panel for [$uuid].")
@@ -94,7 +105,7 @@ object ViewManager {
     utils.Logging.debug(s"View [${view.name}] loaded.")
   }
 
-  private[this] def viewColumns(queryId: UUID, view: Table) = {
+  private[this] def viewColumns(queryId: UUID, view: View) = {
     val id = UUID.randomUUID
     val html = ViewColumnDetailTemplate.columnsForView(id, queryId, view)
     $(s"#workspace-$queryId").prepend(html.toString)
@@ -104,7 +115,7 @@ object ViewManager {
     })
   }
 
-  private[this] def viewDefinition(queryId: UUID, view: Table) = {
+  private[this] def viewDefinition(queryId: UUID, view: View) = {
     val id = UUID.randomUUID
     val html = ViewDefinitionTemplate.definitionForView(id, queryId, view)
     $(s"#workspace-$queryId").prepend(html.toString)

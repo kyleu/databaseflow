@@ -22,6 +22,6 @@ case class QueryResult(
   sortable: Boolean,
   sortedColumn: Option[String] = None,
   sortedAscending: Option[Boolean] = None,
-  occurred: Long
+  occurred: Long = System.currentTimeMillis
 )
 

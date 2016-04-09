@@ -1,6 +1,6 @@
 package models.schema
 
-case class Table(
+case class View(
   name: String,
   catalog: Option[String],
   schema: Option[String],
@@ -8,10 +8,6 @@ case class Table(
   definition: Option[String],
 
   columns: Seq[Column] = Nil,
-  rowIdentifier: Seq[String] = Nil,
-  primaryKey: Option[PrimaryKey] = None,
-  foreignKeys: Seq[ForeignKey] = Nil,
-  indexes: Seq[Index] = Nil,
 
   loadedAt: Long = System.currentTimeMillis
 )

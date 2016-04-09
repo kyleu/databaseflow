@@ -1,7 +1,7 @@
 package models.template
 
 import models.query.SavedQuery
-import models.schema.{ Procedure, Table }
+import models.schema.{ Procedure, Table, View }
 
 import scalatags.Text.all._
 
@@ -20,11 +20,11 @@ object SidenavTemplate {
   ))
   def tables(tables: Seq[Table]) = tables.map(table)
 
-  private[this] def view(v: Table) = li(a(id := "sidenav-view-" + v.name, cls := "sidenav-link waves-effect waves-light", href := "#view-" + v)(
+  private[this] def view(v: View) = li(a(id := "sidenav-view-" + v.name, cls := "sidenav-link waves-effect waves-light", href := "#view-" + v)(
     em(cls := s"fa ${Icons.view}"),
     span(title := v.name)(v.name)
   ))
-  def views(views: Seq[Table]) = views.map(view)
+  def views(views: Seq[View]) = views.map(view)
 
   private[this] def procedure(p: Procedure) = li(
     a(id := "sidenav-procedure-" + p.name, cls := "sidenav-link waves-effect waves-light", href := "#procedure-" + p)(

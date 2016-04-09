@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.queries.DynamicQuery
 import models.query.{ QueryResult, SavedQuery }
-import models.schema.Table
+import models.schema.{ Table, View }
 import models.{ QueryDeleteResponse, QueryResultResponse, QuerySaveResponse, ServerError }
 import services.database.MasterDatabase
 import services.query.SavedQueryService
@@ -71,7 +71,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   }
 
   protected[this] def handleGetViewRowData(queryId: UUID, name: String) = SchemaService.getView(connectionId, name) match {
-    case Some(view) => handleShowTableDataResponse(queryId, view)
+    case Some(view) => handleShowViewDataResponse(queryId, view)
     case None =>
       log.warn(s"Attempted to show data for invalid view [$name].")
       out ! ServerError("Invalid Table", s"[$name] is not a valid view.")
@@ -101,6 +101,28 @@ trait QueryHelper extends Logging { this: ConnectionService =>
         title = table.name,
         sql = sql,
         columns = columnsWithRelations,
+        data = data,
+        sortable = true,
+        occurred = startMs
+      ), durationMs)
+    }
+  }
+
+  private[this] def handleShowViewDataResponse(queryId: UUID, view: View) {
+    val id = UUID.randomUUID
+    val startMs = DateUtils.nowMillis
+    val sql = s"""select * from ${db.engine.quoteIdentifier}${view.name}${db.engine.quoteIdentifier} limit 1001"""
+    log.info(s"Showing data for [${view.name}] using sql [$sql].")
+    sqlCatch(queryId, sql, startMs) { () =>
+      val (columns, data) = db.query(DynamicQuery(sql))
+
+      //log.info(s"Query result: [$result].")
+      val durationMs = (DateUtils.nowMillis - startMs).toInt
+      out ! QueryResultResponse(id, QueryResult(
+        queryId = queryId,
+        title = view.name,
+        sql = sql,
+        columns = columns,
         data = data,
         sortable = true,
         occurred = startMs

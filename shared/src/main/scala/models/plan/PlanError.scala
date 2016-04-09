@@ -7,6 +7,6 @@ case class PlanError(
   sql: String,
   code: String,
   message: String,
-  raw: Option[String] = None
+  raw: Option[String] = None,
+  occurred: Long = System.currentTimeMillis
 )
-

@@ -1,6 +1,6 @@
 package ui
 
-import models.schema.{ Procedure, Table }
+import models.schema.{ Procedure, Table, View }
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
@@ -42,7 +42,7 @@ object MetadataUpdates {
     ModelListManager.updatePanel("table")
   }
 
-  def updateViews(updates: Seq[Table]) = {
+  def updateViews(updates: Seq[View]) = {
     val updatedIds = updates.map(_.name)
     val orig = MetadataManager.schema.map(_.views).getOrElse(Nil)
     val vs = (orig.filterNot(v => updatedIds.contains(v.name)) ++ updates).sortBy(_.name)

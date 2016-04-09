@@ -21,7 +21,7 @@ trait PlanHelper extends Logging { this: ConnectionService =>
         val result = db.query(DynamicQuery(explainSql))
         //log.info(s"Query result: [$result].")
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(result)) match {
+        PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(result), startMs) match {
           case Left(err) =>
             log.warn(s"Error parsing plan [${err.code}: ${err.message}].")
             out ! PlanErrorResponse(id, err, durationMs)

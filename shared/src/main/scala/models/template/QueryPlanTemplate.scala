@@ -6,6 +6,7 @@ import models.PlanResultResponse
 import models.plan.{ PlanNode, PlanResult }
 
 import scalatags.Text.all._
+import scalatags.Text.tags2.time
 
 object QueryPlanTemplate {
   def testPlan(action: String, queryId: UUID) = {
@@ -38,7 +39,7 @@ object QueryPlanTemplate {
     )
   }
 
-  def forPlan(pr: PlanResultResponse) = cardFor(pr)
+  def forPlan(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = cardFor(pr, dateIsoString, dateFullString)
 
   private[this] def forNode(node: PlanNode, className: String): Modifier = if (node.children.isEmpty) {
     li(cls := className)(a(cls := "z-depth-1", href := "#")(node.title))
@@ -47,7 +48,7 @@ object QueryPlanTemplate {
     li(cls := className)(a(cls := "z-depth-1", href := "#")(node.title), ul(kids: _*))
   }
 
-  private[this] def cardFor(pr: PlanResultResponse) = {
+  private[this] def cardFor(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = {
     div(id := pr.id.toString, cls := "row")(
       div(cls := "col s12")(
         div(cls := "card")(
@@ -57,6 +58,7 @@ object QueryPlanTemplate {
               pr.result.name,
               i(cls := s"right fa ${Icons.close}")
             ),
+            div(em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString))),
             div(cls := "plan-chart")(
               div(id := "", cls := "tree-container")(
                 div(cls := "tree")(

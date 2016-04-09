@@ -2,12 +2,12 @@ package models.template
 
 import java.util.UUID
 
-import models.schema.Table
+import models.schema.View
 
 import scalatags.Text.all._
 
 object ViewColumnDetailTemplate {
-  def columnsForView(resultId: UUID, queryId: UUID, t: Table) = {
+  def columnsForView(resultId: UUID, queryId: UUID, v: View) = {
     div(id := resultId.toString, cls := "row")(
       div(cls := "col s12")(
         div(cls := "card")(
@@ -15,10 +15,10 @@ object ViewColumnDetailTemplate {
             span(cls := "card-title")(
               i(cls := s"title-icon fa ${Icons.columns}"),
               "Columns for ",
-              em(t.name),
+              em(v.name),
               i(cls := s"right fa ${Icons.close}")
             ),
-            if (t.columns.isEmpty) {
+            if (v.columns.isEmpty) {
               div("No columns are available for this view.")
             } else {
               table(cls := "bordered highlight responsive-table")(
@@ -29,7 +29,7 @@ object ViewColumnDetailTemplate {
                   )
                 ),
                 tbody(
-                  t.columns.map { col =>
+                  v.columns.map { col =>
                     val nn = col.notNull.toString
                     val defaultVal = col.defaultValue.getOrElse("")
                     tr(

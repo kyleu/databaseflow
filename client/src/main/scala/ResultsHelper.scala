@@ -10,7 +10,8 @@ import ui._
 trait ResultsHelper { this: DatabaseFlow =>
   protected[this] def handleQueryResultResponse(qr: QueryResultResponse) = {
     //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
-    val html = QueryResultsTemplate.forResults(qr)
+    val occurred = new scalajs.js.Date(qr.result.occurred.toDouble)
+    val html = QueryResultsTemplate.forResults(qr, occurred.toISOString, occurred.toString)
     val workspace = $(s"#workspace-${qr.result.queryId}")
     if (workspace.length != 1) {
       utils.Logging.warn(s"No workspace available for query [${qr.result.queryId}].")
@@ -21,6 +22,8 @@ trait ResultsHelper { this: DatabaseFlow =>
     val resultEl = $(".query-result-table", panel)
     val sqlEl = $(".query-result-sql", panel)
     val sqlLink = $(s".results-sql-link", panel)
+
+    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
     $(".query-rel-link", panel).click { (e: JQueryEventObject) =>
       val jq = $(e.currentTarget)

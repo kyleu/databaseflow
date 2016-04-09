@@ -5,12 +5,13 @@ import java.util.UUID
 import models.plan.PlanError
 
 object H2ParseService extends PlanParseService("h2") {
-  override def parse(sql: String, queryId: UUID, plan: String) = {
+  override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {
     Left(PlanError(
       queryId = queryId,
       sql = sql,
       code = "NotSupported",
-      message = "No plan support for H2 currently."
+      message = "No plan support for H2 currently.",
+      occurred = startMs
     ))
   }
 }

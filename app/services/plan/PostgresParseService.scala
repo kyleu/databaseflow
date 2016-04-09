@@ -9,13 +9,13 @@ import upickle.json
 import PostgresParseKeys._
 
 object PostgresParseService extends PlanParseService("postgres") {
-  override def parse(sql: String, queryId: UUID, plan: String) = {
+  override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {
     val json = upickle.json.read(plan)
     val ret = json match {
       case a: Js.Arr => if (a.value.length == 1) {
         a.value.headOption match {
           case Some(x: Js.Obj) => x.value match {
-            case planEl if planEl.headOption.map(_._1).contains("Plan") => parsePlan(sql, queryId, planEl.head._2)
+            case planEl if planEl.headOption.map(_._1).contains("Plan") => parsePlan(sql, queryId, planEl.head._2, startMs)
             case v => throw new IllegalArgumentException("Expected single element \"Plan\", found [" + v.map(_._1).mkString(", ") + "].")
           }
           case x => throw new IllegalArgumentException(s"Array contains [${a.value.length}] elements, and the head is of type [$x].")
@@ -28,21 +28,23 @@ object PostgresParseService extends PlanParseService("postgres") {
     ret
   }
 
-  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value) = plan match {
+  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value, startMs: Long) = plan match {
     case o: Js.Obj => Right(PlanResult(
       queryId = queryId,
       name = "Test Plan",
       action = "Action",
       sql = sql,
       raw = json.write(plan, 2),
-      node = nodeFor(o)
+      node = nodeFor(o),
+      occurred = startMs
     ))
     case x => Left(PlanError(
       queryId = queryId,
       sql = sql,
       code = x.getClass.getSimpleName,
       message = s"Invalid JSON [${json.write(plan)}].",
-      raw = Some(json.write(plan, 2))
+      raw = Some(json.write(plan, 2)),
+      occurred = startMs
     ))
   }
 

@@ -9,10 +9,10 @@ import models.query.QueryResult
 import utils.Logging
 
 object PlanParseService {
-  def parse(sql: String, queryId: UUID, plan: String)(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => PostgresParseService.parse(sql, queryId, plan)
-    case MySQL => MySqlParseService.parse(sql, queryId, plan)
-    case H2 => H2ParseService.parse(sql, queryId, plan)
+  def parse(sql: String, queryId: UUID, plan: String, startMs: Long)(implicit engine: DatabaseEngine) = engine match {
+    case PostgreSQL => PostgresParseService.parse(sql, queryId, plan, startMs)
+    case MySQL => MySqlParseService.parse(sql, queryId, plan, startMs)
+    case H2 => H2ParseService.parse(sql, queryId, plan, startMs)
   }
 
   def resultPlanString(result: (scala.Seq[QueryResult.Col], scala.Seq[scala.Seq[Option[String]]]))(implicit engine: DatabaseEngine) = engine match {
@@ -23,7 +23,7 @@ object PlanParseService {
 }
 
 abstract class PlanParseService(name: String) extends Logging {
-  def parse(sql: String, queryId: UUID, plan: String): Either[PlanError, PlanResult]
+  def parse(sql: String, queryId: UUID, plan: String, startMs: Long): Either[PlanError, PlanResult]
 
   def debug() = {
     log.info(s"Started [$name] plan parse service.")

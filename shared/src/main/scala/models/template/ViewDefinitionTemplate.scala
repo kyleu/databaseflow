@@ -2,12 +2,12 @@ package models.template
 
 import java.util.UUID
 
-import models.schema.Table
+import models.schema.View
 
 import scalatags.Text.all._
 
 object ViewDefinitionTemplate {
-  def definitionForView(resultId: UUID, queryId: UUID, v: Table) = {
+  def definitionForView(resultId: UUID, queryId: UUID, v: View) = {
     div(id := resultId.toString, cls := "row")(
       div(cls := "col s12")(
         div(cls := "card")(

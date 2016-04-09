@@ -18,7 +18,7 @@ object SchemaService {
       val metadata = conn.getMetaData
       val updated = schema.copy(
         tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
-        views = MetadataTables.withViewDetails(db, conn, metadata, schema.views),
+        views = MetadataViews.withViewDetails(db, conn, metadata, schema.views),
         procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures),
         detailsLoadedAt = Some(System.currentTimeMillis)
       )
@@ -62,7 +62,7 @@ object SchemaService {
     )
 
     val tables = MetadataTables.getTables(db, conn, metadata, catalogName, schemaName)
-    val views = MetadataTables.getViews(db, conn, metadata, catalogName, schemaName)
+    val views = MetadataViews.getViews(db, conn, metadata, catalogName, schemaName)
     val procedures = MetadataProcedures.getProcedures(metadata, catalogName, schemaName)
 
     val schema = schemaModel.copy(

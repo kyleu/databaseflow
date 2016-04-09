@@ -4,7 +4,7 @@ import java.sql.DatabaseMetaData
 
 import models.database.Row
 import models.queries.QueryTranslations
-import models.schema.{ Column, Table }
+import models.schema.Column
 import utils.NullUtils
 
 object MetadataColumns {
@@ -16,8 +16,8 @@ object MetadataColumns {
     columns.sortBy(_._1).map(_._2)
   }
 
-  def getColumns(metadata: DatabaseMetaData, t: Table) = {
-    val rs = metadata.getColumns(t.catalog.orNull, t.schema.orNull, t.name, NullUtils.inst)
+  def getColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], name: String) = {
+    val rs = metadata.getColumns(catalog.orNull, schema.orNull, name, NullUtils.inst)
     val columns = new Row.Iter(rs).map(fromRow).toList
     columns.sortBy(_._1).map(_._2)
   }

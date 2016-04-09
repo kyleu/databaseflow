@@ -17,7 +17,7 @@ case class Schema(
   catalogTerm: String,
   maxSqlLength: Int,
   tables: Seq[Table],
-  views: Seq[Table],
+  views: Seq[View],
   procedures: Seq[Procedure],
 
   detailsLoadedAt: Option[Long] = None

@@ -7,7 +7,8 @@ import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 trait PlanHelper { this: DatabaseFlow =>
   protected[this] def handlePlanResultResponse(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
-    val html = QueryPlanTemplate.forPlan(pr)
+    val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
+    val html = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
     val workspace = $(s"#workspace-${pr.result.queryId}")
     workspace.prepend(html.toString)
 
@@ -16,6 +17,8 @@ trait PlanHelper { this: DatabaseFlow =>
     val panel = $(s"#${pr.id}")
     val chart = $(s".plan-chart", panel)
     val raw = $(s".plan-raw", panel)
+
+    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
     $("a", panel).click { (e: JQueryEventObject) =>
       $(e.currentTarget).toggleClass("open")

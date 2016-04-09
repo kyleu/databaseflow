@@ -8,10 +8,10 @@ import upickle.{ Js, json }
 import scala.util.control.NonFatal
 
 object MySqlParseService extends PlanParseService("mysql") {
-  override def parse(sql: String, queryId: UUID, plan: String) = {
+  override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {
     val json = upickle.json.read(plan)
     val ret = json match {
-      case o: Js.Obj => parsePlan(sql, queryId, o)
+      case o: Js.Obj => parsePlan(sql, queryId, o, startMs)
       case _ => throw new IllegalStateException("Not a Json object.")
     }
     ret match {
@@ -21,14 +21,15 @@ object MySqlParseService extends PlanParseService("mysql") {
     ret
   }
 
-  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value) = try {
+  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value, startMs: Long) = try {
     Right(PlanResult(
       queryId = queryId,
       name = "Test Plan",
       action = "Action",
       sql = sql,
       raw = json.write(plan, 2),
-      node = nodeFor(plan)
+      node = nodeFor(plan),
+      occurred = startMs
     ))
   } catch {
     case NonFatal(x) => Left(PlanError(
@@ -36,7 +37,8 @@ object MySqlParseService extends PlanParseService("mysql") {
       sql = sql,
       code = x.getClass.getSimpleName,
       message = x.getMessage,
-      raw = Some(json.write(plan, 2))
+      raw = Some(json.write(plan, 2)),
+      occurred = startMs
     ))
   }
 
@@ -86,7 +88,6 @@ object MySqlParseService extends PlanParseService("mysql") {
   )
 
   private[this] def parseTable(depth: Int, el: Js.Value) = {
-    println("!!!" + el)
     val obj = (el match {
       case o: Js.Obj => o
       case x => throw new IllegalStateException(s"Table element is of type [${x.getClass.getSimpleName}].")

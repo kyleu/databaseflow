@@ -29,40 +29,11 @@ object MetadataTables {
 
     table.copy(
       definition = definition,
-      columns = MetadataColumns.getColumns(metadata, table),
-      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table),
+      columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name),
+      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
       indexes = MetadataIndexes.getIndexes(metadata, table)
-    )
-  }
-
-  def getViews(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
-    val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("VIEW"))
-    new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
-  }
-
-  def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[Table]) = views.map { view =>
-    getViewDetails(db, conn, metadata, view)
-  }
-
-  private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: Table) = {
-    val definition = if (db.engine.showCreateSupported) {
-      Some(db(conn, new Query[String] {
-        override def sql = db.engine.showCreateView(view.name)
-        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.head
-      }))
-    } else {
-      None
-    }
-
-    view.copy(
-      definition = definition,
-      columns = MetadataColumns.getColumns(metadata, view),
-      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, view),
-      primaryKey = MetadataKeys.getPrimaryKey(metadata, view),
-      foreignKeys = MetadataKeys.getForeignKeys(metadata, view),
-      indexes = MetadataIndexes.getIndexes(metadata, view)
     )
   }
 
@@ -71,7 +42,6 @@ object MetadataTables {
     catalog = row.asOpt[String]("TABLE_CAT"),
     schema = row.asOpt[String]("TABLE_SCHEM"),
     description = row.asOpt[String]("REMARKS"),
-    definition = None,
-    typeName = row.as[String]("TABLE_TYPE")
+    definition = None
   )
 }

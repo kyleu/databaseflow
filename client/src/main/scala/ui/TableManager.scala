@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.query.RowDataOptions
 import models.schema.Table
 import models.template.{ Icons, TableDetailTemplate }
 import models.{ GetTableDetail, GetTableRowData }
@@ -35,7 +36,7 @@ object TableManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
-        viewData(queryId, name, None)
+        viewData(queryId, name, RowDataOptions.empty)
         false
       })
 
@@ -50,8 +51,8 @@ object TableManager {
       openTables = openTables + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, name: String, filter: Option[(String, String, String)]) = {
-    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, filter = filter))
+  private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
+    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options))
   }
 
   private[this] def setTableDetails(uuid: UUID, table: Table) = {

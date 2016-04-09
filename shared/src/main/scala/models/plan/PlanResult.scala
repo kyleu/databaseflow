@@ -8,5 +8,6 @@ case class PlanResult(
   action: String,
   sql: String,
   raw: String,
-  node: PlanNode
+  node: PlanNode,
+  occurred: Long = System.currentTimeMillis
 )

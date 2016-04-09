@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import models.query.SavedQuery
+import models.query.{ RowDataOptions, SavedQuery }
 
 sealed trait RequestMessage
 
@@ -19,8 +19,8 @@ case class GetTableDetail(name: String) extends RequestMessage
 case class GetProcedureDetail(name: String) extends RequestMessage
 case class GetViewDetail(name: String) extends RequestMessage
 
-case class GetTableRowData(queryId: UUID, name: String, filter: Option[(String, String, String)]) extends RequestMessage
-case class GetViewRowData(queryId: UUID, name: String, filter: Option[(String, String, String)]) extends RequestMessage
+case class GetTableRowData(queryId: UUID, name: String, options: RowDataOptions) extends RequestMessage
+case class GetViewRowData(queryId: UUID, name: String, options: RowDataOptions) extends RequestMessage
 
 case class QuerySaveRequest(query: SavedQuery) extends RequestMessage
 case class QueryDeleteRequest(id: UUID) extends RequestMessage

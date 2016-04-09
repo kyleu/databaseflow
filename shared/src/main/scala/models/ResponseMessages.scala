@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.plan.{ PlanError, PlanResult }
 import models.query.{ QueryError, QueryResult, SavedQuery }
-import models.schema.{ Procedure, Schema, Table }
+import models.schema.{ Procedure, Schema, Table, View }
 import models.user.UserPreferences
 
 sealed trait ResponseMessage
@@ -27,12 +27,15 @@ case class Disconnected(reason: String) extends ResponseMessage
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 
+case class RowDataResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
+case class RowDataErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
+
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage
 
 case class SavedQueryResultResponse(savedQueries: Seq[SavedQuery], durationMs: Int) extends ResponseMessage
 case class TableResultResponse(tables: Seq[Table], durationMs: Int) extends ResponseMessage
-case class ViewResultResponse(views: Seq[Table], durationMs: Int) extends ResponseMessage
+case class ViewResultResponse(views: Seq[View], durationMs: Int) extends ResponseMessage
 case class ProcedureResultResponse(procedures: Seq[Procedure], durationMs: Int) extends ResponseMessage
 
 case class QuerySaveResponse(savedQuery: SavedQuery, error: Option[String] = None) extends ResponseMessage

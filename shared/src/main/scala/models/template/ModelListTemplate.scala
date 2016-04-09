@@ -3,7 +3,7 @@ package models.template
 import java.util.UUID
 
 import models.query.SavedQuery
-import models.schema.{ Procedure, Table }
+import models.schema.{ Procedure, Table, View }
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._
@@ -34,7 +34,7 @@ object ModelListTemplate {
     forModels(queryId, "table", "Tables", tableFor(cols, None, rows))
   }
 
-  def forViews(queryId: UUID, views: Seq[Table]) = {
+  def forViews(queryId: UUID, views: Seq[View]) = {
     val cols = Seq("Name", "Columns", "Description")
     val rows = views.map(v => tr(
       td(v.name),
