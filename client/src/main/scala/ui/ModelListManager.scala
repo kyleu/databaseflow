@@ -4,12 +4,28 @@ import java.util.UUID
 
 import models.schema.Schema
 import models.template.{ Icons, ModelListTemplate }
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
 import scalatags.Text.all._
 
 object ModelListManager {
   var openLists = Map.empty[String, UUID]
+
+  private[this] def wire(queryPanel: JQuery, key: String) = {
+    $(".list-link", queryPanel).click { (e: JQueryEventObject) =>
+      {
+        val name = $(e.currentTarget).data("name").toString
+        key match {
+          case "saved-query" => SavedQueryManager.savedQueryDetail(UUID.fromString(name))
+          case "table" => TableManager.tableDetail(name)
+          case "view" => ViewManager.viewDetail(name)
+          case "procedure" => ProcedureManager.procedureDetail(name)
+          case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
+        }
+        false
+      }
+    }
+  }
 
   def showList(key: String) = openLists.get(key) match {
     case Some(queryId) =>
@@ -27,6 +43,8 @@ object ModelListManager {
 
       val queryPanel = $(s"#panel-$queryId")
 
+      wire(queryPanel, key)
+
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openLists = openLists - key
         closeList(queryId)
@@ -39,7 +57,7 @@ object ModelListManager {
   def updatePanel(key: String) = openLists.get(key) match {
     case Some(queryId) =>
       val schema = MetadataManager.schema.getOrElse(throw new IllegalStateException("Schema not available."))
-      val (name, template) = getTemplate(key, queryId, schema)
+      val (_, template) = getTemplate(key, queryId, schema)
       val queryPanel = $(s"#panel-$queryId")
       queryPanel.html(template.toString)
     case None => // no op
