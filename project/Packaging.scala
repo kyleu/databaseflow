@@ -5,9 +5,9 @@ import sbt._
 
 object Packaging {
   private[this] lazy val iconGlob = sys.props("os.name").toLowerCase match {
-    case os if os.contains("mac") ⇒ "*.icns"
-    case os if os.contains("win") ⇒ "*.ico"
-    case _ ⇒ "*.png"
+    case os if os.contains("mac") => "*.icns"
+    case os if os.contains("win") => "*.ico"
+    case _ => "*.png"
   }
 
   val soloSettings = Seq(
@@ -19,7 +19,6 @@ object Packaging {
     rpmVendor := "Database Flow",
     wixProductId := "5fee44ae-0989-429b-9b1a-de8ec7dd9af5",
     wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",
-    //sourceDirectories in JDKPackager += "",
     jdkAppIcon := (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file),
     jdkPackagerType := "installer",
     jdkPackagerJVMArgs := Seq("-Xmx2g"),

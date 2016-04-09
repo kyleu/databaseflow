@@ -4,7 +4,6 @@ import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.Plugin.graphSettings
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import playscalajs.ScalaJSPlay
-import playscalajs.ScalaJSPlay.autoImport._
 import sbt.Keys._
 import sbt._
 

@@ -5,6 +5,7 @@ import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.packager.Keys._
+import com.typesafe.sbt.packager.archetypes.{ JavaAppPackaging, JavaServerAppPackaging }
 import com.typesafe.sbt.packager.debian.DebianPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
@@ -34,7 +35,7 @@ object Server {
   }
 
   private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
-    name := Shared.projectName,
+    name := Shared.projectId,
     maintainer := "Kyle Unverferth",
     description := "Database Flow is a modern sql client.",
 
@@ -64,10 +65,10 @@ object Server {
   )
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .enablePlugins(UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
+    .enablePlugins(if(PackagingSettings.serverApp) { JavaServerAppPackaging } else { JavaAppPackaging })
     .settings(serverSettings: _*)
     .aggregate(projectToRef(Client.client))
-    //.settings(Packaging.teamSettings: _*)
-    .settings(Packaging.soloSettings: _*)
+    .settings(PackagingSettings.settings: _*)
     .aggregate(Gui.gui)
     .dependsOn(Gui.gui)
     .aggregate(Shared.sharedJvm)

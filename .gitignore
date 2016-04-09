@@ -9,6 +9,7 @@ dist
 /*.iml
 /db
 /out
+/build
 /.idea_modules
 /.classpath
 /.project
