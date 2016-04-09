@@ -61,7 +61,9 @@ object SearchManager {
   def clearSearchEntries(o: Option[scala.Seq[(String, JQuery, JQuery)]], toggle: JQuery) = {
     closeIfOpen(toggle)
     o.foreach(_.foreach { x =>
-      x._3.text(x._3.attr("title").getOrElse(x._1))
+      val name = x._2.data("name").toString
+      x._3.text(name)
+      x._2.attr("title", name)
       x._2.show()
     })
   }

@@ -39,17 +39,18 @@ object SearchFilterManager {
     }
   }
 
-  private[this] def highlightTitleMatches(title: String, matches: Seq[String], j: JQuery) = {
+  private[this] def highlightTitleMatches(title: String, matches: Seq[String], anchorEl: JQuery, titleEl: JQuery) = {
     val replaced = matches.foldLeft(title) { (x, y) =>
       val titleLc = title.toLowerCase
       val idx = titleLc.indexOf(y)
       if (idx == -1) { title } else { s"""${title.substring(0, idx)}[[${title.substring(idx, idx + y.length)}]]${title.substring(idx + y.length)}""" }
     }
     val html = replaced.replaceAllLiterally("[[", "<strong class=\"search-matched-text\">").replaceAllLiterally("]]", "</strong>")
-    j.html(html)
+    anchorEl.attr("title", replaced.replaceAllLiterally("[[", "[").replaceAllLiterally("]]", "]"))
+    titleEl.html(html)
   }
 
-  private[this] def highlightAdditionalMatches(title: String, keys: Seq[(String, String)], matches: Seq[String], j: JQuery) = {
+  private[this] def highlightAdditionalMatches(keys: Seq[(String, String)], matches: Seq[String], j: JQuery) = {
     val els = keys.map { key =>
       val replaced = matches.foldLeft(key._2) { (x, y) =>
         val keyLc = key._2.toLowerCase
@@ -73,8 +74,8 @@ object SearchFilterManager {
     val (matched, notMatched) = matches.partition(_._2.nonEmpty)
     matched.foreach { o =>
       o._2.find(_._1 == "name") match {
-        case Some(name) => highlightTitleMatches(name._2, searches, o._1._3)
-        case None => highlightAdditionalMatches(o._1._3.attr("title").getOrElse(o._1._1), o._2, searches, o._1._3)
+        case Some(name) => highlightTitleMatches(name._2, searches, o._1._2, o._1._3)
+        case None => highlightAdditionalMatches(o._2, searches, o._1._2)
       }
       o._1._2.show()
     }
