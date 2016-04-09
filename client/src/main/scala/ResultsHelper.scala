@@ -1,7 +1,7 @@
 import java.util.UUID
 
 import models._
-import models.query.SavedQuery
+import models.query.{ RowDataOptions, SavedQuery }
 import models.template._
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
@@ -30,7 +30,7 @@ trait ResultsHelper { this: DatabaseFlow =>
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
-      TableManager.tableDetail(table, Some((col, "=", v)))
+      TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some("="), filterVal = Some(v)))
       false
     }
 

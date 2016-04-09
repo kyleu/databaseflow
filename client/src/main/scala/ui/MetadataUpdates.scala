@@ -1,12 +1,13 @@
 package ui
 
+import models.query.RowDataOptions
 import models.schema.{ Procedure, Table, View }
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
 
 object MetadataUpdates {
   def schemaClick(key: String, name: String) = key match {
-    case "table" => TableManager.tableDetail(name)
+    case "table" => TableManager.tableDetail(name, RowDataOptions.empty)
     case "view" => ViewManager.viewDetail(name)
     case "procedure" => ProcedureManager.procedureDetail(name)
     case _ => throw new IllegalStateException("Invalid key [" + key + "].")

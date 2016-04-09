@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.query.RowDataOptions
 import models.schema.Schema
 import models.template.{ Icons, ModelListTemplate }
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
@@ -17,7 +18,7 @@ object ModelListManager {
         val name = $(e.currentTarget).data("name").toString
         key match {
           case "saved-query" => SavedQueryManager.savedQueryDetail(UUID.fromString(name))
-          case "table" => TableManager.tableDetail(name)
+          case "table" => TableManager.tableDetail(name, RowDataOptions.empty)
           case "view" => ViewManager.viewDetail(name)
           case "procedure" => ProcedureManager.procedureDetail(name)
           case _ => throw new IllegalArgumentException(s"Invalid key [$key].")

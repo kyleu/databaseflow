@@ -1,5 +1,6 @@
 import java.util.UUID
 
+import models.query.RowDataOptions
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NavigationService
 import ui._
@@ -47,7 +48,23 @@ trait InitHelper { this: DatabaseFlow =>
       case ("new", None) => AdHocQueryManager.addNewQuery()
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
       case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))
-      case ("table", Some(id)) => TableManager.tableDetail(id)
+      case ("table", Some(id)) => id.indexOf("::") match {
+        case -1 => TableManager.tableDetail(id, RowDataOptions.empty)
+        case x =>
+          val name = id.substring(0, x)
+          val filter = id.substring(x + 2).split('=')
+          val options = if (filter.length > 1) {
+            RowDataOptions(
+              filterCol = filter.headOption,
+              filterOp = Some("="),
+              filterVal = Some(filter.tail.mkString("="))
+            )
+          } else {
+            utils.Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
+            RowDataOptions.empty
+          }
+          TableManager.tableDetail(name, options)
+      }
       case ("view", Some(id)) => ViewManager.viewDetail(id)
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
       case ("list", Some(key)) => ModelListManager.showList(key)

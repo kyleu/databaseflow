@@ -17,7 +17,7 @@ object TableManager {
     }
   }
 
-  def tableDetail(name: String, initialFilter: Option[(String, String, String)] = None) = openTables.get(name) match {
+  def tableDetail(name: String, options: RowDataOptions) = openTables.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
     case None =>

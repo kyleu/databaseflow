@@ -42,7 +42,7 @@ object DataTableTemplate {
       case Some(relTable) if contentEl._2 => td(
         a(
           cls := "query-rel-link",
-          href := "#",
+          href := s"#table-$relTable::${col.relationColumn.getOrElse("")}=${v.getOrElse("")}",
           title := s"Open [$relTable] table filtered with [${col.relationColumn.getOrElse("")} ${v.getOrElse("0")}]",
           data("rel-table") := relTable,
           data("rel-col") := col.relationColumn.getOrElse(""),
