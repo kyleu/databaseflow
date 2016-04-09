@@ -2,9 +2,9 @@ package ui
 
 import java.util.UUID
 
-import models.GetViewDetail
+import models.{ GetViewDetail, GetViewRowData }
 import models.schema.Table
-import models.template.{ Icons, QueryEditorTemplate, TableColumnDetailTemplate, TableDefinitionTemplate }
+import models.template._
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import services.NotificationService
 
@@ -22,9 +22,7 @@ object ViewManager {
       TabManager.selectTab(queryId)
     case None =>
       val queryId = UUID.randomUUID
-      val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-      val template = QueryEditorTemplate.forView(engine, queryId, name, None, s"select * from $name")
-      WorkspaceManager.append(template.toString)
+      WorkspaceManager.append(ViewDetailTemplate.forView(queryId, name).toString)
 
       MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
         case Some(view) => setViewDetails(queryId, view)
@@ -34,6 +32,14 @@ object ViewManager {
       TabManager.addTab(queryId, "view-" + name, name, Icons.view)
 
       val queryPanel = $(s"#panel-$queryId")
+
+      QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
+
+      $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
+        viewData(queryId, name, None)
+        false
+      })
+
       def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
 
       $(".columns-link", queryPanel).click({ (e: JQueryEventObject) =>
@@ -52,8 +58,6 @@ object ViewManager {
         false
       })
 
-      QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
-
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openViews = openViews - name
         QueryManager.closeQuery(queryId)
@@ -61,7 +65,10 @@ object ViewManager {
       })
 
       openViews = openViews + (name -> queryId)
-      QueryManager.addQuery(queryId, queryPanel, (s) => Unit, () => Unit)
+  }
+
+  private[this] def viewData(queryId: UUID, name: String, filter: Option[(String, String, String)]) = {
+    utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, filter = filter))
   }
 
   private[this] def setViewDetails(uuid: UUID, view: Table) = {
@@ -74,7 +81,7 @@ object ViewManager {
       $(".description", panel).text(desc)
     }
 
-    val summary = s"Table contains ${view.columns.size} columns, ${view.indexes.size} indexes, and ${view.foreignKeys.size} foreign keys."
+    val summary = s"View contains ${view.columns.size} columns."
     $(".summary", panel).text(summary)
 
     if (view.columns.nonEmpty) {
@@ -87,9 +94,9 @@ object ViewManager {
     utils.Logging.debug(s"View [${view.name}] loaded.")
   }
 
-  private[this] def viewColumns(queryId: UUID, table: Table) = {
+  private[this] def viewColumns(queryId: UUID, view: Table) = {
     val id = UUID.randomUUID
-    val html = TableColumnDetailTemplate.columnsForTable(id, queryId, table)
+    val html = ViewColumnDetailTemplate.columnsForView(id, queryId, view)
     $(s"#workspace-$queryId").prepend(html.toString)
     $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()
@@ -97,9 +104,9 @@ object ViewManager {
     })
   }
 
-  private[this] def viewDefinition(queryId: UUID, table: Table) = {
+  private[this] def viewDefinition(queryId: UUID, view: Table) = {
     val id = UUID.randomUUID
-    val html = TableDefinitionTemplate.definitionForTable(id, queryId, table)
+    val html = ViewDefinitionTemplate.definitionForView(id, queryId, view)
     $(s"#workspace-$queryId").prepend(html.toString)
     $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
       $(s"#$id").remove()

@@ -27,7 +27,7 @@ trait ResultsHelper { this: DatabaseFlow =>
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
-      TableManager.tableDetail(table)
+      TableManager.tableDetail(table, Some((col, "=", v)))
       false
     }
 

@@ -68,7 +68,7 @@ object Dependencies {
   }
 
   object Ui {
-    val swing = "org.scala-lang" % "scala-swing" % "2.11.0-M7"
+    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2"
   }
 
   object Metrics {
