@@ -25,12 +25,16 @@ object DataTableTemplate {
     val contentEl = v match {
       case Some(x) => (col.t match {
         case StringType if x.isEmpty => em("empty string")
-        case StringType => span(x)
+        case StringType => span(x.trim)
         case IntegerType => span(x)
         case ShortType => span(x)
         case TimestampType => span(x)
         case BooleanType => span(x)
-        case ByteArrayType => em("byte array")
+        case ByteArrayType => if (x.length > 200) {
+          span(x.substring(0, 200) + "...")
+        } else {
+          span(x)
+        }
         case _ => span(s"$x (${col.t})")
       }) -> true
       case None => span(title := "Null")("∅") -> false
