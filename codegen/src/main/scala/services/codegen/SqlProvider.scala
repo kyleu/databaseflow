@@ -10,7 +10,7 @@ object SqlProvider {
   }
 
   def quoteIdentifier(implicit engine: Engine) = engine match {
-    case PostgreSQL | H2 => "\\\""
+    case PostgreSQL | H2 | Oracle => "\\\""
     case MySQL => "`"
     case _ => "?"
   }

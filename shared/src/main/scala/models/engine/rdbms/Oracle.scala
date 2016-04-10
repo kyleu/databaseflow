@@ -123,7 +123,7 @@ object Oracle extends DatabaseEngine(
   )
 ) {
   override val varchar = "varchar"
-  override val quoteIdentifier = "?"
+  override val quoteIdentifier = "\""
   override val explainSupported = false
   override val analyzeSupported = false
   override val showCreateSupported = false

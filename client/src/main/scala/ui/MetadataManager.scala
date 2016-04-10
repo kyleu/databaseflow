@@ -25,7 +25,7 @@ object MetadataManager {
       val savedQueryList = $("#saved-query-list")
       savedQueryList.html(SidenavTemplate.savedQueries(sqs).mkString("\n"))
       $(".sidenav-link", savedQueryList).click { (e: JQueryEventObject) =>
-        val id = UUID.fromString(e.delegateTarget.id.stripPrefix("sidenav-saved-query-"))
+        val id = UUID.fromString($(e.delegateTarget).data("key").toString)
         SavedQueryManager.savedQueryDetail(id)
         false
       }
@@ -34,7 +34,7 @@ object MetadataManager {
     }
 
     savedQueries = Some(sqs.map { x =>
-      val el = $("#sidenav-saved-query-" + x.id)
+      val el = $("#saved-query-link-" + x.id)
       (x.id.toString, el, $("span", el))
     })
     ModelListManager.updatePanel("saved-query")

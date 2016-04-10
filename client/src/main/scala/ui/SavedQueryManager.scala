@@ -16,7 +16,7 @@ object SavedQueryManager {
     openSavedQueries = openSavedQueries - id
     savedQueries = savedQueries - id
     QueryManager.closeQuery(id)
-    $("#saved-query-" + id).remove()
+    $("#saved-query-link" + id).remove()
   }
 
   def updateSavedQueries(sqs: Seq[SavedQuery]) = {

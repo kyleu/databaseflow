@@ -4,6 +4,7 @@ import models.query.RowDataOptions
 import models.schema.{ Procedure, Table, View }
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import utils.DomUtils
 
 object MetadataUpdates {
   def schemaClick(key: String, name: String) = key match {
@@ -27,7 +28,7 @@ object MetadataUpdates {
       val tableList = $("#table-list")
       tableList.html(SidenavTemplate.tables(ts).mkString("\n"))
       $(".sidenav-link", tableList).click { (e: JQueryEventObject) =>
-        val name = e.delegateTarget.id.stripPrefix("sidenav-table-")
+        val name = $(e.delegateTarget).data("key").toString
         schemaClick("table", name)
         false
       }
@@ -35,7 +36,7 @@ object MetadataUpdates {
       $("#table-list-toggle").css("display", "none")
     }
     tables = Some(ts.map { x =>
-      val el = $("#sidenav-table-" + x.name)
+      val el = $("#table-link-" + DomUtils.cleanForId(x.name))
       (x.name, el, $("span", el))
     })
 
@@ -53,7 +54,7 @@ object MetadataUpdates {
       val viewList = $("#view-list")
       viewList.html(SidenavTemplate.views(vs).mkString("\n"))
       $(".sidenav-link", viewList).click { (e: JQueryEventObject) =>
-        val name = e.delegateTarget.id.stripPrefix("sidenav-view-")
+        val name = $(e.delegateTarget).data("key").toString
         schemaClick("view", name)
         false
       }
@@ -61,7 +62,7 @@ object MetadataUpdates {
       $("#view-list-toggle").css("display", "none")
     }
     views = Some(vs.map { x =>
-      val el = $("#sidenav-view-" + x.name)
+      val el = $("#view-link-" + DomUtils.cleanForId(x.name))
       (x.name, el, $("span", el))
     })
 
@@ -79,7 +80,7 @@ object MetadataUpdates {
       val procedureList = $("#procedure-list")
       procedureList.html(SidenavTemplate.procedures(ps).mkString("\n"))
       $(".sidenav-link", procedureList).click { (e: JQueryEventObject) =>
-        val name = e.delegateTarget.id.stripPrefix("sidenav-procedure-")
+        val name = $(e.delegateTarget).data("key").toString
         schemaClick("procedure", name)
         false
       }
@@ -87,7 +88,7 @@ object MetadataUpdates {
       $("#procedure-list-toggle").css("display", "none")
     }
     procedures = Some(ps.map { x =>
-      val el = $("#sidenav-view-" + x.name)
+      val el = $("#procedure-link-" + DomUtils.cleanForId(x.name))
       (x.name, el, $("span", el))
     })
 
