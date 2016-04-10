@@ -78,6 +78,23 @@
       return false;
     }
 
-    $("#form-engine").material_select();
+    $(function() {
+      var engineSelect = $('#form-engine');
+      engineSelect.material_select();
+      engineSelect.change(function(e) {
+        var newUrl = "jdbc:";
+        switch(e.currentTarget.value) {
+          @models.engine.DatabaseEngine.all.map { de =>
+            case '@de.id':
+              newUrl = '@de.exampleUrl';
+              break;
+          }
+          default:
+            console.log('Unhandled engine [' + e.currentTarget.value + ']');
+            break;
+        }
+        $('#form-url').val(newUrl);
+      });
+    });
   </script>
 }
