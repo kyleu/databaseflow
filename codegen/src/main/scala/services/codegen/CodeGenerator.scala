@@ -25,16 +25,15 @@ object CodeGenerator {
   def getTemplate(cap: Capabilities) = {
     val ret = collection.mutable.ArrayBuffer.empty[String]
     implicit val eng = cap.engine
-    val engName = eng.getClass.getSimpleName.stripSuffix("$")
     ret += "/* Generated Code */"
     ret += "// scalastyle:off"
     ret += "package models.engine.rdbms"
     ret += ""
     ret += "import models.engine.DatabaseEngine"
     ret += ""
-    ret += s"object $engName extends DatabaseEngine("
+    ret += s"object ${eng.getClass.getSimpleName.stripSuffix("$")} extends DatabaseEngine("
     ret += s"  id = ${q(eng.id)},"
-    ret += s"  name = ${q(engName)},"
+    ret += s"  name = ${q(eng.name)},"
     ret += s"  driverClass = ${q(eng.driverClass)},"
     ret += s"  exampleUrl = ${q(eng.exampleUrl)},"
     ret += ""

@@ -47,6 +47,7 @@ object CapabilitiesProvider {
         case x: PositionSubstringFunction => "substring"
         case x: CastFunction => "cast"
         case x: NvlFunction => "nvl"
+        case x: AnsiTrimEmulationFunction => "ansitrim"
         case unknown => throw new IllegalArgumentException(s"Unhandled function type [${unknown.getClass.getName}].")
       }
       Capabilities.SqlFunction(name, typ)

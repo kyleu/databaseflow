@@ -4,6 +4,7 @@ import enumeratum._
 
 sealed abstract class Engine(
     val id: String,
+    val name: String,
     val driverClass: String,
     val exampleUrl: String
 ) extends EnumEntry {
@@ -11,10 +12,36 @@ sealed abstract class Engine(
 }
 
 object Engine extends Enum[Engine] {
-  case object H2 extends Engine("h2", "org.h2.Driver", "jdbc:h2:~/database.h2db")
-  case object MySQL extends Engine("mysql", "com.mysql.jdbc.Driver", "jdbc:mysql://localhost/test")
-  case object Oracle extends Engine("oracle", "oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@//hostname:1521/XE")
-  case object PostgreSQL extends Engine("postgres", "org.postgresql.Driver", "jdbc:postgresql://hostname/dbname")
+  case object H2 extends Engine(
+    id = "h2",
+    name = "H2",
+    driverClass = "org.h2.Driver",
+    exampleUrl = "jdbc:h2:~/database.h2db"
+  )
+  case object MySQL extends Engine(
+    id = "mysql",
+    name = "MySQL",
+    driverClass = "com.mysql.jdbc.Driver",
+    exampleUrl = "jdbc:mysql://localhost/test"
+  )
+  case object Oracle extends Engine(
+    id = "oracle",
+    name = "Oracle",
+    driverClass = "oracle.jdbc.driver.OracleDriver",
+    exampleUrl = "jdbc:oracle:thin:@//hostname:1521/XE"
+  )
+  case object PostgreSQL extends Engine(
+    id = "postgres",
+    name = "PostgreSQL",
+    driverClass = "org.postgresql.Driver",
+    exampleUrl = "jdbc:postgresql://hostname/dbname"
+  )
+  case object SqlServer extends Engine(
+    id = "sqlserver",
+    name = "SQL Server",
+    driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+    exampleUrl = "jdbc:sqlserver://hostname:1433;databaseName=dbname"
+  )
 
   override val values = findValues
 }
