@@ -8,6 +8,7 @@ import upickle.json
 import utils.ApplicationContext
 
 import scala.concurrent.Future
+import scala.util.{ Failure, Success }
 
 object DatabaseTest extends SandboxTask {
   override def id = "dbtest"
@@ -33,9 +34,12 @@ object DatabaseTest extends SandboxTask {
     val ret = connTables.map { t =>
       import upickle.default._
 
-      val tableStrings = t._2.tables.map { x =>
-        val j = writeJs(x)
-        json.write(j, 2)
+      val tableStrings = t._2 match {
+        case Success(s) => s.tables.map { x =>
+          val j = writeJs(x)
+          json.write(j, 2)
+        }
+        case Failure(x) => throw x
       }
       s"${t._1.id}\n${t._1.name}\n" + tableStrings.mkString("\n") + "\n\n"
     }

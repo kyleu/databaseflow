@@ -1,6 +1,6 @@
 package services.schema
 
-import java.sql.{ Connection, DatabaseMetaData }
+import java.sql.DatabaseMetaData
 
 import models.database.Row
 import models.queries.QueryTranslations
@@ -23,17 +23,23 @@ object MetadataProcedures {
     procedure.copy(params = columns)
   }
 
-  private[this] def procedureFromRow(row: Row) = Procedure(
-    name = row.as[String]("procedure_name"),
-    description = row.asOpt[String]("remarks"),
-    params = Nil,
-    returnsResult = row.as[Int]("procedure_type") match {
-      case DatabaseMetaData.procedureResultUnknown => None
-      case DatabaseMetaData.procedureReturnsResult => Some(true)
-      case DatabaseMetaData.procedureNoResult => Some(false)
-      case x => throw new IllegalArgumentException(x.toString)
+  private[this] def procedureFromRow(row: Row) = {
+    val procType = row.as[Any]("procedure_type") match {
+      case i: Int => i
+      case bd: java.math.BigDecimal => bd.doubleValue.toInt
     }
-  )
+    Procedure(
+      name = row.as[String]("procedure_name"),
+      description = row.asOpt[String]("remarks"),
+      params = Nil,
+      returnsResult = procType match {
+        case DatabaseMetaData.procedureResultUnknown => None
+        case DatabaseMetaData.procedureReturnsResult => Some(true)
+        case DatabaseMetaData.procedureNoResult => Some(false)
+        case x => throw new IllegalArgumentException(x.toString)
+      }
+    )
+  }
 
   private[this] def columnFromRow(row: Row) = {
     val paramType = row.as[Any]("COLUMN_TYPE") match {

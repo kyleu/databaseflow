@@ -5,11 +5,14 @@ import java.util.UUID
 import akka.actor.{ ActorRef, Props }
 import models._
 import models.queries.query.SavedQueryQueries
+import models.schema.Schema
 import models.user.User
 import services.database.MasterDatabase
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
 import utils.{ Config, Logging }
+
+import scala.util.{ Failure, Success }
 
 object ConnectionService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
@@ -31,7 +34,13 @@ class ConnectionService(
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] var schema = SchemaService.getSchema(connectionId, db)
+  protected[this] var schema: Option[Schema] = SchemaService.getSchema(connectionId, db) match {
+    case Success(s) => Some(s)
+    case Failure(x) =>
+      log.error("Unable to load schema.", x)
+      out ! ServerError("SchemaLoadError", s"${x.getClass.getSimpleName} - ${x.getMessage}")
+      None
+  }
   protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
@@ -39,13 +48,21 @@ class ConnectionService(
   override def preStart() = {
     supervisor ! ConnectionStarted(user, id, self)
     out ! SavedQueryResultResponse(savedQueries, 0)
-    val is = InitialState(user.id, currentUsername, userPreferences, schema)
-    out ! is
-    if (schema.detailsLoadedAt.isEmpty) {
-      schema = SchemaService.refreshSchema(connectionId, db)
-      out ! TableResultResponse(schema.tables, 0)
-      out ! ViewResultResponse(schema.views, 0)
-      out ! ProcedureResultResponse(schema.procedures, 0)
+    schema.foreach { s =>
+      val is = InitialState(user.id, currentUsername, userPreferences, s)
+      out ! is
+    }
+    if (schema.forall(_.detailsLoadedAt.isEmpty)) {
+      schema = SchemaService.refreshSchema(connectionId, db) match {
+        case Success(s) => Some(s)
+        case Failure(x) =>
+          None
+      }
+      schema.foreach { s =>
+        out ! TableResultResponse(s.tables, 0)
+        out ! ViewResultResponse(s.views, 0)
+        out ! ProcedureResultResponse(s.procedures, 0)
+      }
     }
   }
 

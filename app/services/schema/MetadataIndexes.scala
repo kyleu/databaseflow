@@ -29,17 +29,21 @@ object MetadataIndexes {
   private[this] def toInt(x: Any) = x match {
     case i: Int => i
     case s: Short => s.toInt
+    case bd: java.math.BigDecimal => bd.intValue
     case _ => throw new IllegalStateException(x.getClass.getSimpleName)
   }
 
   private[this] def fromRow(row: Row) = {
     // [index_qualifier], [pages], [filter_condition]
-    val name = row.as[String]("index_name")
-    val unique = !row.as[Boolean]("non_unique")
+    val name = row.asOpt[String]("index_name").getOrElse("null")
+    val unique = !(row.as[Any]("non_unique") match {
+      case b: Boolean => b
+      case bd: java.math.BigDecimal => bd.intValue > 0
+    })
     val position = toInt(row.as[Any]("ordinal_position"))
     val ascending = row.asOpt[String]("asc_or_desc").getOrElse("A") == "A"
 
-    val columnName = row.as[String]("column_name")
+    val columnName = row.asOpt[String]("column_name").getOrElse("null")
     val typ = toInt(row.as[Int]("type")) match {
       case DatabaseMetaData.tableIndexStatistic => "statistic"
       case DatabaseMetaData.tableIndexClustered => "clustered"
@@ -51,6 +55,7 @@ object MetadataIndexes {
       case l: Long => l
       case f: Float => f.toLong
       case i: Int => i.toLong
+      case bd: java.math.BigDecimal => bd.longValue
       case x => throw new IllegalArgumentException(x.getClass.getName)
     }
     (name, unique, typ, cardinality, position, columnName, ascending)

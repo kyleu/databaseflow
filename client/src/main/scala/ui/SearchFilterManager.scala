@@ -12,7 +12,7 @@ object SearchFilterManager {
     case None => Seq("id" -> id)
   }
   private[this] def tableFields(name: String) = MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
-    case Some(t) => Seq("name" -> name, "description" -> t.description.getOrElse("")) ++ t.columns.map(c => "name" -> c.name)
+    case Some(t) => Seq("name" -> name, "description" -> t.description.getOrElse("")) ++ t.columns.map(c => "column" -> c.name)
     case None => Seq("name" -> name)
   }
   private[this] def viewFields(name: String) = MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {

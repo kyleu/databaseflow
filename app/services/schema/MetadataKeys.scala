@@ -13,6 +13,7 @@ object MetadataKeys {
       (row.as[String]("PK_NAME"), row.as[String]("COLUMN_NAME"), row.as[Any]("KEY_SEQ") match {
         case i: Int => i
         case s: Short => s.toInt
+        case bd: java.math.BigDecimal => bd.intValue
       })
     }.toList.groupBy(_._1)
 
@@ -60,9 +61,18 @@ object MetadataKeys {
     val order = row.as[Any]("key_seq") match {
       case i: Int => i
       case s: Short => s.toInt
+      case bd: java.math.BigDecimal => bd.intValue
     }
-    val updateRule = ruleFor(row.as[Int]("update_rule"))
-    val deleteRule = ruleFor(row.as[Int]("delete_rule"))
+    val updateRule = ruleFor(row.asOpt[Any]("update_rule").map {
+      case i: Int => i
+      case s: Short => s.toInt
+      case bd: java.math.BigDecimal => bd.intValue
+    }.getOrElse(DatabaseMetaData.importedKeySetNull))
+    val deleteRule = ruleFor(row.asOpt[Any]("delete_rule").map {
+      case i: Int => i
+      case s: Short => s.toInt
+      case bd: java.math.BigDecimal => bd.intValue
+    }.getOrElse(DatabaseMetaData.importedKeySetNull))
     (name, sourceColumn, targetTable, targetColumn, order, updateRule, deleteRule)
   }
 }
