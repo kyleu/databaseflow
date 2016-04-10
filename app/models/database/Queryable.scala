@@ -23,7 +23,7 @@ trait Queryable extends Logging {
   }
 
   def apply[A](connection: Connection, query: RawQuery[A]): A = {
-    log.info(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
+    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       prepare(stmt, query.values)

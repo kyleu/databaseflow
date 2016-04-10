@@ -14,8 +14,6 @@ class PostgresPlanParseTest extends FlatSpec with Matchers {
 
   it should "load complex PostgreSQL plan" in {
     val result = PlanParseTestHelper.test("postgres-complicated-query", PostgreSQL)
-    println(utils.JsonSerializers.writeResponseMessage(PlanResultResponse(UUID.randomUUID, result, 0), debug = true))
-
     1 should be(1)
   }
 

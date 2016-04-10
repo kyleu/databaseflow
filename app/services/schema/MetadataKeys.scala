@@ -10,11 +10,7 @@ object MetadataKeys {
     val rs = metadata.getPrimaryKeys(table.catalog.orNull, table.schema.orNull, table.name)
 
     val keys = new Row.Iter(rs).map { row =>
-      (row.as[String]("PK_NAME"), row.as[String]("COLUMN_NAME"), row.as[Any]("KEY_SEQ") match {
-        case i: Int => i
-        case s: Short => s.toInt
-        case bd: java.math.BigDecimal => bd.intValue
-      })
+      (row.as[String]("PK_NAME"), row.as[String]("COLUMN_NAME"), JdbcHelper.intVal(row.as[Any]("KEY_SEQ")))
     }.toList.groupBy(_._1)
 
     if (keys.size > 1) {
@@ -58,21 +54,9 @@ object MetadataKeys {
     val targetTable = row.as[String]("pktable_name")
     val targetColumn = row.as[String]("pkcolumn_name")
     val sourceColumn = row.as[String]("fkcolumn_name")
-    val order = row.as[Any]("key_seq") match {
-      case i: Int => i
-      case s: Short => s.toInt
-      case bd: java.math.BigDecimal => bd.intValue
-    }
-    val updateRule = ruleFor(row.asOpt[Any]("update_rule").map {
-      case i: Int => i
-      case s: Short => s.toInt
-      case bd: java.math.BigDecimal => bd.intValue
-    }.getOrElse(DatabaseMetaData.importedKeySetNull))
-    val deleteRule = ruleFor(row.asOpt[Any]("delete_rule").map {
-      case i: Int => i
-      case s: Short => s.toInt
-      case bd: java.math.BigDecimal => bd.intValue
-    }.getOrElse(DatabaseMetaData.importedKeySetNull))
+    val order = JdbcHelper.intVal(row.as[Any]("key_seq"))
+    val updateRule = ruleFor(row.asOpt[Any]("update_rule").map(JdbcHelper.intVal).getOrElse(DatabaseMetaData.importedKeySetNull))
+    val deleteRule = ruleFor(row.asOpt[Any]("delete_rule").map(JdbcHelper.intVal).getOrElse(DatabaseMetaData.importedKeySetNull))
     (name, sourceColumn, targetTable, targetColumn, order, updateRule, deleteRule)
   }
 }

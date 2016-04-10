@@ -23,22 +23,10 @@ object MetadataColumns {
   }
 
   private[this] def fromRow(row: Row) = {
-    val notNull = row.as[Any]("NULLABLE") match {
-      case i: Int => i
-      case bd: java.math.BigDecimal => bd.intValue
-    }
-    val colType = row.as[Any]("DATA_TYPE") match {
-      case i: Int => i
-      case bd: java.math.BigDecimal => bd.intValue
-    }
-    val colSize = row.asOpt[Any]("COLUMN_SIZE") map {
-      case i: Int => i
-      case bd: java.math.BigDecimal => bd.intValue
-    }
-    val position = row.as[Any]("ORDINAL_POSITION") match {
-      case i: Int => i
-      case bd: java.math.BigDecimal => bd.intValue
-    }
+    val notNull = JdbcHelper.intVal(row.as[Any]("NULLABLE"))
+    val colType = JdbcHelper.intVal(row.as[Any]("DATA_TYPE"))
+    val colSize = row.asOpt[Any]("COLUMN_SIZE").map(JdbcHelper.intVal)
+    val position = JdbcHelper.intVal(row.as[Any]("ORDINAL_POSITION"))
     position -> Column(
       name = row.as[String]("COLUMN_NAME"),
       description = row.asOpt[String]("REMARKS"),

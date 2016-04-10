@@ -8,6 +8,8 @@ import models.schema.Table
 import services.database.DatabaseConnection
 import utils.NullUtils
 
+import scala.util.control.NonFatal
+
 object MetadataTables {
   def getTables(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
@@ -38,13 +40,17 @@ object MetadataTables {
   }
 
   private[this] def fromRow(row: Row) = {
-    println(utils.JdbcUtils.rowToString(row))
+    val definition = try {
+      row.asOpt[String]("SQL")
+    } catch {
+      case NonFatal(x) => None
+    }
     Table(
       name = row.as[String]("TABLE_NAME"),
       catalog = row.asOpt[String]("TABLE_CAT"),
       schema = row.asOpt[String]("TABLE_SCHEM"),
       description = row.asOpt[String]("REMARKS"),
-      definition = None
+      definition = definition
     )
   }
 }

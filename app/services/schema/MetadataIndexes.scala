@@ -26,25 +26,18 @@ object MetadataIndexes {
     indexes.sortBy(_.name)
   }
 
-  private[this] def toInt(x: Any) = x match {
-    case i: Int => i
-    case s: Short => s.toInt
-    case bd: java.math.BigDecimal => bd.intValue
-    case _ => throw new IllegalStateException(x.getClass.getSimpleName)
-  }
-
   private[this] def fromRow(row: Row) = {
     // [index_qualifier], [pages], [filter_condition]
     val name = row.asOpt[String]("index_name").getOrElse("null")
-    val unique = !(row.as[Any]("non_unique") match {
+    val nonUnique = row.asOpt[Any]("non_unique").exists {
       case b: Boolean => b
       case bd: java.math.BigDecimal => bd.intValue > 0
-    })
-    val position = toInt(row.as[Any]("ordinal_position"))
+    }
+    val position = row.asOpt[Any]("ordinal_position").map(JdbcHelper.intVal).getOrElse(0)
     val ascending = row.asOpt[String]("asc_or_desc").getOrElse("A") == "A"
 
     val columnName = row.asOpt[String]("column_name").getOrElse("null")
-    val typ = toInt(row.as[Int]("type")) match {
+    val typ = JdbcHelper.intVal(row.as[Int]("type")) match {
       case DatabaseMetaData.tableIndexStatistic => "statistic"
       case DatabaseMetaData.tableIndexClustered => "clustered"
       case DatabaseMetaData.tableIndexHashed => "hashed"
@@ -58,6 +51,6 @@ object MetadataIndexes {
       case bd: java.math.BigDecimal => bd.longValue
       case x => throw new IllegalArgumentException(x.getClass.getName)
     }
-    (name, unique, typ, cardinality, position, columnName, ascending)
+    (name, !nonUnique, typ, cardinality, position, columnName, ascending)
   }
 }

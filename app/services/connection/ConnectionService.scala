@@ -56,6 +56,8 @@ class ConnectionService(
       schema = SchemaService.refreshSchema(connectionId, db) match {
         case Success(s) => Some(s)
         case Failure(x) =>
+          log.error("Unable to refresh schema.", x)
+          out ! ServerError("SchemaDetailError", s"${x.getClass.getSimpleName} - ${x.getMessage}")
           None
       }
       schema.foreach { s =>

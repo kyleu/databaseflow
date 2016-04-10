@@ -12,11 +12,7 @@ object CodeGenerator {
 
   def writeCap(cap: Capabilities) = {
     val outFile = new java.io.File(rdbmsEngineSourceDir, cap.engine.getClass.getSimpleName.stripSuffix("$") + ".scala")
-    println(outFile)
-
     val template = getTemplate(cap)
-    println(template)
-
     FileUtils.write(outFile, template)
   }
 

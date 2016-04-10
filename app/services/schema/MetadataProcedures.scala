@@ -24,10 +24,7 @@ object MetadataProcedures {
   }
 
   private[this] def procedureFromRow(row: Row) = {
-    val procType = row.as[Any]("procedure_type") match {
-      case i: Int => i
-      case bd: java.math.BigDecimal => bd.doubleValue.toInt
-    }
+    val procType = JdbcHelper.intVal(row.as[Any]("procedure_type"))
     Procedure(
       name = row.as[String]("procedure_name"),
       description = row.asOpt[String]("remarks"),
@@ -42,10 +39,7 @@ object MetadataProcedures {
   }
 
   private[this] def columnFromRow(row: Row) = {
-    val paramType = row.as[Any]("COLUMN_TYPE") match {
-      case i: Int => i
-      case s: String => s.toInt
-    }
+    val paramType = JdbcHelper.intVal(row.as[Any]("COLUMN_TYPE"))
 
     row.as[Int]("ORDINAL_POSITION") -> ProcedureParam(
       name = row.as[String]("COLUMN_NAME"),
