@@ -7,8 +7,6 @@ import utils.{ Logging, NullUtils }
 import scala.annotation.tailrec
 
 trait Queryable extends Logging {
-  private[this] def prependComment(obj: Object, sql: String) = s"/* ${obj.getClass.getSimpleName.replace("$", "")} */ $sql"
-
   @tailrec
   private[this] def prepare(stmt: PreparedStatement, values: Seq[Any], index: Int = 1) {
     if (values.nonEmpty) {
@@ -25,8 +23,8 @@ trait Queryable extends Logging {
   }
 
   def apply[A](connection: Connection, query: RawQuery[A]): A = {
-    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
-    val stmt = connection.prepareStatement(prependComment(query, query.sql))
+    log.info(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
+    val stmt = connection.prepareStatement(query.sql)
     try {
       prepare(stmt, query.values)
       val results = stmt.executeQuery()
@@ -42,7 +40,7 @@ trait Queryable extends Logging {
 
   def execute(connection: Connection, statement: Statement): Int = {
     log.debug(s"${statement.sql} with ${statement.values.mkString("(", ", ", ")")}")
-    val stmt = connection.prepareStatement(prependComment(statement, statement.sql))
+    val stmt = connection.prepareStatement(statement.sql)
     try {
       prepare(stmt, statement.values)
       stmt.executeUpdate()

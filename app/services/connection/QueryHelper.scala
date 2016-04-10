@@ -2,6 +2,7 @@ package services.connection
 
 import java.util.UUID
 
+import models.engine.rdbms.Oracle
 import models.queries.DynamicQuery
 import models.query.{ QueryResult, SavedQuery }
 import models.schema.{ Table, View }
@@ -80,7 +81,11 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   private[this] def handleShowTableDataResponse(queryId: UUID, table: Table) {
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
-    val sql = s"""select * from ${db.engine.quoteIdentifier}${table.name}${db.engine.quoteIdentifier} limit 1001"""
+    val qi = db.engine.quoteIdentifier
+    val sql = db.engine match {
+      case Oracle => s"""select * from $qi${table.name}$qi where rownum <= 1001"""
+      case _ => s"""select * from $qi${table.name}$qi limit 1001"""
+    }
     log.info(s"Showing data for [${table.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
       val (columns, data) = db.query(DynamicQuery(sql))

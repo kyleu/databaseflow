@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.engine.rdbms.Oracle
 import models.query.SavedQuery
 import models.template.{ Icons, QueryEditorTemplate }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
@@ -21,8 +22,13 @@ object AdHocQueryManager {
       if (s.tables.isEmpty) {
         ""
       } else {
-        val qi = MetadataManager.engine.getOrElse(throw new IllegalStateException()).quoteIdentifier
-        s"select * from $qi${s.tables(Random.nextInt(s.tables.size)).name}$qi limit 5;"
+        val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException())
+        val qi = engine.quoteIdentifier
+        val t = s.tables(Random.nextInt(s.tables.size)).name
+        engine match {
+          case Oracle => s"select * from $qi$t$qi where rownum <= 5"
+          case _ => s"select * from $qi$t$qi limit 5"
+        }
       }
     }.getOrElse("")
     addAdHocQuery(queryId, queryName, sql)
