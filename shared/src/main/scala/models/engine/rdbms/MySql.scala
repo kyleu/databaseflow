@@ -149,13 +149,8 @@ object MySQL extends DatabaseEngine(
     "longtext"
   )
 ) {
-  override val varchar = "varchar"
-  override val quoteIdentifier = "`"
-  override val explainSupported = true
-  override def explain(sql: String) = "explain format=json " + sql
-  override val analyzeSupported = false
-  override val showCreateSupported = true
-  override def showCreateTable(tableName: String) = "show create table " + tableName
-  override def showCreateView(viewName: String) = "show create view " + viewName
+  override val leftQuoteIdentifier = "`"
+  override val rightQuoteIdentifier = "`"
+  override val explain = Some((sql: String) => { "explain format=json " + sql })
 }
 // scalastyle:on

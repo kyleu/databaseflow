@@ -4,29 +4,15 @@ import models.codegen.Engine
 import models.codegen.Engine._
 
 object SqlProvider {
-  def varchar(implicit engine: Engine) = engine match {
-    case PostgreSQL => "character varying"
-    case _ => "varchar"
-  }
-
-  def quoteIdentifier(implicit engine: Engine) = engine match {
-    case PostgreSQL | H2 | Oracle => "\\\""
+  def leftQuoteIdentifier(implicit engine: Engine) = engine match {
     case MySQL => "`"
-    case _ => "?"
+    case SqlServer => "["
+    case _ => "\\\""
   }
 
-  def showCreateSupported(implicit engine: Engine) = engine match {
-    case MySQL => true
-    case _ => false
-  }
-
-  def showCreateTable(implicit engine: Engine) = engine match {
-    case MySQL => "\"show create table \" + tableName"
-    case _ => false
-  }
-
-  def showCreateView(implicit engine: Engine) = engine match {
-    case MySQL => "\"show create view \" + viewName"
-    case _ => false
+  def rightQuoteIdentifier(implicit engine: Engine) = engine match {
+    case MySQL => "`"
+    case SqlServer => "]"
+    case _ => "\\\""
   }
 }

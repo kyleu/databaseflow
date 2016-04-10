@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.engine.EngineQueries
 import models.query.RowDataOptions
 import models.schema.View
 import models.template._
@@ -43,7 +44,7 @@ object ViewManager {
       })
 
       def wire(q: JQuery, action: String) = q.click({ (e: JQueryEventObject) =>
-        val sql = s"select * from ${engine.quoteIdentifier}$name${engine.quoteIdentifier}"
+        val sql = EngineQueries.selectFrom(name, limit = Some(5))(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
         false
       })

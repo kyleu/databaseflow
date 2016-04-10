@@ -2,6 +2,7 @@ package services.connection
 
 import java.util.UUID
 
+import models.engine.EngineQueries
 import models.engine.rdbms.Oracle
 import models.queries.DynamicQuery
 import models.query.{ QueryResult, SavedQuery }
@@ -81,11 +82,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   private[this] def handleShowTableDataResponse(queryId: UUID, table: Table) {
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
-    val qi = db.engine.quoteIdentifier
-    val sql = db.engine match {
-      case Oracle => s"""select * from $qi${table.name}$qi where rownum <= 1001"""
-      case _ => s"""select * from $qi${table.name}$qi limit 1001"""
-    }
+    val sql = EngineQueries.selectFrom(table.name, limit = Some(1001))(db.engine)
     log.info(s"Showing data for [${table.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
       val (columns, data) = db.query(DynamicQuery(sql))
@@ -116,7 +113,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   private[this] def handleShowViewDataResponse(queryId: UUID, view: View) {
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
-    val sql = s"""select * from ${db.engine.quoteIdentifier}${view.name}${db.engine.quoteIdentifier} limit 1001"""
+    val sql = EngineQueries.selectFrom(view.name, limit = Some(1001))(db.engine)
     log.info(s"Showing data for [${view.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
       val (columns, data) = db.query(DynamicQuery(sql))

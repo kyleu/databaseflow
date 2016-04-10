@@ -6,7 +6,7 @@ import models.engine.DatabaseEngine
 
 object Oracle extends DatabaseEngine(
   id = "oracle",
-  name = "Oracle Database",
+  name = "Oracle",
   driverClass = "oracle.jdbc.driver.OracleDriver",
   exampleUrl = "jdbc:oracle:thin:@//hostname:1521/XE",
 
@@ -122,10 +122,7 @@ object Oracle extends DatabaseEngine(
     "long"
   )
 ) {
-  override val varchar = "varchar"
-  override val quoteIdentifier = "\""
-  override val explainSupported = false
-  override val analyzeSupported = false
-  override val showCreateSupported = false
+  override val leftQuoteIdentifier = "\""
+  override val rightQuoteIdentifier = "\""
 }
 // scalastyle:on

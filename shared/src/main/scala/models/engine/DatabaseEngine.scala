@@ -21,18 +21,11 @@ case class DatabaseEngine(
     builtInFunctions: Seq[String] = Nil,
     columnTypes: Seq[String] = Nil
 ) {
-  def varchar: String = "?"
-  def quoteIdentifier: String = ""
+  def leftQuoteIdentifier: String = ""
+  def rightQuoteIdentifier: String = ""
 
-  val explainSupported = true
-  def explain(sql: String) = ""
-
-  val analyzeSupported = true
-  def analyze(sql: String) = ""
-
-  val showCreateSupported = true
-  def showCreateTable(name: String) = ""
-  def showCreateView(name: String) = ""
+  def explain: Option[(String) => String] = None
+  def analyze: Option[(String) => String] = None
 
   override def toString = id
 }

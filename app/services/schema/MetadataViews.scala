@@ -3,6 +3,7 @@ package services.schema
 import java.sql.{ Connection, DatabaseMetaData }
 
 import models.database.{ Query, Row }
+import models.engine.rdbms.MySQL
 import models.schema.{ Table, View }
 import services.database.DatabaseConnection
 import utils.NullUtils
@@ -18,13 +19,12 @@ object MetadataViews {
   }
 
   private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: View) = {
-    val definition = if (db.engine.showCreateSupported) {
-      Some(db(conn, new Query[String] {
-        override def sql = db.engine.showCreateView(view.name)
+    val definition = db.engine match {
+      case MySQL => Some(db(conn, new Query[String] {
+        override def sql = "show create view " + view.name
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.head
       }))
-    } else {
-      None
+      case _ => None
     }
 
     view.copy(

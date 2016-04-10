@@ -47,20 +47,13 @@ object CodeGenerator {
     ret += cap.columnTypes.flatMap(_._2.map(x => s"    ${q(x)}")).mkString(",\n")
     ret += "  )"
     ret += ") {"
-    ret += "  override val varchar = \"" + SqlProvider.varchar + "\""
-    ret += "  override val quoteIdentifier = \"" + SqlProvider.quoteIdentifier + "\""
-    ret += s"  override val explainSupported = ${PlanProvider.explainSupported}"
+    ret += "  override val leftQuoteIdentifier = \"" + SqlProvider.leftQuoteIdentifier + "\""
+    ret += "  override val rightQuoteIdentifier = \"" + SqlProvider.rightQuoteIdentifier + "\""
     if (PlanProvider.explainSupported) {
-      ret += s"  override def explain(sql: String) = ${PlanProvider.explain}"
+      ret += s"  override val explain = Some((sql: String) => { ${PlanProvider.explain} })"
     }
-    ret += s"  override val analyzeSupported = ${PlanProvider.analyzeSupported}"
     if (PlanProvider.analyzeSupported) {
-      ret += s"  override def analyze(sql: String) = ${PlanProvider.analyze}"
-    }
-    ret += s"  override val showCreateSupported = ${SqlProvider.showCreateSupported}"
-    if (SqlProvider.showCreateSupported) {
-      ret += s"  override def showCreateTable(tableName: String) = ${SqlProvider.showCreateTable}"
-      ret += s"  override def showCreateView(viewName: String) = ${SqlProvider.showCreateView}"
+      ret += s"  override val analyze = Some((sql: String) => { ${PlanProvider.analyze} })"
     }
     ret += "}"
     ret += "// scalastyle:on"

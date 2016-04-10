@@ -4,14 +4,14 @@ object CreateConnectionsTable extends CreateTableStatement("connections") {
   override def sql: String = s"""
     create table $tableName (
       id uuid not null primary key,
-      name ${eng.varchar}(256) not null,
+      name $varchar(256) not null,
       owner uuid,
       public boolean not null,
-      description ${eng.varchar}(4096) not null,
-      engine ${eng.varchar}(128) not null,
-      url ${eng.varchar}(2048) not null,
-      username ${eng.varchar}(512) not null,
-      password ${eng.varchar}(2048) not null
+      description $varchar(4096) not null,
+      engine $varchar(128) not null,
+      url $varchar(2048) not null,
+      username $varchar(512) not null,
+      password $varchar(2048) not null
     );
   """
 }

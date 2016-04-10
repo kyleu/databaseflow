@@ -3,6 +3,7 @@ package services.schema
 import java.sql.{ Connection, DatabaseMetaData }
 
 import models.database.{ Query, Row }
+import models.engine.rdbms.MySQL
 import models.schema.Table
 import services.database.DatabaseConnection
 import utils.NullUtils
@@ -18,13 +19,12 @@ object MetadataTables {
   }
 
   private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
-    val definition = if (db.engine.showCreateSupported) {
-      Some(db(conn, new Query[String] {
-        override def sql = db.engine.showCreateTable(table.name)
+    val definition = db.engine match {
+      case MySQL => Some(db(conn, new Query[String] {
+        override def sql = "show create table " + table.name
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.head
       }))
-    } else {
-      None
+      case _ => None
     }
 
     table.copy(

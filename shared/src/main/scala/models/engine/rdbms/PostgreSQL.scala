@@ -125,12 +125,9 @@ object PostgreSQL extends DatabaseEngine(
     "varchar"
   )
 ) {
-  override val varchar = "character varying"
-  override val quoteIdentifier = "\""
-  override val explainSupported = true
-  override def explain(sql: String) = "explain (costs, verbose, format json) " + sql
-  override val analyzeSupported = true
-  override def analyze(sql: String) = "explain (analyze, costs, verbose, buffers, format json) " + sql
-  override val showCreateSupported = false
+  override val leftQuoteIdentifier = "\""
+  override val rightQuoteIdentifier = "\""
+  override val explain = Some((sql: String) => { "explain (costs, verbose, format json) " + sql })
+  override val analyze = Some((sql: String) => { "explain (analyze, costs, verbose, buffers, format json) " + sql })
 }
 // scalastyle:on

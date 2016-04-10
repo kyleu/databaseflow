@@ -6,7 +6,7 @@ import models.engine.DatabaseEngine
 
 object SqlServer extends DatabaseEngine(
   id = "sqlserver",
-  name = "Microsoft SQL Server",
+  name = "SQL Server",
   driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver",
   exampleUrl = "jdbc:sqlserver://hostname:1433;databaseName=dbname",
 
@@ -103,10 +103,7 @@ object SqlServer extends DatabaseEngine(
     "varchar"
   )
 ) {
-  override val varchar = "varchar"
-  override val quoteIdentifier = "?"
-  override val explainSupported = false
-  override val analyzeSupported = false
-  override val showCreateSupported = false
+  override val leftQuoteIdentifier = "["
+  override val rightQuoteIdentifier = "]"
 }
 // scalastyle:on

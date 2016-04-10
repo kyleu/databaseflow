@@ -4,10 +4,10 @@ case object CreateUsersTable extends CreateTableStatement("flowusers") {
   override val sql = s"""
     create table $tableName (
       id uuid primary key,
-      username ${eng.varchar}(256),
-      prefs ${eng.varchar}(4096) NOT NULL,
-      profiles ${eng.varchar}(1024) not null,
-      roles ${eng.varchar}(512) not null,
+      username $varchar(256),
+      prefs $varchar(4096) NOT NULL,
+      profiles $varchar(1024) not null,
+      roles $varchar(512) not null,
       created timestamp not null
     );
 

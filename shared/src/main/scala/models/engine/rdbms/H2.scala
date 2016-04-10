@@ -138,10 +138,7 @@ object H2 extends DatabaseEngine(
     "varchar"
   )
 ) {
-  override val varchar = "varchar"
-  override val quoteIdentifier = "\""
-  override val explainSupported = false
-  override val analyzeSupported = false
-  override val showCreateSupported = false
+  override val leftQuoteIdentifier = "\""
+  override val rightQuoteIdentifier = "\""
 }
 // scalastyle:on
