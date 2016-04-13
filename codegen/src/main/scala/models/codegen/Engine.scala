@@ -18,6 +18,12 @@ object Engine extends Enum[Engine] {
     driverClass = "org.h2.Driver",
     exampleUrl = "jdbc:h2:~/database.h2db"
   )
+  case object Informix extends Engine(
+    id = "informix",
+    name = "Informix",
+    driverClass = "com.informix.jdbc.IfxDriver",
+    exampleUrl = "jdbc:informix-sqli://hostname:1533/database:INFORMIXSERVER=hostname;"
+  )
   case object MySQL extends Engine(
     id = "mysql",
     name = "MySQL",

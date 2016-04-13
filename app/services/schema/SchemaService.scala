@@ -13,10 +13,12 @@ object SchemaService extends Logging {
 
   def getSchema(db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
     schemaMap.get(db.connectionId) match {
-      case Some(schema) if forceRefresh => refreshSchema(db) match {
-        case Success(s) => s
-        case Failure(x) => throw x
-      }
+      case Some(schema) if forceRefresh =>
+        calculateSchema(db)
+        refreshSchema(db) match {
+          case Success(s) => s
+          case Failure(x) => throw x
+        }
       case Some(schema) => schema
       case None => calculateSchema(db)
     }

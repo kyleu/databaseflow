@@ -45,7 +45,7 @@ object SampleDatabaseService extends Logging {
 
   private[this] def getSampleFile(engine: DatabaseEngine) = {
     val filename = engine match {
-      case H2 => "Chinook_PostgreSql.sql"
+      case H2 => "Chinook_MySql.sql"
       case MySQL => "Chinook_MySql.sql"
       case Oracle => "Chinook_Oracle.sql"
       case PostgreSQL => "Chinook_PostgreSql.sql"
