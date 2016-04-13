@@ -1,4 +1,4 @@
-﻿
+
 /*******************************************************************************
    Chinook Database - Version 1.4
    Script: Chinook_Sqlite.sql
@@ -69,7 +69,7 @@ CREATE TABLE [Album]
     [Title] NVARCHAR(160)  NOT NULL,
     [ArtistId] INTEGER  NOT NULL,
     CONSTRAINT [PK_Album] PRIMARY KEY  ([AlbumId]),
-    FOREIGN KEY ([ArtistId]) REFERENCES [Artist] ([ArtistId]) 
+    FOREIGN KEY ([ArtistId]) REFERENCES [Artist] ([ArtistId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -96,7 +96,7 @@ CREATE TABLE [Customer]
     [Email] NVARCHAR(60)  NOT NULL,
     [SupportRepId] INTEGER,
     CONSTRAINT [PK_Customer] PRIMARY KEY  ([CustomerId]),
-    FOREIGN KEY ([SupportRepId]) REFERENCES [Employee] ([EmployeeId]) 
+    FOREIGN KEY ([SupportRepId]) REFERENCES [Employee] ([EmployeeId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -118,7 +118,7 @@ CREATE TABLE [Employee]
     [Fax] NVARCHAR(24),
     [Email] NVARCHAR(60),
     CONSTRAINT [PK_Employee] PRIMARY KEY  ([EmployeeId]),
-    FOREIGN KEY ([ReportsTo]) REFERENCES [Employee] ([EmployeeId]) 
+    FOREIGN KEY ([ReportsTo]) REFERENCES [Employee] ([EmployeeId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -141,7 +141,7 @@ CREATE TABLE [Invoice]
     [BillingPostalCode] NVARCHAR(10),
     [Total] NUMERIC(10,2)  NOT NULL,
     CONSTRAINT [PK_Invoice] PRIMARY KEY  ([InvoiceId]),
-    FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([CustomerId]) 
+    FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([CustomerId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -153,9 +153,9 @@ CREATE TABLE [InvoiceLine]
     [UnitPrice] NUMERIC(10,2)  NOT NULL,
     [Quantity] INTEGER  NOT NULL,
     CONSTRAINT [PK_InvoiceLine] PRIMARY KEY  ([InvoiceLineId]),
-    FOREIGN KEY ([InvoiceId]) REFERENCES [Invoice] ([InvoiceId]) 
+    FOREIGN KEY ([InvoiceId]) REFERENCES [Invoice] ([InvoiceId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY ([TrackId]) REFERENCES [Track] ([TrackId]) 
+    FOREIGN KEY ([TrackId]) REFERENCES [Track] ([TrackId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -178,9 +178,9 @@ CREATE TABLE [PlaylistTrack]
     [PlaylistId] INTEGER  NOT NULL,
     [TrackId] INTEGER  NOT NULL,
     CONSTRAINT [PK_PlaylistTrack] PRIMARY KEY  ([PlaylistId], [TrackId]),
-    FOREIGN KEY ([PlaylistId]) REFERENCES [Playlist] ([PlaylistId]) 
+    FOREIGN KEY ([PlaylistId]) REFERENCES [Playlist] ([PlaylistId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY ([TrackId]) REFERENCES [Track] ([TrackId]) 
+    FOREIGN KEY ([TrackId]) REFERENCES [Track] ([TrackId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -196,11 +196,11 @@ CREATE TABLE [Track]
     [Bytes] INTEGER,
     [UnitPrice] NUMERIC(10,2)  NOT NULL,
     CONSTRAINT [PK_Track] PRIMARY KEY  ([TrackId]),
-    FOREIGN KEY ([AlbumId]) REFERENCES [Album] ([AlbumId]) 
+    FOREIGN KEY ([AlbumId]) REFERENCES [Album] ([AlbumId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([GenreId]) 
+    FOREIGN KEY ([GenreId]) REFERENCES [Genre] ([GenreId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY ([MediaTypeId]) REFERENCES [MediaType] ([MediaTypeId]) 
+    FOREIGN KEY ([MediaTypeId]) REFERENCES [MediaType] ([MediaTypeId])
 		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -2015,7 +2015,7 @@ INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Co
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1120, 'Sítio Do Pica-Pau Amarelo', 73, 1, 7, 'Gilberto Gil', 218070, 7217955, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1121, 'Straight Out Of Line', 88, 1, 3, 'Sully Erna', 259213, 8511877, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1122, 'Faceless', 88, 1, 3, 'Sully Erna', 216006, 6992417, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1123, 'Changes', 88, 1, 3, 'Sully Erna; Tony Rombola', 260022, 8455835, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1123, 'Changes', 88, 1, 3, 'Sully Erna, Tony Rombola', 260022, 8455835, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1124, 'Make Me Believe', 88, 1, 3, 'Sully Erna', 248607, 8075050, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1125, 'I Stand Alone', 88, 1, 3, 'Sully Erna', 246125, 8017041, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1126, 'Re-Align', 88, 1, 3, 'Sully Erna', 260884, 8513891, 0.99);
@@ -2024,7 +2024,7 @@ INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Co
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1129, 'Dead And Broken', 88, 1, 3, 'Sully Erna', 251454, 8206611, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1130, 'I Am', 88, 1, 3, 'Sully Erna', 239516, 7803270, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1131, 'The Awakening', 88, 1, 3, 'Sully Erna', 89547, 3035251, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1132, 'Serenity', 88, 1, 3, 'Sully Erna; Tony Rombola', 274834, 9172976, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1132, 'Serenity', 88, 1, 3, 'Sully Erna, Tony Rombola', 274834, 9172976, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1133, 'American Idiot', 89, 1, 4, 'Billie Joe Armstrong, Mike Dirnt, Tré Cool', 174419, 5705793, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1134, 'Jesus Of Suburbia / City Of The Damned / I Don''t Care / Dearly Beloved / Tales Of Another Broken Home', 89, 1, 4, 'Billie Joe Armstrong/Green Day', 548336, 17875209, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1135, 'Holiday', 89, 1, 4, 'Billie Joe Armstrong, Mike Dirnt, Tré Cool', 232724, 7599602, 0.99);
@@ -2263,14 +2263,14 @@ INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Co
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1368, 'Hallowed Be Thy Name', 109, 1, 1, 'Steve Harris', 443977, 17760384, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1369, 'Sanctuary', 109, 1, 1, 'David Murray/Paul Di''Anno/Steve Harris', 317335, 12695680, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1370, 'Run To The Hills', 109, 1, 1, 'Steve Harris', 292179, 11688064, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1371, 'Moonchild', 110, 1, 3, 'Adrian Smith; Bruce Dickinson', 340767, 8179151, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1371, 'Moonchild', 110, 1, 3, 'Adrian Smith, Bruce Dickinson', 340767, 8179151, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1372, 'Infinite Dreams', 110, 1, 3, 'Steve Harris', 369005, 8858669, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1373, 'Can I Play With Madness', 110, 1, 3, 'Adrian Smith; Bruce Dickinson; Steve Harris', 211043, 5067867, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1374, 'The Evil That Men Do', 110, 1, 3, 'Adrian Smith; Bruce Dickinson; Steve Harris', 273998, 6578930, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1373, 'Can I Play With Madness', 110, 1, 3, 'Adrian Smith, Bruce Dickinson, Steve Harris', 211043, 5067867, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1374, 'The Evil That Men Do', 110, 1, 3, 'Adrian Smith, Bruce Dickinson, Steve Harris', 273998, 6578930, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1375, 'Seventh Son of a Seventh Son', 110, 1, 3, 'Steve Harris', 593580, 14249000, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1376, 'The Prophecy', 110, 1, 3, 'Dave Murray; Steve Harris', 305475, 7334450, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1377, 'The Clairvoyant', 110, 1, 3, 'Adrian Smith; Bruce Dickinson; Steve Harris', 267023, 6411510, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1378, 'Only the Good Die Young', 110, 1, 3, 'Bruce Dickinson; Harris', 280894, 6744431, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1376, 'The Prophecy', 110, 1, 3, 'Dave Murray, Steve Harris', 305475, 7334450, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1377, 'The Clairvoyant', 110, 1, 3, 'Adrian Smith, Bruce Dickinson, Steve Harris', 267023, 6411510, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1378, 'Only the Good Die Young', 110, 1, 3, 'Bruce Dickinson, Harris', 280894, 6744431, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1379, 'Caught Somewhere in Time', 111, 1, 3, 'Steve Harris', 445779, 10701149, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1380, 'Wasted Years', 111, 1, 3, 'Adrian Smith', 307565, 7384358, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (1381, 'Sea of Madness', 111, 1, 3, 'Adrian Smith', 341995, 8210695, 0.99);
@@ -3920,16 +3920,16 @@ INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Co
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3025, 'Red Light', 239, 1, 1, 'U2', 225854, 7453704, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3026, 'Surrender', 239, 1, 1, 'U2', 333505, 11221406, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3027, '"40"', 239, 1, 1, 'U2', 157962, 5251767, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3028, 'Zooropa', 240, 1, 1, 'U2; Bono', 392359, 12807979, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3029, 'Babyface', 240, 1, 1, 'U2; Bono', 241998, 7942573, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3030, 'Numb', 240, 1, 1, 'U2; Edge, The', 260284, 8577861, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3031, 'Lemon', 240, 1, 1, 'U2; Bono', 418324, 13988878, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3032, 'Stay (Faraway, So Close!)', 240, 1, 1, 'U2; Bono', 298475, 9785480, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3033, 'Daddy''s Gonna Pay For Your Crashed Car', 240, 1, 1, 'U2; Bono', 320287, 10609581, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3034, 'Some Days Are Better Than Others', 240, 1, 1, 'U2; Bono', 257436, 8417690, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3035, 'The First Time', 240, 1, 1, 'U2; Bono', 225697, 7247651, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3036, 'Dirty Day', 240, 1, 1, 'U2; Bono & Edge, The', 324440, 10652877, 0.99);
-INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3037, 'The Wanderer', 240, 1, 1, 'U2; Bono', 283951, 9258717, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3028, 'Zooropa', 240, 1, 1, 'U2, Bono', 392359, 12807979, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3029, 'Babyface', 240, 1, 1, 'U2, Bono', 241998, 7942573, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3030, 'Numb', 240, 1, 1, 'U2, Edge, The', 260284, 8577861, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3031, 'Lemon', 240, 1, 1, 'U2, Bono', 418324, 13988878, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3032, 'Stay (Faraway, So Close!)', 240, 1, 1, 'U2, Bono', 298475, 9785480, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3033, 'Daddy''s Gonna Pay For Your Crashed Car', 240, 1, 1, 'U2, Bono', 320287, 10609581, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3034, 'Some Days Are Better Than Others', 240, 1, 1, 'U2, Bono', 257436, 8417690, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3035, 'The First Time', 240, 1, 1, 'U2, Bono', 225697, 7247651, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3036, 'Dirty Day', 240, 1, 1, 'U2, Bono & Edge, The', 324440, 10652877, 0.99);
+INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Composer], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3037, 'The Wanderer', 240, 1, 1, 'U2, Bono', 283951, 9258717, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3038, 'Breakfast In Bed', 241, 1, 8, 196179, 6513325, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3039, 'Where Did I Go Wrong', 241, 1, 8, 226742, 7485054, 0.99);
 INSERT INTO [Track] ([TrackId], [Name], [AlbumId], [MediaTypeId], [GenreId], [Milliseconds], [Bytes], [UnitPrice]) VALUES (3040, 'I Would Do For You', 241, 1, 8, 334524, 11193602, 0.99);
