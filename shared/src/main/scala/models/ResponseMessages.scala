@@ -27,6 +27,8 @@ case class Disconnected(reason: String) extends ResponseMessage
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 
+case class BatchQueryStatus(id: UUID, completedQueries: Int, remainingQueries: Int, durationMs: Int) extends ResponseMessage
+
 case class RowDataResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage

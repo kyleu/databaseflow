@@ -9,6 +9,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case qrr: QueryResultResponse => handleQueryResultResponse(qrr)
     case qer: QueryErrorResponse => handleQueryErrorResponse(qer)
 
+    case bqs: BatchQueryStatus => handleBatchQueryStatus(bqs)
     case sqrr: SavedQueryResultResponse => handleSavedQueryResponse(sqrr)
     case trr: TableResultResponse => handleTableResultResponse(trr)
     case vrr: ViewResultResponse => handleViewResultResponse(vrr)

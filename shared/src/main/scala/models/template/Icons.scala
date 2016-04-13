@@ -2,6 +2,7 @@ package models.template
 
 object Icons {
   val search = "fa-search"
+  val error = "fa-exclamation"
 
   val help = "fa-key"
   val about = "fa-heart-o"

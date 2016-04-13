@@ -51,6 +51,6 @@ object DatabaseConnectionService {
 
     val poolDataSource = new HikariDataSource(poolConfig)
 
-    new DatabaseConnection(poolDataSource, cs.engine)
+    DatabaseConnection(cs.connectionId, cs.name.getOrElse(cs.id.toString), poolDataSource, cs.engine)
   }
 }

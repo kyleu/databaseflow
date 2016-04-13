@@ -7,7 +7,7 @@ import models._
 import models.queries.query.SavedQueryQueries
 import models.schema.Schema
 import models.user.User
-import services.database.MasterDatabase
+import services.database.{ MasterDatabase, SampleDatabaseService }
 import services.schema.SchemaService
 import utils.metrics.InstrumentedActor
 import utils.{ Config, Logging }
@@ -34,7 +34,7 @@ class ConnectionService(
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] var schema: Option[Schema] = SchemaService.getSchema(connectionId, db) match {
+  protected[this] var schema: Option[Schema] = SchemaService.getSchema(db) match {
     case Success(s) => Some(s)
     case Failure(x) =>
       log.error("Unable to load schema.", x)
@@ -53,7 +53,7 @@ class ConnectionService(
       out ! is
     }
     if (schema.forall(_.detailsLoadedAt.isEmpty)) {
-      schema = SchemaService.refreshSchema(connectionId, db) match {
+      schema = SchemaService.refreshSchema(db) match {
         case Success(s) => Some(s)
         case Failure(x) =>
           log.error("Unable to refresh schema.", x)
@@ -76,6 +76,7 @@ class ConnectionService(
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
 
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
+    case csd: CreateSampleDatabase => timeReceive(csd) { handleCreateSampleDatabase(csd.queryId) }
 
     case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name) }
     case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name) }
@@ -101,6 +102,10 @@ class ConnectionService(
     case "explain" => handleExplainQuery(queryId, sql)
     case "analyze" => handleAnalyzeQuery(queryId, sql)
     case _ => throw new IllegalArgumentException(action)
+  }
+
+  protected[this] def handleCreateSampleDatabase(queryId: UUID) = {
+    SampleDatabaseService(db, queryId, out)
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

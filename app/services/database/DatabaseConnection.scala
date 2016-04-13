@@ -1,6 +1,7 @@
 package services.database
 
 import java.sql.Connection
+import java.util.UUID
 import javax.sql.DataSource
 
 import com.codahale.metrics.MetricRegistry
@@ -10,7 +11,7 @@ import models.engine.DatabaseEngine
 import services.database.transaction.{ TransactionManager, TransactionProvider }
 import utils.metrics.Instrumented
 
-class DatabaseConnection(val source: DataSource, val engine: DatabaseEngine) extends Queryable {
+case class DatabaseConnection(connectionId: UUID, name: String, source: DataSource, engine: DatabaseEngine) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
     val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
     try {

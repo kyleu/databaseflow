@@ -4,22 +4,28 @@ import java.util.UUID
 
 import models.schema.Schema
 import services.database.DatabaseConnection
+import utils.Logging
 
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
-object SchemaService {
+object SchemaService extends Logging {
   private[this] var schemaMap: Map[UUID, Schema] = Map.empty
 
-  def getSchema(connectionId: UUID, db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
-    schemaMap.get(connectionId) match {
-      case Some(schema) if !forceRefresh => schema
-      case None => calculateSchema(connectionId, db)
+  def getSchema(db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
+    schemaMap.get(db.connectionId) match {
+      case Some(schema) if forceRefresh => refreshSchema(db) match {
+        case Success(s) => s
+        case Failure(x) => throw x
+      }
+      case Some(schema) => schema
+      case None => calculateSchema(db)
     }
   }
 
-  def refreshSchema(connectionId: UUID, db: DatabaseConnection) = Try {
-    schemaMap.get(connectionId) match {
+  def refreshSchema(db: DatabaseConnection) = Try {
+    schemaMap.get(db.connectionId) match {
       case Some(schema) => db.withConnection { conn =>
+        log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}].")
         val metadata = conn.getMetaData
         val updated = schema.copy(
           tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
@@ -27,10 +33,10 @@ object SchemaService {
           procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures),
           detailsLoadedAt = Some(System.currentTimeMillis)
         )
-        schemaMap = schemaMap + (connectionId -> updated)
+        schemaMap = schemaMap + (db.connectionId -> updated)
         updated
       }
-      case None => throw new IllegalStateException(s"Attempted to refresh schema [$connectionId], which is not loaded.")
+      case None => throw new IllegalStateException(s"Attempted to refresh schema [$db.connectionId], which is not loaded.")
     }
   }
 
@@ -38,7 +44,7 @@ object SchemaService {
   def getView(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.views.find(_.name == name))
   def getProcedure(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.procedures.find(_.name == name))
 
-  private[this] def calculateSchema(connectionId: UUID, db: DatabaseConnection) = db.withConnection { conn =>
+  private[this] def calculateSchema(db: DatabaseConnection) = db.withConnection { conn =>
     val catalogName = Option(conn.getCatalog)
     val schemaName = try {
       Option(conn.getSchema)
@@ -48,7 +54,7 @@ object SchemaService {
     val metadata = conn.getMetaData
 
     val schemaModel = Schema(
-      connectionId = connectionId,
+      connectionId = db.connectionId,
       schemaName = schemaName,
       catalog = catalogName,
       url = metadata.getURL,
@@ -77,7 +83,7 @@ object SchemaService {
       procedures = procedures
     )
 
-    schemaMap = schemaMap + (connectionId -> schema)
+    schemaMap = schemaMap + (db.connectionId -> schema)
 
     schema
   }

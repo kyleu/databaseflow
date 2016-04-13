@@ -15,6 +15,7 @@ object MasterDatabase extends Logging {
     case None =>
       val c = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
       val cs = PoolSettings(
+        connectionId = connectionId,
         name = Some(c.id.toString),
         engine = c.engine,
         url = c.url,

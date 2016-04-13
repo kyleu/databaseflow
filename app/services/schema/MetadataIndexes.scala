@@ -29,10 +29,7 @@ object MetadataIndexes {
   private[this] def fromRow(row: Row) = {
     // [index_qualifier], [pages], [filter_condition]
     val name = row.asOpt[String]("index_name").getOrElse("null")
-    val nonUnique = row.asOpt[Any]("non_unique").exists {
-      case b: Boolean => b
-      case bd: java.math.BigDecimal => bd.intValue > 0
-    }
+    val nonUnique = row.asOpt[Any]("non_unique").exists(JdbcHelper.boolVal)
     val position = row.asOpt[Any]("ordinal_position").map(JdbcHelper.intVal).getOrElse(0)
     val ascending = row.asOpt[String]("asc_or_desc").getOrElse("A") == "A"
 
@@ -44,13 +41,7 @@ object MetadataIndexes {
       case DatabaseMetaData.tableIndexOther => "other"
       case x => throw new IllegalArgumentException(x.toString)
     }
-    val cardinality = row.as[Any]("cardinality") match {
-      case l: Long => l
-      case f: Float => f.toLong
-      case i: Int => i.toLong
-      case bd: java.math.BigDecimal => bd.longValue
-      case x => throw new IllegalArgumentException(x.getClass.getName)
-    }
+    val cardinality = row.asOpt[Any]("cardinality").map(JdbcHelper.longVal).getOrElse(0L)
     (name, !nonUnique, typ, cardinality, position, columnName, ascending)
   }
 }

@@ -68,6 +68,10 @@ trait ResultsHelper { this: DatabaseFlow =>
     })
   }
 
+  protected[this] def handleBatchQueryStatus(bqs: BatchQueryStatus) = {
+    SampleDatabaseManager.process(bqs)
+  }
+
   protected[this] def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = {
     SavedQueryManager.updateSavedQueries(sqrr.savedQueries)
   }

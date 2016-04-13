@@ -15,6 +15,8 @@ case class DebugInfo(data: String) extends RequestMessage
 
 case class SubmitQuery(queryId: UUID, sql: String, action: Option[String] = None) extends RequestMessage
 
+case class CreateSampleDatabase(queryId: UUID) extends RequestMessage
+
 case class GetTableDetail(name: String) extends RequestMessage
 case class GetProcedureDetail(name: String) extends RequestMessage
 case class GetViewDetail(name: String) extends RequestMessage

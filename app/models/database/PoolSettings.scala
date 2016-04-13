@@ -7,6 +7,7 @@ import services.database.ssl.SslSettings
 
 case class PoolSettings(
   id: UUID = UUID.randomUUID,
+  connectionId: UUID,
   name: Option[String] = None,
   engine: DatabaseEngine,
   url: String,

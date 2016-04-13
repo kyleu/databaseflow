@@ -28,7 +28,7 @@ object DatabaseTest extends SandboxTask {
         case Right(d) => d
         case Left(x) => throw x
       }
-      val metadata = SchemaService.getSchema(c.id, db)
+      val metadata = SchemaService.getSchema(db)
       c -> metadata
     }
     val ret = connTables.map { t =>

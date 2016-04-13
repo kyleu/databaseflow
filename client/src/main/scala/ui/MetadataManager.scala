@@ -47,6 +47,12 @@ object MetadataManager {
 
     schema = Some(sch)
     engine = Some(DatabaseEngine.get(sch.engine))
+
+    if (sch.tables.isEmpty) {
+      val msg = "There are no tables. Would you like to load a sample database? You'll need to have permissions to create tables and indexes."
+      def ok(b: Boolean) = if (b) { SampleDatabaseManager.createSample() } else { ConfirmManager.close() }
+      ConfirmManager.show(ok, msg, trueButton = "Yes", falseButton = "No")
+    }
   }
 
   def getSavedQuery(id: String) = savedQueries.flatMap(_.find(_._1 == id)).map(_._1)
