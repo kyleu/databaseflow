@@ -46,21 +46,11 @@ object QueryEditorTemplate {
 
   private[this] def queryPanel(queryId: UUID, queryName: String, description: Option[String], sql: String, icon: String, links: Seq[TypedTag[String]]) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      div(cls := "row")(
-        div(cls := "col s12")(
-          div(cls := "card")(
-            div(cls := "card-content")(
-              span(cls := "card-title")(
-                i(cls := "title-icon fa " + icon),
-                queryName,
-                span(cls := "unsaved-status", title := "Unsaved Changes")("*"),
-                i(cls := s"right fa ${Icons.close}")
-              ),
-              div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql)
-            ),
-            div(cls := "card-action")(links: _*)
-          )
-        )
+      StaticPanelTemplate.cardRow(
+        queryName,
+        div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql),
+        Some(icon),
+        actions = Some(links)
       ),
       div(id := s"workspace-$queryId")
     )

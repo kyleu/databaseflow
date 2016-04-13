@@ -8,22 +8,16 @@ import scalatags.Text.all._
 
 object TableDefinitionTemplate {
   def definitionForTable(resultId: UUID, queryId: UUID, t: Table) = {
-    div(id := resultId.toString, cls := "row")(
-      div(cls := "col s12")(
-        div(cls := "card")(
-          div(cls := "card-content")(
-            span(cls := "card-title")(
-              i(cls := s"title-icon fa ${Icons.definition}"),
-              "Table Definition for ",
-              em(t.name),
-              i(cls := s"right fa ${Icons.close}")
-            ),
-            t.definition match {
-              case Some(definition) => pre(cls := "pre-wrap")(definition)
-              case None => div("No definition is available for this table.")
-            }
-          )
-        )
+    val content = t.definition match {
+      case Some(definition) => pre(cls := "pre-wrap")(definition)
+      case None => div("No definition is available for this table.")
+    }
+
+    div(id := resultId.toString)(
+      StaticPanelTemplate.cardRow(
+        "Table Definition for " + t.name,
+        content = content,
+        icon = Some(Icons.definition)
       )
     )
   }

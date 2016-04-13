@@ -8,23 +8,13 @@ import scalatags.Text.all._
 
 object ViewDefinitionTemplate {
   def definitionForView(resultId: UUID, queryId: UUID, v: View) = {
-    div(id := resultId.toString, cls := "row")(
-      div(cls := "col s12")(
-        div(cls := "card")(
-          div(cls := "card-content")(
-            span(cls := "card-title")(
-              i(cls := s"title-icon fa ${Icons.definition}"),
-              "View Definition for ",
-              em(v.name),
-              i(cls := s"right fa ${Icons.close}")
-            ),
-            v.definition match {
-              case Some(definition) => pre(cls := "pre-wrap")(definition)
-              case None => div("No definition is available for this view.")
-            }
-          )
-        )
-      )
+    val content = v.definition match {
+      case Some(definition) => pre(cls := "pre-wrap")(definition)
+      case None => div("No definition is available for this view.")
+    }
+
+    div(id := resultId.toString)(
+      StaticPanelTemplate.cardRow("View Definition for " + v.name, content, icon = Some(Icons.definition))
     )
   }
 }

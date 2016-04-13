@@ -7,20 +7,7 @@ import scalatags.Text.all._
 object ProcedureDetailTemplate {
   def forProcedure(queryId: UUID, procedureName: String) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      div(cls := "row")(
-        div(cls := "col s12")(
-          div(cls := "card")(
-            div(cls := "card-content")(
-              span(cls := "card-title")(
-                i(cls := s"title-icon fa ${Icons.procedure}"),
-                procedureName,
-                i(cls := s"right fa ${Icons.close}")
-              )
-            ),
-            div(cls := "card-action")()
-          )
-        )
-      ),
+      StaticPanelTemplate.cardRow(procedureName, div(), Some(Icons.procedure)),
       div(id := s"workspace-$queryId")
     )
   }

@@ -49,31 +49,28 @@ object QueryPlanTemplate {
   }
 
   private[this] def cardFor(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = {
-    div(id := pr.id.toString, cls := "row")(
-      div(cls := "col s12")(
-        div(cls := "card")(
-          div(cls := "card-content")(
-            span(cls := "card-title")(
-              i(cls := s"title-icon fa ${Icons.queryPlan}"),
-              pr.result.name,
-              i(cls := s"right fa ${Icons.close}")
-            ),
-            div(em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pr.durationMs}ms]")),
-            div(cls := "plan-chart")(
-              div(id := "", cls := "tree-container")(
-                div(cls := "tree")(
-                  ul(forNode(pr.result.node, "root-node"))
-                )
-              ),
-              div(cls := "clear")
-            ),
-            pre(cls := "plan-raw pre-wrap")(pr.result.raw)
-          ),
-          div(cls := "card-action")(
-            a(href := "#")("Download"),
-            a(cls := "right plan-view-toggle", href := "#")("View Raw Plan")
+    val content = div(
+      div(em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pr.durationMs}ms]")),
+      div(cls := "plan-chart")(
+        div(id := "", cls := "tree-container")(
+          div(cls := "tree")(
+            ul(forNode(pr.result.node, "root-node"))
           )
-        )
+        ),
+        div(cls := "clear")
+      ),
+      pre(cls := "plan-raw pre-wrap")(pr.result.raw)
+    )
+
+    div(id := pr.id.toString)(
+      StaticPanelTemplate.cardRow(
+        title = pr.result.name,
+        content = content,
+        icon = Some(Icons.queryPlan),
+        actions = Some(Seq(
+          a(href := "#")("Download"),
+          a(cls := "right plan-view-toggle", href := "#")("View Raw Plan")
+        ))
       )
     )
   }

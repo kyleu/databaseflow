@@ -64,21 +64,7 @@ object ModelListTemplate {
 
   private[this] def forModels(queryId: UUID, key: String, name: String, t: TypedTag[String]) = {
     val ret = div(
-      div(cls := "row")(
-        div(cls := "col s12")(
-          div(cls := "card")(
-            div(cls := "card-content")(
-              span(cls := "card-title")(
-                i(cls := s"title-icon fa ${Icons.list}"),
-                name,
-                i(cls := s"right fa ${Icons.close}")
-              ),
-              t
-            ),
-            div(cls := "card-action")()
-          )
-        )
-      ),
+      StaticPanelTemplate.cardRow(name, t, Some(Icons.list)),
       div(id := s"workspace-$queryId")
     )
     name -> ret

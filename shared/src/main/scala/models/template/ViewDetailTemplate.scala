@@ -16,23 +16,13 @@ object ViewDetailTemplate {
   ).flatten
 
   def forView(engine: DatabaseEngine, queryId: UUID, tableName: String) = {
+    val content = div(
+      div(cls := "description")(""),
+      div(cls := "summary")("")
+    )
+
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      div(cls := "row")(
-        div(cls := "col s12")(
-          div(cls := "card")(
-            div(cls := "card-content")(
-              span(cls := "card-title")(
-                i(cls := s"title-icon fa ${Icons.view}"),
-                tableName,
-                i(cls := s"right fa ${Icons.close}")
-              ),
-              div(cls := "description")(""),
-              div(cls := "summary")("")
-            ),
-            div(cls := "card-action")(linksFor(engine))
-          )
-        )
-      ),
+      StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.view), actions = Some(linksFor(engine))),
       div(id := s"workspace-$queryId")
     )
   }
