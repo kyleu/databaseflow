@@ -1,5 +1,4 @@
-﻿
-/*******************************************************************************
+﻿/*******************************************************************************
    Chinook Database - Version 1.4
    Script: Chinook_Oracle.sql
    Description: Creates and populates the Chinook database.
@@ -7,32 +6,6 @@
    Author: Luis Rocha
    License: http://www.codeplex.com/ChinookDatabase/license
 ********************************************************************************/
-
-/*******************************************************************************
-   Drop database if it exists
-********************************************************************************/
-DROP USER chinook CASCADE;
-
-
-/*******************************************************************************
-   Create database
-********************************************************************************/
-CREATE USER chinook
-IDENTIFIED BY p4ssw0rd
-DEFAULT TABLESPACE users
-TEMPORARY TABLESPACE temp
-QUOTA 10M ON users;
-
-GRANT connect to chinook;
-GRANT resource to chinook;
-GRANT create session TO chinook;
-GRANT create table TO chinook;
-GRANT create view TO chinook;
-
-
-
-conn chinook/p4ssw0rd
-
 
 /*******************************************************************************
    Create Tables
@@ -506,7 +479,7 @@ INSERT INTO Artist (ArtistId, Name) VALUES (269, 'Michele Campanella');
 INSERT INTO Artist (ArtistId, Name) VALUES (270, 'Gerald Moore');
 INSERT INTO Artist (ArtistId, Name) VALUES (271, 'Mela Tenenbaum, Pro Musica Prague '||chr(38)||' Richard Kapp');
 INSERT INTO Artist (ArtistId, Name) VALUES (272, 'Emerson String Quartet');
-INSERT INTO Artist (ArtistId, Name) VALUES (273, 'C. Monteverdi, Nigel Rogers - Chiaroscuro; London Baroque; London Cornett '||chr(38)||' Sackbu');
+INSERT INTO Artist (ArtistId, Name) VALUES (273, 'C. Monteverdi, Nigel Rogers - Chiaroscuro, London Baroque, London Cornett '||chr(38)||' Sackbu');
 INSERT INTO Artist (ArtistId, Name) VALUES (274, 'Nash Ensemble');
 INSERT INTO Artist (ArtistId, Name) VALUES (275, 'Philip Glass Ensemble');
 

@@ -1,4 +1,3 @@
-
 /*******************************************************************************
    Chinook Database - Version 1.4
    Script: Chinook_PostgreSql.sql
@@ -7,7 +6,6 @@
    Author: Luis Rocha
    License: http://www.codeplex.com/ChinookDatabase/license
 ********************************************************************************/
-
 
 /*******************************************************************************
    Create Tables

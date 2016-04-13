@@ -1,4 +1,3 @@
-
 /*******************************************************************************
    Chinook Database - Version 1.4
    Script: Chinook_Db2.sql
@@ -7,7 +6,6 @@
    Author: Luis Rocha
    License: http://www.codeplex.com/ChinookDatabase/license
 ********************************************************************************/
-
 
 /*******************************************************************************
    Create Tables
@@ -501,7 +499,7 @@ INSERT INTO "Artist" ("ArtistId", "Name") VALUES (269, N'Michele Campanella');
 INSERT INTO "Artist" ("ArtistId", "Name") VALUES (270, N'Gerald Moore');
 INSERT INTO "Artist" ("ArtistId", "Name") VALUES (271, N'Mela Tenenbaum, Pro Musica Prague & Richard Kapp');
 INSERT INTO "Artist" ("ArtistId", "Name") VALUES (272, N'Emerson String Quartet');
-INSERT INTO "Artist" ("ArtistId", "Name") VALUES (273, N'C. Monteverdi, Nigel Rogers - Chiaroscuro; London Baroque; London Cornett & Sackbu');
+INSERT INTO "Artist" ("ArtistId", "Name") VALUES (273, N'C. Monteverdi, Nigel Rogers - Chiaroscuro, London Baroque, London Cornett & Sackbu');
 INSERT INTO "Artist" ("ArtistId", "Name") VALUES (274, N'Nash Ensemble');
 INSERT INTO "Artist" ("ArtistId", "Name") VALUES (275, N'Philip Glass Ensemble');
 

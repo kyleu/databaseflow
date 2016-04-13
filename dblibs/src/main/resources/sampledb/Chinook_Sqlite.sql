@@ -1,4 +1,3 @@
-
 /*******************************************************************************
    Chinook Database - Version 1.4
    Script: Chinook_Sqlite.sql
@@ -7,58 +6,6 @@
    Author: Luis Rocha
    License: http://www.codeplex.com/ChinookDatabase/license
 ********************************************************************************/
-
-/*******************************************************************************
-   Drop Foreign Keys Constraints
-********************************************************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*******************************************************************************
-   Drop Tables
-********************************************************************************/
-DROP TABLE IF EXISTS [Album];
-
-DROP TABLE IF EXISTS [Artist];
-
-DROP TABLE IF EXISTS [Customer];
-
-DROP TABLE IF EXISTS [Employee];
-
-DROP TABLE IF EXISTS [Genre];
-
-DROP TABLE IF EXISTS [Invoice];
-
-DROP TABLE IF EXISTS [InvoiceLine];
-
-DROP TABLE IF EXISTS [MediaType];
-
-DROP TABLE IF EXISTS [Playlist];
-
-DROP TABLE IF EXISTS [PlaylistTrack];
-
-DROP TABLE IF EXISTS [Track];
-
 
 /*******************************************************************************
    Create Tables
@@ -541,7 +488,7 @@ INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (269, 'Michele Campanella');
 INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (270, 'Gerald Moore');
 INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (271, 'Mela Tenenbaum, Pro Musica Prague & Richard Kapp');
 INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (272, 'Emerson String Quartet');
-INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (273, 'C. Monteverdi, Nigel Rogers - Chiaroscuro; London Baroque; London Cornett & Sackbu');
+INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (273, 'C. Monteverdi, Nigel Rogers - Chiaroscuro, London Baroque, London Cornett & Sackbu');
 INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (274, 'Nash Ensemble');
 INSERT INTO [Artist] ([ArtistId], [Name]) VALUES (275, 'Philip Glass Ensemble');
 
