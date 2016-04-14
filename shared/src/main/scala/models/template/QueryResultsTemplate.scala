@@ -18,14 +18,16 @@ object QueryResultsTemplate {
       )
     )
 
-    StaticPanelTemplate.cardRow(
-      title = cardTitle,
-      content = content,
-      icon = Some(Icons.queryResults),
-      actions = Some(Seq(
-        a(cls := "right results-sql-link", href := "#")("Show SQL"),
-        a(cls := "results-download-link", href := "#")("Download")
-      ))
+    div(id := qr.id.toString)(
+      StaticPanelTemplate.cardRow(
+        title = cardTitle,
+        content = content,
+        icon = Some(Icons.queryResults),
+        actions = Some(Seq(
+          a(cls := "right results-sql-link", href := "#")("Show SQL"),
+          a(cls := "results-download-link", href := "#")("Download")
+        ))
+      )
     )
   }
 }

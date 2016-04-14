@@ -3,11 +3,10 @@ package services.connection
 import java.util.UUID
 
 import models.engine.EngineQueries
-import models.engine.rdbms.Oracle
 import models.queries.DynamicQuery
-import models.query.{ QueryResult, SavedQuery }
+import models.query.{ QueryResult, SavedQuery, StatementResult }
 import models.schema.{ Table, View }
-import models.{ QueryDeleteResponse, QueryResultResponse, QuerySaveResponse, ServerError }
+import models._
 import services.database.MasterDatabase
 import services.query.SavedQueryService
 import services.schema.SchemaService
@@ -50,18 +49,29 @@ trait QueryHelper extends Logging { this: ConnectionService =>
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
     sqlCatch(queryId, sql, startMs) { () =>
-      val result = db.query(DynamicQuery(sql))
-      //log.info(s"Query result: [$result].")
+      val result = db.executeUnknown(DynamicQuery(sql))
+
       val durationMs = (DateUtils.nowMillis - startMs).toInt
-      out ! QueryResultResponse(id, QueryResult(
-        queryId = queryId,
-        title = "Query Results",
-        sql = sql,
-        columns = result._1,
-        data = result._2,
-        sortable = false,
-        occurred = startMs
-      ), durationMs)
+      val msg = result match {
+        case Left(rs) => QueryResultResponse(id, QueryResult(
+          queryId = queryId,
+          title = "Query Results",
+          sql = sql,
+          columns = rs.cols,
+          data = rs.data,
+          sortable = false,
+          occurred = startMs
+        ), durationMs)
+        case Right(i) => StatementResultResponse(id, StatementResult(
+          queryId = queryId,
+          title = "Statement Results",
+          sql = sql,
+          rowsAffected = i,
+          occurred = startMs
+        ), durationMs)
+      }
+
+      out ! msg
     }
   }
 
@@ -85,7 +95,12 @@ trait QueryHelper extends Logging { this: ConnectionService =>
     val sql = EngineQueries.selectFrom(table.name, limit = Some(1001))(db.engine)
     log.info(s"Showing data for [${table.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
-      val (columns, data) = db.query(DynamicQuery(sql))
+      val result = db.executeUnknown(DynamicQuery(sql))
+      val (columns, data) = result match {
+        case Left(rs) => rs.cols -> rs.data
+        case Right(i) => throw new IllegalStateException(s"Invalid query [$sql] returned statement result.")
+      }
+
       val columnsWithRelations = columns.map { col =>
         table.foreignKeys.find(_.references.exists(_.source == col.name)) match {
           case Some(fk) => col.copy(
@@ -116,8 +131,12 @@ trait QueryHelper extends Logging { this: ConnectionService =>
     val sql = EngineQueries.selectFrom(view.name, limit = Some(1001))(db.engine)
     log.info(s"Showing data for [${view.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
-      val (columns, data) = db.query(DynamicQuery(sql))
+      val result = db.executeUnknown(DynamicQuery(sql))
 
+      val (columns, data) = result match {
+        case Left(rs) => rs.cols -> rs.data
+        case Right(i) => throw new IllegalStateException(s"Invalid query [$sql] returned statement result.")
+      }
       //log.info(s"Query result: [$result].")
       val durationMs = (DateUtils.nowMillis - startMs).toInt
       out ! QueryResultResponse(id, QueryResult(

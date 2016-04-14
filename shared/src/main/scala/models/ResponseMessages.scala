@@ -3,7 +3,7 @@ package models
 import java.util.UUID
 
 import models.plan.{ PlanError, PlanResult }
-import models.query.{ QueryError, QueryResult, SavedQuery }
+import models.query.{ QueryError, QueryResult, SavedQuery, StatementResult }
 import models.schema.{ Procedure, Schema, Table, View }
 import models.user.UserPreferences
 
@@ -24,6 +24,7 @@ case object SendTrace extends ResponseMessage
 case class DebugResponse(key: String, data: String) extends ResponseMessage
 case class Disconnected(reason: String) extends ResponseMessage
 
+case class StatementResultResponse(id: UUID, result: StatementResult, durationMs: Int) extends ResponseMessage
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 

@@ -47,14 +47,11 @@ object DataTableTemplate {
         a(
           cls := "query-rel-link",
           href := s"#table-$relTable::${col.relationColumn.getOrElse("")}=${v.getOrElse("")}",
-          title := s"Open [$relTable] table filtered with [${col.relationColumn.getOrElse("")} ${v.getOrElse("0")}]",
+          title := s"Open [$relTable] table filtered where [${col.relationColumn.getOrElse("")}=${v.getOrElse("0")}]",
           data("rel-table") := relTable,
           data("rel-col") := col.relationColumn.getOrElse(""),
           data("rel-val") := v.getOrElse("")
-        )(
-            i(cls := s"fa ${Icons.relation}"),
-            span(contentEl._1)
-          )
+        )(i(cls := s"fa ${Icons.relation}"), span(contentEl._1))
       )
       case _ => td(contentEl._1)
     }

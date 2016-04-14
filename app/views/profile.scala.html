@@ -18,7 +18,7 @@
         <div id="theme-choices">
           @models.user.Themes.all.map { t =>
             <div id="swatch-@t._1" class="swatch z-depth-1" data-name="@t._1" data-color="@t._2" style="background-color : @t._2;">
-              <i class="indicator fa fa-check white-text"></i>
+              <i class="indicator fa @models.template.Icons.check white-text"></i>
             </div>
           }
         </div>

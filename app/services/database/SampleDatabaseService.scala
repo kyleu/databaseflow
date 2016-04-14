@@ -24,7 +24,7 @@ object SampleDatabaseService extends Logging {
     var completedQueries = 0
     connection.transaction { t =>
       statements.foreach { statement =>
-        t.execute(new Statement {
+        t.executeUpdate(new Statement {
           override def sql = statement
         })
         completedQueries += 1
@@ -45,7 +45,7 @@ object SampleDatabaseService extends Logging {
 
   private[this] def getSampleFile(engine: DatabaseEngine) = {
     val filename = engine match {
-      case H2 => "Chinook_MySql.sql"
+      case H2 => "Chinook_H2.sql"
       case MySQL => "Chinook_MySql.sql"
       case Oracle => "Chinook_Oracle.sql"
       case PostgreSQL => "Chinook_PostgreSql.sql"

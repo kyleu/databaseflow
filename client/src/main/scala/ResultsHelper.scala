@@ -8,6 +8,22 @@ import services.NotificationService
 import ui._
 
 trait ResultsHelper { this: DatabaseFlow =>
+  protected[this] def handleStatementResultResponse(srr: StatementResultResponse) = {
+    val occurred = new scalajs.js.Date(srr.result.occurred.toDouble)
+    val html = StatementResultsTemplate.forResults(srr, occurred.toISOString, occurred.toString)
+    val workspace = $(s"#workspace-${srr.result.queryId}")
+    if (workspace.length != 1) {
+      utils.Logging.warn(s"No workspace available for statement [${srr.result.queryId}].")
+    }
+    workspace.prepend(html.toString)
+
+    val panel = $(s"#${srr.id}", workspace)
+    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
+    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
+      panel.remove()
+    })
+  }
+
   protected[this] def handleQueryResultResponse(qr: QueryResultResponse) = {
     //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
     val occurred = new scalajs.js.Date(qr.result.occurred.toDouble)

@@ -33,6 +33,7 @@ object SampleDatabaseManager {
     $(".remaining-statements", queryPanel).text(bqs.remainingQueries.toString)
     if (bqs.remainingQueries == 0) {
       NotificationService.info("DatabaseLoaded", "The sample database was imported successfully.")
+      TabManager.removeTab(queryId)
       queryPanel.remove()
     }
   }

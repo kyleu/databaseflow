@@ -5,7 +5,7 @@ import java.util.UUID
 import models.engine.DatabaseEngine
 import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
 import models.plan.{ PlanError, PlanResult }
-import models.query.QueryResult
+import models.queries.DynamicQuery
 import utils.Logging
 
 object PlanParseService {
@@ -15,9 +15,9 @@ object PlanParseService {
     case H2 => H2ParseService.parse(sql, queryId, plan, startMs)
   }
 
-  def resultPlanString(result: (scala.Seq[QueryResult.Col], scala.Seq[scala.Seq[Option[String]]]))(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => result._2.map(_.head.getOrElse("")).mkString("\n")
-    case MySQL => result._2.map(_.head.getOrElse("")).mkString("\n")
+  def resultPlanString(result: DynamicQuery.Results)(implicit engine: DatabaseEngine) = engine match {
+    case PostgreSQL => result.data.map(_.head.getOrElse("")).mkString("\n")
+    case MySQL => result.data.map(_.head.getOrElse("")).mkString("\n")
     case _ => throw new IllegalArgumentException("Parse result error.")
   }
 }

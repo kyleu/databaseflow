@@ -15,9 +15,9 @@ object PasswordInfoService extends DelegableAuthInfoDAO[PasswordInfo] {
 
   override def save(loginInfo: LoginInfo, authInfo: PasswordInfo) = {
     MasterDatabase.conn.transaction { conn =>
-      val rowsAffected = MasterDatabase.conn.execute(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
+      val rowsAffected = MasterDatabase.conn.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
       if (rowsAffected == 0) {
-        MasterDatabase.conn.execute(PasswordInfoQueries.CreatePasswordInfo(loginInfo, authInfo))
+        MasterDatabase.conn.executeUpdate(PasswordInfoQueries.CreatePasswordInfo(loginInfo, authInfo))
         Future.successful(authInfo)
       } else {
         Future.successful(authInfo)
@@ -26,17 +26,17 @@ object PasswordInfoService extends DelegableAuthInfoDAO[PasswordInfo] {
   }
 
   override def add(loginInfo: LoginInfo, authInfo: PasswordInfo) = {
-    MasterDatabase.conn.execute(PasswordInfoQueries.CreatePasswordInfo(loginInfo, authInfo))
+    MasterDatabase.conn.executeUpdate(PasswordInfoQueries.CreatePasswordInfo(loginInfo, authInfo))
     Future.successful(authInfo)
   }
 
   override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
-    MasterDatabase.conn.execute(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
+    MasterDatabase.conn.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
     Future.successful(authInfo)
   }
 
   override def remove(loginInfo: LoginInfo) = {
-    MasterDatabase.conn.execute(PasswordInfoQueries.removeById(Seq(loginInfo.providerID, loginInfo.providerKey)))
+    MasterDatabase.conn.executeUpdate(PasswordInfoQueries.removeById(Seq(loginInfo.providerID, loginInfo.providerKey)))
     Future.successful(Unit)
   }
 }

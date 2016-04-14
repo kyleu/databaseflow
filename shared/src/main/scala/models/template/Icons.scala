@@ -1,6 +1,7 @@
 package models.template
 
 object Icons {
+  val check = "fa-check"
   val search = "fa-search"
   val error = "fa-exclamation"
 
@@ -27,6 +28,7 @@ object Icons {
 
   val queryPlan = "fa-sitemap"
   val queryResults = "fa-file-text-o"
+  val statementResults = "fa-flash"
 
   val adHocQuery = "fa-pencil-square-o"
   val savedQuery = "fa-envelope-o"

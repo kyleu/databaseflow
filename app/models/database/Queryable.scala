@@ -38,7 +38,7 @@ trait Queryable extends Logging {
     }
   }
 
-  def execute(connection: Connection, statement: Statement): Int = {
+  def executeUpdate(connection: Connection, statement: Statement): Int = {
     log.debug(s"${statement.sql} with ${statement.values.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(statement.sql)
     try {
@@ -49,13 +49,25 @@ trait Queryable extends Logging {
     }
   }
 
-  def execute(statement: Statement): Int
+  def executeUnknown[A](connection: Connection, query: Query[Either[A, Int]]): Either[A, Int] = {
+    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
+    val stmt = connection.prepareStatement(query.sql)
+    try {
+      prepare(stmt, query.values)
+      val isResultset = stmt.execute()
+      if (isResultset) {
+        query.handle(stmt.getResultSet)
+      } else {
+        Right(stmt.getUpdateCount)
+      }
+    } finally {
+      stmt.close()
+    }
+  }
+
+  def executeUpdate(statement: Statement): Int
   def apply[A](query: RawQuery[A]): A
   def transaction[A](f: Transaction => A): A
 
   def query[A](query: RawQuery[A]): A = apply(query)
-
-  def update(statement: Statement): Int = execute(statement)
-  def insert(statement: Statement): Int = execute(statement)
-  def delete(statement: Statement): Int = execute(statement)
 }

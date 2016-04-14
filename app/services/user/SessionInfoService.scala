@@ -15,19 +15,19 @@ object SessionInfoService extends AuthenticatorDAO[CookieAuthenticator] {
   }
 
   override def add(session: CookieAuthenticator) = {
-    MasterDatabase.conn.execute(AuthenticatorQueries.insert(session))
+    MasterDatabase.conn.executeUpdate(AuthenticatorQueries.insert(session))
     UserCache.cacheSession(session)
     Future.successful(session)
   }
 
   override def update(session: CookieAuthenticator) = {
-    MasterDatabase.conn.execute(AuthenticatorQueries.UpdateAuthenticator(session))
+    MasterDatabase.conn.executeUpdate(AuthenticatorQueries.UpdateAuthenticator(session))
     UserCache.cacheSession(session)
     Future.successful(session)
   }
 
   override def remove(id: String) = {
-    MasterDatabase.conn.execute(AuthenticatorQueries.removeById(Seq(id)))
+    MasterDatabase.conn.executeUpdate(AuthenticatorQueries.removeById(Seq(id)))
     UserCache.removeSession(id)
     Future.successful(Unit)
   }

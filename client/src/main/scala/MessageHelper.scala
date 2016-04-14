@@ -6,6 +6,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case p: Pong => latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
     case is: InitialState => onInitialState(is)
 
+    case srr: StatementResultResponse => handleStatementResultResponse(srr)
     case qrr: QueryResultResponse => handleQueryResultResponse(qrr)
     case qer: QueryErrorResponse => handleQueryErrorResponse(qer)
 

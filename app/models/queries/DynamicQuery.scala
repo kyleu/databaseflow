@@ -3,7 +3,14 @@ package models.queries
 import models.database.{ Query, Row }
 import models.query.QueryResult
 
-case class DynamicQuery(override val sql: String) extends Query[(Seq[QueryResult.Col], Seq[Seq[Option[String]]])] {
+object DynamicQuery {
+  case class Results(
+    cols: Seq[QueryResult.Col],
+    data: Seq[Seq[Option[String]]]
+  )
+}
+
+case class DynamicQuery(override val sql: String) extends Query[Either[DynamicQuery.Results, Int]] {
   override def reduce(rows: Iterator[Row]) = {
     if (rows.hasNext) {
       val firstRow = rows.next()
@@ -20,9 +27,9 @@ case class DynamicQuery(override val sql: String) extends Query[(Seq[QueryResult
 
       val data = firstRowData +: remainingData
 
-      columns -> data
+      Left(DynamicQuery.Results(columns, data))
     } else {
-      Nil -> Nil
+      Left(DynamicQuery.Results(Nil, Nil))
     }
   }
 }

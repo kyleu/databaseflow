@@ -24,7 +24,7 @@ object UserService extends Logging {
         existingUser
       }
       case None =>
-        MasterDatabase.conn.execute(ProfileQueries.insert(profile))
+        MasterDatabase.conn.executeUpdate(ProfileQueries.insert(profile))
         val u = currentUser.copy(
           profiles = currentUser.profiles.filterNot(_.providerID == profile.loginInfo.providerID) :+ profile.loginInfo
         )
@@ -39,7 +39,7 @@ object UserService extends Logging {
     } else {
       UserQueries.insert(user)
     }
-    MasterDatabase.conn.execute(statement)
+    MasterDatabase.conn.executeUpdate(statement)
     UserCache.cacheUser(user)
   }
 
@@ -49,7 +49,7 @@ object UserService extends Logging {
     val startTime = System.nanoTime
     MasterDatabase.conn.transaction { conn =>
       val profiles = removeProfiles(userId).length
-      val users = MasterDatabase.conn.execute(UserQueries.removeById(Seq(userId)))
+      val users = MasterDatabase.conn.executeUpdate(UserQueries.removeById(Seq(userId)))
       UserCache.removeUser(userId)
       val timing = ((System.nanoTime - startTime) / 1000000).toInt
       Map("users" -> users, "profiles" -> profiles, "timing" -> timing)
@@ -59,7 +59,7 @@ object UserService extends Logging {
   def enableAdmin(user: User) = {
     val adminCount = MasterDatabase.conn.query(UserQueries.CountAdmins)
     if (adminCount == 0) {
-      MasterDatabase.conn.execute(UserQueries.AddRole(user.id, Role.Admin))
+      MasterDatabase.conn.executeUpdate(UserQueries.AddRole(user.id, Role.Admin))
       UserCache.removeUser(user.id)
     } else {
       throw new IllegalStateException("An admin already exists.")
@@ -70,10 +70,10 @@ object UserService extends Logging {
     val profiles = MasterDatabase.conn.query(ProfileQueries.FindProfilesByUser(userId))
     profiles.map { profile =>
       profile.loginInfo.providerID match {
-        case "credentials" => MasterDatabase.conn.execute(PasswordInfoQueries.removeById(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
+        case "credentials" => MasterDatabase.conn.executeUpdate(PasswordInfoQueries.removeById(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
         case p => throw new IllegalArgumentException(s"Unknown provider [$p].")
       }
-      MasterDatabase.conn.execute(ProfileQueries.remove(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
+      MasterDatabase.conn.executeUpdate(ProfileQueries.remove(Seq(profile.loginInfo.providerID, profile.loginInfo.providerKey)))
     }
     profiles
   }

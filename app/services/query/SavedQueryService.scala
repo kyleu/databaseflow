@@ -15,21 +15,21 @@ object SavedQueryService {
             owner = existing.owner,
             updated = System.currentTimeMillis
           )
-          MasterDatabase.conn.execute(SavedQueryQueries.UpdateSavedQuery(updated))
+          MasterDatabase.conn.executeUpdate(SavedQueryQueries.UpdateSavedQuery(updated))
           updated
         } else {
           throw new IllegalStateException("Not Authorized.")
         }
       case None =>
         val inserted = sq.copy(owner = userId, created = System.currentTimeMillis, updated = System.currentTimeMillis)
-        MasterDatabase.conn.execute(SavedQueryQueries.insert(inserted))
+        MasterDatabase.conn.executeUpdate(SavedQueryQueries.insert(inserted))
         inserted
     }
   }
 
   def delete(id: UUID, userId: Option[UUID] = None) = {
     MasterDatabase.conn.query(SavedQueryQueries.getById(id)) match {
-      case Some(existing) => MasterDatabase.conn.execute(SavedQueryQueries.delete(id))
+      case Some(existing) => MasterDatabase.conn.executeUpdate(SavedQueryQueries.delete(id))
       case None => throw new IllegalStateException(s"Unknown saved query [$id].")
     }
   }

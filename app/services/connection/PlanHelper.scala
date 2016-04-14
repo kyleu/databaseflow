@@ -19,15 +19,19 @@ trait PlanHelper extends Logging { this: ConnectionService =>
         val startMs = DateUtils.nowMillis
         sqlCatch(queryId, sql, startMs) { () =>
           implicit val engine = db.engine
-          val result = db.query(DynamicQuery(explainSql))
-          //log.info(s"Query result: [$result].")
+          val result = db.executeUnknown(DynamicQuery(explainSql))
+
+          //log.info(s"Explain result: [$result].")
           val durationMs = (DateUtils.nowMillis - startMs).toInt
-          PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(result), startMs) match {
-            case Left(err) =>
-              log.warn(s"Error parsing plan [${err.code}: ${err.message}].")
-              out ! PlanErrorResponse(id, err, durationMs)
-            case Right(planResponse) =>
-              out ! PlanResultResponse(id, planResponse, durationMs)
+          result match {
+            case Left(rs) => PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(rs), startMs) match {
+              case Left(err) =>
+                log.warn(s"Error parsing plan [${err.code}: ${err.message}].")
+                out ! PlanErrorResponse(id, err, durationMs)
+              case Right(planResponse) =>
+                out ! PlanResultResponse(id, planResponse, durationMs)
+            }
+            case Right(x) => throw new IllegalStateException()
           }
         }
       case None =>
