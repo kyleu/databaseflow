@@ -21,7 +21,7 @@ object PlanParseTestHelper {
   def test(key: String, engine: DatabaseEngine) = {
     val (sql, plan) = load(key)
     val queryId = UUID.randomUUID
-    PlanParseService.parse(sql, queryId, plan)(engine) match {
+    PlanParseService.parse(sql, queryId, plan, utils.DateUtils.nowMillis)(engine) match {
       case Right(result) => result
       case Left(err) => throw new IllegalStateException(err.toString)
     }
