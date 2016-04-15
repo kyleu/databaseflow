@@ -52,24 +52,6 @@ object ViewManager {
       wire($(".explain-view-link", queryPanel), "explain")
       wire($(".analyze-view-link", queryPanel), "analyze")
 
-      def crash() = NotificationService.info("Table Not Loaded", "Please retry in a moment.")
-
-      $(".columns-link", queryPanel).click({ (e: JQueryEventObject) =>
-        MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
-          case Some(view) => viewColumns(queryId, view)
-          case None => crash()
-        }
-        false
-      })
-
-      $(".definition-link", queryPanel).click({ (e: JQueryEventObject) =>
-        MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
-          case Some(view) => viewDefinition(queryId, view)
-          case None => crash()
-        }
-        false
-      })
-
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openViews = openViews - name
         QueryManager.closeQuery(queryId)
@@ -93,36 +75,20 @@ object ViewManager {
       $(".description", panel).text(desc)
     }
 
-    val summary = s"View contains ${view.columns.size} columns."
-    $(".summary", panel).text(summary)
-
+    view.definition.map { definition =>
+      val section = $(".definition-section", panel)
+      section.removeClass("initially-hidden")
+      $(".section-content", section).html(ViewDefinitionTemplate.definitionPanel(definition).render)
+    }
     if (view.columns.nonEmpty) {
-      $(".columns-link", panel).removeClass("initially-hidden")
+      val section = $(".columns-section", panel)
+      section.removeClass("initially-hidden")
+      $(".badge", section).html(view.columns.size.toString)
+      $(".section-content", section).html(ViewColumnDetailTemplate.columnPanel(view.columns).render)
     }
-    if (view.definition.isDefined) {
-      $(".definition-link", panel).removeClass("initially-hidden")
-    }
+
+    scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
     utils.Logging.debug(s"View [${view.name}] loaded.")
-  }
-
-  private[this] def viewColumns(queryId: UUID, view: View) = {
-    val id = UUID.randomUUID
-    val html = ViewColumnDetailTemplate.columnsForView(id, queryId, view)
-    $(s"#workspace-$queryId").prepend(html.toString)
-    $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
-      $(s"#$id").remove()
-      false
-    })
-  }
-
-  private[this] def viewDefinition(queryId: UUID, view: View) = {
-    val id = UUID.randomUUID
-    val html = ViewDefinitionTemplate.definitionForView(id, queryId, view)
-    $(s"#workspace-$queryId").prepend(html.toString)
-    $(s"#$id .${Icons.close}").click({ (e: JQueryEventObject) =>
-      $(s"#$id").remove()
-      false
-    })
   }
 }

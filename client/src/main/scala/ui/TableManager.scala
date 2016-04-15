@@ -63,9 +63,6 @@ object TableManager {
       $(".description", panel).text(desc)
     }
 
-    //val summary = s"Table contains ${table.columns.size} columns, ${table.indexes.size} indexes, and ${table.foreignKeys.size} foreign keys."
-    //$(".summary", panel).text(summary)
-
     table.definition.map { definition =>
       val section = $(".definition-section", panel)
       section.removeClass("initially-hidden")

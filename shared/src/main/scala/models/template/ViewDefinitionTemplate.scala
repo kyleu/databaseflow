@@ -7,6 +7,10 @@ import models.schema.View
 import scalatags.Text.all._
 
 object ViewDefinitionTemplate {
+  def definitionPanel(definition: String) = {
+    pre(cls := "pre-wrap")(definition)
+  }
+
   def definitionForView(resultId: UUID, queryId: UUID, v: View) = {
     val content = v.definition match {
       case Some(definition) => pre(cls := "pre-wrap")(definition)
