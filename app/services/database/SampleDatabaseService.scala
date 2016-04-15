@@ -7,6 +7,7 @@ import models.{ BatchQueryStatus, TableResultResponse }
 import models.database.Statement
 import models.engine.DatabaseEngine
 import models.engine.rdbms._
+import models.query.SqlParser
 import services.schema.SchemaService
 import utils.{ DateUtils, Logging }
 
@@ -18,7 +19,7 @@ object SampleDatabaseService extends Logging {
     log.info(s"Creating sample database for ${connection.name}")
     val source = getSampleFile(connection.engine)
     val content = source.getLines.toSeq.mkString("\n")
-    val statements = content.split(";").map(_.trim).filter(_.nonEmpty)
+    val statements = SqlParser.split(content)
 
     val startMs = DateUtils.nowMillis
     var completedQueries = 0
