@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.RowDataOptions
 import models.schema.Table
-import models.template.{ Icons, TableDetailTemplate }
+import models.template._
 import models.{ GetTableDetail, GetTableRowData }
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 
@@ -40,8 +40,6 @@ object TableManager {
         false
       })
 
-      TableObjectManager.wire(queryPanel, queryId, name)
-
       $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
         openTables = openTables - name
         QueryManager.closeQuery(queryId)
@@ -65,21 +63,34 @@ object TableManager {
       $(".description", panel).text(desc)
     }
 
-    val summary = s"Table contains ${table.columns.size} columns, ${table.indexes.size} indexes, and ${table.foreignKeys.size} foreign keys."
-    $(".summary", panel).text(summary)
+    //val summary = s"Table contains ${table.columns.size} columns, ${table.indexes.size} indexes, and ${table.foreignKeys.size} foreign keys."
+    //$(".summary", panel).text(summary)
 
-    if (table.definition.nonEmpty) {
-      $(".definition-link", panel).removeClass("initially-hidden")
+    table.definition.map { definition =>
+      val section = $(".definition-section", panel)
+      section.removeClass("initially-hidden")
+      $(".section-content", section).html(TableDefinitionTemplate.definitionPanel(definition).render)
     }
     if (table.columns.nonEmpty) {
-      $(".columns-link", panel).removeClass("initially-hidden")
+      val section = $(".columns-section", panel)
+      section.removeClass("initially-hidden")
+      $(".badge", section).html(table.columns.size.toString)
+      $(".section-content", section).html(TableColumnDetailTemplate.columnPanel(table.columns).render)
     }
     if (table.indexes.nonEmpty) {
-      $(".indexes-link", panel).removeClass("initially-hidden")
+      val section = $(".indexes-section", panel)
+      section.removeClass("initially-hidden")
+      $(".badge", section).html(table.indexes.size.toString)
+      $(".section-content", section).html(TableIndexDetailTemplate.indexPanel(table.indexes).render)
     }
     if (table.foreignKeys.nonEmpty) {
-      $(".foreign-keys-link", panel).removeClass("initially-hidden")
+      val section = $(".foreign-keys-section", panel)
+      section.removeClass("initially-hidden")
+      $(".badge", section).html(table.foreignKeys.size.toString)
+      $(".section-content", section).html(TableForeignKeyDetailTemplate.foreignKeyPanel(table.foreignKeys).render)
     }
+
+    scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
     utils.Logging.debug(s"Table [${table.name}] loaded.")
   }

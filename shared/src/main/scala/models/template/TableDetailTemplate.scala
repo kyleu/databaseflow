@@ -8,14 +8,27 @@ object TableDetailTemplate {
   def forTable(queryId: UUID, tableName: String) = {
     val content = div(
       div(cls := "description")(""),
-      div(cls := "summary")("")
+      ul(cls := "collapsible table-options", data("collapsible") := "expandable")(
+        li(cls := "definition-section initially-hidden")(
+          div(cls := "collapsible-header")(i(cls := s"fa ${Icons.definition}"), "Definition"),
+          div(cls := "collapsible-body")(div(cls := "section-content")("Loading..."))
+        ),
+        li(cls := "columns-section initially-hidden")(
+          div(cls := "collapsible-header")(i(cls := s"fa ${Icons.columns}"), "Columns", span(cls := "badge")("")),
+          div(cls := "collapsible-body")(div(cls := "section-content")("Loading..."))
+        ),
+        li(cls := "indexes-section initially-hidden")(
+          div(cls := "collapsible-header")(i(cls := s"fa ${Icons.indexes}"), "Indexes", span(cls := "badge")("")),
+          div(cls := "collapsible-body")(div(cls := "section-content")("Loading..."))
+        ),
+        li(cls := "foreign-keys-section initially-hidden")(
+          div(cls := "collapsible-header")(i(cls := s"fa ${Icons.foreignKeys}"), "Foreign Keys", span(cls := "badge")("")),
+          div(cls := "collapsible-body")(div(cls := "section-content")("Loading..."))
+        )
+      )
     )
     val actions = Seq(
-      a(cls := "view-data-link", href := "#")("View Data"),
-      a(cls := "right definition-link initially-hidden", href := "#")("Definition"),
-      a(cls := "right foreign-keys-link initially-hidden", href := "#")("Foreign Keys"),
-      a(cls := "right indexes-link initially-hidden", href := "#")("Indexes"),
-      a(cls := "right columns-link initially-hidden", href := "#")("Columns")
+      a(cls := "view-data-link", href := "#")("View First 100 Rows")
     )
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.table), actions = Some(actions)),
