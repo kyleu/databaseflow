@@ -64,9 +64,10 @@ object TableManager {
     }
 
     table.definition.map { definition =>
+      import scalatags.Text.all._
       val section = $(".definition-section", panel)
       section.removeClass("initially-hidden")
-      $(".section-content", section).html(TableDefinitionTemplate.definitionPanel(definition).render)
+      $(".section-content", section).html(pre(cls := "pre-wrap")(definition).render)
     }
     if (table.columns.nonEmpty) {
       val section = $(".columns-section", panel)

@@ -80,7 +80,7 @@ trait ResultsHelper { this: DatabaseFlow =>
     val panel = $(s"#${qe.id}")
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
     $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
-      $(s"#${qe.id}").remove()
+      panel.remove()
     })
   }
 

@@ -19,7 +19,7 @@ object ErrorTemplate {
       }
     )
 
-    StaticPanelTemplate.cardRow(cardTitle, content, Some(Icons.error))
+    div(id := qe.id.toString)(StaticPanelTemplate.cardRow(cardTitle, content, Some(Icons.error)))
   }
 
   def forPlanError(pe: PlanErrorResponse, dateIsoString: String, dateFullString: String) = {
@@ -34,6 +34,6 @@ object ErrorTemplate {
       p(cls := "")(pe.error.message)
     )
 
-    StaticPanelTemplate.cardRow(cardTitle, content, Some(Icons.error))
+    div(id := pe.id.toString)(StaticPanelTemplate.cardRow(cardTitle, content, Some(Icons.error)))
   }
 }

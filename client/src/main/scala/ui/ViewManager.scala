@@ -76,9 +76,10 @@ object ViewManager {
     }
 
     view.definition.map { definition =>
+      import scalatags.Text.all._
       val section = $(".definition-section", panel)
       section.removeClass("initially-hidden")
-      $(".section-content", section).html(ViewDefinitionTemplate.definitionPanel(definition).render)
+      $(".section-content", section).html(pre(cls := "pre-wrap")(definition).render)
     }
     if (view.columns.nonEmpty) {
       val section = $(".columns-section", panel)
