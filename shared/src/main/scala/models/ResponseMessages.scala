@@ -13,9 +13,9 @@ case class ServerError(reason: String, content: String) extends ResponseMessage
 case class VersionResponse(version: String) extends ResponseMessage
 
 case class InitialState(
-  userId: UUID,
+  userId: Option[UUID],
   username: Option[String],
-  preferences: UserPreferences,
+  preferences: Option[UserPreferences],
   schema: Schema
 ) extends ResponseMessage
 

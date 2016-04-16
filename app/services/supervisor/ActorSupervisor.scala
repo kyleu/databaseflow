@@ -11,7 +11,7 @@ import utils.metrics.{ InstrumentedActor, MetricsServletActor }
 import utils.{ ApplicationContext, DateUtils, Logging }
 
 object ActorSupervisor {
-  case class ConnectionRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
+  case class ConnectionRecord(userId: Option[UUID], name: String, actorRef: ActorRef, started: LocalDateTime)
 }
 
 class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor with Logging {
@@ -55,9 +55,9 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
     case None => sender() ! ServerError(s"Unknown Client Connection [${ct.id}].", ct.id.toString)
   }
 
-  protected[this] def handleConnectionStarted(user: User, connectionId: UUID, conn: ActorRef) {
-    log.debug(s"Connection [$connectionId] registered to [${user.username.getOrElse(user.id)}] with path [${conn.path}].")
-    connections(connectionId) = ConnectionRecord(user.id, user.username.getOrElse("Guest"), conn, DateUtils.now)
+  protected[this] def handleConnectionStarted(user: Option[User], connectionId: UUID, conn: ActorRef) {
+    log.debug(s"Connection [$connectionId] registered to [${user.map(_.username).getOrElse(user.map(_.id).getOrElse("Guest"))}] with path [${conn.path}].")
+    connections(connectionId) = ConnectionRecord(user.map(_.id), user.flatMap(_.username).getOrElse("Guest"), conn, DateUtils.now)
     connectionsCounter.inc()
   }
 

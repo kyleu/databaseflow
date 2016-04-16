@@ -15,7 +15,7 @@ import utils.{ Config, Logging }
 import scala.util.{ Failure, Success }
 
 object ConnectionService {
-  def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
+  def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String) = {
     Props(new ConnectionService(id.getOrElse(UUID.randomUUID), supervisor, connectionId, user, out, sourceAddress))
   }
 }
@@ -24,13 +24,13 @@ class ConnectionService(
     val id: UUID = UUID.randomUUID,
     val supervisor: ActorRef,
     val connectionId: UUID,
-    val user: User,
+    val user: Option[User],
     val out: ActorRef,
     val sourceAddress: String
 ) extends InstrumentedActor with StartHelper with DataHelper with TraceHelper with DetailHelper with QueryHelper with PlanHelper with SqlHelper with Logging {
 
-  protected[this] var currentUsername = user.username
-  protected[this] var userPreferences = user.preferences
+  protected[this] var currentUsername = user.flatMap(_.username)
+  protected[this] var userPreferences = user.map(_.preferences)
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
@@ -41,7 +41,7 @@ class ConnectionService(
       out ! ServerError("SchemaLoadError", s"${x.getClass.getSimpleName} - ${x.getMessage}")
       None
   }
-  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.id, connectionId))
+  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.map(_.id), connectionId))
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 

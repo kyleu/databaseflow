@@ -26,10 +26,10 @@ class QueryController @javax.inject.Inject() (override val ctx: ApplicationConte
 
   def connect(connectionId: UUID) = WebSocket.tryAcceptWithActor[RequestMessage, ResponseMessage] { request =>
     implicit val req = Request(request, AnyContentAsEmpty)
-    SecuredRequestHandler { securedRequest =>
+    UserAwareRequestHandler { securedRequest =>
       Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
     }.map {
-      case HandlerResult(r, Some(user)) => Right(ConnectionService.props(None, ctx.supervisor, connectionId, user, _: ActorRef, request.remoteAddress))
+      case HandlerResult(r, Some(userOpt)) => Right(ConnectionService.props(None, ctx.supervisor, connectionId, userOpt, _: ActorRef, request.remoteAddress))
       case HandlerResult(r, None) => Left(r)
     }
   }

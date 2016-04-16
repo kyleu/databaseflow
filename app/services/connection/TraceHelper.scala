@@ -5,7 +5,7 @@ import utils.metrics.InstrumentedActor
 
 trait TraceHelper extends InstrumentedActor { this: ConnectionService =>
   protected[this] def handleConnectionTrace() {
-    val ret = ConnectionTraceResponse(id, user.id, currentUsername)
+    val ret = ConnectionTraceResponse(id, user.map(_.id), currentUsername)
     sender() ! ret
   }
 

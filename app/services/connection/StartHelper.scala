@@ -20,7 +20,7 @@ trait StartHelper extends Logging { this: ConnectionService =>
     supervisor ! ConnectionStarted(user, id, self)
     out ! SavedQueryResultResponse(savedQueries, 0)
     schema.foreach { s =>
-      val is = InitialState(user.id, currentUsername, userPreferences, s)
+      val is = InitialState(user.map(_.id), currentUsername, userPreferences, s)
       out ! is
     }
     if (schema.forall(_.detailsLoadedAt.isEmpty)) {

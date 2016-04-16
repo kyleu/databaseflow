@@ -14,7 +14,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   protected[this] def handleQuerySaveRequest(sq: SavedQuery) = {
     log.info(s"Saving query as [${sq.id}].")
     try {
-      val result = SavedQueryService.save(sq, Some(user.id))
+      val result = SavedQueryService.save(sq, user.map(_.id))
       out ! QuerySaveResponse(savedQuery = result)
     } catch {
       case NonFatal(x) => out ! QuerySaveResponse(error = Some(x.getMessage), savedQuery = sq)
@@ -24,7 +24,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   protected[this] def handleQueryDeleteRequest(id: UUID) = {
     log.info(s"Deleting query [$id].")
     try {
-      val result = SavedQueryService.delete(id, Some(user.id))
+      val result = SavedQueryService.delete(id, user.map(_.id))
       out ! QueryDeleteResponse(id = id)
     } catch {
       case NonFatal(x) => out ! QueryDeleteResponse(id = id, error = Some(x.getMessage))
