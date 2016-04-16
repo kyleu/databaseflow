@@ -7,8 +7,7 @@ import models.query.RowDataOptions
 import models.schema.View
 import models.template._
 import models.{ GetViewDetail, GetViewRowData, SubmitQuery }
-import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
-import services.NotificationService
+import org.scalajs.jquery.{ JQuery, jQuery => $ }
 
 object ViewManager {
   var openViews = Map.empty[String, UUID]
@@ -38,24 +37,21 @@ object ViewManager {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
+      utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
         viewData(queryId, name, RowDataOptions.empty)
-        false
       })
 
-      def wire(q: JQuery, action: String) = q.click({ (e: JQueryEventObject) =>
+      def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
         val sql = EngineQueries.selectFrom(name, limit = Some(5))(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
-        false
       })
 
       wire($(".explain-view-link", queryPanel), "explain")
       wire($(".analyze-view-link", queryPanel), "analyze")
 
-      $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
+      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
         openViews = openViews - name
         QueryManager.closeQuery(queryId)
-        false
       })
 
       openViews = openViews + (name -> queryId)

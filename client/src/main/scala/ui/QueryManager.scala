@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.SubmitQuery
 import models.template.Icons
-import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ JQuery, jQuery => $ }
 
 import scala.scalajs.js
 import scala.scalajs.js.timers.setTimeout
@@ -18,21 +18,18 @@ object QueryManager {
   def addQuery(queryId: UUID, queryPanel: JQuery, onChange: (String) => Unit, onClose: () => Unit): Unit = {
     val sqlEditor = EditorManager.initSqlEditor(queryId, onChange)
 
-    def wire(q: JQuery, action: String) = q.click({ (e: JQueryEventObject) =>
+    def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
       val sql = sqlEditor.getValue().toString
-      //utils.Logging.info(s"Performing [$action] for sql [$sql].")
       utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
-      false
     })
 
     wire($(".run-query-link", queryPanel), "run")
     wire($(".explain-query-link", queryPanel), "explain")
     wire($(".analyze-query-link", queryPanel), "analyze")
 
-    $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
+    utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
       QueryManager.closeQuery(queryId)
       onClose()
-      false
     })
 
     sqlEditor.selection.selectAll()

@@ -5,7 +5,7 @@ import java.util.UUID
 import models.QueryDeleteRequest
 import models.query.SavedQuery
 import models.template.{ Icons, QueryEditorTemplate }
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 import utils.NetworkMessage
 
 object SavedQueryManager {
@@ -50,23 +50,17 @@ object SavedQueryManager {
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
-    $(s".settings-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      QueryFormManager.show(savedQuery.copy(
-        sql = QueryManager.getSql(savedQuery.id)
-      ))
-      false
-    })
+    utils.JQueryUtils.clickHandler($(s".settings-query-link", queryPanel), (jq) => QueryFormManager.show(savedQuery.copy(
+      sql = QueryManager.getSql(savedQuery.id)
+    )))
 
-    $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
-      QueryFormManager.show(savedQuery.copy(
-        id = UUID.randomUUID,
-        name = "Copy of " + savedQuery.name,
-        sql = QueryManager.getSql(savedQuery.id)
-      ))
-      false
-    })
+    utils.JQueryUtils.clickHandler($(s".save-as-query-link", queryPanel), (jq) => QueryFormManager.show(savedQuery.copy(
+      id = UUID.randomUUID,
+      name = "Copy of " + savedQuery.name,
+      sql = QueryManager.getSql(savedQuery.id)
+    )))
 
-    $(s".delete-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+    utils.JQueryUtils.clickHandler($(s".delete-query-link", queryPanel), (jq) => {
       def callback(b: Boolean): Unit = {
         if (b) {
           NetworkMessage.sendMessage(QueryDeleteRequest(savedQuery.id))
@@ -75,7 +69,6 @@ object SavedQueryManager {
       }
       val msg = "Are you sure you want to delete this saved query?"
       ConfirmManager.show(callback = callback, content = msg, trueButton = "Delete")
-      false
     })
 
     def onChange(s: String): Unit = {

@@ -20,12 +20,13 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
-    searchIcon.click { (e: JQueryEventObject) =>
+    utils.JQueryUtils.clickHandler(searchIcon, (jq) => {
       searchInput.value("")
       clearSearch()
       searchInput.trigger("focus")
       searchInput.trigger("blur")
-    }
+    })
+
     searchInput.keyup { (e: JQueryEventObject) =>
       onTextChange(searchInput.value().toString)
     }

@@ -2,9 +2,11 @@ import java.util.UUID
 
 import models._
 import models.template._
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
+import utils.JQueryUtils
 
-trait PlanHelper { this: DatabaseFlow =>
+trait PlanHelper {
+  this: DatabaseFlow =>
   protected[this] def handlePlanResultResponse(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
@@ -20,15 +22,12 @@ trait PlanHelper { this: DatabaseFlow =>
 
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
-    $("a", panel).click { (e: JQueryEventObject) =>
-      $(e.currentTarget).toggleClass("open")
-      false
-    }
+    JQueryUtils.clickHandler($("a", panel), _.toggleClass("open"))
 
     val planViewToggle = $(s".plan-view-toggle", panel)
     var showingChart = true
 
-    planViewToggle.click((e: JQueryEventObject) => {
+    JQueryUtils.clickHandler(planViewToggle, (f) => {
       if (showingChart) {
         planViewToggle.text("View Plan Chart")
         chart.hide()
@@ -39,12 +38,9 @@ trait PlanHelper { this: DatabaseFlow =>
         raw.hide()
       }
       showingChart = !showingChart
-      false
     })
 
-    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
-      panel.remove()
-    })
+    utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
   protected[this] def handlePlanErrorResponse(per: PlanErrorResponse) = {
@@ -56,9 +52,7 @@ trait PlanHelper { this: DatabaseFlow =>
     val panel = $(s"#${per.id}")
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
-    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
-      $(s"#${per.id}").remove()
-    })
+    utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (f) => $(s"#${per.id}").remove())
   }
 
   private[this] def workOutPlanWidth(id: UUID) = {

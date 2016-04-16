@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.schema.Procedure
 import models.template.{ Icons, ProcedureDetailTemplate }
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 import services.NotificationService
 
 object ProcedureManager {
@@ -29,18 +29,16 @@ object ProcedureManager {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      $(".call-link", queryPanel).click({ (e: JQueryEventObject) =>
+      utils.JQueryUtils.clickHandler($(".call-link", queryPanel), (jq) => {
         MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")
         }
-        false
       })
 
-      $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
+      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
         openProcedures = openProcedures - name
         QueryManager.closeQuery(queryId)
-        false
       })
 
       openProcedures = openProcedures + (name -> queryId)

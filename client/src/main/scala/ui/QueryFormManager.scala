@@ -2,7 +2,7 @@ package ui
 
 import models.QuerySaveRequest
 import models.query.SavedQuery
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 import services.NavigationService
 import utils.NetworkMessage
 
@@ -20,14 +20,8 @@ object QueryFormManager {
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
   def init() = {
-    $("#input-query-cancel-link", modal).click { (e: JQueryEventObject) =>
-      modal.closeModal()
-      false
-    }
-    $("#input-query-save-link", modal).click { (e: JQueryEventObject) =>
-      save()
-      false
-    }
+    utils.JQueryUtils.clickHandler($("#input-query-cancel-link", modal), (jq) => modal.closeModal())
+    utils.JQueryUtils.clickHandler($("#input-query-save-link", modal), (jq) => save())
   }
 
   def show(savedQuery: SavedQuery) = {

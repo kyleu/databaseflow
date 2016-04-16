@@ -35,15 +35,13 @@ object TableManager {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      $(".view-data-link", queryPanel).click({ (e: JQueryEventObject) =>
+      utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
         viewData(queryId, name, RowDataOptions.empty)
-        false
       })
 
-      $(s".${Icons.close}", queryPanel).click({ (e: JQueryEventObject) =>
+      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
         openTables = openTables - name
         QueryManager.closeQuery(queryId)
-        false
       })
 
       openTables = openTables + (name -> queryId)

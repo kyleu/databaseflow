@@ -6,7 +6,7 @@ import models.engine.DatabaseEngine
 import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
-import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ JQuery, jQuery => $ }
 
 object MetadataManager {
   var engine: Option[DatabaseEngine] = None
@@ -24,11 +24,10 @@ object MetadataManager {
       $("#saved-query-list-toggle").css("display", "block")
       val savedQueryList = $("#saved-query-list")
       savedQueryList.html(SidenavTemplate.savedQueries(sqs).mkString("\n"))
-      $(".sidenav-link", savedQueryList).click { (e: JQueryEventObject) =>
-        val id = UUID.fromString($(e.delegateTarget).data("key").toString)
+      utils.JQueryUtils.clickHandler($(".sidenav-link", savedQueryList), (jq) => {
+        val id = UUID.fromString(jq.data("key").toString)
         SavedQueryManager.savedQueryDetail(id)
-        false
-      }
+      })
     } else {
       $("#saved-query-list-toggle").css("display", "none")
     }

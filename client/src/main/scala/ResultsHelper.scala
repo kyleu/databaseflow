@@ -3,9 +3,10 @@ import java.util.UUID
 import models._
 import models.query.{ RowDataOptions, SavedQuery }
 import models.template._
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 import services.NotificationService
 import ui._
+import utils.JQueryUtils
 
 trait ResultsHelper { this: DatabaseFlow =>
   protected[this] def handleStatementResultResponse(srr: StatementResultResponse) = {
@@ -19,9 +20,7 @@ trait ResultsHelper { this: DatabaseFlow =>
 
     val panel = $(s"#${srr.id}", workspace)
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
-    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
-      panel.remove()
-    })
+    JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
   protected[this] def handleQueryResultResponse(qr: QueryResultResponse) = {
@@ -41,18 +40,16 @@ trait ResultsHelper { this: DatabaseFlow =>
 
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
-    $(".query-rel-link", panel).click { (e: JQueryEventObject) =>
-      val jq = $(e.currentTarget)
+    utils.JQueryUtils.clickHandler($(".query-rel-link", panel), (jq) => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
       TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some("="), filterVal = Some(v)))
-      false
-    }
+    })
 
     var sqlShown = false
 
-    sqlLink.click((e: JQueryEventObject) => {
+    utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
       if (sqlShown) {
         resultEl.show()
         sqlEl.hide()
@@ -63,12 +60,9 @@ trait ResultsHelper { this: DatabaseFlow =>
         sqlLink.text("Show Results")
       }
       sqlShown = !sqlShown
-      false
     })
 
-    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
-      panel.remove()
-    })
+    utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
   protected[this] def handleQueryErrorResponse(qe: QueryErrorResponse) = {
@@ -79,9 +73,7 @@ trait ResultsHelper { this: DatabaseFlow =>
 
     val panel = $(s"#${qe.id}")
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
-    $(s".${Icons.close}", panel).click((e: JQueryEventObject) => {
-      panel.remove()
-    })
+    utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
   protected[this] def handleBatchQueryStatus(bqs: BatchQueryStatus) = {

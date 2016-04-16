@@ -3,10 +3,9 @@ package ui
 import java.util.UUID
 
 import models.engine.EngineQueries
-import models.engine.rdbms.Oracle
 import models.query.SavedQuery
 import models.template.{ Icons, QueryEditorTemplate }
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 
 import scala.util.Random
 
@@ -39,13 +38,12 @@ object AdHocQueryManager {
 
     val queryPanel = $(s"#panel-$queryId")
 
-    $(s".save-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+    utils.JQueryUtils.clickHandler($(s".save-query-link", queryPanel), (jq) => {
       QueryFormManager.show(SavedQuery(
         id = queryId,
         name = queryName,
         sql = QueryManager.getSql(queryId)
       ))
-      false
     })
 
     def onChange(s: String): Unit = {

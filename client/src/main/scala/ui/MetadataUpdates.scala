@@ -3,7 +3,7 @@ package ui
 import models.query.RowDataOptions
 import models.schema.{ Procedure, Table, View }
 import models.template.SidenavTemplate
-import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ JQuery, jQuery => $ }
 import utils.DomUtils
 
 object MetadataUpdates {
@@ -27,11 +27,10 @@ object MetadataUpdates {
       $("#table-list-toggle").css("display", "block")
       val tableList = $("#table-list")
       tableList.html(SidenavTemplate.tables(ts).mkString("\n"))
-      $(".sidenav-link", tableList).click { (e: JQueryEventObject) =>
-        val name = $(e.delegateTarget).data("key").toString
+      utils.JQueryUtils.clickHandler($(".sidenav-link", tableList), (jq) => {
+        val name = jq.data("key").toString
         schemaClick("table", name)
-        false
-      }
+      })
     } else {
       $("#table-list-toggle").css("display", "none")
     }
@@ -53,11 +52,10 @@ object MetadataUpdates {
       $("#view-list-toggle").css("display", "block")
       val viewList = $("#view-list")
       viewList.html(SidenavTemplate.views(vs).mkString("\n"))
-      $(".sidenav-link", viewList).click { (e: JQueryEventObject) =>
-        val name = $(e.delegateTarget).data("key").toString
+      utils.JQueryUtils.clickHandler($(".sidenav-link", viewList), (jq) => {
+        val name = jq.data("key").toString
         schemaClick("view", name)
-        false
-      }
+      })
     } else {
       $("#view-list-toggle").css("display", "none")
     }
@@ -79,11 +77,10 @@ object MetadataUpdates {
       $("#procedure-list-toggle").css("display", "block")
       val procedureList = $("#procedure-list")
       procedureList.html(SidenavTemplate.procedures(ps).mkString("\n"))
-      $(".sidenav-link", procedureList).click { (e: JQueryEventObject) =>
-        val name = $(e.delegateTarget).data("key").toString
+      utils.JQueryUtils.clickHandler($(".sidenav-link", procedureList), (jq) => {
+        val name = jq.data("key").toString
         schemaClick("procedure", name)
-        false
-      }
+      })
     } else {
       $("#procedure-list-toggle").css("display", "none")
     }

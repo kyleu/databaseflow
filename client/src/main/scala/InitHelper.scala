@@ -1,7 +1,7 @@
 import java.util.UUID
 
 import models.query.RowDataOptions
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 import services.NavigationService
 import ui._
 import utils.{ Logging, NetworkMessage }
@@ -11,13 +11,9 @@ import scala.scalajs.js
 trait InitHelper { this: DatabaseFlow =>
   protected[this] def init() {
     utils.Logging.installErrorHandler()
-
     NetworkMessage.register(sendMessage)
-
     wireSideNav()
-
     js.Dynamic.global.$("select").material_select()
-
     EditorManager.initEditorFramework()
     SearchManager.init()
     ConfirmManager.init()
@@ -28,17 +24,8 @@ trait InitHelper { this: DatabaseFlow =>
   }
 
   private[this] def wireSideNav() = {
-    $("#new-query-link").click({ (e: JQueryEventObject) =>
-      AdHocQueryManager.addNewQuery()
-      false
-    })
-
-    $(".show-list-link").click({ (e: JQueryEventObject) =>
-      val key = $(e.delegateTarget).data("key").toString
-      ModelListManager.showList(key)
-      false
-    })
-
+    utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
+    utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
