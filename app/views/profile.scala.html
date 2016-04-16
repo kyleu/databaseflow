@@ -1,4 +1,4 @@
-@(user: models.user.User, debug: Boolean)(
+@(user: Option[models.user.User], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(user, utils.Config.projectName, debug = debug) {
   <form action="" method="post">
@@ -7,13 +7,13 @@
       <div class="card-content">
         <div class="row">
           <div class="input-field col s12">
-            @defining(user.username.orElse(user.profiles.headOption.map(_.providerKey)).getOrElse("Guest")) { username =>
+            @defining(user.map(_.username).orElse(user.flatMap(_.profiles.headOption.map(_.providerKey))).getOrElse("Guest")) { username =>
               <input id="input-username" type="text" class="form-control validate" name="username" value="@username" />
               <label for="input-username">@Messages("profile.form.username")</label>
             }
           </div>
         </div>
-        <input id="input-theme" type="hidden" class="" name="theme" value="@user.preferences.theme" />
+        <input id="input-theme" type="hidden" class="" name="theme" value="@user.map(_.preferences.theme).getOrElse("blue-grey")" />
         <label for="input-theme">@Messages("profile.form.theme")</label><br/>
         <div id="theme-choices">
           @models.user.Themes.all.map { t =>
@@ -33,11 +33,10 @@
 
   <script>
     $(function() {
-      var activeSwatch = '@user.preferences.theme';
+      var activeSwatch = '@user.map(_.preferences.theme).getOrElse("blue-grey")';
       $(".swatch").click(function(e) {
         var el = $(e.currentTarget);
         var newSwatch = el.data('name');
-        var newColor = el.data('color');
         $('#swatch-' + activeSwatch).removeClass('active');
         el.addClass('active');
 

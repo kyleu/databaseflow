@@ -1,15 +1,15 @@
-@(user: models.user.User, dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: Option[models.user.User], dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 <header>
-  @views.html.components.userDropdown(isGuest = user.isGuest)
+  @views.html.components.userDropdown(isGuest = user.forall(_.isGuest))
 
   <div class="nb-container navbar-fixed">
-    <nav id="topnav" class="@user.preferences.theme lighten-2">
+    <nav id="topnav" class="@user.map(_.preferences.theme).getOrElse("blue-grey") lighten-2">
       <div class="nav-wrapper">
         <a href="@routes.HomeController.index()" class="brand-logo"><i class="fa @models.template.Icons.database"></i> @dbName</a>
         <a href="#" data-activates="main-menu" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
         <ul class="right hide-on-small-only">
           <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
-            @user.username.getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
+            @user.flatMap(_.username).getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
           </a></li>
         </ul>
 

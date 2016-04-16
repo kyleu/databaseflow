@@ -1,4 +1,4 @@
-@(user: models.user.User, conn: models.engine.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
+@(user: Option[models.user.User], conn: models.engine.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
   @components.formErrors(errors)

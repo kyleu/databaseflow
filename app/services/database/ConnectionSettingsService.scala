@@ -26,7 +26,7 @@ object ConnectionSettingsService {
   )
 
   def getAll = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll()) :+ masterConnectionSettings
-  def getVisible(userId: UUID) = MasterDatabase.conn.query(ConnectionSettingsQueries.getVisible(userId)) :+ masterConnectionSettings
+  def getVisible(userId: Option[UUID]) = MasterDatabase.conn.query(ConnectionSettingsQueries.getVisible(userId)) :+ masterConnectionSettings
 
   def getById(id: UUID) = if (id == masterId) {
     Some(masterConnectionSettings)

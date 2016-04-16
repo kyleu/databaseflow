@@ -1,12 +1,12 @@
-@(user: models.user.User, debug: Boolean, dbName: String, initialQuery: java.util.UUID)(
+@(user: Option[models.user.User], debug: Boolean, dbName: String, initialQuery: java.util.UUID)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.materialize(
-  user = Some(user),
+  user = user,
   title = dbName + " - " + utils.Config.projectName,
   scripts = Seq(routes.Assets.versioned("javascripts/timeago.js").url),
   debug = debug
 ) {
-  <style type="text/css">@defining(models.user.Themes.map(user.preferences.theme)) { themeColor =>
+  <style type="text/css">@defining(models.user.Themes.map(user.map(_.preferences.theme).getOrElse("blue-grey"))) { themeColor =>
     .tabs .tab a { color: @themeColor; }
     .tabs .tab a:hover { color: @themeColor; }
     .tabs .tab.disabled a { color: @themeColor; }

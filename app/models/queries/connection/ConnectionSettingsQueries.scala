@@ -15,10 +15,13 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   val insert = Insert
   def delete(id: UUID) = Delete(Seq(id))
   def getAll(orderBy: String = "name") = GetAll(orderBy = orderBy)
-  def getVisible(owner: UUID, orderBy: String = "name") = GetAll(
-    whereClause = Some("public = true or owner = ?"),
+  def getVisible(owner: Option[UUID], orderBy: String = "name") = GetAll(
+    whereClause = owner match {
+    case Some(x) => Some("public = true or owner = ?")
+    case None => Some("public = true")
+  },
     orderBy = orderBy,
-    values = Seq(owner)
+    values = owner.toSeq
   )
   def getById(id: UUID) = GetById(Seq(id))
   val search = Search

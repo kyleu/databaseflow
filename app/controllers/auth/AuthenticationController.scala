@@ -38,7 +38,14 @@ class AuthenticationController @javax.inject.Inject() (override val ctx: Applica
 
   def signOut = withSession("signout") { implicit request =>
     val result = Redirect(controllers.routes.HomeController.index())
-    env.eventBus.publish(LogoutEvent(request.identity, request, request2Messages))
-    env.authenticatorService.discard(request.authenticator, result).map(x => result)
+    request.identity match {
+      case Some(id) =>
+        env.eventBus.publish(LogoutEvent(id, request, request2Messages))
+        request.authenticator match {
+          case Some(auth) => env.authenticatorService.discard(auth, result).map(x => result)
+          case None => Future.successful(result)
+        }
+      case None => Future.successful(result)
+    }
   }
 }

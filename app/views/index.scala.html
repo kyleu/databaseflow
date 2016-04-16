@@ -1,4 +1,4 @@
-@(user: models.user.User, debug: Boolean, connections: Seq[models.engine.ConnectionSettings])(
+@(user: Option[models.user.User], debug: Boolean, connections: Seq[models.engine.ConnectionSettings])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(user, utils.Config.projectName, debug = debug) {
   <div class="col s12">

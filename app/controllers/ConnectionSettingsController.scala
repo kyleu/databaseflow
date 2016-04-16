@@ -35,7 +35,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       cf => {
         val almostUpdated = conn.copy(
           name = cf.name,
-          owner = conn.owner.orElse(Some(request.identity.id)),
+          owner = conn.owner.orElse(request.identity.map(_.id)),
           public = cf.public,
           engine = DatabaseEngine.get(cf.engine),
           url = cf.url,

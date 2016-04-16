@@ -1,4 +1,4 @@
-@(user: models.user.User, form: Form[models.user.RegistrationData])(
+@(user: Option[models.user.User], form: Form[models.user.RegistrationData], error: Option[String] = None)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(user = user, title = Messages("registration.title", utils.Config.projectName), debug = false) {
   <form method="post" action="@controllers.auth.routes.RegistrationController.register()">
@@ -6,8 +6,8 @@
       <div class="col s6 offset-s3">
         <div class="card">
           <div class="card-content">
-            @if(flash.get("error").isDefined) {
-              <div class="flash-error">@flash("error")</div>
+            @error.map { e =>
+              <div class="flash-error">@e</div>
             }
             <span class="card-title">
             @Messages("registration.call.to.action", utils.Config.projectName)

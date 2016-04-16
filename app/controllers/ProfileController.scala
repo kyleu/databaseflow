@@ -13,13 +13,14 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
   }
 
   def save() = withSession("view") { implicit request =>
+    val user = request.identity.getOrElse(throw new IllegalStateException("Not logged in."))
     UserForms.profileForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.profile(request.identity, debug = false))),
       profileData => {
-        val newPrefs = request.identity.preferences.copy(
+        val newPrefs = user.preferences.copy(
           theme = profileData.theme
         )
-        val newUser = request.identity.copy(username = Some(profileData.username), preferences = newPrefs)
+        val newUser = user.copy(username = Some(profileData.username), preferences = newPrefs)
         UserService.save(newUser, update = true)
         Future.successful(Redirect(routes.HomeController.index()))
       }

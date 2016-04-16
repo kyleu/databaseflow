@@ -1,9 +1,11 @@
 package controllers.auth
 
+import java.util.UUID
+
 import com.mohiva.play.silhouette.api.{ LoginEvent, LoginInfo, SignUpEvent }
 import com.mohiva.play.silhouette.impl.providers.{ CommonSocialProfile, CredentialsProvider }
 import controllers.BaseController
-import models.user.{ RegistrationData, UserForms }
+import models.user.{ RegistrationData, User, UserForms, UserPreferences }
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.AnyContent
@@ -24,7 +26,7 @@ class RegistrationController @javax.inject.Inject() (override val ctx: Applicati
         val futureUserOpt = env.identityService.retrieve(LoginInfo(CredentialsProvider.ID, data.email))
         futureUserOpt.flatMap {
           case Some(user) => Future.successful {
-            Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data))).flashing("error" -> Messages("registration.email.taken"))
+            Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data), Some(Messages("registration.email.taken"))))
           }
           case None => saveProfile(data)
         }
@@ -32,22 +34,22 @@ class RegistrationController @javax.inject.Inject() (override val ctx: Applicati
     )
   }
 
-  private[this] def saveProfile(data: RegistrationData)(implicit request: SecuredRequest[AnyContent]) = {
-    if (request.identity.profiles.exists(_.providerID == "credentials")) {
+  private[this] def saveProfile(data: RegistrationData)(implicit request: UserAwareRequest[AnyContent]) = {
+    if (request.identity.isDefined) {
       throw new IllegalStateException("You're already registered.")
     }
 
     if (data.password != data.passwordConfirm) {
       val d = data.copy(password = "", passwordConfirm = "")
-      Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(d))).flashing {
-        "error" -> Messages("registration.passwords.do.not.match")
-      })
+      Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(d), Some(Messages("registration.passwords.do.not.match")))))
     } else {
       val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
       val authInfo = env.hasher.hash(data.password)
-      val user = request.identity.copy(
-        username = if (data.username.isEmpty) { request.identity.username } else { Some(data.username) },
-        profiles = request.identity.profiles :+ loginInfo
+      val user = User(
+        id = UUID.randomUUID,
+        username = Some(data.username),
+        profiles = Seq(loginInfo),
+        preferences = UserPreferences()
       )
       val profile = CommonSocialProfile(
         loginInfo = loginInfo,

@@ -1,14 +1,14 @@
-@(user: models.user.User, title: String, debug: Boolean)(content: Html)(
+@(user: Option[models.user.User], title: String, debug: Boolean)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.materialize(Some(user), title, debug = false) {
+)@layout.materialize(user, title, debug = false) {
   <header>
-    @views.html.components.userDropdown(isGuest = user.isGuest)
+    @views.html.components.userDropdown(isGuest = user.forall(_.isGuest))
 
-    <nav id="topnav" class="@user.preferences.theme lighten-2">
+    <nav id="topnav" class="@user.map(_.preferences.theme).getOrElse("blue-grey") lighten-2">
       <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
       <ul class="right hide-on-small-only">
         <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
-          @user.username.getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
+          @user.flatMap(_.username).getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
         </a></li>
       </ul>
     </nav>
@@ -22,7 +22,7 @@
     </div>
   </main>
 
-  <footer class="page-footer @user.preferences.theme lighten-2">
+  <footer class="page-footer @user.map(_.preferences.theme).getOrElse("blue-grey") lighten-2">
     <div class="footer-copyright">
       © 2016 Kyle Unverferth
       <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>

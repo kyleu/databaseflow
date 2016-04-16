@@ -2,9 +2,11 @@
 index.welcome = Welcome to Database Flow!
 
 # Registration
+registration.title = Register
 registration.call.to.action = Register for {0}
 registration.register = Sign Up
 
+registration.email.taken = That email address is already in use
 registration.form.username = Name
 registration.form.email = Email Address
 registration.form.password = Password
