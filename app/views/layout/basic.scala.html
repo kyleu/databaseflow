@@ -16,7 +16,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
 
-    <link id="favicon-link" rel="shortcut icon" type="image/png" href="@routes.Assets.versioned(s"images/ui/favicon/icon-${user.map(_.preferences.theme).getOrElse("black")}@2x.png")">
+    <link id="favicon-link" rel="shortcut icon" type="image/png" href="@routes.Assets.versioned(s"images/ui/favicon/icon-${user.map(_.preferences.theme).getOrElse("blue-grey")}@2x.png")">
 
     @for(script <- scripts) {<script src="@script"></script>}
     @for(stylesheet <- stylesheets) {<link rel="stylesheet" media="screen" href="@stylesheet" />}

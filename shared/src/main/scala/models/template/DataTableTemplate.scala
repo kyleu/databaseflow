@@ -30,6 +30,7 @@ object DataTableTemplate {
         case ShortType => span(x)
         case TimestampType => span(x)
         case BooleanType => span(x)
+        case BigDecimalType => span(x)
         case ByteArrayType => if (x.length > 200) {
           span(x.substring(0, 200) + "...")
         } else {
