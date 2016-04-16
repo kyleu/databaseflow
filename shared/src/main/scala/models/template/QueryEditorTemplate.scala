@@ -24,6 +24,7 @@ object QueryEditorTemplate {
     val modificationLinks = if (sq.owner.contains(userId)) {
       Seq(
         a(cls := "save-query-link right", href := "#")("Save"),
+        a(cls := "settings-query-link right", href := "#")("Settings"),
         a(cls := "save-as-query-link right", href := "#")("Save As New"),
         a(cls := "delete-query-link right", href := "#")("Delete")
       )

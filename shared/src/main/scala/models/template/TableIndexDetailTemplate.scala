@@ -12,10 +12,10 @@ object TableIndexDetailTemplate {
   private[this] def tableFor(indexes: Seq[Index]) = table(cls := "bordered highlight responsive-table")(
     thead(
       tr(
-        td("Name"),
-        td("Unique"),
-        td("Type"),
-        td("Columns")
+        th("Name"),
+        th("Unique"),
+        th("Type"),
+        th("Columns")
       )
     ),
     tbody(

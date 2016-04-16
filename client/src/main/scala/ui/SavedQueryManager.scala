@@ -50,6 +50,13 @@ object SavedQueryManager {
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
+    $(s".settings-query-link", queryPanel).click({ (e: JQueryEventObject) =>
+      QueryFormManager.show(savedQuery.copy(
+        sql = QueryManager.getSql(savedQuery.id)
+      ))
+      false
+    })
+
     $(s".save-as-query-link", queryPanel).click({ (e: JQueryEventObject) =>
       QueryFormManager.show(savedQuery.copy(
         id = UUID.randomUUID,
