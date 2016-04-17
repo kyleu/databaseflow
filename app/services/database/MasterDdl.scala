@@ -11,7 +11,9 @@ object MasterDdl extends Logging {
     CreatePasswordInfoTable,
 
     CreateConnectionsTable,
-    CreateSavedQueriesTable
+    CreateSavedQueriesTable,
+
+    CreateAuditRecordTable
   )
 
   def update(db: DatabaseConnection) = {
