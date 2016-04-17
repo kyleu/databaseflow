@@ -6,7 +6,7 @@ import models.query.RowDataOptions
 import models.schema.Table
 import models.template._
 import models.{ GetTableDetail, GetTableRowData }
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 
 object TableManager {
   private[this] var openTables = Map.empty[String, UUID]

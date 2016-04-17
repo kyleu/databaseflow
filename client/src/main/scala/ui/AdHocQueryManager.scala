@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.engine.EngineQueries
-import models.query.SavedQuery
+import models.query.{ RowDataOptions, SavedQuery }
 import models.template.{ Icons, QueryEditorTemplate }
 import org.scalajs.jquery.{ jQuery => $ }
 
@@ -24,7 +24,7 @@ object AdHocQueryManager {
       } else {
         val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException())
         val t = s.tables(Random.nextInt(s.tables.size)).name
-        EngineQueries.selectFrom(t, limit = Some(5))(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
+        EngineQueries.selectFrom(t, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
       }
     }.getOrElse("")
     addAdHocQuery(queryId, queryName, sql)

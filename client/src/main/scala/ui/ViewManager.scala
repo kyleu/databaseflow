@@ -42,7 +42,7 @@ object ViewManager {
       })
 
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
-        val sql = EngineQueries.selectFrom(name, limit = Some(5))(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
+        val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
       })
 

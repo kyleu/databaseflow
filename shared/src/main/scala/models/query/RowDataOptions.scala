@@ -9,6 +9,6 @@ case class RowDataOptions(
   filterCol: Option[String] = None,
   filterOp: Option[String] = None,
   filterVal: Option[String] = None,
-  limit: Int = 100,
-  offset: Int = 0
+  limit: Option[Int] = None,
+  offset: Option[Int] = None
 )

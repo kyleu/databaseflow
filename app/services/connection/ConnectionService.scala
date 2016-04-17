@@ -57,8 +57,8 @@ class ConnectionService(
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
     case csd: CreateSampleDatabase => timeReceive(csd) { handleCreateSampleDatabase(csd.queryId) }
 
-    case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name) }
-    case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name) }
+    case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options) }
+    case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options) }
 
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }

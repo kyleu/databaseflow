@@ -5,30 +5,30 @@ import java.util.UUID
 import models._
 import models.engine.EngineQueries
 import models.queries.DynamicQuery
-import models.query.QueryResult
+import models.query.{ QueryResult, RowDataOptions }
 import models.schema.{ Table, View }
 import services.schema.SchemaService
 import utils.{ DateUtils, Logging }
 
 trait DataHelper extends Logging { this: ConnectionService =>
-  protected[this] def handleGetTableRowData(queryId: UUID, name: String) = SchemaService.getTable(connectionId, name) match {
-    case Some(table) => handleShowTableDataResponse(queryId, table)
+  protected[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions) = SchemaService.getTable(connectionId, name) match {
+    case Some(table) => handleShowTableDataResponse(queryId, table, options)
     case None =>
       log.warn(s"Attempted to show data for invalid table [$name].")
       out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
   }
 
-  protected[this] def handleGetViewRowData(queryId: UUID, name: String) = SchemaService.getView(connectionId, name) match {
-    case Some(view) => handleShowViewDataResponse(queryId, view)
+  protected[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions) = SchemaService.getView(connectionId, name) match {
+    case Some(view) => handleShowViewDataResponse(queryId, view, options)
     case None =>
       log.warn(s"Attempted to show data for invalid view [$name].")
       out ! ServerError("Invalid Table", s"[$name] is not a valid view.")
   }
 
-  private[this] def handleShowTableDataResponse(queryId: UUID, table: Table) {
+  private[this] def handleShowTableDataResponse(queryId: UUID, table: Table, options: RowDataOptions) {
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
-    val sql = EngineQueries.selectFrom(table.name, limit = Some(1001))(db.engine)
+    val sql = EngineQueries.selectFrom(table.name, options)(db.engine)
     log.info(s"Showing data for [${table.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
       val result = db.executeUnknown(DynamicQuery(sql))
@@ -61,10 +61,10 @@ trait DataHelper extends Logging { this: ConnectionService =>
     }
   }
 
-  private[this] def handleShowViewDataResponse(queryId: UUID, view: View) {
+  private[this] def handleShowViewDataResponse(queryId: UUID, view: View, options: RowDataOptions) {
     val id = UUID.randomUUID
     val startMs = DateUtils.nowMillis
-    val sql = EngineQueries.selectFrom(view.name, limit = Some(1001))(db.engine)
+    val sql = EngineQueries.selectFrom(view.name, options)(db.engine)
     log.info(s"Showing data for [${view.name}] using sql [$sql].")
     sqlCatch(queryId, sql, startMs) { () =>
       val result = db.executeUnknown(DynamicQuery(sql))

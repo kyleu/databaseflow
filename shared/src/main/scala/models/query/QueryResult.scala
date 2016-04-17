@@ -24,4 +24,3 @@ case class QueryResult(
   sortedAscending: Option[Boolean] = None,
   occurred: Long = System.currentTimeMillis
 )
-
