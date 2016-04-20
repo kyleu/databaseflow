@@ -4,8 +4,7 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models.{ RequestMessage, ResponseMessage }
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
+import play.api.mvc.WebSocket
 import services.connection.{ ConnectionService, ConnectionSettingsService }
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
@@ -16,7 +15,7 @@ import scala.concurrent.Future
 class QueryController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
     val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
-    Future.successful(Ok(views.html.query.main(request.identity, ctx.config.debug, activeDb.map(_._1).getOrElse("..."), UUID.randomUUID)))
+    Future.successful(Ok(views.html.query.main(userFor(request), ctx.config.debug, activeDb.map(_._1).getOrElse("..."), UUID.randomUUID)))
   }
 
   val mff = new MessageFrameFormatter(ctx.config.debug)
@@ -24,12 +23,9 @@ class QueryController @javax.inject.Inject() (override val ctx: ApplicationConte
   import play.api.Play.current
 
   def connect(connectionId: UUID) = WebSocket.tryAcceptWithActor[RequestMessage, ResponseMessage] { request =>
-    implicit val req = Request(request, AnyContentAsEmpty)
-    UserAwareRequestHandler { securedRequest =>
-      Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
-    }.map {
-      case HandlerResult(r, Some(userOpt)) => Right(ConnectionService.props(None, ctx.supervisor, connectionId, userOpt, _: ActorRef, request.remoteAddress))
-      case HandlerResult(r, None) => Left(r)
-    }
+    val userOpt = None
+    Future.successful(
+      Right(ConnectionService.props(None, ctx.supervisor, connectionId, userOpt, _: ActorRef, request.remoteAddress))
+    )
   }
 }

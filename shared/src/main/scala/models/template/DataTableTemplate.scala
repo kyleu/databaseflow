@@ -52,7 +52,8 @@ object DataTableTemplate {
           data("rel-table") := relTable,
           data("rel-col") := col.relationColumn.getOrElse(""),
           data("rel-val") := v.getOrElse("")
-        )(i(cls := s"fa ${Icons.relation}"), span(contentEl._1))
+        )(i(cls := s"fa ${Icons.relation}")),
+        span(contentEl._1)
       )
       case _ => td(contentEl._1)
     }

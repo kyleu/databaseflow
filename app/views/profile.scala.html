@@ -7,7 +7,7 @@
       <div class="card-content">
         <div class="row">
           <div class="input-field col s12">
-            @defining(user.map(_.username).orElse(user.flatMap(_.profiles.headOption.map(_.providerKey))).getOrElse("Guest")) { username =>
+            @defining(user.map(_.username).getOrElse("Guest")) { username =>
               <input id="input-username" type="text" class="form-control validate" name="username" value="@username" />
               <label for="input-username">@Messages("profile.form.username")</label>
             }

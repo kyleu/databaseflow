@@ -9,13 +9,11 @@ import play.api.Environment
 import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
-import play.api.libs.concurrent.Akka
 import play.api.mvc.{ Action, RequestHeader, Results }
 import play.api.routing.Router
 import services.database.MasterDatabase
 import services.notification.NotificationService
 import services.supervisor.ActorSupervisor
-import services.user.AuthenticationEnvironment
 import utils.metrics.Instrumented
 
 import scala.concurrent.Future
@@ -35,7 +33,6 @@ object ApplicationContext {
 
 @javax.inject.Singleton
 class ApplicationContext @javax.inject.Inject() (
-    val authEnv: AuthenticationEnvironment,
     val messagesApi: MessagesApi,
     val config: Config,
     val lifecycle: ApplicationLifecycle,
