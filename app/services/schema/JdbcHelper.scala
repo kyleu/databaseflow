@@ -5,6 +5,7 @@ object JdbcHelper {
     case i: Int => i
     case s: Short => s.toInt
     case bd: java.math.BigDecimal => bd.intValue
+    case bi: java.math.BigInteger => bi.intValue
     case s: String => s.toInt
     case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as an int.")
   }
@@ -14,7 +15,8 @@ object JdbcHelper {
     case f: Float => f.toLong
     case i: Int => i.toLong
     case bd: java.math.BigDecimal => bd.longValue
-    case x => throw new IllegalArgumentException(x.getClass.getName)
+    case bi: java.math.BigInteger => bi.longValue
+    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as long.")
   }
 
   def boolVal(a: Any) = a match {

@@ -1,6 +1,6 @@
 package services.schema
 
-import java.sql.{ Connection, DatabaseMetaData }
+import java.sql.{ Connection, DatabaseMetaData, Timestamp }
 
 import models.database.{ Query, Row }
 import models.engine.rdbms.MySQL
@@ -29,13 +29,41 @@ object MetadataTables {
       case _ => None
     }
 
+    val rowStats = db.engine match {
+      case MySQL => db(conn, new Query[Option[(String, String, Long, Int, Long, Long)]] {
+        override def sql = {
+          s"""select table_name, engine, table_rows, avg_row_length, data_length, create_time from information_schema.tables where table_name = \"${table.name}\""""
+        }
+        override def reduce(rows: Iterator[Row]) = rows.map { row =>
+          val tableName = row.as[String]("table_name")
+          val engine = row.as[String]("engine")
+          val rowEstimate = JdbcHelper.longVal(row.as[Any]("table_rows"))
+          val averageRowLength = JdbcHelper.intVal(row.as[Any]("avg_row_length"))
+          val dataLength = JdbcHelper.longVal(row.as[Any]("data_length"))
+          val createTime = row.as[Timestamp]("create_time").getTime
+
+          (tableName, engine, rowEstimate, averageRowLength, dataLength, createTime)
+        }.toList.headOption
+      })
+      case _ => None
+    }
+
     table.copy(
       definition = definition,
+
+      storageEngine = rowStats.map(_._2),
+
+      rowCountEstimate = rowStats.map(_._3),
+      averageRowLength = rowStats.map(_._4),
+      dataLength = rowStats.map(_._5),
+
       columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name),
       rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
-      indexes = MetadataIndexes.getIndexes(metadata, table)
+      indexes = MetadataIndexes.getIndexes(metadata, table),
+
+      createTime = rowStats.map(_._6)
     )
   }
 

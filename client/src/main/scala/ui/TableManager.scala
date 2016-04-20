@@ -36,7 +36,7 @@ object TableManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        viewData(queryId, name, RowDataOptions.empty)
+        viewData(queryId, name, RowDataOptions(limit = Some(101)))
       })
 
       utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
