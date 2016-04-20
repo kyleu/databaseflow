@@ -1,44 +1,12 @@
 package models.template
 
-import java.util.UUID
-
 import models.PlanResultResponse
-import models.plan.{ PlanNode, PlanResult }
+import models.plan.PlanNode
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
 object QueryPlanTemplate {
-  def testPlan(action: String, queryId: UUID) = {
-    val node = PlanNode(title = "Parent", nodeType = "?", children = Seq(
-      PlanNode(title = "Child A", nodeType = "?", children = Seq(
-        PlanNode(title = "Grand Child A-1", nodeType = "?")
-      )),
-      PlanNode(title = "Child B", nodeType = "?", children = Seq(
-        PlanNode(title = "Grand Child B-1", nodeType = "?"),
-        PlanNode(title = "Grand Child B-2", nodeType = "?", children = Seq(
-          PlanNode(title = "Great Grand Child B-2-1", nodeType = "?"),
-          PlanNode(title = "Great Grand Child B-2-2", nodeType = "?"),
-          PlanNode(title = "Great Grand Child B-2-3", nodeType = "?")
-        )),
-        PlanNode(title = "Grand Child B-3", nodeType = "?")
-      ))
-    ))
-
-    PlanResultResponse(
-      id = UUID.randomUUID,
-      PlanResult(
-        queryId = queryId,
-        name = "Test Query Plan",
-        action = action,
-        sql = "select * from something",
-        raw = "{ 'plan': 'test' }",
-        node = node
-      ),
-      durationMs = 1000
-    )
-  }
-
   def forPlan(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = cardFor(pr, dateIsoString, dateFullString)
 
   private[this] def forNode(node: PlanNode, className: String): Modifier = if (node.children.isEmpty) {

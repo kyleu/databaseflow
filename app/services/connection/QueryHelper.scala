@@ -5,8 +5,9 @@ import java.util.UUID
 import models._
 import models.queries.DynamicQuery
 import models.query.{ QueryResult, SavedQuery, StatementResult }
+import services.database.DatabaseWorkerPool
 import services.query.SavedQueryService
-import utils.{ DateUtils, Logging }
+import utils.{ DateUtils, ExceptionUtils, Logging }
 
 import scala.util.control.NonFatal
 
@@ -32,33 +33,36 @@ trait QueryHelper extends Logging { this: ConnectionService =>
   }
 
   protected[this] def handleRunQuery(queryId: UUID, sql: String) = {
-    log.info(s"Performing query action [run] for sql [$sql].")
-    val id = UUID.randomUUID
-    val startMs = DateUtils.nowMillis
-    sqlCatch(queryId, sql, startMs) { () =>
-      val result = db.executeUnknown(DynamicQuery(sql))
+    def work() = {
+      log.info(s"Performing query action [run] for sql [$sql].")
+      val id = UUID.randomUUID
+      val startMs = DateUtils.nowMillis
+      sqlCatch(queryId, sql, startMs) { () =>
+        val result = db.executeUnknown(DynamicQuery(sql))
 
-      val durationMs = (DateUtils.nowMillis - startMs).toInt
-      val msg = result match {
-        case Left(rs) => QueryResultResponse(id, QueryResult(
-          queryId = queryId,
-          title = "Query Results",
-          sql = sql,
-          columns = rs.cols,
-          data = rs.data,
-          sortable = false,
-          occurred = startMs
-        ), durationMs)
-        case Right(i) => StatementResultResponse(id, StatementResult(
-          queryId = queryId,
-          title = "Statement Results",
-          sql = sql,
-          rowsAffected = i,
-          occurred = startMs
-        ), durationMs)
+        val durationMs = (DateUtils.nowMillis - startMs).toInt
+        result match {
+          case Left(rs) => QueryResultResponse(id, QueryResult(
+            queryId = queryId,
+            title = "Query Results",
+            sql = sql,
+            columns = rs.cols,
+            data = rs.data,
+            sortable = false,
+            occurred = startMs
+          ), durationMs)
+          case Right(i) => StatementResultResponse(id, StatementResult(
+            queryId = queryId,
+            title = "Statement Results",
+            sql = sql,
+            rowsAffected = i,
+            occurred = startMs
+          ), durationMs)
+        }
       }
-
-      out ! msg
     }
+    def onSuccess(rm: ResponseMessage) = out ! rm
+    def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanError", t)
+    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 }

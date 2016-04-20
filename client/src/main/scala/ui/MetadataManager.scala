@@ -41,8 +41,13 @@ object MetadataManager {
 
   def updateSchema(sch: Schema) = {
     MetadataUpdates.updateTables(sch.tables)
+    sch.tables.foreach(TableManager.addTable)
+
     MetadataUpdates.updateViews(sch.views)
+    sch.views.foreach(ViewManager.addView)
+
     MetadataUpdates.updateProcedures(sch.procedures)
+    sch.procedures.foreach(ProcedureManager.addProcedure)
 
     schema = Some(sch)
     engine = Some(DatabaseEngine.get(sch.engine))

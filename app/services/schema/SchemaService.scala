@@ -3,7 +3,7 @@ package services.schema
 import java.util.UUID
 
 import models.schema.Schema
-import services.database.DatabaseConnection
+import services.database.{ DatabaseConnection, DatabaseWorkerPool }
 import utils.Logging
 
 import scala.util.{ Failure, Success, Try }
@@ -14,30 +14,36 @@ object SchemaService extends Logging {
   def getSchema(db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
     schemaMap.get(db.connectionId) match {
       case Some(schema) if forceRefresh =>
-        calculateSchema(db)
-        refreshSchema(db) match {
-          case Success(s) => s
-          case Failure(x) => throw x
-        }
+        val s = calculateSchema(db)
+        refreshSchema(db)
+        s
       case Some(schema) => schema
       case None => calculateSchema(db)
     }
   }
 
-  def refreshSchema(db: DatabaseConnection) = Try {
+  def refreshSchema(db: DatabaseConnection, onSuccess: (Schema) => Unit = (s) => Unit, onFailure: (Throwable) => Unit = (x) => Unit) = Try {
     schemaMap.get(db.connectionId) match {
-      case Some(schema) => db.withConnection { conn =>
-        log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}].")
-        val metadata = conn.getMetaData
-        val updated = schema.copy(
-          tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
-          views = MetadataViews.withViewDetails(db, conn, metadata, schema.views),
-          procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures),
-          detailsLoadedAt = Some(System.currentTimeMillis)
-        )
-        schemaMap = schemaMap + (db.connectionId -> updated)
-        updated
-      }
+      case Some(schema) =>
+        val startMs = System.currentTimeMillis
+        def work() = db.withConnection { conn =>
+          log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}].")
+          val metadata = conn.getMetaData
+          schema.copy(
+            tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
+            views = MetadataViews.withViewDetails(db, conn, metadata, schema.views),
+            procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures),
+            detailsLoadedAt = Some(System.currentTimeMillis)
+          )
+        }
+
+        def onSuccessMapped(schema: Schema) = {
+          schemaMap = schemaMap + (db.connectionId -> schema)
+          log.info(s"Schema update complete for [${schema.schemaName.getOrElse(schema.connectionId)}] in [${System.currentTimeMillis - startMs}ms].")
+          onSuccess(schema)
+        }
+
+        DatabaseWorkerPool.submitWork(work, onSuccessMapped, onFailure)
       case None => throw new IllegalStateException(s"Attempted to refresh schema [$db.connectionId], which is not loaded.")
     }
   }

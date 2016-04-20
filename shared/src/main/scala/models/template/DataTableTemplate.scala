@@ -7,7 +7,6 @@ import scalatags.Text.all._
 
 object DataTableTemplate {
   private[this] def tableHeader(res: QueryResult) = {
-
     def str(name: String) = if (res.sortable) {
       if (res.sortedColumn.contains(name)) {
         val icon = if (res.sortedAscending.contains(false)) { Icons.sortedDesc } else { Icons.sortedAsc }
@@ -25,6 +24,7 @@ object DataTableTemplate {
     val contentEl = v match {
       case Some(x) => (col.t match {
         case StringType if x.isEmpty => em("empty string")
+        case StringType if x.length > 200 => span(title := x.trim)(x.trim.substring(0, 200) + "...")
         case StringType => span(x.trim)
         case IntegerType => span(x)
         case ShortType => span(x)
@@ -32,7 +32,7 @@ object DataTableTemplate {
         case BooleanType => span(x)
         case BigDecimalType => span(x)
         case ByteArrayType => if (x.length > 200) {
-          span(x.substring(0, 200) + "...")
+          span(title := x.trim)(x.substring(0, 200) + "...")
         } else {
           span(x)
         }

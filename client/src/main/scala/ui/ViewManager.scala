@@ -27,8 +27,8 @@ object ViewManager {
       WorkspaceManager.append(ViewDetailTemplate.forView(engine, queryId, name).toString)
 
       MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
-        case Some(view) => setViewDetails(queryId, view)
-        case None => utils.NetworkMessage.sendMessage(GetViewDetail(name))
+        case Some(view) if view.columns.nonEmpty => setViewDetails(queryId, view)
+        case _ => utils.NetworkMessage.sendMessage(GetViewDetail(name))
       }
 
       TabManager.addTab(queryId, "view-" + name, name, Icons.view)
@@ -42,8 +42,9 @@ object ViewManager {
       })
 
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
+        // TODO build card to hold result
         val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
-        utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
+        utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action)))
       })
 
       wire($(".explain-view-link", queryPanel), "explain")
@@ -58,6 +59,7 @@ object ViewManager {
   }
 
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
+    // TODO build card to hold result
     utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, options = options))
   }
 

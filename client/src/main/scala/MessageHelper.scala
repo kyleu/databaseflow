@@ -11,10 +11,13 @@ trait MessageHelper { this: DatabaseFlow =>
     case qer: QueryErrorResponse => handleQueryErrorResponse(qer)
 
     case bqs: BatchQueryStatus => handleBatchQueryStatus(bqs)
+
     case sqrr: SavedQueryResultResponse => handleSavedQueryResponse(sqrr)
-    case trr: TableResultResponse => handleTableResultResponse(trr)
-    case vrr: ViewResultResponse => handleViewResultResponse(vrr)
-    case prr: ProcedureResultResponse => handleProcedureResultResponse(prr)
+
+    case srr: SchemaResultResponse => handleSchemaResultResponse(srr)
+    case trr: TableResultResponse => handleTableResultResponse(trr.tables)
+    case vrr: ViewResultResponse => handleViewResultResponse(vrr.views)
+    case prr: ProcedureResultResponse => handleProcedureResultResponse(prr.procedures)
 
     case prr: PlanResultResponse => handlePlanResultResponse(prr)
     case per: PlanErrorResponse => handlePlanErrorResponse(per)

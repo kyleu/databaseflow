@@ -4,14 +4,14 @@ import java.sql.SQLSyntaxErrorException
 import java.util.UUID
 
 import models.query.QueryError
-import models.{ QueryErrorResponse, ServerError }
+import models.{ QueryErrorResponse, ResponseMessage, ServerError }
 import org.postgresql.util.PSQLException
 import utils.DateUtils
 
 import scala.util.control.NonFatal
 
 trait SqlHelper { this: ConnectionService =>
-  def sqlCatch(queryId: UUID, sql: String, startMs: Long)(f: () => Unit) = try {
+  def sqlCatch(queryId: UUID, sql: String, startMs: Long)(f: () => ResponseMessage) = try {
     f()
   } catch {
     case t: Throwable =>
@@ -19,12 +19,12 @@ trait SqlHelper { this: ConnectionService =>
       t match {
         case sqlEx: PSQLException =>
           val e = sqlEx.getServerErrorMessage
-          out ! QueryErrorResponse(id, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
+          QueryErrorResponse(id, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
         case sqlEx: SQLSyntaxErrorException =>
-          out ! QueryErrorResponse(id, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(id, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case NonFatal(x) =>
           log.warn(s"Unhandled error running sql [$sql].", x)
-          out ! ServerError(x.getClass.getSimpleName, x.getMessage)
+          ServerError(x.getClass.getSimpleName, x.getMessage)
         case _ => throw t
       }
   }

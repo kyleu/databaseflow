@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.GetProcedureDetail
 import models.schema.Procedure
 import models.template.{ Icons, ProcedureDetailTemplate }
 import org.scalajs.jquery.{ jQuery => $ }
@@ -22,6 +23,11 @@ object ProcedureManager {
     case None =>
       val queryId = UUID.randomUUID
       WorkspaceManager.append(ProcedureDetailTemplate.forProcedure(queryId, name).toString)
+
+      MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
+        case Some(procedure) if procedure.params.nonEmpty => setProcedureDetails(queryId, procedure)
+        case _ => utils.NetworkMessage.sendMessage(GetProcedureDetail(name))
+      }
 
       TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure)
 

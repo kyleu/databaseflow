@@ -19,6 +19,7 @@ object QueryManager {
     val sqlEditor = EditorManager.initSqlEditor(queryId, onChange)
 
     def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
+      // TODO build card to hold result
       val sql = sqlEditor.getValue().toString
       utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action)))
     })

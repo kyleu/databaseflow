@@ -25,8 +25,8 @@ object TableManager {
       WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
       MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
-        case Some(table) => setTableDetails(queryId, table)
-        case None => utils.NetworkMessage.sendMessage(GetTableDetail(name))
+        case Some(table) if table.columns.nonEmpty => setTableDetails(queryId, table)
+        case _ => utils.NetworkMessage.sendMessage(GetTableDetail(name))
       }
 
       TabManager.addTab(queryId, "table-" + name, name, Icons.table)
@@ -48,6 +48,7 @@ object TableManager {
   }
 
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
+    // TODO build card to hold result
     utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options))
   }
 

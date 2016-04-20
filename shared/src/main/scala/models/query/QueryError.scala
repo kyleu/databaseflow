@@ -11,4 +11,3 @@ case class QueryError(
   position: Option[Int] = None,
   occurred: Long = System.currentTimeMillis
 )
-

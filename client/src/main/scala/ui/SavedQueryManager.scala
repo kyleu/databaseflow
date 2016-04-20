@@ -43,9 +43,8 @@ object SavedQueryManager {
   }
 
   private[this] def addSavedQuery(savedQuery: SavedQuery) = {
-    val userId = UserManager.userId.getOrElse(throw new IllegalStateException("Not signed in."))
     val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, userId).toString)
+    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, UserManager.userId).toString)
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")

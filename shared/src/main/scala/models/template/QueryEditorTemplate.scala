@@ -20,18 +20,21 @@ object QueryEditorTemplate {
     queryPanel(queryId, queryName, None, sql, Icons.adHocQuery, links)
   }
 
-  def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: UUID) = {
-    val modificationLinks = if (sq.owner.contains(userId)) {
-      Seq(
-        a(cls := "save-query-link right", href := "#")("Save"),
-        a(cls := "settings-query-link right", href := "#")("Settings"),
-        a(cls := "save-as-query-link right", href := "#")("Save As New"),
-        a(cls := "delete-query-link right", href := "#")("Delete")
-      )
-    } else {
-      Seq(
-        a(cls := "save-as-query-link right", href := "#")("Save As New")
-      )
+  def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: Option[UUID]) = {
+    val modificationLinks = userId match {
+      case Some(uid) => if (sq.owner.contains(uid)) {
+        Seq(
+          a(cls := "save-query-link right", href := "#")("Save"),
+          a(cls := "settings-query-link right", href := "#")("Settings"),
+          a(cls := "save-as-query-link right", href := "#")("Save As New"),
+          a(cls := "delete-query-link right", href := "#")("Delete")
+        )
+      } else {
+        Seq(
+          a(cls := "save-as-query-link right", href := "#")("Save As New")
+        )
+      }
+      case None => Seq.empty
     }
     val links = linksFor(engine) ++ modificationLinks
     queryPanel(sq.id, sq.name, sq.description, sq.sql, Icons.savedQuery, links)

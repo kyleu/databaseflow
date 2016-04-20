@@ -4,15 +4,13 @@ import java.util.UUID
 
 import akka.actor.{ ActorRef, Props }
 import models._
-import models.queries.query.SavedQueryQueries
+import models.query.SavedQuery
 import models.schema.Schema
 import models.user.User
-import services.database.{ MasterDatabase, SampleDatabaseService }
-import services.schema.SchemaService
+import services.data.SampleDatabaseService
+import services.database.DatabaseWorkerPool
 import utils.metrics.InstrumentedActor
-import utils.{ Config, Logging }
-
-import scala.util.{ Failure, Success }
+import utils.{ Config, ExceptionUtils, Logging }
 
 object ConnectionService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String) = {
@@ -27,21 +25,15 @@ class ConnectionService(
     val user: Option[User],
     val out: ActorRef,
     val sourceAddress: String
-) extends InstrumentedActor with StartHelper with DataHelper with TraceHelper with DetailHelper with QueryHelper with PlanHelper with SqlHelper with Logging {
+) extends InstrumentedActor with ConnectionServiceHelper with Logging {
 
   protected[this] var currentUsername = user.flatMap(_.username)
   protected[this] var userPreferences = user.map(_.preferences)
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
-  protected[this] var schema: Option[Schema] = SchemaService.getSchema(db) match {
-    case Success(s) => Some(s)
-    case Failure(x) =>
-      log.error("Unable to load schema.", x)
-      out ! ServerError("SchemaLoadError", s"${x.getClass.getSimpleName} - ${x.getMessage}")
-      None
-  }
-  protected[this] val savedQueries = MasterDatabase.conn.query(SavedQueryQueries.getForUser(user.map(_.id), connectionId))
+  protected[this] var schema: Option[Schema] = None
+  protected[this] var savedQueries: Option[Seq[SavedQuery]] = None
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
@@ -84,7 +76,9 @@ class ConnectionService(
   }
 
   protected[this] def handleCreateSampleDatabase(queryId: UUID) = {
-    SampleDatabaseService(db, queryId, out)
+    def work() = SampleDatabaseService(db, queryId, out)
+    def onError(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "CreateSampleDatabase", t)
+    DatabaseWorkerPool.submitWork(work, (x: Unit) => {}, onError)
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

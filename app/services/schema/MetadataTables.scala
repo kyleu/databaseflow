@@ -23,7 +23,7 @@ object MetadataTables {
   private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
-        override def sql = "show create table " + table.name
+        override def sql = "show create table " + db.engine.leftQuoteIdentifier + table.name + db.engine.rightQuoteIdentifier
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.head
       }))
       case _ => None
