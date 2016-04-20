@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], conn: models.engine.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
+@(user: Option[models.user.User], conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
   @components.formErrors(errors)
@@ -63,7 +63,7 @@
       <div class="card-action">
         <button class="btn waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
         <a class="btn-flat waves-effect waves-light" href="@routes.HomeController.index()">Cancel</a>
-        @if((!isNew) && conn.id != services.database.ConnectionSettingsService.masterId) {
+        @if((!isNew) && conn.id != services.connection.ConnectionSettingsService.masterId) {
           <button class="right btn-flat waves-effect waves-light" onclick="onDelete();return false;">Delete</button>
         }
       </div>

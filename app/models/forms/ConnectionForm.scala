@@ -1,6 +1,6 @@
 package models.forms
 
-import models.engine.{ ConnectionSettings, DatabaseEngine }
+import models.engine.DatabaseEngine
 import play.api.data.Form
 import play.api.data.Forms._
 

@@ -1,10 +1,11 @@
-package services.database
+package services.connection
 
 import java.util.UUID
 
-import models.engine.ConnectionSettings
+import models.connection.ConnectionSettings
 import models.engine.rdbms._
 import models.queries.connection.ConnectionSettingsQueries
+import services.database.MasterDatabase
 
 object ConnectionSettingsService {
   val masterId = UUID.fromString("00000000-0000-0000-0000-000000000000")

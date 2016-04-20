@@ -6,8 +6,7 @@ import akka.actor.ActorRef
 import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
-import services.connection.ConnectionService
-import services.database.ConnectionSettingsService
+import services.connection.{ ConnectionService, ConnectionSettingsService }
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
 

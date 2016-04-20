@@ -1,7 +1,8 @@
-package models.engine
+package models.connection
 
 import java.util.UUID
 
+import models.engine.DatabaseEngine
 import models.engine.rdbms.PostgreSQL
 
 object ConnectionSettings {

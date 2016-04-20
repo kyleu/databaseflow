@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], connections: Seq[models.engine.ConnectionSettings])
+@(user: Option[models.user.User], connections: Seq[models.connection.ConnectionSettings])
 <ul class="collapsible popout connection-list" data-collapsible="expandable">
 @connections.map { c =>
   <li>
@@ -12,7 +12,7 @@
         <div>@c.description</div>
         <em style="display: block;">@c.url</em>
         <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn" style="margin: 10px 0;">Query</a>
-        @if(c.id != services.database.ConnectionSettingsService.masterId) {
+        @if(c.id != services.connection.ConnectionSettingsService.masterId) {
           @if(c.owner.isEmpty || user.forall(u => c.owner.contains(u.id))) {
             <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
           }
