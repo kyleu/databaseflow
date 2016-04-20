@@ -1,13 +1,14 @@
-package services.database
+package services.data
 
 import java.util.UUID
 
 import akka.actor.ActorRef
-import models.{ BatchQueryStatus, TableResultResponse }
 import models.database.Statement
 import models.engine.DatabaseEngine
 import models.engine.rdbms._
 import models.query.SqlParser
+import models.{ BatchQueryStatus, TableResultResponse }
+import services.database.DatabaseConnection
 import services.schema.SchemaService
 import utils.{ DateUtils, Logging }
 
@@ -38,7 +39,7 @@ object SampleDatabaseService extends Logging {
     }
 
     SchemaService.getSchema(connection, forceRefresh = true) match {
-      case Success(s) => statusActor ! TableResultResponse(s.tables, 0)
+      case Success(s) => statusActor ! TableResultResponse(s.tables)
       case Failure(x) => throw x
     }
 

@@ -1,10 +1,12 @@
-package services.database
+package services.data
 
 import java.util.UUID
 
-import models.engine.ConnectionSettings
+import models.connection.ConnectionSettings
 import models.engine.rdbms._
 import models.query.SavedQuery
+import services.connection.ConnectionSettingsService
+import services.database.DatabaseConnection
 import services.query.SavedQueryService
 
 object SeedData {

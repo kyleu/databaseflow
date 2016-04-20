@@ -1,6 +1,7 @@
 package services.sandbox
 
-import services.database.{ SeedData, MasterDatabase, MasterDdl }
+import services.data.{ MasterDdl, SeedData }
+import services.database.MasterDatabase
 import utils.ApplicationContext
 
 import scala.concurrent.Future

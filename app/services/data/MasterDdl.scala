@@ -1,6 +1,7 @@
-package services.database
+package services.data
 
 import models.ddl._
+import services.database.DatabaseConnection
 import utils.Logging
 
 object MasterDdl extends Logging {
