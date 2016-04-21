@@ -2,6 +2,7 @@ package models.queries.auth
 
 import java.util.UUID
 
+import com.mohiva.play.silhouette.api.LoginInfo
 import models.database.{ FlatSingleRowQuery, Row, SingleRowQuery, Statement }
 import models.queries.BaseQueries
 import models.user.{ Role, User, UserPreferences }
@@ -28,8 +29,7 @@ object UserQueries extends BaseQueries[User] {
   case class UpdateUser(u: User) extends Statement {
     override val sql = updateSql(Seq("username", "prefs", "profiles", "roles"))
     override val values = {
-      // TODO val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
-      val profiles = u.profiles.mkString(",")
+      val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
       val roles = u.roles.map(_.toString).mkString(",")
       val prefs = write(u.preferences)
       Seq(u.username, prefs, profiles, roles, u.id)
@@ -52,6 +52,12 @@ object UserQueries extends BaseQueries[User] {
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
+  case class FindUserByProfile(loginInfo: LoginInfo) extends FlatSingleRowQuery[User] {
+    override val sql = getSql(Some("profiles like ?"))
+    override val values = Seq(s"%${loginInfo.providerID}:${loginInfo.providerKey}%")
+    override def flatMap(row: Row) = Some(fromRow(row))
+  }
+
   case object CountAdmins extends SingleRowQuery[Int]() {
     override def sql = "select count(*) as c from users where 'admin' = any(roles)"
     override def map(row: Row) = row.as[Long]("c").toInt
@@ -65,8 +71,7 @@ object UserQueries extends BaseQueries[User] {
         val delimiter = info.indexOf(':')
         val provider = info.substring(0, delimiter)
         val key = info.substring(delimiter + 1)
-        // TODO Some(LoginInfo(provider, key))
-        Some(info)
+        Some(LoginInfo(provider, key))
       } else {
         None
       }
@@ -81,8 +86,7 @@ object UserQueries extends BaseQueries[User] {
 
   override protected def toDataSeq(u: User) = {
     val prefs = write(u.preferences)
-    // TODO val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
-    val profiles = u.profiles.mkString(",")
+    val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
     val roles = u.roles.map(_.toString).mkString(",")
     Seq(u.id, u.username, prefs, profiles, roles, u.created)
   }

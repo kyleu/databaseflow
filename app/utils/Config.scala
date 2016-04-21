@@ -4,7 +4,7 @@ import java.net.InetAddress
 
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSettings
 import com.typesafe.config.ConfigFactory
-import play.api.{ Environment, Mode, Play }
+import play.api.{ Environment, Mode }
 
 object Config {
   private[this] val cnf = ConfigFactory.load()
