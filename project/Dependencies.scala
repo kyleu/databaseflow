@@ -53,7 +53,7 @@ object Dependencies {
   }
 
   object Authentication {
-    val silhouette = "com.mohiva" %% "play-silhouette" % "3.0.4"
+    val silhouette = "com.mohiva" %% "play-silhouette" % "4.0.0-BETA4"
   }
 
   object WebJars {

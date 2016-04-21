@@ -42,7 +42,7 @@ class MessageFrameFormatter(debug: Boolean) extends Logging {
     }
   }
 
-  implicit val transformer = MessageFlowTransformer.stringMessageFlowTransformer.map { s =>
+  val transformer = MessageFlowTransformer.stringMessageFlowTransformer.map { s =>
     requestFromJsValue(jsValueFromString(s))
   }.contramap { m: ResponseMessage =>
     jsValueToString(responseToJsValue(m))
