@@ -11,7 +11,7 @@ object QueryResultsTemplate {
   def loadingPanel(queryId: UUID, title: String, resultId: UUID) = div(id := resultId.toString)(
     StaticPanelTemplate.cardRow(
       title = title,
-      content = div(id := "content")("Loading..."),
+      content = div(cls := "content")("Loading..."),
       icon = Some(Icons.queryResults),
       actions = Some(Seq(
         a(cls := "right results-sql-link", href := "#")("Show SQL"),

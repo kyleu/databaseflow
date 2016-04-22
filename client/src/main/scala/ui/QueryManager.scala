@@ -22,7 +22,11 @@ object QueryManager {
       val resultId = UUID.randomUUID
 
       val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
+
       val queryWorkspace = $(s"#workspace-$queryId", workspace)
+      if (queryWorkspace.length != 1) {
+        throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
+      }
       queryWorkspace.prepend(html)
 
       val sql = sqlEditor.getValue().toString
@@ -56,8 +60,6 @@ object QueryManager {
     if (activeQueries.size == 1) {
       AdHocQueryManager.addNewQuery()
     }
-
-    //utils.Logging.info(s"Closing [$queryId].")
 
     val originalIndex = activeQueries.indexOf(queryId)
     activeQueries = activeQueries.filterNot(_ == queryId)

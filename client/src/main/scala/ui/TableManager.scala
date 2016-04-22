@@ -11,6 +11,8 @@ import org.scalajs.jquery.{ jQuery => $ }
 object TableManager {
   private[this] var openTables = Map.empty[String, UUID]
 
+  private[this] lazy val workspace = $("#workspace")
+
   def addTable(table: Table) = {
     openTables.get(table.name).foreach { uuid =>
       setTableDetails(uuid, table)
@@ -51,8 +53,12 @@ object TableManager {
     val resultId = UUID.randomUUID
 
     val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
-    val queryWorkspace = $(s"#workspace-$queryId")
-    queryWorkspace.prepend(html)
+    val queryWorkspace = $(s"#workspace-$queryId", workspace)
+    if (queryWorkspace.length != 1) {
+      throw new IllegalStateException(s"No workspace available for view data result [$resultId] for query [$queryId].")
+    }
+    val panelContent = $(".content", queryWorkspace)
+    queryWorkspace.prepend(panelContent.html(html))
 
     utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }

@@ -36,7 +36,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
     def work() = {
       log.info(s"Performing query action [run] for sql [$sql].")
       val startMs = DateUtils.nowMillis
-      sqlCatch(queryId, sql, startMs) { () =>
+      sqlCatch(queryId, sql, startMs, resultId) { () =>
         val result = db.executeUnknown(DynamicQuery(sql))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt

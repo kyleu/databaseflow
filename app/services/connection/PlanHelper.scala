@@ -11,7 +11,7 @@ import utils.{ DateUtils, ExceptionUtils, Logging }
 trait PlanHelper extends Logging { this: ConnectionService =>
   def getResult(queryId: UUID, sql: String, explainSql: String, resultId: UUID) = {
     val startMs = DateUtils.nowMillis
-    sqlCatch(queryId, sql, startMs) { () =>
+    sqlCatch(queryId, sql, startMs, resultId) { () =>
       implicit val engine = db.engine
       val result = db.executeUnknown(DynamicQuery(explainSql))
 

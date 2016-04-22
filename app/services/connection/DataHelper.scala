@@ -35,7 +35,7 @@ trait DataHelper extends Logging { this: ConnectionService =>
       val startMs = DateUtils.nowMillis
       val sql = EngineQueries.selectFrom(table.name, options)(db.engine)
       log.info(s"Showing data for [${table.name}] using sql [$sql].")
-      sqlCatch(queryId, sql, startMs) { () =>
+      sqlCatch(queryId, sql, startMs, resultId) { () =>
         val result = db.executeUnknown(DynamicQuery(sql))
         val (columns, data) = result match {
           case Left(rs) => rs.cols -> rs.data
@@ -76,7 +76,7 @@ trait DataHelper extends Logging { this: ConnectionService =>
       val startMs = DateUtils.nowMillis
       val sql = EngineQueries.selectFrom(view.name, options)(db.engine)
       log.info(s"Showing data for [${view.name}] using sql [$sql].")
-      sqlCatch(queryId, sql, startMs) { () =>
+      sqlCatch(queryId, sql, startMs, resultId) { () =>
         val result = db.executeUnknown(DynamicQuery(sql))
 
         val (columns, data) = result match {

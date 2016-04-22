@@ -42,7 +42,8 @@ trait QueryResultsHelper { this: DatabaseFlow =>
       utils.Logging.warn(s"No panel available for result [${qr.id}].")
     }
 
-    panel.prepend(html.toString)
+    val contentElement = $(".content", panel)
+    contentElement.html(html.render)
 
     val resultEl = $(".query-result-table", panel)
     val sqlEl = $(".query-result-sql", panel)
@@ -85,7 +86,7 @@ trait QueryResultsHelper { this: DatabaseFlow =>
       utils.Logging.warn(s"No panel available for result [${qer.id}].")
     }
 
-    panel.prepend(html.toString)
+    $(".content", panel).html(html.toString)
 
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
     utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
