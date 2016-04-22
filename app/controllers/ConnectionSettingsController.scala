@@ -14,7 +14,7 @@ import scala.concurrent.Future
 class ConnectionSettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
     val conn = ConnectionSettings.empty
-    Future.successful(Ok(views.html.connection.form(userFor(request), conn, "New Connection", isNew = true)))
+    Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection", isNew = true)))
   }
 
   def editForm(id: UUID) = withSession("edit-form-" + id) { implicit request =>
@@ -22,7 +22,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       throw new IllegalArgumentException(s"Invalid connection [$id].")
     }
     val isMaster = id == ConnectionSettingsService.masterId
-    Future.successful(Ok(views.html.connection.form(userFor(request), conn, conn.name, isNew = false)))
+    Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
   }
 
   def save(connectionId: UUID) = withSession("save") { implicit request =>
@@ -31,12 +31,12 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
         val title = ConnectionForm.form.value.map(_.name).getOrElse("New Connection")
-        BadRequest(views.html.connection.form(userFor(request), conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
+        BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
       },
       cf => {
         val almostUpdated = conn.copy(
           name = cf.name,
-          owner = conn.owner.orElse(userFor(request).map(_.id)),
+          owner = conn.owner.orElse(request.identity.map(_.id)),
           public = cf.public,
           engine = DatabaseEngine.get(cf.engine),
           url = cf.url,

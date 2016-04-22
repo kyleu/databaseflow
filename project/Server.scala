@@ -29,10 +29,12 @@ object Server {
     Seq(
       Cache.ehCache, Mail.mailer,
       Akka.actor, Akka.logging, Akka.testkit,
-      Play.playFilters, Play.playWs, Play.playTest, Authentication.silhouette, Authentication.hasher,
+      Play.playFilters, Play.playWs, Play.playTest,
+      Authentication.silhouette, Authentication.hasher, Authentication.persistence,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome,
       Ui.swing,
+      Utils.scalaGuice,
       Testing.scalaTest
     )
   }

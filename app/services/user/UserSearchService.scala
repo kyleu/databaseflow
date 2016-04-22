@@ -12,7 +12,8 @@ import utils.cache.UserCache
 
 import scala.concurrent.Future
 
-object UserSearchService extends IdentityService[User] with Logging {
+@javax.inject.Singleton
+class UserSearchService @javax.inject.Inject() () extends IdentityService[User] with Logging {
   def retrieve(id: UUID): Option[User] = UserCache.getUser(id).orElse {
     MasterDatabase.conn.query(UserQueries.getById(Seq(id))).map(UserCache.cacheUser)
   }
@@ -21,19 +22,6 @@ object UserSearchService extends IdentityService[User] with Logging {
 
   override def retrieve(loginInfo: LoginInfo) = UserCache.getUserByLoginInfo(loginInfo) match {
     case Some(u) => Future.successful(Some(u))
-    case None => if (loginInfo.providerID == "anonymous") {
-      MasterDatabase.conn.query(UserQueries.getById(Seq(UUID.fromString(loginInfo.providerKey)))) match {
-        case Some(dbUser) => if (dbUser.profiles.nonEmpty) {
-          log.warn(s"Attempt to authenticate as anonymous for user with profiles [${dbUser.profiles}].")
-          Future.successful(None)
-        } else {
-          UserCache.cacheUser(dbUser)
-          Future.successful(Some(dbUser))
-        }
-        case None => Future.successful(None)
-      }
-    } else {
-      Future.successful(MasterDatabase.conn.query(UserQueries.FindUserByProfile(loginInfo)).map(UserCache.cacheUser))
-    }
+    case None => Future.successful(MasterDatabase.conn.query(UserQueries.FindUserByProfile(loginInfo)).map(UserCache.cacheUser))
   }
 }

@@ -1,7 +1,7 @@
 @(user: Option[models.user.User], form: Form[models.user.RegistrationData], error: Option[String] = None)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(user = user, title = Messages("registration.title", utils.Config.projectName), debug = false) {
-  <form method="post" action="TODO">
+  <form method="post" action="@controllers.auth.routes.RegistrationController.register()">
     <div class="row">
       <div class="col s6 offset-s3">
         <div class="card">
@@ -52,7 +52,7 @@
           <div class="card-action">
             <button class="right btn waves-effect waves-light" type="submit">@Messages("registration.register")</button>
             <div>
-              <p>Already a member? <a href="TODO">Sign In</a></p>
+              <p>Already a member? <a href="@controllers.auth.routes.AuthenticationController.signInForm()">Sign In</a></p>
             </div>
           </div>
         </div>

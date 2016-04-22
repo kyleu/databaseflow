@@ -15,7 +15,7 @@ class SandboxController @javax.inject.Inject() (override val ctx: ApplicationCon
   def sandbox(key: String) = withSession(key) { implicit request =>
     val sandbox = SandboxTask.byId.getOrElse(key, throw new IllegalStateException())
     if (sandbox == HtmlSandbox) {
-      Future.successful(Ok(views.html.sandbox(userFor(request))))
+      Future.successful(Ok(views.html.sandbox(request.identity)))
     } else {
       sandbox.run(ctx).map { result =>
         Ok(result)

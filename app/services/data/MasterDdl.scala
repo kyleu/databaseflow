@@ -7,8 +7,6 @@ import utils.Logging
 object MasterDdl extends Logging {
   val tables = Seq(
     CreateUsersTable,
-    CreateUserProfilesTable,
-    CreateSessionInfoTable,
     CreatePasswordInfoTable,
 
     CreateConnectionsTable,

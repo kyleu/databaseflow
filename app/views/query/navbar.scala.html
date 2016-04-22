@@ -1,6 +1,6 @@
 @(user: Option[models.user.User], dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 <header>
-  @views.html.components.userDropdown(isGuest = user.forall(_.isGuest))
+  @views.html.components.userDropdown(isGuest = user.isEmpty)
 
   <div class="nb-container navbar-fixed">
     <nav id="topnav" class="@user.map(_.preferences.theme).getOrElse("blue-grey") lighten-2">

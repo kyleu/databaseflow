@@ -9,8 +9,8 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class HomeController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def index() = withSession("index") { implicit request =>
-    val connections = ConnectionSettingsService.getVisible(userFor(request).map(_.id))
-    Future.successful(Ok(views.html.index(userFor(request), ctx.config.debug, connections)))
+    val connections = ConnectionSettingsService.getVisible(request.identity.map(_.id))
+    Future.successful(Ok(views.html.index(request.identity, ctx.config.debug, connections)))
   }
 
   def untrail(path: String) = Action.async {

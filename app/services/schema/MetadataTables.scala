@@ -30,7 +30,7 @@ object MetadataTables {
     }
 
     val rowStats = db.engine match {
-      case MySQL => db(conn, new Query[Option[(String, String, Long, Int, Long, Long)]] {
+      case MySQL => db(conn, new Query[Option[(String, String, Long, Int, Long, Option[Long])]] {
         override def sql = {
           s"""select table_name, engine, table_rows, avg_row_length, data_length, create_time from information_schema.tables where table_name = \"${table.name}\""""
         }
@@ -40,7 +40,7 @@ object MetadataTables {
           val rowEstimate = JdbcHelper.longVal(row.as[Any]("table_rows"))
           val averageRowLength = JdbcHelper.intVal(row.as[Any]("avg_row_length"))
           val dataLength = JdbcHelper.longVal(row.as[Any]("data_length"))
-          val createTime = row.as[Timestamp]("create_time").getTime
+          val createTime = row.asOpt[Timestamp]("create_time").map(_.getTime)
 
           (tableName, engine, rowEstimate, averageRowLength, dataLength, createTime)
         }.toList.headOption
@@ -63,7 +63,7 @@ object MetadataTables {
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
       indexes = MetadataIndexes.getIndexes(metadata, table),
 
-      createTime = rowStats.map(_._6)
+      createTime = rowStats.flatMap(_._6)
     )
   }
 

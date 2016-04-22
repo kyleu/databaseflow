@@ -18,11 +18,11 @@ GET         /sandbox/:key                controllers.SandboxController.sandbox(k
 GET         /*path/                      controllers.HomeController.untrail(path: String)
 
 # Authentication
-# GET         /signup                      controllers.auth.RegistrationController.registrationForm
-# POST        /signup                      controllers.auth.RegistrationController.register
-# GET         /signin                      controllers.auth.AuthenticationController.signInForm
-# POST        /signin                      controllers.auth.AuthenticationController.authenticateCredentials
-# GET         /signout                     controllers.auth.AuthenticationController.signOut
+GET         /signup                      controllers.auth.RegistrationController.registrationForm
+POST        /signup                      controllers.auth.RegistrationController.register
+GET         /signin                      controllers.auth.AuthenticationController.signInForm
+POST        /signin                      controllers.auth.AuthenticationController.authenticateCredentials
+GET         /signout                     controllers.auth.AuthenticationController.signOut
 
 GET         /profile                     controllers.ProfileController.view()
 POST        /profile                     controllers.ProfileController.save()

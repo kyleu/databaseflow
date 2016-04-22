@@ -1,11 +1,10 @@
 package models.user
 
+import com.mohiva.play.silhouette.api.util.Credentials
 import play.api.data.Forms._
 import play.api.data._
 
 object UserForms {
-  case class Credentials(identifier: String, password: String)
-
   val signInForm = Form(
     mapping(
       "email" -> email,

@@ -11,7 +11,7 @@ import utils.JdbcUtils
 
 object UserQueries extends BaseQueries[User] {
   override protected val tableName = "flowusers"
-  override protected val columns = Seq("id", "username", "prefs", "profiles", "roles", "created")
+  override protected val columns = Seq("id", "username", "prefs", "email", "roles", "created")
   override protected val searchColumns = Seq("id::text", "username")
 
   val insert = Insert
@@ -29,10 +29,9 @@ object UserQueries extends BaseQueries[User] {
   case class UpdateUser(u: User) extends Statement {
     override val sql = updateSql(Seq("username", "prefs", "profiles", "roles"))
     override val values = {
-      val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
-      val roles = u.roles.map(_.toString).mkString(",")
+      val roles = u.roles.mkString(",")
       val prefs = write(u.preferences)
-      Seq(u.username, prefs, profiles, roles, u.id)
+      Seq(u.username, prefs, u.profile.providerKey, roles, u.id)
     }
   }
 
@@ -41,9 +40,9 @@ object UserQueries extends BaseQueries[User] {
     override val values = Seq(write(userPreferences), userId)
   }
 
-  case class AddRole(id: UUID, role: Role) extends Statement {
-    override val sql = s"update $tableName set roles = array_append(roles, ?) where id = ?"
-    override val values = Seq(role.toString, id)
+  case class SetRoles(id: UUID, roles: Set[Role]) extends Statement {
+    override val sql = s"update $tableName set roles = ? where id = ?"
+    override val values = Seq(roles.mkString(","), id)
   }
 
   case class FindUserByUsername(username: String) extends FlatSingleRowQuery[User] {
@@ -53,41 +52,30 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class FindUserByProfile(loginInfo: LoginInfo) extends FlatSingleRowQuery[User] {
-    override val sql = getSql(Some("profiles like ?"))
-    override val values = Seq(s"%${loginInfo.providerID}:${loginInfo.providerKey}%")
+    override val sql = getSql(Some("email = ?"))
+    override val values = Seq(loginInfo.providerKey)
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
   case object CountAdmins extends SingleRowQuery[Int]() {
-    override def sql = "select count(*) as c from users where 'admin' = any(roles)"
+    override def sql = "select count(*) as c from users where roles like '%admin%'"
     override def map(row: Row) = row.as[Long]("c").toInt
   }
 
   override protected def fromRow(row: Row) = {
     val id = row.as[UUID]("id")
-    val profiles = row.as[String]("profiles").split(",").flatMap { l =>
-      val info = l.trim
-      if (info.nonEmpty) {
-        val delimiter = info.indexOf(':')
-        val provider = info.substring(0, delimiter)
-        val key = info.substring(delimiter + 1)
-        Some(LoginInfo(provider, key))
-      } else {
-        None
-      }
-    }
     val username = row.asOpt[String]("username")
     val prefsString = row.as[String]("prefs")
     val preferences = read[UserPreferences](prefsString)
+    val profile = LoginInfo("credentials", row.as[String]("email"))
     val roles = row.as[String]("roles").split(",").map(x => Role(x.trim)).toSet
     val created = JdbcUtils.toLocalDateTime(row, "created")
-    User(id, username, preferences, profiles, roles, created)
+    User(id, username, preferences, profile, roles, created)
   }
 
   override protected def toDataSeq(u: User) = {
-    val prefs = write(u.preferences)
-    val profiles = u.profiles.map(l => s"${l.providerID}:${l.providerKey}").mkString(",")
     val roles = u.roles.map(_.toString).mkString(",")
-    Seq(u.id, u.username, prefs, profiles, roles, u.created)
+    val prefs = write(u.preferences)
+    Seq(u.id, u.username, prefs, u.profile.providerKey, roles, u.created)
   }
 }

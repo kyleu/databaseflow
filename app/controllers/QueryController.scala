@@ -21,7 +21,7 @@ class QueryController @javax.inject.Inject() (
 ) extends BaseController {
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
     val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
-    Future.successful(Ok(views.html.query.main(userFor(request), ctx.config.debug, activeDb.map(_._1).getOrElse("..."), UUID.randomUUID)))
+    Future.successful(Ok(views.html.query.main(request.identity, ctx.config.debug, activeDb.map(_._1).getOrElse("..."), UUID.randomUUID)))
   }
 
   val mff = new MessageFrameFormatter(ctx.config.debug)

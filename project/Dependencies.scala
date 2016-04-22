@@ -16,12 +16,13 @@ object Dependencies {
   object Jdbc {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.5"
 
-    val db2 = "?" % "?" % "?"
+    //val db2 = dblibs/lib/???
     val h2 = "com.h2database" % "h2" % "1.4.191"
+    //val informix = dblibs/lib/???
     val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
-    val oracle = "?" % "?" % "?"
-    val sqlServer = "?" % "?" % "?"
+    //val oracle = dblibs/lib/oracle-ojdbc7.jar
+    //val sqlServer = dblibs/lib/sqlserver-sqljdbc42.jar
   }
 
   object Play {
@@ -53,9 +54,10 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "4.0.0-BETA1"
+    private[this] val version = "4.0.0-BETA4"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
+    val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
   }
 
   object WebJars {
@@ -91,6 +93,7 @@ object Dependencies {
     val enumeratumVersion = "1.3.7"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.4"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
   }
 
   object Testing {
