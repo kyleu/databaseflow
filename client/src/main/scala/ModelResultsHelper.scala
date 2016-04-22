@@ -8,19 +8,33 @@ import services.NotificationService
 import ui._
 
 trait ModelResultsHelper { this: DatabaseFlow =>
+  private[this] var receivedSavedQueryResponse = false
+  private[this] var receivedSchemaResultResponse = false
+
   protected[this] def handleBatchQueryStatus(bqs: BatchQueryStatus) = {
     SampleDatabaseManager.process(bqs)
   }
 
   protected[this] def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = {
     SavedQueryManager.updateSavedQueries(sqrr.savedQueries)
+    if (!receivedSavedQueryResponse) {
+      receivedSavedQueryResponse = true
+      if (receivedSchemaResultResponse) {
+        performInitialAction()
+      }
+    }
   }
 
   protected[this] def handleSchemaResultResponse(srr: SchemaResultResponse) = {
     if (MetadataManager.schema.isEmpty) {
       MetadataManager.updateSchema(srr.schema)
       $("#loading-panel").hide()
-      performInitialAction()
+      if (!receivedSchemaResultResponse) {
+        receivedSchemaResultResponse = true
+        if (receivedSavedQueryResponse) {
+          performInitialAction()
+        }
+      }
     } else {
       MetadataManager.updateSchema(srr.schema)
     }

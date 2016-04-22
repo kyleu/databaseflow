@@ -42,9 +42,14 @@ object ViewManager {
       })
 
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
-        // TODO build card to hold result
+        val resultId = UUID.randomUUID
+
+        val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
+        val queryWorkspace = $(s"#workspace-$queryId")
+        queryWorkspace.prepend(html)
+
         val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
-        utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action)))
+        utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action), resultId = resultId))
       })
 
       wire($(".explain-view-link", queryPanel), "explain")
@@ -59,8 +64,13 @@ object ViewManager {
   }
 
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
-    // TODO build card to hold result
-    utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, options = options))
+    val resultId = UUID.randomUUID
+
+    val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
+    val queryWorkspace = $(s"#workspace-$queryId")
+    queryWorkspace.prepend(html)
+
+    utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }
 
   private[this] def setViewDetails(uuid: UUID, view: View) = {

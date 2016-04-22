@@ -42,22 +42,23 @@ class ConnectionService(
   override def receiveRequest = {
     // Incoming basic messages
     case mr: MalformedRequest => timeReceive(mr) { log.error(s"MalformedRequest:  [${mr.reason}]: [${mr.content}].") }
+
     case p: Ping => timeReceive(p) { out ! Pong(p.timestamp) }
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
-
-    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run")) }
-    case csd: CreateSampleDatabase => timeReceive(csd) { handleCreateSampleDatabase(csd.queryId) }
-
-    case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options) }
-    case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options) }
 
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
 
+    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
+    case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options, trd.resultId) }
+    case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options, vrd.resultId) }
+
     case qsr: QuerySaveRequest => timeReceive(qsr) { handleQuerySaveRequest(qsr.query) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { handleQueryDeleteRequest(qdr.id) }
+
+    case csd: CreateSampleDatabase => timeReceive(csd) { handleCreateSampleDatabase(csd.queryId) }
 
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
@@ -68,10 +69,10 @@ class ConnectionService(
     supervisor ! ConnectionStopped(id)
   }
 
-  protected[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String) = action match {
-    case "run" => handleRunQuery(queryId, sql)
-    case "explain" => handleExplainQuery(queryId, sql)
-    case "analyze" => handleAnalyzeQuery(queryId, sql)
+  protected[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String, resultId: UUID) = action match {
+    case "run" => handleRunQuery(queryId, sql, resultId)
+    case "explain" => handleExplainQuery(queryId, sql, resultId)
+    case "analyze" => handleAnalyzeQuery(queryId, sql, resultId)
     case _ => throw new IllegalArgumentException(action)
   }
 

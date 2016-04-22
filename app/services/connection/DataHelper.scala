@@ -12,27 +12,26 @@ import services.schema.SchemaService
 import utils.{ DateUtils, ExceptionUtils, Logging }
 
 trait DataHelper extends Logging { this: ConnectionService =>
-  protected[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions) = {
+  protected[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getTable(connectionId, name) match {
-      case Some(table) => handleShowTableDataResponse(queryId, table, options)
+      case Some(table) => handleShowTableDataResponse(queryId, table, options, resultId)
       case None =>
         log.warn(s"Attempted to show data for invalid table [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
     }
   }
 
-  protected[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions) = {
+  protected[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getView(connectionId, name) match {
-      case Some(view) => handleShowViewDataResponse(queryId, view, options)
+      case Some(view) => handleShowViewDataResponse(queryId, view, options, resultId)
       case None =>
         log.warn(s"Attempted to show data for invalid view [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid view.")
     }
   }
 
-  private[this] def handleShowTableDataResponse(queryId: UUID, table: Table, options: RowDataOptions) {
+  private[this] def handleShowTableDataResponse(queryId: UUID, table: Table, options: RowDataOptions, resultId: UUID) {
     def work() = {
-      val id = UUID.randomUUID
       val startMs = DateUtils.nowMillis
       val sql = EngineQueries.selectFrom(table.name, options)(db.engine)
       log.info(s"Showing data for [${table.name}] using sql [$sql].")
@@ -55,7 +54,7 @@ trait DataHelper extends Logging { this: ConnectionService =>
 
         //log.info(s"Query result: [$result].")
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        QueryResultResponse(id, QueryResult(
+        QueryResultResponse(resultId, QueryResult(
           queryId = queryId,
           title = table.name,
           sql = sql,
@@ -72,9 +71,8 @@ trait DataHelper extends Logging { this: ConnectionService =>
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
-  private[this] def handleShowViewDataResponse(queryId: UUID, view: View, options: RowDataOptions) {
+  private[this] def handleShowViewDataResponse(queryId: UUID, view: View, options: RowDataOptions, resultId: UUID) {
     def work() = {
-      val id = UUID.randomUUID
       val startMs = DateUtils.nowMillis
       val sql = EngineQueries.selectFrom(view.name, options)(db.engine)
       log.info(s"Showing data for [${view.name}] using sql [$sql].")
@@ -87,7 +85,7 @@ trait DataHelper extends Logging { this: ConnectionService =>
         }
         //log.info(s"Query result: [$result].")
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        QueryResultResponse(id, QueryResult(
+        QueryResultResponse(resultId, QueryResult(
           queryId = queryId,
           title = view.name,
           sql = sql,

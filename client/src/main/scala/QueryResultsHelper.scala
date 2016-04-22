@@ -8,29 +8,42 @@ import utils.JQueryUtils
 trait QueryResultsHelper { this: DatabaseFlow =>
   protected[this] def handleStatementResultResponse(srr: StatementResultResponse) = {
     val occurred = new scalajs.js.Date(srr.result.occurred.toDouble)
-    val html = StatementResultsTemplate.forResults(srr, occurred.toISOString, occurred.toString)
+    val status = StatementResultsTemplate.status(srr, occurred.toISOString, occurred.toString)
+    val html = StatementResultsTemplate.forResults(srr)
+
     val workspace = $(s"#workspace-${srr.result.queryId}")
     if (workspace.length != 1) {
       utils.Logging.warn(s"No workspace available for statement [${srr.result.queryId}].")
     }
-    workspace.prepend(html.toString)
 
     val panel = $(s"#${srr.id}", workspace)
+    if (panel.length != 1) {
+      utils.Logging.warn(s"No panel available for result [${srr.id}].")
+    }
+
+    panel.prepend(html.toString)
+
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
     JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
   protected[this] def handleQueryResultResponse(qr: QueryResultResponse) = {
-    //Logging.info(s"Received result with [${qr.columns.size}] columns and [${qr.data.size}] rows.")
     val occurred = new scalajs.js.Date(qr.result.occurred.toDouble)
-    val html = QueryResultsTemplate.forResults(qr, occurred.toISOString, occurred.toString)
+    val desc = QueryResultsTemplate.status(qr, occurred.toISOString, occurred.toString)
+    val html = QueryResultsTemplate.forResults(qr)
+
     val workspace = $(s"#workspace-${qr.result.queryId}")
     if (workspace.length != 1) {
       utils.Logging.warn(s"No workspace available for query [${qr.result.queryId}].")
     }
-    workspace.prepend(html.toString)
 
     val panel = $(s"#${qr.id}", workspace)
+    if (panel.length != 1) {
+      utils.Logging.warn(s"No panel available for result [${qr.id}].")
+    }
+
+    panel.prepend(html.toString)
+
     val resultEl = $(".query-result-table", panel)
     val sqlEl = $(".query-result-sql", panel)
     val sqlLink = $(s".results-sql-link", panel)
@@ -62,13 +75,18 @@ trait QueryResultsHelper { this: DatabaseFlow =>
     utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
-  protected[this] def handleQueryErrorResponse(qe: QueryErrorResponse) = {
-    val occurred = new scalajs.js.Date(qe.error.occurred.toDouble)
-    val html = ErrorTemplate.forQueryError(qe, occurred.toISOString, occurred.toString)
-    val workspace = $(s"#workspace-${qe.error.queryId}")
-    workspace.prepend(html.toString)
+  protected[this] def handleQueryErrorResponse(qer: QueryErrorResponse) = {
+    val occurred = new scalajs.js.Date(qer.error.occurred.toDouble)
+    val html = ErrorTemplate.forQueryError(qer, occurred.toISOString, occurred.toString)
+    val workspace = $(s"#workspace-${qer.error.queryId}")
 
-    val panel = $(s"#${qe.id}")
+    val panel = $(s"#${qer.id}", workspace)
+    if (panel.length != 1) {
+      utils.Logging.warn(s"No panel available for result [${qer.id}].")
+    }
+
+    panel.prepend(html.toString)
+
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
     utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }

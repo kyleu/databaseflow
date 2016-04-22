@@ -7,10 +7,9 @@ import scalatags.Text.tags2.time
 
 object ErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String, dateFullString: String) = {
-    val cardTitle = "Query Error"
-
-    val content = div(
-      p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qe.durationMs}ms]."),
+    val status = p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qe.durationMs}ms].")
+    div(id := qe.id.toString)(
+      status,
       p(cls := "")(qe.error.message),
       if (qe.error.position.isEmpty) {
         ""
@@ -18,22 +17,13 @@ object ErrorTemplate {
         s"Error encountered at position [${qe.error.line.getOrElse(0)}:${qe.error.position.getOrElse(0)}]."
       }
     )
-
-    div(id := qe.id.toString)(StaticPanelTemplate.cardRow(cardTitle, content, Some(Icons.error)))
   }
 
   def forPlanError(pe: PlanErrorResponse, dateIsoString: String, dateFullString: String) = {
-    val cardTitle = "Plan Error"
-
-    val content = div(
-      span(cls := "card-title")(
-        cardTitle,
-        i(cls := s"right fa ${Icons.close}")
-      ),
-      p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pe.durationMs}ms]."),
+    val status = p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pe.durationMs}ms].")
+    div(id := pe.id.toString)(
+      status,
       p(cls := "")(pe.error.message)
     )
-
-    div(id := pe.id.toString)(StaticPanelTemplate.cardRow(cardTitle, content, Some(Icons.error)))
   }
 }

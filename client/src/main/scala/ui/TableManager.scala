@@ -48,8 +48,13 @@ object TableManager {
   }
 
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
-    // TODO build card to hold result
-    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options))
+    val resultId = UUID.randomUUID
+
+    val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
+    val queryWorkspace = $(s"#workspace-$queryId")
+    queryWorkspace.prepend(html)
+
+    utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }
 
   private[this] def setTableDetails(uuid: UUID, table: Table) = {

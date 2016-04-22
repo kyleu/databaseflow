@@ -32,17 +32,16 @@ trait QueryHelper extends Logging { this: ConnectionService =>
     }
   }
 
-  protected[this] def handleRunQuery(queryId: UUID, sql: String) = {
+  protected[this] def handleRunQuery(queryId: UUID, sql: String, resultId: UUID) = {
     def work() = {
       log.info(s"Performing query action [run] for sql [$sql].")
-      val id = UUID.randomUUID
       val startMs = DateUtils.nowMillis
       sqlCatch(queryId, sql, startMs) { () =>
         val result = db.executeUnknown(DynamicQuery(sql))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
-          case Left(rs) => QueryResultResponse(id, QueryResult(
+          case Left(rs) => QueryResultResponse(resultId, QueryResult(
             queryId = queryId,
             title = "Query Results",
             sql = sql,
@@ -51,7 +50,7 @@ trait QueryHelper extends Logging { this: ConnectionService =>
             sortable = false,
             occurred = startMs
           ), durationMs)
-          case Right(i) => StatementResultResponse(id, StatementResult(
+          case Right(i) => StatementResultResponse(resultId, StatementResult(
             queryId = queryId,
             title = "Statement Results",
             sql = sql,
