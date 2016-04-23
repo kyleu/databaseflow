@@ -50,7 +50,7 @@ object SearchFilterManager {
     titleEl.html(html)
   }
 
-  private[this] def highlightAdditionalMatches(keys: Seq[(String, String)], matches: Seq[String], j: JQuery) = {
+  private[this] def highlightAdditionalMatches(keys: Seq[(String, String)], matches: Seq[String], anchorEl: JQuery, titleEl: JQuery) = {
     val els = keys.map { key =>
       val replaced = matches.foldLeft(key._2) { (x, y) =>
         val keyLc = key._2.toLowerCase
@@ -59,7 +59,9 @@ object SearchFilterManager {
       }
       s"""Matches ${key._1} "$replaced"."""
     }
-    j.attr("title", els.mkString("\n"))
+    val name = anchorEl.data("name").toString
+    titleEl.text(name)
+    anchorEl.attr("title", els.mkString("\n"))
   }
 
   private[this] def filterObjects(
@@ -72,10 +74,11 @@ object SearchFilterManager {
     }
 
     val (matched, notMatched) = matches.partition(_._2.nonEmpty)
+    val searchValues = searches.map(_.split(":").last)
     matched.foreach { o =>
       o._2.find(_._1 == "name") match {
-        case Some(name) => highlightTitleMatches(name._2, searches, o._1._2, o._1._3)
-        case None => highlightAdditionalMatches(o._2, searches, o._1._2)
+        case Some(name) => highlightTitleMatches(name._2, searchValues, o._1._2, o._1._3)
+        case None => highlightAdditionalMatches(o._2, searchValues, o._1._2, o._1._3)
       }
       o._1._2.show()
     }
@@ -86,10 +89,14 @@ object SearchFilterManager {
 
   private[this] def matchKey(searches: Seq[String], key: (String, String)) = {
     val lcn = key._2.toLowerCase
-    if (searches.forall(s => lcn.contains(s))) {
-      Some(key)
-    } else {
-      None
+    val matches = searches.forall { s =>
+      if (s.contains(':')) {
+        val split = s.split(':')
+        key._1 == split(0) && lcn.contains(split(1))
+      } else {
+        lcn.contains(s)
+      }
     }
+    if (matches) { Some(key) } else { None }
   }
 }

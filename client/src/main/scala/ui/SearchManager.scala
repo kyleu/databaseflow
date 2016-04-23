@@ -76,14 +76,4 @@ object SearchManager {
     clearSearchEntries(MetadataUpdates.views, viewsToggle)
     clearSearchEntries(MetadataUpdates.procedures, proceduresToggle)
   }
-
-  private[this] def highlightMatches(title: String, matches: Seq[String], j: JQuery) = {
-    val replaced = matches.foldLeft(title) { (x, y) =>
-      val titleLc = title.toLowerCase
-      val idx = titleLc.indexOf(y)
-      if (idx == -1) { title } else { s"""${title.substring(0, idx)}[[${title.substring(idx, idx + y.length)}]]${title.substring(idx + y.length)}""" }
-    }
-    val html = replaced.replaceAllLiterally("[[", "<strong class=\"search-matched-text\">").replaceAllLiterally("]]", "</strong>")
-    j.html(html)
-  }
 }
