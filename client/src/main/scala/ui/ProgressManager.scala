@@ -8,14 +8,14 @@ import org.scalajs.jquery.{ jQuery => $ }
 import scalatags.Text.TypedTag
 
 object ProgressManager {
-  var activeQueries = Map.empty[UUID, UUID]
+  var activeQueries = Map.empty[UUID, (UUID, () => Unit)]
 
   lazy val workspace = $("#workspace")
 
-  def startProgress(queryId: UUID, resultId: UUID, icon: String, title: String): Unit = {
+  def startProgress(queryId: UUID, resultId: UUID, onComplete: () => Unit, icon: String, title: String): Unit = {
     activeQueries.get(queryId) match {
-      case Some(active) if active == resultId => throw new IllegalStateException(s"Already started progress for query [$queryId] with result [$resultId].")
-      case Some(active) => throw new IllegalStateException(s"Cannot start progress for query [$queryId] with [$resultId], already processing [$active].")
+      case Some(active) if active._1 == resultId => throw new IllegalStateException(s"Already started progress for query [$queryId] with result [$resultId].")
+      case Some(active) => throw new IllegalStateException(s"Cannot start progress for query [$queryId] with [$resultId], already processing [${active._1}].")
       case None => // No op
     }
 
@@ -27,13 +27,13 @@ object ProgressManager {
     }
     queryWorkspace.html(html)
 
-    activeQueries = activeQueries + (queryId -> resultId)
+    activeQueries = activeQueries + (queryId -> (resultId -> onComplete))
   }
 
   def completeProgress(queryId: UUID, resultId: UUID, icon: String, title: String, content: TypedTag[String], actions: Seq[TypedTag[String]]): Unit = {
-    activeQueries.get(queryId) match {
-      case Some(rid) if rid == resultId => // No op
-      case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [$rid], not expected [$resultId].")
+    val onComplete = activeQueries.get(queryId) match {
+      case Some(rid) if rid._1 == resultId => rid._2
+      case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [${rid._1}], not expected [$resultId].")
       case None => throw new IllegalStateException(s"No active progress for query [$queryId].")
     }
 
@@ -72,5 +72,7 @@ object ProgressManager {
     scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
     activeQueries = activeQueries - queryId
+
+    onComplete()
   }
 }

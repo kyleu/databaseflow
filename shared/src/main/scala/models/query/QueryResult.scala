@@ -11,6 +11,15 @@ object QueryResult {
     relationTable: Option[String] = None,
     relationColumn: Option[String] = None
   )
+
+  case class Source(
+    t: String,
+    name: String,
+    sortable: Boolean,
+    sortedColumn: Option[String] = None,
+    sortedAscending: Option[Boolean] = None,
+    dataOffset: Int = 0
+  )
 }
 
 case class QueryResult(
@@ -19,9 +28,6 @@ case class QueryResult(
   sql: String,
   columns: Seq[QueryResult.Col],
   data: Seq[Seq[Option[String]]],
-  sortable: Boolean,
-  sortedColumn: Option[String] = None,
-  sortedAscending: Option[Boolean] = None,
-  dataOffset: Int = 0,
+  source: Option[QueryResult.Source] = None,
   occurred: Long = System.currentTimeMillis
 )

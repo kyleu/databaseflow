@@ -5,7 +5,8 @@ object RowDataOptions {
 }
 
 case class RowDataOptions(
-  orderBy: Option[String] = None,
+  orderByCol: Option[String] = None,
+  orderByAsc: Option[Boolean] = None,
   filterCol: Option[String] = None,
   filterOp: Option[String] = None,
   filterVal: Option[String] = None,

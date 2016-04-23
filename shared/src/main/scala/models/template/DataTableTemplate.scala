@@ -7,17 +7,17 @@ import scalatags.Text.all._
 
 object DataTableTemplate {
   private[this] def tableHeader(res: QueryResult) = {
-    def str(name: String) = if (res.sortable) {
-      if (res.sortedColumn.contains(name)) {
-        val icon = if (res.sortedAscending.contains(false)) { Icons.sortedDesc } else { Icons.sortedAsc }
-        Seq(i(cls := s"right fa $icon"), span(cls := "sorted-title")(name))
+    def str(name: String) = if (res.source.exists(_.sortable)) {
+      if (res.source.flatMap(_.sortedColumn).contains(name)) {
+        val icon = if (res.source.flatMap(_.sortedAscending).contains(false)) { Icons.sortedDesc } else { Icons.sortedAsc }
+        span(cls := "sorted-title", data("col") := name)(i(cls := s"right fa $icon"), name)
       } else {
-        Seq(i(cls := s"sort-icon fa ${Icons.sortable}"), span(cls := "sorted-title")(name))
+        span(cls := "sorted-title", data("col") := name)(i(cls := s"right sort-icon fa ${Icons.sortable}"), name)
       }
     } else {
-      Seq(span(name))
+      span(cls := "unsorted-title")(name)
     }
-    thead(tr(res.columns.map(c => th(title := c.t.toString)(str(c.name): _*))))
+    thead(tr(res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
   }
 
   private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = {
@@ -59,22 +59,18 @@ object DataTableTemplate {
     }
   }
 
-  private[this] def tableBody(res: QueryResult) = {
-    tbody(res.data.map(r => tr(res.columns.zip(r).map(x => cellValue(x._1, x._2)))))
+  def tableRows(res: QueryResult) = {
+    res.data.map(r => tr(res.columns.zip(r).map(x => cellValue(x._1, x._2))))
   }
 
-  def forResults(res: QueryResult) = {
-    val data = if (res.columns.isEmpty || res.data.isEmpty) {
-      em("No rows returned.")
-    } else {
-      div(cls := "query-result-table")(
-        table(cls := "bordered highlight responsive-table")(
-          tableHeader(res),
-          tableBody(res)
-        )
+  def forResults(res: QueryResult) = if (res.columns.isEmpty || res.data.isEmpty) {
+    em("No rows returned.")
+  } else {
+    div(cls := "query-result-table")(
+      table(cls := "bordered highlight responsive-table")(
+        tableHeader(res),
+        tbody(tableRows(res))
       )
-    }
-
-    data
+    )
   }
 }

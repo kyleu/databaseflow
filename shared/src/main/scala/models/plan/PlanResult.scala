@@ -4,7 +4,7 @@ import java.util.UUID
 
 case class PlanResult(
   queryId: UUID,
-  name: String,
+  title: String,
   action: String,
   sql: String,
   raw: String,

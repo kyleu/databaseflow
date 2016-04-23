@@ -1,6 +1,7 @@
 package models.template
 
 import models.QueryResultResponse
+import models.query.QueryResult
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
@@ -11,11 +12,11 @@ object QueryResultsTemplate {
     a(cls := "results-download-link", href := "#")("Download")
   )
 
-  def forResults(qr: QueryResultResponse, dateIsoString: String, dateFullString: String) = div(
-    em(s"${qr.result.data.size} rows returned ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qr.durationMs}ms]."),
-    DataTableTemplate.forResults(qr.result),
+  def forResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int) = div(
+    em(s"${qr.data.size} rows returned ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${durationMs}ms]."),
+    DataTableTemplate.forResults(qr),
     div(cls := "z-depth-1 query-result-sql")(
-      pre(cls := "pre-wrap")(qr.result.sql)
+      pre(cls := "pre-wrap")(qr.sql)
     )
   )
 }

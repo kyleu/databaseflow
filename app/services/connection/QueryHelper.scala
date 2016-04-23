@@ -47,7 +47,6 @@ trait QueryHelper extends Logging { this: ConnectionService =>
             sql = sql,
             columns = rs.cols,
             data = rs.data,
-            sortable = false,
             occurred = startMs
           ), durationMs)
           case Right(i) => StatementResultResponse(resultId, StatementResult(

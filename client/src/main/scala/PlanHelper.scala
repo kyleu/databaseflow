@@ -12,7 +12,7 @@ trait PlanHelper {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
     val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
-    ProgressManager.completeProgress(pr.result.queryId, pr.id, Icons.queryPlan, pr.result.name, content, QueryPlanTemplate.actions)
+    ProgressManager.completeProgress(pr.result.queryId, pr.id, Icons.queryPlan, pr.result.title, content, QueryPlanTemplate.actions)
 
     val workspace = $(s"#workspace-${pr.result.queryId}")
     val panel = $(s"#${pr.id}", workspace)

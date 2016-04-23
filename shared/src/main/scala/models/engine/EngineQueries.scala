@@ -40,7 +40,10 @@ object EngineQueries {
         s" where $col $op '$fVal'" + whereClauseAdditions.map(" and " + _).getOrElse("")
       case None => whereClauseAdditions.map(" where" + _).getOrElse("")
     }
-    val orderByClause = options.orderBy.map(" order by " + engine.leftQuoteIdentifier + _ + engine.rightQuoteIdentifier).getOrElse("")
+    val orderByClause = options.orderByCol.map { orderCol =>
+      val ordering = if (options.orderByAsc.contains(false)) { "desc" } else { "asc" }
+      s" order by ${engine.leftQuoteIdentifier}$orderCol${engine.rightQuoteIdentifier} $ordering"
+    }.getOrElse("")
     val sql = s"select * from $quotedName$whereClause$orderByClause$postQueryClauses"
     sql
   }

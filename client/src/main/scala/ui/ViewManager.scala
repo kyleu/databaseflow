@@ -44,7 +44,7 @@ object ViewManager {
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
         val resultId = UUID.randomUUID
         val title = "Query Plan"
-        ProgressManager.startProgress(queryId, resultId, Icons.loading, title)
+        ProgressManager.startProgress(queryId, resultId, () => Unit, Icons.loading, title)
 
         val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action), resultId = resultId))
@@ -64,7 +64,11 @@ object ViewManager {
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
     val resultId = UUID.randomUUID
 
-    ProgressManager.startProgress(queryId, resultId, Icons.loading, name)
+    def onComplete(): Unit = {
+      utils.Logging.info(s"onComplete for view [$name], result id [$resultId].")
+    }
+
+    ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)
 
     utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }

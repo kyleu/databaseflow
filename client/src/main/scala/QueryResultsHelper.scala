@@ -1,30 +1,39 @@
+import java.util.UUID
+
 import models._
-import models.query.RowDataOptions
+import models.query.{ QueryResult, RowDataOptions }
 import models.template._
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.{ ProgressManager, TableManager }
+import utils.JQueryUtils
 
 trait QueryResultsHelper { this: DatabaseFlow =>
   protected[this] def handleStatementResultResponse(srr: StatementResultResponse) = {
     val occurred = new scalajs.js.Date(srr.result.occurred.toDouble)
     val content = StatementResultsTemplate.forResults(srr, occurred.toISOString, occurred.toString)
-    ProgressManager.completeProgress(srr.result.queryId, srr.id, Icons.statementResults, "Statement Result", content, Nil)
+    ProgressManager.completeProgress(srr.result.queryId, srr.id, Icons.statementResults, srr.result.title, content, Nil)
   }
 
-  protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = {
-    val occurred = new scalajs.js.Date(qrr.result.occurred.toDouble)
-    val content = QueryResultsTemplate.forResults(qrr, occurred.toISOString, occurred.toString)
+  protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = if (qrr.result.source.forall(_.dataOffset == 0)) {
+    handleNewQueryResult(qrr.id, qrr.result, qrr.durationMs)
+  } else {
+    handleAppendQueryResult(qrr.id, qrr.result, qrr.durationMs)
+  }
 
-    ProgressManager.completeProgress(qrr.result.queryId, qrr.id, Icons.queryResults, "Query Result", content, QueryResultsTemplate.actions)
+  private[this] def handleNewQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {
+    val occurred = new scalajs.js.Date(qr.occurred.toDouble)
+    val content = QueryResultsTemplate.forResults(qr, occurred.toISOString, occurred.toString, durationMs)
 
-    val workspace = $(s"#workspace-${qrr.result.queryId}")
-    val panel = $(s"#${qrr.id}", workspace)
+    ProgressManager.completeProgress(qr.queryId, resultId, Icons.queryResults, qr.title, content, QueryResultsTemplate.actions)
+
+    val workspace = $(s"#workspace-${qr.queryId}")
+    val panel = $(s"#$resultId", workspace)
 
     val resultEl = $(".query-result-table", panel)
     val sqlEl = $(".query-result-sql", panel)
     val sqlLink = $(s".results-sql-link", panel)
 
-    utils.JQueryUtils.clickHandler($(".query-rel-link", panel), (jq) => {
+    JQueryUtils.clickHandler($(".query-rel-link", panel), (jq) => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
@@ -33,7 +42,7 @@ trait QueryResultsHelper { this: DatabaseFlow =>
 
     var sqlShown = false
 
-    utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
+    JQueryUtils.clickHandler(sqlLink, (jq) => {
       if (sqlShown) {
         resultEl.show()
         sqlEl.hide()
@@ -45,6 +54,10 @@ trait QueryResultsHelper { this: DatabaseFlow =>
       }
       sqlShown = !sqlShown
     })
+  }
+
+  private[this] def handleAppendQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {
+    utils.Logging.info(s"TODO: Appending [${qr.data.length}] rows to result [$resultId].")
   }
 
   protected[this] def handleQueryErrorResponse(qer: QueryErrorResponse) = {

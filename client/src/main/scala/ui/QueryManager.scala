@@ -21,7 +21,7 @@ object QueryManager {
     def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
       val resultId = UUID.randomUUID
 
-      ProgressManager.startProgress(queryId, resultId, Icons.loading, title)
+      ProgressManager.startProgress(queryId, resultId, () => Unit, Icons.loading, title)
 
       val sql = sqlEditor.getValue().toString
       utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action), resultId))
