@@ -32,7 +32,7 @@ trait PlanHelper extends Logging { this: ConnectionService =>
       case Some(explain) =>
         def work() = {
           val explainSql = explain(sql)
-          log.info(s"Performing query action [explain] for sql [$explainSql].")
+          log.info(s"Performing query action [explain] with resultId [$resultId] for query [$queryId] with sql [$explainSql].")
           getResult(queryId, sql, explainSql, resultId)
         }
         def onSuccess(rm: ResponseMessage) = out ! rm
@@ -48,7 +48,7 @@ trait PlanHelper extends Logging { this: ConnectionService =>
       case Some(analyze) =>
         def work() = {
           val analyzeSql = analyze(sql)
-          log.info(s"Performing query action [analyze] for sql [$analyzeSql].")
+          log.info(s"Performing query action [analyze] with resultId [$resultId] for query [$queryId] with sql [$analyzeSql].")
           getResult(queryId, sql, analyzeSql, resultId)
         }
         def onSuccess(rm: ResponseMessage) = out ! rm

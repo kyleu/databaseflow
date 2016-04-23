@@ -13,26 +13,26 @@ object StaticPanelTemplate {
     )
   }
 
-  def cardRow(title: String, content: TypedTag[String], icon: Option[String] = None, actions: Option[Seq[TypedTag[String]]] = None) = {
+  def cardRow(title: String, content: TypedTag[String], icon: Option[String] = None, actions: Seq[TypedTag[String]] = Nil, showClose: Boolean = true) = {
     val cardContent = div(cls := "card-content")(
       span(cls := "card-title")(Seq(
         icon.map(icn => i(cls := "title-icon fa " + icn)),
-        Some(span(title)),
-        Some(i(cls := s"right fa ${Icons.close}"))
+        Some(span(cls := "title")(title)),
+        if (showClose) { Some(i(cls := s"right fa ${Icons.close}")) } else { None }
       ).flatten: _*),
-      content
+      div(cls := "content")(content)
     )
-
-    val cardActions = actions.map { x =>
-      div(cls := "card-action")(x)
-    }
 
     div(cls := "row")(
       div(cls := "col s12")(
-        div(cls := "card")(Seq(
-          Some(cardContent),
-          cardActions
-        ).flatten: _*)
+        div(cls := "card")(
+          cardContent,
+          if (actions.isEmpty) {
+            div(cls := "card-action initially-hidden")()
+          } else {
+            div(cls := "card-action")(actions)
+          }
+        )
       )
     )
   }

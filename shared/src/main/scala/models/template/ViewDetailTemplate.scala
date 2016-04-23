@@ -29,7 +29,7 @@ object ViewDetailTemplate {
     )
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.view), actions = Some(linksFor(engine))),
+      StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.view), actions = linksFor(engine)),
       div(id := s"workspace-$queryId")
     )
   }

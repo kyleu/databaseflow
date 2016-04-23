@@ -54,7 +54,7 @@ object QueryEditorTemplate {
         queryName,
         div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql),
         Some(icon),
-        actions = Some(links)
+        actions = links
       ),
       div(id := s"workspace-$queryId")
     )

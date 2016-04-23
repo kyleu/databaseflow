@@ -52,13 +52,7 @@ object TableManager {
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
     val resultId = UUID.randomUUID
 
-    val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
-    val queryWorkspace = $(s"#workspace-$queryId", workspace)
-    if (queryWorkspace.length != 1) {
-      throw new IllegalStateException(s"No workspace available for view data result [$resultId] for query [$queryId].")
-    }
-    val panelContent = $(".content", queryWorkspace)
-    queryWorkspace.prepend(panelContent.html(html))
+    ProgressManager.startProgress(queryId, resultId, Icons.loading, "TODO: Table Manager")
 
     utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }

@@ -21,13 +21,7 @@ object QueryManager {
     def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
       val resultId = UUID.randomUUID
 
-      val html = QueryResultsTemplate.loadingPanel(queryId, "Loading Test", resultId).render
-
-      val queryWorkspace = $(s"#workspace-$queryId", workspace)
-      if (queryWorkspace.length != 1) {
-        throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
-      }
-      queryWorkspace.prepend(html)
+      ProgressManager.startProgress(queryId, resultId, Icons.loading, "TODO: Query Manager")
 
       val sql = sqlEditor.getValue().toString
       utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action), resultId))

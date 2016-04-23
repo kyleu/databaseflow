@@ -31,7 +31,7 @@ object TableDetailTemplate {
       a(cls := "view-data-link", href := "#")("View First 100 Rows")
     )
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.table), actions = Some(actions)),
+      StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.table), actions = actions),
       div(id := s"workspace-$queryId")
     )
   }

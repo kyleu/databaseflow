@@ -72,10 +72,10 @@
   width: 0; height: 20px;
 }
 
-.tree li a{
+.tree li .node {
   border: 1px solid #ccc;
   padding: 5px 10px;
-  text-decoration: none;
+  cursor: pointer;
   color: #666;
   font-size: 14px;
   white-space: nowrap;
@@ -86,13 +86,13 @@
   -moz-transition: all 0.5s;
 }
 
-.tree li a:hover, .tree li a:hover+ul li a {
+.tree li .node:hover, .tree li .node:hover+ul li .node {
   background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
 }
 
-.tree li a:hover+ul li::after,
-.tree li a:hover+ul li::before,
-.tree li a:hover+ul::before,
-.tree li a:hover+ul ul::before{
+.tree li .node:hover+ul li::after,
+.tree li .node:hover+ul li::before,
+.tree li .node:hover+ul::before,
+.tree li .node:hover+ul ul::before{
   border-color:  #94a0b4;
 }

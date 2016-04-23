@@ -1,6 +1,8 @@
 package models.template
 
 object Icons {
+  val spin = "fa-spin"
+
   val check = "fa-check"
   val search = "fa-search"
   val error = "fa-exclamation"
@@ -8,6 +10,8 @@ object Icons {
   val help = "fa-key"
   val about = "fa-heart-o"
   val close = "fa-close"
+
+  val loading = "fa-spinner"
 
   val dropdownToggle = "fa-angle-down"
 

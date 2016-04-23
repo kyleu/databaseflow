@@ -3,6 +3,7 @@ import java.util.UUID
 import models._
 import models.template._
 import org.scalajs.jquery.{ jQuery => $ }
+import ui.ProgressManager
 import utils.JQueryUtils
 
 trait PlanHelper {
@@ -10,17 +11,16 @@ trait PlanHelper {
   protected[this] def handlePlanResultResponse(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
-    val html = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
+    val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
+    ProgressManager.completeProgress(pr.result.queryId, pr.id, Icons.queryPlan, pr.result.name, content, QueryPlanTemplate.actions)
+
     val workspace = $(s"#workspace-${pr.result.queryId}")
-    workspace.prepend(html.toString)
+    val panel = $(s"#${pr.id}", workspace)
 
     workOutPlanWidth(pr.id)
 
-    val panel = $(s"#${pr.id}")
     val chart = $(s".plan-chart", panel)
     val raw = $(s".plan-raw", panel)
-
-    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
 
     JQueryUtils.clickHandler($("a", panel), _.toggleClass("open"))
 
@@ -39,20 +39,13 @@ trait PlanHelper {
       }
       showingChart = !showingChart
     })
-
-    utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (jq) => panel.remove())
   }
 
   protected[this] def handlePlanErrorResponse(per: PlanErrorResponse) = {
     val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
-    val html = ErrorTemplate.forPlanError(per, occurred.toISOString, occurred.toString)
-    val workspace = $(s"#workspace-${per.error.queryId}")
-    workspace.prepend(html.toString)
+    val content = ErrorTemplate.forPlanError(per, occurred.toISOString, occurred.toString)
 
-    val panel = $(s"#${per.id}")
-    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
-
-    utils.JQueryUtils.clickHandler($(s".${Icons.close}", panel), (f) => $(s"#${per.id}").remove())
+    ProgressManager.completeProgress(per.error.queryId, per.id, Icons.error, "Plan Error", content, Nil)
   }
 
   private[this] def workOutPlanWidth(id: UUID) = {

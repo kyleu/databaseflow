@@ -7,9 +7,8 @@ import scalatags.Text.tags2.time
 
 object ErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String, dateFullString: String) = {
-    val status = p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qe.durationMs}ms].")
     div(id := qe.id.toString)(
-      status,
+      p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qe.durationMs}ms]."),
       p(cls := "")(qe.error.message),
       if (qe.error.position.isEmpty) {
         ""
