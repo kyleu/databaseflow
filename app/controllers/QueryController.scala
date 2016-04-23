@@ -4,9 +4,11 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
+import com.mohiva.play.silhouette.api.HandlerResult
 import models.{ RequestMessage, ResponseMessage }
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.streams.ActorFlow
-import play.api.mvc.WebSocket
+import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
 import services.connection.{ ConnectionService, ConnectionSettingsService }
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
@@ -27,8 +29,14 @@ class QueryController @javax.inject.Inject() (
   val mff = new MessageFrameFormatter(ctx.config.debug)
   implicit val t = mff.transformer
 
-  def connect(connectionId: UUID) = WebSocket.accept[RequestMessage, ResponseMessage] { request =>
-    val userOpt = None
-    ActorFlow.actorRef(out => ConnectionService.props(None, ctx.supervisor, connectionId, userOpt, out, request.remoteAddress))
+  def connect(connectionId: UUID) = WebSocket.acceptOrResult[RequestMessage, ResponseMessage] { request =>
+    implicit val req = Request(request, AnyContentAsEmpty)
+    ctx.silhouette.UserAwareRequestHandler { userAwareRequest =>
+      Future.successful(HandlerResult(Ok, Some(userAwareRequest.identity)))
+    }.map {
+      case HandlerResult(r, Some(user)) => Right(ActorFlow.actorRef { out =>
+        ConnectionService.props(None, ctx.supervisor, connectionId, user, out, request.remoteAddress)
+      })
+    }
   }
 }

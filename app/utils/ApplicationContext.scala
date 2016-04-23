@@ -2,7 +2,7 @@ package utils
 
 import java.util.TimeZone
 
-import akka.actor.{ ActorSystem, Props }
+import akka.actor.{ ActorRef, ActorSystem, Props }
 import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
 import org.joda.time.DateTimeZone
@@ -45,24 +45,26 @@ class ApplicationContext @javax.inject.Inject() (
     val actorSystem: ActorSystem,
     val silhouette: Silhouette[AuthEnv]
 ) extends Logging {
-  log.info(s"${Config.projectName} is starting.")
+  if (ApplicationContext.initialized) {
+    log.info(s"Skipping initialization after failure.")
+  } else {
+    log.info(s"${Config.projectName} is starting.")
+    ApplicationContext.initialized = true
 
-  DateTimeZone.setDefault(DateTimeZone.UTC)
-  TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+    DateTimeZone.setDefault(DateTimeZone.UTC)
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
-  SharedMetricRegistries.remove("default")
-  SharedMetricRegistries.add("default", Instrumented.metricRegistry)
+    SharedMetricRegistries.remove("default")
+    SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
-  MasterDatabase.open()
-  settings.load()
+    MasterDatabase.open()
+    settings.load()
 
-  val supervisor = {
-    val instanceRef = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
-    log.info(s"Actor Supervisor [${instanceRef.path}] started for [${utils.Config.projectId}].")
-    instanceRef
+    lifecycle.addStopHook(() => Future.successful(stop()))
   }
 
-  lifecycle.addStopHook(() => Future.successful(stop()))
+  val supervisor = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
+  log.info(s"Actor Supervisor [${supervisor.path}] started for [${utils.Config.projectId}].")
 
   private[this] def stop() = {
     MasterDatabase.close()
