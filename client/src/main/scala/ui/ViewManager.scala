@@ -8,6 +8,7 @@ import models.schema.View
 import models.template._
 import models.{ GetViewDetail, GetViewRowData, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import utils.JQueryUtils
 
 object ViewManager {
   var openViews = Map.empty[String, UUID]
@@ -61,11 +62,25 @@ object ViewManager {
       openViews = openViews + (name -> queryId)
   }
 
-  private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
+  private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions): Unit = {
     val resultId = UUID.randomUUID
 
     def onComplete(): Unit = {
       utils.Logging.info(s"onComplete for view [$name], result id [$resultId].")
+      val panel = $(s"#$resultId")
+      if (panel.length != 1) {
+        throw new IllegalStateException(s"Found [${panel.length}] panels for result [$resultId].")
+      }
+      JQueryUtils.clickHandler($(".sorted-title", panel), (j) => {
+        val col = j.data("col").toString
+        val asc = j.data("dir").toString == "asc"
+
+        utils.Logging.info(s"Clicked [$col].")
+        viewData(queryId, name, options.copy(
+          orderByCol = Some(col),
+          orderByAsc = Some(!asc)
+        ))
+      })
     }
 
     ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)

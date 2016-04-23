@@ -20,8 +20,8 @@ object Icons {
   val sectionDetails = "fa-share-square-o"
 
   val sortable = "fa-sort"
-  val sortedAsc = "fa-sorted"
-  val sortedDesc = "fa-chevron-down"
+  val sortedAsc = "fa-sort-down"
+  val sortedDesc = "fa-sort-up"
 
   val list = "fa-list"
 

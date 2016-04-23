@@ -61,11 +61,12 @@ object TableManager {
       }
       JQueryUtils.clickHandler($(".sorted-title", panel), (j) => {
         val col = j.data("col").toString
-        val asc = true
+        val asc = j.data("dir").toString == "asc"
+
         utils.Logging.info(s"Clicked [$col].")
         viewData(queryId, name, options.copy(
           orderByCol = Some(col),
-          orderByAsc = Some(asc)
+          orderByAsc = Some(!asc)
         ))
       })
     }

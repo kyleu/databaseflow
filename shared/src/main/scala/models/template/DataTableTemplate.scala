@@ -9,10 +9,16 @@ object DataTableTemplate {
   private[this] def tableHeader(res: QueryResult) = {
     def str(name: String) = if (res.source.exists(_.sortable)) {
       if (res.source.flatMap(_.sortedColumn).contains(name)) {
-        val icon = if (res.source.flatMap(_.sortedAscending).contains(false)) { Icons.sortedDesc } else { Icons.sortedAsc }
-        span(cls := "sorted-title", data("col") := name)(i(cls := s"right fa $icon"), name)
+        val asc = !res.source.flatMap(_.sortedAscending).contains(false)
+        span(cls := "sorted-title", data("col") := name, data("dir") := { if (asc) { "asc" } else { "desc" } })(
+          i(cls := s"right sorted-icon fa ${if (asc) { Icons.sortedAsc } else { Icons.sortedDesc }}"),
+          span(name)
+        )
       } else {
-        span(cls := "sorted-title", data("col") := name)(i(cls := s"right sort-icon fa ${Icons.sortable}"), name)
+        span(cls := "sorted-title", data("col") := name, data("dir") := "none")(
+          i(cls := s"right sort-icon fa ${Icons.sortable}"),
+          span(name)
+        )
       }
     } else {
       span(cls := "unsorted-title")(name)
