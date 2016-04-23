@@ -14,7 +14,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val searchColumns = columns
 
   val insert = Insert
-  def delete(id: UUID) = Delete(Seq(id))
+  def removeById(id: UUID) = RemoveById(Seq(id))
   def getAll(orderBy: String = "name") = GetAll(orderBy = orderBy)
   def getVisible(owner: Option[UUID], orderBy: String = "name") = GetAll(
     whereClause = owner match {

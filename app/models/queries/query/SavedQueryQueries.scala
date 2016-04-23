@@ -13,7 +13,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val searchColumns = Seq("id", "name", "description", "sql", "owner", "connection")
 
   val insert = Insert
-  def delete(id: UUID) = Delete(Seq(id))
+  def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
   def getForUser(userId: Option[UUID], connectionId: UUID) = {
     val ownerClause = userId match {

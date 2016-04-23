@@ -37,5 +37,5 @@ object ConnectionSettingsService {
 
   def insert(connSettings: ConnectionSettings) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
   def update(connSettings: ConnectionSettings) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
-  def delete(id: UUID) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.delete(id))
+  def delete(id: UUID) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.removeById(id))
 }

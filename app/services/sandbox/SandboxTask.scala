@@ -7,6 +7,7 @@ import scala.concurrent.Future
 object SandboxTask {
   val all = Seq(
     Testbed,
+    ShowSettings,
     DatabaseTest,
     HtmlSandbox,
     RebuildMaster

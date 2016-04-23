@@ -15,6 +15,7 @@ import play.api.routing.Router
 import models.auth.AuthEnv
 import services.database.MasterDatabase
 import services.notification.NotificationService
+import services.settings.SettingsService
 import services.supervisor.ActorSupervisor
 import utils.metrics.Instrumented
 
@@ -37,6 +38,7 @@ object ApplicationContext {
 class ApplicationContext @javax.inject.Inject() (
     val messagesApi: MessagesApi,
     val config: Config,
+    val settings: SettingsService,
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
     val notificationService: NotificationService,
@@ -52,16 +54,15 @@ class ApplicationContext @javax.inject.Inject() (
   SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
   MasterDatabase.open()
+  settings.load()
 
-  lifecycle.addStopHook(() => Future.successful(stop()))
-
-  lazy val supervisor = {
+  val supervisor = {
     val instanceRef = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
     log.info(s"Actor Supervisor [${instanceRef.path}] started for [${utils.Config.projectId}].")
     instanceRef
   }
 
-  supervisor.toString
+  lifecycle.addStopHook(() => Future.successful(stop()))
 
   private[this] def stop() = {
     MasterDatabase.close()

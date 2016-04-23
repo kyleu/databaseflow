@@ -5,7 +5,7 @@ case object CreateUsersTable extends CreateTableStatement("flowusers") {
     create table $tableName (
       id uuid primary key,
       username $varchar(256),
-      prefs $varchar(4096) NOT NULL,
+      prefs $varchar(4096) not null,
       email $varchar(1024) not null,
       roles $varchar(512) not null,
       created timestamp not null

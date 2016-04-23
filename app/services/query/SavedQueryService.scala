@@ -29,7 +29,7 @@ object SavedQueryService {
 
   def delete(id: UUID, userId: Option[UUID] = None) = {
     MasterDatabase.conn.query(SavedQueryQueries.getById(id)) match {
-      case Some(existing) => MasterDatabase.conn.executeUpdate(SavedQueryQueries.delete(id))
+      case Some(existing) => MasterDatabase.conn.executeUpdate(SavedQueryQueries.removeById(id))
       case None => throw new IllegalStateException(s"Unknown saved query [$id].")
     }
   }
