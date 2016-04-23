@@ -12,14 +12,14 @@ object ProgressManager {
 
   lazy val workspace = $("#workspace")
 
-  def startProgress(queryId: UUID, resultId: UUID, icon: String, status: String): Unit = {
+  def startProgress(queryId: UUID, resultId: UUID, icon: String, title: String): Unit = {
     activeQueries.get(queryId) match {
       case Some(active) if active == resultId => throw new IllegalStateException(s"Already started progress for query [$queryId] with result [$resultId].")
       case Some(active) => throw new IllegalStateException(s"Cannot start progress for query [$queryId] with [$resultId], already processing [$active].")
       case None => // No op
     }
 
-    val html = ProgressTemplate.loadingPanel(queryId, "Loading Test", resultId).render
+    val html = ProgressTemplate.loadingPanel(queryId, title, resultId).render
 
     val queryWorkspace = $(s"#workspace-$queryId", workspace)
     if (queryWorkspace.length != 1) {

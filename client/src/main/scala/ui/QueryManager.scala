@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.SubmitQuery
-import models.template.{ Icons, QueryResultsTemplate }
+import models.template.Icons
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
 
 import scala.scalajs.js
@@ -15,13 +15,13 @@ object QueryManager {
 
   lazy val workspace = $("#workspace")
 
-  def addQuery(queryId: UUID, queryPanel: JQuery, onChange: (String) => Unit, onClose: () => Unit): Unit = {
+  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, onChange: (String) => Unit, onClose: () => Unit): Unit = {
     val sqlEditor = EditorManager.initSqlEditor(queryId, onChange)
 
     def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
       val resultId = UUID.randomUUID
 
-      ProgressManager.startProgress(queryId, resultId, Icons.loading, "TODO: Query Manager")
+      ProgressManager.startProgress(queryId, resultId, Icons.loading, title)
 
       val sql = sqlEditor.getValue().toString
       utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action), resultId))

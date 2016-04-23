@@ -82,6 +82,6 @@ object SavedQueryManager {
       openSavedQueries = openSavedQueries - savedQuery.id
     }
 
-    QueryManager.addQuery(savedQuery.id, queryPanel, onChange, onClose)
+    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, onChange, onClose)
   }
 }

@@ -33,7 +33,8 @@ object AdHocQueryManager {
 
   def addAdHocQuery(queryId: UUID, queryName: String, sql: String): Unit = {
     val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-    QueryManager.workspace.append(QueryEditorTemplate.forAdHocQuery(engine, queryId, queryName, sql).toString)
+    val html = QueryEditorTemplate.forAdHocQuery(engine, queryId, queryName, sql)
+    QueryManager.workspace.append(html.render)
     TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery)
 
     val queryPanel = $(s"#panel-$queryId")
@@ -54,7 +55,7 @@ object AdHocQueryManager {
       }
     }
 
-    QueryManager.addQuery(queryId, queryPanel, onChange, () => Unit)
+    QueryManager.addQuery(queryId, "Untitled Query", queryPanel, onChange, () => Unit)
   }
 
 }

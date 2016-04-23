@@ -52,7 +52,7 @@ object TableManager {
   private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions) = {
     val resultId = UUID.randomUUID
 
-    ProgressManager.startProgress(queryId, resultId, Icons.loading, "TODO: Table Manager")
+    ProgressManager.startProgress(queryId, resultId, Icons.loading, name)
 
     utils.NetworkMessage.sendMessage(GetTableRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }
