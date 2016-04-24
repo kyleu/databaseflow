@@ -7,7 +7,8 @@ import scalatags.Text.all._
 object TableDetailTemplate {
   def forTable(queryId: UUID, tableName: String) = {
     val content = div(
-      div(cls := "description")(""),
+      div(cls := "description initially-hidden")(""),
+      div(cls := "row-count initially-hidden")(em(span("Unknown"), " estimated rows")),
       ul(cls := "collapsible table-options", data("collapsible") := "expandable")(
         li(cls := "definition-section initially-hidden")(
           div(cls := "collapsible-header")(i(cls := s"fa ${Icons.definition}"), "Definition"),

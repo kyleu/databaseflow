@@ -3,7 +3,7 @@ package services.schema
 import java.sql.{ Connection, DatabaseMetaData, Timestamp }
 
 import models.database.{ Query, Row }
-import models.engine.rdbms.MySQL
+import models.engine.rdbms.{ MySQL, PostgreSQL }
 import models.schema.Table
 import services.database.DatabaseConnection
 import utils.NullUtils
@@ -30,9 +30,10 @@ object MetadataTables {
     }
 
     val rowStats = db.engine match {
-      case MySQL => db(conn, new Query[Option[(String, String, Long, Int, Long, Option[Long])]] {
+      case MySQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
         override def sql = {
-          s"""select table_name, engine, table_rows, avg_row_length, data_length, create_time from information_schema.tables where table_name = \"${table.name}\""""
+          val t = s"${db.engine.leftQuoteIdentifier}${table.name}${db.engine.rightQuoteIdentifier}"
+          s"""select table_name, engine, table_rows, avg_row_length, data_length, create_time from information_schema.tables where table_name = $t"""
         }
         override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("table_name")
@@ -42,7 +43,17 @@ object MetadataTables {
           val dataLength = JdbcHelper.longVal(row.as[Any]("data_length"))
           val createTime = row.asOpt[Timestamp]("create_time").map(_.getTime)
 
-          (tableName, engine, rowEstimate, averageRowLength, dataLength, createTime)
+          (tableName, Some(engine), rowEstimate, Some(averageRowLength), Some(dataLength), createTime)
+        }.toList.headOption
+      })
+      case PostgreSQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
+        val t = s"${table.schema.map(_ + ".").getOrElse("")}${table.name}"
+        override def sql = s"select relname as name, reltuples as rows from pg_class where oid = '$t'::regclass"
+        override def reduce(rows: Iterator[Row]) = rows.map { row =>
+          val tableName = row.as[String]("name")
+          val rowEstimate = JdbcHelper.longVal(row.as[Any]("rows"))
+
+          (tableName, None, rowEstimate, None, None, None)
         }.toList.headOption
       })
       case _ => None
@@ -51,11 +62,11 @@ object MetadataTables {
     table.copy(
       definition = definition,
 
-      storageEngine = rowStats.map(_._2),
+      storageEngine = rowStats.flatMap(_._2),
 
       rowCountEstimate = rowStats.map(_._3),
-      averageRowLength = rowStats.map(_._4),
-      dataLength = rowStats.map(_._5),
+      averageRowLength = rowStats.flatMap(_._4),
+      dataLength = rowStats.flatMap(_._5),
 
       columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name),
       rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
