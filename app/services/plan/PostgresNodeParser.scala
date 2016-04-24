@@ -3,7 +3,7 @@ package services.plan
 import models.plan.PlanNode
 import upickle.Js
 
-import PostgresParseKeys._
+import services.plan.PostgresParseKeys._
 
 object PostgresNodeParser {
   def nodeFor(jsVal: Js.Value): PlanNode = jsVal match {

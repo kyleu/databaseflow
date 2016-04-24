@@ -2,6 +2,6 @@ package gui.web
 
 trait WebApp {
   def started: Boolean
-  def start(): Unit
-  def stop(): Unit
+  def start()
+  def stop()
 }

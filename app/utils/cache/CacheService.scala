@@ -18,7 +18,7 @@ object CacheService {
   }
 
   def keys() = {
-    import collection.JavaConverters._
+    import scala.collection.JavaConverters._
     cache.getKeys.asScala.map({
       case s: String => s
       case x => x.toString

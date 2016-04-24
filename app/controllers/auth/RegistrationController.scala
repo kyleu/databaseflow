@@ -34,8 +34,12 @@ class RegistrationController @javax.inject.Inject() (
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userSearchService.retrieve(loginInfo).flatMap {
-          case Some(user) =>
-            Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data), Some(Messages("registration.email.taken")))))
+          case _ if data.password != data.passwordConfirm => Future.successful(
+            Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data), Some(Messages("registration.passwords.do.not.match"))))
+          )
+          case Some(user) => Future.successful(
+            Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data), Some(Messages("registration.email.taken"))))
+          )
           case None =>
             val authInfo = hasher.hash(data.password)
             val user = User(

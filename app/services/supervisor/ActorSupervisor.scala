@@ -15,7 +15,7 @@ object ActorSupervisor {
 }
 
 class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor with Logging {
-  import ActorSupervisor._
+  import services.supervisor.ActorSupervisor._
 
   protected[this] val connections = collection.mutable.HashMap.empty[UUID, ConnectionRecord]
   protected[this] val connectionsCounter = metrics.counter("active-connections")
