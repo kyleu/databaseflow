@@ -54,7 +54,6 @@ object TableManager {
     val resultId = UUID.randomUUID
 
     def onComplete(): Unit = {
-      utils.Logging.info(s"onComplete for table [$name], result id [$resultId].")
       val panel = $(s"#$resultId")
       if (panel.length != 1) {
         throw new IllegalStateException(s"Found [${panel.length}] panels for result [$resultId].")
@@ -63,7 +62,6 @@ object TableManager {
         val col = j.data("col").toString
         val asc = j.data("dir").toString == "asc"
 
-        utils.Logging.info(s"Clicked [$col].")
         viewData(queryId, name, options.copy(
           orderByCol = Some(col),
           orderByAsc = Some(!asc)

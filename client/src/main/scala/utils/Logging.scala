@@ -27,8 +27,8 @@ object Logging {
   }
 
   def installErrorHandler() = {
-    dom.document.onerror = (e: Event) => {
-      info("Script Error Encountered")
+    dom.window.onerror = (e: Event, source: String, lineno: Int, colno: Int) => {
+      info(s"Script error [$e] encountered in [$source:$lineno:$colno]")
       error(e.toString)
       if (showDebug) {
         // rethrow
