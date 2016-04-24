@@ -33,7 +33,8 @@ trait DataHelper extends Logging { this: ConnectionService =>
   private[this] def handleShowDataResponse(queryId: UUID, t: String, name: String, foreignKeys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID) {
     def work() = {
       val startMs = DateUtils.nowMillis
-      val sql = EngineQueries.selectFrom(name, options)(db.engine)
+      val optionsNewLimit = options.copy(limit = options.limit.map(_ + 1))
+      val sql = EngineQueries.selectFrom(name, optionsNewLimit)(db.engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
       sqlCatch(queryId, sql, startMs, resultId) { () =>
         val result = db.executeUnknown(DynamicQuery(sql))
@@ -42,6 +43,14 @@ trait DataHelper extends Logging { this: ConnectionService =>
           case Right(i) => throw new IllegalStateException(s"Invalid query [$sql] returned statement result.")
         }
 
+        val (trimmedData, moreRowsAvailable) = options.limit match {
+          case Some(limit) => if (data.size > limit) {
+            data.take(limit) -> true
+          } else {
+            data -> false
+          }
+          case None => data -> false
+        }
         val columnsWithRelations = columns.map { col =>
           foreignKeys.find(_.references.exists(_.source == col.name)) match {
             case Some(fk) => col.copy(
@@ -59,7 +68,8 @@ trait DataHelper extends Logging { this: ConnectionService =>
           title = name + " Data",
           sql = sql,
           columns = columnsWithRelations,
-          data = data,
+          data = trimmedData,
+          moreRowsAvailable = moreRowsAvailable,
           source = Some(QueryResult.Source(
             t = t,
             name = name,

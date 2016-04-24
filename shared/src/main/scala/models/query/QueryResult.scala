@@ -28,6 +28,7 @@ case class QueryResult(
   sql: String,
   columns: Seq[QueryResult.Col],
   data: Seq[Seq[Option[String]]],
+  moreRowsAvailable: Boolean = false,
   source: Option[QueryResult.Source] = None,
   occurred: Long = System.currentTimeMillis
 )

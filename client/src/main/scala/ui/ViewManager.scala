@@ -6,9 +6,8 @@ import models.engine.EngineQueries
 import models.query.RowDataOptions
 import models.schema.View
 import models.template._
-import models.{ GetViewDetail, GetViewRowData, SubmitQuery }
+import models.{ GetViewDetail, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import utils.JQueryUtils
 
 object ViewManager extends ViewDetailHelper {
   var openViews = Map.empty[String, UUID]
@@ -39,7 +38,7 @@ object ViewManager extends ViewDetailHelper {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        viewData(queryId, name, RowDataOptions.empty)
+        RowDataManager.showViewRowData(queryId, name, RowDataOptions.empty)
       })
 
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
@@ -47,7 +46,9 @@ object ViewManager extends ViewDetailHelper {
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, () => Unit, Icons.loading, title)
 
-        val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
+        val sql = EngineQueries.selectFrom(name, RowDataOptions(limit = Some(100))) {
+          MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine."))
+        }
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action), resultId = resultId))
       })
 
@@ -60,29 +61,5 @@ object ViewManager extends ViewDetailHelper {
       })
 
       openViews = openViews + (name -> queryId)
-  }
-
-  private[this] def viewData(queryId: UUID, name: String, options: RowDataOptions): Unit = {
-    val resultId = UUID.randomUUID
-
-    def onComplete(): Unit = {
-      val panel = $(s"#$resultId")
-      if (panel.length != 1) {
-        throw new IllegalStateException(s"Found [${panel.length}] panels for result [$resultId].")
-      }
-      JQueryUtils.clickHandler($(".sorted-title", panel), (j) => {
-        val col = j.data("col").toString
-        val asc = j.data("dir").toString == "asc"
-
-        viewData(queryId, name, options.copy(
-          orderByCol = Some(col),
-          orderByAsc = Some(!asc)
-        ))
-      })
-    }
-
-    ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)
-
-    utils.NetworkMessage.sendMessage(GetViewRowData(queryId = queryId, name = name, options = options, resultId = resultId))
   }
 }

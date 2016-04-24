@@ -1,6 +1,5 @@
 package models.template
 
-import models.QueryResultResponse
 import models.query.QueryResult
 
 import scalatags.Text.all._
@@ -15,6 +14,11 @@ object QueryResultsTemplate {
   def forResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int) = div(
     em(s"${qr.data.size} rows returned ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${durationMs}ms]."),
     DataTableTemplate.forResults(qr),
+    if (qr.moreRowsAvailable) {
+      div(em("More rows available!"))
+    } else {
+      div(em("No more rows available"))
+    },
     div(cls := "z-depth-1 query-result-sql")(
       pre(cls := "pre-wrap")(qr.sql)
     )
