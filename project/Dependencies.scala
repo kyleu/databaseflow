@@ -42,6 +42,12 @@ object Dependencies {
     val scalaTags = "com.lihaoyi" %% "scalatags" % version
   }
 
+  object Licensing {
+    val version = "1.1.0"
+    val core = "net.nicholaswilliams.java.licensing" % "licensing-core" % version
+    val licensor = "net.nicholaswilliams.java.licensing" % "licensing-licensor-base" % version
+  }
+
   object Akka {
     private[this] val version = "2.4.3"
     val actor = "com.typesafe.akka" %% "akka-actor" % version

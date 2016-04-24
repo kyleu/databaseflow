@@ -13,4 +13,5 @@ object Build extends Build with UniversalKeys {
   lazy val server = Server.server
 
   lazy val iconCreator = Utilities.iconCreator
+  lazy val licenseGenerator = Utilities.licenseGenerator
 }

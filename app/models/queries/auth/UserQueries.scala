@@ -27,7 +27,7 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class UpdateUser(u: User) extends Statement {
-    override val sql = updateSql(Seq("username", "prefs", "profiles", "roles"))
+    override val sql = updateSql(Seq("username", "prefs", "email", "roles"))
     override val values = {
       val roles = u.roles.mkString(",")
       val prefs = write(u.preferences)
