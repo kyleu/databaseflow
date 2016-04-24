@@ -5,6 +5,7 @@ import java.util.UUID
 import models.template.{ Icons, ProgressTemplate }
 import org.scalajs.jquery.{ jQuery => $ }
 
+import scala.scalajs.js.timers
 import scalatags.Text.TypedTag
 
 object ProgressManager {
@@ -26,6 +27,21 @@ object ProgressManager {
       throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
     }
     queryWorkspace.html(html)
+
+    val timer = $(".timer", queryWorkspace)
+    if (timer.length != 1) {
+      throw new IllegalStateException(s"Found [${timer.length}] timers for result [$resultId].")
+    }
+
+    def incrementTimer(): Unit = {
+      val newVal = timer.text().toString.toInt + 1
+      timer.text(newVal.toString)
+      if (activeQueries.get(queryId).exists(_._1 == resultId)) {
+        timers.setTimeout(1000)(incrementTimer())
+      }
+    }
+
+    timers.setTimeout(1000)(incrementTimer())
 
     activeQueries = activeQueries + (queryId -> (resultId -> onComplete))
   }

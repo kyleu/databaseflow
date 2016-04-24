@@ -9,7 +9,7 @@ object ProgressTemplate {
     div(id := resultId.toString, cls := "panel")(
       StaticPanelTemplate.cardRow(
         title = title,
-        content = div("Loading..."),
+        content = div("Loading for ", span(cls := "timer")("0"), " seconds..."),
         icon = Some(Icons.loading + " " + Icons.spin),
         showClose = false
       )
