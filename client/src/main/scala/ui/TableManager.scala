@@ -38,7 +38,7 @@ object TableManager extends TableDetailHelper {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        RowDataManager.showTableRowData(queryId, name, RowDataOptions(limit = Some(100)))
+        RowDataManager.showTableRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
       })
 
       utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {

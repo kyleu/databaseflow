@@ -9,6 +9,7 @@ object UserManager {
   var userId: Option[UUID] = None
   var username: Option[String] = None
   var preferences: Option[UserPreferences] = None
+  val rowsReturned = 100
 
   def onUserSettings(us: UserSettings) = {
     userId = us.userId

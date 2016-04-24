@@ -38,7 +38,7 @@ object ViewManager extends ViewDetailHelper {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        RowDataManager.showViewRowData(queryId, name, RowDataOptions.empty)
+        RowDataManager.showViewRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
       })
 
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
@@ -46,9 +46,7 @@ object ViewManager extends ViewDetailHelper {
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, () => Unit, Icons.loading, title)
 
-        val sql = EngineQueries.selectFrom(name, RowDataOptions(limit = Some(100))) {
-          MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine."))
-        }
+        val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action), resultId = resultId))
       })
 
