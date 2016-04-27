@@ -1,12 +1,13 @@
-@(isGuest: Boolean)
-<ul id="dropdown-user" class="dropdown-content">
-  @if(isGuest) {
-    <li><a href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign Up</a></li>
-    <li><a href="@controllers.auth.routes.AuthenticationController.signInForm()">Sign In</a></li>
-    <li><a href="http://databaseflow.com">About</a></li>
-  } else {
-    <li><a href="@routes.ProfileController.view()">Profile</a></li>
-    <li><a href="@controllers.auth.routes.AuthenticationController.signOut()">Sign Out</a></li>
-    <li><a href="http://databaseflow.com">About</a></li>
-  }
-</ul>
+@(user: Option[models.user.User])
+@defining(user.map(_.preferences.theme).getOrElse("blue-grey") + "-text") { theme =>
+  <ul id="dropdown-user" class="dropdown-content">
+    @if(user.isEmpty) {
+    <li><a class="@theme" href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign Up</a></li>
+    <li><a class="@theme" href="@controllers.auth.routes.AuthenticationController.signInForm()">Sign In</a></li>
+    } else {
+    <li><a class="@theme" href="@routes.ProfileController.view()">Profile</a></li>
+    <li><a class="@theme" href="@controllers.auth.routes.AuthenticationController.signOut()">Sign Out</a></li>
+    }
+    <li><a class="@theme" href="http://databaseflow.com">About</a></li>
+  </ul>
+}

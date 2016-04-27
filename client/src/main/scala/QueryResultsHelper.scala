@@ -4,7 +4,7 @@ import models._
 import models.query.{ QueryResult, RowDataOptions }
 import models.template._
 import org.scalajs.jquery.{ jQuery => $ }
-import ui.{ ProgressManager, TableManager }
+import ui.{ ProgressManager, TableManager, UserManager }
 import utils.JQueryUtils
 
 trait QueryResultsHelper { this: DatabaseFlow =>
@@ -57,6 +57,20 @@ trait QueryResultsHelper { this: DatabaseFlow =>
   }
 
   private[this] def handleAppendQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {
+    val workspace = $(s"#workspace-${qr.queryId}")
+    val panel = $(s"#$resultId", workspace)
+    val resultEl = $(".query-result-table tbody", panel)
+
+    val content = QueryResultsTemplate.forAppend(qr)
+
+    resultEl.append(content)
+
+    if (qr.moreRowsAvailable) {
+      val linkTo = $(".additional-results", panel)
+      linkTo.data("!!!") = "100"
+
+    }
+
     utils.Logging.info(s"TODO: Appending [${qr.data.length}] rows to result [$resultId].")
   }
 

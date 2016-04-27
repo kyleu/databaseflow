@@ -14,9 +14,8 @@ object RowDataManager {
   def showTableRowData(queryId: UUID, name: String, options: RowDataOptions) = showRowData("table", queryId, name, options)
   def showViewRowData(queryId: UUID, name: String, options: RowDataOptions) = showRowData("view", queryId, name, options)
 
-  private[this] def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions): Unit = {
+  private[this] def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID = UUID.randomUUID): Unit = {
     utils.Logging.info(s"Showing [$key] row data for [$name] with options [$options].")
-    val resultId = UUID.randomUUID
 
     def onComplete(): Unit = {
       val panel = $(s"#$resultId")
@@ -31,11 +30,20 @@ object RowDataManager {
       })
 
       JQueryUtils.clickHandler($(".append-rows-link", panel), (j) => {
-        utils.Logging.info("Append!")
+        val newOptions = options.copy(limit = Some(UserManager.rowsReturned), offset = Some(options.offset.getOrElse(0) + UserManager.rowsReturned))
+        showRowData(key, queryId, name, newOptions, resultId)
       })
     }
 
-    ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)
+    if (options.offset.forall(_ == 0)) {
+      ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)
+    } else {
+      val panel = $(s"#$resultId")
+      if (panel.length != 1) {
+        throw new IllegalStateException(s"Found [${panel.length}] panels for result [$resultId].")
+      }
+      $(".append-rows-link", panel).remove()
+    }
     val msg = key match {
       case "table" => GetTableRowData(queryId, name, options, resultId)
       case "view" => GetViewRowData(queryId, name, options, resultId)

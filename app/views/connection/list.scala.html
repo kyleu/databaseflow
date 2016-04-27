@@ -4,17 +4,19 @@
   <li>
     <div class="collapsible-header">
       <em class="right">@c.engine.name</em>
-      <i style="color: @models.user.Themes.map(user.map(_.preferences.theme).getOrElse("blue-grey"))" class="fa @models.template.Icons.database"></i>
+      @defining(user.map(_.preferences.theme).getOrElse("blue-grey")) { theme =>
+        <i class="@theme-text fa @models.template.Icons.database"></i>
+      }
       @c.name
     </div>
     <div class="collapsible-body">
-      <div style="padding: 25px;">
+      <div style="padding : 25px ;">
         <div>@c.description</div>
-        <em style="display: block;">@c.url</em>
-        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn" style="margin: 10px 0;">Query</a>
+        <em style="display : block ;">@c.url</em>
+        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin : 10px 0 ;">Query</a>
         @if(c.id != services.connection.ConnectionSettingsService.masterId) {
           @if(c.owner.isEmpty || user.forall(u => c.owner.contains(u.id))) {
-            <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn">Settings</a>
+            <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn theme">Settings</a>
           }
         }
       </div>

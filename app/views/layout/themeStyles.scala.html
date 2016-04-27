@@ -1,0 +1,38 @@
+@(color: String)
+<style type="text/css">@defining(models.user.Themes.map(color)) { themeColor =>
+  /* Tabs */
+  .tabs .tab a { color: @themeColor; }
+  .tabs .tab a:hover { color: @themeColor; }
+  .tabs .tab.disabled a { color: @themeColor; }
+  .tabs .indicator { background-color: @themeColor; }
+
+  /* Search */
+  ul#main-menu li.search .search-wrapper input#search:focus { border-bottom: 2px solid @themeColor !important; }
+
+  /* Forms */
+  [type="radio"]:checked+label:after {
+    border-color: @themeColor;
+    background-color: @themeColor;
+  }
+
+   .input-field label {
+     color: #000;
+   }
+   .input-field input[type=text]:focus + label, .input-field input[type=password]:focus + label {
+     color: @themeColor;
+   }
+   .input-field input[type=text]:focus, .input-field input[type=password]:focus {
+     border-bottom: 1px solid @themeColor;
+     box-shadow: 0 1px 0 0 @themeColor;
+   }
+   .input-field .prefix.active {
+     color: @themeColor;
+   }
+
+   .theme {
+     background-color: @themeColor !important;
+   }
+   .theme-text {
+     color: @themeColor !important;
+   }
+}</style>

@@ -8,7 +8,7 @@
         <span class="card-title">@title</span>
         <div class="row" style="margin-bottom: 0;">
           <div class="input-field col s12 m6">
-            <input id="form-name" name="name" type="text" class="validate" value="@conn.name" />
+            <input id="form-name" name="name" type="text" value="@conn.name" />
             <label for="form-name">Connection Name</label>
           </div>
 
@@ -22,17 +22,17 @@
           </div>
 
           <div class="input-field col s12">
-            <input id="form-url" name="url" type="text" class="validate" value="@conn.url" />
+            <input id="form-url" name="url" type="text" value="@conn.url" />
             <label for="form-url">Jdbc Url</label>
           </div>
 
           <div class="input-field col s12 m6">
-            <input id="form-username" name="databaseUsername" type="text" class="validate" value="@conn.username" />
+            <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
             <label for="form-username">Username</label>
           </div>
 
           <div class="input-field col s12 m6">
-            <input id="form-password" name="databasePassword" type="password" class="validate" value="" />
+            <input id="form-password" name="databasePassword" type="password" value="" />
             <label for="form-password">Password</label>
           </div>
 
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="card-action">
-        <button class="btn waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
+        <button class="btn @user.map(_.preferences.theme).getOrElse("blue-grey") waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
         <a class="btn-flat waves-effect waves-light" href="@routes.HomeController.index()">Cancel</a>
         @if((!isNew) && conn.id != services.connection.ConnectionSettingsService.masterId) {
           <button class="right btn-flat waves-effect waves-light" onclick="onDelete();return false;">Delete</button>

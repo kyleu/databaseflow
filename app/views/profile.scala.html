@@ -1,7 +1,7 @@
 @(user: Option[models.user.User], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(user, utils.Config.projectName, debug = debug) {
-  <form action="" method="post">
+  <form id="profile-form" action="" method="post">
   <div class="col s12">
     <div class="card">
       <div class="card-content">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="card-action">
-        <button class="right btn-flat waves-effect waves-light" type="submit">@Messages("profile.save")</button>
+        <a class="right waves-effect btn-flat" onclick="document.getElementById('profile-form').submit()">@Messages("profile.save")</a>
         <div style="clear: both;"></div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.query.SavedQuery
 import models.schema.{ Procedure, Table, View }
+import utils.NumberUtils
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._
@@ -21,9 +22,10 @@ object ModelListTemplate {
   }
 
   def forTables(queryId: UUID, tables: Seq[Table]) = {
-    val cols = Seq("Name", "Columns", "Primary Key", "Indexes", "Foreign Keys", "Description")
+    val cols = Seq("Name", "Rows", "Columns", "Primary Key", "Indexes", "Foreign Keys", "Description")
     val rows = tables.map(t => tr(
       td(a(cls := "list-link", data("name") := t.name, href := s"#table-${t.name}")(t.name)),
+      td(t.rowCountEstimate.map(NumberUtils.withCommas).getOrElse(""): String),
       td(t.columns.size.toString),
       td(t.primaryKey.map(pk => span(pk.columns.mkString(", "))).getOrElse(em("None"))),
       td(t.indexes.size.toString),

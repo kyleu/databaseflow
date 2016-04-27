@@ -1,10 +1,10 @@
-@()
+@(user: Option[models.user.User])
 <div id="confirm-modal" class="modal">
   <div class="modal-content">
     <p id="confirm-modal-content">Are you sure?</p>
   </div>
   <div class="modal-footer">
-    <a id="confirm-true-link" href="#" class="modal-action waves-effect waves-light btn">Save</a>
+    <a id="confirm-true-link" href="#" class="modal-action waves-effect waves-light btn @user.map(_.preferences.theme).getOrElse("blue-grey")">Save</a>
     <a id="confirm-false-link" href="#" class="modal-action waves-effect waves-light btn-flat">Cancel</a>
   </div>
 </div>

@@ -6,15 +6,7 @@
   scripts = Seq(routes.Assets.versioned("javascripts/timeago.js").url),
   debug = debug
 ) {
-  <style type="text/css">@defining(models.user.Themes.map(user.map(_.preferences.theme).getOrElse("blue-grey"))) { themeColor =>
-    .tabs .tab a { color: @themeColor; }
-    .tabs .tab a:hover { color: @themeColor; }
-    .tabs .tab.disabled a { color: @themeColor; }
-    .tabs .indicator { background-color: @themeColor; }
-
-    ul#main-menu li.search .search-wrapper input#search:focus { border-bottom: 2px solid @themeColor !important; }
-  }</style>
-
+  @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse("blue-grey"))
   @views.html.query.navbar(user, dbName)
 
   <main class="indent">
@@ -42,8 +34,8 @@
       </div>
     </div>
 
-    @views.html.query.confirmModal()
-    @views.html.query.saveModal()
+    @views.html.query.confirmModal(user)
+    @views.html.query.saveModal(user)
   </main>
 
   @if(debug) {

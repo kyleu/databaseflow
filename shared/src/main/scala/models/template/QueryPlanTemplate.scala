@@ -8,8 +8,8 @@ import scalatags.Text.tags2.time
 
 object QueryPlanTemplate {
   val actions = Seq(
-    a(href := "#")("Download"),
-    a(cls := "right plan-view-toggle", href := "#")("View Raw Plan")
+    a(cls := "theme-text", href := "#")("Download"),
+    a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan")
   )
 
   def forPlan(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = div(

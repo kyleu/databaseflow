@@ -8,7 +8,11 @@ import sbt._
 object Client {
   private[this] val clientSettings = Shared.commonSettings ++ Seq(
     persistLauncher := false,
-    libraryDependencies ++= Seq("be.doeraene" %%% "scalajs-jquery" % "0.9.0"),
+    libraryDependencies ++= Seq(
+      "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
+      "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
+    ),
+    testFrameworks += new TestFramework("utest.runner.Framework"),
     scalaJSStage in Global := FastOptStage,
     scapegoatIgnoredFiles := Seq(".*/JsonUtils.scala", ".*/JsonSerializers.scala")
   )

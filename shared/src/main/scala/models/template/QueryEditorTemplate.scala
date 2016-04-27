@@ -24,14 +24,14 @@ object QueryEditorTemplate {
     val modificationLinks = userId match {
       case Some(uid) => if (sq.owner.contains(uid)) {
         Seq(
-          a(cls := "save-query-link right", href := "#")("Save"),
-          a(cls := "settings-query-link right", href := "#")("Settings"),
-          a(cls := "save-as-query-link right", href := "#")("Save As New"),
-          a(cls := "delete-query-link right", href := "#")("Delete")
+          a(cls := "save-query-link right theme-text", href := "#")("Save"),
+          a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
+          a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
+          a(cls := "delete-query-link right theme-text", href := "#")("Delete")
         )
       } else {
         Seq(
-          a(cls := "save-as-query-link right", href := "#")("Save As New")
+          a(cls := "save-as-query-link right theme-text", href := "#")("Save As New")
         )
       }
       case None => Seq.empty
