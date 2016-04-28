@@ -39,7 +39,7 @@ object AdHocQueryManager {
 
     val queryPanel = $(s"#panel-$queryId")
 
-    utils.JQueryUtils.clickHandler($(s".save-query-link", queryPanel), (jq) => {
+    utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       QueryFormManager.show(SavedQuery(
         id = queryId,
         name = queryName,

@@ -31,7 +31,7 @@ trait QueryResultsHelper { this: DatabaseFlow =>
 
     val resultEl = $(".query-result-table", panel)
     val detailsEl = $(".query-result-details", panel)
-    val detailsLink = $(s".title-icon", panel)
+    val detailsLink = $(".title-icon", panel)
 
     JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
       val table = jq.data("rel-table").toString

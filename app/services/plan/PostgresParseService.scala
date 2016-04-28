@@ -12,7 +12,9 @@ object PostgresParseService extends PlanParseService("postgres") {
       case a: Js.Arr => if (a.value.length == 1) {
         a.value.headOption match {
           case Some(x: Js.Obj) => x.value match {
-            case planEl if planEl.headOption.map(_._1).contains("Plan") => parsePlan(sql, queryId, planEl.head._2, startMs)
+            case planEl if planEl.headOption.map(_._1).contains("Plan") =>
+              val plan = planEl.headOption.getOrElse(throw new IllegalStateException())._2
+              parsePlan(sql, queryId, plan, startMs)
             case v => throw new IllegalArgumentException("Expected single element \"Plan\", found [" + v.map(_._1).mkString(", ") + "].")
           }
           case x => throw new IllegalArgumentException(s"Array contains [${a.value.length}] elements, and the head is of type [$x].")

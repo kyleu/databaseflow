@@ -30,7 +30,7 @@ object MetadataKeys {
 
     val rows = new Row.Iter(rs).map(fromRow).toList.groupBy(_._1)
     rows.map { row =>
-      val first = row._2.head
+      val first = row._2.headOption.getOrElse(throw new IllegalStateException("Missing column info."))
       ForeignKey(
         name = first._1,
         targetTable = first._3,

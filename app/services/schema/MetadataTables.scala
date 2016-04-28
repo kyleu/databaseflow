@@ -11,7 +11,7 @@ import utils.NullUtils
 import scala.util.control.NonFatal
 
 object MetadataTables {
-  def getTables(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+  def getTables(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
     new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
   }
@@ -24,7 +24,9 @@ object MetadataTables {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override def sql = "show create table " + db.engine.leftQuoteIdentifier + table.name + db.engine.rightQuoteIdentifier
-        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.head
+        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.headOption.getOrElse {
+          throw new IllegalStateException("Missing column [Create Table].")
+        }
       }))
       case _ => None
     }

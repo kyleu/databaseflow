@@ -46,7 +46,7 @@ class ApplicationContext @javax.inject.Inject() (
     val silhouette: Silhouette[AuthEnv]
 ) extends Logging {
   if (ApplicationContext.initialized) {
-    log.info(s"Skipping initialization after failure.")
+    log.info("Skipping initialization after failure.")
   } else {
     log.info(s"${Config.projectName} is starting.")
     ApplicationContext.initialized = true

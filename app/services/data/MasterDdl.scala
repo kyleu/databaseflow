@@ -30,7 +30,7 @@ object MasterDdl extends Logging {
 
   def wipe(db: DatabaseConnection) = {
     log.warn("Wiping database schema.")
-    val tableNames = tables.reverse.map(_.tableName)
+    val tableNames = tables.reverseMap(_.tableName)
     tableNames.map { tableName =>
       db.executeUpdate(DdlQueries.TruncateTable(tableName))
     }

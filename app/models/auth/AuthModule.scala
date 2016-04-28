@@ -1,7 +1,6 @@
 package models.auth
 
 import com.google.inject.{ AbstractModule, Provides }
-import com.mohiva.play.silhouette.api.actions.{ SecuredErrorHandler, UnsecuredErrorHandler }
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util._
@@ -38,7 +37,7 @@ class AuthModule extends AbstractModule with ScalaModule {
     eventBus: EventBus,
     userSearchService: UserSearchService
   ): Environment[AuthEnv] = {
-    Environment[AuthEnv](userSearchService, authenticatorService, Seq(), eventBus)
+    Environment[AuthEnv](userSearchService, authenticatorService, Seq.empty, eventBus)
   }
 
   @Provides

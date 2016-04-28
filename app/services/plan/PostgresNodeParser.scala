@@ -57,7 +57,10 @@ object PostgresNodeParser {
       val tags = Nil
 
       PlanNode(
-        title = params.get(keyNodeType).map(_.asInstanceOf[Js.Str].value).getOrElse("?"),
+        title = params.get(keyNodeType).map {
+          case s: Js.Str => s.value
+          case x => throw new IllegalStateException(x.toString)
+        }.getOrElse("?"),
         nodeType = "?",
         costs = costs,
         properties = props,

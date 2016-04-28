@@ -32,7 +32,7 @@ object TabManager {
     tabBar.append(s"""<li id="tab-$id" class="tab col s3">
       <a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a>
     </li>""")
-    $(s".tabs .indicator").remove()
+    $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
 
     selectTab(id)
@@ -41,7 +41,7 @@ object TabManager {
   def removeTab(queryId: UUID) = {
     openTabs = openTabs.filterNot(_._1 == queryId)
     $(s"#tab-$queryId").remove()
-    $(s".tabs .indicator").remove()
+    $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
   }
 

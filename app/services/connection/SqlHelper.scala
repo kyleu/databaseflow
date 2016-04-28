@@ -14,7 +14,7 @@ trait SqlHelper { this: ConnectionService =>
   def sqlCatch(queryId: UUID, sql: String, startMs: Long, resultId: UUID)(f: () => ResponseMessage) = try {
     f()
   } catch {
-    case t: Throwable =>
+    case NonFatal(t) =>
       val durationMs = (DateUtils.nowMillis - startMs).toInt
       t match {
         case sqlEx: PSQLException =>
@@ -22,10 +22,9 @@ trait SqlHelper { this: ConnectionService =>
           QueryErrorResponse(resultId, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
         case sqlEx: SQLSyntaxErrorException =>
           QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
-        case NonFatal(x) =>
+        case x =>
           log.warn(s"Unhandled error running sql [$sql].", x)
           ServerError(x.getClass.getSimpleName, x.getMessage)
-        case _ => throw t
       }
   }
 }

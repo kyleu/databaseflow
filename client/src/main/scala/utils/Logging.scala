@@ -31,7 +31,7 @@ object Logging {
       info(s"Script error [$e] encountered in [$source:$lineno:$colno]")
       error(e.toString)
       if (showDebug) {
-        // rethrow
+        throw new IllegalStateException(e.toString)
       }
     }
   }

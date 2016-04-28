@@ -19,9 +19,7 @@ import scala.concurrent.Future
 class AuthenticationController @javax.inject.Inject() (
     override val ctx: ApplicationContext,
     userSearchService: UserSearchService,
-    authInfoRepository: AuthInfoRepository,
-    credentialsProvider: CredentialsProvider,
-    clock: Clock
+    credentialsProvider: CredentialsProvider
 ) extends BaseController {
   def signInForm = withSession("form") { implicit request =>
     Future.successful(Ok(views.html.auth.signin(request.identity, UserForms.signInForm)))

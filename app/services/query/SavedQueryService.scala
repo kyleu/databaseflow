@@ -29,7 +29,11 @@ object SavedQueryService {
 
   def delete(id: UUID, userId: Option[UUID] = None) = {
     MasterDatabase.conn.query(SavedQueryQueries.getById(id)) match {
-      case Some(existing) => MasterDatabase.conn.executeUpdate(SavedQueryQueries.removeById(id))
+      case Some(existing) => if (existing.owner.isEmpty || existing.owner.forall(x => userId.contains(x))) {
+        MasterDatabase.conn.executeUpdate(SavedQueryQueries.removeById(id))
+      } else {
+        throw new IllegalStateException(s"Attempted by [$userId] to remove saved query [$id], which is owned by [${existing.owner.getOrElse("None")}].")
+      }
       case None => throw new IllegalStateException(s"Unknown saved query [$id].")
     }
   }

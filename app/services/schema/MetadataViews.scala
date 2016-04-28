@@ -9,7 +9,7 @@ import services.database.DatabaseConnection
 import utils.NullUtils
 
 object MetadataViews {
-  def getViews(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+  def getViews(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("VIEW"))
     new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
   }
@@ -22,7 +22,9 @@ object MetadataViews {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override def sql = "show create view " + view.name
-        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.head
+        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.headOption.getOrElse {
+          throw new IllegalStateException("Missing [Create View] column.")
+        }
       }))
       case _ => None
     }

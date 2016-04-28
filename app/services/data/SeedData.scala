@@ -10,7 +10,7 @@ import services.database.DatabaseConnection
 import services.query.SavedQueryService
 
 object SeedData {
-  def insert(db: DatabaseConnection) = {
+  def insert() = {
     addConnections()
     addSavedQueries()
   }

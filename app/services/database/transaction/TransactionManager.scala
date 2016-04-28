@@ -13,7 +13,9 @@ class TransactionManager extends TransactionProvider {
 
   protected def ambientTransactionState = localTransactionStorage.get
 
-  protected def ambientTransaction = ambientTransactionState.flatMap(t => Some(t.transactions.head))
+  protected def ambientTransaction = ambientTransactionState.flatMap(t => Some(t.transactions.headOption.getOrElse {
+    throw new IllegalStateException("Missing transactions.")
+  }))
 
   protected def currentTransactionState = ambientTransactionState.getOrElse(throw new Exception("No transaction in current context"))
 

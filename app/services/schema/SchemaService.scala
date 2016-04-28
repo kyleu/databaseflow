@@ -81,8 +81,8 @@ object SchemaService extends Logging {
       procedures = Nil
     )
 
-    val tables = MetadataTables.getTables(db, conn, metadata, catalogName, schemaName)
-    val views = MetadataViews.getViews(db, conn, metadata, catalogName, schemaName)
+    val tables = MetadataTables.getTables(metadata, catalogName, schemaName)
+    val views = MetadataViews.getViews(metadata, catalogName, schemaName)
     val procedures = MetadataProcedures.getProcedures(metadata, catalogName, schemaName)
 
     val schema = schemaModel.copy(

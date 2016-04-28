@@ -16,8 +16,8 @@ object PlanParseService {
   }
 
   def resultPlanString(result: DynamicQuery.Results)(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => result.data.map(_.head.getOrElse("")).mkString("\n")
-    case MySQL => result.data.map(_.head.getOrElse("")).mkString("\n")
+    case PostgreSQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
+    case MySQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
     case _ => throw new IllegalArgumentException("Parse result error.")
   }
 }

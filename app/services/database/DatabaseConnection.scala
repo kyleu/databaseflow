@@ -11,6 +11,8 @@ import models.engine.DatabaseEngine
 import services.database.transaction.{ TransactionManager, TransactionProvider }
 import utils.metrics.Instrumented
 
+import scala.util.control.NonFatal
+
 case class DatabaseConnection(connectionId: UUID, name: String, source: DataSource, engine: DatabaseEngine) extends Queryable {
   private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
     val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
@@ -20,7 +22,7 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
   val transactionProvider: TransactionProvider = new TransactionManager
   def transaction[A](f: Transaction => A): A = transaction(logError = true, f)
   def quietTransaction[A](f: Transaction => A): A = transaction(logError = false, f)
-  def transaction[A](logError: Boolean, f: Transaction => A): A = transaction(logError = false, forceNew = false, f)
+  def transaction[A](logError: Boolean, f: Transaction => A): A = transaction(logError = logError, forceNew = false, f)
 
   def transaction[A](logError: Boolean, forceNew: Boolean, f: Transaction => A): A = {
     if (!forceNew && transactionProvider.transactionExists) {
@@ -35,7 +37,7 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
         txn.commit()
         result
       } catch {
-        case t: Throwable =>
+        case NonFatal(t) =>
           if (logError) { log.error("Exception thrown in transaction scope; aborting transaction", t) }
           txn.rollback()
           throw t

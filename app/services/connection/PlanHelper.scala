@@ -27,7 +27,7 @@ trait PlanHelper extends Logging { this: ConnectionService =>
     }
   }
 
-  def handleExplainQuery(queryId: UUID, sql: String, resultId: UUID) = {
+  def handleExplainQuery(queryId: UUID, sql: String, resultId: UUID): Unit = {
     db.engine.explain match {
       case Some(explain) =>
         def work() = {

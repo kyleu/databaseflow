@@ -57,6 +57,6 @@ object MasterDatabase extends Logging {
     databases.clear()
     connOpt.foreach(_.close())
     connOpt = None
-    log.info(s"Master database closed.")
+    log.info("Master database closed.")
   }
 }

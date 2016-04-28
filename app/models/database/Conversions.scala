@@ -6,6 +6,7 @@ import org.joda.time.{ LocalDateTime, LocalDate, DateTime, ReadableInstant }
 import utils.DateUtils
 
 object Conversions {
+  @SuppressWarnings(Array("MethodReturningAny"))
   def convert(x: AnyRef): AnyRef = x match {
     case num: BigDecimal => num.underlying()
     case num: BigInt => BigDecimal(num).underlying()

@@ -21,7 +21,10 @@ object JsonSerializers {
       properties = readJs[Map[String, String]](x("properties")),
       tags = readJs[Seq[String]](x("tags")),
       children = x("children") match {
-        case a: Js.Arr => a.value.map(n => readPlanNode(n.asInstanceOf[Js.Obj]))
+        case a: Js.Arr => a.value.map(n => readPlanNode(n match {
+          case o: Js.Obj => o
+          case x => throw new IllegalStateException(x.toString)
+        }))
         case other => throw new IllegalArgumentException(other.toString)
       }
     )

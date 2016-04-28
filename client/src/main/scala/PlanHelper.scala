@@ -19,12 +19,12 @@ trait PlanHelper {
 
     workOutPlanWidth(pr.id)
 
-    val chart = $(s".plan-chart", panel)
-    val raw = $(s".plan-raw", panel)
+    val chart = $(".plan-chart", panel)
+    val raw = $(".plan-raw", panel)
 
     JQueryUtils.clickHandler($("a", panel), _.toggleClass("open"))
 
-    val planViewToggle = $(s".plan-view-toggle", panel)
+    val planViewToggle = $(".plan-view-toggle", panel)
     var showingChart = true
 
     JQueryUtils.clickHandler(planViewToggle, (f) => {

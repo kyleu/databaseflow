@@ -34,7 +34,7 @@ object ProgressManager {
     }
 
     def incrementTimer(): Unit = {
-      val newVal = timer.text().toString.toInt + 1
+      val newVal = timer.text().toInt + 1
       timer.text(newVal.toString)
       if (activeQueries.get(queryId).exists(_._1 == resultId)) {
         timers.setTimeout(1000)(incrementTimer())

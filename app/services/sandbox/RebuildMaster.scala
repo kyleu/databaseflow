@@ -15,7 +15,7 @@ object RebuildMaster extends SandboxTask {
   override def run(ctx: ApplicationContext) = {
     MasterDdl.wipe(MasterDatabase.conn)
     MasterDdl.update(MasterDatabase.conn)
-    SeedData.insert(MasterDatabase.conn)
+    SeedData.insert()
     Future.successful("Rebuilt!")
   }
 }
