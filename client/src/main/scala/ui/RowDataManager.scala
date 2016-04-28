@@ -29,20 +29,19 @@ object RowDataManager {
         showRowData(key, queryId, name, newOptions)
       })
 
-      JQueryUtils.clickHandler($(".append-rows-link", panel), (j) => {
-        val newOptions = options.copy(limit = Some(UserManager.rowsReturned), offset = Some(options.offset.getOrElse(0) + UserManager.rowsReturned))
+      val appendRowsLink = $(".append-rows-link", panel)
+      JQueryUtils.clickHandler(appendRowsLink, (j) => {
+        val offset = appendRowsLink.data("offset").toString.toInt + UserManager.rowsReturned
+        val newOptions = options.copy(limit = Some(UserManager.rowsReturned), offset = Some(offset))
+        utils.Logging.info(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}].")
+        appendRowsLink.data("offset", offset.toString)
+        appendRowsLink.hide()
         showRowData(key, queryId, name, newOptions, resultId)
       })
     }
 
     if (options.offset.forall(_ == 0)) {
       ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)
-    } else {
-      val panel = $(s"#$resultId")
-      if (panel.length != 1) {
-        throw new IllegalStateException(s"Found [${panel.length}] panels for result [$resultId].")
-      }
-      $(".append-rows-link", panel).remove()
     }
     val msg = key match {
       case "table" => GetTableRowData(queryId, name, options, resultId)

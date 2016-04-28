@@ -10,13 +10,13 @@ import scalatags.Text.all._
 
 object QueryEditorTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
-    Some(a(cls := "run-query-link", href := "#")("Run")),
-    if (engine.explain.isDefined) { Some(a(cls := "explain-query-link", href := "#")("Explain")) } else { None },
-    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link", href := "#")("Analyze")) } else { None }
+    Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
+    if (engine.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
+    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
   ).flatten
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {
-    val links = linksFor(engine) :+ a(cls := "save-query-link right", href := "#")("Save")
+    val links = linksFor(engine) :+ a(cls := "save-query-link right theme-text", href := "#")("Save")
     queryPanel(queryId, queryName, None, sql, Icons.adHocQuery, links)
   }
 
@@ -38,14 +38,6 @@ object QueryEditorTemplate {
     }
     val links = linksFor(engine) ++ modificationLinks
     queryPanel(sq.id, sq.name, sq.description, sq.sql, Icons.savedQuery, links)
-  }
-
-  def forView(engine: DatabaseEngine, queryId: UUID, viewName: String, description: Option[String], sql: String) = {
-    val modificationLinks = Seq(
-      a(cls := "right definition-link initially-hidden", href := "#")("Definition"),
-      a(cls := "right columns-link initially-hidden", href := "#")("Columns")
-    )
-    queryPanel(queryId, viewName, description, sql, Icons.view, linksFor(engine) ++ modificationLinks)
   }
 
   private[this] def queryPanel(queryId: UUID, queryName: String, description: Option[String], sql: String, icon: String, links: Seq[TypedTag[String]]) = {

@@ -1,8 +1,6 @@
 package models.template
 
-import java.util.UUID
-
-import models.schema.{ Column, View }
+import models.schema.Column
 
 import scalatags.Text.all._
 
