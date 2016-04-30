@@ -13,11 +13,23 @@ main {
   }
 }
 
-.card .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
-  text-transform: none;
-  cursor: pointer;
-  &:hover {
-    color: #888;
+// Panels
+.card {
+  .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
+    text-transform: none;
+    cursor: pointer;
+    &:hover {
+      color: #888;
+    }
+  }
+
+  .card-content {
+    .card-title {
+      line-height: 28px;
+    }
+    .content {
+      margin-top: 10px;
+    }
   }
 }
 

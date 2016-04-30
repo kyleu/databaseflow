@@ -66,7 +66,7 @@ object ModelListTemplate {
 
   private[this] def forModels(queryId: UUID, key: String, name: String, t: TypedTag[String]) = {
     val ret = div(
-      StaticPanelTemplate.cardRow(name, t, Some(Icons.list)),
+      StaticPanelTemplate.cardRow(t, Some(Icons.list -> name)),
       div(id := s"workspace-$queryId")
     )
     name -> ret

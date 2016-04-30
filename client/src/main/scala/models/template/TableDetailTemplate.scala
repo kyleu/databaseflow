@@ -33,7 +33,7 @@ object TableDetailTemplate {
       a(cls := "right export-link theme-text", href := "#")("Export")
     )
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.cardRow(tableName, content, icon = Some(Icons.table), actions = actions),
+      StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.table -> tableName), actions = actions),
       div(id := s"workspace-$queryId")
     )
   }

@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.template.{ Icons, ProgressTemplate }
+import models.template.ProgressTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 
 import scala.scalajs.js.timers
@@ -46,46 +46,20 @@ object ProgressManager {
     activeQueries = activeQueries + (queryId -> (resultId -> onComplete))
   }
 
-  def completeProgress(queryId: UUID, resultId: UUID, icon: String, title: String, content: TypedTag[String], actions: Seq[TypedTag[String]]): Unit = {
+  def completeProgress(queryId: UUID, resultId: UUID, content: TypedTag[String]): Unit = {
     val onComplete = activeQueries.get(queryId) match {
       case Some(rid) if rid._1 == resultId => rid._2
       case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [${rid._1}], not expected [$resultId].")
       case None => throw new IllegalStateException(s"No active progress for query [$queryId].")
     }
 
-    val panel = $(s"#$resultId", workspace)
-    if (panel.length != 1) {
-      throw new IllegalStateException(s"Found [${panel.length}] panels for result [$resultId].")
+    val queryWorkspace = $(s"#workspace-$queryId", workspace)
+    if (queryWorkspace.length != 1) {
+      throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
     }
+    queryWorkspace.html(content.render)
 
-    val iconEl = $(".title-icon", panel)
-    if (iconEl.length != 1) {
-      throw new IllegalStateException(s"Found [${iconEl.length}] icon elements for result [$resultId].")
-    }
-    iconEl.removeClass(Icons.loading).removeClass(Icons.spin).addClass(icon)
-
-    val titleEl = $(".title", panel)
-    if (titleEl.length != 1) {
-      throw new IllegalStateException(s"Found [${titleEl.length}] status elements for result [$resultId].")
-    }
-    titleEl.text(title)
-
-    val contentEl = $(".content", panel)
-    if (contentEl.length != 1) {
-      throw new IllegalStateException(s"Found [${contentEl.length}] content elements for result [$resultId].")
-    }
-    contentEl.html(content.render)
-
-    if (actions.nonEmpty) {
-      val actionsEl = $(".card-action", panel)
-      if (actionsEl.length != 1) {
-        throw new IllegalStateException(s"Found [${actionsEl.length}] actions elements for result [$resultId].")
-      }
-      actionsEl.html(actions.map(_.render).mkString("\n"))
-      actionsEl.show()
-    }
-
-    scalajs.js.Dynamic.global.$("time.timeago", panel).timeago()
+    scalajs.js.Dynamic.global.$("time.timeago", queryWorkspace).timeago()
 
     activeQueries = activeQueries - queryId
 

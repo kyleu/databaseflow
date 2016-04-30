@@ -8,22 +8,26 @@ import ui.{ ProgressManager, TableManager }
 import utils.JQueryUtils
 
 trait QueryResultsHelper { this: DatabaseFlow =>
-  protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = qrr.results.map { result =>
-    if (result.source.forall(_.dataOffset == 0)) {
-      handleNewQueryResult(qrr.id, result, qrr.durationMs)
-    } else {
+  protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = {
+    if (qrr.results.size == 1 && qrr.results.headOption.exists(_.source.exists(_.dataOffset > 0))) {
+      val result = qrr.results.headOption.getOrElse(throw new IllegalStateException())
       handleAppendQueryResult(qrr.id, result, qrr.durationMs)
+    } else {
+      handleNewQueryResults(qrr.id, qrr.results, qrr.durationMs)
     }
   }
 
-  private[this] def handleNewQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {
+  private[this] def handleNewQueryResults(resultId: UUID, results: Seq[QueryResult], durationMs: Int): Unit = {
+    val qr = results.head // TODO
+
     val occurred = new scalajs.js.Date(qr.occurred.toDouble)
-    val content = QueryResultsTemplate.forResults(qr, occurred.toISOString, occurred.toString, durationMs)
 
     if (qr.isStatement) {
-      ProgressManager.completeProgress(qr.queryId, resultId, Icons.statementResults, qr.title, content, Nil)
+      val content = QueryResultsTemplate.forStatementResults(qr, occurred.toISOString, occurred.toString, durationMs)
+      ProgressManager.completeProgress(qr.queryId, resultId, content)
     } else {
-      ProgressManager.completeProgress(qr.queryId, resultId, Icons.queryResults, qr.title, content, Nil)
+      val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, occurred.toString, durationMs)
+      ProgressManager.completeProgress(qr.queryId, resultId, content)
 
       val workspace = $(s"#workspace-${qr.queryId}")
       val panel = $(s"#$resultId", workspace)
@@ -56,7 +60,7 @@ trait QueryResultsHelper { this: DatabaseFlow =>
     }
   }
 
-  private[this] def handleAppendQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {
+  private[this] def handleAppendQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int): Unit = {
     val workspace = $(s"#workspace-${qr.queryId}")
     val panel = $(s"#$resultId", workspace)
     val resultEl = $(".query-result-table tbody", panel)
@@ -82,10 +86,9 @@ trait QueryResultsHelper { this: DatabaseFlow =>
     utils.Logging.info(s"Appended [${qr.data.length}] rows to result [$resultId].")
   }
 
-  protected[this] def handleQueryErrorResponse(qer: QueryErrorResponse) = {
+  protected[this] def handleQueryErrorResponse(qer: QueryErrorResponse): Unit = {
     val occurred = new scalajs.js.Date(qer.error.occurred.toDouble)
     val content = ErrorTemplate.forQueryError(qer, occurred.toISOString, occurred.toString)
-
-    ProgressManager.completeProgress(qer.error.queryId, qer.id, Icons.error, "Query Error", content, Nil)
+    ProgressManager.completeProgress(qer.error.queryId, qer.id, content)
   }
 }

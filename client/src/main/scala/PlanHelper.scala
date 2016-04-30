@@ -12,7 +12,7 @@ trait PlanHelper {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
     val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
-    ProgressManager.completeProgress(pr.result.queryId, pr.id, Icons.queryPlan, pr.result.title, content, QueryPlanTemplate.actions)
+    ProgressManager.completeProgress(pr.result.queryId, pr.id, content)
 
     val workspace = $(s"#workspace-${pr.result.queryId}")
     val panel = $(s"#${pr.id}", workspace)
@@ -45,7 +45,7 @@ trait PlanHelper {
     val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
     val content = ErrorTemplate.forPlanError(per, occurred.toISOString, occurred.toString)
 
-    ProgressManager.completeProgress(per.error.queryId, per.id, Icons.error, "Plan Error", content, Nil)
+    ProgressManager.completeProgress(per.error.queryId, per.id, content)
   }
 
   private[this] def workOutPlanWidth(id: UUID) = {
