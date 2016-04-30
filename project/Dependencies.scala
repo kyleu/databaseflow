@@ -9,43 +9,12 @@ object Dependencies {
     val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
   }
 
-  object Hibernate {
-    val core = "org.hibernate" % "hibernate-core" % "5.1.0.Final"
-  }
-
-  object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.5"
-
-    //val db2 = dblibs/lib/???
-    val h2 = "com.h2database" % "h2" % "1.4.191"
-    //val informix = dblibs/lib/???
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.38" // 6.0.2 has NPE on load
-    val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
-    //val oracle = dblibs/lib/oracle-ojdbc7.jar
-    //val sqlServer = dblibs/lib/sqlserver-sqljdbc42.jar
-  }
-
   object Play {
     private[this] val version = "2.5.1" // 2.5.2 has a logging error
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
     val playTest = "com.typesafe.play" %% "play-test" % version
-  }
-
-  object Serialization {
-    val version = "0.3.9" // 0.4.0 has a linking error
-    val uPickle = "com.lihaoyi" %% "upickle" % version
-  }
-
-  object Templating {
-    val version = "0.5.5"
-    val scalaTags = "com.lihaoyi" %% "scalatags" % version
-  }
-
-  object Licensing {
-    val version = "1.1.0"
-    val core = "net.nicholaswilliams.java.licensing" % "licensing-core" % version
-    val licensor = "net.nicholaswilliams.java.licensing" % "licensing-licensor-base" % version
+    val playMailer = "com.typesafe.play" %% "play-mailer" % "4.0.0"
   }
 
   object Akka {
@@ -66,15 +35,43 @@ object Dependencies {
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
   }
 
+  object Jdbc {
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.5"
+
+    //val db2 = dblibs/lib/???
+    val h2 = "com.h2database" % "h2" % "1.4.191"
+    //val informix = dblibs/lib/???
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.38" // 6.0.2 has NPE on load
+    val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
+    //val oracle = dblibs/lib/oracle-ojdbc7.jar
+    //val sqlServer = dblibs/lib/sqlserver-sqljdbc42.jar
+  }
+
+  object Hibernate {
+    val core = "org.hibernate" % "hibernate-core" % "5.1.0.Final"
+  }
+
+  object Serialization {
+    val version = "0.3.9" // 0.4.0 has a linking error
+    val uPickle = "com.lihaoyi" %% "upickle" % version
+  }
+
+  object Templating {
+    val version = "0.5.5"
+    val scalaTags = "com.lihaoyi" %% "scalatags" % version
+  }
+
+  object Licensing {
+    val version = "1.1.0"
+    val core = "net.nicholaswilliams.java.licensing" % "licensing-core" % version
+    val licensor = "net.nicholaswilliams.java.licensing" % "licensing-licensor-base" % version
+  }
+
   object WebJars {
     val requireJs = "org.webjars" % "requirejs" % "2.2.0"
     val jquery = "org.webjars" % "jquery" % "2.2.3"
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
     val fontAwesome = "org.webjars" % "font-awesome" % "4.6.1"
-  }
-
-  object Mail {
-    val mailer = "com.typesafe.play" %% "play-mailer" % "4.0.0"
   }
 
   object Ui {
@@ -103,7 +100,8 @@ object Dependencies {
   }
 
   object Testing {
+    val uTestVersion = "0.4.3"
+    val utest = "com.lihaoyi" %% "utest" % uTestVersion % "test"
     val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6" % "test"
-    val utest = "com.lihaoyi" %% "utest" % "0.4.3" % "test"
   }
 }

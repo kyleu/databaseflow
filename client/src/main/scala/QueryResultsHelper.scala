@@ -8,52 +8,52 @@ import ui.{ ProgressManager, TableManager }
 import utils.JQueryUtils
 
 trait QueryResultsHelper { this: DatabaseFlow =>
-  protected[this] def handleStatementResultResponse(srr: StatementResultResponse) = {
-    val occurred = new scalajs.js.Date(srr.result.occurred.toDouble)
-    val content = StatementResultsTemplate.forResults(srr, occurred.toISOString, occurred.toString)
-    ProgressManager.completeProgress(srr.result.queryId, srr.id, Icons.statementResults, srr.result.title, content, Nil)
-  }
-
-  protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = if (qrr.result.source.forall(_.dataOffset == 0)) {
-    handleNewQueryResult(qrr.id, qrr.result, qrr.durationMs)
-  } else {
-    handleAppendQueryResult(qrr.id, qrr.result, qrr.durationMs)
+  protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = qrr.results.map { result =>
+    if (result.source.forall(_.dataOffset == 0)) {
+      handleNewQueryResult(qrr.id, result, qrr.durationMs)
+    } else {
+      handleAppendQueryResult(qrr.id, result, qrr.durationMs)
+    }
   }
 
   private[this] def handleNewQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {
     val occurred = new scalajs.js.Date(qr.occurred.toDouble)
     val content = QueryResultsTemplate.forResults(qr, occurred.toISOString, occurred.toString, durationMs)
 
-    ProgressManager.completeProgress(qr.queryId, resultId, Icons.queryResults, qr.title, content, Nil)
-
-    val workspace = $(s"#workspace-${qr.queryId}")
-    val panel = $(s"#$resultId", workspace)
-
-    val resultEl = $(".query-result-table", panel)
-    val detailsEl = $(".query-result-details", panel)
-    val detailsLink = $(".title-icon", panel)
-
-    JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
-      val table = jq.data("rel-table").toString
-      val col = jq.data("rel-col").toString
-      val v = jq.data("rel-val").toString
-      TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some("="), filterVal = Some(v)))
-    })
-
-    var detailsShown = false
-
-    if (qr.moreRowsAvailable) {
-      $(".additional-results .append-rows-link").show()
-      $(".additional-results .no-rows-remaining").hide()
+    if (qr.isStatement) {
+      ProgressManager.completeProgress(qr.queryId, resultId, Icons.statementResults, qr.title, content, Nil)
     } else {
-      $(".additional-results .append-rows-link").hide()
-      $(".additional-results .no-rows-remaining").show()
-    }
+      ProgressManager.completeProgress(qr.queryId, resultId, Icons.queryResults, qr.title, content, Nil)
 
-    JQueryUtils.clickHandler(detailsLink, (jq) => {
-      if (detailsShown) { detailsEl.hide() } else { detailsEl.show() }
-      detailsShown = !detailsShown
-    })
+      val workspace = $(s"#workspace-${qr.queryId}")
+      val panel = $(s"#$resultId", workspace)
+
+      val resultEl = $(".query-result-table", panel)
+      val detailsEl = $(".query-result-details", panel)
+      val detailsLink = $(".title-icon", panel)
+
+      JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
+        val table = jq.data("rel-table").toString
+        val col = jq.data("rel-col").toString
+        val v = jq.data("rel-val").toString
+        TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some("="), filterVal = Some(v)))
+      })
+
+      var detailsShown = false
+
+      if (qr.moreRowsAvailable) {
+        $(".additional-results .append-rows-link").show()
+        $(".additional-results .no-rows-remaining").hide()
+      } else {
+        $(".additional-results .append-rows-link").hide()
+        $(".additional-results .no-rows-remaining").show()
+      }
+
+      JQueryUtils.clickHandler(detailsLink, (jq) => {
+        if (detailsShown) { detailsEl.hide() } else { detailsEl.show() }
+        detailsShown = !detailsShown
+      })
+    }
   }
 
   private[this] def handleAppendQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int) = {

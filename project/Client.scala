@@ -10,7 +10,8 @@ object Client {
     persistLauncher := false,
     libraryDependencies ++= Seq(
       "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
-      "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
+      "com.lihaoyi" %%% "scalatags" % Dependencies.Templating.version,
+      "com.lihaoyi" %%% "utest" % Dependencies.Testing.uTestVersion % "test"
     ),
     testFrameworks += new TestFramework("utest.runner.Framework"),
     scalaJSStage in Global := FastOptStage,

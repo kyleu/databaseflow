@@ -3,7 +3,7 @@ package models
 import java.util.UUID
 
 import models.plan.{ PlanError, PlanResult }
-import models.query.{ QueryError, QueryResult, SavedQuery, StatementResult }
+import models.query.{ QueryError, QueryResult, SavedQuery }
 import models.schema.{ Procedure, Schema, Table, View }
 import models.user.UserPreferences
 
@@ -26,15 +26,11 @@ case class TableResultResponse(tables: Seq[Table]) extends ResponseMessage
 case class ViewResultResponse(views: Seq[View]) extends ResponseMessage
 case class ProcedureResultResponse(procedures: Seq[Procedure]) extends ResponseMessage
 
-case class StatementResultResponse(id: UUID, result: StatementResult, durationMs: Int) extends ResponseMessage
-
-case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
+case class QueryResultResponse(id: UUID, results: Seq[QueryResult], durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage
-
-// ? case class RowDataResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 
 case class BatchQueryStatus(id: UUID, completedQueries: Int, remainingQueries: Int, durationMs: Int) extends ResponseMessage
 

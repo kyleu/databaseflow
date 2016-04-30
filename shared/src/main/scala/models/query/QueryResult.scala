@@ -26,8 +26,10 @@ case class QueryResult(
   queryId: UUID,
   title: String,
   sql: String,
-  columns: Seq[QueryResult.Col],
-  data: Seq[Seq[Option[String]]],
+  isStatement: Boolean = false,
+  columns: Seq[QueryResult.Col] = Nil,
+  data: Seq[Seq[Option[String]]] = Nil,
+  rowsAffected: Int = 0,
   moreRowsAvailable: Boolean = false,
   source: Option[QueryResult.Source] = None,
   occurred: Long = System.currentTimeMillis

@@ -63,12 +63,13 @@ trait DataHelper extends Logging { this: ConnectionService =>
 
         //log.info(s"Query result: [$result].")
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        QueryResultResponse(resultId, QueryResult(
+        QueryResultResponse(resultId, Seq(QueryResult(
           queryId = queryId,
           title = name + " Data",
           sql = sql,
           columns = columnsWithRelations,
           data = trimmedData,
+          rowsAffected = trimmedData.length,
           moreRowsAvailable = moreRowsAvailable,
           source = Some(QueryResult.Source(
             t = t,
@@ -79,7 +80,7 @@ trait DataHelper extends Logging { this: ConnectionService =>
             dataOffset = options.offset.getOrElse(0)
           )),
           occurred = startMs
-        ), durationMs)
+        )), durationMs)
       }
     }
     def onSuccess(rm: ResponseMessage) = out ! rm

@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models._
 import models.queries.DynamicQuery
-import models.query.{ QueryResult, SavedQuery, StatementResult }
+import models.query.{ QueryResult, SavedQuery }
 import services.database.DatabaseWorkerPool
 import services.query.SavedQueryService
 import utils.{ DateUtils, ExceptionUtils, Logging }
@@ -41,21 +41,23 @@ trait QueryHelper extends Logging { this: ConnectionService =>
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
-          case Left(rs) => QueryResultResponse(resultId, QueryResult(
+          case Left(rs) => QueryResultResponse(resultId, Seq(QueryResult(
             queryId = queryId,
             title = "Query Results",
             sql = sql,
             columns = rs.cols,
             data = rs.data,
+            rowsAffected = rs.data.length,
             occurred = startMs
-          ), durationMs)
-          case Right(i) => StatementResultResponse(resultId, StatementResult(
+          )), durationMs)
+          case Right(i) => QueryResultResponse(resultId, Seq(QueryResult(
             queryId = queryId,
             title = "Statement Results",
             sql = sql,
+            isStatement = true,
             rowsAffected = i,
             occurred = startMs
-          ), durationMs)
+          )), durationMs)
         }
       }
     }

@@ -43,7 +43,6 @@ object Shared {
   lazy val sharedJs = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % Serialization.version,
-      "com.lihaoyi" %%% "scalatags" % Templating.version,
       "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion
     )
   )
