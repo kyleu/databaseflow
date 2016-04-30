@@ -8,7 +8,7 @@ import utils.NetworkMessage
 
 import scala.scalajs.js
 
-object QueryFormManager {
+object QuerySaveFormManager {
   private[this] var activeQuery: Option[SavedQuery] = None
   private[this] val modal = js.Dynamic.global.$("#save-query-modal")
 

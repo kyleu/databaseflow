@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], debug: Boolean, dbName: String, initialQuery: java.util.UUID)(
+@(user: Option[models.user.User], debug: Boolean, connectionId: java.util.UUID, dbName: String, initialQuery: java.util.UUID)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.materialize(
   user = user,
@@ -36,6 +36,7 @@
 
     @views.html.query.confirmModal(user)
     @views.html.query.saveModal(user)
+    @views.html.query.exportModal(user, connectionId)
   </main>
 
   @if(debug) {

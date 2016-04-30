@@ -10,6 +10,7 @@ GET         /c/:id/delete                controllers.ConnectionSettingsControlle
 # Query Interface
 GET         /q/:conn                     controllers.QueryController.main(conn: java.util.UUID)
 GET         /q/:conn/websocket           controllers.QueryController.connect(conn: java.util.UUID)
+POST        /q/:conn/export              controllers.QueryController.export(conn: java.util.UUID)
 
 # Sandbox
 GET         /sandbox/:key                controllers.SandboxController.sandbox(key)

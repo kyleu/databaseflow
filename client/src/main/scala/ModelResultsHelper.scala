@@ -55,7 +55,7 @@ trait ModelResultsHelper { this: DatabaseFlow =>
 
   protected[this] def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Save Error", err)
-    case None => QueryFormManager.handleQuerySaveResponse(sq, error)
+    case None => QuerySaveFormManager.handleQuerySaveResponse(sq, error)
   }
 
   protected[this] def handleQueryDeleteResponse(id: UUID, error: Option[String]) = error match {

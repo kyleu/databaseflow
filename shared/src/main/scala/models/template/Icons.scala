@@ -30,6 +30,9 @@ object Icons {
 
   val newQuery = "fa-plus-square-o"
 
+  val export = "fa-file-o"
+  val transaction = "fa-cube"
+
   val queryPlan = "fa-sitemap"
   val queryResults = "fa-file-text-o"
   val statementResults = "fa-flash"

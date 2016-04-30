@@ -40,11 +40,15 @@ object AdHocQueryManager {
     val queryPanel = $(s"#panel-$queryId")
 
     utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
-      QueryFormManager.show(SavedQuery(
+      QuerySaveFormManager.show(SavedQuery(
         id = queryId,
         name = queryName,
         sql = QueryManager.getSql(queryId)
       ))
+    })
+
+    utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+      QueryExportFormManager.show(queryId, QueryManager.getSql(queryId))
     })
 
     def onChange(s: String): Unit = {

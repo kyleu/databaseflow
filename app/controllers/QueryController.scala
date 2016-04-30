@@ -23,7 +23,10 @@ class QueryController @javax.inject.Inject() (
 ) extends BaseController {
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
     val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
-    Future.successful(Ok(views.html.query.main(request.identity, ctx.config.debug, activeDb.map(_._1).getOrElse("..."), UUID.randomUUID)))
+    Future.successful(activeDb match {
+      case Some((name, id)) => Ok(views.html.query.main(request.identity, ctx.config.debug, id, name, UUID.randomUUID))
+      case None => Redirect(routes.HomeController.index())
+    })
   }
 
   val mff = new MessageFrameFormatter(ctx.config.debug)
@@ -38,5 +41,15 @@ class QueryController @javax.inject.Inject() (
         ConnectionService.props(None, ctx.supervisor, connectionId, user, out, request.remoteAddress)
       })
     }
+  }
+
+  def export(connectionId: UUID) = withSession("export") { implicit request =>
+    val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException("Invalid request"))
+
+    val queryId = form.get("queryId").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [queryId] parameter."))
+    val sql = form.get("sql").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [sql] parameter."))
+    val format = form.get("format").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [format] parameter."))
+
+    Future.successful(Ok(s"Exporting query [$queryId] in [$format] format using sql [$sql]!, motherfucker!"))
   }
 }

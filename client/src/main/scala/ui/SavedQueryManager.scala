@@ -49,11 +49,11 @@ object SavedQueryManager {
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
-    utils.JQueryUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QueryFormManager.show(savedQuery.copy(
+    utils.JQueryUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       sql = QueryManager.getSql(savedQuery.id)
     )))
 
-    utils.JQueryUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QueryFormManager.show(savedQuery.copy(
+    utils.JQueryUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = QueryManager.getSql(savedQuery.id)

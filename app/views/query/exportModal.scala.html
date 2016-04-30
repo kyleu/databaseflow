@@ -1,0 +1,39 @@
+@(user: Option[models.user.User], connectionId: java.util.UUID)
+<div id="export-modal" class="modal">
+  <form action="@routes.QueryController.export(connectionId)" method="post">
+    <input id="input-export-query-id" name="queryId" type="hidden" value="" />
+    <input id="input-export-sql" name="sql" type="hidden" value="" />
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <div class="card-panel option-panel">
+                <h6><i class="fa @models.template.Icons.export"></i> Export Format</h6>
+                <p>
+                  <input id="input-export-format-csv" name="format" type="radio" value="csv" checked="checked" />
+                  <label for="input-export-format-csv">
+                    <code>csv</code><br/>
+                    <em>Comma Separated Values</em>
+                  </label>
+                </p>
+                <p>
+                  <input id="input-export-format-xls" name="format" type="radio" value="xls" />
+                  <label for="input-export-format-xls">
+                    <code>xls</code><br/>
+                    <em>Microsoft Excel</em>
+                  </label>
+                </p>
+                <div class="clear"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="modal-action waves-effect waves-light btn @user.map(_.preferences.theme).getOrElse("blue-grey")">Export</button>
+      <a id="export-cancel-link" href="#" class="modal-action waves-effect waves-light btn-flat">Cancel</a>
+    </div>
+  </form>
+</div>
