@@ -61,5 +61,4 @@ object AdHocQueryManager {
 
     QueryManager.addQuery(queryId, "Untitled Query", queryPanel, onChange, () => Unit)
   }
-
 }

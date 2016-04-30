@@ -13,7 +13,7 @@ object QueryPlanTemplate {
   )
 
   def forPlan(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = {
-    val content = div(
+    val content = div(id := pr.id.toString)(
       em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pr.durationMs}ms]"),
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(

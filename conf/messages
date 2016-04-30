@@ -26,5 +26,8 @@ profile.save = Save Changes
 profile.form.username = Name
 profile.form.theme = Theme
 
+# Admin
+admin.title = Settings
+
 # Static
 static.copyright = © 2016 Database Flow

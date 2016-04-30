@@ -3,6 +3,7 @@ package ui
 import java.util.UUID
 
 import models.GetTableDetail
+import models.engine.EngineQueries
 import models.query.RowDataOptions
 import models.schema.Table
 import models.template._
@@ -39,6 +40,11 @@ object TableManager extends TableDetailHelper {
 
       utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
         RowDataManager.showTableRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
+      })
+
+      utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+        implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
+        QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name))
       })
 
       utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {

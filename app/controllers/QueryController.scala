@@ -1,5 +1,6 @@
 package controllers
 
+import java.io.ByteArrayInputStream
 import java.util.UUID
 
 import akka.actor.ActorSystem
@@ -7,8 +8,9 @@ import akka.stream.Materializer
 import com.mohiva.play.silhouette.api.HandlerResult
 import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits._
+import play.api.libs.iteratee.Enumerator
 import play.api.libs.streams.ActorFlow
-import play.api.mvc.{ AnyContentAsEmpty, Request, WebSocket }
+import play.api.mvc._
 import services.connection.{ ConnectionService, ConnectionSettingsService }
 import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
@@ -21,6 +23,9 @@ class QueryController @javax.inject.Inject() (
     implicit val system: ActorSystem,
     implicit val materializer: Materializer
 ) extends BaseController {
+
+  private[this] implicit val t = new MessageFrameFormatter(ctx.config.debug).transformer
+
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
     val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
     Future.successful(activeDb match {
@@ -28,9 +33,6 @@ class QueryController @javax.inject.Inject() (
       case None => Redirect(routes.HomeController.index())
     })
   }
-
-  val mff = new MessageFrameFormatter(ctx.config.debug)
-  implicit val t = mff.transformer
 
   def connect(connectionId: UUID) = WebSocket.acceptOrResult[RequestMessage, ResponseMessage] { request =>
     implicit val req = Request(request, AnyContentAsEmpty)
@@ -50,6 +52,19 @@ class QueryController @javax.inject.Inject() (
     val sql = form.get("sql").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [sql] parameter."))
     val format = form.get("format").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [format] parameter."))
 
-    Future.successful(Ok(s"Exporting query [$queryId] in [$format] format using sql [$sql]!, motherfucker!"))
+    val status = s"Exporting query [$queryId] in [$format] format using sql [$sql]!, motherfucker!"
+
+    val result = Ok(status)
+
+    val withHeaders = result.withHeaders(
+      CONTENT_TYPE -> (format match {
+        case "csv" => "text/csv"
+        case "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        case x => throw new IllegalStateException(s"Invalid format [$x].")
+      }),
+      CONTENT_DISPOSITION -> s"attachment; filename=DatabaseFlowExport.$format"
+    )
+
+    Future.successful(withHeaders)
   }
 }

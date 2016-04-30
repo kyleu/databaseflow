@@ -41,6 +41,11 @@ object ViewManager extends ViewDetailHelper {
         RowDataManager.showViewRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
       })
 
+      utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+        implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
+        QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name))
+      })
+
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
         val resultId = UUID.randomUUID
         val title = "Query Plan"

@@ -54,7 +54,6 @@ object Shared {
   lazy val sharedJvm = (project in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
       Serialization.uPickle,
-      Templating.scalaTags,
       Utils.enumeratum
     )
   )

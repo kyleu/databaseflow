@@ -4,7 +4,7 @@ import models.engine.rdbms._
 import models.query.RowDataOptions
 
 object EngineQueries {
-  def selectFrom(name: String, options: RowDataOptions)(implicit engine: DatabaseEngine) = {
+  def selectFrom(name: String, options: RowDataOptions = RowDataOptions.empty)(implicit engine: DatabaseEngine) = {
     val whereClauseAdditions = options.limit match {
       case Some(l) if engine == Oracle => options.offset match {
         case Some(o) => Some(s" rownum <= ${l + o} and rownum > $o")

@@ -56,11 +56,6 @@ object Dependencies {
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
-  object Templating {
-    val version = "0.5.5"
-    val scalaTags = "com.lihaoyi" %% "scalatags" % version
-  }
-
   object Licensing {
     val version = "1.1.0"
     val core = "net.nicholaswilliams.java.licensing" % "licensing-core" % version
