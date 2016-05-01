@@ -30,7 +30,7 @@ object TableDetailTemplate {
     )
     val actions = Seq(
       a(cls := "view-data-link theme-text", href := "#")("View First 100 Rows"),
-      a(cls := "right export-link theme-text", href := "#")("Export")
+      a(cls := "right export-link theme-text first-right-link", href := "#")("Export")
     )
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.table -> tableName), actions = actions),

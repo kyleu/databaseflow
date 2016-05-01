@@ -10,16 +10,15 @@ import scalatags.Text.tags2.time
 object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int, resultId: UUID) = {
     val content = div(id := resultId.toString)(
-      div(cls := "query-result-details z-depth-1")(
-        h4("Activity"),
-        div(cls := "activity-container")(
-          em(
-            s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
-            time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
-            s" in [${durationMs}ms]."
-          )
-        ),
-        h4("SQL"),
+      a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
+
+      p(
+        s"${qr.rowsAffected} rows returned ",
+        time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
+        s" in [${durationMs}ms]."
+      ),
+
+      div(cls := "z-depth-1 query-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
       ),
 

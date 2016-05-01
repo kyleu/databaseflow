@@ -15,7 +15,7 @@ object StaticPanelTemplate {
 
   def cardRow(content: TypedTag[String], iconAndTitle: Option[(String, String)] = None, actions: Seq[TypedTag[String]] = Nil, showClose: Boolean = true) = {
     val closeEl = if (showClose) {
-      Some(i(cls := s"right fa ${Icons.close}"))
+      Some(i(cls := s"right theme-text fa ${Icons.close}"))
     } else {
       None
     }

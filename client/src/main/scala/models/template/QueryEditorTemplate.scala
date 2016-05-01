@@ -17,7 +17,7 @@ object QueryEditorTemplate {
   ).flatten
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {
-    val links = linksFor(engine) :+ a(cls := "save-query-link right theme-text", href := "#")("Save")
+    val links = linksFor(engine) :+ a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save")
     queryPanel(queryId, queryName, None, sql, Icons.adHocQuery, links)
   }
 
@@ -25,14 +25,14 @@ object QueryEditorTemplate {
     val modificationLinks = userId match {
       case Some(uid) => if (sq.owner.contains(uid)) {
         Seq(
-          a(cls := "save-query-link right theme-text", href := "#")("Save"),
+          a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save"),
           a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
           a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
           a(cls := "delete-query-link right theme-text", href := "#")("Delete")
         )
       } else {
         Seq(
-          a(cls := "save-as-query-link right theme-text", href := "#")("Save As New")
+          a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New")
         )
       }
       case None => Seq.empty

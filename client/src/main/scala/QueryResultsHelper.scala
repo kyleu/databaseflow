@@ -33,8 +33,8 @@ trait QueryResultsHelper { this: DatabaseFlow =>
       val panel = $(s"#$resultId", workspace)
 
       val resultEl = $(".query-result-table", panel)
-      val detailsEl = $(".query-result-details", panel)
-      val detailsLink = $(".title-icon", panel)
+      val sqlEl = $(".query-result-sql", panel)
+      val sqlLink = $(s".results-sql-link", panel)
 
       JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
         val table = jq.data("rel-table").toString
@@ -42,8 +42,6 @@ trait QueryResultsHelper { this: DatabaseFlow =>
         val v = jq.data("rel-val").toString
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some("="), filterVal = Some(v)))
       })
-
-      var detailsShown = false
 
       if (qr.moreRowsAvailable) {
         $(".additional-results .append-rows-link").show()
@@ -53,9 +51,10 @@ trait QueryResultsHelper { this: DatabaseFlow =>
         $(".additional-results .no-rows-remaining").show()
       }
 
-      JQueryUtils.clickHandler(detailsLink, (jq) => {
-        if (detailsShown) { detailsEl.hide() } else { detailsEl.show() }
-        detailsShown = !detailsShown
+      var sqlShown = false
+      utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
+        if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
+        sqlShown = !sqlShown
       })
     }
   }
