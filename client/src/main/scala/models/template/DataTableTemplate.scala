@@ -23,7 +23,7 @@ object DataTableTemplate {
     } else {
       span(cls := "unsorted-title")(name)
     }
-    thead(tr(res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
+    thead(tr(th("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
   }
 
   private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = {
@@ -66,7 +66,8 @@ object DataTableTemplate {
   }
 
   def tableRows(res: QueryResult) = {
-    res.data.map(r => tr(res.columns.zip(r).map(x => cellValue(x._1, x._2))))
+    val offset = res.source.map(_.dataOffset + 1).getOrElse(1)
+    res.data.zipWithIndex.map(r => tr(td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))))
   }
 
   def forResults(res: QueryResult) = if (res.columns.isEmpty || res.data.isEmpty) {

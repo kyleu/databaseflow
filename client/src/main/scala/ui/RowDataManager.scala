@@ -9,8 +9,6 @@ import org.scalajs.jquery.{ jQuery => $ }
 import utils.JQueryUtils
 
 object RowDataManager {
-  private[this] var openRowDatas = Map.empty[String, UUID]
-
   def showTableRowData(queryId: UUID, name: String, options: RowDataOptions) = showRowData("table", queryId, name, options)
   def showViewRowData(queryId: UUID, name: String, options: RowDataOptions) = showRowData("view", queryId, name, options)
 

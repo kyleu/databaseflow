@@ -26,7 +26,7 @@ trait QueryResultsHelper { this: DatabaseFlow =>
       val content = QueryResultsTemplate.forStatementResults(qr, occurred.toISOString, occurred.toString, durationMs)
       ProgressManager.completeProgress(qr.queryId, resultId, content)
     } else {
-      val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, occurred.toString, durationMs)
+      val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, occurred.toString, durationMs, resultId)
       ProgressManager.completeProgress(qr.queryId, resultId, content)
 
       val workspace = $(s"#workspace-${qr.queryId}")

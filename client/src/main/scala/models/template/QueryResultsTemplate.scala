@@ -1,13 +1,15 @@
 package models.template
 
+import java.util.UUID
+
 import models.query.QueryResult
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
 object QueryResultsTemplate {
-  def forQueryResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int) = {
-    val content = div(
+  def forQueryResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int, resultId: UUID) = {
+    val content = div(id := resultId.toString)(
       div(cls := "query-result-details z-depth-1")(
         h4("Activity"),
         div(cls := "activity-container")(
@@ -31,6 +33,7 @@ object QueryResultsTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
+      //iconAndTitle = Some(Icons.queryResults -> qr.title),
       showClose = false
     )
   }
@@ -45,6 +48,7 @@ object QueryResultsTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
+      //iconAndTitle = Some(Icons.statementResults -> qr.title),
       showClose = false
     )
   }
