@@ -2,73 +2,76 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
   @components.formErrors(errors)
-  <form class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">@title</span>
-        <div class="row" style="margin-bottom: 0;">
-          <div class="input-field col s12 m6">
-            <input id="form-name" name="name" type="text" value="@conn.name" />
-            <label for="form-name">Connection Name</label>
-          </div>
+  <div class="row">
+    <form class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">@title</span>
+          <div class="row" style="margin-bottom: 0;">
+            <div class="input-field col s12 m6">
+              <input id="form-name" name="name" type="text" value="@conn.name" />
+              <label for="form-name">Connection Name</label>
+            </div>
 
-          <div class="input-field col s12 m6">
-            <select id="form-engine" name="engine">
-              @models.engine.DatabaseEngine.all.map { e =>
-                <option value="@e.id" @if(e == conn.engine) { selected }>@e.name</option>
-              }
-            </select>
-            <label for="form-engine">Database Engine</label>
-          </div>
-
-          <div class="input-field col s12">
-            <input id="form-url" name="url" type="text" value="@conn.url" />
-            <label for="form-url">Jdbc Url</label>
-          </div>
-
-          <div class="input-field col s12 m6">
-            <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
-            <label for="form-username">Username</label>
-          </div>
-
-          <div class="input-field col s12 m6">
-            <input id="form-password" name="databasePassword" type="password" value="" />
-            <label for="form-password">Password</label>
-          </div>
-
-          <div class="input-field col s12">
-            <div class="card-panel option-panel">
-              <h6><i class="fa @models.template.Icons.user"></i> Available To</h6>
-              <p>
-                @if(conn.public) {
-                  <input id="form-public-true" name="public" type="radio" value="true" checked="checked" />
-                } else {
-                  <input id="form-public-true" name="public" type="radio" value="true" />
+            <div class="input-field col s12 m6">
+              <select id="form-engine" name="engine">
+                @models.engine.DatabaseEngine.all.map { e =>
+                  <option value="@e.id" @if(e == conn.engine) { selected }>@e.name</option>
                 }
-                <label for="form-public-true">Everyone</label>
-              </p>
-              <p>
-                @if(conn.public) {
-                  <input id="form-public-false" name="public" type="radio" value="false" />
-                } else {
-                  <input id="form-public-false" name="public" type="radio" value="false" checked="checked" />
-                }
-                <label for="form-public-false">Only Myself</label>
-              </p>
-              <div class="clear" style="padding-bottom: 20px;"></div>
+              </select>
+              <label for="form-engine">Database Engine</label>
+            </div>
+
+            <div class="input-field col s12">
+              <input id="form-url" name="url" type="text" value="@conn.url" />
+              <label for="form-url">Jdbc Url</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+              <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
+              <label for="form-username">Username</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+              <input id="form-password" name="databasePassword" type="password" value="" />
+              <label for="form-password">Password</label>
+            </div>
+
+            <div class="input-field col s12">
+              <div class="card-panel option-panel">
+                <h6><i class="fa @models.template.Icons.user"></i> Available To</h6>
+                <p>
+                  @if(conn.public) {
+                    <input id="form-public-true" name="public" type="radio" value="true" checked="checked" />
+                  } else {
+                    <input id="form-public-true" name="public" type="radio" value="true" />
+                  }
+                  <label for="form-public-true">Everyone</label>
+                </p>
+                <p>
+                  @if(conn.public) {
+                    <input id="form-public-false" name="public" type="radio" value="false" />
+                  } else {
+                    <input id="form-public-false" name="public" type="radio" value="false" checked="checked" />
+                  }
+                  <label for="form-public-false">Only Myself</label>
+                </p>
+                <div class="clear" style="padding-bottom: 20px;"></div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="card-action">
+          <button class="btn @user.map(_.preferences.theme).getOrElse("blue-grey") waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
+          <a class="btn-flat theme-text" href="@routes.HomeController.index()">Cancel</a>
+          @if((!isNew) && conn.id != services.connection.ConnectionSettingsService.masterId) {
+            <button class="right btn-flat waves-effect waves-light" onclick="onDelete();return false;">Delete</button>
+          }
+        </div>
       </div>
-      <div class="card-action">
-        <button class="btn @user.map(_.preferences.theme).getOrElse("blue-grey") waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
-        <a class="btn-flat theme-text" href="@routes.HomeController.index()">Cancel</a>
-        @if((!isNew) && conn.id != services.connection.ConnectionSettingsService.masterId) {
-          <button class="right btn-flat waves-effect waves-light" onclick="onDelete();return false;">Delete</button>
-        }
-      </div>
-    </div>
-  </form>
+    </form>
+  </div>
+
   <script>
     function onDelete() {
       var confirmed = confirm('Are you certain you\'d like to delete this connection?');
