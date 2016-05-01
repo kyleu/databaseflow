@@ -9,7 +9,7 @@ object ErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String, dateFullString: String) = {
     val content = div(id := qe.id.toString)(
       p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${qe.durationMs}ms]."),
-      p(cls := "")(qe.error.message),
+      p(cls := "error-detail-message")(qe.error.message),
       if (qe.error.position.isEmpty) {
         ""
       } else {

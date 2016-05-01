@@ -2,6 +2,7 @@ package models.template
 
 object Icons {
   val spin = "fa-spin"
+  val settings = "fa-gear"
 
   val check = "fa-check"
   val search = "fa-search"

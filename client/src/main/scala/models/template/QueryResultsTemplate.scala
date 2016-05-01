@@ -57,5 +57,4 @@ object QueryResultsTemplate {
     val rows = DataTableTemplate.tableRows(qr)
     rows.map(_.render).mkString("\n")
   }
-
 }

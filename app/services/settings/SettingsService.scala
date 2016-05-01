@@ -6,13 +6,19 @@ import services.database.MasterDatabase
 
 @javax.inject.Singleton
 class SettingsService @javax.inject.Inject() () {
-  private[this] var settings = Map.empty[SettingKey, String]
+  private[this] var settings = Seq.empty[Setting]
+  private[this] var settingsMap = Map.empty[SettingKey, String]
 
-  def apply(key: SettingKey) = settings.getOrElse(key, key.default)
+  def apply(key: SettingKey) = settingsMap.getOrElse(key, key.default)
 
-  def load() = settings = MasterDatabase.conn.query(SettingQueries.getAll()).map(s => s.key -> s.value).toMap
+  def load() = {
+    settingsMap = MasterDatabase.conn.query(SettingQueries.getAll()).map(s => s.key -> s.value).toMap
+    settings = SettingKey.values.map(k => Setting(k, settingsMap.getOrElse(k, k.default)))
+  }
 
-  def isOverride(key: SettingKey) = settings.isDefinedAt(key)
+  def isOverride(key: SettingKey) = settingsMap.isDefinedAt(key)
+
+  def getAll = settings
 
   def set(key: SettingKey, value: String) = {
     MasterDatabase.conn.transaction { t =>
@@ -21,6 +27,7 @@ class SettingsService @javax.inject.Inject() () {
         case None => t.executeUpdate(SettingQueries.insert(Setting(key, value)))
       }
     }
-    settings = settings + (key -> value)
+    settingsMap = settingsMap + (key -> value)
+    settings = SettingKey.values.map(k => Setting(k, settingsMap.getOrElse(k, k.default)))
   }
 }
