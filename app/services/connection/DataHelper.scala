@@ -37,21 +37,17 @@ trait DataHelper extends Logging { this: ConnectionService =>
       val sql = EngineQueries.selectFrom(name, optionsNewLimit)(db.engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
       sqlCatch(queryId, sql, startMs, resultId) { () =>
-        val result = db.executeUnknown(DynamicQuery(sql))
-        val (columns, data) = result match {
-          case Left(rs) => rs.cols -> rs.data
-          case Right(i) => throw new IllegalStateException(s"Invalid query [$sql] returned statement result.")
-        }
+        val result = db.query(DynamicQuery(sql))
 
         val (trimmedData, moreRowsAvailable) = options.limit match {
-          case Some(limit) => if (data.size > limit) {
-            data.take(limit) -> true
+          case Some(limit) => if (result.data.size > limit) {
+            result.data.take(limit) -> true
           } else {
-            data -> false
+            result.data -> false
           }
-          case None => data -> false
+          case None => result.data -> false
         }
-        val columnsWithRelations = columns.map { col =>
+        val columnsWithRelations = result.cols.map { col =>
           foreignKeys.find(_.references.exists(_.source == col.name)) match {
             case Some(fk) => col.copy(
               relationTable = Some(fk.targetTable),

@@ -50,14 +50,14 @@ trait Queryable extends Logging {
     }
   }
 
-  def executeUnknown[A](connection: Connection, query: Query[Either[A, Int]]): Either[A, Int] = {
+  def executeUnknown[A](connection: Connection, query: Query[A]): Either[A, Int] = {
     log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       prepare(stmt, query.values)
       val isResultset = stmt.execute()
       if (isResultset) {
-        query.handle(stmt.getResultSet)
+        Left(query.handle(stmt.getResultSet))
       } else {
         Right(stmt.getUpdateCount)
       }

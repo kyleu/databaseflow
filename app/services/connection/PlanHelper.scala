@@ -13,16 +13,13 @@ trait PlanHelper extends Logging { this: ConnectionService =>
     val startMs = DateUtils.nowMillis
     sqlCatch(queryId, sql, startMs, resultId) { () =>
       implicit val engine = db.engine
-      val result = db.executeUnknown(DynamicQuery(explainSql))
+      val result = db.query(DynamicQuery(explainSql))
 
       //log.info(s"Explain result: [$result].")
       val durationMs = (DateUtils.nowMillis - startMs).toInt
-      result match {
-        case Left(rs) => PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(rs), startMs) match {
-          case Left(err) => PlanErrorResponse(resultId, err, durationMs)
-          case Right(planResponse) => PlanResultResponse(resultId, planResponse, durationMs)
-        }
-        case Right(x) => throw new IllegalStateException()
+      PlanParseService.parse(sql, queryId, PlanParseService.resultPlanString(result), startMs) match {
+        case Left(err) => PlanErrorResponse(resultId, err, durationMs)
+        case Right(planResponse) => PlanResultResponse(resultId, planResponse, durationMs)
       }
     }
   }

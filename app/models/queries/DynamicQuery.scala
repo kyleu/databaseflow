@@ -10,7 +10,7 @@ object DynamicQuery {
   )
 }
 
-case class DynamicQuery(override val sql: String) extends Query[Either[DynamicQuery.Results, Int]] {
+case class DynamicQuery(override val sql: String) extends Query[DynamicQuery.Results] {
   override def reduce(rows: Iterator[Row]) = {
     if (rows.hasNext) {
       val firstRow = rows.next()
@@ -26,10 +26,9 @@ case class DynamicQuery(override val sql: String) extends Query[Either[DynamicQu
       }.toList
 
       val data = firstRowData +: remainingData
-
-      Left(DynamicQuery.Results(columns, data))
+      DynamicQuery.Results(columns, data)
     } else {
-      Left(DynamicQuery.Results(Nil, Nil))
+      DynamicQuery.Results(Nil, Nil)
     }
   }
 }

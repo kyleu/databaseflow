@@ -1,6 +1,5 @@
 package services.database
 
-import akka.dispatch.ForkJoinExecutorConfigurator
 import models.database.{ Query, Statement }
 import utils.Logging
 
@@ -20,7 +19,7 @@ object DatabaseWorkerPool extends Logging {
     submit(() => db.executeUpdate(s), onSuccess, onFailure)
   }
 
-  def submitUnknown[T](q: Query[Either[T, Int]], db: DatabaseConnection, onSuccess: (Either[T, Int]) => Unit, onFailure: (Throwable) => Unit) = {
+  def submitUnknown[T](q: Query[T], db: DatabaseConnection, onSuccess: (Either[T, Int]) => Unit, onFailure: (Throwable) => Unit) = {
     submit(() => db.executeUnknown(q), onSuccess, onFailure)
   }
 
