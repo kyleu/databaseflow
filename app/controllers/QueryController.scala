@@ -1,14 +1,13 @@
 package controllers
 
-import java.io.ByteArrayInputStream
 import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
+import akka.stream.scaladsl.Source
 import com.mohiva.play.silhouette.api.HandlerResult
 import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.iteratee.Enumerator
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.{ ConnectionService, ConnectionSettingsService }
@@ -54,7 +53,9 @@ class QueryController @javax.inject.Inject() (
 
     val status = s"Exporting query [$queryId] in [$format] format using sql [$sql]!, motherfucker!"
 
-    val result = Ok(status)
+    val testSource = Source.fromIterator(() => Iterator(status))
+
+    val result = Ok.chunked(testSource)
 
     val withHeaders = result.withHeaders(
       CONTENT_TYPE -> (format match {

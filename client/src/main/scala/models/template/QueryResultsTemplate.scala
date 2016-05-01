@@ -13,7 +13,7 @@ object QueryResultsTemplate {
       a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
 
       p(
-        s"${qr.rowsAffected} rows returned ",
+        s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
         time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
         s" in [${durationMs}ms]."
       ),
