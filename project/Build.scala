@@ -12,6 +12,8 @@ object Build extends Build with UniversalKeys {
   lazy val dblibs = Database.dblibs
   lazy val server = Server.server
 
+  lazy val site = Site.site
+
   lazy val iconCreator = Utilities.iconCreator
   lazy val licenseGenerator = Utilities.licenseGenerator
 }

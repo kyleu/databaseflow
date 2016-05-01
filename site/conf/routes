@@ -1,0 +1,7 @@
+GET         /                            controllers.HomeController.index
+
+# Assets
+GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
+GET         /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
+
+GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)

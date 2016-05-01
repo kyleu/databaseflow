@@ -1,0 +1,22 @@
+@(title: String)(content: Html)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.materialize(title) {
+  <header>
+    <nav id="topnav" class="blue-grey lighten-2">
+      <a href="@routes.HomeController.index()" class="brand-logo center">Database Flow</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="static-container container">
+      @content
+    </div>
+  </main>
+
+  <footer class="page-footer blue-grey lighten-2">
+    <div class="footer-copyright">
+      @messages("static.copyright")
+      <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>
+    </div>
+  </footer>
+}

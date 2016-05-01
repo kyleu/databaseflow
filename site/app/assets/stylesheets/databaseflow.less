@@ -1,0 +1,76 @@
+// General Styles
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #fcfcfc;
+}
+
+main {
+  flex: 1 0 auto;
+  .static-container {
+    margin-top: 16px;
+  }
+}
+
+footer.page-footer {
+  margin: 0;
+  padding: 0;
+  .footer-copyright {
+    height: 48px;
+    line-height: 48px;
+    padding: 0 10px;
+  }
+}
+
+// Navbar
+.nb-container {
+  height: 48px;
+}
+
+#topnav {
+  height: 48px;
+  line-height: 48px;
+
+  .brand-logo {
+    margin: 0 14px;
+    font-size: 1.6rem;
+    i {
+      height: 48px;
+      line-height: 48px;
+      margin-right: 6px;
+    }
+  }
+}
+
+// Panels
+.card {
+  .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
+    text-transform: none;
+    cursor: pointer;
+    &:hover {
+      color: #888;
+    }
+  }
+
+  .card-content {
+    .card-title {
+      line-height: 28px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+// Helper Classes
+.initially-hidden {
+  display: none;
+}
+
+.black {
+  background-color: #555 !important;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
+  font-family: 'roboto-mono';
+}

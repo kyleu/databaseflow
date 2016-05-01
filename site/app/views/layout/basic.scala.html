@@ -1,0 +1,22 @@
+@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(implicit session: Session, flash: Flash)<!DOCTYPE html>
+<html>
+  <head>
+    <title>@title</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="og:site_name" content="Database Flow" />
+    <meta property="og:title" content="@title" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+
+    <link id="favicon-link" rel="shortcut icon" type="image/png" href="@routes.Assets.versioned(s"images/ui/favicon/icon-blue-grey@2x.png")">
+
+    @for(script <- scripts) {<script src="@script"></script>}
+    @for(stylesheet <- stylesheets) {<link rel="stylesheet" media="screen" href="@stylesheet" />}
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/databaseflow.min.css")" />
+  </head>
+  <body>@content
+  </body>
+</html>
