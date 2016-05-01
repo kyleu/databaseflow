@@ -43,7 +43,6 @@ trait QueryHelper extends Logging { this: ConnectionService =>
         result match {
           case Left(rs) => QueryResultResponse(resultId, Seq(QueryResult(
             queryId = queryId,
-            title = "Query Results",
             sql = sql,
             columns = rs.cols,
             data = rs.data,
@@ -52,7 +51,6 @@ trait QueryHelper extends Logging { this: ConnectionService =>
           )), durationMs)
           case Right(i) => QueryResultResponse(resultId, Seq(QueryResult(
             queryId = queryId,
-            title = "Statement Results",
             sql = sql,
             isStatement = true,
             rowsAffected = i,

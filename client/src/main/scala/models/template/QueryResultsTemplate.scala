@@ -33,7 +33,6 @@ object QueryResultsTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      //iconAndTitle = Some(Icons.queryResults -> qr.title),
       showClose = false
     )
   }
@@ -48,7 +47,6 @@ object QueryResultsTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      //iconAndTitle = Some(Icons.statementResults -> qr.title),
       showClose = false
     )
   }

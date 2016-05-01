@@ -4,7 +4,6 @@ import java.util.UUID
 
 case class PlanError(
   queryId: UUID,
-  title: String,
   sql: String,
   code: String,
   message: String,

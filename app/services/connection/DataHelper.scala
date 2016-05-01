@@ -61,7 +61,6 @@ trait DataHelper extends Logging { this: ConnectionService =>
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         QueryResultResponse(resultId, Seq(QueryResult(
           queryId = queryId,
-          title = name + " Data",
           sql = sql,
           columns = columnsWithRelations,
           data = trimmedData,

@@ -28,7 +28,7 @@ object QueryPlanTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.queryPlan -> pr.result.title),
+      iconAndTitle = Some(Icons.queryPlan -> "Query Plan"),
       actions = QueryPlanTemplate.actions,
       showClose = false
     )

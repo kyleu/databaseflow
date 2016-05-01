@@ -24,7 +24,6 @@ object QueryResult {
 
 case class QueryResult(
   queryId: UUID,
-  title: String,
   sql: String,
   isStatement: Boolean = false,
   columns: Seq[QueryResult.Col] = Nil,

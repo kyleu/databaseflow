@@ -30,7 +30,6 @@ object PostgresParseService extends PlanParseService("postgres") {
   private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value, startMs: Long) = plan match {
     case o: Js.Obj => Right(PlanResult(
       queryId = queryId,
-      title = "Query Plan",
       action = "Action",
       sql = sql,
       raw = json.write(plan, 2),

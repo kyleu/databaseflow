@@ -19,7 +19,6 @@ object MySqlParseService extends PlanParseService("mysql") {
   private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value, startMs: Long) = try {
     Right(PlanResult(
       queryId = queryId,
-      title = "Test Plan",
       action = "Action",
       sql = sql,
       raw = json.write(plan, 2),
