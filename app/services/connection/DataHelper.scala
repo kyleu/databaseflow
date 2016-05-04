@@ -40,12 +40,8 @@ trait DataHelper extends Logging { this: ConnectionService =>
         val result = db.query(DynamicQuery(sql))
 
         val (trimmedData, moreRowsAvailable) = options.limit match {
-          case Some(limit) => if (result.data.size > limit) {
-            result.data.take(limit) -> true
-          } else {
-            result.data -> false
-          }
-          case None => result.data -> false
+          case Some(limit) if result.data.size > limit => result.data.take(limit) -> true
+          case _ => result.data -> false
         }
         val columnsWithRelations = result.cols.map { col =>
           foreignKeys.find(_.references.exists(_.source == col.name)) match {
@@ -72,6 +68,9 @@ trait DataHelper extends Logging { this: ConnectionService =>
             sortable = true,
             sortedColumn = options.orderByCol,
             sortedAscending = options.orderByAsc,
+            filterColumn = options.filterCol,
+            filterOp = options.filterOp,
+            filterValue = options.filterVal,
             dataOffset = options.offset.getOrElse(0)
           )),
           occurred = startMs

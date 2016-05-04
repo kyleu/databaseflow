@@ -7,6 +7,8 @@ import org.scalajs.jquery.{ jQuery => $ }
 import ui.{ ProgressManager, TableManager }
 import utils.JQueryUtils
 
+import scala.scalajs.js
+
 trait QueryResultsHelper { this: DatabaseFlow =>
   protected[this] def handleQueryResultResponse(qrr: QueryResultResponse) = {
     if (qrr.results.size == 1 && qrr.results.headOption.exists(_.source.exists(_.dataOffset > 0))) {
@@ -26,15 +28,18 @@ trait QueryResultsHelper { this: DatabaseFlow =>
       val content = QueryResultsTemplate.forStatementResults(qr, occurred.toISOString, occurred.toString, durationMs)
       ProgressManager.completeProgress(qr.queryId, resultId, content)
     } else {
-      val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, occurred.toString, durationMs, resultId)
-      ProgressManager.completeProgress(qr.queryId, resultId, content)
+      if (qr.source.isDefined) {
+        val content = QueryResultsTemplate.forRowResults(qr, occurred.toISOString, occurred.toString, durationMs, resultId)
+        ProgressManager.completeProgress(qr.queryId, resultId, content)
+      } else {
+        val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, occurred.toString, durationMs, resultId)
+        ProgressManager.completeProgress(qr.queryId, resultId, content)
+      }
 
       val workspace = $(s"#workspace-${qr.queryId}")
       val panel = $(s"#$resultId", workspace)
 
       val resultEl = $(".query-result-table", panel)
-      val sqlEl = $(".query-result-sql", panel)
-      val sqlLink = $(s".results-sql-link", panel)
 
       JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
         val table = jq.data("rel-table").toString
@@ -43,6 +48,31 @@ trait QueryResultsHelper { this: DatabaseFlow =>
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some("="), filterVal = Some(v)))
       })
 
+      if (qr.source.isDefined) {
+        js.Dynamic.global.$(".filter-select", panel).material_select()
+
+        val filterEl = $(".filter-container", panel)
+        val filterLink = $(s".results-filter-link", panel)
+        val filterCancelLink = $(s".results-filter-cancel", panel)
+
+        utils.JQueryUtils.clickHandler(filterLink, (jq) => {
+          filterLink.hide()
+          filterEl.show()
+        })
+        utils.JQueryUtils.clickHandler(filterCancelLink, (jq) => {
+          filterLink.show()
+          filterEl.hide()
+        })
+      } else {
+        val sqlEl = $(".query-result-sql", panel)
+        val sqlLink = $(s".results-sql-link", panel)
+        var sqlShown = false
+        utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
+          if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
+          sqlShown = !sqlShown
+        })
+      }
+
       if (qr.moreRowsAvailable) {
         $(".additional-results .append-rows-link").show()
         $(".additional-results .no-rows-remaining").hide()
@@ -50,12 +80,6 @@ trait QueryResultsHelper { this: DatabaseFlow =>
         $(".additional-results .append-rows-link").hide()
         $(".additional-results .no-rows-remaining").show()
       }
-
-      var sqlShown = false
-      utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
-        if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
-        sqlShown = !sqlShown
-      })
     }
   }
 

@@ -59,7 +59,7 @@ object DataTableTemplate {
           data("rel-col") := col.relationColumn.getOrElse(""),
           data("rel-val") := v.getOrElse("")
         )(i(cls := s"fa ${Icons.relation}")),
-        span(contentEl._1)
+        span(cls := "linked-cell")(contentEl._1)
       )
       case _ => td(contentEl._1)
     }
@@ -71,7 +71,7 @@ object DataTableTemplate {
   }
 
   def forResults(res: QueryResult) = if (res.columns.isEmpty || res.data.isEmpty) {
-    em("No rows returned.")
+    em("No rows returned")
   } else {
     div(cls := "query-result-table")(
       table(cls := "bordered highlight responsive-table")(

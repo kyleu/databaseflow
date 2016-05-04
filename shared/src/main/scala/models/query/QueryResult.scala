@@ -18,6 +18,9 @@ object QueryResult {
     sortable: Boolean,
     sortedColumn: Option[String] = None,
     sortedAscending: Option[Boolean] = None,
+    filterColumn: Option[String] = None,
+    filterOp: Option[String] = None,
+    filterValue: Option[String] = None,
     dataOffset: Int = 0
   )
 }

@@ -20,7 +20,7 @@ trait TableDetailHelper {
     table.rowCountEstimate match {
       case Some(cnt) =>
         $(".row-count", panel).show()
-        $(".row-count span", panel).text(cnt.toString)
+        $(".row-count span", panel).text(utils.NumberUtils.withCommas(cnt))
       case None => $(".row-count", panel).hide()
     }
 

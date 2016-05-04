@@ -28,7 +28,6 @@ object MySqlParseService extends PlanParseService("mysql") {
   } catch {
     case NonFatal(x) => Left(PlanError(
       queryId = queryId,
-      title = "Plan Error",
       sql = sql,
       code = x.getClass.getSimpleName,
       message = x.getMessage,

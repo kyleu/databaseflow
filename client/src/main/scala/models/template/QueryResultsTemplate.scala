@@ -8,10 +8,37 @@ import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
 object QueryResultsTemplate {
+  def forRowResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int, resultId: UUID) = {
+    val source = qr.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]"))
+    val hiddenClass = source.sortedColumn match {
+      case Some(_) => "initially-hidden"
+      case None => ""
+    }
+    val content = div(id := resultId.toString)(
+      a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter"),
+      p(
+        s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
+        time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
+        s" in [${durationMs}ms]."
+      ),
+
+      DataFilterTemplate.forResults(qr, resultId),
+      DataTableTemplate.forResults(qr),
+      div(cls := "additional-results")(
+        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", href := "#")(s"Load ${qr.data.size} More Rows"),
+        em(cls := "no-rows-remaining initially-hidden")("No more rows available")
+      )
+    )
+
+    StaticPanelTemplate.cardRow(
+      content = content,
+      showClose = false
+    )
+  }
+
   def forQueryResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int, resultId: UUID) = {
     val content = div(id := resultId.toString)(
       a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
-
       p(
         s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
         time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),

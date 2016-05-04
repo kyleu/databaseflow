@@ -1,0 +1,23 @@
+package models.schema
+
+import enumeratum._
+
+sealed abstract class FilterOp(val key: String, val symbol: String, val title: String) extends EnumEntry {
+  override def toString = key
+}
+
+object FilterOp extends Enum[FilterOp] {
+  case object Equal extends FilterOp("eq", "=", "Equal")
+  case object NotEqual extends FilterOp("neq", "≠", "Not Equal")
+  case object LessThan extends FilterOp("lt", "<", "Less Than")
+  case object GreaterThan extends FilterOp("gt", ">", "Greater Than")
+  case object LessThanOrEqual extends FilterOp("lte", "≤", "Less Than Or Equal")
+  case object GreaterThanOrEqual extends FilterOp("gte", "≥", "Greater Than Or Equal")
+  case object In extends FilterOp("in", "in", "Between")
+  case object Like extends FilterOp("like", "like", "Like")
+  case object Between extends FilterOp("btw", "between", "Between")
+  case object IsNull extends FilterOp("nl", "is null", "Is Null")
+  case object IsNotNull extends FilterOp("nnl", "is not null", "Is Not Null")
+
+  override def values = findValues
+}

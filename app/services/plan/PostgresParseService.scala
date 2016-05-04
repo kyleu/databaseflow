@@ -38,7 +38,6 @@ object PostgresParseService extends PlanParseService("postgres") {
     ))
     case x => Left(PlanError(
       queryId = queryId,
-      title = "Plan Error",
       sql = sql,
       code = x.getClass.getSimpleName,
       message = s"Invalid JSON [${json.write(plan)}].",

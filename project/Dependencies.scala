@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.1" // 2.5.2 has a logging error
+    private[this] val version = "2.5.3"
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
     val playTest = "com.typesafe.play" %% "play-test" % version
@@ -88,7 +88,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.1"
+    val enumeratumVersion = "1.4.2"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.4"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"

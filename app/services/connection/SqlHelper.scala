@@ -19,9 +19,9 @@ trait SqlHelper { this: ConnectionService =>
       t match {
         case sqlEx: PSQLException =>
           val e = sqlEx.getServerErrorMessage
-          QueryErrorResponse(resultId, QueryError(queryId, "Query Error", sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
+          QueryErrorResponse(resultId, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
         case sqlEx: SQLSyntaxErrorException =>
-          QueryErrorResponse(resultId, QueryError(queryId, "Query Error", sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case x =>
           log.warn(s"Unhandled error running sql [$sql].", x)
           ServerError(x.getClass.getSimpleName, x.getMessage)
