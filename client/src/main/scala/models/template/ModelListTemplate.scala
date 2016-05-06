@@ -18,7 +18,7 @@ object ModelListTemplate {
       td(sq.public.toString()),
       td(sq.connection.map(c => span(c.toString)).getOrElse(em("None")))
     ))
-    forModels(queryId, "saved-query", "Saved Queries", tableFor(cols, rows))
+    forModels(queryId, "Saved Queries", tableFor(cols, rows))
   }
 
   def forTables(queryId: UUID, tables: Seq[Table]) = {
@@ -32,7 +32,7 @@ object ModelListTemplate {
       td(t.foreignKeys.size.toString),
       td(t.description.map(d => span(d)).getOrElse(em("None")))
     ))
-    forModels(queryId, "table", "Tables", tableFor(cols, rows))
+    forModels(queryId, "Tables", tableFor(cols, rows))
   }
 
   def forViews(queryId: UUID, views: Seq[View]) = {
@@ -42,7 +42,7 @@ object ModelListTemplate {
       td(v.columns.map(_.name).mkString(", ")),
       td(v.description.map(d => span(d)).getOrElse(em("None")))
     ))
-    forModels(queryId, "view", "Views", tableFor(cols, rows))
+    forModels(queryId, "Views", tableFor(cols, rows))
   }
 
   def forProcedures(queryId: UUID, procedures: Seq[Procedure]) = {
@@ -52,7 +52,7 @@ object ModelListTemplate {
       td(p.params.map(param => s"${param.name} (${param.paramType} ${param.columnType})").mkString(", ")),
       td(p.returnsResult.getOrElse(false).toString())
     ))
-    forModels(queryId, "procedure", "Procedures", tableFor(cols, rows))
+    forModels(queryId, "Procedures", tableFor(cols, rows))
   }
 
   private[this] def tableFor(cols: Seq[String], rows: Seq[TypedTag[String]]) = {
@@ -64,7 +64,7 @@ object ModelListTemplate {
     )
   }
 
-  private[this] def forModels(queryId: UUID, key: String, name: String, t: TypedTag[String]) = {
+  private[this] def forModels(queryId: UUID, name: String, t: TypedTag[String]) = {
     val ret = div(
       StaticPanelTemplate.cardRow(t, Some(Icons.list -> name)),
       div(id := s"workspace-$queryId")

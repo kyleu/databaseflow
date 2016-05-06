@@ -4,7 +4,6 @@ import java.util.UUID
 
 import models.{ GetTableRowData, GetViewRowData }
 import models.query.RowDataOptions
-import models.template._
 import org.scalajs.jquery.{ jQuery => $ }
 import utils.JQueryUtils
 
@@ -39,7 +38,7 @@ object RowDataManager {
     }
 
     if (options.offset.forall(_ == 0)) {
-      ProgressManager.startProgress(queryId, resultId, onComplete, Icons.loading, name)
+      ProgressManager.startProgress(queryId, resultId, onComplete, name)
     }
     val msg = key match {
       case "table" => GetTableRowData(queryId, name, options, resultId)

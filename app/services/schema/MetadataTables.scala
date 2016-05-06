@@ -33,9 +33,10 @@ object MetadataTables {
 
     val rowStats = db.engine match {
       case MySQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
-        override def sql = {
-          s"""select table_name, engine, table_rows, avg_row_length, data_length, create_time from information_schema.tables where table_name = '${table.name}'"""
-        }
+        override def sql = s"""
+          select table_name, engine, table_rows, avg_row_length, data_length, create_time
+          from information_schema.tables where table_name = '${table.name}'
+        """
         override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("table_name")
           val engine = row.as[String]("engine")

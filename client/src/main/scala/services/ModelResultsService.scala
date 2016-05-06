@@ -1,38 +1,39 @@
+package services
+
 import java.util.UUID
 
-import models._
 import models.query.SavedQuery
 import models.schema.{ Procedure, Table, View }
+import models.{ BatchQueryStatus, SavedQueryResultResponse, SchemaResultResponse }
 import org.scalajs.jquery.{ jQuery => $ }
-import services.NotificationService
-import ui._
+import ui.{ ProcedureManager, QuerySaveFormManager, TableManager, ViewManager, _ }
 
-trait ModelResultsHelper { this: DatabaseFlow =>
+object ModelResultsService {
   private[this] var receivedSavedQueryResponse = false
   private[this] var receivedSchemaResultResponse = false
 
-  protected[this] def handleBatchQueryStatus(bqs: BatchQueryStatus) = {
+  def handleBatchQueryStatus(bqs: BatchQueryStatus) = {
     SampleDatabaseManager.process(bqs)
   }
 
-  protected[this] def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = {
+  def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = {
     SavedQueryManager.updateSavedQueries(sqrr.savedQueries)
     if (!receivedSavedQueryResponse) {
       receivedSavedQueryResponse = true
       if (receivedSchemaResultResponse) {
-        performInitialAction()
+        InitService.performInitialAction()
       }
     }
   }
 
-  protected[this] def handleSchemaResultResponse(srr: SchemaResultResponse) = {
+  def handleSchemaResultResponse(srr: SchemaResultResponse) = {
     if (MetadataManager.schema.isEmpty) {
       MetadataManager.updateSchema(srr.schema)
       $("#loading-panel").hide()
       if (!receivedSchemaResultResponse) {
         receivedSchemaResultResponse = true
         if (receivedSavedQueryResponse) {
-          performInitialAction()
+          InitService.performInitialAction()
         }
       }
     } else {
@@ -40,25 +41,25 @@ trait ModelResultsHelper { this: DatabaseFlow =>
     }
   }
 
-  protected[this] def handleTableResultResponse(t: Seq[Table]) = {
+  def handleTableResultResponse(t: Seq[Table]) = {
     MetadataUpdates.updateTables(t)
     t.foreach(TableManager.addTable)
   }
-  protected[this] def handleViewResultResponse(v: Seq[View]) = {
+  def handleViewResultResponse(v: Seq[View]) = {
     MetadataUpdates.updateViews(v)
     v.foreach(ViewManager.addView)
   }
-  protected[this] def handleProcedureResultResponse(p: Seq[Procedure]) = {
+  def handleProcedureResultResponse(p: Seq[Procedure]) = {
     MetadataUpdates.updateProcedures(p)
     p.foreach(ProcedureManager.addProcedure)
   }
 
-  protected[this] def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = error match {
+  def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Save Error", err)
     case None => QuerySaveFormManager.handleQuerySaveResponse(sq, error)
   }
 
-  protected[this] def handleQueryDeleteResponse(id: UUID, error: Option[String]) = error match {
+  def handleQueryDeleteResponse(id: UUID, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Delete Error", err)
     case None => SavedQueryManager.deleteQuery(id)
   }

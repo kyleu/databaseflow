@@ -3,6 +3,7 @@ package models.template
 import java.util.UUID
 
 import models.query.QueryResult
+import models.schema.FilterOp
 
 import scalatags.Text.all._
 
@@ -18,16 +19,21 @@ object DataFilterTemplate {
     div(cls := s"filter-container $hiddenClass z-depth-1")(
       div(cls := "row")(
         div(cls := "input-field col s5")(
-          select(cls := "filter-select filter-col-select theme-text")(r.columns.map(c => if (source.sortedColumn.contains(c.name)) {
-            option(selected)(c.name)
-          } else {
-            option(c.name)
-          })),
+          select(cls := "filter-select filter-col-select theme-text")(r.columns.map(c =>
+            if (source.filterColumn.contains(c.name)) {
+              option(selected)(c.name)
+            } else {
+              option(c.name)
+            })),
           label("Column")
         ),
         div(cls := "input-field col s2")(
-          select(cls := "filter-select filter-op-select theme-text")(models.schema.FilterOp.values.map { op =>
-            option(value := op.key)(op.symbol)
+          select(cls := "filter-select filter-op-select theme-text")(FilterOp.values.map { op =>
+            if (source.filterOp.contains(op)) {
+              option(value := op.key, selected)(op.symbol)
+            } else {
+              option(value := op.key)(op.symbol)
+            }
           }),
           label("Op")
         ),

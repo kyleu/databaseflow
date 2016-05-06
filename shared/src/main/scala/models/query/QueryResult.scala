@@ -2,7 +2,7 @@ package models.query
 
 import java.util.UUID
 
-import models.schema.ColumnType
+import models.schema.{ ColumnType, FilterOp }
 
 object QueryResult {
   case class Col(
@@ -19,7 +19,7 @@ object QueryResult {
     sortedColumn: Option[String] = None,
     sortedAscending: Option[Boolean] = None,
     filterColumn: Option[String] = None,
-    filterOp: Option[String] = None,
+    filterOp: Option[FilterOp] = None,
     filterValue: Option[String] = None,
     dataOffset: Int = 0
   )

@@ -1,15 +1,18 @@
+package services
+
 import java.util.UUID
 
+import models.RequestMessage
 import models.query.RowDataOptions
+import models.schema.FilterOp
 import org.scalajs.jquery.{ jQuery => $ }
-import services.NavigationService
 import ui._
 import utils.{ Logging, NetworkMessage }
 
 import scala.scalajs.js
 
-trait InitHelper { this: DatabaseFlow =>
-  protected[this] def init() {
+object InitService {
+  def init(sendMessage: (RequestMessage) => Unit, connect: () => Unit) {
     utils.Logging.installErrorHandler()
     NetworkMessage.register(sendMessage)
     wireSideNav()
@@ -29,7 +32,7 @@ trait InitHelper { this: DatabaseFlow =>
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
-  protected[this] def performInitialAction() = {
+  def performInitialAction() = {
     TabManager.initIfNeeded()
     NavigationService.initialMessage match {
       case ("new", None) => AdHocQueryManager.addNewQuery()
@@ -43,7 +46,7 @@ trait InitHelper { this: DatabaseFlow =>
           val options = if (filter.length > 1) {
             RowDataOptions(
               filterCol = filter.headOption,
-              filterOp = Some("="),
+              filterOp = Some(FilterOp.Equal),
               filterVal = Some(filter.tail.mkString("="))
             )
           } else {

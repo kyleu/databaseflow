@@ -20,38 +20,45 @@ object TableManager extends TableDetailHelper {
     }
   }
 
-  def tableDetail(name: String, options: RowDataOptions) = openTables.get(name) match {
-    case Some(queryId) =>
-      TabManager.selectTab(queryId)
-    case None =>
-      val queryId = UUID.randomUUID
-      WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
+  def tableDetail(name: String, options: RowDataOptions) = {
+    val qId = openTables.get(name) match {
+      case Some(queryId) =>
+        TabManager.selectTab(queryId)
+        queryId
+      case None =>
+        val queryId = UUID.randomUUID
+        WorkspaceManager.append(TableDetailTemplate.forTable(queryId, name).toString)
 
-      MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
-        case Some(table) if table.columns.nonEmpty => setTableDetails(queryId, table)
-        case _ => utils.NetworkMessage.sendMessage(GetTableDetail(name))
-      }
+        MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
+          case Some(table) if table.columns.nonEmpty => setTableDetails(queryId, table)
+          case _ => utils.NetworkMessage.sendMessage(GetTableDetail(name))
+        }
 
-      TabManager.addTab(queryId, "table-" + name, name, Icons.table)
+        TabManager.addTab(queryId, "table-" + name, name, Icons.table)
 
-      val queryPanel = $(s"#panel-$queryId")
+        val queryPanel = $(s"#panel-$queryId")
 
-      QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
+        QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        RowDataManager.showTableRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
-      })
+        utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
+          RowDataManager.showTableRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
+        })
 
-      utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-        implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
-        QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name))
-      })
+        utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+          implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
+          QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name))
+        })
 
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        openTables = openTables - name
-        QueryManager.closeQuery(queryId)
-      })
+        utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
+          openTables = openTables - name
+          QueryManager.closeQuery(queryId)
+        })
 
-      openTables = openTables + (name -> queryId)
+        openTables = openTables + (name -> queryId)
+        queryId
+    }
+    if (options.isFiltered) {
+      RowDataManager.showTableRowData(qId, name, options.copy(limit = Some(UserManager.rowsReturned)))
+    }
   }
 }

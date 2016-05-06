@@ -3,6 +3,7 @@ package gui.ui
 import scala.swing._
 
 object Colors {
+  val black = new Color(0, 0, 0)
   val background = new Color(144, 164, 174)
 
   val titleForeground = new Color(255, 255, 255)

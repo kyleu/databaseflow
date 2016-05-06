@@ -21,7 +21,6 @@ class RegistrationController @javax.inject.Inject() (
     userService: UserService,
     userSearchService: UserSearchService,
     authInfoRepository: AuthInfoRepository,
-    credentialsProvider: CredentialsProvider,
     hasher: PasswordHasher
 ) extends BaseController {
   def registrationForm = withSession("form") { implicit request =>

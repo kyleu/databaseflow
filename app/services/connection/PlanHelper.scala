@@ -40,7 +40,7 @@ trait PlanHelper extends Logging { this: ConnectionService =>
     }
   }
 
-  def handleAnalyzeQuery(queryId: UUID, sql: String, resultId: UUID) = {
+  def handleAnalyzeQuery(queryId: UUID, sql: String, resultId: UUID): Unit = {
     db.engine.analyze match {
       case Some(analyze) =>
         def work() = {

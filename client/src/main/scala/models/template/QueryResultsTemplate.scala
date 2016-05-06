@@ -15,11 +15,21 @@ object QueryResultsTemplate {
       case None => ""
     }
     val content = div(id := resultId.toString)(
-      a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter"),
-      p(
-        s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
-        time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
-        s" in [${durationMs}ms]."
+      div(cls := "row-status-display")(
+        a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter"),
+        p(
+          s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
+          time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
+          s" in [${durationMs}ms]."
+        ),
+
+        div(source.filterColumn match {
+          case Some(column) =>
+            val op = source.filterOp.getOrElse("?")
+            val v = source.filterValue.getOrElse("?")
+            s"$column $op $v"
+          case None => ""
+        })
       ),
 
       DataFilterTemplate.forResults(qr, resultId),

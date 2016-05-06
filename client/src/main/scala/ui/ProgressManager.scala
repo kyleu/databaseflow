@@ -13,7 +13,7 @@ object ProgressManager {
 
   lazy val workspace = $("#workspace")
 
-  def startProgress(queryId: UUID, resultId: UUID, onComplete: () => Unit, icon: String, title: String): Unit = {
+  def startProgress(queryId: UUID, resultId: UUID, onComplete: () => Unit, title: String): Unit = {
     activeQueries.get(queryId) match {
       case Some(active) if active._1 == resultId => throw new IllegalStateException(s"Already started progress for query [$queryId] with result [$resultId].")
       case Some(active) => throw new IllegalStateException(s"Cannot start progress for query [$queryId] with [$resultId], already processing [${active._1}].")

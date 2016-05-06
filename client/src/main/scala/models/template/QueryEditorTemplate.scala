@@ -18,7 +18,7 @@ object QueryEditorTemplate {
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {
     val links = linksFor(engine) :+ a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save")
-    queryPanel(queryId, queryName, None, sql, Icons.adHocQuery, links)
+    queryPanel(queryId, queryName, sql, Icons.adHocQuery, links)
   }
 
   def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: Option[UUID]) = {
@@ -38,10 +38,10 @@ object QueryEditorTemplate {
       case None => Seq.empty
     }
     val links = linksFor(engine) ++ modificationLinks
-    queryPanel(sq.id, sq.name, sq.description, sq.sql, Icons.savedQuery, links)
+    queryPanel(sq.id, sq.name, sq.sql, Icons.savedQuery, links)
   }
 
-  private[this] def queryPanel(queryId: UUID, queryName: String, description: Option[String], sql: String, icon: String, links: Seq[TypedTag[String]]) = {
+  private[this] def queryPanel(queryId: UUID, queryName: String, sql: String, icon: String, links: Seq[TypedTag[String]]) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(
         div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql),

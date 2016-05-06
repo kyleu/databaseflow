@@ -13,7 +13,7 @@ class TopFrame(app: WebApp) extends MainFrame {
     foreground = Colors.titleForeground
   }
 
-  private[this] val statusLabel = new Label("Starting application...", None.orNull, Alignment.Center) {
+  private[this] val statusLabel = new Label("Starting...", None.orNull, Alignment.Center) {
     font = RobotoFont.regularText
     foreground = Colors.panelForeground
   }
@@ -30,8 +30,9 @@ class TopFrame(app: WebApp) extends MainFrame {
     background = Colors.background
   }
 
-  def setStatus(status: String) = {
+  def setStatus(status: String) = Swing.onEDT {
     statusLabel.text = status
+    println(s"Setting status to [$status] on thread [${Thread.currentThread().getName}]")
   }
 
   contents = new BorderPanel {
@@ -47,7 +48,12 @@ class TopFrame(app: WebApp) extends MainFrame {
 
   background = Colors.background
 
+  def serverStarted() = {
+    setStatus("Server running.")
+  }
+
   peer.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE)
+
   override def closeOperation() = {
     if (app.started) {
       app.stop()

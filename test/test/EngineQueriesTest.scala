@@ -3,6 +3,7 @@ package test
 import models.engine.EngineQueries
 import models.engine.rdbms.{ MySQL, PostgreSQL, SqlServer }
 import models.query.RowDataOptions
+import models.schema.FilterOp
 import org.scalatest.{ FlatSpec, Matchers }
 
 class EngineQueriesTest extends FlatSpec with Matchers {
@@ -12,12 +13,12 @@ class EngineQueriesTest extends FlatSpec with Matchers {
 
   val rdoCol = RowDataOptions(
     filterCol = Some("y"),
-    filterOp = Some("="),
+    filterOp = Some(FilterOp.Equal),
     filterVal = Some("z")
   )
 
   val rdoOrder = RowDataOptions(
-    orderBy = Some("y")
+    orderByCol = Some("y")
   )
 
   "Engine Queries" should "output SQL Server limit syntax" in {

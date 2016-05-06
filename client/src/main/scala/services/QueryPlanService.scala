@@ -1,3 +1,5 @@
+package services
+
 import java.util.UUID
 
 import models._
@@ -6,9 +8,8 @@ import org.scalajs.jquery.{ jQuery => $ }
 import ui.ProgressManager
 import utils.JQueryUtils
 
-trait PlanHelper {
-  this: DatabaseFlow =>
-  protected[this] def handlePlanResultResponse(pr: PlanResultResponse) = {
+object QueryPlanService {
+  def handlePlanResultResponse(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
     val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
@@ -41,7 +42,7 @@ trait PlanHelper {
     })
   }
 
-  protected[this] def handlePlanErrorResponse(per: PlanErrorResponse) = {
+  def handlePlanErrorResponse(per: PlanErrorResponse) = {
     val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
     val content = ErrorTemplate.forPlanError(per, occurred.toISOString, occurred.toString)
 
@@ -60,7 +61,7 @@ trait PlanHelper {
     while (continue) {
       treeWidth = tree.width(treeWidth + 500).width()
       val newNodeWidth = rootNode.width()
-      if (newNodeWidth == nodeWidth) {
+      if (newNodeWidth.toInt == nodeWidth.toInt) {
         continue = false
       } else {
         nodeWidth = newNodeWidth
