@@ -12,6 +12,12 @@ sealed abstract class Engine(
 }
 
 object Engine extends Enum[Engine] {
+  case object DB2 extends Engine(
+    id = "db2",
+    name = "DB2",
+    driverClass = "com.ibm.db2.jcc.DB2Driver",
+    exampleUrl = "jdbc:db2://hostname:50000/database"
+  )
   case object H2 extends Engine(
     id = "h2",
     name = "H2",

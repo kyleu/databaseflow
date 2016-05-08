@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="card-action">
-            <a class="right waves-effect btn-flat" onclick="document.getElementById('profile-form').submit()">@Messages("profile.save")</a>
+            <a id="save-button" class="right waves-effect btn-flat theme-text" onclick="document.getElementById('profile-form').submit()">@Messages("profile.save")</a>
             <div style="clear: both;"></div>
           </div>
         </div>
@@ -36,6 +36,8 @@
   <script>
     $(function() {
       var activeSwatch = '@user.map(_.preferences.theme).getOrElse("blue-grey")';
+      $('#save-button').addClass(activeSwatch + "-text").removeClass("theme-text");
+
       $(".swatch").click(function(e) {
         var el = $(e.currentTarget);
         var newSwatch = el.data('name');
@@ -43,6 +45,7 @@
         el.addClass('active');
 
         $('footer, nav').removeClass(activeSwatch).addClass(newSwatch);
+        $('#save-button').removeClass(activeSwatch + "-text").addClass(newSwatch + "-text");
         $('#input-theme').val(newSwatch);
         $('#favicon-link').attr('href', '/assets/images/ui/favicon/icon-' + newSwatch + '@@2x.png');
         activeSwatch = newSwatch;
