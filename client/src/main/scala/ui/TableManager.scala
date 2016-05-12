@@ -46,7 +46,7 @@ object TableManager extends TableDetailHelper {
 
         utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
           implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
-          QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name))
+          QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name), name)
         })
 
         utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {

@@ -43,7 +43,7 @@ object ViewManager extends ViewDetailHelper {
 
       utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
         implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
-        QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name))
+        QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name), name)
       })
 
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {

@@ -9,38 +9,33 @@ class TopFrame(app: WebApp) extends MainFrame {
   resizable = false
 
   private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Center) {
-    font = RobotoFont.titleText
-    foreground = Colors.titleForeground
+    font = CustomFonts.titleText
+    foreground = Colors.foreground
+    peer.setSize(new Dimension(300, 40))
+    peer.setLocation(0, 20)
   }
 
   private[this] val statusLabel = new Label("Starting...", None.orNull, Alignment.Center) {
-    font = RobotoFont.regularText
-    foreground = Colors.panelForeground
+    font = CustomFonts.regularText
+    foreground = Colors.foreground
+    peer.setSize(new Dimension(300, 40))
+    peer.setLocation(0, 95)
   }
 
-  private[this] val detailPanel = new BorderPanel {
-    layout(statusLabel) = BorderPanel.Position.Center
-    background = Colors.panelBackground
-    border = Swing.EmptyBorder(5, 5, 5, 5)
-  }
+  private[this] val panel = new Panel {
+    peer.setLayout(None.orNull)
 
-  private[this] val borderPanel = new BorderPanel {
-    layout(detailPanel) = BorderPanel.Position.Center
-    border = Swing.EmptyBorder(15, 0, 0, 0)
     background = Colors.background
+
+    def add(comp: Component) = {
+      peer.add(comp.peer)
+    }
   }
 
-  def setStatus(status: String) = Swing.onEDT {
-    statusLabel.text = status
-    println(s"Setting status to [$status] on thread [${Thread.currentThread().getName}]")
-  }
+  panel.add(titleLabel)
+  panel.add(statusLabel)
 
-  contents = new BorderPanel {
-    layout(titleLabel) = BorderPanel.Position.North
-    layout(borderPanel) = BorderPanel.Position.Center
-    background = Colors.background
-    border = Swing.EmptyBorder(10, 20, 20, 20)
-  }
+  contents = panel
 
   menuBar = new FrameMenu()
 
@@ -48,11 +43,11 @@ class TopFrame(app: WebApp) extends MainFrame {
 
   background = Colors.background
 
-  def serverStarted() = {
-    setStatus("Server running.")
-  }
-
   peer.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE)
+
+  def onStart() = {
+    statusLabel.text = "Started"
+  }
 
   override def closeOperation() = {
     if (app.started) {

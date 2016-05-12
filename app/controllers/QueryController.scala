@@ -1,17 +1,20 @@
 package controllers
 
+import java.io.FileOutputStream
 import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
 import com.mohiva.play.silhouette.api.HandlerResult
+import models.queries.export.{ CsvExportQuery, XlsxExportQuery }
 import models.{ RequestMessage, ResponseMessage }
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.{ ConnectionService, ConnectionSettingsService }
-import utils.ApplicationContext
+import services.database.MasterDatabase
+import utils.{ ApplicationContext, DateUtils }
 import utils.web.MessageFrameFormatter
 
 import scala.concurrent.Future
@@ -50,22 +53,24 @@ class QueryController @javax.inject.Inject() (
     val queryId = form.get("queryId").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [queryId] parameter."))
     val sql = form.get("sql").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [sql] parameter."))
     val format = form.get("format").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [format] parameter."))
+    val filename = form.get("filename").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [filename] parameter."))
 
-    val status = s"Exporting query [$queryId] in [$format] format using sql [$sql]!, motherfucker!"
+    val db = MasterDatabase.databaseFor(connectionId) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
 
-    val testSource = Source.fromIterator(() => Iterator(status))
+    val ts = DateUtils.now.toString("yyyy-MM-dd HHmmss")
+    val tempFile = new java.io.File("./tmp", s"$filename $ts.$format")
+    val fos = new FileOutputStream(tempFile)
+    val query = format match {
+      case "csv" => CsvExportQuery(sql, format, fos)
+      case "xlsx" => XlsxExportQuery(sql, format, fos)
+      case _ => throw new IllegalArgumentException(s"Unknown format [$format].")
+    }
+    db.query(query)
+    fos.close()
 
-    val result = Ok.chunked(testSource)
-
-    val withHeaders = result.withHeaders(
-      CONTENT_TYPE -> (format match {
-        case "csv" => "text/csv"
-        case "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        case x => throw new IllegalStateException(s"Invalid format [$x].")
-      }),
-      CONTENT_DISPOSITION -> s"attachment; filename=DatabaseFlowExport.$format"
-    )
-
-    Future.successful(withHeaders)
+    Future.successful(Ok.sendFile(tempFile))
   }
 }

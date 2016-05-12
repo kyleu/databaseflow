@@ -50,7 +50,7 @@ object SavedQueryManager {
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
     utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-      QueryExportFormManager.show(savedQuery.id, QueryManager.getSql(savedQuery.id))
+      QueryExportFormManager.show(savedQuery.id, QueryManager.getSql(savedQuery.id), savedQuery.name)
     })
 
     utils.JQueryUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(

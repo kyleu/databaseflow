@@ -9,6 +9,7 @@ object SqlParser {
 
     while (currentIndex < len) {
       sql(currentIndex) match {
+        case x if x == '\\' => currentIndex += 2
         case x if x == '"' || x == '\'' || x == '`' => sql.indexOf(x.toInt, currentIndex + 1) match {
           case -1 => throw new IllegalStateException(s"Unclosed [$x] string literal.")
           case idx => currentIndex = idx + 1

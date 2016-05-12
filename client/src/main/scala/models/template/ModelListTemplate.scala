@@ -13,7 +13,7 @@ object ModelListTemplate {
   def forSavedQueries(queryId: UUID, savedQueries: Seq[SavedQuery]) = {
     val cols = Seq("Name", "Owner", "Public", "Connection")
     val rows = savedQueries.map(sq => tr(
-      td(a(cls := "list-link", data("name") := sq.id.toString, href := s"#saved-query-${sq.id}")(sq.name)),
+      td(a(cls := "list-link theme-text", data("name") := sq.id.toString, href := s"#saved-query-${sq.id}")(sq.name)),
       td(sq.owner.map(o => span(o.toString)).getOrElse(em("None"))),
       td(sq.public.toString()),
       td(sq.connection.map(c => span(c.toString)).getOrElse(em("None")))
@@ -24,7 +24,7 @@ object ModelListTemplate {
   def forTables(queryId: UUID, tables: Seq[Table]) = {
     val cols = Seq("Name", "Rows", "Columns", "Primary Key", "Indexes", "Foreign Keys", "Description")
     val rows = tables.map(t => tr(
-      td(a(cls := "list-link", data("name") := t.name, href := s"#table-${t.name}")(t.name)),
+      td(a(cls := "list-link theme-text", data("name") := t.name, href := s"#table-${t.name}")(t.name)),
       td(t.rowCountEstimate.map(NumberUtils.withCommas).getOrElse(""): String),
       td(t.columns.size.toString),
       td(t.primaryKey.map(pk => span(pk.columns.mkString(", "))).getOrElse(em("None"))),
@@ -38,7 +38,7 @@ object ModelListTemplate {
   def forViews(queryId: UUID, views: Seq[View]) = {
     val cols = Seq("Name", "Columns", "Description")
     val rows = views.map(v => tr(
-      td(a(cls := "list-link", data("name") := v.name, href := s"#view-${v.name}")(v.name)),
+      td(a(cls := "list-link theme-text", data("name") := v.name, href := s"#view-${v.name}")(v.name)),
       td(v.columns.map(_.name).mkString(", ")),
       td(v.description.map(d => span(d)).getOrElse(em("None")))
     ))
@@ -48,7 +48,7 @@ object ModelListTemplate {
   def forProcedures(queryId: UUID, procedures: Seq[Procedure]) = {
     val cols = Seq("Name", "Parameters", "Returns Result")
     val rows = procedures.map(p => tr(
-      td(a(cls := "list-link", data("name") := p.name, href := s"#procedure-${p.name}")(p.name)),
+      td(a(cls := "list-link theme-text", data("name") := p.name, href := s"#procedure-${p.name}")(p.name)),
       td(p.params.map(param => s"${param.name} (${param.paramType} ${param.columnType})").mkString(", ")),
       td(p.returnsResult.getOrElse(false).toString())
     ))
@@ -57,9 +57,7 @@ object ModelListTemplate {
 
   private[this] def tableFor(cols: Seq[String], rows: Seq[TypedTag[String]]) = {
     table(cls := "bordered highlight responsive-table")(
-      thead(
-        tr(cols.map(c => th(c)))
-      ),
+      thead(tr(cols.map(c => th(c)))),
       tbody(rows: _*)
     )
   }

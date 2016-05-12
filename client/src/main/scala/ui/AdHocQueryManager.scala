@@ -48,7 +48,7 @@ object AdHocQueryManager {
     })
 
     utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-      QueryExportFormManager.show(queryId, QueryManager.getSql(queryId))
+      QueryExportFormManager.show(queryId, QueryManager.getSql(queryId), "Export")
     })
 
     def onChange(s: String): Unit = {
