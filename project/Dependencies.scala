@@ -38,17 +38,22 @@ object Dependencies {
   object Jdbc {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.5"
 
-    //val db2 = dblibs/lib/???
+    val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.191"
-    //val informix = dblibs/lib/???
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.38" // 6.0.2 has NPE on load
+    val informix = "dblibs/lib/informix-ifxjdbc.jar"
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0.2 has NPE on load
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
-    //val oracle = dblibs/lib/oracle-ojdbc7.jar
-    //val sqlServer = dblibs/lib/sqlserver-sqljdbc42.jar
+    val oracle = "dblibs/lib/oracle-ojdbc7.jar"
+    val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
   }
 
   object Hibernate {
     val core = "org.hibernate" % "hibernate-core" % "5.1.0.Final"
+  }
+
+  object Export {
+    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.1"
+    val xlsx = "org.apache.poi" % "poi-ooxml" % "3.14"
   }
 
   object Serialization {
@@ -66,7 +71,7 @@ object Dependencies {
     val requireJs = "org.webjars" % "requirejs" % "2.2.0"
     val jquery = "org.webjars" % "jquery" % "2.2.3"
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
-    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.1"
+    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.2"
   }
 
   object Ui {
@@ -88,7 +93,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.2"
+    val enumeratumVersion = "1.4.4"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.4"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
