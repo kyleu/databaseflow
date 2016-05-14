@@ -9,15 +9,17 @@ import akka.stream.scaladsl.Source
 import com.mohiva.play.silhouette.api.HandlerResult
 import models.queries.export.{ CsvExportQuery, XlsxExportQuery }
 import models.{ RequestMessage, ResponseMessage }
+import play.api.libs.Files.TemporaryFile
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.{ ConnectionService, ConnectionSettingsService }
 import services.database.MasterDatabase
-import utils.{ ApplicationContext, DateUtils }
+import utils.{ ApplicationContext, DateUtils, FileUtils }
 import utils.web.MessageFrameFormatter
 
 import scala.concurrent.Future
+import scala.util.Random
 
 @javax.inject.Singleton
 class QueryController @javax.inject.Inject() (
@@ -60,17 +62,21 @@ class QueryController @javax.inject.Inject() (
       case Left(x) => throw x
     }
 
-    val ts = DateUtils.now.toString("yyyy-MM-dd HHmmss")
-    val tempFile = new java.io.File("./tmp", s"$filename $ts.$format")
-    val fos = new FileOutputStream(tempFile)
+    val ts = DateUtils.now.toString("yyyy-MM-dd")
+    val finalName = s"Database Flow $filename Export $ts"
+
+    val file = FileUtils.getTempFile(finalName, format)
+    val fos = new FileOutputStream(file)
     val query = format match {
       case "csv" => CsvExportQuery(sql, format, fos)
-      case "xlsx" => XlsxExportQuery(sql, format, fos)
+      case "xlsx" => XlsxExportQuery(filename, sql, format, fos)
       case _ => throw new IllegalArgumentException(s"Unknown format [$format].")
     }
     db.query(query)
     fos.close()
 
-    Future.successful(Ok.sendFile(tempFile))
+    Future.successful(Ok.sendFile(content = file, fileName = (f) => s"$finalName.$format", onClose = () => {
+      file.delete
+    }))
   }
 }

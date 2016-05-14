@@ -2,27 +2,27 @@ package models.queries.export
 
 import java.io.OutputStream
 
+import com.github.tototoshi.csv.CSVWriter
 import models.database.{ Query, Row }
 
 case class CsvExportQuery(override val sql: String, format: String, out: OutputStream) extends Query[Unit] {
   override def reduce(rows: Iterator[Row]) = {
+    val writer = CSVWriter.open(out)
     if (rows.hasNext) {
       val firstRow = rows.next()
       val md = firstRow.rs.getMetaData
       val cc = md.getColumnCount
       val columns = (1 to cc).map(md.getColumnLabel)
-      out.write((columns.mkString(",") + "\n").getBytes)
+      writer.writeRow(columns)
 
       val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).map(_.toString).getOrElse(""))
-      out.write((firstRowData.mkString(",") + "\n").getBytes)
+      writer.writeRow(firstRowData)
 
-      val remainingData = rows.foreach { row =>
+      rows.foreach { row =>
         val data = (1 to cc).map(i => row.asOpt[Any](i).map(_.toString).getOrElse(""))
-        out.write((data.mkString(",") + "\n").getBytes)
+        writer.writeRow(data)
       }
-    } else {
-      out.write("".getBytes)
     }
-    out.close()
+    writer.close()
   }
 }
