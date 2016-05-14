@@ -42,4 +42,8 @@ class UserService @javax.inject.Inject() () extends Logging {
       throw new IllegalStateException("An admin already exists.")
     }
   }
+
+  def getAll = {
+    MasterDatabase.conn.query(UserQueries.getAll("username"))
+  }
 }

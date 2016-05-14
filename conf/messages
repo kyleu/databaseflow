@@ -27,7 +27,8 @@ profile.form.username = Name
 profile.form.theme = Theme
 
 # Admin
-admin.title = Settings
+admin.settings.title = Settings
+admin.users.title = User Management
 
 # Static
 static.copyright = © 2016 Database Flow

@@ -1,0 +1,40 @@
+@(user: Option[models.user.User], debug: Boolean, users: Seq[models.user.User])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.admin(user, "users", messages("admin.users.title"), debug = debug) {
+  <div class="card-content">
+    <div class="card-title"><i class="fa @models.template.Icons.user"></i> @messages("admin.users.title")</div>
+
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Theme</th>
+            <th>Roles</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @users.map { u =>
+            <tr>
+              <td>@u.username.getOrElse("(not set)")</td>
+              <td>@u.profile.providerKey</td>
+              <td><div class="theme-swatch" style="background-color: @models.user.Themes.map(u.preferences.theme)"></div></td>
+              <td>@u.roles.toSeq.sortBy(_.entryName).mkString(", ")</td>
+              <td>@utils.Formatter.niceDate(u.created.toLocalDate)</td>
+              <td>
+                <a href=""><i class="fa fa-clock-o"></i> Edit</a>
+                <a href=""><i class="fa fa-close"></i> Delete</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-action">
+    <a class="theme-text" href="@routes.HomeController.index()">Back to Connection List</a>
+  </div>
+}
