@@ -14,6 +14,7 @@ import scala.scalajs.js
 object InitService {
   def init(sendMessage: (RequestMessage) => Unit, connect: () => Unit) {
     utils.Logging.installErrorHandler()
+    HelpManager.init()
     NetworkMessage.register(sendMessage)
     wireSideNav()
     js.Dynamic.global.$("select").material_select()
@@ -29,12 +30,14 @@ object InitService {
   private[this] def wireSideNav() = {
     utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
     utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
+    utils.JQueryUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
   def performInitialAction() = {
     TabManager.initIfNeeded()
     NavigationService.initialMessage match {
+      case ("help", None) => HelpManager.show()
       case ("new", None) => AdHocQueryManager.addNewQuery()
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
       case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))
