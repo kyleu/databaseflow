@@ -45,7 +45,7 @@ object ModelListManager {
 
       utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
         openLists = openLists - key
-        closeList(queryId)
+        QueryManager.closeQuery(queryId)
       })
 
       openLists = openLists + (key -> queryId)
@@ -66,9 +66,5 @@ object ModelListManager {
     case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))
     case "procedure" => ModelListTemplate.forProcedures(queryId, schema.procedures.sortBy(_.name))
     case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
-  }
-
-  private[this] def closeList(queryId: UUID): Unit = {
-    QueryManager.closeQuery(queryId)
   }
 }

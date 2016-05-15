@@ -14,7 +14,6 @@ import scala.scalajs.js
 object InitService {
   def init(sendMessage: (RequestMessage) => Unit, connect: () => Unit) {
     utils.Logging.installErrorHandler()
-    HelpManager.init()
     NetworkMessage.register(sendMessage)
     wireSideNav()
     js.Dynamic.global.$("select").material_select()

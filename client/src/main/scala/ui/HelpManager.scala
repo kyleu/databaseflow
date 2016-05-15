@@ -2,30 +2,34 @@ package ui
 
 import java.util.UUID
 
-import models.template.Icons
+import models.template.{ HelpTemplate, Icons }
 import org.scalajs.jquery.{ jQuery => $ }
+
+import scalatags.Text.all._
 
 object HelpManager {
   private[this] val helpId = UUID.fromString("77777777-7777-7777-7777-777777777777")
-
-  def init() = {
-    val queryPanel = $(s"#panel-$helpId")
-    utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-      close()
-    })
-  }
-
-  private[this] def close() = {
-    if (QueryManager.activeQueries.size == 0) {
-      AdHocQueryManager.addNewQuery()
-    }
-
-    $(s"#panel-$helpId").hide()
-    TabManager.removeTab(helpId)
-
-  }
+  private[this] var isOpen = false
 
   def show() = {
-    TabManager.addTab(helpId, "help", "Help", Icons.help)
+    if (isOpen) {
+      TabManager.selectTab(helpId)
+    } else {
+      val template = HelpTemplate.content()
+      val panelHtml = div(id := s"panel-$helpId", cls := "workspace-panel")(template)
+
+      WorkspaceManager.append(panelHtml.toString)
+      TabManager.addTab(helpId, "help", "Help", Icons.help)
+      QueryManager.activeQueries = QueryManager.activeQueries :+ helpId
+
+      val queryPanel = $(s"#panel-$helpId")
+
+      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
+        isOpen = false
+        QueryManager.closeQuery(helpId)
+      })
+
+      isOpen = true
+    }
   }
 }
