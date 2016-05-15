@@ -2,16 +2,13 @@ package models.template
 
 import models.PlanResultResponse
 import models.plan.PlanNode
+import upickle.default._
+import upickle.json
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
 object QueryPlanTemplate {
-  val actions = Seq(
-    a(cls := "theme-text", href := "#")("Download"),
-    a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan")
-  )
-
   def forPlan(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = {
     val content = div(id := pr.id.toString)(
       em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pr.durationMs}ms]"),
@@ -29,15 +26,26 @@ object QueryPlanTemplate {
     StaticPanelTemplate.cardRow(
       content = content,
       iconAndTitle = Some(Icons.queryPlan -> "Query Plan"),
-      actions = QueryPlanTemplate.actions,
+      actions = Seq(
+        a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan")
+      ),
       showClose = false
     )
   }
 
-  private[this] def forNode(node: PlanNode, className: String): Modifier = if (node.children.isEmpty) {
-    li(cls := className)(div(cls := "node z-depth-1")(node.title))
-  } else {
-    val kids = node.children.map(n => forNode(n, ""))
-    li(cls := className)(div(cls := "node z-depth-1")(node.title), ul(kids: _*))
+  private[this] def forNode(node: PlanNode, className: String, depth: Int = 0): Modifier = {
+    val divContents = div(cls := "node z-depth-1")(
+      div(cls := "node-title")(node.title),
+      div(cls := "node-details")(
+        "Costs: ", node.costs.toString
+      )
+    )
+
+    if (node.children.isEmpty) {
+      li(cls := className)(divContents)
+    } else {
+      val kids = node.children.map(n => forNode(n, s"depth-$depth-child", depth + 1))
+      li(cls := className)(divContents, ul(kids: _*))
+    }
   }
 }

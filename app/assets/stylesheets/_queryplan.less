@@ -11,88 +11,116 @@
 
 .tree {
   margin: auto;
-}
 
-.tree ul {
-  padding-top: 20px; position: relative;
+  ul {
+    padding-top: 20px;
+    position: relative;
 
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-}
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+  }
 
-.tree li {
-  float: left; text-align: center;
-  list-style-type: none;
-  position: relative;
-  padding: 20px 5px 0 5px;
+  li {
+    float: left;
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 20px 5px 0 5px;
 
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-}
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+  }
 
-.tree li::before, .tree li::after{
-  content: '';
-  position: absolute; top: 0; right: 50%;
-  border-top: 1px solid #ccc;
-  width: 50%; height: 20px;
-}
-.tree li::after{
-  right: auto; left: 50%;
-  border-left: 1px solid #ccc;
-}
+  li::before, li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    border-top: 1px solid #ccc;
+    width: 50%;
+    height: 20px;
+  }
+  li::after {
+    right: auto;
+    left: 50%;
+    border-left: 1px solid #ccc;
+  }
 
-.tree li:only-child::after, .tree li:only-child::before {
-  display: none;
-}
+  li:only-child::after, li:only-child::before {
+    display: none;
+  }
 
-.tree li:only-child{ padding-top: 0;}
+  li:only-child {
+    padding-top: 0;
+  }
 
-.tree li:first-child::before, .tree li:last-child::after{
-  border: 0 none;
-}
+  li:first-child::before, li:last-child::after {
+    border: 0 none;
+  }
 
-.tree li:last-child::before{
-  border-right: 1px solid #ccc;
-  border-radius: 0 5px 0 0;
-  -webkit-border-radius: 0 5px 0 0;
-  -moz-border-radius: 0 5px 0 0;
-}
-.tree li:first-child::after{
-  border-radius: 5px 0 0 0;
-  -webkit-border-radius: 5px 0 0 0;
-  -moz-border-radius: 5px 0 0 0;
-}
+  li:last-child::before {
+    border-right: 1px solid #ccc;
+    border-radius: 0 5px 0 0;
+    -webkit-border-radius: 0 5px 0 0;
+    -moz-border-radius: 0 5px 0 0;
+  }
+  li:first-child::after {
+    border-radius: 5px 0 0 0;
+    -webkit-border-radius: 5px 0 0 0;
+    -moz-border-radius: 5px 0 0 0;
+  }
 
-.tree ul ul::before{
-  content: '';
-  position: absolute; top: 0; left: 50%;
-  border-left: 1px solid #ccc;
-  width: 0; height: 20px;
-}
+  ul ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-left: 1px solid #ccc;
+    width: 0;
+    height: 20px;
+  }
 
-.tree li .node {
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  cursor: pointer;
-  color: #666;
-  font-size: 14px;
-  white-space: nowrap;
-  display: inline-block;
+  li {
+    .node {
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      color: #666;
+      font-size: 14px;
+      white-space: nowrap;
+      display: inline-block;
 
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-}
+      transition: all 0.5s;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+    }
 
-.tree li .node:hover, .tree li .node:hover+ul li .node {
-  background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
-}
+    .node-title {
+      cursor: pointer;
+    }
 
-.tree li .node:hover+ul li::after,
-.tree li .node:hover+ul li::before,
-.tree li .node:hover+ul::before,
-.tree li .node:hover+ul ul::before{
-  border-color:  #94a0b4;
+    .node-details {
+      display: none;
+    }
+
+    .node:hover, .node:hover + ul li .node {
+      background: #fff;
+      color: #000;
+      border: 1px solid #aaa;
+    }
+
+    //.node:hover+ul li::after,
+    //.node:hover+ul li::before,
+    //.node:hover+ul::before,
+    //.node:hover+ul ul::before{
+    //  border-color:  #aaa;
+    //}
+  }
+
+  .open {
+    .node-details {
+      display: block;
+    }
+  }
 }

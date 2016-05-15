@@ -42,4 +42,11 @@
   a.theme-text:hover {
     color: #999 !important;
   }
+
+  .tree li .node:hover+ul li::after,
+  .tree li .node:hover+ul li::before,
+  .tree li .node:hover+ul::before,
+  .tree li .node:hover+ul ul::before{
+    border-color: @themeColor;
+  }
 }</style>

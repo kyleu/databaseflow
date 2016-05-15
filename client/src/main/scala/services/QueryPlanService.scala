@@ -23,9 +23,12 @@ object QueryPlanService {
     val chart = $(".plan-chart", panel)
     val raw = $(".plan-raw", panel)
 
-    JQueryUtils.clickHandler($("a", panel), _.toggleClass("open"))
+    JQueryUtils.clickHandler($(".node-title", panel), (x) => {
+      x.parent().toggleClass("open")
+      workOutPlanWidth(pr.id)
+    })
 
-    val planViewToggle = $(".plan-view-toggle", panel)
+    val planViewToggle = $(".plan-view-toggle", workspace)
     var showingChart = true
 
     JQueryUtils.clickHandler(planViewToggle, (f) => {

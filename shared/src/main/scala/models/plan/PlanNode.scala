@@ -12,6 +12,16 @@ object PlanNode {
     lazy val estimatesRowsFactor = actualRows.map(estimatedRows / _)
     lazy val estimatesDurationFactor = actualDuration.map(estimatedDuration / _)
     lazy val estimatesCostFactor = actualCost.map(estimatedCost / _)
+
+    override def toString = {
+      "" +
+        (if (estimatedRows > 0) { s"EstRows: $estimatedRows " } else { "" }) +
+        actualRows.map(a => s"ActRows: $a ").getOrElse("") +
+        (if (estimatedDuration > 0) { s"EstDur: $estimatedDuration " } else { "" }) +
+        actualDuration.map(a => s"ActDur: $a ").getOrElse("") +
+        (if (estimatedCost > 0) { s"EstCost: $estimatedCost " } else { "" }) +
+        actualCost.map(a => s"ActCost: $a ").getOrElse("")
+    }
   }
 }
 

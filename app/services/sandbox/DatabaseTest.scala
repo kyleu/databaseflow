@@ -36,8 +36,7 @@ object DatabaseTest extends SandboxTask {
 
       val tableStrings = t._2 match {
         case Success(s) => s.tables.map { x =>
-          val j = writeJs(x)
-          json.write(j, 2)
+          json.write(writeJs(x), 2)
         }
         case Failure(x) => throw x
       }

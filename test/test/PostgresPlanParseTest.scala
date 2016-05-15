@@ -1,8 +1,5 @@
 package test
 
-import java.util.UUID
-
-import models.PlanResultResponse
 import models.engine.rdbms.PostgreSQL
 import org.scalatest.{ FlatSpec, Matchers }
 
