@@ -8,7 +8,7 @@ import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
 object QueryResultsTemplate {
-  def forRowResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int, resultId: UUID) = {
+  def forRowResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val source = qr.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]"))
     val hiddenClass = source.sortedColumn match {
       case Some(_) => "initially-hidden"
@@ -19,10 +19,9 @@ object QueryResultsTemplate {
         a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter"),
         p(
           s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
-          time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
+          time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString),
           s" in [${durationMs}ms]."
         ),
-
         div(source.filterColumn match {
           case Some(column) =>
             val op = source.filterOp.getOrElse("?")
@@ -35,7 +34,9 @@ object QueryResultsTemplate {
       DataFilterTemplate.forResults(qr, resultId),
       DataTableTemplate.forResults(qr),
       div(cls := "additional-results")(
-        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", href := "#")(s"Load ${qr.data.size} More Rows"),
+        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
+          s"Load ${qr.data.size} More Rows"
+        ),
         em(cls := "no-rows-remaining initially-hidden")("No more rows available")
       )
     )
@@ -46,15 +47,14 @@ object QueryResultsTemplate {
     )
   }
 
-  def forQueryResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int, resultId: UUID) = {
+  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val content = div(id := resultId.toString)(
       a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
       p(
         s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
-        time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString),
+        time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString),
         s" in [${durationMs}ms]."
       ),
-
       div(cls := "z-depth-1 query-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
       ),
@@ -62,7 +62,9 @@ object QueryResultsTemplate {
       DataTableTemplate.forResults(qr),
 
       div(cls := "additional-results")(
-        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", href := "#")(s"Load ${qr.data.size} More Rows"),
+        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
+          s"Load ${qr.data.size} More Rows"
+        ),
         em(cls := "no-rows-remaining initially-hidden")("No more rows available")
       )
     )
@@ -73,9 +75,9 @@ object QueryResultsTemplate {
     )
   }
 
-  def forStatementResults(qr: QueryResult, dateIsoString: String, dateFullString: String, durationMs: Int) = {
+  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int) = {
     val content = div(
-      p(s"${qr.rowsAffected} rows affected ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${durationMs}ms]."),
+      p(s"${qr.rowsAffected} rows affected ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
       )

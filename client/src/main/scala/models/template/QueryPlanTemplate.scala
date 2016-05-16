@@ -2,16 +2,14 @@ package models.template
 
 import models.PlanResultResponse
 import models.plan.PlanNode
-import upickle.default._
-import upickle.json
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
 object QueryPlanTemplate {
-  def forPlan(pr: PlanResultResponse, dateIsoString: String, dateFullString: String) = {
+  def forPlan(pr: PlanResultResponse, dateIsoString: String) = {
     val content = div(id := pr.id.toString)(
-      em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateFullString), s" in [${pr.durationMs}ms]"),
+      em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString), s" in [${pr.durationMs}ms]"),
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree")(
@@ -27,7 +25,8 @@ object QueryPlanTemplate {
       content = content,
       iconAndTitle = Some(Icons.queryPlan -> "Query Plan"),
       actions = Seq(
-        a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan")
+        a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan"),
+        div(style := "clear: both;")()
       ),
       showClose = false
     )

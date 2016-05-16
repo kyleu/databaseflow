@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.template.ProgressTemplate
 import org.scalajs.jquery.{ jQuery => $ }
+import utils.JQueryUtils
 
 import scala.scalajs.js.timers
 import scalatags.Text.TypedTag
@@ -59,7 +60,7 @@ object ProgressManager {
     }
     queryWorkspace.html(content.render)
 
-    scalajs.js.Dynamic.global.$("time.timeago", queryWorkspace).timeago()
+    JQueryUtils.relativeTime(queryWorkspace)
 
     activeQueries = activeQueries - queryId
 

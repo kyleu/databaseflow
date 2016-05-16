@@ -18,14 +18,14 @@ object QueryResultService {
     val occurred = new scalajs.js.Date(qr.occurred.toDouble)
 
     if (qr.isStatement) {
-      val content = QueryResultsTemplate.forStatementResults(qr, occurred.toISOString, occurred.toString, durationMs)
+      val content = QueryResultsTemplate.forStatementResults(qr, occurred.toISOString, durationMs)
       ProgressManager.completeProgress(qr.queryId, resultId, content)
     } else {
       if (qr.source.isDefined) {
-        val content = QueryResultsTemplate.forRowResults(qr, occurred.toISOString, occurred.toString, durationMs, resultId)
+        val content = QueryResultsTemplate.forRowResults(qr, occurred.toISOString, durationMs, resultId)
         ProgressManager.completeProgress(qr.queryId, resultId, content)
       } else {
-        val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, occurred.toString, durationMs, resultId)
+        val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, durationMs, resultId)
         ProgressManager.completeProgress(qr.queryId, resultId, content)
       }
 

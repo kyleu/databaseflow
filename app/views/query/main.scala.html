@@ -3,7 +3,10 @@
 )@views.html.layout.materialize(
   user = user,
   title = dbName + " - " + utils.Config.projectName,
-  scripts = Seq(routes.Assets.versioned("javascripts/timeago.js").url),
+  scripts = Seq(
+    routes.Assets.versioned("lib/momentjs/min/moment.min.js").url,
+    routes.Assets.versioned("lib/mousetrap/mousetrap.min.js").url
+  ),
   debug = debug
 ) {
   @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse("blue-grey"))

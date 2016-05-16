@@ -12,7 +12,7 @@ object QueryPlanService {
   def handlePlanResultResponse(pr: PlanResultResponse) = {
     //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
-    val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString, occurred.toString)
+    val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString)
     ProgressManager.completeProgress(pr.result.queryId, pr.id, content)
 
     val workspace = $(s"#workspace-${pr.result.queryId}")
@@ -47,7 +47,7 @@ object QueryPlanService {
 
   def handlePlanErrorResponse(per: PlanErrorResponse) = {
     val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
-    val content = ErrorTemplate.forPlanError(per, occurred.toISOString, occurred.toString)
+    val content = ErrorTemplate.forPlanError(per, occurred.toISOString)
 
     ProgressManager.completeProgress(per.error.queryId, per.id, content)
   }

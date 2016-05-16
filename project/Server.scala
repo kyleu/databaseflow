@@ -31,7 +31,7 @@ object Server {
       Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
-      WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome,
+      WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
       Export.csv, Export.xlsx, Ui.swing, Utils.scalaGuice,
       Testing.scalaTest
     )
