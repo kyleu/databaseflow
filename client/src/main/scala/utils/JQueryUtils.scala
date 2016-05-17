@@ -11,8 +11,15 @@ object JQueryUtils {
     }
   }
 
-  def relativeTime(jq: JQuery) = {
-    $("time.timeago", jq).each { (e: dom.Element) =>
+  def keyUpHandler(jq: JQuery, f: (JQuery, Int) => Unit) = {
+    jq.keyup { (e: JQueryEventObject) =>
+      f($(e.currentTarget), e.which)
+      false
+    }
+  }
+
+  def relativeTime() = {
+    $("time.timeago").each { (e: dom.Element) =>
       val el = $(e)
       val moment = scalajs.js.Dynamic.global.moment(el.attr("datetime"))
       el.text(moment.fromNow().toString)

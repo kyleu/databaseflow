@@ -26,10 +26,10 @@ object ModelListTemplate {
     val rows = tables.map(t => tr(
       td(a(cls := "list-link theme-text", data("name") := t.name, href := s"#table-${t.name}")(t.name)),
       td(t.rowCountEstimate.map(NumberUtils.withCommas).getOrElse(""): String),
-      td(t.columns.size.toString),
+      td(title := t.columns.map(_.name).mkString(", "))(t.columns.size.toString),
       td(t.primaryKey.map(pk => span(pk.columns.mkString(", "))).getOrElse(em("None"))),
-      td(t.indexes.size.toString),
-      td(t.foreignKeys.size.toString),
+      td(title := t.indexes.map(_.name).mkString(", "))(t.indexes.size.toString),
+      td(title := t.foreignKeys.map(_.name).mkString(", "))(t.foreignKeys.size.toString),
       td(t.description.map(d => span(d)).getOrElse(em("None")))
     ))
     forModels(queryId, "Tables", tableFor(cols, rows))
@@ -63,8 +63,9 @@ object ModelListTemplate {
   }
 
   private[this] def forModels(queryId: UUID, name: String, t: TypedTag[String]) = {
+    val searchBox = input(cls := "model-filter", placeholder := s"Filter $name", `type` := "text")
     val ret = div(
-      StaticPanelTemplate.cardRow(t, Some(Icons.list -> name)),
+      StaticPanelTemplate.cardRow(div(searchBox, t), Some(Icons.list -> name)),
       div(id := s"workspace-$queryId")
     )
     name -> ret

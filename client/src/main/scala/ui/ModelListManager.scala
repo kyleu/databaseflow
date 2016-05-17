@@ -41,11 +41,27 @@ object ModelListManager {
 
       val queryPanel = $(s"#panel-$queryId")
 
+      if (queryPanel.length != 1) {
+        throw new IllegalStateException(s"Found [${queryPanel.length}] query panels for model list.")
+      }
+
       wire(queryPanel, key)
 
       utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
         openLists = openLists - key
         QueryManager.closeQuery(queryId)
+      })
+
+      val filterManager = ModelFilterManager(queryPanel)
+
+      utils.JQueryUtils.keyUpHandler($(s".model-filter", queryPanel), (jq, key) => {
+        if (key == 27) {
+          jq.value("")
+          filterManager.filter(None)
+        } else {
+          val v = jq.value().toString
+          filterManager.filter(if (v.isEmpty) { None } else { Some(v.toLowerCase.trim) })
+        }
       })
 
       openLists = openLists + (key -> queryId)

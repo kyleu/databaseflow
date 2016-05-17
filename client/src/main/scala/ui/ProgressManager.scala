@@ -60,7 +60,7 @@ object ProgressManager {
     }
     queryWorkspace.html(content.render)
 
-    JQueryUtils.relativeTime(queryWorkspace)
+    JQueryUtils.relativeTime()
 
     activeQueries = activeQueries - queryId
 

@@ -32,10 +32,10 @@ object QueryResultsTemplate {
       ),
 
       DataFilterTemplate.forResults(qr, resultId),
-      DataTableTemplate.forResults(qr),
+      DataTableTemplate.forResults(qr, resultId),
       div(cls := "additional-results")(
         a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
-          s"Load ${qr.data.size} More Rows"
+          s"Load ${qr.data.size * 2} More Rows"
         ),
         em(cls := "no-rows-remaining initially-hidden")("No more rows available")
       )
@@ -59,11 +59,11 @@ object QueryResultsTemplate {
         pre(cls := "pre-wrap")(qr.sql)
       ),
 
-      DataTableTemplate.forResults(qr),
+      DataTableTemplate.forResults(qr, resultId),
 
       div(cls := "additional-results")(
-        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
-          s"Load ${qr.data.size} More Rows"
+        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := (qr.data.size * 2).toString, href := "#")(
+          s"Load ${qr.data.size * 2} More Rows"
         ),
         em(cls := "no-rows-remaining initially-hidden")("No more rows available")
       )
@@ -89,8 +89,8 @@ object QueryResultsTemplate {
     )
   }
 
-  def forAppend(qr: QueryResult) = {
-    val rows = DataTableTemplate.tableRows(qr)
+  def forAppend(qr: QueryResult, resultId: UUID) = {
+    val rows = DataTableTemplate.tableRows(qr, resultId)
     rows.map(_.render).mkString("\n")
   }
 }

@@ -1,5 +1,7 @@
 package models.template
 
+import java.util.UUID
+
 import models.query.QueryResult
 import models.schema.ColumnType._
 
@@ -65,18 +67,20 @@ object DataTableTemplate {
     }
   }
 
-  def tableRows(res: QueryResult) = {
+  def tableRows(res: QueryResult, resultId: UUID) = {
     val offset = res.source.map(_.dataOffset + 1).getOrElse(1)
-    res.data.zipWithIndex.map(r => tr(td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))))
+    res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
+      td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+    ))
   }
 
-  def forResults(res: QueryResult) = if (res.columns.isEmpty || res.data.isEmpty) {
+  def forResults(res: QueryResult, resultId: UUID) = if (res.columns.isEmpty || res.data.isEmpty) {
     em("No rows returned")
   } else {
     div(cls := "query-result-table")(
       table(cls := "bordered highlight responsive-table")(
         tableHeader(res),
-        tbody(tableRows(res))
+        tbody(tableRows(res, resultId))
       )
     )
   }

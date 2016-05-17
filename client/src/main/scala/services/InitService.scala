@@ -5,9 +5,10 @@ import java.util.UUID
 import models.RequestMessage
 import models.query.RowDataOptions
 import models.schema.FilterOp
+import org.scalajs.dom
 import org.scalajs.jquery.{ jQuery => $ }
 import ui._
-import utils.{ Logging, NetworkMessage }
+import utils.{ JQueryUtils, Logging, NetworkMessage }
 
 import scala.scalajs.js
 
@@ -16,6 +17,7 @@ object InitService {
     utils.Logging.installErrorHandler()
     NetworkMessage.register(sendMessage)
     wireSideNav()
+    installTimers()
     js.Dynamic.global.$("select").material_select()
     EditorManager.initEditorFramework()
     SearchManager.init()
@@ -64,5 +66,9 @@ object InitService {
         utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
         AdHocQueryManager.addNewQuery()
     }
+  }
+
+  def installTimers() = {
+    dom.window.setInterval(JQueryUtils.relativeTime _, 1000)
   }
 }

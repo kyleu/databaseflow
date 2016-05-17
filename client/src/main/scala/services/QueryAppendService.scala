@@ -15,18 +15,21 @@ object QueryAppendService {
     val panel = $(s"#$resultId", workspace)
     val resultEl = $(".query-result-table tbody", panel)
 
-    val content = QueryResultsTemplate.forAppend(qr)
+    val content = QueryResultsTemplate.forAppend(qr, resultId)
     resultEl.append(content)
 
-    JQueryUtils.clickHandler($(".query-rel-link", panel), (jq) => {
+    val newRows = $(s".result-$resultId", panel)
+
+    JQueryUtils.clickHandler($(".query-rel-link", newRows), (jq) => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
       TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
     })
 
+    val appendLink = $(".additional-results .append-rows-link")
     if (qr.moreRowsAvailable) {
-      $(".additional-results .append-rows-link").show()
+      appendLink.show()
       $(".additional-results .no-rows-remaining").hide()
     } else {
       $(".additional-results .append-rows-link").hide()
