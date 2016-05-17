@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ./switch-team.sh
 
-cd ../
+cd ../../
 
 bin/activator universal:packageZipTarball
 mv ./target/universal/databaseflow-1.0.0.tgz ./build/databaseflow-team.tgz

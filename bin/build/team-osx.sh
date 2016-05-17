@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ./switch-team.sh
 
-cd ../
+cd ../../
 
 sbt-nodebug universal:packageBin
 mv ./target/universal/databaseflow-1.0.0.zip ./build/databaseflow-team.zip

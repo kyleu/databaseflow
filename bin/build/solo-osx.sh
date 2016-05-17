@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ./switch-solo.sh
-cd ../
+cd ../../
 
 sbt-nodebug universal:packageBin
 mv ./target/universal/databaseflow-1.0.0.zip ./build/databaseflow-solo.zip
@@ -10,6 +10,6 @@ mv ./target/jdkpackager/bundles/databaseflow-1.0.0-MacAppStore.pkg ./build/datab
 mv ./target/jdkpackager/bundles/databaseflow-1.0.0.dmg ./build/databaseflow-solo.dmg
 mv ./target/jdkpackager/bundles/databaseflow-1.0.0.pkg ./build/databaseflow-solo.pkg
 
-cd bin
+cd bin/build
 ./switch-team.sh
 
