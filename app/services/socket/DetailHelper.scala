@@ -1,4 +1,4 @@
-package services.connection
+package services.socket
 
 import models._
 import models.schema.{ Procedure, Table, View }
@@ -6,7 +6,7 @@ import services.database.DatabaseWorkerPool
 import services.schema.{ MetadataProcedures, MetadataTables, MetadataViews, SchemaService }
 import utils.ExceptionUtils
 
-trait DetailHelper { this: ConnectionService =>
+trait DetailHelper { this: SocketService =>
   protected[this] def handleGetTableDetail(name: String) = SchemaService.getTable(connectionId, name).foreach { t =>
     def work() = db.withConnection { conn =>
       MetadataTables.withTableDetails(db, conn, conn.getMetaData, Seq(t))
@@ -44,5 +44,23 @@ trait DetailHelper { this: ConnectionService =>
       ExceptionUtils.actorErrorFunction(out, "ProcedureDetail", x)
     }
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+  }
+
+  protected[this] def handleSocketTrace() {
+    val ret = SocketTraceResponse(id, user.map(_.id), currentUsername)
+    sender() ! ret
+  }
+
+  protected[this] def handleClientTrace() {
+    pendingDebugChannel = Some(sender())
+    out ! SendTrace
+  }
+
+  protected[this] def handleDebugInfo(data: String) = pendingDebugChannel match {
+    case Some(dc) =>
+      val json = upickle.json.read(data)
+      dc ! ClientTraceResponse(id, json)
+    case None =>
+      log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active brawl.")
   }
 }

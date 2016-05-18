@@ -1,4 +1,4 @@
-package services.connection
+package services.socket
 
 import java.util.UUID
 
@@ -9,23 +9,24 @@ import models.schema.Schema
 import models.user.User
 import services.data.SampleDatabaseService
 import services.database.DatabaseWorkerPool
+import services.query.{ PlanExecutionService, QueryExecutionService }
 import utils.metrics.InstrumentedActor
 import utils.{ Config, ExceptionUtils, Logging }
 
-object ConnectionService {
+object SocketService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String) = {
-    Props(new ConnectionService(id.getOrElse(UUID.randomUUID), supervisor, connectionId, user, out, sourceAddress))
+    Props(new SocketService(id.getOrElse(UUID.randomUUID), supervisor, connectionId, user, out, sourceAddress))
   }
 }
 
-class ConnectionService(
+class SocketService(
     val id: UUID = UUID.randomUUID,
     val supervisor: ActorRef,
     val connectionId: UUID,
     val user: Option[User],
     val out: ActorRef,
     val sourceAddress: String
-) extends InstrumentedActor with ConnectionServiceHelper with Logging {
+) extends InstrumentedActor with StartHelper with DataHelper with DetailHelper with Logging {
 
   protected[this] var currentUsername = user.flatMap(_.username)
   protected[this] var userPreferences = user.map(_.preferences)
@@ -55,8 +56,8 @@ class ConnectionService(
     case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options, trd.resultId) }
     case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options, vrd.resultId) }
 
-    case qsr: QuerySaveRequest => timeReceive(qsr) { handleQuerySaveRequest(qsr.query) }
-    case qdr: QueryDeleteRequest => timeReceive(qdr) { handleQueryDeleteRequest(qdr.id) }
+    case qsr: QuerySaveRequest => timeReceive(qsr) { QueryExecutionService.handleQuerySaveRequest(user, qsr.query, out) }
+    case qdr: QueryDeleteRequest => timeReceive(qdr) { QueryExecutionService.handleQueryDeleteRequest(user, qdr.id, out) }
 
     case csd: CreateSampleDatabase => timeReceive(csd) { handleCreateSampleDatabase(csd.queryId) }
 
@@ -66,13 +67,13 @@ class ConnectionService(
   }
 
   override def postStop() = {
-    supervisor ! ConnectionStopped(id)
+    supervisor ! SocketStopped(id)
   }
 
   protected[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String, resultId: UUID) = action match {
-    case "run" => handleRunQuery(queryId, sql, resultId)
-    case "explain" => handleExplainQuery(queryId, sql, resultId)
-    case "analyze" => handleAnalyzeQuery(queryId, sql, resultId)
+    case "run" => QueryExecutionService.handleRunQuery(db, queryId, sql, resultId, out)
+    case "explain" => PlanExecutionService.handleExplainQuery(db, queryId, sql, resultId, out)
+    case "analyze" => PlanExecutionService.handleAnalyzeQuery(db, queryId, sql, resultId, out)
     case _ => throw new IllegalArgumentException(action)
   }
 
@@ -83,7 +84,7 @@ class ConnectionService(
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
-    case ct: SendConnectionTrace => timeReceive(ct) { handleConnectionTrace() }
+    case ct: SendSocketTrace => timeReceive(ct) { handleSocketTrace() }
     case ct: SendClientTrace => timeReceive(ct) { handleClientTrace() }
     case x => throw new IllegalArgumentException(s"Unhandled internal message [${x.getClass.getSimpleName}].")
   }

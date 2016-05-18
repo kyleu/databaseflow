@@ -10,8 +10,8 @@ import services.database.MasterDatabase
 object ConnectionSettingsService {
   val masterId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
-  //val (masterEngine, masterUrl) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
-  val (masterEngine, masterUrl) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
+  val (masterEngine, masterUrl) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
+  //val (masterEngine, masterUrl) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
 
   val masterUsername = "databaseflow"
   private[this] val masterPassword = "flow"

@@ -13,8 +13,9 @@ import play.api.libs.Files.TemporaryFile
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-import services.connection.{ ConnectionService, ConnectionSettingsService }
+import services.connection.ConnectionSettingsService
 import services.database.MasterDatabase
+import services.socket.SocketService
 import utils.{ ApplicationContext, DateUtils, FileUtils }
 import utils.web.MessageFrameFormatter
 
@@ -44,7 +45,7 @@ class QueryController @javax.inject.Inject() (
       Future.successful(HandlerResult(Ok, Some(userAwareRequest.identity)))
     }.map {
       case HandlerResult(r, Some(user)) => Right(ActorFlow.actorRef { out =>
-        ConnectionService.props(None, ctx.supervisor, connectionId, user, out, request.remoteAddress)
+        SocketService.props(None, ctx.supervisor, connectionId, user, out, request.remoteAddress)
       })
     }
   }

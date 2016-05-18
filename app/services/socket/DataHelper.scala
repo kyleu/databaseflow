@@ -1,4 +1,4 @@
-package services.connection
+package services.socket
 
 import java.util.UUID
 
@@ -9,9 +9,9 @@ import models.query.{ QueryResult, RowDataOptions }
 import models.schema.ForeignKey
 import services.database.DatabaseWorkerPool
 import services.schema.SchemaService
-import utils.{ DateUtils, ExceptionUtils, Logging }
+import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
 
-trait DataHelper extends Logging { this: ConnectionService =>
+trait DataHelper extends Logging { this: SocketService =>
   protected[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getTable(connectionId, name) match {
       case Some(table) => handleShowDataResponse(queryId, "table", table.name, table.foreignKeys, options, resultId)
@@ -36,7 +36,7 @@ trait DataHelper extends Logging { this: ConnectionService =>
       val optionsNewLimit = options.copy(limit = options.limit.map(_ + 1))
       val sql = EngineQueries.selectFrom(name, optionsNewLimit)(db.engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
-      sqlCatch(queryId, sql, startMs, resultId) { () =>
+      JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
         val result = db.query(DynamicQuery(sql))
 
         val (trimmedData, moreRowsAvailable) = options.limit match {

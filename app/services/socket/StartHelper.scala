@@ -1,4 +1,4 @@
-package services.connection
+package services.socket
 
 import models._
 import models.queries.query.SavedQueryQueries
@@ -10,7 +10,7 @@ import utils.{ ExceptionUtils, Logging }
 
 import scala.util.{ Failure, Success, Try }
 
-trait StartHelper extends Logging { this: ConnectionService =>
+trait StartHelper extends Logging { this: SocketService =>
   protected[this] def attemptConnect() = MasterDatabase.databaseFor(connectionId) match {
     case Right(d) => Some(d)
     case Left(x) =>
@@ -22,7 +22,7 @@ trait StartHelper extends Logging { this: ConnectionService =>
   protected[this] def onStart() = {
     log.info(s"Starting connection for user [${user.map(_.id)}: $currentUsername].")
 
-    supervisor ! ConnectionStarted(user, id, self)
+    supervisor ! SocketStarted(user, id, self)
     out ! UserSettings(user.map(_.id), currentUsername, userPreferences)
 
     val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
