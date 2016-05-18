@@ -10,7 +10,7 @@ import upickle.default._
 import utils.JdbcUtils
 
 object UserQueries extends BaseQueries[User] {
-  override protected val tableName = "flowusers"
+  override protected val tableName = "dbf_users"
   override protected val columns = Seq("id", "username", "prefs", "email", "roles", "created")
   override protected val searchColumns = Seq("id::text", "username")
 

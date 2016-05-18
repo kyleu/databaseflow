@@ -8,7 +8,7 @@ import models.queries.BaseQueries
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
   override protected val tableName = "audit_records"
-  override protected val columns = Seq("id")
+  override protected val columns = Seq("id", "audit_type", "owner", "connection", "status", "attributes", "properties", "elapsed", "occurred")
   override protected val searchColumns = Seq("id")
 
   val insert = Insert
@@ -19,7 +19,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
       id = row.as[UUID]("id"),
 
       auditType = AuditType.withName(row.as[String]("audit_type")),
-      user = row.asOpt[UUID]("user"),
+      owner = row.asOpt[UUID]("owner"),
       connection = row.as[UUID]("connection"),
       status = AuditStatus.withName(row.as[String]("status")),
       attributes = row.as[String]("attributes").split("::").map { s =>
@@ -30,14 +30,14 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
         val split = s.split("/")
         split(0) -> split(1).toInt
       }.toMap,
-      elapsed = row.as[Int]("elapsed")
-
+      elapsed = row.as[Int]("elapsed"),
+      occurred = row.as[Long]("occurred")
     )
   }
 
   override protected def toDataSeq(ar: AuditRecord) = {
     val attributes = ar.attributes.map(x => x._1 + "/" + x._2).mkString("::")
     val properties = ar.properties.map(x => x._1 + "/" + x._2).mkString("::")
-    Seq[Any](ar.id, ar.auditType.toString, ar.user, ar.connection, ar.status.toString, attributes, properties, ar.elapsed)
+    Seq[Any](ar.id, ar.auditType.toString, ar.owner, ar.connection, ar.status.toString, attributes, properties, ar.elapsed)
   }
 }

@@ -7,7 +7,7 @@ case object CreateAuditRecordTable extends CreateTableStatement("audit_records")
 
       audit_type $varchar(32) not null,
 
-      user uuid,
+      owner uuid,
       connection uuid not null,
 
       status $varchar(32) not null,
@@ -16,6 +16,6 @@ case object CreateAuditRecordTable extends CreateTableStatement("audit_records")
       elapsed int not null
     );
 
-    create index idx_${tableName}_user on $tableName (user);
+    create index idx_${tableName}_user on $tableName (owner);
   """
 }

@@ -1,6 +1,6 @@
 package models.ddl
 
-case object CreateUsersTable extends CreateTableStatement("flowusers") {
+case object CreateUsersTable extends CreateTableStatement("dbf_users") {
   override val sql = s"""
     create table $tableName (
       id uuid primary key,
