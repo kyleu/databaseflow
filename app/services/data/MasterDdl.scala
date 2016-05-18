@@ -11,6 +11,7 @@ object MasterDdl extends Logging {
 
     CreateConnectionsTable,
     CreateSavedQueriesTable,
+    CreateQueryResultsTable,
 
     CreateSettingsTable,
     CreateAuditRecordTable

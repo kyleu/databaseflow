@@ -1,12 +1,35 @@
 package utils
 
-import java.sql.{ ResultSet, Timestamp }
+import java.sql.{ ResultSet, SQLSyntaxErrorException, Timestamp }
+import java.util.UUID
 
+import models.{ QueryErrorResponse, ResponseMessage, ServerError }
 import models.database.Row
+import models.query.QueryError
 import org.joda.time.LocalDateTime
 import org.postgresql.jdbc.PgArray
+import org.postgresql.util.PSQLException
 
-object JdbcUtils {
+import scala.util.control.NonFatal
+
+object JdbcUtils extends Logging {
+  def sqlCatch(queryId: UUID, sql: String, startMs: Long, resultId: UUID)(f: () => ResponseMessage) = try {
+    f()
+  } catch {
+    case NonFatal(t) =>
+      val durationMs = (DateUtils.nowMillis - startMs).toInt
+      t match {
+        case sqlEx: PSQLException =>
+          val e = sqlEx.getServerErrorMessage
+          QueryErrorResponse(resultId, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
+        case sqlEx: SQLSyntaxErrorException =>
+          QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+        case x =>
+          log.warn(s"Unhandled error running sql [$sql].", x)
+          ServerError(x.getClass.getSimpleName, x.getMessage)
+      }
+  }
+
   def toLocalDateTime(row: Row, column: String) = {
     val ts = row.as[Timestamp](column)
     new LocalDateTime(ts.getTime)

@@ -35,7 +35,7 @@ object QueryResultsTemplate {
       DataTableTemplate.forResults(qr, resultId),
       div(cls := "additional-results")(
         a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
-          s"Load ${qr.data.size * 2} More Rows"
+          s"Load ${qr.data.size} More Rows"
         ),
         em(cls := "no-rows-remaining initially-hidden")("No more rows available")
       )
@@ -62,8 +62,8 @@ object QueryResultsTemplate {
       DataTableTemplate.forResults(qr, resultId),
 
       div(cls := "additional-results")(
-        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := (qr.data.size * 2).toString, href := "#")(
-          s"Load ${qr.data.size * 2} More Rows"
+        a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
+          s"Load ${qr.data.size} More Rows"
         ),
         em(cls := "no-rows-remaining initially-hidden")("No more rows available")
       )

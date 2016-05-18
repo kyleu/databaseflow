@@ -28,11 +28,14 @@ object RowDataManager {
 
       val appendRowsLink = $(".append-rows-link", panel)
       JQueryUtils.clickHandler(appendRowsLink, (j) => {
-        val offset = appendRowsLink.data("offset").toString.toInt + UserManager.rowsReturned
         val limit = appendRowsLink.data("limit").toString.toInt
+        val offset = appendRowsLink.data("offset").toString.toInt match {
+          case 0 => 100
+          case x => x
+        }
         val newOptions = options.copy(limit = Some(limit), offset = Some(offset))
         utils.Logging.info(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}] and limit [$limit].")
-        appendRowsLink.data("offset", offset.toString)
+        appendRowsLink.data("offset", offset + limit)
         appendRowsLink.hide()
         showRowData(key, queryId, name, newOptions, resultId)
       })

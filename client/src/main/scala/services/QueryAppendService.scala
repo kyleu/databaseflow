@@ -28,12 +28,16 @@ object QueryAppendService {
     })
 
     val appendLink = $(".additional-results .append-rows-link")
+    val additionalResults = $(".additional-results .no-rows-remaining")
     if (qr.moreRowsAvailable) {
+      val limit = appendLink.data("limit").toString.toInt * 2
       appendLink.show()
-      $(".additional-results .no-rows-remaining").hide()
+      appendLink.data("limit", limit)
+      appendLink.text(s"Load $limit More Rows")
+      additionalResults.hide()
     } else {
-      $(".additional-results .append-rows-link").hide()
-      $(".additional-results .no-rows-remaining").show()
+      appendLink.hide()
+      additionalResults.show()
     }
 
     utils.Logging.info(s"Appended [${qr.data.length}] rows to result [$resultId].")
