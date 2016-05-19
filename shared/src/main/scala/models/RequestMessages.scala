@@ -12,6 +12,8 @@ case class Ping(timestamp: Long) extends RequestMessage
 case object GetVersion extends RequestMessage
 case class DebugInfo(data: String) extends RequestMessage
 
+case object RefreshSchema extends RequestMessage
+
 case class GetTableDetail(name: String) extends RequestMessage
 case class GetProcedureDetail(name: String) extends RequestMessage
 case class GetViewDetail(name: String) extends RequestMessage

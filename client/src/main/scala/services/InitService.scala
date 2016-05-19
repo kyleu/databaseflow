@@ -2,7 +2,7 @@ package services
 
 import java.util.UUID
 
-import models.RequestMessage
+import models.{ RefreshSchema, RequestMessage }
 import models.query.RowDataOptions
 import models.schema.FilterOp
 import org.scalajs.dom
@@ -32,6 +32,8 @@ object InitService {
     utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
     utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
     utils.JQueryUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
+    utils.JQueryUtils.clickHandler($("#sidenav-refresh-link"), (jq) => utils.NetworkMessage.sendMessage(RefreshSchema))
+    utils.JQueryUtils.clickHandler($("#sidenav-history-link"), (jq) => HistoryManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
@@ -39,6 +41,7 @@ object InitService {
     TabManager.initIfNeeded()
     NavigationService.initialMessage match {
       case ("help", None) => HelpManager.show()
+      case ("history", None) => HistoryManager.show()
       case ("new", None) => AdHocQueryManager.addNewQuery()
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
       case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))

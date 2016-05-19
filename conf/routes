@@ -15,6 +15,7 @@ POST        /q/:conn/export              controllers.QueryController.export(conn
 # Admin
 GET         /admin/settings              controllers.AdminController.settings
 GET         /admin/users                 controllers.AdminController.users
+GET         /sandbox                     controllers.SandboxController.list
 GET         /sandbox/:key                controllers.SandboxController.sandbox(key)
 
 # Utility

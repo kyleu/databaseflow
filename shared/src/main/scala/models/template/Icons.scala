@@ -9,6 +9,7 @@ object Icons {
   val error = "fa-exclamation"
 
   val help = "fa-key"
+  val history = "fa-clock-o"
   val about = "fa-heart-o"
   val close = "fa-close"
 
@@ -30,6 +31,7 @@ object Icons {
   val user = "fa-user"
 
   val newQuery = "fa-plus-square-o"
+  val refresh = "fa-refresh"
 
   val export = "fa-file-o"
   val transaction = "fa-cube"
