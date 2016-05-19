@@ -5,11 +5,9 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
-import akka.stream.scaladsl.Source
 import com.mohiva.play.silhouette.api.HandlerResult
 import models.queries.export.{ CsvExportQuery, XlsxExportQuery }
 import models.{ RequestMessage, ResponseMessage }
-import play.api.libs.Files.TemporaryFile
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
@@ -20,7 +18,6 @@ import utils.{ ApplicationContext, DateUtils, FileUtils }
 import utils.web.MessageFrameFormatter
 
 import scala.concurrent.Future
-import scala.util.Random
 
 @javax.inject.Singleton
 class QueryController @javax.inject.Inject() (
@@ -53,7 +50,6 @@ class QueryController @javax.inject.Inject() (
   def export(connectionId: UUID) = withSession("export") { implicit request =>
     val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException("Invalid request"))
 
-    val queryId = form.get("queryId").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [queryId] parameter."))
     val sql = form.get("sql").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [sql] parameter."))
     val format = form.get("format").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [format] parameter."))
     val filename = form.get("filename").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [filename] parameter."))
@@ -73,11 +69,17 @@ class QueryController @javax.inject.Inject() (
       case "xlsx" => XlsxExportQuery(filename, sql, format, fos)
       case _ => throw new IllegalArgumentException(s"Unknown format [$format].")
     }
-    db.query(query)
-    fos.close()
+    try {
+      db.query(query)
+      fos.close()
 
-    Future.successful(Ok.sendFile(content = file, fileName = (f) => s"$finalName.$format", onClose = () => {
-      file.delete
-    }))
+      Future.successful(Ok.sendFile(content = file, fileName = (f) => s"$finalName.$format", onClose = () => {
+        file.delete
+      }))
+    } catch {
+      case t: Throwable =>
+        file.delete
+        Future.successful(InternalServerError(s"Unable to export query: [${t.getClass.getSimpleName}: ${t.getMessage}]"))
+    }
   }
 }
