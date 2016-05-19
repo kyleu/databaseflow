@@ -48,6 +48,7 @@ class SocketService(
     case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
 
+    case RefreshSchema => timeReceive(RefreshSchema) { refreshSchema() }
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }

@@ -6,10 +6,11 @@ import scala.concurrent.Future
 
 object SandboxTask {
   val all = Seq(
-    Testbed,
-    ShowSettings,
-    DatabaseTest,
     HtmlSandbox,
+    ShowSettings,
+    Testbed,
+    DatabaseTest,
+    CacheResultsTest,
     RebuildMaster
   )
 
@@ -20,5 +21,6 @@ trait SandboxTask extends Logging {
   def id: String
   def name: String
   def description: String
+  def isHtml = false
   def run(ctx: ApplicationContext): Future[String]
 }
