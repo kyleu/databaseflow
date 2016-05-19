@@ -2,9 +2,18 @@ package models.result
 
 import java.util.UUID
 
+import org.joda.time.LocalDateTime
+
 case class CachedResult(
   resultId: UUID,
   queryId: UUID,
+  connectionId: UUID,
   owner: Option[UUID],
-  sql: String
+  status: String,
+  sql: String,
+  columns: Int,
+  rows: Int,
+  duration: Int,
+  lastAccessed: LocalDateTime,
+  created: LocalDateTime
 )
