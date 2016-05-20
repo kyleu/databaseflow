@@ -27,6 +27,10 @@ object ModelResultsService {
   }
 
   def handleSchemaResultResponse(srr: SchemaResultResponse) = {
+    if (MetadataManager.pendingRefresh) {
+      MetadataManager.pendingRefresh = false
+      NotificationService.info("Schema Refresh", "Completed successfully.")
+    }
     if (MetadataManager.schema.isEmpty) {
       MetadataManager.updateSchema(srr.schema)
       $("#loading-panel").hide()

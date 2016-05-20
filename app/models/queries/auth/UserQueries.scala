@@ -22,7 +22,7 @@ object UserQueries extends BaseQueries[User] {
   val removeById = RemoveById
 
   case class IsUsernameInUse(name: String) extends SingleRowQuery[Boolean] {
-    override val sql = "select count(*) as c from users where username = ?"
+    override val sql = """select count(*) as c from \"users\" where \"username\" = ?"""
     override val values = Seq(name)
     override def map(row: Row) = row.as[Long]("c") != 0L
   }
@@ -42,24 +42,24 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class SetRoles(id: UUID, roles: Set[Role]) extends Statement {
-    override val sql = s"update $tableName set roles = ? where id = ?"
+    override val sql = s"""update \"$tableName\" set \"roles\" = ? where \"id\" = ?"""
     override val values = Seq(roles.mkString(","), id)
   }
 
   case class FindUserByUsername(username: String) extends FlatSingleRowQuery[User] {
-    override val sql = getSql(Some("username = ?"))
+    override val sql = getSql(Some("\"username\" = ?"))
     override val values = Seq(username)
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
   case class FindUserByProfile(loginInfo: LoginInfo) extends FlatSingleRowQuery[User] {
-    override val sql = getSql(Some("email = ?"))
+    override val sql = getSql(Some("\"email\" = ?"))
     override val values = Seq(loginInfo.providerKey)
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
   case object CountAdmins extends SingleRowQuery[Int]() {
-    override def sql = "select count(*) as c from users where roles like '%admin%'"
+    override def sql = "select count(*) as c from \"users\" where \"roles\" like '%admin%'"
     override def map(row: Row) = row.as[Long]("c").toInt
   }
 

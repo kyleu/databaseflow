@@ -17,12 +17,12 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   def getById(id: UUID) = GetById(Seq(id))
   def getForUser(userId: Option[UUID], connectionId: UUID) = {
     val ownerClause = userId match {
-      case Some(uid) => Seq(uid, connectionId) -> "(owner = ? or owner is null) and (connection = ? or connection is null)"
-      case None => Seq(connectionId) -> "owner is null and (connection = ? or connection is null)"
+      case Some(uid) => Seq(uid, connectionId) -> "(\"owner\" = ? or \"owner\" is null) and (\"connection\" = ? or \"connection\" is null)"
+      case None => Seq(connectionId) -> "\"owner\" is null and (\"connection\" = ? or \"connection\" is null)"
     }
     GetAll(
       whereClause = Some(ownerClause._2),
-      orderBy = "name",
+      orderBy = "\"name\"",
       values = ownerClause._1
     )
   }

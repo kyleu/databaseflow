@@ -29,6 +29,7 @@ profile.form.theme = Theme
 # Admin
 admin.settings.title = Settings
 admin.users.title = User Management
+admin.results.title = Cached Results
 
 # Static
 static.copyright = © 2016 Database Flow

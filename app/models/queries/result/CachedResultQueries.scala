@@ -6,6 +6,7 @@ import java.util.UUID
 import models.database.{ Row, Statement }
 import models.queries.BaseQueries
 import models.result.CachedResult
+import services.schema.JdbcHelper
 import utils.{ DateUtils, JdbcUtils }
 
 object CachedResultQueries extends BaseQueries[CachedResult] {
@@ -32,7 +33,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
       connectionId = row.as[UUID]("connection_id"),
       owner = row.asOpt[UUID]("owner"),
       status = row.as[String]("status"),
-      sql = row.as[String]("sql"),
+      sql = JdbcHelper.stringVal("sql"),
       columns = row.as[Int]("columns"),
       rows = row.as[Int]("rows"),
       duration = row.as[Int]("duration"),

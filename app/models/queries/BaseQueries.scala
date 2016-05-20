@@ -16,10 +16,10 @@ trait BaseQueries[T] {
   protected def fromRow(row: Row): T
   protected def toDataSeq(t: T): Seq[Any]
 
-  protected lazy val insertSql = s"insert into $tableName (${columns.mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"
+  protected lazy val insertSql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"""
 
   protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = BaseQueries.trim(s"""
-    update $tableName set ${updateColumns.map(x => s"$x = ?").mkString(", ")}${additionalUpdates.map(x => s", $x").getOrElse("")} where $idWhereClause
+    update \"$tableName\" set ${updateColumns.map(x => s""""$x" = ?""").mkString(", ")}${additionalUpdates.map(x => s", $x").getOrElse("")} where $idWhereClause
   """)
 
   protected def getSql(
@@ -30,7 +30,7 @@ trait BaseQueries[T] {
     offset: Option[Int] = None
   ) = {
     BaseQueries.trim(s"""
-      select ${columns.mkString(", ")} from $tableName
+      select ${columns.map("\"" + _ + "\"").mkString(", ")} from "$tableName"
       ${whereClause.map(x => s" where $x").getOrElse("")}
       ${groupBy.map(x => s" group by $x").getOrElse("")}
       ${orderBy.map(x => s" order by $x").getOrElse("")}
@@ -40,16 +40,21 @@ trait BaseQueries[T] {
   }
 
   protected case class GetById(override val values: Seq[Any]) extends FlatSingleRowQuery[T] {
-    override val sql = s"select ${columns.mkString(", ")} from $tableName where $idWhereClause"
+    override val sql = s"""select ${columns.map("\"" + _ + "\"").mkString(", ")} from "$tableName" where $idWhereClause"""
     override def flatMap(row: Row) = Some(fromRow(row))
   }
 
   protected case class GetAll(
       whereClause: Option[String] = None,
-      orderBy: String = idColumns.mkString(", "),
+      orderBy: String = idColumns.map("\"" + _ + "\"").mkString(", "),
       override val values: Seq[Any] = Nil
   ) extends Query[Seq[T]] {
-    override val sql = s"select ${columns.mkString(", ")} from $tableName ${whereClause.map(w => "where " + w).getOrElse("")} order by $orderBy"
+    override val sql = s"""
+      select ${columns.map("\"" + _ + "\"").mkString(", ")}
+      from "$tableName"
+      ${whereClause.map(w => "where " + w).getOrElse("")}
+      order by $orderBy
+    """.trim
     override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
   }
 
@@ -62,12 +67,12 @@ trait BaseQueries[T] {
 
   protected case class InsertBatch(models: Seq[T]) extends Statement {
     private[this] val valuesClause = models.map(m => s"(${columns.map(x => "?").mkString(", ")})").mkString(", ")
-    override val sql = s"insert into $tableName (${columns.mkString(", ")}) values $valuesClause"
+    override val sql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values $valuesClause"""
     override val values = models.flatMap(toDataSeq)
   }
 
   protected case class RemoveById(override val values: Seq[Any]) extends Statement {
-    override val sql = s"delete from $tableName where $idWhereClause"
+    override val sql = s"""delete from "$tableName" where $idWhereClause"""
   }
 
   protected case class Count(override val sql: String, override val values: Seq[Any]) extends Query[Int] {
@@ -75,8 +80,8 @@ trait BaseQueries[T] {
   }
 
   protected case class SearchCount(q: String, groupBy: Option[String] = None) extends Query[Int] {
-    val searchWhere = if (q.isEmpty) { "" } else { "where " + searchColumns.map(c => s"lower($c) like lower(?)").mkString(" or ") }
-    override val sql = s"select count(*) as c from $tableName $searchWhere ${groupBy.map(x => s" group by $x").getOrElse("")}"
+    val searchWhere = if (q.isEmpty) { "" } else { "where " + searchColumns.map(c => s"""lower("$c") like lower(?)""").mkString(" or ") }
+    override val sql = s"""select count(*) as c from "$tableName" $searchWhere ${groupBy.map(x => s" group by $x").getOrElse("")}"""
     override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
   }
 
@@ -89,5 +94,5 @@ trait BaseQueries[T] {
     override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
   }
 
-  private def idWhereClause = idColumns.map(c => s"$c = ?").mkString(" and ")
+  private def idWhereClause = idColumns.map(c => s""""$c" = ?""").mkString(" and ")
 }

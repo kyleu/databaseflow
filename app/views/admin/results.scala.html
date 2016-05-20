@@ -1,0 +1,81 @@
+@(user: Option[models.user.User], debug: Boolean, rows: Seq[models.result.CachedResult], tables: Set[String])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.admin(user, "caches", messages("admin.results.title"), debug = debug) {
+  <div class="card-content">
+    <div class="card-title"><i class="fa @models.template.Icons.cache"></i> @messages("admin.results.title")</div>
+
+    <div class="row">
+      <div class="col s12">
+      @if(rows.isEmpty) {
+        <div style="padding: 10px;">No cached results in database.</div>
+      } else {
+        <table>
+          <thead>
+            <tr>
+              <th>Result ID</th>
+              <th>Query ID</th>
+              <th>Conn ID</th>
+              <th>Owner</th>
+              <th>Status</th>
+              <th>Cols</th>
+              <th>Rows</th>
+              <th>Table</th>
+              <th>Dur</th>
+              <th>Last Accessed</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          @rows.map { r =>
+            <tr>
+              <td title="@r.resultId">@r.resultId.toString.take(8)</td>
+              <td title="@r.queryId">@r.queryId.toString.take(8)</td>
+              <td title="@r.connectionId">@r.connectionId.toString.take(8)</td>
+              <td>@r.owner.getOrElse("")</td>
+              <td>@r.status</td>
+              <td>@r.columns</td>
+              <td>@r.rows</td>
+              <td>@if(tables.contains(r.tableName)) {
+                Ok
+              } else {
+                Missing
+              }</td>
+              <td>@{r.duration}ms</td>
+              <td>@r.lastAccessed.toString("yyyy-MM-dd HH:mm:ss")</td>
+              <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
+              <td>
+                <a href="@routes.AdminController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="12"><code>@r.sql</code></td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      }
+    </div>
+    @defining(rows.map(_.tableName).toSet) { tableNames =>
+      @defining(tables.toSeq.filterNot(tableNames.contains).sorted) { orphans =>
+        @if(orphans.nonEmpty) {
+          <div class="row">
+            <div class="col s12">
+              <div style="padding : 10px ;">
+                <h5>Orphaned Tables</h5>
+                <ul>
+                @orphans.map { o =>
+                  <li>@o (<a href="@routes.AdminController.removeOrphan(o)">remove</a>)</li>
+                }
+                </ul>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="card-action">
+    <a class="theme-text" href="@routes.HomeController.index()">Back to Connection List</a>
+  </div>
+}

@@ -32,7 +32,7 @@ object InitService {
     utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
     utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
     utils.JQueryUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
-    utils.JQueryUtils.clickHandler($("#sidenav-refresh-link"), (jq) => utils.NetworkMessage.sendMessage(RefreshSchema))
+    utils.JQueryUtils.clickHandler($("#sidenav-refresh-link"), (jq) => MetadataManager.refreshSchema)
     utils.JQueryUtils.clickHandler($("#sidenav-history-link"), (jq) => HistoryManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }

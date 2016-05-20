@@ -3,17 +3,20 @@ package models.result
 import java.util.UUID
 
 import org.joda.time.LocalDateTime
+import utils.DateUtils
 
 case class CachedResult(
-  resultId: UUID,
-  queryId: UUID,
-  connectionId: UUID,
-  owner: Option[UUID],
-  status: String,
-  sql: String,
-  columns: Int,
-  rows: Int,
-  duration: Int,
-  lastAccessed: LocalDateTime,
-  created: LocalDateTime
-)
+    resultId: UUID,
+    queryId: UUID,
+    connectionId: UUID,
+    owner: Option[UUID] = None,
+    status: String = "starting",
+    sql: String,
+    columns: Int = 0,
+    rows: Int = 0,
+    duration: Int = 0,
+    lastAccessed: LocalDateTime = DateUtils.now,
+    created: LocalDateTime = DateUtils.now
+) {
+  def tableName = "result_" + resultId.toString.replaceAllLiterally("-", "")
+}

@@ -15,11 +15,11 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
 
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
-  def getAll(orderBy: String = "name") = GetAll(orderBy = orderBy)
-  def getVisible(owner: Option[UUID], orderBy: String = "name") = GetAll(
+  def getAll(orderBy: String = "\"name\"") = GetAll(orderBy = orderBy)
+  def getVisible(owner: Option[UUID], orderBy: String = "\"name\"") = GetAll(
     whereClause = owner match {
-    case Some(x) => Some("public = true or owner = ?")
-    case None => Some("public = true")
+    case Some(x) => Some("\"public\" = true or \"owner\" = ?")
+    case None => Some("\"public\" = true")
   },
     orderBy = orderBy,
     values = owner.toSeq
@@ -29,7 +29,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   val removeById = RemoveById
 
   case class Update(cs: ConnectionSettings) extends Statement {
-    override def sql = s"update $tableName set name = ?, owner = ?, public = ?, description = ?, engine = ?, url = ?, username = ?, password = ? where id = ?"
+    override def sql = updateSql(Seq("name", "owner", "public", "description", "engine", "url", "username", "password"))
     override def values = Seq(cs.name, cs.owner, cs.public, cs.description, cs.engine.id, cs.url, cs.username, cs.password, cs.id)
   }
 

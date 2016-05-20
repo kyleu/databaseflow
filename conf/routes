@@ -1,42 +1,45 @@
-GET         /                            controllers.HomeController.index
-GET         /ping                        controllers.HomeController.ping(timestamp: Long)
+GET         /                                controllers.HomeController.index
+GET         /ping                            controllers.HomeController.ping(timestamp: Long)
 
 # Connection Management
-GET         /c/new                       controllers.ConnectionSettingsController.addNew()
-POST        /c/:id                       controllers.ConnectionSettingsController.save(id: java.util.UUID)
-GET         /c/:id                       controllers.ConnectionSettingsController.editForm(id: java.util.UUID)
-GET         /c/:id/delete                controllers.ConnectionSettingsController.delete(id: java.util.UUID)
+GET         /c/new                           controllers.ConnectionSettingsController.addNew()
+POST        /c/:id                           controllers.ConnectionSettingsController.save(id: java.util.UUID)
+GET         /c/:id                           controllers.ConnectionSettingsController.editForm(id: java.util.UUID)
+GET         /c/:id/delete                    controllers.ConnectionSettingsController.delete(id: java.util.UUID)
 
 # Query Interface
-GET         /q/:conn                     controllers.QueryController.main(conn: java.util.UUID)
-GET         /q/:conn/websocket           controllers.QueryController.connect(conn: java.util.UUID)
-POST        /q/:conn/export              controllers.QueryController.export(conn: java.util.UUID)
+GET         /q/:conn                         controllers.QueryController.main(conn: java.util.UUID)
+GET         /q/:conn/websocket               controllers.QueryController.connect(conn: java.util.UUID)
+POST        /q/:conn/export                  controllers.QueryController.export(conn: java.util.UUID)
 
 # Admin
-GET         /admin/settings              controllers.AdminController.settings
-GET         /admin/users                 controllers.AdminController.users
-GET         /sandbox                     controllers.SandboxController.list
-GET         /sandbox/:key                controllers.SandboxController.sandbox(key)
+GET         /admin/settings                  controllers.AdminController.settings
+GET         /admin/users                     controllers.AdminController.users
+GET         /admin/results                   controllers.AdminController.results
+GET         /admin/results/remove/:id        controllers.AdminController.removeResult(id: java.util.UUID)
+GET         /admin/results/orphan/:id        controllers.AdminController.removeOrphan(id)
+GET         /sandbox                         controllers.SandboxController.list
+GET         /sandbox/:key                    controllers.SandboxController.sandbox(key)
 
 # Utility
-GET         /*path/                      controllers.HomeController.untrail(path: String)
+GET         /*path/                          controllers.HomeController.untrail(path: String)
 
 # Authentication
-GET         /signup                      controllers.auth.RegistrationController.registrationForm
-POST        /signup                      controllers.auth.RegistrationController.register
-GET         /signin                      controllers.auth.AuthenticationController.signInForm
-POST        /signin                      controllers.auth.AuthenticationController.authenticateCredentials
-GET         /signout                     controllers.auth.AuthenticationController.signOut
+GET         /signup                          controllers.auth.RegistrationController.registrationForm
+POST        /signup                          controllers.auth.RegistrationController.register
+GET         /signin                          controllers.auth.AuthenticationController.signInForm
+POST        /signin                          controllers.auth.AuthenticationController.authenticateCredentials
+GET         /signout                         controllers.auth.AuthenticationController.signOut
 
-GET         /profile                     controllers.ProfileController.view()
-POST        /profile                     controllers.ProfileController.save()
+GET         /profile                         controllers.ProfileController.view()
+POST        /profile                         controllers.ProfileController.save()
 
 #SSL Verification
-GET         /.well-known/*file           controllers.SslVerificationController.at(file)
+GET         /.well-known/*file               controllers.SslVerificationController.at(file)
 
 # Assets
-GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
-GET         /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
+GET         /favicon.ico                     controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
+GET         /apple-touch-icon.png            controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
 
 
-GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)

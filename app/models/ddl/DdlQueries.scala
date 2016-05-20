@@ -1,6 +1,7 @@
 package models.ddl
 
 import models.database.{ Row, SingleRowQuery, Statement }
+import models.engine.DatabaseEngine
 
 object DdlQueries {
   case class DoesTableExist(tableName: String) extends SingleRowQuery[Boolean] {
@@ -10,7 +11,11 @@ object DdlQueries {
   }
 
   case class TruncateTable(tableName: String) extends Statement {
-    override val sql = s"truncate table $tableName"
+    override val sql = s"""truncate table \"$tableName\""""
+  }
+
+  case class DropTable(tableName: String)(implicit val engine: DatabaseEngine) extends Statement {
+    override val sql = s"drop table ${engine.leftQuoteIdentifier}$tableName${engine.rightQuoteIdentifier}"
   }
 
   def trim(s: String) = s.replaceAll("""[\s]+""", " ").trim

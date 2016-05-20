@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.RefreshSchema
 import models.engine.DatabaseEngine
 import models.query.SavedQuery
 import models.schema.Schema
@@ -11,6 +12,7 @@ import org.scalajs.jquery.{ JQuery, jQuery => $ }
 object MetadataManager {
   var engine: Option[DatabaseEngine] = None
   var schema: Option[Schema] = None
+  var pendingRefresh = false
 
   var savedQueries: Option[Seq[(String, JQuery, JQuery)]] = None
 
@@ -37,6 +39,11 @@ object MetadataManager {
       (x.id.toString, el, $("span", el))
     })
     ModelListManager.updatePanel("saved-query")
+  }
+
+  def refreshSchema() = {
+    pendingRefresh = true
+    utils.NetworkMessage.sendMessage(RefreshSchema)
   }
 
   def updateSchema(sch: Schema) = {

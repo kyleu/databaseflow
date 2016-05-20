@@ -1,6 +1,14 @@
 package services.schema
 
+import java.sql.Clob
+
 object JdbcHelper {
+  def stringVal(a: Any, maxLength: Option[Int] = None) = a match {
+    case s: String => maxLength.map(l => s.substring(0, l)).getOrElse(s)
+    case c: Clob => c.getSubString(0, maxLength.getOrElse(Int.MaxValue))
+    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as a string.")
+  }
+
   def intVal(a: Any) = a match {
     case i: Int => i
     case s: Short => s.toInt

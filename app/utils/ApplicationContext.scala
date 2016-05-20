@@ -13,7 +13,7 @@ import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{ Action, RequestHeader, Results }
 import play.api.routing.Router
 import models.auth.AuthEnv
-import services.database.MasterDatabase
+import services.database.{ MasterDatabase, ResultCacheDatabase }
 import services.notification.NotificationService
 import services.settings.SettingsService
 import services.supervisor.ActorSupervisor
@@ -58,6 +58,7 @@ class ApplicationContext @javax.inject.Inject() (
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
     MasterDatabase.open()
+    ResultCacheDatabase.open()
     settings.load()
 
     lifecycle.addStopHook(() => Future.successful(stop()))
@@ -68,6 +69,7 @@ class ApplicationContext @javax.inject.Inject() (
 
   private[this] def stop() = {
     MasterDatabase.close()
+    ResultCacheDatabase.close()
     SharedMetricRegistries.remove("default")
   }
 }

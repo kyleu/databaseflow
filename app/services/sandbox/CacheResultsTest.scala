@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.engine.rdbms.PostgreSQL
 import models.queries.result.CreateResultTable
+import services.connection.ConnectionSettingsService
 import services.database.MasterDatabase
 import services.result.CachedResultService
 import utils.ApplicationContext
@@ -19,7 +20,7 @@ object CacheResultsTest extends SandboxTask {
   override def run(ctx: ApplicationContext) = {
     val resultId = UUID.randomUUID
     val queryId = UUID.randomUUID
-    val connectionId = UUID.randomUUID
+    val connectionId = ConnectionSettingsService.getAll.find(_.name == "PostgreSQL Sample").getOrElse(throw new IllegalStateException()).id
     val owner = None
     val sql = "select * from actor"
 

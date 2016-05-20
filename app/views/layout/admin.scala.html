@@ -20,6 +20,11 @@
         } else {
           <li><a href="@routes.AdminController.users()">Users</a></li>
         }
+        @if(activeSection == "results") {
+          <li class="active"><a href="@routes.AdminController.results()">Results</a></li>
+        } else {
+          <li><a href="@routes.AdminController.results()">Results</a></li>
+        }
       </ul>
 
       <ul class="right hide-on-small-only">
