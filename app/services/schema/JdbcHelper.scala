@@ -1,11 +1,17 @@
 package services.schema
 
+import java.io.{ BufferedReader, StringWriter }
 import java.sql.Clob
+
+import org.apache.commons.io.IOUtils
 
 object JdbcHelper {
   def stringVal(a: Any, maxLength: Option[Int] = None) = a match {
-    case s: String => maxLength.map(l => s.substring(0, l)).getOrElse(s)
-    case c: Clob => c.getSubString(0, maxLength.getOrElse(Int.MaxValue))
+    case s: String => maxLength.fold(s)(l => s.substring(0, l))
+    case c: Clob =>
+      val ret = new StringWriter()
+      IOUtils.copy(c.getCharacterStream, ret)
+      ret.toString
     case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as a string.")
   }
 

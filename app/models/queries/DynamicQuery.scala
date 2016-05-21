@@ -18,7 +18,7 @@ case class DynamicQuery(override val sql: String) extends Query[DynamicQuery.Res
       val cc = md.getColumnCount
       val columns = (1 to cc).map { i =>
         val columnType = QueryTranslations.forType(md.getColumnType(i))
-        QueryResult.Col(md.getColumnLabel(i), columnType)
+        QueryResult.Col(md.getColumnLabel(i), columnType, md.getPrecision(i), md.getScale(i))
       }
       val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).map(_.toString))
       val remainingData = rows.map { row =>

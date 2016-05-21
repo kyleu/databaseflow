@@ -8,6 +8,8 @@ object QueryResult {
   case class Col(
     name: String,
     t: ColumnType,
+    precision: Int = 0,
+    scale: Int = 0,
     relationTable: Option[String] = None,
     relationColumn: Option[String] = None
   )
@@ -15,7 +17,7 @@ object QueryResult {
   case class Source(
     t: String,
     name: String,
-    sortable: Boolean,
+    sortable: Boolean = true,
     sortedColumn: Option[String] = None,
     sortedAscending: Option[Boolean] = None,
     filterColumn: Option[String] = None,

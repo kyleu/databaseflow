@@ -33,7 +33,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
       connectionId = row.as[UUID]("connection_id"),
       owner = row.asOpt[UUID]("owner"),
       status = row.as[String]("status"),
-      sql = JdbcHelper.stringVal("sql"),
+      sql = JdbcHelper.stringVal(row.as[Any]("sql")),
       columns = row.as[Int]("columns"),
       rows = row.as[Int]("rows"),
       duration = row.as[Int]("duration"),

@@ -18,5 +18,5 @@ case class CachedResult(
     lastAccessed: LocalDateTime = DateUtils.now,
     created: LocalDateTime = DateUtils.now
 ) {
-  def tableName = "result_" + resultId.toString.replaceAllLiterally("-", "")
+  lazy val tableName = "result_" + resultId.toString.replaceAllLiterally("-", "")
 }
