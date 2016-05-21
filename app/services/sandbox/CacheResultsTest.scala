@@ -2,10 +2,12 @@ package services.sandbox
 
 import java.util.UUID
 
-import models.engine.rdbms.PostgreSQL
 import models.queries.result.CreateResultTable
+import models.query.QueryResult
+import models.result.CachedResultQuery
+import models.schema.ColumnType._
 import services.connection.ConnectionSettingsService
-import services.database.MasterDatabase
+import services.database.ResultCacheDatabase
 import services.result.CachedResultService
 import utils.ApplicationContext
 
@@ -22,9 +24,43 @@ object CacheResultsTest extends SandboxTask {
     val queryId = UUID.randomUUID
     val connectionId = ConnectionSettingsService.getAll.find(_.name == "PostgreSQL Sample").getOrElse(throw new IllegalStateException()).id
     val owner = None
-    val sql = "select * from actor"
+    val sql = "select * from city"
 
     CachedResultService.cache(resultId, queryId, connectionId, owner, sql)
+
+    val columns = Seq(
+      QueryResult.Col("v", StringType, precision = 128),
+      QueryResult.Col("bd", BigDecimalType, precision = 4, scale = 4),
+      QueryResult.Col("b", BooleanType),
+      QueryResult.Col("by", ByteType),
+      QueryResult.Col("s", ShortType),
+      QueryResult.Col("i", IntegerType),
+      QueryResult.Col("l", LongType),
+      QueryResult.Col("f", FloatType),
+      QueryResult.Col("d", DoubleType),
+      QueryResult.Col("ba", ByteArrayType),
+      QueryResult.Col("da", DateType),
+      QueryResult.Col("ti", TimeType),
+      QueryResult.Col("ts", TimestampType),
+      QueryResult.Col("r", RefType),
+      QueryResult.Col("x", XmlType),
+      QueryResult.Col("u", UuidType)
+
+    //QueryResult.Col("n", NullType),
+    //QueryResult.Col("o", ObjectType),
+    //QueryResult.Col("st", StructType),
+    //QueryResult.Col("a", ArrayType),
+
+    //QueryResult.Col("unk", UnknownType)
+    )
+
+    val statement = CreateResultTable(resultId, columns)(ResultCacheDatabase.conn.engine).sql
+
+    if (statement.nonEmpty) {
+      //throw new IllegalStateException(statement)
+    }
+
+    CachedResultQuery.createResultTable(UUID.randomUUID, columns)
 
     Future.successful("Ok!")
   }
