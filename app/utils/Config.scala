@@ -3,12 +3,9 @@ package utils
 import java.net.InetAddress
 
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSettings
-import com.typesafe.config.ConfigFactory
 import play.api.{ Environment, Mode }
 
 object Config {
-  private[this] val cnf = ConfigFactory.load()
-
   val projectId = "databaseflow"
   val projectName = "Database Flow"
   val version = "0.1"

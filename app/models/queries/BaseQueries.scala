@@ -16,7 +16,9 @@ trait BaseQueries[T] {
   protected def fromRow(row: Row): T
   protected def toDataSeq(t: T): Seq[Any]
 
-  protected lazy val insertSql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"""
+  protected lazy val insertSql = {
+    s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"""
+  }
 
   protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = BaseQueries.trim(s"""
     update \"$tableName\" set ${updateColumns.map(x => s""""$x" = ?""").mkString(", ")}${additionalUpdates.fold("")(x => s", $x")} where $idWhereClause
@@ -64,7 +66,6 @@ trait BaseQueries[T] {
     override val sql = insertSql
     override val values = toDataSeq(model)
   }
-
   protected case class InsertBatch(models: Seq[T]) extends Statement {
     private[this] val valuesClause = models.map(m => s"(${columns.map(x => "?").mkString(", ")})").mkString(", ")
     override val sql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values $valuesClause"""
@@ -84,7 +85,6 @@ trait BaseQueries[T] {
     override val sql = s"""select count(*) as c from "$tableName" $searchWhere ${groupBy.fold("")(x => s" group by $x")}"""
     override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
   }
-
   protected case class Search(q: String, orderBy: String, page: Option[Int], groupBy: Option[String] = None) extends Query[List[T]] {
     private[this] val whereClause = if (q.isEmpty) { None } else { Some(searchColumns.map(c => s"lower($c) like lower(?)").mkString(" or ")) }
     private[this] val limit = page.map(x => Config.pageSize)

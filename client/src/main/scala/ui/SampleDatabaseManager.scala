@@ -22,7 +22,6 @@ object SampleDatabaseManager {
     )
     QueryManager.workspace.append(StaticPanelTemplate.panel(queryId, "Loading Sample Database", content, Icons.database).render)
     TabManager.addTab(queryId, "ctx-load", "Sample Database", Icons.database)
-    val queryPanel = $(s"#panel-$queryId")
     NetworkMessage.sendMessage(CreateSampleDatabase(queryId))
     ConfirmManager.close()
   }

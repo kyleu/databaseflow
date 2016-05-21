@@ -1,8 +1,6 @@
 package controllers.auth
 
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.Clock
 import com.mohiva.play.silhouette.api.{ LoginEvent, LogoutEvent }
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider

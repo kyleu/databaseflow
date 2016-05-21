@@ -2,7 +2,7 @@ package services
 
 import java.util.UUID
 
-import models.{ RefreshSchema, RequestMessage }
+import models.RequestMessage
 import models.query.RowDataOptions
 import models.schema.FilterOp
 import org.scalajs.dom

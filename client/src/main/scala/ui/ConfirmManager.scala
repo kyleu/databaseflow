@@ -1,6 +1,6 @@
 package ui
 
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{ jQuery => $ }
 
 import scala.scalajs.js
 

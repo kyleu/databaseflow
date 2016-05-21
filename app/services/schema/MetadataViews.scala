@@ -4,7 +4,7 @@ import java.sql.{ Connection, DatabaseMetaData }
 
 import models.database.{ Query, Row }
 import models.engine.rdbms.MySQL
-import models.schema.{ Table, View }
+import models.schema.View
 import services.database.DatabaseConnection
 import utils.NullUtils
 

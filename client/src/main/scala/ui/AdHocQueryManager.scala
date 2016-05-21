@@ -22,7 +22,6 @@ object AdHocQueryManager {
       if (s.tables.isEmpty) {
         ""
       } else {
-        val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException())
         val t = s.tables(Random.nextInt(s.tables.size)).name
         EngineQueries.selectFrom(t, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
       }

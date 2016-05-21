@@ -21,7 +21,6 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
     val conn = ConnectionSettingsService.getById(id).getOrElse {
       throw new IllegalArgumentException(s"Invalid connection [$id].")
     }
-    val isMaster = id == ConnectionSettingsService.masterId
     Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
   }
 

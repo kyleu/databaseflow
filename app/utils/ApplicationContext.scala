@@ -2,9 +2,10 @@ package utils
 
 import java.util.TimeZone
 
-import akka.actor.{ ActorRef, ActorSystem, Props }
+import akka.actor.{ ActorSystem, Props }
 import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
+import models.auth.AuthEnv
 import org.joda.time.DateTimeZone
 import play.api.Environment
 import play.api.http.HttpRequestHandler
@@ -12,7 +13,6 @@ import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{ Action, RequestHeader, Results }
 import play.api.routing.Router
-import models.auth.AuthEnv
 import services.database.{ MasterDatabase, ResultCacheDatabase }
 import services.notification.NotificationService
 import services.settings.SettingsService
@@ -38,7 +38,6 @@ object ApplicationContext {
 class ApplicationContext @javax.inject.Inject() (
     val messagesApi: MessagesApi,
     val config: Config,
-    val settings: SettingsService,
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
     val notificationService: NotificationService,
@@ -59,7 +58,7 @@ class ApplicationContext @javax.inject.Inject() (
 
     MasterDatabase.open()
     ResultCacheDatabase.open()
-    settings.load()
+    SettingsService.load()
 
     lifecycle.addStopHook(() => Future.successful(stop()))
   }

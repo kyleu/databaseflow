@@ -1,10 +1,8 @@
 package ui
 
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import org.scalajs.jquery.JQuery
 
 object SearchFilterManager extends SearchFilterFields {
-  private[this] lazy val mainMenu = $("#main-menu")
-
   def filterSchema(searches: Seq[String]) = {
     MetadataManager.savedQueries.foreach { savedQueries =>
       filterObjects("saved-query", savedQueries, searches, SearchManager.savedQueriesToggle, savedQueryFields)

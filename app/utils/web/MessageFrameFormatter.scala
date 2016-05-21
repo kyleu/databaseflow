@@ -8,10 +8,6 @@ import utils.{ JsonSerializers, Logging }
 import scala.util.control.NonFatal
 
 class MessageFrameFormatter(debug: Boolean) extends Logging {
-  private[this] def requestToJsValue(r: RequestMessage): Js.Value = {
-    throw new IllegalArgumentException(s"Attempted to serialize RequestMessage [$r] on server.")
-  }
-
   private[this] def requestFromJsValue(json: Js.Value): RequestMessage = try {
     JsonSerializers.readRequestMessage(json)
   } catch {
@@ -19,10 +15,6 @@ class MessageFrameFormatter(debug: Boolean) extends Logging {
   }
 
   private[this] def responseToJsValue(r: ResponseMessage): Js.Value = JsonSerializers.writeResponseMessageJs(r)
-
-  private[this] def responseFromJsValue(json: Js.Value): ResponseMessage = {
-    throw new IllegalArgumentException(s"Attempted to deserialize ResponseMessage [$json] on server.")
-  }
 
   private[this] def jsValueToString(v: Js.Value) =
     if (debug) {

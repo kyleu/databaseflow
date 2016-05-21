@@ -62,7 +62,7 @@ object MetadataManager {
     if (sch.tables.isEmpty) {
       val msg = "There are no tables. Would you like to load a sample database? You'll need to have permissions to create tables and indexes."
       def ok(b: Boolean) = if (b) { SampleDatabaseManager.createSample() } else { ConfirmManager.close() }
-      ConfirmManager.show(ok, msg, trueButton = "Yes", falseButton = "No")
+      ConfirmManager.show(ok, msg, "Yes", "No")
     }
   }
 

@@ -29,7 +29,7 @@ object QueryExecutionService extends Logging {
   def handleQueryDeleteRequest(user: Option[User], id: UUID, out: ActorRef) = {
     log.info(s"Deleting query [$id].")
     try {
-      val result = SavedQueryService.delete(id, user.map(_.id))
+      SavedQueryService.delete(id, user.map(_.id))
       out ! QueryDeleteResponse(id = id)
     } catch {
       case NonFatal(x) => out ! QueryDeleteResponse(id = id, error = Some(x.getMessage))

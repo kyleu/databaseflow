@@ -6,7 +6,7 @@ import models.schema.Schema
 import services.database.{ DatabaseConnection, DatabaseWorkerPool }
 import utils.Logging
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.Try
 
 object SchemaService extends Logging {
   private[this] var schemaMap: Map[UUID, Schema] = Map.empty

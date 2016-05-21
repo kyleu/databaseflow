@@ -10,21 +10,17 @@ object ViewColumnDetailTemplate {
   }
 
   private[this] def tableFor(columns: Seq[Column]) = table(cls := "bordered highlight responsive-table")(
-    thead(
+    thead(tr(
+      th("Name"),
+      th("Type")
+    )),
+    tbody(columns.map { col =>
+      val nn = col.notNull.toString
+      val defaultVal = col.defaultValue.getOrElse("")
       tr(
-        th("Name"),
-        th("Type")
+        td(col.name),
+        td(col.columnType.toString)
       )
-    ),
-    tbody(
-      columns.map { col =>
-        val nn = col.notNull.toString
-        val defaultVal = col.defaultValue.getOrElse("")
-        tr(
-          td(col.name),
-          td(col.columnType.toString)
-        )
-      }
-    )
+    })
   )
 }

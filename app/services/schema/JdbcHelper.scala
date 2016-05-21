@@ -1,6 +1,6 @@
 package services.schema
 
-import java.io.{ BufferedReader, StringWriter }
+import java.io.StringWriter
 import java.sql.Clob
 
 import org.apache.commons.io.IOUtils

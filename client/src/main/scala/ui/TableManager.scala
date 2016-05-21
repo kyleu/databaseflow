@@ -12,8 +12,6 @@ import org.scalajs.jquery.{ jQuery => $ }
 object TableManager extends TableDetailHelper {
   private[this] var openTables = Map.empty[String, UUID]
 
-  private[this] lazy val workspace = $("#workspace")
-
   def addTable(table: Table) = {
     openTables.get(table.name).foreach { uuid =>
       setTableDetails(uuid, table)

@@ -4,8 +4,7 @@ import models.queries.settings.SettingQueries
 import models.settings.{ Setting, SettingKey }
 import services.database.MasterDatabase
 
-@javax.inject.Singleton
-class SettingsService @javax.inject.Inject() () {
+object SettingsService {
   private[this] var settings = Seq.empty[Setting]
   private[this] var settingsMap = Map.empty[SettingKey, String]
 
