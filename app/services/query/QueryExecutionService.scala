@@ -72,7 +72,7 @@ object QueryExecutionService extends Logging {
   }
 
   def handleCancelQuery(db: DatabaseConnection, queryId: UUID, resultId: UUID, out: ActorRef) = {
-    out ! ServerError("OK!", "Cancelled!")
+    activeQueries.get(resultId).foreach(_.cancel())
   }
 
   def registerRunningStatement(resultId: UUID, stmt: PreparedStatement) = activeQueries(resultId) = stmt
