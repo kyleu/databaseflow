@@ -8,8 +8,6 @@ import models.queries.connection.ConnectionSettingsQueries
 import services.database.MasterDatabase
 
 object ConnectionSettingsService {
-  val masterId = UUID.fromString("00000000-0000-0000-0000-000000000000")
-
   //val (masterEngine, masterUrl) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
   val (masterEngine, masterUrl) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
 
@@ -17,7 +15,7 @@ object ConnectionSettingsService {
   private[this] val masterPassword = "flow"
 
   val masterConnectionSettings = ConnectionSettings(
-    id = masterId,
+    id = MasterDatabase.connectionId,
     engine = masterEngine,
     name = s"${utils.Config.projectName} Storage",
     description = s"Internal storage used by ${utils.Config.projectName}.",
@@ -29,7 +27,7 @@ object ConnectionSettingsService {
   def getAll = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll()) :+ masterConnectionSettings
   def getVisible(userId: Option[UUID]) = MasterDatabase.conn.query(ConnectionSettingsQueries.getVisible(userId)) :+ masterConnectionSettings
 
-  def getById(id: UUID) = if (id == masterId) {
+  def getById(id: UUID) = if (id == MasterDatabase.connectionId) {
     Some(masterConnectionSettings)
   } else {
     MasterDatabase.conn.query(ConnectionSettingsQueries.getById(id))

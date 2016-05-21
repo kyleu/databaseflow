@@ -12,6 +12,8 @@ import scala.util.control.NonFatal
 object MasterDatabase extends Logging {
   private[this] val databases = collection.mutable.HashMap.empty[UUID, DatabaseConnection]
 
+  val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
+
   def databaseFor(connectionId: UUID) = databases.get(connectionId) match {
     case Some(c) => Right(c)
     case None =>
@@ -38,7 +40,7 @@ object MasterDatabase extends Logging {
   def open() = {
     connOpt.foreach(x => throw new IllegalStateException("History database already open."))
 
-    val database = databaseFor(ConnectionSettingsService.masterId) match {
+    val database = databaseFor(MasterDatabase.connectionId) match {
       case Right(db) => db
       case Left(x) => throw x
     }

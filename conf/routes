@@ -14,6 +14,7 @@ POST        /q/:conn/export                  controllers.QueryController.export(
 
 # Admin
 GET         /admin/settings                  controllers.AdminController.settings
+POST        /admin/settings                  controllers.AdminController.saveSettings
 GET         /admin/users                     controllers.AdminController.users
 GET         /admin/results                   controllers.AdminController.results
 GET         /admin/results/remove/:id        controllers.AdminController.removeResult(id: java.util.UUID)

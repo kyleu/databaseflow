@@ -20,13 +20,19 @@ object SettingsService {
   def getAll = settings
 
   def set(key: SettingKey, value: String) = {
-    MasterDatabase.conn.transaction { t =>
-      t.query(SettingQueries.getById(key)) match {
-        case Some(setting) => t.executeUpdate(SettingQueries.Update(Setting(key, value)))
-        case None => t.executeUpdate(SettingQueries.insert(Setting(key, value)))
+    val s = Setting(key, value)
+    if (s.isDefault) {
+      settingsMap = settingsMap - key
+      MasterDatabase.conn.executeUpdate(SettingQueries.removeById(key))
+    } else {
+      MasterDatabase.conn.transaction { t =>
+        t.query(SettingQueries.getById(key)) match {
+          case Some(setting) => t.executeUpdate(SettingQueries.Update(s))
+          case None => t.executeUpdate(SettingQueries.insert(s))
+        }
       }
+      settingsMap = settingsMap + (key -> value)
     }
-    settingsMap = settingsMap + (key -> value)
     settings = SettingKey.values.map(k => Setting(k, settingsMap.getOrElse(k, k.default)))
   }
 }

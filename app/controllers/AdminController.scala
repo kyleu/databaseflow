@@ -3,6 +3,7 @@ package controllers
 import java.util.UUID
 
 import models.ddl.DdlQueries
+import models.settings.SettingKey
 import services.database.ResultCacheDatabase
 import services.result.CachedResultService
 import services.settings.SettingsService
@@ -18,7 +19,18 @@ class AdminController @javax.inject.Inject() (
 ) extends BaseController {
 
   def settings = withSession("admin-settings") { implicit request =>
-    Future.successful(Ok(views.html.admin.settings(request.identity, ctx.config.debug, SettingsService.getAll)))
+    Future.successful(Ok(views.html.admin.settings(request.identity, ctx.config.debug, SettingsService.getAll.map(s => s.key -> s.value).toMap)))
+  }
+
+  def saveSettings = withSession("admin-settings-save") { implicit request =>
+    val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException()).flatMap(x => x._2.headOption.map(x._1 -> _)).toSeq
+    form.foreach { x =>
+      SettingKey.withNameOption(x._1) match {
+        case Some(settingKey) => SettingsService.set(settingKey, x._2)
+        case None => log.warn(s"Attempt to save invalid setting [${x._1}].")
+      }
+    }
+    Future.successful(Redirect(routes.HomeController.index()))
   }
 
   def users = withSession("admin-users") { implicit request =>

@@ -1,24 +1,61 @@
-@(user: Option[models.user.User], debug: Boolean, settings: Seq[models.settings.Setting])(
+@(user: Option[models.user.User], debug: Boolean, settings: Map[models.settings.SettingKey, String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.admin(user, "settings", messages("admin.settings.title"), debug = debug) {
-  <div class="card-content">
-    <div class="card-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.settings.title")</div>
+)
 
-    <div class="row">
-      @settings.map { setting =>
-        <div class="col s12 m6 l4">
-          <div class="z-depth-1 setting-panel">
-            <strong>@setting.key.title</strong>
-            <div class="setting-input">
-              <input type="text" name="@setting.key.id" value="@setting.value" />
-            </div>
-            <em>@setting.key.description</em>
-          </div>
-        </div>
-      }
+@import models.settings.SettingKey
+@import models.settings.SettingKey._
+
+@settingPanel(key: SettingKey)(content: Html) = {
+  <div class="col s12">
+    <div class="z-depth-1 setting-panel">
+      <strong>@key.title</strong>
+      <div class="setting-input">@content</div>
+      <em>@key.description</em>
     </div>
   </div>
-  <div class="card-action">
-    <a class="theme-text" href="@routes.HomeController.index()">Back to Connection List</a>
-  </div>
+}
+
+@layout.admin(user, "settings", messages("admin.settings.title"), debug = debug) {
+  <form action="@routes.AdminController.saveSettings()" method="post">
+    <div class="card-content">
+      <div class="card-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.settings.title")</div>
+
+      <div class="row">
+        @settingPanel(AllowGuests) {
+          <input type="radio" id="@AllowGuests.id-true" name="@AllowGuests.id" value="true" @if(settings(AllowGuests) == "true") { checked="checked" } />
+          <label for="@AllowGuests.id-true">Yes</label>
+          <input type="radio" id="@AllowGuests.id-false" name="@AllowGuests.id" value="false" @if(settings(AllowGuests) == "false") { checked="checked" } />
+          <label for="@AllowGuests.id-false">No</label>
+        }
+
+        @settingPanel(QueryCacheConnection) {
+          <div class="input-field">
+            <select id="@QueryCacheConnection.id-select" name="@QueryCacheConnection.id">
+            @defining(settings(QueryCacheConnection)) { connection =>
+              @defining(services.connection.ConnectionSettingsService.getAll.filter { dbc =>
+                dbc.engine == models.engine.rdbms.H2 || dbc.engine == models.engine.rdbms.PostgreSQL
+              }) { connections =>
+                @connections.map { c =>
+                  <option value="@c.id" @if(c.id.toString == connection) { selected="selected" }>@c.name</option>
+                }
+              }
+            }
+            </select>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="card-action">
+      <button class="right theme btn" type="submit">Save</button>
+      <a class="right theme-text btn-flat" href="@routes.HomeController.index()">Cancel</a>
+      <div style="clear: both;"></div>
+    </div>
+  </form>
+
+  <script>
+    $(function() {
+      $('#@QueryCacheConnection.id-select').material_select();
+    });
+  </script>
+
 }

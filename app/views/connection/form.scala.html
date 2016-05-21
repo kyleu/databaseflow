@@ -64,7 +64,7 @@
         <div class="card-action">
           <button class="btn @user.fold("blue-grey")(_.preferences.theme) waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
           <a class="btn-flat theme-text" href="@routes.HomeController.index()">Cancel</a>
-          @if((!isNew) && conn.id != services.connection.ConnectionSettingsService.masterId) {
+          @if((!isNew) && conn.id != services.database.MasterDatabase.connectionId) {
             <button class="right btn-flat waves-effect waves-light" onclick="onDelete();return false;">Delete</button>
           }
         </div>
