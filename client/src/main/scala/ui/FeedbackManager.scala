@@ -29,7 +29,15 @@ object FeedbackManager {
         QueryManager.closeQuery(feedbackId)
       })
 
+      utils.JQueryUtils.clickHandler($(s".submit-feedback", queryPanel), (jq) => {
+        submitFeedback($(".feedback-content", queryPanel).value().toString)
+      })
+
       isOpen = true
     }
+  }
+
+  private[this] def submitFeedback(feedback: String) = {
+    utils.Logging.info("Feedback: " + feedback)
   }
 }
