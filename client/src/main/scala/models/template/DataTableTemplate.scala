@@ -8,7 +8,7 @@ import models.schema.ColumnType._
 import scalatags.Text.all._
 
 object DataTableTemplate {
-  private[this] def tableHeader(res: QueryResult) = {
+  private[this] def tableHeader(res: QueryResult, addRowNum: Boolean) = {
     def str(name: String) = if (res.source.exists(_.sortable)) {
       if (res.source.flatMap(_.sortedColumn).contains(name)) {
         val asc = !res.source.flatMap(_.sortedAscending).contains(false)
@@ -25,7 +25,12 @@ object DataTableTemplate {
     } else {
       span(cls := "unsorted-title")(name)
     }
-    thead(tr(th("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
+
+    if (addRowNum) {
+      thead(tr(th("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
+    } else {
+      thead(res.columns.map(c => th(data("t") := c.t.toString)(str(c.name))))
+    }
   }
 
   private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = {
@@ -67,20 +72,27 @@ object DataTableTemplate {
     }
   }
 
-  def tableRows(res: QueryResult, resultId: UUID) = {
+  def tableRows(res: QueryResult, resultId: UUID, addRowNum: Boolean) = {
     val offset = res.source.map(_.dataOffset + 1).getOrElse(1)
-    res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
-      td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
-    ))
+    if (addRowNum) {
+      res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
+        td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+      ))
+    } else {
+      res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
+        res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+      ))
+    }
   }
 
   def forResults(res: QueryResult, resultId: UUID) = if (res.columns.isEmpty || res.data.isEmpty) {
     em("No rows returned")
   } else {
+    val addRowNum = !res.columns.headOption.exists(_.name == "row_num")
     div(cls := "query-result-table")(
       table(cls := "bordered highlight responsive-table")(
-        tableHeader(res),
-        tbody(tableRows(res, resultId))
+        tableHeader(res, addRowNum),
+        tbody(tableRows(res, resultId, addRowNum))
       )
     )
   }

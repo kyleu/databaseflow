@@ -3,6 +3,7 @@ package services.database
 import java.util.UUID
 
 import models.database.PoolSettings
+import models.engine.rdbms._
 import services.connection.ConnectionSettingsService
 import services.data.MasterDdl
 import utils.Logging
@@ -13,6 +14,11 @@ object MasterDatabase extends Logging {
   private[this] val databases = collection.mutable.HashMap.empty[UUID, DatabaseConnection]
 
   val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
+  //val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
+  val (engine, url) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
+
+  val username = "databaseflow"
+  val password = "flow"
 
   def databaseFor(connectionId: UUID) = databases.get(connectionId) match {
     case Some(c) => Right(c)
@@ -45,7 +51,7 @@ object MasterDatabase extends Logging {
       case Left(x) => throw x
     }
 
-    log.info(s"Master database started as user [${ConnectionSettingsService.masterUsername}] against url [${ConnectionSettingsService.masterUrl}].")
+    log.info(s"Master database started as user [$username] against url [$url].")
 
     MasterDdl.update(database)
 
