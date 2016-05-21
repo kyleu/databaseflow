@@ -9,6 +9,7 @@ object Icons {
   val search = "fa-search"
   val error = "fa-exclamation"
 
+  val feedback = "fa-at"
   val help = "fa-key"
   val history = "fa-clock-o"
   val about = "fa-heart-o"

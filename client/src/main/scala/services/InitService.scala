@@ -32,7 +32,8 @@ object InitService {
     utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
     utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
     utils.JQueryUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
-    utils.JQueryUtils.clickHandler($("#sidenav-refresh-link"), (jq) => MetadataManager.refreshSchema)
+    utils.JQueryUtils.clickHandler($("#sidenav-feedback-link"), (jq) => FeedbackManager.show())
+    utils.JQueryUtils.clickHandler($("#sidenav-refresh-link"), (jq) => MetadataManager.refreshSchema())
     utils.JQueryUtils.clickHandler($("#sidenav-history-link"), (jq) => HistoryManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
@@ -41,6 +42,7 @@ object InitService {
     TabManager.initIfNeeded()
     NavigationService.initialMessage match {
       case ("help", None) => HelpManager.show()
+      case ("feedback", None) => FeedbackManager.show()
       case ("history", None) => HistoryManager.show()
       case ("new", None) => AdHocQueryManager.addNewQuery()
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))

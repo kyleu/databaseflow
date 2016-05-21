@@ -1,12 +1,12 @@
 package utils
 
-import java.sql.{ ResultSet, SQLSyntaxErrorException, Timestamp }
+import java.sql.{ SQLSyntaxErrorException, Timestamp }
 import java.util.UUID
 
 import com.mysql.jdbc.exceptions.MySQLStatementCancelledException
-import models.{ QueryErrorResponse, ResponseMessage, ServerError }
 import models.database.Row
 import models.query.QueryError
+import models.{ QueryErrorResponse, ResponseMessage }
 import org.joda.time.LocalDateTime
 import org.postgresql.jdbc.PgArray
 import org.postgresql.util.PSQLException
@@ -29,7 +29,7 @@ object JdbcUtils extends Logging {
           QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case x =>
           log.warn(s"Unhandled error running sql [$sql].", x)
-          ServerError(x.getClass.getSimpleName, x.getMessage)
+          QueryErrorResponse(resultId, QueryError(queryId, sql, x.getClass.getSimpleName, x.getMessage, occurred = startMs), durationMs)
       }
   }
 

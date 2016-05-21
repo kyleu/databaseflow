@@ -28,6 +28,7 @@ object NavigationService {
     case x if x.startsWith("procedure-") => "procedure" -> Some(x.substring(10))
     case x if x.startsWith("list-") => "list" -> Some(x.substring(5))
     case "help" => "help" -> None
+    case "feedback" => "feedback" -> None
     case x =>
       utils.Logging.warn(s"Unhandled initial action [$x].")
       "new" -> None
