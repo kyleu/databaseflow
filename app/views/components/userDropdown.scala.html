@@ -1,5 +1,5 @@
 @(user: Option[models.user.User])
-@defining(user.map(_.preferences.theme).getOrElse("blue-grey") + "-text") { theme =>
+@defining(user.fold("blue-grey")(_.preferences.theme) + "-text") { theme =>
   <ul id="dropdown-user" class="dropdown-content">
     @if(user.isEmpty) {
     <li><a class="@theme" href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign Up</a></li>

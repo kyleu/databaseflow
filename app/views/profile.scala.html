@@ -14,7 +14,7 @@
                 }
               </div>
             </div>
-            <input id="input-theme" type="hidden" class="" name="theme" value="@user.map(_.preferences.theme).getOrElse("blue-grey")" />
+            <input id="input-theme" type="hidden" class="" name="theme" value="@user.fold("blue-grey")(_.preferences.theme)" />
             <label for="input-theme">@Messages("profile.form.theme")</label><br/>
             <div id="theme-choices">
               @models.user.Themes.all.map { t =>
@@ -35,7 +35,7 @@
 
   <script>
     $(function() {
-      var activeSwatch = '@user.map(_.preferences.theme).getOrElse("blue-grey")';
+      var activeSwatch = '@user.fold("blue-grey")(_.preferences.theme)';
       $('#save-button').addClass(activeSwatch + "-text").removeClass("theme-text");
 
       $(".swatch").click(function(e) {

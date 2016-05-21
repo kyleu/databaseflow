@@ -37,7 +37,7 @@ object MetadataColumns {
       columnType = QueryTranslations.forType(colType), // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeName = row.as[String]("TYPE_NAME"),
-      size = row.asOpt[Any]("COLUMN_SIZE").map(_.toString).getOrElse("?"),
+      size = row.asOpt[Any]("COLUMN_SIZE").fold("?")(_.toString),
       sizeAsInt = colSize.getOrElse(0), // ?
       scale = 0, // BUFFER_LENGTH? DECIMAL_DIGITS? NUM_PREC_RADIX?
       defaultValue = row.asOpt[String]("COLUMN_DEF")

@@ -30,7 +30,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
     val conn = connOpt.getOrElse(ConnectionSettings(id = connectionId))
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
-        val title = ConnectionForm.form.value.map(_.name).getOrElse("New Connection")
+        val title = ConnectionForm.form.value.fold("New Connection")(_.name)
         BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
       },
       cf => {

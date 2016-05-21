@@ -9,7 +9,7 @@
   ),
   debug = debug
 ) {
-  @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse("blue-grey"))
+  @views.html.layout.themeStyles(user.fold("blue-grey")(_.preferences.theme))
   @views.html.query.navbar(user, dbName)
 
   <main class="indent">

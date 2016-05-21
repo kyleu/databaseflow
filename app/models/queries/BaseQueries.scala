@@ -19,7 +19,7 @@ trait BaseQueries[T] {
   protected lazy val insertSql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"""
 
   protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = BaseQueries.trim(s"""
-    update \"$tableName\" set ${updateColumns.map(x => s""""$x" = ?""").mkString(", ")}${additionalUpdates.map(x => s", $x").getOrElse("")} where $idWhereClause
+    update \"$tableName\" set ${updateColumns.map(x => s""""$x" = ?""").mkString(", ")}${additionalUpdates.fold("")(x => s", $x")} where $idWhereClause
   """)
 
   protected def getSql(
@@ -31,11 +31,11 @@ trait BaseQueries[T] {
   ) = {
     BaseQueries.trim(s"""
       select ${columns.map("\"" + _ + "\"").mkString(", ")} from "$tableName"
-      ${whereClause.map(x => s" where $x").getOrElse("")}
-      ${groupBy.map(x => s" group by $x").getOrElse("")}
-      ${orderBy.map(x => s" order by $x").getOrElse("")}
-      ${limit.map(x => s" limit $x").getOrElse("")}
-      ${offset.map(x => s" offset $x").getOrElse("")}
+      ${whereClause.fold("")(x => s" where $x")}
+      ${groupBy.fold("")(x => s" group by $x")}
+      ${orderBy.fold("")(x => s" order by $x")}
+      ${limit.fold("")(x => s" limit $x")}
+      ${offset.fold("")(x => s" offset $x")}
     """)
   }
 
@@ -52,7 +52,7 @@ trait BaseQueries[T] {
     override val sql = s"""
       select ${columns.map("\"" + _ + "\"").mkString(", ")}
       from "$tableName"
-      ${whereClause.map(w => "where " + w).getOrElse("")}
+      ${whereClause.fold("")(w => "where " + w)}
       order by $orderBy
     """.trim
     override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
@@ -81,7 +81,7 @@ trait BaseQueries[T] {
 
   protected case class SearchCount(q: String, groupBy: Option[String] = None) extends Query[Int] {
     val searchWhere = if (q.isEmpty) { "" } else { "where " + searchColumns.map(c => s"""lower("$c") like lower(?)""").mkString(" or ") }
-    override val sql = s"""select count(*) as c from "$tableName" $searchWhere ${groupBy.map(x => s" group by $x").getOrElse("")}"""
+    override val sql = s"""select count(*) as c from "$tableName" $searchWhere ${groupBy.fold("")(x => s" group by $x")}"""
     override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
   }
 

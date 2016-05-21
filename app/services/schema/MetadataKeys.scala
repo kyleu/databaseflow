@@ -55,8 +55,8 @@ object MetadataKeys {
     val targetColumn = row.as[String]("pkcolumn_name")
     val sourceColumn = row.as[String]("fkcolumn_name")
     val order = JdbcHelper.intVal(row.as[Any]("key_seq"))
-    val updateRule = ruleFor(row.asOpt[Any]("update_rule").map(JdbcHelper.intVal).getOrElse(DatabaseMetaData.importedKeySetNull))
-    val deleteRule = ruleFor(row.asOpt[Any]("delete_rule").map(JdbcHelper.intVal).getOrElse(DatabaseMetaData.importedKeySetNull))
+    val updateRule = ruleFor(row.asOpt[Any]("update_rule").fold(DatabaseMetaData.importedKeySetNull)(JdbcHelper.intVal))
+    val deleteRule = ruleFor(row.asOpt[Any]("delete_rule").fold(DatabaseMetaData.importedKeySetNull)(JdbcHelper.intVal))
     (name, sourceColumn, targetTable, targetColumn, order, updateRule, deleteRule)
   }
 }

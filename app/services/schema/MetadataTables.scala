@@ -49,7 +49,7 @@ object MetadataTables {
         }.toList.headOption
       })
       case PostgreSQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
-        val t = s"${table.schema.map(_ + ".").getOrElse("")}${table.name}"
+        val t = s"${table.schema.fold("")(_ + ".")}${table.name}"
         override def sql = s"select relname as name, reltuples as rows from pg_class where oid = '$t'::regclass"
         override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("name")

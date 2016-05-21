@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="card-action">
-            <button class="right btn @user.map(_.preferences.theme).getOrElse("blue-grey") waves-effect waves-light" type="submit">@Messages("authentication.sign.in")</button>
+            <button class="right btn @user.fold("blue-grey")(_.preferences.theme) waves-effect waves-light" type="submit">@Messages("authentication.sign.in")</button>
             <div>
               <p>Not a member? <a href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign up now</a></p>
             </div>

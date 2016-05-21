@@ -28,26 +28,26 @@ object PostgresNodeParser {
       }))
 
       val costs = PlanNode.Costs(
-        estimatedRows = params.get(keyPlanRows).map {
+        estimatedRows = params.get(keyPlanRows).fold(0) {
           case n: Js.Num => n.value.toInt
           case _ => 0
-        }.getOrElse(0),
+        },
         actualRows = params.get(keyActualRows).map {
           case n: Js.Num => n.value.toInt
           case _ => 0
         },
-        estimatedDuration = params.get("???").map {
+        estimatedDuration = params.get("???").fold(0) {
           case n: Js.Num => n.value.toInt
           case _ => 0
-        }.getOrElse(0),
+        },
         actualDuration = params.get(keyActualTotalTime).map {
           case n: Js.Num => n.value.toInt
           case _ => 0
         },
-        estimatedCost = params.get("???").map {
+        estimatedCost = params.get("???").fold(0) {
           case n: Js.Num => n.value.toInt
           case _ => 0
-        }.getOrElse(0),
+        },
         actualCost = params.get(keyTotalCost).map {
           case n: Js.Num => n.value.toInt
           case _ => 0
@@ -57,10 +57,10 @@ object PostgresNodeParser {
       val tags = Nil
 
       PlanNode(
-        title = params.get(keyNodeType).map {
+        title = params.get(keyNodeType).fold("?") {
           case s: Js.Str => s.value
           case x => throw new IllegalStateException(x.toString)
-        }.getOrElse("?"),
+        },
         nodeType = "?",
         costs = costs,
         properties = props,

@@ -15,11 +15,11 @@ case class CsvExportQuery(override val sql: String, format: String, out: OutputS
       val columns = (1 to cc).map(md.getColumnLabel)
       writer.writeRow(columns)
 
-      val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).map(_.toString).getOrElse(""))
+      val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).fold("")(_.toString))
       writer.writeRow(firstRowData)
 
       rows.foreach { row =>
-        val data = (1 to cc).map(i => row.asOpt[Any](i).map(_.toString).getOrElse(""))
+        val data = (1 to cc).map(i => row.asOpt[Any](i).fold("")(_.toString))
         writer.writeRow(data)
       }
     }
