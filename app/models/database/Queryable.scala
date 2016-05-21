@@ -1,7 +1,9 @@
 package models.database
 
 import java.sql.{ Connection, PreparedStatement, Types }
+import java.util.UUID
 
+import services.query.QueryExecutionService
 import utils.{ Logging, NullUtils }
 
 import scala.annotation.tailrec
@@ -50,11 +52,12 @@ trait Queryable extends Logging {
     }
   }
 
-  def executeUnknown[A](connection: Connection, query: Query[A]): Either[A, Int] = {
+  def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID]): Either[A, Int] = {
     log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       prepare(stmt, query.values)
+      resultId.foreach(id => QueryExecutionService.registerRunningStatement(id, stmt))
       val isResultset = stmt.execute()
       if (isResultset) {
         Left(query.handle(stmt.getResultSet))

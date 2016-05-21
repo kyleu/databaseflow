@@ -66,11 +66,11 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
     try { time(query.getClass) { apply(connection, query) } } finally { connection.close() }
   }
 
-  def executeUnknown[A](query: Query[A]): Either[A, Int] = if (transactionProvider.transactionExists) {
-    transactionProvider.currentTransaction.executeUnknown(query)
+  def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int] = if (transactionProvider.transactionExists) {
+    transactionProvider.currentTransaction.executeUnknown(query, resultId)
   } else {
     val connection = source.getConnection
-    try { time(query.getClass) { executeUnknown(connection, query) } } finally { connection.close() }
+    try { time(query.getClass) { executeUnknown(connection, query, resultId) } } finally { connection.close() }
   }
 
   def executeUpdate(statement: Statement) = {

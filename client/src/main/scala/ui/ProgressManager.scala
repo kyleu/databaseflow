@@ -2,9 +2,10 @@ package ui
 
 import java.util.UUID
 
+import models.CancelQuery
 import models.template.ProgressTemplate
 import org.scalajs.jquery.{ jQuery => $ }
-import utils.JQueryUtils
+import utils.{ JQueryUtils, NetworkMessage }
 
 import scala.scalajs.js.timers
 import scalatags.Text.TypedTag
@@ -28,6 +29,11 @@ object ProgressManager {
       throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
     }
     queryWorkspace.html(html)
+
+    val cancelLink = $(".cancel-query-link", queryWorkspace)
+    JQueryUtils.clickHandler(cancelLink, (jq) => {
+      NetworkMessage.sendMessage(CancelQuery(queryId, resultId))
+    })
 
     val timer = $(".timer", queryWorkspace)
     if (timer.length != 1) {

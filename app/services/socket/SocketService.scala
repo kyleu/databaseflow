@@ -8,10 +8,9 @@ import models.query.SavedQuery
 import models.schema.Schema
 import models.user.User
 import services.data.SampleDatabaseService
-import services.database.DatabaseWorkerPool
 import services.query.{ PlanExecutionService, QueryExecutionService }
 import utils.metrics.InstrumentedActor
-import utils.{ Config, ExceptionUtils, Logging }
+import utils.{ Config, Logging }
 
 object SocketService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String) = {
@@ -56,11 +55,12 @@ class SocketService(
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
     case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options, trd.resultId) }
     case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options, vrd.resultId) }
+    case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(db, cq.queryId, cq.resultId, out) }
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { QueryExecutionService.handleQuerySaveRequest(user, qsr.query, out) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QueryExecutionService.handleQueryDeleteRequest(user, qdr.id, out) }
 
-    case csd: CreateSampleDatabase => timeReceive(csd) { handleCreateSampleDatabase(csd.queryId) }
+    case csd: CreateSampleDatabase => timeReceive(csd) { SampleDatabaseService.schedule(db, csd.queryId, out) }
 
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
@@ -76,12 +76,6 @@ class SocketService(
     case "explain" => PlanExecutionService.handleExplainQuery(db, queryId, sql, resultId, out)
     case "analyze" => PlanExecutionService.handleAnalyzeQuery(db, queryId, sql, resultId, out)
     case _ => throw new IllegalArgumentException(action)
-  }
-
-  protected[this] def handleCreateSampleDatabase(queryId: UUID) = {
-    def work() = SampleDatabaseService(db, queryId, out)
-    def onError(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "CreateSampleDatabase", t)
-    DatabaseWorkerPool.submitWork(work, (x: Unit) => {}, onError)
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

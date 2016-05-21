@@ -8,14 +8,20 @@ import models.engine.DatabaseEngine
 import models.engine.rdbms._
 import models.query.SqlParser
 import models.{ BatchQueryStatus, TableResultResponse }
-import services.database.DatabaseConnection
+import services.database.{ DatabaseConnection, DatabaseWorkerPool }
 import services.schema.SchemaService
-import utils.{ DateUtils, Logging }
+import utils.{ DateUtils, ExceptionUtils, Logging }
 
 import scala.io.Source
 import scala.util.{ Failure, Success }
 
 object SampleDatabaseService extends Logging {
+  def schedule(db: DatabaseConnection, queryId: UUID, out: ActorRef) = {
+    def work() = apply(db, queryId, out)
+    def onError(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "CreateSampleDatabase", t)
+    DatabaseWorkerPool.submitWork(work, (x: Unit) => {}, onError)
+  }
+
   def apply(connection: DatabaseConnection, queryId: UUID, statusActor: ActorRef) = {
     log.info(s"Creating sample database for ${connection.name}")
     val source = getSampleFile(connection.engine)

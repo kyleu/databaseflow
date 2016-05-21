@@ -1,6 +1,8 @@
 package models.database
 
 import java.sql.{ Connection, Savepoint }
+import java.util.UUID
+
 import scala.collection.mutable.ListBuffer
 
 class Transaction(connection: Connection) extends Queryable {
@@ -8,7 +10,7 @@ class Transaction(connection: Connection) extends Queryable {
 
   override def apply[A](query: RawQuery[A]): A = apply(connection, query)
 
-  def executeUnknown[A](query: Query[A]): Either[A, Int] = executeUnknown(connection, query)
+  def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int] = executeUnknown(connection, query, resultId)
 
   def executeUpdate(statement: Statement) = executeUpdate(connection, statement)
 
