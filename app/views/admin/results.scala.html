@@ -68,7 +68,7 @@
                 <ul>
                 @orphans.map { o =>
                   <li>
-                    @o (<a href="@controllers.routes.QueryController.main(ResultCacheDatabase.conn.connectionId)#table-@o">view</a>,
+                    @o (<a href="@controllers.routes.QueryController.main(services.database.ResultCacheDatabase.conn.connectionId)#table-@o">view</a>,
                     <a href="@routes.AdminController.removeOrphan(o)">remove</a>)
                   </li>
                 }
