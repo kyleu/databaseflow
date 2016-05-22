@@ -6,8 +6,8 @@ import ui.ProgressManager
 
 object QueryErrorService {
   def handleQueryCheckResponse(qcr: QueryCheckResponse) = qcr.error match {
-    case Some(err) => utils.Logging.info(s"Query error [$err] at [${qcr.location}] for query [${qcr.queryId}].")
-    case None => utils.Logging.info(s"Query [${qcr.queryId}] checked successfully.")
+    case Some(err) => //utils.Logging.info(s"Query error [$err] at [${qcr.location}] for query [${qcr.queryId}].")
+    case None => //utils.Logging.info(s"Query [${qcr.queryId}] checked successfully.")
   }
 
   def handleQueryErrorResponse(qer: QueryErrorResponse) = {

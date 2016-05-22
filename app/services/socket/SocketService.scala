@@ -8,7 +8,7 @@ import models.query.SavedQuery
 import models.schema.Schema
 import models.user.User
 import services.data.SampleDatabaseService
-import services.query.{ PlanExecutionService, QueryExecutionService }
+import services.query.{ PlanExecutionService, QueryCheckService, QueryExecutionService }
 import utils.metrics.InstrumentedActor
 import utils.{ Config, Logging }
 
@@ -52,7 +52,7 @@ class SocketService(
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
 
-    case cq: CheckQuery => timeReceive(cq) { handleCheckQuery(cq.queryId, cq.sql) }
+    case cq: CheckQuery => timeReceive(cq) { QueryCheckService.handleCheckQuery(connectionId, cq.queryId, cq.sql, out) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
     case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options, trd.resultId) }
     case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options, vrd.resultId) }
