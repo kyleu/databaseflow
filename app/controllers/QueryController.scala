@@ -54,10 +54,7 @@ class QueryController @javax.inject.Inject() (
     val format = form.get("format").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [format] parameter."))
     val filename = form.get("filename").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [filename] parameter."))
 
-    val db = MasterDatabase.databaseFor(connectionId) match {
-      case Right(x) => x
-      case Left(x) => throw x
-    }
+    val db = MasterDatabase.db(connectionId)
 
     val ts = DateUtils.now.toString("yyyy-MM-dd")
     val finalName = s"Database Flow $filename Export $ts"

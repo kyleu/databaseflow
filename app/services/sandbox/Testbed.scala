@@ -17,10 +17,7 @@ object Testbed extends SandboxTask {
     val connections = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll())
 
     val connection = connections.find(_.name.endsWith("Production")).getOrElse(throw new IllegalStateException())
-    val db = MasterDatabase.databaseFor(connection.id) match {
-      case Right(d) => d
-      case Left(x) => throw x
-    }
+    val db = MasterDatabase.db(connection.id)
     val schema = SchemaService.getSchema(db)
 
     val tableStrings = schema match {

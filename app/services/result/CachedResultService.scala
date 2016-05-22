@@ -19,10 +19,7 @@ object CachedResultService extends Logging {
     log.info(s"Caching result [$model].")
     MasterDatabase.conn.executeUpdate(CachedResultQueries.insert(model))
 
-    val ret = MasterDatabase.databaseFor(connectionId) match {
-      case Right(db) => db.executeUnknown(CachedResultQuery(model, None))
-      case Left(t) => throw t
-    }
+    val ret = MasterDatabase.db(connectionId).executeUnknown(CachedResultQuery(model, None))
 
     ret
   }

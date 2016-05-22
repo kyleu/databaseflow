@@ -24,10 +24,7 @@ object DatabaseTest extends SandboxTask {
     val connections = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll())
 
     val connTables = connections.map { c =>
-      val db = MasterDatabase.databaseFor(c.id) match {
-        case Right(d) => d
-        case Left(x) => throw x
-      }
+      val db = MasterDatabase.db(c.id)
       val metadata = SchemaService.getSchema(db)
       c -> metadata
     }

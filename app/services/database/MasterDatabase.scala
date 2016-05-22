@@ -41,15 +41,17 @@ object MasterDatabase extends Logging {
       }
   }
 
+  def db(connectionId: UUID) = databaseFor(connectionId) match {
+    case Right(x) => x
+    case Left(x) => throw x
+  }
+
   private[this] var connOpt: Option[DatabaseConnection] = None
 
   def open() = {
     connOpt.foreach(x => throw new IllegalStateException("History database already open."))
 
-    val database = databaseFor(MasterDatabase.connectionId) match {
-      case Right(db) => db
-      case Left(x) => throw x
-    }
+    val database = db(MasterDatabase.connectionId)
 
     log.info(s"Master database started as user [$username] against url [$url].")
 
