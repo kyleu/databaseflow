@@ -18,6 +18,7 @@ case class GetTableDetail(name: String) extends RequestMessage
 case class GetProcedureDetail(name: String) extends RequestMessage
 case class GetViewDetail(name: String) extends RequestMessage
 
+case class CheckQuery(queryId: UUID, sql: String) extends RequestMessage
 case class SubmitQuery(queryId: UUID, sql: String, action: Option[String] = None, resultId: UUID) extends RequestMessage
 case class GetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) extends RequestMessage
 case class GetViewRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) extends RequestMessage
