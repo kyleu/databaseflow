@@ -62,7 +62,6 @@ object QueryManager {
 
   def check(queryId: UUID, sql: String) = {
     sqlChecks = sqlChecks + (queryId -> sql)
-    utils.Logging.info(s"Checking SQL [$sql].")
     NetworkMessage.sendMessage(CheckQuery(queryId, sql))
   }
 
