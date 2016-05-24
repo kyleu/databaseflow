@@ -1,5 +1,7 @@
 package models.template
 
+import ui.UserManager
+
 import scalatags.Text.all._
 
 object FeedbackTemplate {
@@ -12,8 +14,12 @@ object FeedbackTemplate {
               p("Thanks for your feedback. If you'd like to be notified when we reply, please include an email address.")
             ),
             div(cls := "input-field col s12")(
-              textarea(cls := "feedback-content materialize-textarea")(),
-              label("for".attr := "textarea1")("Enter your feedback")
+              input(id := "feedback-email-input", `type` := "email", cls := "feedback-email")(),
+              label("for".attr := "feedback-email-input", value := UserManager.email.getOrElse(""))("Email Address")
+            ),
+            div(cls := "input-field col s12")(
+              textarea(id := "feedback-content-input", cls := "feedback-content materialize-textarea")(),
+              label("for".attr := "feedback-content-input")("Enter your feedback")
             )
           )
         )

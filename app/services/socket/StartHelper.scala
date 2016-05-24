@@ -23,7 +23,7 @@ trait StartHelper extends Logging { this: SocketService =>
     log.info(s"Starting connection for user [${user.map(_.id)}: $currentUsername].")
 
     supervisor ! SocketStarted(user, id, self)
-    out ! UserSettings(user.map(_.id), currentUsername, userPreferences)
+    out ! UserSettings(user.map(_.id), currentUsername, user.map(_.profile.providerKey), userPreferences)
 
     val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
     def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) { out ! SavedQueryResultResponse(savedQueries, 0) }
