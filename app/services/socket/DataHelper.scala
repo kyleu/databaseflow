@@ -37,47 +37,45 @@ trait DataHelper extends Logging { this: SocketService =>
       val sql = EngineQueries.selectFrom(name, optionsNewLimit)(db.engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
-        val results = db.query(DynamicQuery(sql))
+        val result = db.query(DynamicQuery(sql))
 
-        val qrs = results.map { result =>
-          val (trimmedData, moreRowsAvailable) = options.limit match {
-            case Some(limit) if result.data.size > limit => result.data.take(limit) -> true
-            case _ => result.data -> false
+        val (trimmedData, moreRowsAvailable) = options.limit match {
+          case Some(limit) if result.data.size > limit => result.data.take(limit) -> true
+          case _ => result.data -> false
+        }
+        val columnsWithRelations = result.cols.map { col =>
+          foreignKeys.find(_.references.exists(_.source == col.name)) match {
+            case Some(fk) => col.copy(
+              relationTable = Some(fk.targetTable),
+              relationColumn = fk.references.find(_.source == col.name).map(_.target)
+            )
+            case None => col
           }
-          val columnsWithRelations = result.cols.map { col =>
-            foreignKeys.find(_.references.exists(_.source == col.name)) match {
-              case Some(fk) => col.copy(
-                relationTable = Some(fk.targetTable),
-                relationColumn = fk.references.find(_.source == col.name).map(_.target)
-              )
-              case None => col
-            }
-          }
-
-          QueryResult(
-            queryId = queryId,
-            sql = sql,
-            columns = columnsWithRelations,
-            data = trimmedData,
-            rowsAffected = trimmedData.length,
-            moreRowsAvailable = moreRowsAvailable,
-            source = Some(QueryResult.Source(
-              t = t,
-              name = name,
-              sortable = true,
-              sortedColumn = options.orderByCol,
-              sortedAscending = options.orderByAsc,
-              filterColumn = options.filterCol,
-              filterOp = options.filterOp,
-              filterValue = options.filterVal,
-              dataOffset = options.offset.getOrElse(0)
-            )),
-            occurred = startMs
-          )
         }
 
+        val qr = QueryResult(
+          queryId = queryId,
+          sql = sql,
+          columns = columnsWithRelations,
+          data = trimmedData,
+          rowsAffected = trimmedData.length,
+          moreRowsAvailable = moreRowsAvailable,
+          source = Some(QueryResult.Source(
+            t = t,
+            name = name,
+            sortable = true,
+            sortedColumn = options.orderByCol,
+            sortedAscending = options.orderByAsc,
+            filterColumn = options.filterCol,
+            filterOp = options.filterOp,
+            filterValue = options.filterVal,
+            dataOffset = options.offset.getOrElse(0)
+          )),
+          occurred = startMs
+        )
+
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        QueryResultResponse(resultId, qrs, durationMs)
+        QueryResultResponse(resultId, qr, durationMs)
       }
     }
     def onSuccess(rm: ResponseMessage) = out ! rm

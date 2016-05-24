@@ -45,23 +45,21 @@ object QueryExecutionService extends Logging {
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
-          case Left(results) => QueryResultResponse(resultId, results.map { rs =>
-            QueryResult(
-              queryId = queryId,
-              sql = sql,
-              columns = rs.cols,
-              data = rs.data,
-              rowsAffected = rs.data.length,
-              occurred = startMs
-            )
-          }, durationMs)
-          case Right(i) => QueryResultResponse(resultId, Seq(QueryResult(
+          case Left(rs) => QueryResultResponse(resultId, QueryResult(
+            queryId = queryId,
+            sql = sql,
+            columns = rs.cols,
+            data = rs.data,
+            rowsAffected = rs.data.length,
+            occurred = startMs
+          ), durationMs)
+          case Right(i) => QueryResultResponse(resultId, QueryResult(
             queryId = queryId,
             sql = sql,
             isStatement = true,
             rowsAffected = i,
             occurred = startMs
-          )), durationMs)
+          ), durationMs)
         }
       }
     }

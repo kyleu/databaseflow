@@ -34,11 +34,10 @@ trait MessageHelper { this: DatabaseFlow =>
   }
 
   private[this] def handleQueryResultResponse(qrr: QueryResultResponse) = {
-    if (qrr.results.size == 1 && qrr.results.headOption.exists(_.source.exists(_.dataOffset > 0))) {
-      val result = qrr.results.headOption.getOrElse(throw new IllegalStateException())
-      QueryAppendService.handleAppendQueryResult(qrr.id, result, qrr.durationMs)
+    if (qrr.result.source.exists(_.dataOffset > 0)) {
+      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result, qrr.durationMs)
     } else {
-      QueryResultService.handleNewQueryResults(qrr.id, qrr.results, qrr.durationMs)
+      QueryResultService.handleNewQueryResults(qrr.id, qrr.result, qrr.durationMs)
     }
   }
 }

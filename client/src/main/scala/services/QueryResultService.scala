@@ -12,24 +12,22 @@ import utils.JQueryUtils
 import scala.scalajs.js
 
 object QueryResultService {
-  def handleNewQueryResults(resultId: UUID, results: Seq[QueryResult], durationMs: Int): Unit = {
-    val qr = results.head // TODO
+  def handleNewQueryResults(resultId: UUID, result: QueryResult, durationMs: Int): Unit = {
+    val occurred = new scalajs.js.Date(result.occurred.toDouble)
 
-    val occurred = new scalajs.js.Date(qr.occurred.toDouble)
-
-    if (qr.isStatement) {
-      val content = QueryResultsTemplate.forStatementResults(qr, occurred.toISOString, durationMs)
-      ProgressManager.completeProgress(qr.queryId, resultId, content)
+    if (result.isStatement) {
+      val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs)
+      ProgressManager.completeProgress(result.queryId, resultId, content)
     } else {
-      if (qr.source.isDefined) {
-        val content = QueryResultsTemplate.forRowResults(qr, occurred.toISOString, durationMs, resultId)
-        ProgressManager.completeProgress(qr.queryId, resultId, content)
+      if (result.source.isDefined) {
+        val content = QueryResultsTemplate.forRowResults(result, occurred.toISOString, durationMs, resultId)
+        ProgressManager.completeProgress(result.queryId, resultId, content)
       } else {
-        val content = QueryResultsTemplate.forQueryResults(qr, occurred.toISOString, durationMs, resultId)
-        ProgressManager.completeProgress(qr.queryId, resultId, content)
+        val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
+        ProgressManager.completeProgress(result.queryId, resultId, content)
       }
 
-      val workspace = $(s"#workspace-${qr.queryId}")
+      val workspace = $(s"#workspace-${result.queryId}")
       val panel = $(s"#$resultId", workspace)
 
       val resultEl = $(".query-result-table", panel)
@@ -41,7 +39,7 @@ object QueryResultService {
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
       })
 
-      if (qr.source.isDefined) {
+      if (result.source.isDefined) {
         js.Dynamic.global.$(".filter-select", panel).material_select()
 
         val filterStatusEl = $(".row-status-display", panel)
@@ -65,7 +63,7 @@ object QueryResultService {
         })
       }
 
-      if (qr.moreRowsAvailable) {
+      if (result.moreRowsAvailable) {
         $(".additional-results .append-rows-link").show()
         $(".additional-results .no-rows-remaining").hide()
       } else {
