@@ -105,5 +105,7 @@ object SqlServer extends DatabaseEngine(
 ) {
   override val leftQuoteIdentifier = "["
   override val rightQuoteIdentifier = "]"
+  override val explain = Some((sql: String) => { sql })
+  override val analyze = Some((sql: String) => { sql })
 }
 // scalastyle:on

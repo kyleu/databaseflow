@@ -3,21 +3,25 @@ package services.plan
 import java.util.UUID
 
 import models.engine.DatabaseEngine
-import models.engine.rdbms.{ H2, MySQL, PostgreSQL }
+import models.engine.rdbms._
 import models.plan.{ PlanError, PlanResult }
 import models.queries.DynamicQuery
 import utils.Logging
 
 object PlanParseService {
   def parse(sql: String, queryId: UUID, plan: String, startMs: Long)(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => PostgresParseService.parse(sql, queryId, plan, startMs)
-    case MySQL => MySqlParseService.parse(sql, queryId, plan, startMs)
     case H2 => H2ParseService.parse(sql, queryId, plan, startMs)
+    case MySQL => MySqlParseService.parse(sql, queryId, plan, startMs)
+    case Oracle => OracleParseService.parse(sql, queryId, plan, startMs)
+    case PostgreSQL => PostgresParseService.parse(sql, queryId, plan, startMs)
+    case SqlServer => SqlServerParseService.parse(sql, queryId, plan, startMs)
   }
 
   def resultPlanString(result: DynamicQuery.Results)(implicit engine: DatabaseEngine) = engine match {
-    case PostgreSQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
     case MySQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
+    case Oracle => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
+    case PostgreSQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
+    case SqlServer => result.data.map(_.mkString(", ")).mkString("\n")
     case _ => throw new IllegalArgumentException("Parse result error.")
   }
 }

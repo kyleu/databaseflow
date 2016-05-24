@@ -124,5 +124,6 @@ object Oracle extends DatabaseEngine(
 ) {
   override val leftQuoteIdentifier = "\""
   override val rightQuoteIdentifier = "\""
+  override val explain = Some((sql: String) => { "explain plan for  " + sql })
 }
 // scalastyle:on
