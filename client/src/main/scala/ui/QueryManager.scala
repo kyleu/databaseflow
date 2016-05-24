@@ -31,7 +31,7 @@ object QueryManager {
 
       ProgressManager.startProgress(queryId, resultId, () => Unit, title)
 
-      val sql = sqlEditor.getValue().toString
+      val sql = sqlEditor.getValue().toString.stripSuffix(";")
       utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action), resultId))
     })
 

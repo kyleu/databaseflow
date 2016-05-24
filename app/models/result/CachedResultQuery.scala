@@ -1,5 +1,6 @@
 package models.result
 
+import java.sql.PreparedStatement
 import java.util.UUID
 
 import akka.actor.ActorRef
@@ -23,7 +24,7 @@ object CachedResultQuery {
 case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extends Query[Int] {
   override def sql: String = result.sql
 
-  override def reduce(rows: Iterator[Row]) = {
+  override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = {
     if (rows.hasNext) {
       val firstRow = rows.next()
       val md = firstRow.rs.getMetaData

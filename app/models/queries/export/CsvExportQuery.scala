@@ -1,12 +1,13 @@
 package models.queries.export
 
 import java.io.OutputStream
+import java.sql.PreparedStatement
 
 import com.github.tototoshi.csv.CSVWriter
 import models.database.{ Query, Row }
 
 case class CsvExportQuery(override val sql: String, format: String, out: OutputStream) extends Query[Unit] {
-  override def reduce(rows: Iterator[Row]) = {
+  override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = {
     val writer = CSVWriter.open(out)
     if (rows.hasNext) {
       val firstRow = rows.next()

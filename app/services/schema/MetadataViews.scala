@@ -1,6 +1,6 @@
 package services.schema
 
-import java.sql.{ Connection, DatabaseMetaData }
+import java.sql.{ Connection, DatabaseMetaData, PreparedStatement }
 
 import models.database.{ Query, Row }
 import models.engine.rdbms.MySQL
@@ -22,7 +22,7 @@ object MetadataViews {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override def sql = "show create view " + view.name
-        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.headOption.getOrElse {
+        override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.map(_.as[String]("Create View")).toList.headOption.getOrElse {
           throw new IllegalStateException("Missing [Create View] column.")
         }
       }))
