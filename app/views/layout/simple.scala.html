@@ -18,6 +18,9 @@
 
   <main>
     <div class="static-container container">
+      @flash.get("error").map { err =>
+        <div class="flash-error z-depth-1">@err</div>
+      }
       @content
     </div>
   </main>

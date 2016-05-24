@@ -23,21 +23,21 @@ class RegistrationController @javax.inject.Inject() (
     authInfoRepository: AuthInfoRepository,
     hasher: PasswordHasher
 ) extends BaseController {
-  def registrationForm = withSession("form") { implicit request =>
-    Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm)))
+  def registrationForm = withoutSession("form") { implicit request =>
+    Future.successful(Ok(views.html.auth.register(UserForms.registrationForm)))
   }
 
-  def register = withSession("register") { implicit request =>
+  def register = withoutSession("register") { implicit request =>
     UserForms.registrationForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.auth.register(request.identity, form))),
+      form => Future.successful(BadRequest(views.html.auth.register(form))),
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userSearchService.retrieve(loginInfo).flatMap {
           case _ if data.password != data.passwordConfirm => Future.successful(
-            Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data), Some(Messages("registration.passwords.do.not.match"))))
+            Redirect(controllers.auth.routes.RegistrationController.register()).flashing("error" -> Messages("registration.passwords.do.not.match"))
           )
           case Some(user) => Future.successful(
-            Ok(views.html.auth.register(request.identity, UserForms.registrationForm.fill(data), Some(Messages("registration.email.taken"))))
+            Redirect(controllers.auth.routes.RegistrationController.register()).flashing("error" -> Messages("registration.email.taken"))
           )
           case None =>
             val authInfo = hasher.hash(data.password)
