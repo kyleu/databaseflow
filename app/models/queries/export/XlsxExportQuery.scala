@@ -1,7 +1,7 @@
 package models.queries.export
 
 import java.io.OutputStream
-import java.sql.{ Date, PreparedStatement, Time, Timestamp }
+import java.sql.{ Date, Time, Timestamp }
 import java.util.GregorianCalendar
 
 import models.database.{ Query, Row }
@@ -11,7 +11,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import utils.NullUtils
 
 case class XlsxExportQuery(title: String, override val sql: String, format: String, out: OutputStream) extends Query[Unit] {
-  override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = {
+  override def reduce(rows: Iterator[Row]) = {
     val wb = new SXSSFWorkbook(100)
 
     val resultSheet = wb.createSheet(WorkbookUtil.createSafeSheetName(title))

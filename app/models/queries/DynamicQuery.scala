@@ -1,7 +1,5 @@
 package models.queries
 
-import java.sql.PreparedStatement
-
 import models.database.{ Query, Row }
 import models.query.QueryResult
 
@@ -16,15 +14,8 @@ object DynamicQuery {
   }
 }
 
-case class DynamicQuery(override val sql: String) extends Query[Seq[DynamicQuery.Results]] {
-  override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = {
-    val firstResults = getResults(rows: Iterator[Row])
-    var ret = Seq(firstResults)
-    if (stmt.getMoreResults()) {
-      ret = ret :+ getResults(rows)
-    }
-    ret
-  }
+case class DynamicQuery(override val sql: String) extends Query[DynamicQuery.Results] {
+  override def reduce(rows: Iterator[Row]) = getResults(rows)
 
   private[this] def rowData(cc: Int, firstRow: Row) = (1 to cc).map(i => firstRow.asOpt[Any](i).map(DynamicQuery.transform))
 

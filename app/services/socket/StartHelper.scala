@@ -20,7 +20,7 @@ trait StartHelper extends Logging { this: SocketService =>
   }
 
   protected[this] def onStart() = {
-    log.info(s"Starting connection for user [${user.map(_.id)}: $currentUsername].")
+    log.info(s"Starting connection for user [${user.map(_.id).getOrElse("")}: ${currentUsername.getOrElse("")}].")
 
     supervisor ! SocketStarted(user, id, self)
     out ! UserSettings(user.map(_.id), currentUsername, user.map(_.profile.providerKey), userPreferences)

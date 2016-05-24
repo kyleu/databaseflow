@@ -1,6 +1,5 @@
 package models.result
 
-import java.sql.PreparedStatement
 import java.util.UUID
 
 import akka.actor.ActorRef
@@ -24,7 +23,7 @@ object CachedResultQuery {
 case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extends Query[Int] {
   override def sql: String = result.sql
 
-  override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = {
+  override def reduce(rows: Iterator[Row]) = {
     if (rows.hasNext) {
       val firstRow = rows.next()
       val md = firstRow.rs.getMetaData
@@ -43,16 +42,14 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
       CachedResultQuery.insertRow(result.tableName, columnNames, rowCount, firstRowData)
 
       out.foreach { o =>
-        val msg = QueryResult(
+        o ! QueryResultResponse(result.resultId, QueryResult(
           queryId = result.queryId,
           sql = result.sql,
           columns = columns,
           data = Seq(firstRowData.map(_.map(_.toString))),
           moreRowsAvailable = rows.hasNext,
           source = Some(QueryResult.Source("cache", result.tableName))
-        )
-
-        o ! QueryResultResponse(result.resultId, Seq(msg), 0)
+        ), 0)
       }
 
       rows.foreach { row =>

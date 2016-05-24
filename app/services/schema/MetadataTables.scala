@@ -1,6 +1,6 @@
 package services.schema
 
-import java.sql.{ Connection, DatabaseMetaData, PreparedStatement, Timestamp }
+import java.sql.{ Connection, DatabaseMetaData, Timestamp }
 
 import models.database.{ Query, Row }
 import models.engine.rdbms.{ MySQL, PostgreSQL }
@@ -24,7 +24,7 @@ object MetadataTables {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override def sql = "show create table " + db.engine.leftQuoteIdentifier + table.name + db.engine.rightQuoteIdentifier
-        override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.headOption.getOrElse {
+        override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.headOption.getOrElse {
           throw new IllegalStateException("Missing column [Create Table].")
         }
       }))
@@ -37,7 +37,7 @@ object MetadataTables {
           select table_name, engine, table_rows, avg_row_length, data_length, create_time
           from information_schema.tables where table_name = '${table.name}'
         """
-        override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.map { row =>
+        override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("table_name")
           val engine = row.as[String]("engine")
           val rowEstimate = JdbcHelper.longVal(row.as[Any]("table_rows"))
@@ -51,7 +51,7 @@ object MetadataTables {
       case PostgreSQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
         val t = s"${table.schema.fold("")(_ + ".")}${table.name}"
         override def sql = s"select relname as name, reltuples as rows from pg_class where oid = '$t'::regclass"
-        override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.map { row =>
+        override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("name")
           val rowEstimate = JdbcHelper.longVal(row.as[Any]("rows"))
 

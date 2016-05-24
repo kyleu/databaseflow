@@ -12,7 +12,7 @@ object DataFilterTemplate {
     div()
   } else {
     val source = r.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]"))
-    val hiddenClass = source.sortedColumn match {
+    val hiddenClass = source.filterColumn match {
       case Some(_) => ""
       case None => "initially-hidden"
     }

@@ -32,7 +32,7 @@ trait Queryable extends Logging {
       prepare(stmt, query.values)
       val results = stmt.executeQuery()
       try {
-        query.handle(stmt, results)
+        query.handle(results)
       } finally {
         results.close()
       }
@@ -61,7 +61,7 @@ trait Queryable extends Logging {
       val isResultset = stmt.execute()
       if (isResultset) {
         val res = stmt.getResultSet
-        Left(query.handle(stmt, res))
+        Left(query.handle(res))
       } else {
         Right(stmt.getUpdateCount)
       }

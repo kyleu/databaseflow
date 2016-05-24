@@ -1,7 +1,5 @@
 package models.queries
 
-import java.sql.PreparedStatement
-
 import models.database.{ FlatSingleRowQuery, Query, Row, Statement }
 import utils.Config
 
@@ -59,7 +57,7 @@ trait BaseQueries[T] {
       ${whereClause.fold("")(w => "where " + w)}
       order by $orderBy
     """.trim
-    override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.map(fromRow).toList
+    override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
   }
 
   protected def getBySingleId(id: Any) = GetById(Seq(id))
@@ -79,13 +77,13 @@ trait BaseQueries[T] {
   }
 
   protected case class Count(override val sql: String, override val values: Seq[Any]) extends Query[Int] {
-    override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
+    override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
   }
 
   protected case class SearchCount(q: String, groupBy: Option[String] = None) extends Query[Int] {
     val searchWhere = if (q.isEmpty) { "" } else { "where " + searchColumns.map(c => s"""lower("$c") like lower(?)""").mkString(" or ") }
     override val sql = s"""select count(*) as c from "$tableName" $searchWhere ${groupBy.fold("")(x => s" group by $x")}"""
-    override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
+    override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
   }
   protected case class Search(q: String, orderBy: String, page: Option[Int], groupBy: Option[String] = None) extends Query[List[T]] {
     private[this] val whereClause = if (q.isEmpty) { None } else { Some(searchColumns.map(c => s"lower($c) like lower(?)").mkString(" or ")) }
@@ -93,7 +91,7 @@ trait BaseQueries[T] {
     private[this] val offset = page.map(x => x * Config.pageSize)
     override val sql = getSql(whereClause, groupBy, Some(orderBy), limit, offset)
     override val values = if (q.isEmpty) { Seq.empty } else { searchColumns.map(c => s"%$q%") }
-    override def reduce(stmt: PreparedStatement, rows: Iterator[Row]) = rows.map(fromRow).toList
+    override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
   }
 
   private def idWhereClause = idColumns.map(c => s""""$c" = ?""").mkString(" and ")
