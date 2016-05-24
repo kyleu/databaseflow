@@ -5,7 +5,16 @@ import org.joda.time.format.PeriodFormatterBuilder
 
 object OracleParseHelper {
   case class PlanEntry(
-    id: Int, operation: String, depth: Int, name: Option[String], rows: String, bytes: String, cost: Int, cpu: Int, time: String, children: Seq[PlanEntry] = Nil
+    id: Int,
+    operation: String,
+    depth: Int,
+    name: Option[String],
+    rows: String,
+    bytes: String,
+    cost: Int,
+    cpu: Int,
+    time: String,
+    children: Seq[PlanEntry] = Nil
   )
 
   def nodeFor(s: Seq[PlanEntry]): PlanNode = {
@@ -37,7 +46,7 @@ object OracleParseHelper {
     )
   }
 
-  private[this] def stringToInt(s: String) = s match {
+  def stringToInt(s: String) = s match {
     case _ if s.endsWith("K") => s.dropRight(1).toInt * 1000
     case _ if s.endsWith("M") => s.dropRight(1).toInt * 1000000
     case _ => s.toInt

@@ -14,14 +14,12 @@ object PlanParseService {
     case MySQL => MySqlParseService.parse(sql, queryId, plan, startMs)
     case Oracle => OracleParseService.parse(sql, queryId, plan, startMs)
     case PostgreSQL => PostgresParseService.parse(sql, queryId, plan, startMs)
-    case SqlServer => SqlServerParseService.parse(sql, queryId, plan, startMs)
   }
 
   def resultPlanString(result: DynamicQuery.Results)(implicit engine: DatabaseEngine) = engine match {
     case MySQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
     case Oracle => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
     case PostgreSQL => result.data.map(_.headOption.flatten.getOrElse("")).mkString("\n")
-    case SqlServer => result.data.map(_.mkString(", ")).mkString("\n")
     case _ => throw new IllegalArgumentException("Parse result error.")
   }
 }

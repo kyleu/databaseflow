@@ -19,7 +19,7 @@ object OracleParseService extends PlanParseService("oracle") {
           None
         } else if (split.length == 7) {
           val (cost, cpu) = {
-            val ret = split(5).stripSuffix(")").split("\\(").map(_.trim.toInt)
+            val ret = split(5).stripSuffix(")").split("\\(").map(x => OracleParseHelper.stringToInt(x.trim))
             ret(0) -> ret(1)
           }
 
@@ -27,11 +27,7 @@ object OracleParseService extends PlanParseService("oracle") {
             id = split(0).trim.toInt,
             operation = split(1).trim,
             depth = split(1).length - split(1).replaceAll("^\\s+", "").length,
-            name = if (split(2).trim.nonEmpty) {
-            Some(split(2).trim)
-          } else {
-            None
-          },
+            name = if (split(2).trim.nonEmpty) { Some(split(2).trim) } else { None },
             rows = split(3).trim,
             bytes = split(4).trim,
             cost = cost,

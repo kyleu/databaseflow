@@ -3,11 +3,11 @@ package services.query
 import java.util.UUID
 
 import akka.actor.ActorRef
-import models.engine.rdbms.{ Oracle, SqlServer }
+import models.engine.rdbms.Oracle
 import models.queries.DynamicQuery
 import models.{ PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError }
 import services.database.{ DatabaseConnection, DatabaseWorkerPool }
-import services.plan.{ PlanParseService, SqlServerParseService }
+import services.plan.PlanParseService
 import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
 
 object PlanExecutionService extends Logging {
@@ -17,24 +17,14 @@ object PlanExecutionService extends Logging {
       db.transaction { tx =>
         implicit val engine = db.engine
 
-        db.engine match {
-          case SqlServer => tx.executeUpdate(if (isAnalyze) { SqlServerParseService.enableAnalyze } else { SqlServerParseService.enableExplain })
-          case _ => // no op
-        }
-
         val initialResult = tx.executeUnknown(DynamicQuery(explainSql)) match {
           case Left(res) => res
-          case Right(i) => Seq(DynamicQuery.Results(Nil, Nil))
+          case Right(i) => DynamicQuery.Results(Nil, Nil)
         }
 
         val result = db.engine match {
-          case Oracle => tx.query(DynamicQuery("select plan_table_output from table(dbms_xplan.display())")).last
-          case _ => initialResult.last
-        }
-
-        db.engine match {
-          case SqlServer => tx.executeUpdate(if (isAnalyze) { SqlServerParseService.disableAnalyze } else { SqlServerParseService.disableExplain })
-          case _ => // no op
+          case Oracle => tx.query(DynamicQuery("select plan_table_output from table(dbms_xplan.display())"))
+          case _ => initialResult
         }
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
