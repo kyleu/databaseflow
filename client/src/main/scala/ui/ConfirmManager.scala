@@ -34,5 +34,5 @@ object ConfirmManager {
     modal.openModal()
   }
 
-  def close() = modal.closeModal()
+  def close(): Unit = modal.closeModal()
 }

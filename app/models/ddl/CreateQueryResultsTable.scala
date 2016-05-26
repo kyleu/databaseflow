@@ -16,6 +16,6 @@ case object CreateQueryResultsTable extends CreateTableStatement("query_results"
       "created" timestamp not null
     );
 
-    create unique index "${tableName}_owner_idx" on "$tableName" ("owner");
+    create index "${tableName}_owner_idx" on "$tableName" ("owner");
   """
 }

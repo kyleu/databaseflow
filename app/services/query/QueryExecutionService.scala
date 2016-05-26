@@ -5,10 +5,11 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models._
-import models.queries.DynamicQuery
 import models.query.{ QueryResult, SavedQuery }
+import models.result.CachedResultQuery
 import models.user.User
 import services.database.{ DatabaseConnection, DatabaseWorkerPool }
+import services.result.CachedResultService
 import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
 
 import scala.util.control.NonFatal
@@ -36,23 +37,17 @@ object QueryExecutionService extends Logging {
     }
   }
 
-  def handleRunQuery(db: DatabaseConnection, queryId: UUID, sql: String, resultId: UUID, out: ActorRef) = {
+  def handleRunQuery(db: DatabaseConnection, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
     def work() = {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
-        val result = db.executeUnknown(DynamicQuery(sql), Some(resultId))
+        val model = CachedResultService.insertCacheResult(resultId, queryId, connectionId, owner, sql)
+        val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
-          case Left(rs) => QueryResultResponse(resultId, QueryResult(
-            queryId = queryId,
-            sql = sql,
-            columns = rs.cols,
-            data = rs.data,
-            rowsAffected = rs.data.length,
-            occurred = startMs
-          ), durationMs)
+          case Left(rowCount) => rowCount
           case Right(i) => QueryResultResponse(resultId, QueryResult(
             queryId = queryId,
             sql = sql,

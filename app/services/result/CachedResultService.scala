@@ -12,16 +12,11 @@ import utils.Logging
 import scala.util.control.NonFatal
 
 object CachedResultService extends Logging {
-  def cache(resultId: UUID, queryId: UUID, connectionId: UUID, owner: Option[UUID], sql: String) = {
-    val status = "starting"
-
-    val model = CachedResult(resultId, queryId, connectionId, owner, status, sql)
+  def insertCacheResult(resultId: UUID, queryId: UUID, connectionId: UUID, owner: Option[UUID], sql: String) = {
+    val model = CachedResult(resultId, queryId, connectionId, owner, "starting", sql)
     log.info(s"Caching result [$model].")
     MasterDatabase.conn.executeUpdate(CachedResultQueries.insert(model))
-
-    val ret = MasterDatabase.db(connectionId).executeUnknown(CachedResultQuery(model, None))
-
-    ret
+    model
   }
 
   def getAll = MasterDatabase.conn.query(CachedResultQueries.getAll(orderBy = "\"created\" desc"))

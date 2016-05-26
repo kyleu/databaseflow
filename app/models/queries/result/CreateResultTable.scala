@@ -52,7 +52,11 @@ case class CreateResultTable(resultId: UUID, columns: Seq[QueryResult.Col])(impl
 
   override def sql = {
     val quotedName = engine.leftQuoteIdentifier + tableName + engine.rightQuoteIdentifier
-    val rowNumCol = s"${engine.leftQuoteIdentifier}row_num${engine.rightQuoteIdentifier} integer not null"
+    val rowNumCol = if (columns.exists(_.name == "row_num")) {
+      ""
+    } else {
+      s"${engine.leftQuoteIdentifier}row_num${engine.rightQuoteIdentifier} integer not null,"
+    }
 
     val columnStatements = columns.map(x => CreateResultTable.columnFor(x))
 
@@ -60,7 +64,7 @@ case class CreateResultTable(resultId: UUID, columns: Seq[QueryResult.Col])(impl
     val pkConstraint = s"""constraint $pkName primary key (\"row_num\")"""
 
     s"""create table $quotedName (
-      $rowNumCol,
+      $rowNumCol
       ${columnStatements.mkString(",\n      ")},
       $pkConstraint
     )"""

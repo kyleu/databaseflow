@@ -73,7 +73,7 @@ class SocketService(
   }
 
   protected[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String, resultId: UUID) = action match {
-    case "run" => QueryExecutionService.handleRunQuery(db, queryId, sql, resultId, out)
+    case "run" => QueryExecutionService.handleRunQuery(db, queryId, sql, resultId, connectionId, user.map(_.id), out)
     case "explain" => PlanExecutionService.handleExplainQuery(db, queryId, sql, resultId, out)
     case "analyze" => PlanExecutionService.handleAnalyzeQuery(db, queryId, sql, resultId, out)
     case _ => throw new IllegalArgumentException(action)
