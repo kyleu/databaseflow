@@ -1,11 +1,12 @@
-package ui
+package ui.metadata
 
 import java.util.UUID
 
-import models.{ BatchQueryStatus, CreateSampleDatabase }
 import models.template.{ Icons, StaticPanelTemplate }
+import models.{ BatchQueryStatus, CreateSampleDatabase }
 import org.scalajs.jquery.{ jQuery => $ }
 import services.NotificationService
+import ui.{ ConfirmManager, QueryManager, TabManager }
 import utils.NetworkMessage
 
 import scalatags.Text.all._

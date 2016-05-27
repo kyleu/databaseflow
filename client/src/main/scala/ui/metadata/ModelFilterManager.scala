@@ -1,4 +1,4 @@
-package ui
+package ui.metadata
 
 import org.scalajs.dom
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
