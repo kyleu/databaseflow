@@ -4,7 +4,7 @@ import akka.actor.ActorRef
 import models.database.{ Query, Row }
 import models.queries.QueryTranslations
 import models.query.QueryResult
-import models.schema.ColumnType.LongType
+import models.schema.ColumnType.{ ArrayType, LongType, UnknownType }
 import models.{ QueryResultRowCount, ResponseMessage }
 import services.result.CachedResultService
 import utils.DateUtils
@@ -14,7 +14,9 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
 
   override def sql: String = result.sql
 
-  def dataFor(row: Row, cc: Int) = (1 to cc).map(i => row.asOpt[Any](i) match {
+  def dataFor(row: Row, columns: Seq[(QueryResult.Col, Int)]) = columns.map(c => row.asOpt[Any](c._2 + 1) match {
+    case x if x.isDefined && c._1.t == ArrayType => Some(x.get.toString)
+    case x if x.isDefined && c._1.t == UnknownType => Some(x.get.toString)
     case x => x
   })
 
@@ -28,6 +30,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
         val columnType = QueryTranslations.forType(md.getColumnType(i))
         QueryResult.Col(md.getColumnLabel(i), columnType, md.getPrecision(i), md.getScale(i))
       }
+      val columnsWithIndex = columns.zipWithIndex
 
       val containsRowNum = columns.exists(_.name == "#")
 
@@ -40,7 +43,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
       val columnNames = updatedColumns.map(_.name)
 
       var rowCount = 1
-      val firstRowData = dataFor(firstRow, cc)
+      val firstRowData = dataFor(firstRow, columnsWithIndex)
 
       if (rows.hasNext) {
         CachedResultService.insertCacheResult(result.copy(columns = columns.size))
@@ -58,7 +61,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
 
         rows.foreach { row =>
           rowCount += 1
-          val data = dataFor(row, cc)
+          val data = dataFor(row, columnsWithIndex)
           val transformedData = if (containsRowNum) {
             data
           } else {

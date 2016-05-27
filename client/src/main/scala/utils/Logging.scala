@@ -27,11 +27,10 @@ object Logging {
   }
 
   def installErrorHandler() = {
-    dom.window.onerror = (e: Event, source: String, lineno: Int, colno: Int) => {
-      info(s"Script error [$e] encountered in [$source:$lineno:$colno]")
-      error(e.toString)
-      if (showDebug) {
-        throw new IllegalStateException(e.toString)
+    if (showDebug) {
+      dom.window.onerror = (e: Event, source: String, lineno: Int, colno: Int) => {
+        info(s"Script error [$e] encountered in [$source:$lineno:$colno]")
+        error(e.toString)
       }
     }
   }
