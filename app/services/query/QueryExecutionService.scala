@@ -6,7 +6,7 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models._
 import models.query.{ QueryResult, SavedQuery }
-import models.result.CachedResultQuery
+import models.result.{ CachedResult, CachedResultQuery }
 import models.user.User
 import services.database.{ DatabaseConnection, DatabaseWorkerPool }
 import services.result.CachedResultService
@@ -42,7 +42,7 @@ object QueryExecutionService extends Logging {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
-        val model = CachedResultService.insertCacheResult(resultId, queryId, connectionId, owner, sql)
+        val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
         val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt

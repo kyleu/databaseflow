@@ -1,19 +1,20 @@
 package ui
 
 import org.scalajs.jquery.JQuery
+import ui.metadata.{ ProcedureUpdates, TableUpdates, ViewUpdates }
 
 object SearchFilterManager extends SearchFilterFields {
   def filterSchema(searches: Seq[String]) = {
     MetadataManager.savedQueries.foreach { savedQueries =>
       filterObjects("saved-query", savedQueries, searches, SearchManager.savedQueriesToggle, savedQueryFields)
     }
-    MetadataUpdates.tables.foreach { tables =>
+    TableUpdates.tables.foreach { tables =>
       filterObjects("table", tables, searches, SearchManager.tablesToggle, tableFields)
     }
-    MetadataUpdates.views.foreach { views =>
+    ViewUpdates.views.foreach { views =>
       filterObjects("view", views, searches, SearchManager.viewsToggle, viewFields)
     }
-    MetadataUpdates.procedures.foreach { procedures =>
+    ProcedureUpdates.procedures.foreach { procedures =>
       filterObjects("procedure", procedures, searches, SearchManager.proceduresToggle, procedureFields)
     }
   }

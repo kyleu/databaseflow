@@ -19,6 +19,7 @@ object JdbcUtils extends Logging {
   } catch {
     case NonFatal(t) =>
       val durationMs = (DateUtils.nowMillis - startMs).toInt
+      log.warn(s"Encountered query error after [${durationMs}ms] running sql [$sql].", t)
       t match {
         case sqlEx: PSQLException =>
           val e = sqlEx.getServerErrorMessage
@@ -28,7 +29,6 @@ object JdbcUtils extends Logging {
         case sqlEx: MySQLStatementCancelledException =>
           QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case x =>
-          log.warn(s"Unhandled error running sql [$sql].", x)
           QueryErrorResponse(resultId, QueryError(queryId, sql, x.getClass.getSimpleName, x.getMessage, occurred = startMs), durationMs)
       }
   }

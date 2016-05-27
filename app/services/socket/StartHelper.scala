@@ -50,6 +50,6 @@ trait StartHelper extends Logging { this: SocketService =>
       case Failure(x) => ExceptionUtils.actorErrorFunction(out, "SchemaLoadError", x)
     }
     def onSchemaFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SchemaLoadException", t) }
-    DatabaseWorkerPool.submitWork(() => SchemaService.getSchema(db), onSchemaSuccess, onSchemaFailure)
+    DatabaseWorkerPool.submitWork(() => SchemaService.getSchema(db, forceRefresh = true), onSchemaSuccess, onSchemaFailure)
   }
 }

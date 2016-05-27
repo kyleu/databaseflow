@@ -6,6 +6,7 @@ import models.query.SavedQuery
 import models.schema.{ Procedure, Table, View }
 import models.{ BatchQueryStatus, SavedQueryResultResponse, SchemaResultResponse }
 import org.scalajs.jquery.{ jQuery => $ }
+import ui.metadata.{ ProcedureUpdates, SampleDatabaseManager, TableUpdates, ViewUpdates }
 import ui.{ ProcedureManager, QuerySaveFormManager, TableManager, ViewManager, _ }
 
 object ModelResultsService {
@@ -31,8 +32,11 @@ object ModelResultsService {
       MetadataManager.pendingRefresh = false
       NotificationService.info("Schema Refresh", "Completed successfully.")
     }
-    if (MetadataManager.schema.isEmpty) {
-      MetadataManager.updateSchema(srr.schema)
+
+    val newSchema = MetadataManager.schema.isEmpty
+    MetadataManager.updateSchema(srr.schema, fullSchema = true)
+
+    if (newSchema) {
       $("#loading-panel").hide()
       if (!receivedSchemaResultResponse) {
         receivedSchemaResultResponse = true
@@ -40,21 +44,19 @@ object ModelResultsService {
           InitService.performInitialAction()
         }
       }
-    } else {
-      MetadataManager.updateSchema(srr.schema)
     }
   }
 
   def handleTableResultResponse(t: Seq[Table]) = {
-    MetadataUpdates.updateTables(t)
+    TableUpdates.updateTables(t, fullSchema = false)
     t.foreach(TableManager.addTable)
   }
   def handleViewResultResponse(v: Seq[View]) = {
-    MetadataUpdates.updateViews(v)
+    ViewUpdates.updateViews(v, fullSchema = false)
     v.foreach(ViewManager.addView)
   }
   def handleProcedureResultResponse(p: Seq[Procedure]) = {
-    MetadataUpdates.updateProcedures(p)
+    ProcedureUpdates.updateProcedures(p, fullSchema = false)
     p.foreach(ProcedureManager.addProcedure)
   }
 

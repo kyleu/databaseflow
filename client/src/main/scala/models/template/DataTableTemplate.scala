@@ -8,7 +8,7 @@ import models.schema.ColumnType._
 import scalatags.Text.all._
 
 object DataTableTemplate {
-  private[this] def tableHeader(res: QueryResult, addRowNum: Boolean) = {
+  private[this] def tableHeader(res: QueryResult, containsRowNum: Boolean) = {
     def str(name: String) = if (res.source.exists(_.sortable)) {
       if (res.source.flatMap(_.sortedColumn).contains(name)) {
         val asc = !res.source.flatMap(_.sortedAscending).contains(false)
@@ -26,10 +26,10 @@ object DataTableTemplate {
       span(cls := "unsorted-title")(name)
     }
 
-    if (addRowNum) {
-      thead(tr(th("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
-    } else {
+    if (containsRowNum) {
       thead(res.columns.map(c => th(data("t") := c.t.toString)(str(c.name))))
+    } else {
+      thead(tr(th("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
     }
   }
 
@@ -44,6 +44,7 @@ object DataTableTemplate {
         case TimestampType => span(x)
         case BooleanType => span(x)
         case BigDecimalType => span(x)
+        case LongType => span(x)
         case ByteArrayType => if (x.length > 200) {
           span(title := x.trim)(x.substring(0, 200) + "...")
         } else {
@@ -72,15 +73,15 @@ object DataTableTemplate {
     }
   }
 
-  def tableRows(res: QueryResult, resultId: UUID, addRowNum: Boolean) = {
+  def tableRows(res: QueryResult, resultId: UUID, containsRowNum: Boolean) = {
     val offset = res.source.map(_.dataOffset + 1).getOrElse(1)
-    if (addRowNum) {
-      res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
-        td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+    if (containsRowNum) {
+      res.data.map(r => tr(cls := s"result-$resultId")(
+        res.columns.zip(r).map(x => cellValue(x._1, x._2))
       ))
     } else {
       res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
-        res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+        td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
       ))
     }
   }
@@ -88,11 +89,11 @@ object DataTableTemplate {
   def forResults(res: QueryResult, resultId: UUID) = if (res.columns.isEmpty || res.data.isEmpty) {
     em("No rows returned")
   } else {
-    val addRowNum = !res.columns.headOption.exists(_.name == "row_num")
+    val containsRowNum = res.columns.headOption.exists(_.name == "#")
     div(cls := "query-result-table")(
       table(cls := "bordered highlight responsive-table")(
-        tableHeader(res, addRowNum),
-        tbody(tableRows(res, resultId, addRowNum))
+        tableHeader(res, containsRowNum),
+        tbody(tableRows(res, resultId, containsRowNum))
       )
     )
   }

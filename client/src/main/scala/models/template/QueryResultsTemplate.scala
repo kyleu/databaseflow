@@ -90,7 +90,7 @@ object QueryResultsTemplate {
   }
 
   def forAppend(qr: QueryResult, resultId: UUID) = {
-    val addRowNum = !qr.columns.headOption.exists(_.name == "row_num")
+    val addRowNum = !qr.columns.headOption.exists(_.name == "#")
     val rows = DataTableTemplate.tableRows(qr, resultId, addRowNum)
     rows.map(_.render).mkString("\n")
   }

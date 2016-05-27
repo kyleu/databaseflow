@@ -2,6 +2,7 @@ package ui
 
 import models.template.Icons
 import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import ui.metadata.{ ProcedureUpdates, TableUpdates, ViewUpdates }
 
 object SearchManager {
   private[this] lazy val searchContainer = $(".search-wrapper")
@@ -72,8 +73,8 @@ object SearchManager {
   private[this] def clearSearch() = {
     $(".sidenav-link").removeClass("search-ignored")
     clearSearchEntries(MetadataManager.savedQueries, savedQueriesToggle)
-    clearSearchEntries(MetadataUpdates.tables, tablesToggle)
-    clearSearchEntries(MetadataUpdates.views, viewsToggle)
-    clearSearchEntries(MetadataUpdates.procedures, proceduresToggle)
+    clearSearchEntries(TableUpdates.tables, tablesToggle)
+    clearSearchEntries(ViewUpdates.views, viewsToggle)
+    clearSearchEntries(ProcedureUpdates.procedures, proceduresToggle)
   }
 }

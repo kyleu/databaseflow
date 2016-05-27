@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.queries.result.CreateResultTable
 import models.query.QueryResult
-import models.result.CachedResultQuery
+import models.result.{ CachedResult, CachedResultQuery, CachedResultQueryHelper }
 import models.schema.ColumnType._
 import services.connection.ConnectionSettingsService
 import services.database.{ MasterDatabase, ResultCacheDatabase }
@@ -26,7 +26,8 @@ object CacheResultsTest extends SandboxTask {
     val owner = None
     val sql = "select * from city"
 
-    val model = CachedResultService.insertCacheResult(resultId, queryId, connectionId, owner, sql)
+    val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
+    CachedResultService.insertCacheResult(model)
 
     MasterDatabase.db(connectionId).executeUnknown(CachedResultQuery(model, None))
 
@@ -62,7 +63,7 @@ object CacheResultsTest extends SandboxTask {
       //throw new IllegalStateException(statement)
     }
 
-    CachedResultQuery.createResultTable(UUID.randomUUID, columns)
+    CachedResultQueryHelper.createResultTable(UUID.randomUUID, columns)
 
     Future.successful("Ok!")
   }

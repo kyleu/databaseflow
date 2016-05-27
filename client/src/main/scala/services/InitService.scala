@@ -8,6 +8,7 @@ import models.schema.FilterOp
 import org.scalajs.dom
 import org.scalajs.jquery.{ jQuery => $ }
 import ui._
+import ui.metadata.ModelListManager
 import utils.{ JQueryUtils, Logging, NetworkMessage }
 
 import scala.scalajs.js

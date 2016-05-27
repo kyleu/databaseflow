@@ -8,7 +8,7 @@ import akka.stream.Materializer
 import com.mohiva.play.silhouette.api.HandlerResult
 import models.queries.export.{ CsvExportQuery, XlsxExportQuery }
 import models.{ RequestMessage, ResponseMessage }
-import play.api.libs.concurrent.Execution.Implicits._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.ConnectionSettingsService

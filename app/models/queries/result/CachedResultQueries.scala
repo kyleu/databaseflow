@@ -18,12 +18,21 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
   val getAll = GetAll
+  def findBy(queryId: UUID, owner: Option[UUID]) = owner match {
+    case Some(o) => GetAll(whereClause = Some(""""query_id" = ? and "owner" = ?"""), values = Seq(queryId, o))
+    case None => GetAll(whereClause = Some(""""query_id" = ? and "owner" is null"""), values = Seq(queryId))
+  }
   val search = Search
   val removeById = RemoveById
 
   case class UpdateLastAccessed(id: UUID, lastAccessed: Option[Long]) extends Statement {
     override val sql = updateSql(Seq("last_accessed"))
-    override val values = Seq[Any](lastAccessed)
+    override val values = Seq[Any](lastAccessed, id)
+  }
+
+  case class Complete(id: UUID, rowCount: Int, duration: Int) extends Statement {
+    override val sql = updateSql(Seq("rows", "status", "duration"))
+    override val values = Seq[Any](rowCount, "complete", duration, id)
   }
 
   override protected def fromRow(row: Row) = {

@@ -22,7 +22,7 @@ object QueryTranslations extends Logging {
     case TIMESTAMP | TIMESTAMP_WITH_TIMEZONE => TimestampType
     case REF | REF_CURSOR => RefType
     case SQLXML => XmlType
-    case OTHER => UuidType
+    case OTHER => UnknownType
 
     case NULL => NullType
     case JAVA_OBJECT => ObjectType

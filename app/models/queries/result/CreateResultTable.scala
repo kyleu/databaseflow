@@ -11,6 +11,7 @@ import models.schema.ColumnType._
 object CreateResultTable {
   def columnFor(col: QueryResult.Col)(implicit engine: DatabaseEngine) = {
     val colDeclaration = col.t match {
+      case StringType if col.precision > 100000 => "text"
       case StringType => engine match {
         case PostgreSQL => s"character varying(${col.precision})"
         case _ => s"varchar(${col.precision})"
@@ -35,11 +36,11 @@ object CreateResultTable {
       case UuidType => "uuid"
 
       case NullType => throw new IllegalArgumentException("Cannot support null column types.")
-      case ObjectType => throw new IllegalArgumentException("Cannot support object column types.")
-      case StructType => throw new IllegalArgumentException("Cannot support struct column types.")
-      case ArrayType => "array"
+      case ObjectType => "text"
+      case StructType => "text"
+      case ArrayType => "text"
 
-      case UnknownType => throw new IllegalArgumentException("Cannot support unknown column types.")
+      case UnknownType => "text"
 
       case x => throw new IllegalStateException(s"Unhandled column type [${col.t}].")
     }
@@ -52,16 +53,16 @@ case class CreateResultTable(resultId: UUID, columns: Seq[QueryResult.Col])(impl
 
   override def sql = {
     val quotedName = engine.leftQuoteIdentifier + tableName + engine.rightQuoteIdentifier
-    val rowNumCol = if (columns.exists(_.name == "row_num")) {
+    val rowNumCol = if (columns.exists(_.name == "#")) {
       ""
     } else {
-      s"${engine.leftQuoteIdentifier}row_num${engine.rightQuoteIdentifier} integer not null,"
+      s"${engine.leftQuoteIdentifier}#${engine.rightQuoteIdentifier} integer not null,"
     }
 
     val columnStatements = columns.map(x => CreateResultTable.columnFor(x))
 
     val pkName = engine.leftQuoteIdentifier + tableName + "_pk" + engine.rightQuoteIdentifier
-    val pkConstraint = s"""constraint $pkName primary key (\"row_num\")"""
+    val pkConstraint = s"""constraint $pkName primary key (\"#\")"""
 
     s"""create table $quotedName (
       $rowNumCol

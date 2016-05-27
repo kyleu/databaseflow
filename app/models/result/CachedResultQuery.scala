@@ -1,30 +1,22 @@
 package models.result
 
-import java.util.UUID
-
 import akka.actor.ActorRef
-import models.{ QueryResultResponse, QueryResultRowCount }
 import models.database.{ Query, Row }
-import models.queries.{ DynamicQuery, QueryTranslations }
-import models.queries.result.{ CreateResultTable, InsertResultRow }
+import models.queries.QueryTranslations
 import models.query.QueryResult
-import services.database.ResultCacheDatabase
+import models.schema.ColumnType.LongType
+import models.{ QueryResultRowCount, ResponseMessage }
+import services.result.CachedResultService
 import utils.DateUtils
 
-object CachedResultQuery {
-  def createResultTable(resultId: UUID, columns: Seq[QueryResult.Col]) = {
-    ResultCacheDatabase.conn.executeUpdate(CreateResultTable(resultId, columns)(ResultCacheDatabase.conn.engine))
-  }
-
-  def insertRow(tableName: String, columnNames: Seq[String], data: Seq[Any]) = {
-    ResultCacheDatabase.conn.executeUpdate(InsertResultRow(tableName, columnNames, data)(ResultCacheDatabase.conn.engine))
-  }
-}
-
-case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extends Query[QueryResultRowCount] {
+case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
   val startMs = DateUtils.nowMillis
 
   override def sql: String = result.sql
+
+  def dataFor(row: Row, cc: Int) = (1 to cc).map(i => row.asOpt[Any](i) match {
+    case x => x
+  })
 
   override def reduce(rows: Iterator[Row]) = {
     if (rows.hasNext) {
@@ -36,68 +28,64 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
         val columnType = QueryTranslations.forType(md.getColumnType(i))
         QueryResult.Col(md.getColumnLabel(i), columnType, md.getPrecision(i), md.getScale(i))
       }
-      CachedResultQuery.createResultTable(result.resultId, columns)
 
-      val appendRowNum = !columns.exists(_.name == "row_num")
+      val containsRowNum = columns.exists(_.name == "#")
 
-      val columnNames = if (appendRowNum) {
-        "row_num" +: columns.map(_.name)
+      val updatedColumns = if (containsRowNum) {
+        columns
       } else {
-        columns.map(_.name)
+        QueryResult.Col("#", LongType, 0, 0) +: columns
       }
+
+      val columnNames = updatedColumns.map(_.name)
 
       var rowCount = 1
-      val firstRowData = if (appendRowNum) {
-        Some(rowCount) +: (1 to cc).map(i => firstRow.asOpt[Any](i))
-      } else {
-        (1 to cc).map(i => firstRow.asOpt[Any](i))
-      }
-      CachedResultQuery.insertRow(result.tableName, columnNames, firstRowData)
+      val firstRowData = dataFor(firstRow, cc)
 
-      val partialRowData = collection.mutable.ArrayBuffer(firstRowData)
+      if (rows.hasNext) {
+        CachedResultService.insertCacheResult(result.copy(columns = columns.size))
+        CachedResultQueryHelper.createResultTable(result.resultId, columns)
 
-      rows.foreach { row =>
-        rowCount += 1
-        val data = if (appendRowNum) {
-          Some(rowCount) +: (1 to cc).map(i => row.asOpt[Any](i))
+        val transformedData = if (containsRowNum) {
+          firstRowData
         } else {
-          (1 to cc).map(i => row.asOpt[Any](i))
+          Some(rowCount) +: firstRowData
         }
-        CachedResultQuery.insertRow(result.tableName, columnNames, data)
+
+        CachedResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
+
+        val partialRowData = collection.mutable.ArrayBuffer(transformedData)
+
+        rows.foreach { row =>
+          rowCount += 1
+          val data = dataFor(row, cc)
+          val transformedData = if (containsRowNum) {
+            data
+          } else {
+            Some(rowCount) +: data
+          }
+
+          CachedResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
+          if (rowCount <= 100) {
+            partialRowData += transformedData
+          }
+          if (rowCount == 101) {
+            CachedResultQueryHelper.sendResult(result, out, updatedColumns, partialRowData, (DateUtils.nowMillis - startMs).toInt, moreRowsAvailable = true)
+          }
+        }
+
         if (rowCount <= 100) {
-          partialRowData += data
+          CachedResultQueryHelper.sendResult(result, out, updatedColumns, partialRowData, (DateUtils.nowMillis - startMs).toInt, moreRowsAvailable = false)
         }
-        if (rowCount == 101) {
-          sendResult(columns, partialRowData, (DateUtils.nowMillis - startMs).toInt, moreRowsAvailable = true)
-        }
-      }
 
-      if (rowCount <= 100) {
-        sendResult(columns, partialRowData, (DateUtils.nowMillis - startMs).toInt, moreRowsAvailable = false)
+        val duration = (DateUtils.nowMillis - startMs).toInt
+        CachedResultService.completeCacheResult(result.resultId, rowCount, duration)
+        QueryResultRowCount(result.resultId, result.queryId, rowCount, duration)
+      } else {
+        CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, columns, Seq(firstRowData))
       }
-
-      QueryResultRowCount(result.resultId, result.queryId, rowCount, (DateUtils.nowMillis - startMs).toInt)
     } else {
-      sendResult(Nil, Nil, 0, moreRowsAvailable = false)
-      QueryResultRowCount(result.resultId, result.queryId, 0, (DateUtils.nowMillis - startMs).toInt)
-    }
-  }
-
-  private[this] def sendResult(columns: Seq[QueryResult.Col], rowData: Seq[Seq[Option[Any]]], elapsedMs: Int, moreRowsAvailable: Boolean) = {
-    out.foreach { o =>
-      val msg = QueryResultResponse(result.resultId, QueryResult(
-        queryId = result.queryId,
-        sql = result.sql,
-        columns = columns,
-        data = rowData.map(_.map(_.map(DynamicQuery.transform))),
-        moreRowsAvailable = moreRowsAvailable,
-        source = Some(QueryResult.Source(
-          t = "cache",
-          name = result.tableName,
-          sortable = true
-        ))
-      ), 0)
-      o ! msg
+      CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, Nil, Nil)
     }
   }
 }

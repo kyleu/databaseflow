@@ -8,6 +8,7 @@ import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import ui.metadata._
 
 object MetadataManager {
   var engine: Option[DatabaseEngine] = None
@@ -46,14 +47,14 @@ object MetadataManager {
     utils.NetworkMessage.sendMessage(RefreshSchema)
   }
 
-  def updateSchema(sch: Schema) = {
-    MetadataUpdates.updateTables(sch.tables)
+  def updateSchema(sch: Schema, fullSchema: Boolean) = {
+    TableUpdates.updateTables(sch.tables, fullSchema)
     sch.tables.foreach(TableManager.addTable)
 
-    MetadataUpdates.updateViews(sch.views)
+    ViewUpdates.updateViews(sch.views, fullSchema)
     sch.views.foreach(ViewManager.addView)
 
-    MetadataUpdates.updateProcedures(sch.procedures)
+    ProcedureUpdates.updateProcedures(sch.procedures, fullSchema)
     sch.procedures.foreach(ProcedureManager.addProcedure)
 
     schema = Some(sch)
