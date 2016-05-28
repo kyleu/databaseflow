@@ -5,6 +5,10 @@ POST        /feedback                    controllers.FeedbackController.postFeed
 
 # Admin Section
 GET         /admin                       controllers.admin.AdminController.index()
+GET         /admin/enable/:id            controllers.admin.AdminController.enable(id)
+GET         /admin/licenses              controllers.admin.LicenseController.list()
+GET         /admin/licenses/new          controllers.admin.LicenseController.form()
+POST        /admin/licenses/new          controllers.admin.LicenseController.save()
 
 # Assets
 GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")

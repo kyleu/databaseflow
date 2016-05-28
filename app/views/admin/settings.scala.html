@@ -22,25 +22,31 @@
 
       <div class="row">
         @settingPanel(AllowGuests) {
-          <input type="radio" id="@AllowGuests.id-true" name="@AllowGuests.id" value="true" @if(settings(AllowGuests) == "true") { checked="checked" } />
-          <label for="@AllowGuests.id-true">Yes</label>
-          <input type="radio" id="@AllowGuests.id-false" name="@AllowGuests.id" value="false" @if(settings(AllowGuests) == "false") { checked="checked" } />
-          <label for="@AllowGuests.id-false">No</label>
+          <div class="row">
+            <div class="col s12">
+              <input type="radio" id="@AllowGuests.id-true" name="@AllowGuests.id" value="true" @if(settings(AllowGuests) == "true") { checked="checked" } />
+              <label for="@AllowGuests.id-true">Yes</label>
+              <input type="radio" id="@AllowGuests.id-false" name="@AllowGuests.id" value="false" @if(settings(AllowGuests) == "false") { checked="checked" } />
+              <label for="@AllowGuests.id-false">No</label>
+            </div>
+          </div>
         }
 
         @settingPanel(QueryCacheConnection) {
-          <div class="input-field">
-            <select id="@QueryCacheConnection.id-select" name="@QueryCacheConnection.id">
-            @defining(settings(QueryCacheConnection)) { connection =>
-              @defining(services.connection.ConnectionSettingsService.getAll.filter { dbc =>
-                dbc.engine == models.engine.rdbms.H2 || dbc.engine == models.engine.rdbms.PostgreSQL
-              }) { connections =>
-                @connections.map { c =>
-                  <option value="@c.id" @if(c.id.toString == connection) { selected="selected" }>@c.name</option>
+          <div class="row">
+            <div class="col s12 input-field">
+              <select id="@QueryCacheConnection.id-select" name="@QueryCacheConnection.id">
+              @defining(settings(QueryCacheConnection)) { connection =>
+                @defining(services.connection.ConnectionSettingsService.getAll.filter { dbc =>
+                  dbc.engine == models.engine.rdbms.H2 || dbc.engine == models.engine.rdbms.PostgreSQL
+                }) { connections =>
+                  @connections.map { c =>
+                    <option value="@c.id" @if(c.id.toString == connection) { selected="selected" }>@c.name</option>
+                  }
                 }
               }
-            }
-            </select>
+              </select>
+            </div>
           </div>
         }
       </div>

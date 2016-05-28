@@ -7,7 +7,16 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class AdminController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseAdminController {
-  def index() = Action.async { implicit request =>
-    Future.successful(Ok(views.html.admin.index()))
+  def index() = withSession("index") { (username, request) =>
+    implicit val req = request
+    Future.successful(Ok(views.html.admin.index(username)))
+  }
+
+  def enable(id: String) = Action.async { implicit request =>
+    if (request.getQueryString("p").contains("np")) {
+      Future.successful(Redirect(controllers.admin.routes.AdminController.index()).withSession("admin-role" -> id))
+    } else {
+      Future.successful(Redirect(controllers.routes.HomeController.index()).withNewSession)
+    }
   }
 }

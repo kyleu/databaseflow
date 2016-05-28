@@ -1,0 +1,23 @@
+@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple("Database Flow Licenses") {
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <form action="@controllers.admin.routes.LicenseController.save()" method="post">
+          <div class="card-content">
+            <span class="card-title">New License</span>
+            <div class="row">
+              <div class="col s12 input-field">
+                <input id="email-input" type="email" name="email" class="validate" />
+                <label for="email-input">Email Address</label>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <button type="submit" class="btn blue-grey">Save</button>
+            <a href="@controllers.admin.routes.LicenseController.list()" class="btn btn-flat">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
