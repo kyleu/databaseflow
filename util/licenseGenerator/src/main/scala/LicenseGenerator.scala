@@ -1,5 +1,6 @@
 import java.nio.file.{ Files, Paths }
 
+import keys.PublicKeyProvider
 import net.nicholaswilliams.java.licensing._
 import net.nicholaswilliams.java.licensing.encryption.PasswordProvider
 import net.nicholaswilliams.java.licensing.licensor.LicenseCreator
@@ -15,7 +16,7 @@ object LicenseGenerator {
       override def getLicense(context: scala.Any) = {
         val encodedLicenseData = Files.readAllBytes(Paths.get(LicenseGenerator.licenseDir, context.toString + ".license"))
         val decodedLicenseData = Base64.decodeBase64(encodedLicenseData)
-        new SignedLicense(decodedLicenseData, Base64.decodeBase64(KeyGenerator.publicKeyData))
+        new SignedLicense(decodedLicenseData, PublicKeyProvider.getEncryptedPublicKeyData)
       }
     })
     LicenseManagerProperties.setLicensePasswordProvider(new PasswordProvider {

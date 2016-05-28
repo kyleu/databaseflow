@@ -4,7 +4,8 @@ object Entrypoint extends App {
   KeyGenerator.init()
   LicenseGenerator.init()
 
-  KeyGenerator.generateKeys()
+  //KeyGenerator.generateKeys()
+
   LicenseGenerator.writeTestLicense()
   LicenseGenerator.readTestLicense()
 }
