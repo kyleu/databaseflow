@@ -19,13 +19,12 @@ object QueryResultService {
       val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs)
       ProgressManager.completeProgress(result.queryId, resultId, content)
     } else {
-      if (result.source.isDefined) {
-        val content = QueryResultsTemplate.forRowResults(result, occurred.toISOString, durationMs, resultId)
-        ProgressManager.completeProgress(result.queryId, resultId, content)
+      val content = if (result.source.isDefined) {
+        QueryResultsTemplate.forRowResults(result, occurred.toISOString, durationMs, resultId)
       } else {
-        val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
-        ProgressManager.completeProgress(result.queryId, resultId, content)
+        QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
       }
+      ProgressManager.completeProgress(result.queryId, resultId, content)
 
       val workspace = $(s"#workspace-${result.queryId}")
       val panel = $(s"#$resultId", workspace)

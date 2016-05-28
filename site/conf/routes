@@ -1,5 +1,11 @@
 GET         /                            controllers.HomeController.index
 
+GET         /feedback                    controllers.FeedbackController.feedbackForm
+POST        /feedback                    controllers.FeedbackController.postFeedback
+
+# Admin Section
+GET         /admin                       controllers.admin.AdminController.index()
+
 # Assets
 GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
 GET         /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")

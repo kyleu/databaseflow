@@ -33,7 +33,7 @@ object Server {
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
       Export.csv, Export.xlsx, Ui.swing, Utils.scalaGuice,
-      Testing.scalaTest
+      Testing.scalaTest, Licensing.core
     )
   }
 

@@ -51,4 +51,6 @@ object Site {
   )
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .settings(siteSettings: _*)
+    .dependsOn(Utilities.licenseGenerator)
+    .aggregate(Utilities.licenseGenerator)
 }

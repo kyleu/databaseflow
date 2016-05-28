@@ -13,7 +13,7 @@ import utils.Logging
 object CachedResultQueryHelper extends Logging {
   def createResultTable(resultId: UUID, columns: Seq[QueryResult.Col]) = {
     val q = CreateResultTable(resultId, columns)(ResultCacheDatabase.conn.engine)
-    log.info(q.sql)
+    //log.info(q.sql)
     ResultCacheDatabase.conn.executeUpdate(q)
   }
 
