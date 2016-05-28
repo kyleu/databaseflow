@@ -61,12 +61,6 @@ object Dependencies {
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
-  object Licensing {
-    val version = "1.1.0"
-    val core = "net.nicholaswilliams.java.licensing" % "licensing-core" % version
-    val licensor = "net.nicholaswilliams.java.licensing" % "licensing-licensor-base" % version
-  }
-
   object WebJars {
     val requireJs = "org.webjars" % "requirejs" % "2.2.0"
     val jquery = "org.webjars" % "jquery" % "2.2.4"
@@ -99,6 +93,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.4"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
+    val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
   }
 
   object Testing {

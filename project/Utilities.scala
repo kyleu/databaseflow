@@ -17,7 +17,7 @@ object Utilities {
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   )
     .settings(
-      libraryDependencies += Dependencies.Licensing.licensor
+      libraryDependencies += Dependencies.Utils.crypto
     )
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
