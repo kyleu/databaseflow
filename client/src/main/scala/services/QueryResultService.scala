@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.{ QueryResult, RowDataOptions }
 import models.schema.FilterOp
-import models.template.QueryResultsTemplate
+import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.ProgressManager
 import ui.query.TableManager

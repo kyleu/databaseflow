@@ -1,6 +1,8 @@
-package models.template
+package models.template.tbl
 
 import java.util.UUID
+
+import models.template.{ Icons, StaticPanelTemplate }
 
 import scalatags.Text.all._
 

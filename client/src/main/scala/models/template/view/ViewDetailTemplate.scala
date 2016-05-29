@@ -1,8 +1,9 @@
-package models.template
+package models.template.view
 
 import java.util.UUID
 
 import models.engine.DatabaseEngine
+import models.template.{ Icons, StaticPanelTemplate }
 
 import scalatags.Text.all._
 

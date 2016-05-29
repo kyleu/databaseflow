@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.schema.View
 import models.template._
+import models.template.view.ViewColumnDetailTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 
 trait ViewDetailHelper {

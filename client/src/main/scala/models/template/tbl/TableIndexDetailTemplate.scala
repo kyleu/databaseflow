@@ -1,4 +1,4 @@
-package models.template
+package models.template.tbl
 
 import models.schema.Index
 

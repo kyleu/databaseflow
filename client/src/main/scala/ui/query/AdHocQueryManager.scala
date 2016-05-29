@@ -4,7 +4,8 @@ import java.util.UUID
 
 import models.engine.EngineQueries
 import models.query.{ RowDataOptions, SavedQuery }
-import models.template.{ Icons, QueryEditorTemplate }
+import models.template.Icons
+import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.TabManager
 import ui.metadata.MetadataManager

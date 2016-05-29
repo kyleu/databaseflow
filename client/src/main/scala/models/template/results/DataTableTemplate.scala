@@ -1,9 +1,10 @@
-package models.template
+package models.template.results
 
 import java.util.UUID
 
 import models.query.QueryResult
 import models.schema.ColumnType._
+import models.template.Icons
 
 import scalatags.Text.all._
 

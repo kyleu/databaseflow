@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.schema.Table
 import models.template._
+import models.template.tbl.{ TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate }
 import org.scalajs.jquery.{ jQuery => $ }
 
 trait TableDetailHelper {

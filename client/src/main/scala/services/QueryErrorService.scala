@@ -1,7 +1,7 @@
 package services
 
+import models.template.query.QueryErrorTemplate
 import models.{ QueryCheckResponse, QueryErrorResponse }
-import models.template.ErrorTemplate
 import ui.ProgressManager
 
 object QueryErrorService {
@@ -12,7 +12,7 @@ object QueryErrorService {
 
   def handleQueryErrorResponse(qer: QueryErrorResponse) = {
     val occurred = new scalajs.js.Date(qer.error.occurred.toDouble)
-    val content = ErrorTemplate.forQueryError(qer, occurred.toISOString)
+    val content = QueryErrorTemplate.forQueryError(qer, occurred.toISOString)
     ProgressManager.completeProgress(qer.error.queryId, qer.id, content)
   }
 }

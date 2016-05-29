@@ -1,4 +1,4 @@
-package models.template
+package models.template.view
 
 import models.schema.Column
 

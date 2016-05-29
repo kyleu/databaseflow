@@ -1,11 +1,12 @@
-package models.template
+package models.template.query
 
+import models.template.{ Icons, StaticPanelTemplate }
 import models.{ PlanErrorResponse, QueryErrorResponse }
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
-object ErrorTemplate {
+object QueryErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String) = {
     val content = div(id := qe.id.toString)(
       p("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString), s" in [${qe.durationMs}ms]."),

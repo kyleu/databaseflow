@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models._
 import models.template._
+import models.template.query.{ QueryErrorTemplate, QueryPlanTemplate }
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.ProgressManager
 import utils.JQueryUtils
@@ -47,7 +48,7 @@ object QueryPlanService {
 
   def handlePlanErrorResponse(per: PlanErrorResponse) = {
     val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
-    val content = ErrorTemplate.forPlanError(per, occurred.toISOString)
+    val content = QueryErrorTemplate.forPlanError(per, occurred.toISOString)
 
     ProgressManager.completeProgress(per.error.queryId, per.id, content)
   }

@@ -9,7 +9,6 @@ import org.scalajs.jquery.{ jQuery => $ }
 import ui.metadata._
 import ui.modal.QuerySaveFormManager
 import ui.query.{ ProcedureManager, SavedQueryManager, TableManager, ViewManager }
-import ui.ProcedureManager
 
 object ModelResultsService {
   private[this] var receivedSavedQueryResponse = false
