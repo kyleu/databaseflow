@@ -1,9 +1,9 @@
 package controllers.admin
 
 import licensing.{ License, LicenseGenerator }
-import play.api.i18n.MessagesApi
-import play.api.data._
 import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n.MessagesApi
 
 import scala.concurrent.Future
 
@@ -43,6 +43,6 @@ class LicenseController @javax.inject.Inject() (implicit override val messagesAp
   def remove(id: String) = withSession("license-remove") { (username, request) =>
     implicit val req = request
     LicenseGenerator.removeLicense(id)
-    Future.successful(Redirect(controllers.admin.routes.LicenseController.list()))
+    Future.successful(Redirect(controllers.admin.routes.LicenseController.list()).flashing("success" -> "Feedback removed."))
   }
 }
