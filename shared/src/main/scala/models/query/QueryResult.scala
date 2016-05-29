@@ -25,7 +25,7 @@ object QueryResult {
       filterValue: Option[String] = None,
       dataOffset: Int = 0
   ) {
-    lazy val asRowDataOptions = RowDataOptions(sortedColumn, sortedAscending, filterColumn, filterOp, filterValue)
+    lazy val asRowDataOptions = RowDataOptions(sortedColumn, sortedAscending, filterColumn, filterOp, filterValue, Some(100), Some(dataOffset))
   }
 }
 
