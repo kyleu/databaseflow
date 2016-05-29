@@ -14,6 +14,7 @@ case class CachedResult(
     sql: String,
     columns: Int = 0,
     rows: Int = 0,
+    firstMessage: Int = 0,
     duration: Int = 0,
     lastAccessed: LocalDateTime = DateUtils.now,
     created: LocalDateTime = DateUtils.now

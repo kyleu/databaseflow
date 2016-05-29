@@ -11,7 +11,7 @@ import utils.{ DateUtils, JdbcUtils }
 
 object CachedResultQueries extends BaseQueries[CachedResult] {
   override protected val tableName = "query_results"
-  override protected val columns = Seq("id", "query_id", "connection_id", "owner", "status", "sql", "columns", "rows", "duration", "last_accessed", "created")
+  override protected val columns = Seq("id", "query_id", "connection_id", "owner", "status", "sql", "columns", "rows", "first_message", "duration", "last_accessed", "created")
   override protected val searchColumns = Seq("id", "query_id", "connection_id", "status", "sql")
 
   val insert = Insert
@@ -30,6 +30,11 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
     override val values = Seq[Any](lastAccessed, id)
   }
 
+  case class SetFirstMessageDuration(id: UUID, firstMessageElapsed: Int) extends Statement {
+    override val sql = updateSql(Seq("first_message"))
+    override val values = Seq[Any](firstMessageElapsed, id)
+  }
+
   case class Complete(id: UUID, rowCount: Int, duration: Int) extends Statement {
     override val sql = updateSql(Seq("rows", "status", "duration"))
     override val values = Seq[Any](rowCount, "complete", duration, id)
@@ -45,6 +50,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
       sql = JdbcHelper.stringVal(row.as[Any]("sql")),
       columns = row.as[Int]("columns"),
       rows = row.as[Int]("rows"),
+      firstMessage = row.as[Int]("first_message"),
       duration = row.as[Int]("duration"),
       lastAccessed = JdbcUtils.toLocalDateTime(row, "last_accessed"),
       created = JdbcUtils.toLocalDateTime(row, "created")
@@ -53,7 +59,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
 
   override protected def toDataSeq(q: CachedResult) = Seq[Any](
     q.resultId, q.queryId, q.connectionId, q.owner, q.status,
-    q.sql, q.columns, q.rows, q.duration,
+    q.sql, q.columns, q.rows, q.duration, q.firstMessage,
     new Timestamp(DateUtils.toMillis(q.lastAccessed)), new Timestamp(DateUtils.toMillis(q.created))
   )
 }

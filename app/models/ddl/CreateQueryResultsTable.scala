@@ -11,6 +11,7 @@ case object CreateQueryResultsTable extends CreateTableStatement("query_results"
       "sql" text,
       "columns" int not null default 0,
       "rows" int not null default 0,
+      "first_message" int not null default 0,
       "duration" int not null default 0,
       "last_accessed" timestamp,
       "created" timestamp not null

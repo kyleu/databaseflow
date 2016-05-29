@@ -20,6 +20,7 @@
               <th>Cols</th>
               <th>Rows</th>
               <th>Table</th>
+              <th>1st</th>
               <th>Dur</th>
               <th>Last Accessed</th>
               <th>Created</th>
@@ -43,6 +44,7 @@
               } else {
                 Missing
               }</td>
+              <td>@{r.firstMessage}ms</td>
               <td>@{r.duration}ms</td>
               <td>@r.lastAccessed.toString("yyyy-MM-dd HH:mm:ss")</td>
               <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>

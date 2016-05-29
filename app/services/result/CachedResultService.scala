@@ -23,6 +23,10 @@ object CachedResultService extends Logging {
     result
   }
 
+  def setFirstMessageDuration(resultId: UUID, firstMessageDuration: Int) = {
+    MasterDatabase.conn.executeUpdate(CachedResultQueries.SetFirstMessageDuration(resultId, firstMessageDuration))
+  }
+
   def completeCacheResult(resultId: UUID, rowCount: Int, duration: Int) = {
     MasterDatabase.conn.executeUpdate(CachedResultQueries.Complete(resultId, rowCount, duration))
   }

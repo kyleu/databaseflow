@@ -73,12 +73,16 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
             partialRowData += transformedData
           }
           if (rowCount == 101) {
-            CachedResultQueryHelper.sendResult(result, out, updatedColumns, partialRowData, (DateUtils.nowMillis - startMs).toInt, moreRowsAvailable = true)
+            val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
+            CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
+            CachedResultQueryHelper.sendResult(result, out, updatedColumns, partialRowData, firstMessageElapsed, moreRowsAvailable = true)
           }
         }
 
         if (rowCount <= 100) {
-          CachedResultQueryHelper.sendResult(result, out, updatedColumns, partialRowData, (DateUtils.nowMillis - startMs).toInt, moreRowsAvailable = false)
+          val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
+          CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
+          CachedResultQueryHelper.sendResult(result, out, updatedColumns, partialRowData, firstMessageElapsed, moreRowsAvailable = false)
         }
 
         val duration = (DateUtils.nowMillis - startMs).toInt
