@@ -7,37 +7,50 @@ import models.engine.EngineQueries
 import models.queries.DynamicQuery
 import models.query.{ QueryResult, RowDataOptions }
 import models.schema.ForeignKey
-import services.database.DatabaseWorkerPool
+import services.database.{ DatabaseWorkerPool, ResultCacheDatabase }
 import services.schema.SchemaService
 import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
 
 trait DataHelper extends Logging { this: SocketService =>
-  protected[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
+  protected[this] def handleGetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = key match {
+    case "table" => handleGetTableRowData(queryId, name, options, resultId)
+    case "view" => handleGetViewRowData(queryId, name, options, resultId)
+    case "cache" => handleGetCacheRowData(queryId, name, options, resultId)
+  }
+
+  private[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getTable(connectionId, name) match {
-      case Some(table) => handleShowDataResponse(queryId, "table", table.name, table.foreignKeys, options, resultId)
+      case Some(table) => handleShowDataResponse(queryId, "table", table.name, table.foreignKeys, options, resultId, cacheDb = false)
       case None =>
         log.warn(s"Attempted to show data for invalid table [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
     }
   }
 
-  protected[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
+  private[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getView(connectionId, name) match {
-      case Some(view) => handleShowDataResponse(queryId, "view", view.name, Nil, options, resultId)
+      case Some(view) => handleShowDataResponse(queryId, "view", view.name, Nil, options, resultId, cacheDb = false)
       case None =>
         log.warn(s"Attempted to show data for invalid view [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid view.")
     }
   }
 
-  private[this] def handleShowDataResponse(queryId: UUID, t: String, name: String, foreignKeys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID) {
+  private[this] def handleGetCacheRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
+    handleShowDataResponse(queryId, "cache", name, Nil, options, resultId, cacheDb = true)
+  }
+
+  private[this] def handleShowDataResponse(
+    queryId: UUID, t: String, name: String, foreignKeys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID, cacheDb: Boolean
+  ) {
     def work() = {
       val startMs = DateUtils.nowMillis
       val optionsNewLimit = options.copy(limit = options.limit.map(_ + 1))
       val sql = EngineQueries.selectFrom(name, optionsNewLimit)(db.engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
-        val result = db.query(DynamicQuery(sql))
+        val database = if (cacheDb) { ResultCacheDatabase.conn } else { db }
+        val result = database.query(DynamicQuery(sql))
 
         val (trimmedData, moreRowsAvailable) = options.limit match {
           case Some(limit) if result.data.size > limit => result.data.take(limit) -> true

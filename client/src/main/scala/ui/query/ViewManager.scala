@@ -25,6 +25,7 @@ object ViewManager extends ViewDetailHelper {
   def viewDetail(name: String) = openViews.get(name) match {
     case Some(queryId) =>
       TabManager.selectTab(queryId)
+      queryId
     case None =>
       val queryId = UUID.randomUUID
       val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
@@ -42,7 +43,7 @@ object ViewManager extends ViewDetailHelper {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        RowDataManager.showViewRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
+        RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
       })
 
       utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {

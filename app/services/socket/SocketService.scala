@@ -54,8 +54,7 @@ class SocketService(
 
     case cq: CheckQuery => timeReceive(cq) { QueryCheckService.handleCheckQuery(connectionId, cq.queryId, cq.sql, out) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
-    case trd: GetTableRowData => timeReceive(trd) { handleGetTableRowData(trd.queryId, trd.name, trd.options, trd.resultId) }
-    case vrd: GetViewRowData => timeReceive(vrd) { handleGetViewRowData(vrd.queryId, vrd.name, vrd.options, vrd.resultId) }
+    case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId) }
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(db, cq.queryId, cq.resultId, out) }
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { QueryExecutionService.handleQuerySaveRequest(user, qsr.query, out) }

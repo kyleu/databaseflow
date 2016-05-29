@@ -43,7 +43,7 @@ object TableManager extends TableDetailHelper {
         QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
         utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-          RowDataManager.showTableRowData(queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
+          RowDataManager.showRowData("table", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
         })
 
         utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
@@ -60,7 +60,7 @@ object TableManager extends TableDetailHelper {
         queryId
     }
     if (options.isFiltered) {
-      RowDataManager.showTableRowData(qId, name, options.copy(limit = Some(UserManager.rowsReturned)))
+      RowDataManager.showRowData("table", qId, name, options.copy(limit = Some(UserManager.rowsReturned)))
     }
   }
 }

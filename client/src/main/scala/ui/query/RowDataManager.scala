@@ -2,17 +2,14 @@ package ui.query
 
 import java.util.UUID
 
+import models.GetRowData
 import models.query.RowDataOptions
-import models.{ GetTableRowData, GetViewRowData }
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.ProgressManager
 import utils.JQueryUtils
 
 object RowDataManager {
-  def showTableRowData(queryId: UUID, name: String, options: RowDataOptions) = showRowData("table", queryId, name, options)
-  def showViewRowData(queryId: UUID, name: String, options: RowDataOptions) = showRowData("view", queryId, name, options)
-
-  private[this] def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID = UUID.randomUUID): Unit = {
+  def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID = UUID.randomUUID): Unit = {
     utils.Logging.info(s"Showing [$key] row data for [$name] with options [$options].")
 
     def onComplete(): Unit = {
@@ -45,10 +42,6 @@ object RowDataManager {
     if (options.offset.forall(_ == 0)) {
       ProgressManager.startProgress(queryId, resultId, onComplete, name)
     }
-    val msg = key match {
-      case "table" => GetTableRowData(queryId, name, options, resultId)
-      case "view" => GetViewRowData(queryId, name, options, resultId)
-    }
-    utils.NetworkMessage.sendMessage(msg)
+    utils.NetworkMessage.sendMessage(GetRowData(key, queryId, name, options, resultId))
   }
 }
