@@ -3,6 +3,7 @@ package controllers
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.libs.json.{ JsObject, JsString }
 import play.api.mvc.{ Action, Controller }
 import services.FeedbackService
 import services.FeedbackService.Feedback
@@ -25,15 +26,24 @@ class FeedbackController @javax.inject.Inject() (implicit val messagesApi: Messa
     Future.successful(Ok(views.html.feedbackForm()))
   }
 
-  def postFeedback() = Action.async { implicit request =>
+  def feedbackOptions() = Action.async { implicit request =>
+    Future.successful(Ok("OK").withHeaders(HomeController.cors: _*))
+  }
+
+  def postFeedback(ajax: Boolean) = Action.async { implicit request =>
     val action = FeedbackController.feedbackForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.feedbackForm()),
       feedback => {
         FeedbackService.save(feedback)
-        Redirect(controllers.routes.HomeController.index()).flashing("success" -> "Thanks for your feedback!")
+
+        if (ajax) {
+          Ok(JsObject(Seq("status" -> JsString("OK"))))
+        } else {
+          Redirect(controllers.routes.HomeController.index()).flashing("success" -> "Thanks for your feedback!")
+        }
       }
     )
 
-    Future.successful(action)
+    Future.successful(action.withHeaders(HomeController.cors: _*))
   }
 }

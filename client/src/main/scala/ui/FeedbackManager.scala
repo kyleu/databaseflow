@@ -3,9 +3,11 @@ package ui
 import java.util.UUID
 
 import models.template.{ FeedbackTemplate, Icons }
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{ JQueryAjaxSettings, JQueryXHR, jQuery => $ }
 import services.NotificationService
+import utils.Logging
 
+import scala.scalajs.js
 import scalatags.Text.all._
 
 object FeedbackManager {
@@ -42,8 +44,24 @@ object FeedbackManager {
 
   private[this] def submitFeedback(email: String, content: String) = {
     utils.Logging.info(s"Feedback from [$email]: $content")
-    NotificationService.info("Feedback Success", "Thanks!")
-    isOpen = false
-    QueryManager.closeQuery(feedbackId)
+
+    val url = "http://databaseflow.dev/feedback?ajax=true"
+    $.ajax(js.Dynamic.literal(
+      url = url,
+      data = js.Dynamic.literal(
+        id = UUID.randomUUID.toString,
+        email = email,
+        content = content
+      ),
+      success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
+        NotificationService.info("Feedback Success", "Thanks!")
+        isOpen = false
+        QueryManager.closeQuery(feedbackId)
+      },
+      error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
+        Logging.info(s"Error: jqXHR=$jqXHR,text=$textStatus,err=$errorThrow")
+      },
+      `type` = "POST"
+    ).asInstanceOf[JQueryAjaxSettings])
   }
 }

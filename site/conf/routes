@@ -1,7 +1,8 @@
 GET         /                            controllers.HomeController.index
 
 GET         /feedback                    controllers.FeedbackController.feedbackForm
-POST        /feedback                    controllers.FeedbackController.postFeedback
+OPTIONS     /feedback                    controllers.FeedbackController.feedbackOptions()
+POST        /feedback                    controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
 
 # Admin Section
 ->          /admin                       admin.Routes

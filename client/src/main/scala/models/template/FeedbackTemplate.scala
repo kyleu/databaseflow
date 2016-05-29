@@ -14,7 +14,7 @@ object FeedbackTemplate {
               p("Thanks for your feedback. If you'd like to be notified when we reply, please include an email address.")
             ),
             div(cls := "input-field col s12")(
-              input(id := "feedback-email-input", `type` := "email", value := email, placeholder := "Email Address")()
+              input(id := "feedback-email-input", cls := "validate", `type` := "email", value := email, placeholder := "Email Address")()
             ),
             div(cls := "input-field col s12")(
               textarea(id := "feedback-content-input", cls := "materialize-textarea", placeholder := "Enter your feedback")()
