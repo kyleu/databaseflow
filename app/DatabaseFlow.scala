@@ -11,7 +11,7 @@ object DatabaseFlow extends SimpleSwingApplication {
 
   new Thread(new Runnable {
     override def run() = {
-      app.start()
+      //app.start()
       top.onStart()
     }
   }).start()

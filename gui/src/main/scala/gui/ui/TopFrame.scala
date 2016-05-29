@@ -1,5 +1,7 @@
 package gui.ui
 
+import javax.swing.BorderFactory
+
 import gui.web.WebApp
 
 import scala.swing._
@@ -8,38 +10,38 @@ class TopFrame(app: WebApp) extends MainFrame {
   title = "Database Flow"
   resizable = false
 
-  private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Center) {
+  private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Left) {
     font = CustomFonts.titleText
     foreground = Colors.foreground
-    peer.setSize(new Dimension(300, 40))
-    peer.setLocation(0, 20)
+  }
+
+  private[this] val logoLabel = new Label("\uf1c0", None.orNull, Alignment.Left) {
+    font = CustomFonts.icons
+    foreground = Colors.foreground
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   }
 
   private[this] val statusLabel = new Label("Starting...", None.orNull, Alignment.Center) {
     font = CustomFonts.regularText
     foreground = Colors.foreground
-    peer.setSize(new Dimension(300, 40))
-    peer.setLocation(0, 95)
   }
 
-  private[this] val panel = new Panel {
-    peer.setLayout(None.orNull)
-
+  private[this] val titlePanel = new BorderPanel {
+    layout(logoLabel) = BorderPanel.Position.West
+    layout(titleLabel) = BorderPanel.Position.Center
     background = Colors.background
-
-    def add(comp: Component) = {
-      peer.add(comp.peer)
-    }
   }
 
-  panel.add(titleLabel)
-  panel.add(statusLabel)
+  private[this] val panel = new BorderPanel {
+    layout(titlePanel) = BorderPanel.Position.North
+    layout(statusLabel) = BorderPanel.Position.Center
+  }
 
   contents = panel
 
   menuBar = new FrameMenu()
 
-  size = new Dimension(300, 200)
+  size = new Dimension(480, 320)
 
   background = Colors.background
 
