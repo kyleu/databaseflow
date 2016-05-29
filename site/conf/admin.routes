@@ -1,0 +1,7 @@
+# Admin Section
+GET         /                           controllers.admin.AdminController.index()
+GET         /enable/:id                 controllers.admin.AdminController.enable(id)
+GET         /licenses                   controllers.admin.LicenseController.list()
+GET         /licenses/new               controllers.admin.LicenseController.form()
+POST        /licenses/new               controllers.admin.LicenseController.save()
+GET         /licenses/remove/:id        controllers.admin.LicenseController.remove(id)

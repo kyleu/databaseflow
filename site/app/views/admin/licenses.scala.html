@@ -7,22 +7,24 @@
           @if(licenses.isEmpty) {
             <p>No active licenses.</p>
           } else {
-            <table>
+            <table class="bordered highlight">
               <thead>
                 <tr>
                   <th>Email Address</th>
-                  <th>Actions</th>
+                  <th style="text-align: right;">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  @licenses.map { l =>
+                @licenses.map { l =>
+                  <tr>
                     <td>@l</td>
-                    <td>
-                      <a href="" title="Remove License"><i class="fa fa-remove"></i></a>
+                    <td style="text-align: right;">
+                      <a href="@controllers.admin.routes.LicenseController.remove(l)" title="Remove License" onclick="return confirm('You sure?');">
+                        <i class="fa fa-remove"></i>
+                      </a>
                     </td>
-                  }
-                </tr>
+                  </tr>
+                }
               </tbody>
             </table>
           }
