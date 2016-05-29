@@ -11,14 +11,14 @@ import scala.scalajs.js.timers
 import scalatags.Text.TypedTag
 
 object ProgressManager {
-  var activeQueries = Map.empty[UUID, (UUID, () => Unit)]
+  var activeQueries = Map.empty[UUID, UUID]
 
   lazy val workspace = $("#workspace")
 
-  def startProgress(queryId: UUID, resultId: UUID, onComplete: () => Unit, title: String): Unit = {
+  def startProgress(queryId: UUID, resultId: UUID, title: String): Unit = {
     activeQueries.get(queryId) match {
-      case Some(active) if active._1 == resultId => throw new IllegalStateException(s"Already started progress for query [$queryId] with result [$resultId].")
-      case Some(active) => throw new IllegalStateException(s"Cannot start progress for query [$queryId] with [$resultId], already processing [${active._1}].")
+      case Some(active) if active == resultId => throw new IllegalStateException(s"Already started progress for query [$queryId] with result [$resultId].")
+      case Some(active) => throw new IllegalStateException(s"Cannot start progress for query [$queryId] with [$resultId], already processing [$active].")
       case None => // No op
     }
 
@@ -43,20 +43,20 @@ object ProgressManager {
     def incrementTimer(): Unit = {
       val newVal = timer.text().toInt + 1
       timer.text(newVal.toString)
-      if (activeQueries.get(queryId).exists(_._1 == resultId)) {
+      if (activeQueries.get(queryId).contains(resultId)) {
         timers.setTimeout(1000)(incrementTimer())
       }
     }
 
     timers.setTimeout(1000)(incrementTimer())
 
-    activeQueries = activeQueries + (queryId -> (resultId -> onComplete))
+    activeQueries = activeQueries + (queryId -> resultId)
   }
 
   def completeProgress(queryId: UUID, resultId: UUID, content: TypedTag[String]): Unit = {
-    val onComplete = activeQueries.get(queryId) match {
-      case Some(rid) if rid._1 == resultId => rid._2
-      case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [${rid._1}], not expected [$resultId].")
+    activeQueries.get(queryId) match {
+      case Some(rid) if rid == resultId => // No op
+      case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [$rid], not expected [$resultId].")
       case None => throw new IllegalStateException(s"No active progress for query [$queryId].")
     }
 
@@ -69,7 +69,5 @@ object ProgressManager {
     JQueryUtils.relativeTime()
 
     activeQueries = activeQueries - queryId
-
-    onComplete()
   }
 }

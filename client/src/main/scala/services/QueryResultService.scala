@@ -7,7 +7,7 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.ProgressManager
-import ui.query.TableManager
+import ui.query.{ RowDataManager, TableManager }
 import utils.JQueryUtils
 
 import scala.scalajs.js
@@ -39,28 +39,53 @@ object QueryResultService {
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
       })
 
-      if (result.source.isDefined) {
-        js.Dynamic.global.$(".filter-select", panel).material_select()
+      result.source match {
+        case Some(src) =>
+          js.Dynamic.global.$(".filter-select", panel).material_select()
 
-        val filterStatusEl = $(".row-status-display", panel)
-        val filterEl = $(".filter-container", panel)
+          val filterStatusEl = $(".row-status-display", panel)
+          val filterEl = $(".filter-container", panel)
 
-        utils.JQueryUtils.clickHandler($(".results-filter-link", panel), (jq) => {
-          filterStatusEl.hide()
-          filterEl.show()
-        })
-        utils.JQueryUtils.clickHandler($(".results-filter-cancel", panel), (jq) => {
-          filterStatusEl.show()
-          filterEl.hide()
-        })
-      } else {
-        val sqlEl = $(".query-result-sql", panel)
-        val sqlLink = $(".results-sql-link", panel)
-        var sqlShown = false
-        utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
-          if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
-          sqlShown = !sqlShown
-        })
+          utils.JQueryUtils.clickHandler($(".results-filter-link", panel), (jq) => {
+            filterStatusEl.hide()
+            filterEl.show()
+          })
+          utils.JQueryUtils.clickHandler($(".results-filter-cancel", panel), (jq) => {
+            filterStatusEl.show()
+            filterEl.hide()
+          })
+
+          val options = src.asRowDataOptions
+
+          JQueryUtils.clickHandler($(".sorted-title", panel), (j) => {
+            val col = j.data("col").toString
+            val asc = j.data("dir").toString == "asc"
+            val newOptions = options.copy(orderByCol = Some(col), orderByAsc = Some(!asc))
+            RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
+          })
+
+          val appendRowsLink = $(".append-rows-link", panel)
+          JQueryUtils.clickHandler(appendRowsLink, (j) => {
+            val limit = appendRowsLink.data("limit").toString.toInt
+            val offset = appendRowsLink.data("offset").toString.toInt match {
+              case 0 => 100
+              case x => x
+            }
+            val newOptions = options.copy(limit = Some(limit), offset = Some(offset))
+            utils.Logging.info(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}] and limit [$limit].")
+            appendRowsLink.data("offset", offset + limit)
+            appendRowsLink.hide()
+            RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
+          })
+
+        case None =>
+          val sqlEl = $(".query-result-sql", panel)
+          val sqlLink = $(".results-sql-link", panel)
+          var sqlShown = false
+          utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
+            if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
+            sqlShown = !sqlShown
+          })
       }
 
       if (result.moreRowsAvailable) {

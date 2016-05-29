@@ -15,16 +15,18 @@ object QueryResult {
   )
 
   case class Source(
-    t: String,
-    name: String,
-    sortable: Boolean = true,
-    sortedColumn: Option[String] = None,
-    sortedAscending: Option[Boolean] = None,
-    filterColumn: Option[String] = None,
-    filterOp: Option[FilterOp] = None,
-    filterValue: Option[String] = None,
-    dataOffset: Int = 0
-  )
+      t: String,
+      name: String,
+      sortable: Boolean = true,
+      sortedColumn: Option[String] = None,
+      sortedAscending: Option[Boolean] = None,
+      filterColumn: Option[String] = None,
+      filterOp: Option[FilterOp] = None,
+      filterValue: Option[String] = None,
+      dataOffset: Int = 0
+  ) {
+    lazy val asRowDataOptions = RowDataOptions(sortedColumn, sortedAscending, filterColumn, filterOp, filterValue)
+  }
 }
 
 case class QueryResult(

@@ -54,7 +54,7 @@ object ViewManager extends ViewDetailHelper {
       def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
         val resultId = UUID.randomUUID
         val title = "Query Plan"
-        ProgressManager.startProgress(queryId, resultId, () => Unit, title)
+        ProgressManager.startProgress(queryId, resultId, title)
 
         val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
         utils.NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, action = Some(action), resultId = resultId))
