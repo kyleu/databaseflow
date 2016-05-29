@@ -5,6 +5,7 @@ import java.util.UUID
 import models.template.{ FeedbackTemplate, Icons }
 import org.scalajs.jquery.{ JQueryAjaxSettings, JQueryXHR, jQuery => $ }
 import services.NotificationService
+import ui.query.QueryManager
 import utils.Logging
 
 import scala.scalajs.js

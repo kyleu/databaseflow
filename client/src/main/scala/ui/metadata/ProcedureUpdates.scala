@@ -3,7 +3,7 @@ package ui.metadata
 import models.schema.Procedure
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import ui.{ MetadataManager, ProcedureManager }
+import ui.query.ProcedureManager
 import utils.DomUtils
 
 object ProcedureUpdates {

@@ -1,6 +1,9 @@
-package ui
+package ui.search
 
 import java.util.UUID
+
+import ui.metadata.MetadataManager
+import ui.query.SavedQueryManager
 
 trait SearchFilterFields {
   protected[this] def savedQueryFields(id: String) = SavedQueryManager.savedQueries.get(UUID.fromString(id)) match {

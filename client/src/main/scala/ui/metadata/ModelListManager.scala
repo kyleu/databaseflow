@@ -6,7 +6,8 @@ import models.query.RowDataOptions
 import models.schema.Schema
 import models.template.{ Icons, ModelListTemplate }
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import ui.{ MetadataManager, QueryManager, WorkspaceManager, _ }
+import ui.query._
+import ui.WorkspaceManager
 
 import scalatags.Text.all._
 

@@ -1,4 +1,4 @@
-package ui
+package ui.query
 
 import java.util.UUID
 
@@ -8,6 +8,9 @@ import models.query.RowDataOptions
 import models.schema.Table
 import models.template._
 import org.scalajs.jquery.{ jQuery => $ }
+import ui.metadata.MetadataManager
+import ui.modal.QueryExportFormManager
+import ui.{ UserManager, _ }
 
 object TableManager extends TableDetailHelper {
   private[this] var openTables = Map.empty[String, UUID]

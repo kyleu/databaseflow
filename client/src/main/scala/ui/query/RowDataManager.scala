@@ -1,10 +1,11 @@
-package ui
+package ui.query
 
 import java.util.UUID
 
-import models.{ GetTableRowData, GetViewRowData }
 import models.query.RowDataOptions
+import models.{ GetTableRowData, GetViewRowData }
 import org.scalajs.jquery.{ jQuery => $ }
+import ui.ProgressManager
 import utils.JQueryUtils
 
 object RowDataManager {

@@ -1,4 +1,4 @@
-package ui
+package ui.query
 
 import java.util.UUID
 
@@ -8,6 +8,9 @@ import models.schema.View
 import models.template._
 import models.{ GetViewDetail, SubmitQuery }
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import ui.metadata.MetadataManager
+import ui.modal.QueryExportFormManager
+import ui.{ ProgressManager, UserManager, _ }
 
 object ViewManager extends ViewDetailHelper {
   var openViews = Map.empty[String, UUID]

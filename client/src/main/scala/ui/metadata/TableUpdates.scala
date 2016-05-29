@@ -4,7 +4,7 @@ import models.query.RowDataOptions
 import models.schema.Table
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import ui.{ MetadataManager, TableManager }
+import ui.query.TableManager
 import utils.DomUtils
 
 object TableUpdates {

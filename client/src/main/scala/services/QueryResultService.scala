@@ -6,7 +6,8 @@ import models.query.{ QueryResult, RowDataOptions }
 import models.schema.FilterOp
 import models.template.QueryResultsTemplate
 import org.scalajs.jquery.{ jQuery => $ }
-import ui.{ ProgressManager, TableManager }
+import ui.ProgressManager
+import ui.query.TableManager
 import utils.JQueryUtils
 
 import scala.scalajs.js

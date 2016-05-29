@@ -2,6 +2,8 @@ package ui
 
 import java.util.UUID
 
+import ui.metadata.MetadataManager
+
 import scala.scalajs.js
 
 object EditorManager {

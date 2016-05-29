@@ -1,4 +1,4 @@
-package ui
+package ui.modal
 
 import org.scalajs.jquery.{ jQuery => $ }
 

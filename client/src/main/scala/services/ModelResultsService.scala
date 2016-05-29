@@ -6,8 +6,10 @@ import models.query.SavedQuery
 import models.schema.{ Procedure, Table, View }
 import models.{ BatchQueryStatus, SavedQueryResultResponse, SchemaResultResponse }
 import org.scalajs.jquery.{ jQuery => $ }
-import ui.metadata.{ ProcedureUpdates, SampleDatabaseManager, TableUpdates, ViewUpdates }
-import ui.{ ProcedureManager, QuerySaveFormManager, TableManager, ViewManager, _ }
+import ui.metadata._
+import ui.modal.QuerySaveFormManager
+import ui.query.{ ProcedureManager, SavedQueryManager, TableManager, ViewManager }
+import ui.ProcedureManager
 
 object ModelResultsService {
   private[this] var receivedSavedQueryResponse = false

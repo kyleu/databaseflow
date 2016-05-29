@@ -1,7 +1,7 @@
-package ui
+package ui.search
 
 import org.scalajs.jquery.JQuery
-import ui.metadata.{ ProcedureUpdates, TableUpdates, ViewUpdates }
+import ui.metadata.{ MetadataManager, ProcedureUpdates, TableUpdates, ViewUpdates }
 
 object SearchFilterManager extends SearchFilterFields {
   def filterSchema(searches: Seq[String]) = {

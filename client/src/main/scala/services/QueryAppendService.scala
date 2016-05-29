@@ -6,7 +6,7 @@ import models.query.{ QueryResult, RowDataOptions }
 import models.schema.FilterOp
 import models.template.QueryResultsTemplate
 import org.scalajs.jquery.{ jQuery => $ }
-import ui.TableManager
+import ui.query.TableManager
 import utils.JQueryUtils
 
 object QueryAppendService {

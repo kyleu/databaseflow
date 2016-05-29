@@ -1,4 +1,4 @@
-package ui
+package ui.query
 
 import java.util.UUID
 
@@ -7,6 +7,8 @@ import models.schema.Procedure
 import models.template.{ Icons, ProcedureDetailTemplate }
 import org.scalajs.jquery.{ jQuery => $ }
 import services.NotificationService
+import ui.metadata.MetadataManager
+import ui.{ TabManager, WorkspaceManager }
 
 object ProcedureManager {
   var openProcedures = Map.empty[String, UUID]

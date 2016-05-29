@@ -3,7 +3,7 @@ package ui.metadata
 import models.schema.View
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import ui.{ MetadataManager, ViewManager }
+import ui.query.ViewManager
 import utils.DomUtils
 
 object ViewUpdates {

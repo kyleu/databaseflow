@@ -1,4 +1,4 @@
-package ui
+package ui.query
 
 import java.util.UUID
 

@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.template.{ HelpTemplate, Icons }
 import org.scalajs.jquery.{ jQuery => $ }
+import ui.query.QueryManager
 
 import scalatags.Text.all._
 
