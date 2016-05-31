@@ -1,5 +1,6 @@
 package gui.ui
 
+import java.awt.Cursor
 import javax.swing.BorderFactory
 
 import gui.web.WebApp
@@ -12,43 +13,64 @@ class TopFrame(app: WebApp) extends MainFrame {
 
   private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Left) {
     font = CustomFonts.titleText
-    foreground = Colors.foreground
+    foreground = Colors.white
   }
 
   private[this] val logoLabel = new Label("\uf1c0", None.orNull, Alignment.Left) {
     font = CustomFonts.icons
-    foreground = Colors.foreground
+    foreground = Colors.white
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   }
 
-  private[this] val statusLabel = new Label("Starting...", None.orNull, Alignment.Center) {
+  private[this] val statusLabel = new Label("Starting...", None.orNull, Alignment.Left) {
     font = CustomFonts.regularText
-    foreground = Colors.foreground
+    foreground = Colors.black
+    background = Colors.white
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+  }
+
+  private[this] val linkLabel = new Label("http://localhost:4000", None.orNull, Alignment.Left) {
+    font = CustomFonts.regularText
+    foreground = Colors.black
+    background = Colors.white
+    cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+  }
+
+  private[this] val statusPanel = new BorderPanel {
+    layout(statusLabel) = BorderPanel.Position.North
+    background = Colors.white
+  }
+
+  private[this] val linkPanel = new BorderPanel {
+    layout(linkLabel) = BorderPanel.Position.South
+    background = Colors.white
   }
 
   private[this] val titlePanel = new BorderPanel {
     layout(logoLabel) = BorderPanel.Position.West
     layout(titleLabel) = BorderPanel.Position.Center
-    background = Colors.background
+    background = Colors.bluegrey
   }
 
   private[this] val panel = new BorderPanel {
     layout(titlePanel) = BorderPanel.Position.North
-    layout(statusLabel) = BorderPanel.Position.Center
+    layout(statusPanel) = BorderPanel.Position.Center
+    layout(linkPanel) = BorderPanel.Position.South
   }
 
   contents = panel
 
   menuBar = new FrameMenu()
 
-  size = new Dimension(480, 320)
-
-  background = Colors.background
+  size = new Dimension(320, 170)
 
   peer.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE)
 
+  background = Colors.white
+
   def onStart() = {
-    statusLabel.text = "Started"
+    statusLabel.text = "Server started."
   }
 
   override def closeOperation() = {
