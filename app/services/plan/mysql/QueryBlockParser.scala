@@ -12,7 +12,7 @@ object QueryBlockParser {
       val nodeType = if (potentialNodeType.size == 1) {
         potentialNodeType.headOption.getOrElse(throw new IllegalStateException())
       } else {
-        throw new IllegalStateException(s"Multiple params for node type: [${potentialNodeType.keys.toSeq.sorted.mkString(", ")}].")
+        throw new IllegalStateException(s"Multiple params for node type: [${potentialNodeType.keys.toSeq.sorted.mkString(", ")}] at depth [$depth].")
       }
 
       nodeType._1 match {
@@ -44,7 +44,7 @@ object QueryBlockParser {
 
   private[this] def parseUnionResult(el: Js.Value) = PlanNode(
     title = "Union Result",
-    nodeType = "Union Result",
+    nodeType = el.toString,
     children = Nil
   )
 

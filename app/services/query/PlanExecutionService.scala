@@ -11,7 +11,7 @@ import services.plan.PlanParseService
 import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
 
 object PlanExecutionService extends Logging {
-  private[this] def getResult(db: DatabaseConnection, queryId: UUID, sql: String, explainSql: String, resultId: UUID, isAnalyze: Boolean) = {
+  private[this] def getResult(db: DatabaseConnection, queryId: UUID, sql: String, explainSql: String, resultId: UUID) = {
     val startMs = DateUtils.nowMillis
     JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
       db.transaction { tx =>
@@ -42,7 +42,7 @@ object PlanExecutionService extends Logging {
         def work() = {
           val explainSql = explain(sql)
           log.info(s"Performing query action [explain] with resultId [$resultId] for query [$queryId] with sql [$explainSql].")
-          getResult(db, queryId, sql, explainSql, resultId, isAnalyze = false)
+          getResult(db, queryId, sql, explainSql, resultId)
         }
         def onSuccess(rm: ResponseMessage) = out ! rm
         def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanExplainError", t)
@@ -58,7 +58,7 @@ object PlanExecutionService extends Logging {
         def work() = {
           val analyzeSql = analyze(sql)
           log.info(s"Performing query action [analyze] with resultId [$resultId] for query [$queryId] with sql [$analyzeSql].")
-          getResult(db, queryId, sql, analyzeSql, resultId, isAnalyze = true)
+          getResult(db, queryId, sql, analyzeSql, resultId)
         }
         def onSuccess(rm: ResponseMessage) = out ! rm
         def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanAnalyzeError", t)

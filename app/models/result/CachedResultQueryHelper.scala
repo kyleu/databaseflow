@@ -52,7 +52,7 @@ object CachedResultQueryHelper extends Logging {
           name = result.tableName,
           sortable = true
         ))
-      ), 0)
+      ), elapsedMs)
       o ! msg
     }
   }

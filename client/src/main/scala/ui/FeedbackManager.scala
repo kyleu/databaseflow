@@ -33,7 +33,7 @@ object FeedbackManager {
         QueryManager.closeQuery(feedbackId)
       })
 
-      utils.JQueryUtils.clickHandler($(s".submit-feedback", queryPanel), (jq) => {
+      utils.JQueryUtils.clickHandler($(".submit-feedback", queryPanel), (jq) => {
         val email = $("#feedback-email-input", queryPanel).value().toString
         val content = $("#feedback-content-input", queryPanel).value().toString
         submitFeedback(email, content)
@@ -43,6 +43,7 @@ object FeedbackManager {
     }
   }
 
+  @SuppressWarnings(Array("AsInstanceOf"))
   private[this] def submitFeedback(email: String, content: String) = {
     utils.Logging.info(s"Feedback from [$email]: $content")
 

@@ -10,7 +10,7 @@ import ui.query.TableManager
 import utils.JQueryUtils
 
 object QueryAppendService {
-  def handleAppendQueryResult(resultId: UUID, qr: QueryResult, durationMs: Int): Unit = {
+  def handleAppendQueryResult(resultId: UUID, qr: QueryResult): Unit = {
     val workspace = $(s"#workspace-${qr.queryId}")
     val panel = $(s"#$resultId", workspace)
     val resultEl = $(".query-result-table tbody", panel)

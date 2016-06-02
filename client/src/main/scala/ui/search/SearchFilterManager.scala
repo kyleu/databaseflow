@@ -6,16 +6,16 @@ import ui.metadata.{ MetadataManager, ProcedureUpdates, TableUpdates, ViewUpdate
 object SearchFilterManager extends SearchFilterFields {
   def filterSchema(searches: Seq[String]) = {
     MetadataManager.savedQueries.foreach { savedQueries =>
-      filterObjects("saved-query", savedQueries, searches, SearchManager.savedQueriesToggle, savedQueryFields)
+      filterObjects(savedQueries, searches, SearchManager.savedQueriesToggle, savedQueryFields)
     }
     TableUpdates.tables.foreach { tables =>
-      filterObjects("table", tables, searches, SearchManager.tablesToggle, tableFields)
+      filterObjects(tables, searches, SearchManager.tablesToggle, tableFields)
     }
     ViewUpdates.views.foreach { views =>
-      filterObjects("view", views, searches, SearchManager.viewsToggle, viewFields)
+      filterObjects(views, searches, SearchManager.viewsToggle, viewFields)
     }
     ProcedureUpdates.procedures.foreach { procedures =>
-      filterObjects("procedure", procedures, searches, SearchManager.proceduresToggle, procedureFields)
+      filterObjects(procedures, searches, SearchManager.proceduresToggle, procedureFields)
     }
   }
 
@@ -44,9 +44,7 @@ object SearchFilterManager extends SearchFilterFields {
     anchorEl.attr("title", els.mkString("\n"))
   }
 
-  private[this] def filterObjects(
-    key: String, seq: Seq[(String, JQuery, JQuery)], searches: Seq[String], toggle: JQuery, searchF: (String) => Seq[(String, String)]
-  ) = {
+  private[this] def filterObjects(seq: Seq[(String, JQuery, JQuery)], searches: Seq[String], toggle: JQuery, searchF: (String) => Seq[(String, String)]) = {
     val matches = seq.map { t =>
       val values = searchF(t._1)
       val results = values.flatMap(v => matchKey(searches, v))

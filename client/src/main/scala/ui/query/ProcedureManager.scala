@@ -53,7 +53,7 @@ object ProcedureManager {
   }
 
   private[this] def callProcedure(queryId: UUID, procedure: Procedure) = {
-    utils.Logging.info(s"Calling procedure [$queryId].")
+    utils.Logging.info(s"Calling procedure [$queryId]: " + procedure)
     //utils.NetworkMessage.sendMessage(???)
   }
 

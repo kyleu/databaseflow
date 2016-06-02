@@ -35,6 +35,7 @@ object EditorManager {
     langTools.addCompleter(completer)
   }
 
+  @SuppressWarnings(Array("LooksLikeInterpolatedString"))
   def initSqlEditor(id: UUID, onChange: (String) => Unit) = {
     val editor = js.Dynamic.global.ace.edit(s"sql-textarea-$id")
     val session = editor.getSession()

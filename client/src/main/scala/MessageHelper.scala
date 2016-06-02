@@ -35,7 +35,7 @@ trait MessageHelper { this: DatabaseFlow =>
 
   private[this] def handleQueryResultResponse(qrr: QueryResultResponse) = {
     if (qrr.result.source.exists(_.dataOffset > 0)) {
-      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result, qrr.durationMs)
+      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result)
     } else {
       QueryResultService.handleNewQueryResults(qrr.id, qrr.result, qrr.durationMs)
     }

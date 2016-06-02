@@ -15,8 +15,8 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
   override def sql: String = result.sql
 
   def dataFor(row: Row, columns: Seq[(QueryResult.Col, Int)]) = columns.map(c => row.asOpt[Any](c._2 + 1) match {
-    case x if x.isDefined && c._1.t == ArrayType => Some(x.get.toString)
-    case x if x.isDefined && c._1.t == UnknownType => Some(x.get.toString)
+    case Some(x) if c._1.t == ArrayType => Some(x.toString)
+    case Some(x) if c._1.t == UnknownType => Some(x.toString)
     case x => x
   })
 

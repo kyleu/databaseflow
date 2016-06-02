@@ -18,7 +18,7 @@ object OracleParseHelper {
   )
 
   def nodeFor(s: Seq[PlanEntry]): PlanNode = {
-    val me = s.head
+    val me = s.headOption.getOrElse(throw new IllegalArgumentException("Node encountered empty list."))
 
     val children = s.tail.foldLeft(Seq.empty[Seq[PlanEntry]]) { (x, y) =>
       if (y.depth == me.depth + 1) {

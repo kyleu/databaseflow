@@ -11,6 +11,7 @@ import services.database.{ DatabaseWorkerPool, MasterDatabase }
 import utils.{ ExceptionUtils, Logging }
 
 object QueryCheckService extends Logging {
+  @SuppressWarnings(Array("CatchThrowable"))
   def handleCheckQuery(connectionId: UUID, queryId: UUID, sql: String, out: ActorRef) = {
     def work() = {
       //log.info(s"Checking query [$queryId] sql [$sql].")

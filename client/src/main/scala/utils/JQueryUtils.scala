@@ -11,6 +11,7 @@ object JQueryUtils {
     }
   }
 
+  @SuppressWarnings(Array("VarClosure"))
   def keyUpHandler(jq: JQuery, f: (JQuery, Int) => Unit) = {
     jq.keyup { (e: JQueryEventObject) =>
       f($(e.currentTarget), e.which)

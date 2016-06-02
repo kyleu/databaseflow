@@ -43,8 +43,7 @@ object Site {
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
     // Code Quality
-    scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala"),
-    scapegoatDisabledInspections := Seq("DuplicateImport")
+    scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")
   )
 
   lazy val site = Project(

@@ -23,20 +23,18 @@ object QueryEditorTemplate {
   }
 
   def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: Option[UUID]) = {
-    val modificationLinks = userId match {
-      case Some(uid) => if (sq.owner.contains(uid)) {
-        Seq(
-          a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save"),
-          a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
-          a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
-          a(cls := "delete-query-link right theme-text", href := "#")("Delete")
-        )
-      } else {
-        Seq(
-          a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New")
-        )
-      }
-      case None => Seq.empty
+    val canEdit = userId.forall(uid => sq.owner.contains(uid))
+    val modificationLinks = if (canEdit) {
+      Seq(
+        a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save"),
+        a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
+        a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
+        a(cls := "delete-query-link right theme-text", href := "#")("Delete")
+      )
+    } else {
+      Seq(
+        a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New")
+      )
     }
     val links = linksFor(engine) ++ modificationLinks
     queryPanel(sq.id, sq.name, sq.sql, Icons.savedQuery, links)

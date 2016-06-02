@@ -30,6 +30,7 @@ case class QueryCheckResponse(queryId: UUID, error: Option[String] = None, line:
 case class QueryResultRowCount(id: UUID, queryId: UUID, count: Int, durationMs: Int) extends ResponseMessage
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage
+case class QueryCancelledResponse(queryId: UUID, resultId: UUID) extends ResponseMessage
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage

@@ -47,7 +47,7 @@ object AdHocQueryManager {
         id = queryId,
         name = queryName,
         sql = QueryManager.getSql(queryId)
-      ))
+      ), isNew = true)
     })
 
     utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {

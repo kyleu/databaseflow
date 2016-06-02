@@ -11,7 +11,9 @@ import utils.{ DateUtils, JdbcUtils }
 
 object CachedResultQueries extends BaseQueries[CachedResult] {
   override protected val tableName = "query_results"
-  override protected val columns = Seq("id", "query_id", "connection_id", "owner", "status", "sql", "columns", "rows", "first_message", "duration", "last_accessed", "created")
+  override protected val columns = Seq(
+    "id", "query_id", "connection_id", "owner", "status", "sql", "columns", "rows", "first_message", "duration", "last_accessed", "created"
+  )
   override protected val searchColumns = Seq("id", "query_id", "connection_id", "status", "sql")
 
   val insert = Insert

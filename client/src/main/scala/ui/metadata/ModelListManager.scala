@@ -56,7 +56,7 @@ object ModelListManager {
 
       val filterManager = ModelFilterManager(queryPanel)
 
-      utils.JQueryUtils.keyUpHandler($(s".model-filter", queryPanel), (jq, key) => {
+      utils.JQueryUtils.keyUpHandler($(".model-filter", queryPanel), (jq, key) => {
         if (key == 27) {
           jq.value("")
           filterManager.filter(None)

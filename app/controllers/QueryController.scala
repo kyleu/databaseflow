@@ -18,6 +18,7 @@ import utils.{ ApplicationContext, DateUtils, FileUtils }
 import utils.web.MessageFrameFormatter
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class QueryController @javax.inject.Inject() (
@@ -74,8 +75,9 @@ class QueryController @javax.inject.Inject() (
         file.delete
       }))
     } catch {
-      case t: Throwable =>
+      case NonFatal(t) =>
         file.delete
+        log.warn(s"Unable to export query for sql [$sql].", t)
         Future.successful(InternalServerError(s"Unable to export query: [${t.getClass.getSimpleName}: ${t.getMessage}]"))
     }
   }

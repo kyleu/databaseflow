@@ -1,6 +1,5 @@
 package gui.ui
 
-import java.awt.Cursor
 import javax.swing.BorderFactory
 
 import gui.web.WebApp
@@ -33,7 +32,7 @@ class TopFrame(app: WebApp) extends MainFrame {
     font = CustomFonts.regularText
     foreground = Colors.black
     background = Colors.white
-    cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+    cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   }
 

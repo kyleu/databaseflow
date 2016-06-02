@@ -4,7 +4,7 @@ import models.QuerySaveRequest
 import models.query.SavedQuery
 import org.scalajs.jquery.{ jQuery => $ }
 import services.NavigationService
-import ui.query.SavedQueryManager
+import ui.query.{ QueryManager, SavedQueryManager }
 import utils.NetworkMessage
 
 import scala.scalajs.js
@@ -25,7 +25,7 @@ object QuerySaveFormManager {
     utils.JQueryUtils.clickHandler($("#input-query-save-link", modal), (jq) => save())
   }
 
-  def show(savedQuery: SavedQuery) = {
+  def show(savedQuery: SavedQuery, isNew: Boolean = false) = {
     inputName.value(savedQuery.name)
     inputDescription.value(savedQuery.description.getOrElse(""))
 
@@ -49,11 +49,14 @@ object QuerySaveFormManager {
     if (activeQuery.exists(_.id == sq.id)) {
       error match {
         case Some(err) => utils.Logging.error("Cannot save query: " + err)
-        case None => SavedQueryManager.updateSavedQueries(Seq(sq))
+        case None =>
+          SavedQueryManager.updateSavedQueries(Seq(sq))
+          QueryManager.closeQuery(sq.id)
+          SavedQueryManager.savedQueryDetail(sq.id)
       }
       modal.closeModal()
     } else {
-      utils.Logging.warn(s"Received unhandled save response for unknown query [$sq].")
+      SavedQueryManager.updateSavedQueries(Seq(sq))
     }
   }
 

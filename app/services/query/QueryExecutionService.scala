@@ -9,7 +9,6 @@ import models.query.{ QueryResult, SavedQuery }
 import models.result.{ CachedResult, CachedResultQuery }
 import models.user.User
 import services.database.{ DatabaseConnection, DatabaseWorkerPool }
-import services.result.CachedResultService
 import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
 
 import scala.util.control.NonFatal
@@ -66,8 +65,9 @@ object QueryExecutionService extends Logging {
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
-  def handleCancelQuery(db: DatabaseConnection, queryId: UUID, resultId: UUID, out: ActorRef) = {
+  def handleCancelQuery(queryId: UUID, resultId: UUID, out: ActorRef) = {
     activeQueries.get(resultId).foreach(_.cancel())
+    out ! QueryCancelledResponse(queryId, resultId)
   }
 
   def registerRunningStatement(resultId: UUID, stmt: PreparedStatement) = activeQueries(resultId) = stmt

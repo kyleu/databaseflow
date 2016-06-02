@@ -38,7 +38,7 @@ object CachedResultService extends Logging {
     try {
       ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable("result_" + resultId.toString.replaceAllLiterally("-", ""))(ResultCacheDatabase.conn.engine))
     } catch {
-      case NonFatal(x) => // no op
+      case NonFatal(x) => log.info(s"Encountered exception while dropping table for [${resultId}].", x)
     }
   }
 

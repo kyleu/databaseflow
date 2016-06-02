@@ -30,7 +30,7 @@ object Shared {
 
     // Code Quality
     scapegoatVersion := Utils.scapegoatVersion,
-    scapegoatDisabledInspections := Seq("MethodNames", "MethodReturningAny"),
+    scapegoatDisabledInspections := Seq("MethodNames", "MethodReturningAny", "DuplicateImport"),
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   ) ++ graphSettings ++ scalariformSettings
 

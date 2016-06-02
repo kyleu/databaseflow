@@ -2,7 +2,7 @@ package ui.query
 
 import java.util.UUID
 
-import models.QueryDeleteRequest
+import models.{ QueryDeleteRequest, QuerySaveRequest }
 import models.query.SavedQuery
 import models.template.Icons
 import models.template.query.QueryEditorTemplate
@@ -20,7 +20,7 @@ object SavedQueryManager {
     openSavedQueries = openSavedQueries - id
     savedQueries = savedQueries - id
     QueryManager.closeQuery(id)
-    $("#saved-query-link" + id).remove()
+    $("#saved-query-link-" + id).remove()
   }
 
   def updateSavedQueries(sqs: Seq[SavedQuery]) = {
@@ -66,6 +66,13 @@ object SavedQueryManager {
       name = "Copy of " + savedQuery.name,
       sql = QueryManager.getSql(savedQuery.id)
     )))
+
+    utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
+      val newSavedQuery = savedQuery.copy(
+        sql = QueryManager.getSql(savedQuery.id)
+      )
+      NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
+    })
 
     utils.JQueryUtils.clickHandler($(".delete-query-link", queryPanel), (jq) => {
       def callback(b: Boolean): Unit = {

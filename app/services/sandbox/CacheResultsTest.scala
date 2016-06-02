@@ -59,10 +59,6 @@ object CacheResultsTest extends SandboxTask {
 
     val statement = CreateResultTable(resultId, columns)(ResultCacheDatabase.conn.engine).sql
 
-    if (statement.nonEmpty) {
-      //throw new IllegalStateException(statement)
-    }
-
     CachedResultQueryHelper.createResultTable(UUID.randomUUID, columns)
 
     Future.successful("Ok!")
