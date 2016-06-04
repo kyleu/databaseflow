@@ -18,7 +18,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.6"
+    private[this] val version = "2.4.7"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -39,7 +39,7 @@ object Dependencies {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.6"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
-    val h2 = "com.h2database" % "h2" % "1.4.191"
+    val h2 = "com.h2database" % "h2" % "1.4.192"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0.2 has NPE on load
     val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
@@ -57,7 +57,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.3.9" // 0.4.0 has a linking error
+    val version = "0.3.9" // 0.4.0, 0.4.1 have a linking error
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
@@ -65,9 +65,9 @@ object Dependencies {
     val requireJs = "org.webjars" % "requirejs" % "2.2.0"
     val jquery = "org.webjars" % "jquery" % "2.2.4"
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
-    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.2"
+    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.3"
     val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
-    val moment = "org.webjars" % "momentjs" % "2.12.0"
+    val moment = "org.webjars" % "momentjs" % "2.13.0"
   }
 
   object Ui {
