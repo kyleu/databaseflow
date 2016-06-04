@@ -20,11 +20,7 @@ object QueryResultService {
       val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs)
       ProgressManager.completeProgress(result.queryId, resultId, content)
     } else {
-      val content = if (result.source.isDefined) {
-        QueryResultsTemplate.forRowResults(result, occurred.toISOString, durationMs, resultId)
-      } else {
-        QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
-      }
+      val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
       ProgressManager.completeProgress(result.queryId, resultId, content)
 
       val workspace = $(s"#workspace-${result.queryId}")
@@ -40,15 +36,16 @@ object QueryResultService {
 
       result.source match {
         case Some(src) => onComplete(result, src, panel, resultId)
-        case None =>
-          val sqlEl = $(".query-result-sql", panel)
-          val sqlLink = $(".results-sql-link", panel)
-          var sqlShown = false
-          utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
-            if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
-            sqlShown = !sqlShown
-          })
+        case None => // No op
       }
+
+      val sqlEl = $(".query-result-sql", panel)
+      val sqlLink = $(".results-sql-link", panel)
+      var sqlShown = false
+      utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
+        if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
+        sqlShown = !sqlShown
+      })
 
       if (result.moreRowsAvailable) {
         $(".additional-results .append-rows-link").show()

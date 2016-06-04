@@ -55,10 +55,14 @@ object QueryManager {
 
     check(queryId, getSql(queryId))
   }
-
   def getSql(queryId: UUID) = sqlEditors.get(queryId) match {
     case Some(editor) => editor.getValue().toString
     case None => ""
+  }
+
+  def setSql(queryId: UUID, sql: String) = sqlEditors.get(queryId) match {
+    case Some(editor) => editor.setValue(sql)
+    case None => // no op
   }
 
   def check(queryId: UUID, sql: String) = {

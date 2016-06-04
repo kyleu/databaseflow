@@ -25,7 +25,7 @@ object QuerySaveFormManager {
     utils.JQueryUtils.clickHandler($("#input-query-save-link", modal), (jq) => save())
   }
 
-  def show(savedQuery: SavedQuery, isNew: Boolean = false) = {
+  def show(savedQuery: SavedQuery) = {
     inputName.value(savedQuery.name)
     inputDescription.value(savedQuery.description.getOrElse(""))
 
@@ -51,7 +51,9 @@ object QuerySaveFormManager {
         case Some(err) => utils.Logging.error("Cannot save query: " + err)
         case None =>
           SavedQueryManager.updateSavedQueries(Seq(sq))
-          QueryManager.closeQuery(sq.id)
+          if (!SavedQueryManager.openSavedQueries.contains(sq.id)) {
+            QueryManager.closeQuery(sq.id)
+          }
           SavedQueryManager.savedQueryDetail(sq.id)
       }
       modal.closeModal()

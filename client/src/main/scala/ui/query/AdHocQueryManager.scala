@@ -18,9 +18,9 @@ object AdHocQueryManager {
 
   def addNewQuery(queryId: UUID = UUID.randomUUID) = {
     val queryName = if (lastNum == 1) {
-      "Untitled Query"
+      "Unsaved Query"
     } else {
-      "Untitled Query " + lastNum
+      "Unsaved Query " + lastNum
     }
     val sql = MetadataManager.schema.map { s =>
       if (s.tables.isEmpty) {
@@ -47,7 +47,7 @@ object AdHocQueryManager {
         id = queryId,
         name = queryName,
         sql = QueryManager.getSql(queryId)
-      ), isNew = true)
+      ))
     })
 
     utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {

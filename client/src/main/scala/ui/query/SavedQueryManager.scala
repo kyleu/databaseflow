@@ -9,7 +9,7 @@ import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.metadata.MetadataManager
 import ui.modal.{ ConfirmManager, QueryExportFormManager, QuerySaveFormManager }
-import ui.{ TabManager, UserManager }
+import ui.{ EditorManager, TabManager, UserManager }
 import utils.NetworkMessage
 
 object SavedQueryManager {
@@ -28,10 +28,7 @@ object SavedQueryManager {
       savedQueries = savedQueries + (sq.id -> sq)
 
       if (openSavedQueries(sq.id)) {
-        utils.Logging.info(s"Closing query [${sq.id}].")
-        openSavedQueries = openSavedQueries - sq.id
-        QueryManager.closeQuery(sq.id)
-        savedQueryDetail(sq.id)
+        QueryManager.setSql(sq.id, sq.sql)
       }
     }
     MetadataManager.updateSavedQueries(savedQueries.values.toSeq.sortBy(_.name))
