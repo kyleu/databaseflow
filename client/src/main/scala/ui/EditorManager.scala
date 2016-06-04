@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import services.ShortcutService
 import ui.metadata.MetadataManager
 
 import scala.scalajs.js
@@ -40,7 +41,6 @@ object EditorManager {
     val editor = js.Dynamic.global.ace.edit(s"sql-textarea-$id")
     val session = editor.getSession()
 
-    //editor.setTheme("ace/theme/monokai")
     editor.setShowPrintMargin(false)
     editor.setHighlightActiveLine(false)
     editor.setAutoScrollEditorIntoView(false)
@@ -59,6 +59,16 @@ object EditorManager {
       onChange(editor.getValue().toString)
     })
 
+    ShortcutService.configureEditor(id)
+
     editor
+  }
+
+  def onSave(id: UUID) = {
+    utils.Logging.info(s"Saving query [$id]...")
+  }
+
+  def onRun(id: UUID) = {
+    utils.Logging.info(s"Running query [$id]...")
   }
 }

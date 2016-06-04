@@ -30,10 +30,10 @@ trait StartHelper extends Logging { this: SocketService =>
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
 
-    refreshSchema()
+    refreshSchema(false)
   }
 
-  protected[this] def refreshSchema() = {
+  protected[this] def refreshSchema(forceRefresh: Boolean) = {
     def onSchemaSuccess(t: Try[Schema]): Unit = t match {
       case Success(sch) =>
         schema = Some(sch)
@@ -50,6 +50,6 @@ trait StartHelper extends Logging { this: SocketService =>
       case Failure(x) => ExceptionUtils.actorErrorFunction(out, "SchemaLoadError", x)
     }
     def onSchemaFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SchemaLoadException", t) }
-    DatabaseWorkerPool.submitWork(() => SchemaService.getSchema(db, forceRefresh = true), onSchemaSuccess, onSchemaFailure)
+    DatabaseWorkerPool.submitWork(() => SchemaService.getSchema(db, forceRefresh = forceRefresh), onSchemaSuccess, onSchemaFailure)
   }
 }

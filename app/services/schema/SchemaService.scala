@@ -14,20 +14,27 @@ object SchemaService extends Logging {
   def getSchema(db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
     schemaMap.get(db.connectionId) match {
       case Some(schema) if forceRefresh =>
-        val s = calculateSchema(db)
+        val s = SchemaHelper.calculateSchema(db)
+        schemaMap = schemaMap + (db.connectionId -> s)
         refreshSchema(db)
         s
       case Some(schema) => schema
-      case None => calculateSchema(db)
+      case None =>
+        val s = SchemaHelper.calculateSchema(db)
+        schemaMap = schemaMap + (db.connectionId -> s)
+        s
     }
   }
+
+  var x = 0
 
   def refreshSchema(db: DatabaseConnection, onSuccess: (Schema) => Unit = (s) => Unit, onFailure: (Throwable) => Unit = (x) => Unit) = Try {
     schemaMap.get(db.connectionId) match {
       case Some(schema) =>
         val startMs = System.currentTimeMillis
         def work() = db.withConnection { conn =>
-          log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}].")
+          x = x + 1
+          log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}]: $x.")
           val metadata = conn.getMetaData
           schema.copy(
             tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
@@ -51,48 +58,4 @@ object SchemaService extends Logging {
   def getTable(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.tables.find(_.name == name))
   def getView(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.views.find(_.name == name))
   def getProcedure(connectionId: UUID, name: String) = schemaMap.get(connectionId).flatMap(_.procedures.find(_.name == name))
-
-  private[this] def calculateSchema(db: DatabaseConnection) = db.withConnection { conn =>
-    val catalogName = Option(conn.getCatalog)
-    val schemaName = try {
-      Option(conn.getSchema)
-    } catch {
-      case _: AbstractMethodError => None
-    }
-    val metadata = conn.getMetaData
-
-    val schemaModel = Schema(
-      connectionId = db.connectionId,
-      schemaName = schemaName,
-      catalog = catalogName,
-      url = metadata.getURL,
-      username = metadata.getUserName,
-      engine = db.engine.id,
-      engineVersion = metadata.getDatabaseProductVersion,
-      driver = metadata.getDriverName,
-      driverVersion = metadata.getDriverVersion,
-      catalogTerm = metadata.getCatalogTerm,
-      schemaTerm = metadata.getSchemaTerm,
-      procedureTerm = metadata.getProcedureTerm,
-      maxSqlLength = metadata.getMaxStatementLength,
-
-      tables = Nil,
-      views = Nil,
-      procedures = Nil
-    )
-
-    val tables = MetadataTables.getTables(metadata, catalogName, schemaName)
-    val views = MetadataViews.getViews(metadata, catalogName, schemaName)
-    val procedures = MetadataProcedures.getProcedures(metadata, catalogName, schemaName)
-
-    val schema = schemaModel.copy(
-      tables = tables,
-      views = views,
-      procedures = procedures
-    )
-
-    schemaMap = schemaMap + (db.connectionId -> schema)
-
-    schema
-  }
 }

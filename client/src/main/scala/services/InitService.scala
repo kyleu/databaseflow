@@ -22,9 +22,13 @@ object InitService {
     NetworkMessage.register(sendMessage)
     wireSideNav()
     installTimers()
+
     js.Dynamic.global.$("select").material_select()
+
     EditorManager.initEditorFramework()
     SearchManager.init()
+
+    ShortcutService.init()
     ConfirmManager.init()
     QuerySaveFormManager.init()
     QueryExportFormManager.init()
