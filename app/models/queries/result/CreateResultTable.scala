@@ -11,10 +11,10 @@ import models.schema.ColumnType._
 object CreateResultTable {
   def columnFor(col: QueryResult.Col)(implicit engine: DatabaseEngine) = {
     val colDeclaration = col.t match {
-      case StringType if col.precision.exists(_ > 100000) => "text"
+      case StringType if col.precision.exists(_ > 32000) => "text"
       case StringType => engine match {
-        case PostgreSQL => s"character varying(${col.precision})"
-        case _ => s"varchar(${col.precision})"
+        case PostgreSQL => s"character varying(${col.precision.getOrElse(32000)})"
+        case _ => s"varchar(${col.precision.getOrElse(32000)})"
       }
       case BigDecimalType => col.precision match {
         case Some(pr) => col.scale match {

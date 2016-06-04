@@ -43,7 +43,15 @@ object TableManager extends TableDetailHelper {
         QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
         utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-          RowDataManager.showRowData("table", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
+          val newOptions = options.copy(
+            offset = None,
+            limit = Some(UserManager.rowsReturned),
+            orderByCol = MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
+              case Some(table) if table.columns.nonEmpty => Some(table.columns.headOption.getOrElse(throw new IllegalStateException()).name)
+              case _ => None
+            }
+          )
+          RowDataManager.showRowData("table", queryId, name, newOptions)
         })
 
         utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {

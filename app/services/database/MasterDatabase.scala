@@ -14,8 +14,8 @@ object MasterDatabase extends Logging {
   private[this] val databases = collection.mutable.HashMap.empty[UUID, DatabaseConnection]
 
   val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
-  val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
-  //val (engine, url) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
+  //val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
+  val (engine, url) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
 
   val username = "databaseflow"
   val password = "flow"
