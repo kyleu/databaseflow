@@ -11,24 +11,26 @@ import scalatags.Text.tags2.time
 
 object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
-    val source = qr.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]"))
-    val hiddenClass = source.sortedColumn match {
+    val hiddenClass = qr.source.flatMap(_.sortedColumn) match {
       case Some(_) => "initially-hidden"
       case None => ""
     }
     val content = div(id := resultId.toString)(
       div(cls := "row-status-display")(
-        a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter"),
+        qr.source match {
+          case Some(_) => a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter")
+          case None => span()
+        },
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
         p(
           s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
           time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString),
           s" in [${durationMs}ms]."
         ),
-        div(source.filterColumn match {
+        div(qr.source.flatMap(_.filterColumn) match {
           case Some(column) =>
-            val op = source.filterOp.getOrElse("?")
-            val v = source.filterValue.getOrElse("?")
+            val op = qr.source.flatMap(_.filterOp).getOrElse("?")
+            val v = qr.source.flatMap(_.filterValue).getOrElse("?")
             s"$column $op $v"
           case None => ""
         })

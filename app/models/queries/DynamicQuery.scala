@@ -1,5 +1,7 @@
 package models.queries
 
+import java.sql.ResultSetMetaData
+
 import models.database.{ Query, Row }
 import models.query.QueryResult
 
@@ -11,6 +13,19 @@ object DynamicQuery {
 
   def transform(x: Any) = x match {
     case _ => x.toString
+  }
+
+  def getColumnMetadata(md: ResultSetMetaData, colIdx: Int) = {
+    val columnType = QueryTranslations.forType(md.getColumnType(colIdx))
+    val precision = md.getPrecision(colIdx) match {
+      case x if x < 1 => None
+      case x => Some(x)
+    }
+    val scale = md.getScale(colIdx) match {
+      case x if x < 1 => None
+      case x => Some(x)
+    }
+    (columnType, precision, scale)
   }
 }
 
@@ -25,8 +40,8 @@ case class DynamicQuery(override val sql: String) extends Query[DynamicQuery.Res
       val md = firstRow.rs.getMetaData
       val cc = md.getColumnCount
       val columns = (1 to cc).map { i =>
-        val columnType = QueryTranslations.forType(md.getColumnType(i))
-        QueryResult.Col(md.getColumnLabel(i), columnType, md.getPrecision(i), md.getScale(i))
+        val (columnType, precision, scale) = DynamicQuery.getColumnMetadata(md, i)
+        QueryResult.Col(md.getColumnLabel(i), columnType, precision, scale)
       }
       val firstRowData = rowData(cc, firstRow)
       val remainingData = rows.map(rowData(cc, _)).toList

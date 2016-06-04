@@ -1,10 +1,11 @@
 package models.result
 
+import java.sql.ResultSetMetaData
 import java.util.UUID
 
 import akka.actor.ActorRef
 import models.QueryResultResponse
-import models.queries.DynamicQuery
+import models.queries.{ DynamicQuery, QueryTranslations }
 import models.queries.result.{ CreateResultTable, InsertResultRow }
 import models.query.QueryResult
 import services.database.ResultCacheDatabase
@@ -56,6 +57,5 @@ object CachedResultQueryHelper extends Logging {
       o ! msg
     }
   }
-
 }
 

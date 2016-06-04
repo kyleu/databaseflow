@@ -57,11 +57,14 @@ object QueryExecutionService extends Logging {
         }
       }
     }
+
     def onSuccess(rm: ResponseMessage) = {
       activeQueries.remove(resultId)
       out ! rm
     }
+
     def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanError", t)
+
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 

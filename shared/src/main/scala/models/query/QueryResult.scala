@@ -8,8 +8,8 @@ object QueryResult {
   case class Col(
     name: String,
     t: ColumnType,
-    precision: Int = 0,
-    scale: Int = 0,
+    precision: Option[Int] = None,
+    scale: Option[Int] = None,
     relationTable: Option[String] = None,
     relationColumn: Option[String] = None
   )

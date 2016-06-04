@@ -2,7 +2,7 @@ package models.result
 
 import akka.actor.ActorRef
 import models.database.{ Query, Row }
-import models.queries.QueryTranslations
+import models.queries.DynamicQuery
 import models.query.QueryResult
 import models.schema.ColumnType.{ ArrayType, LongType, UnknownType }
 import models.{ QueryResultRowCount, ResponseMessage }
@@ -27,8 +27,8 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
 
       val cc = md.getColumnCount
       val columns = (1 to cc).map { i =>
-        val columnType = QueryTranslations.forType(md.getColumnType(i))
-        QueryResult.Col(md.getColumnLabel(i), columnType, md.getPrecision(i), md.getScale(i))
+        val (columnType, precision, scale) = DynamicQuery.getColumnMetadata(md, i)
+        QueryResult.Col(md.getColumnLabel(i), columnType, precision, scale)
       }
       val columnsWithIndex = columns.zipWithIndex
 
@@ -37,7 +37,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
       val updatedColumns = if (containsRowNum) {
         columns
       } else {
-        QueryResult.Col("#", LongType, 0, 0) +: columns
+        QueryResult.Col("#", LongType, None, None) +: columns
       }
 
       val columnNames = updatedColumns.map(_.name)

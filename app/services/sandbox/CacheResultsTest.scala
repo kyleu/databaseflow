@@ -32,8 +32,8 @@ object CacheResultsTest extends SandboxTask {
     MasterDatabase.db(connectionId).executeUnknown(CachedResultQuery(model, None))
 
     val columns = Seq(
-      QueryResult.Col("v", StringType, precision = 128),
-      QueryResult.Col("bd", BigDecimalType, precision = 4, scale = 4),
+      QueryResult.Col("v", StringType, precision = Some(128)),
+      QueryResult.Col("bd", BigDecimalType, precision = Some(4), scale = Some(4)),
       QueryResult.Col("b", BooleanType),
       QueryResult.Col("by", ByteType),
       QueryResult.Col("s", ShortType),
