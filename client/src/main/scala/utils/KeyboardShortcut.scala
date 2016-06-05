@@ -3,35 +3,44 @@ package utils
 import java.util.UUID
 
 import enumeratum._
-import ui.EditorManager
+import ui.metadata.MetadataManager
+import ui.query.AdHocQueryManager
+import ui.{ EditorManager, HelpManager, TabManager }
 
-sealed abstract class KeyboardShortcut(val pattern: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = false) extends EnumEntry
+sealed abstract class KeyboardShortcut(val pattern: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
 
 object KeyboardShortcut extends Enum[KeyboardShortcut] {
-  case object Save extends KeyboardShortcut("mod+s", {
-    case Some(uuid) => EditorManager.onSave(uuid)
-    case None => throw new IllegalStateException()
+  case object Save extends KeyboardShortcut("mod+s", { uuid =>
+    EditorManager.onSave(uuid.getOrElse(throw new IllegalStateException()))
+  }, isGlobal = false)
+
+  case object Run extends KeyboardShortcut("mod+enter", { uuid =>
+    EditorManager.onRun(uuid.getOrElse(throw new IllegalStateException()))
+  }, isGlobal = false)
+
+  case object Help extends KeyboardShortcut("?", { _ =>
+    HelpManager.show()
   })
 
-  case object Run extends KeyboardShortcut("mod+enter", {
-    case Some(uuid) => EditorManager.onRun(uuid)
-    case None => throw new IllegalStateException()
+  case object RefreshSchema extends KeyboardShortcut("r", { _ =>
+    MetadataManager.refreshSchema()
   })
 
-  case object Help extends KeyboardShortcut("?", {
-    case Some(_) => throw new IllegalStateException()
-    case None => utils.Logging.info("Loading help...")
-  }, isGlobal = true)
+  case object NewQuery extends KeyboardShortcut("+", { _ =>
+    AdHocQueryManager.addNewQuery()
+  })
 
-  case object RefreshSchema extends KeyboardShortcut("r", {
-    case Some(_) => throw new IllegalStateException()
-    case None => utils.Logging.info("Refreshing schema...")
-  }, isGlobal = true)
+  case object CloseTab extends KeyboardShortcut("del", { _ =>
+    utils.Logging.info("Closing tab...")
+  })
 
-  case object NewQuery extends KeyboardShortcut("+", {
-    case Some(_) => throw new IllegalStateException()
-    case None => utils.Logging.info("Adding new query...")
-  }, isGlobal = true)
+  case object NextTab extends KeyboardShortcut("]", { _ =>
+    TabManager.selectNextTab()
+  })
+
+  case object PreviousTab extends KeyboardShortcut("[", { _ =>
+    TabManager.selectPreviousTab()
+  })
 
   override val values = findValues
 }

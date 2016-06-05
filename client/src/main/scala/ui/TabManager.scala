@@ -45,6 +45,14 @@ object TabManager {
     dynamicTabBar.tabs()
   }
 
+  def selectNextTab() = {
+    utils.Logging.info("Moving to next tab...")
+  }
+
+  def selectPreviousTab() = {
+    utils.Logging.info("Moving to previous tab...")
+  }
+
   def selectTab(queryId: UUID) = {
     dynamicTabBar.tabs("select_tab", s"panel-$queryId")
   }

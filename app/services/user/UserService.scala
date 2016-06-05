@@ -43,7 +43,5 @@ class UserService @javax.inject.Inject() () extends Logging {
     }
   }
 
-  def getAll = {
-    MasterDatabase.conn.query(UserQueries.getAll("username"))
-  }
+  def getAll = MasterDatabase.conn.query(UserQueries.getAll("\"username\""))
 }
