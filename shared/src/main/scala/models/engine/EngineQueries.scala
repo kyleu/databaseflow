@@ -2,6 +2,7 @@ package models.engine
 
 import models.engine.rdbms._
 import models.query.RowDataOptions
+import models.schema.FilterOp
 
 object EngineQueries {
   def selectFrom(name: String, options: RowDataOptions = RowDataOptions.empty)(implicit engine: DatabaseEngine) = {
@@ -35,9 +36,9 @@ object EngineQueries {
     val quotedName = engine.leftQuoteIdentifier + name + engine.rightQuoteIdentifier
     val whereClause = options.filterCol match {
       case Some(col) =>
-        val op = options.filterOp.getOrElse("=")
+        val op = options.filterOp.getOrElse(FilterOp.Equal)
         val fVal = options.filterVal.getOrElse("?")
-        s" where $col $op '$fVal'" + whereClauseAdditions.map(" and " + _).getOrElse("")
+        s" where $col ${op.sqlSymbol} '$fVal'" + whereClauseAdditions.map(" and " + _).getOrElse("")
       case None => whereClauseAdditions.map(" where" + _).getOrElse("")
     }
     val orderByClause = options.orderByCol.map { orderCol =>

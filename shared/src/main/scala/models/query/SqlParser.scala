@@ -5,7 +5,7 @@ object SqlParser {
     val len = sql.length
     var startIndex = 0
     var currentIndex = 0
-    var ret = Seq.empty[String]
+    var ret = Seq.empty[(String, Int)]
 
     while (currentIndex < len) {
       sql(currentIndex) match {
@@ -40,7 +40,7 @@ object SqlParser {
         }
         case d if d == delimiter =>
           val statement = sql.substring(startIndex, currentIndex)
-          ret = ret :+ statement
+          ret = ret :+ (statement -> startIndex)
           currentIndex += 1
           startIndex = currentIndex
 
@@ -48,8 +48,8 @@ object SqlParser {
       }
     }
 
-    ret = ret :+ sql.substring(startIndex)
+    ret = ret :+ (sql.substring(startIndex) -> startIndex)
 
-    ret.map(_.trim).filter(_.nonEmpty)
+    ret.map(x => x._1.trim -> x._2).filter(_._1.nonEmpty)
   }
 }

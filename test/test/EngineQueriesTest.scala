@@ -23,7 +23,7 @@ class EngineQueriesTest extends FlatSpec with Matchers {
 
   "Engine Queries" should "output SQL Server limit syntax" in {
     val sql = EngineQueries.selectFrom("X", rdoLimit)(SqlServer)
-    sql should be("select * from [X] fetch next 1000 rows only")
+    sql should be("select * from [X] offset 0 rows fetch next 1000 rows only")
   }
 
   it should "output PostgreSQL limit syntax" in {
@@ -48,6 +48,6 @@ class EngineQueriesTest extends FlatSpec with Matchers {
 
   it should "output a proper order by clause" in {
     val sql = EngineQueries.selectFrom("X", rdoOrder)(PostgreSQL)
-    sql should be("select * from \"X\" order by \"y\"")
+    sql should be("select * from \"X\" order by \"y\" asc")
   }
 }

@@ -33,7 +33,7 @@ object SampleDatabaseService extends Logging {
     connection.transaction { t =>
       statements.foreach { statement =>
         t.executeUpdate(new Statement {
-          override def sql = statement
+          override def sql = statement._1
         })
         completedQueries += 1
         if (completedQueries < 10 || (completedQueries < 100 && completedQueries % 10 == 0) || (completedQueries % 100 == 0)) {

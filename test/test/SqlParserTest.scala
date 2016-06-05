@@ -27,57 +27,57 @@ class SqlParserTest extends FlatSpec with Matchers {
   it should "parse a single statement" in {
     val result = SqlParser.split(testQueryOne + ";")
     result.length should be(1)
-    result.head should be(testQueryOne)
+    result.head._1 should be(testQueryOne)
   }
 
   it should "parse multiple basic statements" in {
     val result = SqlParser.split(testQueryOne + ";\n" + testQueryTwo + ";\n" + testQueryThree)
 
     result.length should be(3)
-    result.head should be(testQueryOne)
-    result(1) should be(testQueryTwo)
-    result(2) should be(testQueryThree)
+    result.head._1 should be(testQueryOne)
+    result(1)._1 should be(testQueryTwo)
+    result(2)._1 should be(testQueryThree)
   }
 
   it should "parse a quoted statement" in {
     val result = SqlParser.split(testQueryQuoted)
     result.length should be(1)
-    result.head should be(testQueryQuoted)
+    result.head._1 should be(testQueryQuoted)
   }
 
   it should "parse a square bracketed statement" in {
     val result = SqlParser.split(testQuerySquareBracket)
     result.length should be(1)
-    result.head should be(testQuerySquareBracket)
+    result.head._1 should be(testQuerySquareBracket)
   }
 
   it should "parse a statement with line breaks" in {
     val result = SqlParser.split(testQueryLineBreaks)
     result.length should be(1)
-    result.head should be(testQueryLineBreaks)
+    result.head._1 should be(testQueryLineBreaks)
   }
 
   it should "parse a statement with dash comments" in {
     val result = SqlParser.split(testQueryDashComment)
     result.length should be(1)
-    result.head should be(testQueryDashComment)
+    result.head._1 should be(testQueryDashComment)
   }
 
   it should "parse a statement with hash comments" in {
     val result = SqlParser.split(testQueryHashComment)
     result.length should be(1)
-    result.head should be(testQueryHashComment)
+    result.head._1 should be(testQueryHashComment)
   }
 
   it should "parse a statement with C style comments" in {
     val result = SqlParser.split(testQueryCStyleComment)
     result.length should be(1)
-    result.head should be(testQueryCStyleComment)
+    result.head._1 should be(testQueryCStyleComment)
   }
 
   it should "parse a tricky statement" in {
     val result = SqlParser.split(testQueryTricky)
     result.length should be(1)
-    result.head should be(testQueryTricky)
+    result.head._1 should be(testQueryTricky)
   }
 }
