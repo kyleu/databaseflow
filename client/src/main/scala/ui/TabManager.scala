@@ -11,6 +11,7 @@ import scala.scalajs.js
 object TabManager {
   private[this] var initialized = false
   private[this] var openTabs = Seq.empty[(UUID, String, () => Unit)]
+  private[this] var activeTab: Option[UUID] = None
 
   private[this] lazy val tabBar = $("#query-tabs")
   private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
@@ -21,6 +22,7 @@ object TabManager {
 
     $("ul.tabs").on("click", "a", (e: JQueryEventObject) => {
       val queryId = UUID.fromString($(e.currentTarget).data("query").toString)
+      activeTab = Some(queryId)
       openTabs.find(_._1 == queryId) match {
         case Some(x) => org.scalajs.dom.window.history.replaceState(NullUtils.inst, x._2, "#" + x._2)
         case None => throw new IllegalStateException(s"No open tab [$queryId] from choices [${openTabs.mkString(", ")}].")
@@ -54,14 +56,43 @@ object TabManager {
   }
 
   def selectNextTab() = {
-    utils.Logging.info("Moving to next tab...")
+    utils.Logging.info(s"Moving to next tab from [$activeTab]...")
+    activeTab match {
+      case Some(active) =>
+        val idx = openTabs.indexWhere(_._1 == active)
+        if (idx == -1 || openTabs.length <= 1) {
+          openTabs.headOption.foreach(x => selectTab(x._1))
+        } else {
+          if (idx == openTabs.length - 1) {
+            selectTab(openTabs.head._1)
+          } else {
+            selectTab(openTabs(idx + 1)._1)
+          }
+        }
+      case None => openTabs.headOption.foreach(x => selectTab(x._1))
+    }
   }
 
   def selectPreviousTab() = {
-    utils.Logging.info("Moving to previous tab...")
+    utils.Logging.info(s"Moving to previous tab from [$activeTab]...")
+    activeTab match {
+      case Some(active) =>
+        val idx = openTabs.indexWhere(_._1 == active)
+        if (idx == -1 || openTabs.length <= 1) {
+          openTabs.headOption.foreach(x => selectTab(x._1))
+        } else {
+          if (idx == 0) {
+            selectTab(openTabs.last._1)
+          } else {
+            selectTab(openTabs(idx - 1)._1)
+          }
+        }
+      case None => openTabs.headOption.foreach(x => selectTab(x._1))
+    }
   }
 
   def selectTab(queryId: UUID) = {
     dynamicTabBar.tabs("select_tab", s"panel-$queryId")
+    activeTab = Some(queryId)
   }
 }
