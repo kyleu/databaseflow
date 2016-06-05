@@ -18,7 +18,7 @@ object QueryManager {
 
   lazy val workspace = $("#workspace")
 
-  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, onChange: (String) => Unit, onClose: () => Unit): Unit = {
+  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, onChange: (String) => Unit): Unit = {
     val sqlEditor = EditorManager.initSqlEditor(queryId, (s: String) => {
       val changed = !sqlChecks.get(queryId).contains(s)
       if (changed) {
@@ -39,11 +39,6 @@ object QueryManager {
     wire($(".run-query-link", queryPanel), "run")
     wire($(".explain-query-link", queryPanel), "explain")
     wire($(".analyze-query-link", queryPanel), "analyze")
-
-    utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-      QueryManager.closeQuery(queryId)
-      onClose()
-    })
 
     sqlEditor.selection.selectAll()
     setTimeout(500) {

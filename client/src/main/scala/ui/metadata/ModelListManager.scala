@@ -38,7 +38,13 @@ object ModelListManager {
       val panelHtml = div(id := s"panel-$queryId", cls := "workspace-panel")(template)
 
       WorkspaceManager.append(panelHtml.toString)
-      TabManager.addTab(queryId, "list-" + key, name, Icons.list)
+
+      def close() = {
+        openLists = openLists - key
+        QueryManager.closeQuery(queryId)
+      }
+
+      TabManager.addTab(queryId, "list-" + key, name, Icons.list, close)
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")
@@ -48,11 +54,6 @@ object ModelListManager {
       }
 
       wire(queryPanel, key)
-
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        openLists = openLists - key
-        QueryManager.closeQuery(queryId)
-      })
 
       val filterManager = ModelFilterManager(queryPanel)
 

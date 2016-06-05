@@ -46,7 +46,13 @@ object SavedQueryManager {
   private[this] def addSavedQuery(savedQuery: SavedQuery) = {
     val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
     QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, UserManager.userId).toString)
-    TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery)
+
+    def close() = {
+      QueryManager.closeQuery(savedQuery.id)
+      openSavedQueries = openSavedQueries - savedQuery.id
+    }
+
+    TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
@@ -90,10 +96,6 @@ object SavedQueryManager {
       }
     }
 
-    def onClose() = {
-      openSavedQueries = openSavedQueries - savedQuery.id
-    }
-
-    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, onChange, onClose)
+    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, onChange)
   }
 }

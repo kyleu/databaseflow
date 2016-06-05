@@ -36,7 +36,12 @@ object ViewManager extends ViewDetailHelper {
         case _ => utils.NetworkMessage.sendMessage(GetViewDetail(name))
       }
 
-      TabManager.addTab(queryId, "view-" + name, name, Icons.view)
+      def close() = {
+        openViews = openViews - name
+        QueryManager.closeQuery(queryId)
+      }
+
+      TabManager.addTab(queryId, "view-" + name, name, Icons.view, close)
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -62,11 +67,6 @@ object ViewManager extends ViewDetailHelper {
 
       wire($(".explain-view-link", queryPanel), "explain")
       wire($(".analyze-view-link", queryPanel), "analyze")
-
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        openViews = openViews - name
-        QueryManager.closeQuery(queryId)
-      })
 
       openViews = openViews + (name -> queryId)
   }

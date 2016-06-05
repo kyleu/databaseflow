@@ -20,15 +20,16 @@ object HistoryManager {
       val panelHtml = div(id := s"panel-$historyId", cls := "workspace-panel")(template)
 
       WorkspaceManager.append(panelHtml.toString)
-      TabManager.addTab(historyId, "history", "History", Icons.history)
+
+      def close() = {
+        isOpen = false
+        QueryManager.closeQuery(historyId)
+      }
+
+      TabManager.addTab(historyId, "history", "History", Icons.history, close)
       QueryManager.activeQueries = QueryManager.activeQueries :+ historyId
 
       val queryPanel = $(s"#panel-$historyId")
-
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        isOpen = false
-        QueryManager.closeQuery(historyId)
-      })
 
       isOpen = true
     }

@@ -31,7 +31,12 @@ object ProcedureManager {
         case _ => utils.NetworkMessage.sendMessage(GetProcedureDetail(name))
       }
 
-      TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure)
+      def close() = {
+        openProcedures = openProcedures - name
+        QueryManager.closeQuery(queryId)
+      }
+
+      TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure, close)
 
       val queryPanel = $(s"#panel-$queryId")
 
@@ -42,11 +47,6 @@ object ProcedureManager {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")
         }
-      })
-
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        openProcedures = openProcedures - name
-        QueryManager.closeQuery(queryId)
       })
 
       openProcedures = openProcedures + (name -> queryId)

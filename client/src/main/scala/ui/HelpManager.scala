@@ -20,15 +20,16 @@ object HelpManager {
       val panelHtml = div(id := s"panel-$helpId", cls := "workspace-panel")(template)
 
       WorkspaceManager.append(panelHtml.toString)
-      TabManager.addTab(helpId, "help", "Help", Icons.help)
+
+      def close() = {
+        isOpen = false
+        QueryManager.closeQuery(helpId)
+      }
+
+      TabManager.addTab(helpId, "help", "Help", Icons.help, close)
       QueryManager.activeQueries = QueryManager.activeQueries :+ helpId
 
       val queryPanel = $(s"#panel-$helpId")
-
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        isOpen = false
-        QueryManager.closeQuery(helpId)
-      })
 
       isOpen = true
     }

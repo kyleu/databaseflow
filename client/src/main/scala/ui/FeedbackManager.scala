@@ -23,15 +23,16 @@ object FeedbackManager {
       val panelHtml = div(id := s"panel-$feedbackId", cls := "workspace-panel")(template)
 
       WorkspaceManager.append(panelHtml.toString)
-      TabManager.addTab(feedbackId, "feedback", "Feedback", Icons.feedback)
+
+      def close() = {
+        isOpen = false
+        QueryManager.closeQuery(feedbackId)
+      }
+
+      TabManager.addTab(feedbackId, "feedback", "Feedback", Icons.feedback, close)
       QueryManager.activeQueries = QueryManager.activeQueries :+ feedbackId
 
       val queryPanel = $(s"#panel-$feedbackId")
-
-      utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-        isOpen = false
-        QueryManager.closeQuery(feedbackId)
-      })
 
       utils.JQueryUtils.clickHandler($(".submit-feedback", queryPanel), (jq) => {
         val email = $("#feedback-email-input", queryPanel).value().toString

@@ -36,7 +36,12 @@ object TableManager extends TableDetailHelper {
           case _ => utils.NetworkMessage.sendMessage(GetTableDetail(name))
         }
 
-        TabManager.addTab(queryId, "table-" + name, name, Icons.table)
+        def close() = {
+          openTables = openTables - name
+          QueryManager.closeQuery(queryId)
+        }
+
+        TabManager.addTab(queryId, "table-" + name, name, Icons.table, close)
 
         val queryPanel = $(s"#panel-$queryId")
 
@@ -57,11 +62,6 @@ object TableManager extends TableDetailHelper {
         utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
           implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
           QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name), name)
-        })
-
-        utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
-          openTables = openTables - name
-          QueryManager.closeQuery(queryId)
         })
 
         openTables = openTables + (name -> queryId)

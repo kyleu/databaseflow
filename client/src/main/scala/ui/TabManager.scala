@@ -2,6 +2,7 @@ package ui
 
 import java.util.UUID
 
+import models.template.Icons
 import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
 import utils.NullUtils
 
@@ -9,7 +10,7 @@ import scala.scalajs.js
 
 object TabManager {
   private[this] var initialized = false
-  private[this] var openTabs = Seq.empty[(UUID, String)]
+  private[this] var openTabs = Seq.empty[(UUID, String, () => Unit)]
 
   private[this] lazy val tabBar = $("#query-tabs")
   private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
@@ -27,19 +28,26 @@ object TabManager {
     })
   }
 
-  def addTab(id: UUID, ctx: String, title: String, icon: String) = {
-    openTabs = openTabs :+ (id -> ctx)
+  def addTab(id: UUID, ctx: String, title: String, icon: String, onClose: () => Unit) = {
+    openTabs = openTabs :+ ((id, ctx, onClose))
     tabBar.append(s"""<li id="tab-$id" class="tab col s3">
       <a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a>
     </li>""")
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
 
+    val queryPanel = $(s"#panel-$id")
+    utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
+      onClose()
+    })
+
     selectTab(id)
   }
 
   def removeTab(queryId: UUID) = {
+    val tabCloseOp = openTabs.find(_._1 == queryId).map(_._3)
     openTabs = openTabs.filterNot(_._1 == queryId)
+    tabCloseOp.foreach { _() }
     $(s"#tab-$queryId").remove()
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
