@@ -18,7 +18,7 @@ object DataFilterTemplate {
     }
     div(cls := s"filter-container $hiddenClass z-depth-1")(
       div(cls := "row")(
-        div(cls := "input-field col s5")(
+        div(cls := "input-field col s4")(
           select(cls := "filter-select filter-col-select theme-text")(r.columns.map(c =>
             if (source.filterColumn.contains(c.name)) {
               option(selected)(c.name)
@@ -37,14 +37,26 @@ object DataFilterTemplate {
           }),
           label("Op")
         ),
-        div(cls := "input-field col s5")(
-          input(name := "", `type` := "text", cls := "theme-text"),
-          label("Value")
+        div(cls := "single-value")(
+          div(cls := "input-field col s6")(
+            input(cls := "filter-single-val theme-text", `type` := "text"),
+            label("Value")
+          )
+        ),
+        div(cls := "double-value initially-hidden")(
+          div(cls := "input-field col s3")(
+            input(cls := "filter-double-val-a theme-text", `type` := "text"),
+            label("Value 1")
+          ),
+          div(cls := "input-field col s3")(
+            input(cls := "filter-double-val-b theme-text", `type` := "text"),
+            label("Value 2")
+          )
         )
       ),
       div(cls := "row")(
         div(cls := "col s12")(
-          button(cls := "btn theme right waves-effect waves-light")("Filter"),
+          button(cls := "btn theme right waves-effect waves-light results-filter-go")("Filter"),
           button(cls := "btn-flat waves-effect waves-light right results-filter-cancel")("Cancel")
         )
       )

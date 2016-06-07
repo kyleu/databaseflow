@@ -8,7 +8,7 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{ JQuery, jQuery => $ }
 import ui.ProgressManager
-import ui.query.{ RowDataManager, TableManager }
+import ui.query.{ FilterManager, RowDataManager, TableManager }
 import utils.JQueryUtils
 
 import scala.scalajs.js
@@ -60,14 +60,7 @@ object QueryResultService {
   private[this] def onComplete(result: QueryResult, src: Source, panel: JQuery, resultId: UUID) = {
     js.Dynamic.global.$(".filter-select", panel).material_select()
 
-    utils.JQueryUtils.clickHandler($(".results-filter-link", panel), (jq) => {
-      $(".row-status-display", panel).hide()
-      $(".filter-container", panel).show()
-    })
-    utils.JQueryUtils.clickHandler($(".results-filter-cancel", panel), (jq) => {
-      $(".row-status-display", panel).show()
-      $(".filter-container", panel).hide()
-    })
+    FilterManager.init(src.t, result.queryId, src.name, panel, src)
 
     val options = src.asRowDataOptions
     JQueryUtils.clickHandler($(".sorted-title", panel), (j) => {

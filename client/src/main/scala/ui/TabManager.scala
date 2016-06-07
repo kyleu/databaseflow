@@ -32,9 +32,7 @@ object TabManager {
 
   def addTab(id: UUID, ctx: String, title: String, icon: String, onClose: () => Unit) = {
     openTabs = openTabs :+ ((id, ctx, onClose))
-    tabBar.append(s"""<li id="tab-$id" class="tab col s3">
-      <a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a>
-    </li>""")
+    tabBar.append(s"""<li id="tab-$id" class="tab col s3"><a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a></li>""")
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
 
@@ -55,40 +53,30 @@ object TabManager {
     dynamicTabBar.tabs()
   }
 
-  def selectNextTab() = {
-    utils.Logging.info(s"Moving to next tab from [$activeTab]...")
-    activeTab match {
-      case Some(active) =>
-        val idx = openTabs.indexWhere(_._1 == active)
-        if (idx == -1 || openTabs.length <= 1) {
-          openTabs.headOption.foreach(x => selectTab(x._1))
-        } else {
-          if (idx == openTabs.length - 1) {
-            selectTab(openTabs.head._1)
-          } else {
-            selectTab(openTabs(idx + 1)._1)
-          }
-        }
-      case None => openTabs.headOption.foreach(x => selectTab(x._1))
-    }
+  def selectNextTab() = activeTab match {
+    case Some(active) =>
+      val idx = openTabs.indexWhere(_._1 == active)
+      if (idx == -1 || openTabs.length <= 1) {
+        openTabs.headOption.foreach(x => selectTab(x._1))
+      } else if (idx == openTabs.length - 1) {
+        selectTab(openTabs.head._1)
+      } else {
+        selectTab(openTabs(idx + 1)._1)
+      }
+    case None => openTabs.headOption.foreach(x => selectTab(x._1))
   }
 
-  def selectPreviousTab() = {
-    utils.Logging.info(s"Moving to previous tab from [$activeTab]...")
-    activeTab match {
-      case Some(active) =>
-        val idx = openTabs.indexWhere(_._1 == active)
-        if (idx == -1 || openTabs.length <= 1) {
-          openTabs.headOption.foreach(x => selectTab(x._1))
-        } else {
-          if (idx == 0) {
-            selectTab(openTabs.last._1)
-          } else {
-            selectTab(openTabs(idx - 1)._1)
-          }
-        }
-      case None => openTabs.headOption.foreach(x => selectTab(x._1))
-    }
+  def selectPreviousTab() = activeTab match {
+    case Some(active) =>
+      val idx = openTabs.indexWhere(_._1 == active)
+      if (idx == -1 || openTabs.length <= 1) {
+        openTabs.headOption.foreach(x => selectTab(x._1))
+      } else if (idx == 0) {
+        selectTab(openTabs.last._1)
+      } else {
+        selectTab(openTabs(idx - 1)._1)
+      }
+    case None => openTabs.headOption.foreach(x => selectTab(x._1))
   }
 
   def selectTab(queryId: UUID) = {
