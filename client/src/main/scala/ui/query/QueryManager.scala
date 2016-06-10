@@ -50,6 +50,7 @@ object QueryManager {
 
     check(queryId, getSql(queryId))
   }
+
   def getSql(queryId: UUID) = sqlEditors.get(queryId) match {
     case Some(editor) => editor.getValue().toString
     case None => ""

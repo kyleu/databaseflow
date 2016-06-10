@@ -2,9 +2,11 @@ package ui
 
 import java.util.UUID
 
+import models.GetQueryHistory
 import models.template.{ HistoryTemplate, Icons }
 import org.scalajs.jquery.{ jQuery => $ }
 import ui.query.QueryManager
+import utils.{ JQueryUtils, NetworkMessage }
 
 import scalatags.Text.all._
 
@@ -31,7 +33,15 @@ object HistoryManager {
 
       val queryPanel = $(s"#panel-$historyId")
 
+      JQueryUtils.clickHandler($(".refresh-history-link", queryPanel), e => {
+        refresh()
+      })
+
+      refresh()
+
       isOpen = true
     }
   }
+
+  def refresh() = NetworkMessage.sendMessage(GetQueryHistory(100, 0))
 }

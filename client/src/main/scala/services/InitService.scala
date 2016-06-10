@@ -52,6 +52,7 @@ object InitService {
       case ("help", None) => HelpManager.show()
       case ("feedback", None) => FeedbackManager.show()
       case ("history", None) => HistoryManager.show()
+      case ("list", Some(key)) => ModelListManager.showList(key)
       case ("new", None) => AdHocQueryManager.addNewQuery()
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
       case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))
@@ -74,7 +75,6 @@ object InitService {
       }
       case ("view", Some(id)) => ViewManager.viewDetail(id)
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
-      case ("list", Some(key)) => ModelListManager.showList(key)
       case (key, id) =>
         utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
         AdHocQueryManager.addNewQuery()

@@ -9,6 +9,7 @@ import models.schema.Schema
 import models.user.User
 import services.data.SampleDatabaseService
 import services.query.{ PlanExecutionService, QueryCheckService, QueryExecutionService }
+import services.user.QueryHistoryService
 import utils.metrics.InstrumentedActor
 import utils.{ Config, Logging }
 
@@ -59,6 +60,8 @@ class SocketService(
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { QueryExecutionService.handleQuerySaveRequest(user, qsr.query, out) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QueryExecutionService.handleQueryDeleteRequest(user, qdr.id, out) }
+
+    case gqh: GetQueryHistory => timeReceive(gqh) { QueryHistoryService.handleGetQueryHistory(db.connectionId, user, gqh, out) }
 
     case csd: CreateSampleDatabase => timeReceive(csd) { SampleDatabaseService.schedule(db, csd.queryId, out) }
 

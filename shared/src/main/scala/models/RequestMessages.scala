@@ -26,4 +26,6 @@ case class CancelQuery(queryId: UUID, resultId: UUID) extends RequestMessage
 case class QuerySaveRequest(query: SavedQuery) extends RequestMessage
 case class QueryDeleteRequest(id: UUID) extends RequestMessage
 
+case class GetQueryHistory(limit: Int, offset: Int) extends RequestMessage
+
 case class CreateSampleDatabase(queryId: UUID) extends RequestMessage

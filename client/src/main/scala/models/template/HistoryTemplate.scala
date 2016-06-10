@@ -5,7 +5,8 @@ import scalatags.Text.all._
 object HistoryTemplate {
   def content() = {
     val content = div(id := "history-panel")(
-      "History!"
+      div(a(cls := "refresh-history-link", href := "")("Refresh")),
+      div("Loading query history...")
     )
 
     StaticPanelTemplate.cardRow(
