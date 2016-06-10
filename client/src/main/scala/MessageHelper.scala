@@ -19,6 +19,7 @@ trait MessageHelper { this: DatabaseFlow =>
 
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
     case qrr: QueryResultResponse => handleQueryResultResponse(qrr)
+    case qrrc: QueryResultRowCount => QueryResultService.handleResultRowCount(qrrc)
     case qer: QueryErrorResponse => QueryErrorService.handleQueryErrorResponse(qer)
 
     case prr: PlanResultResponse => QueryPlanService.handlePlanResultResponse(prr)

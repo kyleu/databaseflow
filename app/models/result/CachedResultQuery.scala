@@ -87,12 +87,14 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
 
         val duration = (DateUtils.nowMillis - startMs).toInt
         CachedResultService.completeCacheResult(result.resultId, rowCount, duration)
-        QueryResultRowCount(result.resultId, result.queryId, rowCount, duration)
+        QueryResultRowCount(result.resultId, result.queryId, result.resultId, rowCount, duration)
       } else {
-        CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, columns, Seq(firstRowData))
+        val elapsed = (DateUtils.nowMillis - startMs).toInt
+        CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, columns, Seq(firstRowData), elapsed)
       }
     } else {
-      CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, Nil, Nil)
+      val elapsed = (DateUtils.nowMillis - startMs).toInt
+      CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, Nil, Nil, elapsed)
     }
   }
 }

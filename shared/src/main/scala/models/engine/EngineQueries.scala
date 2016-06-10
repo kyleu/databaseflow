@@ -38,7 +38,12 @@ object EngineQueries {
       case Some(col) =>
         val op = options.filterOp.getOrElse(FilterOp.Equal)
         val fVal = options.filterVal.getOrElse("?")
-        s" where $col ${op.sqlSymbol} '$fVal'" + whereClauseAdditions.map(" and " + _).getOrElse("")
+        val modifiedVal = op match {
+          case FilterOp.Between => fVal.split('|').map(s => "'" + s + "'").mkString(" and ")
+          case FilterOp.Like if !fVal.contains('%') => s"'%$fVal%'"
+          case _ => s"'$fVal'"
+        }
+        s" where ${engine.leftQuoteIdentifier}$col${engine.rightQuoteIdentifier} ${op.sqlSymbol} $modifiedVal" + whereClauseAdditions.map(" and " + _).getOrElse("")
       case None => whereClauseAdditions.map(" where" + _).getOrElse("")
     }
     val orderByClause = options.orderByCol.map { orderCol =>

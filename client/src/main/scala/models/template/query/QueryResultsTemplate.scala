@@ -23,9 +23,13 @@ object QueryResultsTemplate {
         },
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
         p(
-          s"${utils.NumberUtils.withCommas(qr.rowsAffected)} rows returned ",
+          s"${utils.NumberUtils.withCommas(qr.rowsAffected)} ",
+          span(cls := "total-row-count"),
+          " rows returned ",
           time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString),
-          s" in [${durationMs}ms]."
+          " in [",
+          span(cls := "total-duration")(durationMs.toString),
+          "ms]."
         ),
         div(qr.source.flatMap(_.filterColumn) match {
           case Some(column) =>

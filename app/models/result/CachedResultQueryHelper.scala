@@ -22,14 +22,15 @@ object CachedResultQueryHelper extends Logging {
     ResultCacheDatabase.conn.executeUpdate(InsertResultRow(tableName, columnNames, data)(ResultCacheDatabase.conn.engine))
   }
 
-  def getResultResponseFor(resultId: UUID, queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[Any]]]) = {
+  def getResultResponseFor(resultId: UUID, queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[Any]]], elapsedMs: Int) = {
     val mappedData = data.map(_.map(_.map(DynamicQuery.transform)))
     QueryResultResponse(resultId, QueryResult(
       queryId = queryId,
       sql = sql,
       columns = columns,
-      data = mappedData
-    ), 0)
+      data = mappedData,
+      rowsAffected = mappedData.size
+    ), elapsedMs)
   }
 
   def sendResult(
@@ -47,6 +48,7 @@ object CachedResultQueryHelper extends Logging {
         sql = result.sql,
         columns = columns,
         data = mappedData,
+        rowsAffected = mappedData.size,
         moreRowsAvailable = moreRowsAvailable,
         source = Some(QueryResult.Source(
           t = "cache",

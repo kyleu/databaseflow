@@ -2,6 +2,7 @@ package services
 
 import java.util.UUID
 
+import models.QueryResultRowCount
 import models.query.QueryResult.Source
 import models.query.{ QueryResult, RowDataOptions }
 import models.schema.FilterOp
@@ -83,5 +84,14 @@ object QueryResultService {
       appendRowsLink.hide()
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
+  }
+
+  def handleResultRowCount(qrrc: QueryResultRowCount) = {
+    val workspace = $(s"#workspace-${qrrc.queryId}")
+    val panel = $(s"#${qrrc.resultId}", workspace)
+    val rowCountEl = $(".total-row-count", panel)
+    rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
+    val timingEl = $(".total-duration", panel)
+    timingEl.text(utils.NumberUtils.withCommas(qrrc.durationMs).toString)
   }
 }
