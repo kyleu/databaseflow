@@ -1,5 +1,4 @@
 import sbt.Keys._
-import sbt.Project.projectToRef
 import sbt._
 
 object Database {
