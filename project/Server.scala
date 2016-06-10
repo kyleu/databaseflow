@@ -29,7 +29,7 @@ object Server {
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit,
       Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
-      Authentication.silhouette, Authentication.hasher, Authentication.persistence,
+      Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
       Export.csv, Export.xlsx, Ui.swing, Utils.scalaGuice,
