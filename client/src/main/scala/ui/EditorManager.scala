@@ -4,6 +4,7 @@ import java.util.UUID
 
 import services.ShortcutService
 import ui.metadata.MetadataManager
+import org.scalajs.jquery.{ jQuery => $ }
 
 import scala.scalajs.js
 
@@ -55,9 +56,7 @@ object EditorManager {
 
     session.setMode("ace/mode/sql")
     session.setTabSize(2)
-    session.on("change", () => {
-      onChange(editor.getValue().toString)
-    })
+    session.on("change", () => onChange(editor.getValue().toString))
 
     ShortcutService.configureEditor(id)
 
@@ -65,10 +64,20 @@ object EditorManager {
   }
 
   def onSave(id: UUID) = {
-    utils.Logging.info(s"Saving query [$id]...")
+    val queryPanel = $(s"#panel-$id")
+    val saveLink = $(".save-query-link", queryPanel)
+    if (saveLink.length != 1) {
+      utils.Logging.warn(s"Found [${queryPanel.length}] panels and [${saveLink.length}] links for query [$id].")
+    }
+    saveLink.click()
   }
 
   def onRun(id: UUID) = {
-    utils.Logging.info(s"Running query [$id]...")
+    val queryPanel = $(s"#panel-$id")
+    val runLink = $(".run-query-link", queryPanel)
+    if (runLink.length != 1) {
+      utils.Logging.warn(s"Found [${queryPanel.length}] panels and [${runLink.length}] links for query [$id].")
+    }
+    runLink.click()
   }
 }

@@ -30,6 +30,8 @@ object TabManager {
     })
   }
 
+  def getActiveTab = activeTab
+
   def addTab(id: UUID, ctx: String, title: String, icon: String, onClose: () => Unit) = {
     openTabs = openTabs :+ ((id, ctx, onClose))
     tabBar.append(s"""<li id="tab-$id" class="tab col s3"><a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a></li>""")

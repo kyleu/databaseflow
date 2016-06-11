@@ -4,7 +4,7 @@ import java.util.UUID
 
 import enumeratum._
 import ui.metadata.MetadataManager
-import ui.query.AdHocQueryManager
+import ui.query.{ AdHocQueryManager, QueryManager }
 import ui.{ EditorManager, HelpManager, TabManager }
 
 sealed abstract class KeyboardShortcut(val pattern: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
@@ -16,6 +16,10 @@ object KeyboardShortcut extends Enum[KeyboardShortcut] {
 
   case object Run extends KeyboardShortcut("mod+enter", { uuid =>
     EditorManager.onRun(uuid.getOrElse(throw new IllegalStateException()))
+  }, isGlobal = false)
+
+  case object Blur extends KeyboardShortcut("esc", { uuid =>
+    QueryManager.blurEditor(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
   case object Help extends KeyboardShortcut("?", { _ =>
@@ -31,7 +35,9 @@ object KeyboardShortcut extends Enum[KeyboardShortcut] {
   })
 
   case object CloseTab extends KeyboardShortcut("del", { _ =>
-    utils.Logging.info("Closing tab...")
+    TabManager.getActiveTab.foreach { id =>
+      QueryManager.closeQuery(id)
+    }
   })
 
   case object NextTab extends KeyboardShortcut("]", { _ =>

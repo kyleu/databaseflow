@@ -83,4 +83,9 @@ object QueryManager {
     val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
     TabManager.selectTab(newId)
   }
+
+  def blurEditor(queryId: UUID) = sqlEditors.get(queryId) match {
+    case Some(editor) => editor.blur()
+    case None => ""
+  }
 }
