@@ -5,46 +5,51 @@ import java.util.UUID
 import enumeratum._
 import ui.metadata.MetadataManager
 import ui.query.{ AdHocQueryManager, QueryManager }
+import ui.search.SearchManager
 import ui.{ EditorManager, HelpManager, TabManager }
 
-sealed abstract class KeyboardShortcut(val pattern: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
+sealed abstract class KeyboardShortcut(val pattern: String, val desc: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
 
 object KeyboardShortcut extends Enum[KeyboardShortcut] {
-  case object Save extends KeyboardShortcut("mod+s", { uuid =>
+  case object Save extends KeyboardShortcut("mod+s", "Save Query", { uuid =>
     EditorManager.onSave(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
-  case object Run extends KeyboardShortcut("mod+enter", { uuid =>
+  case object Run extends KeyboardShortcut("mod+enter", "Run Query", { uuid =>
     EditorManager.onRun(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
-  case object Blur extends KeyboardShortcut("esc", { uuid =>
+  case object Blur extends KeyboardShortcut("esc", "Leave Editor", { uuid =>
     QueryManager.blurEditor(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
-  case object Help extends KeyboardShortcut("?", { _ =>
+  case object Help extends KeyboardShortcut("?", "Help", { _ =>
     HelpManager.show()
   })
 
-  case object RefreshSchema extends KeyboardShortcut("r", { _ =>
+  case object Search extends KeyboardShortcut("/", "Search", { _ =>
+    SearchManager.focus()
+  })
+
+  case object RefreshSchema extends KeyboardShortcut("r", "Refresh Schema", { _ =>
     MetadataManager.refreshSchema()
   })
 
-  case object NewQuery extends KeyboardShortcut("+", { _ =>
+  case object NewQuery extends KeyboardShortcut("+", "New Query", { _ =>
     AdHocQueryManager.addNewQuery()
   })
 
-  case object CloseTab extends KeyboardShortcut("del", { _ =>
+  case object CloseTab extends KeyboardShortcut("del", "Close Tab", { _ =>
     TabManager.getActiveTab.foreach { id =>
       QueryManager.closeQuery(id)
     }
   })
 
-  case object NextTab extends KeyboardShortcut("]", { _ =>
+  case object NextTab extends KeyboardShortcut("]", "Select Next Tab", { _ =>
     TabManager.selectNextTab()
   })
 
-  case object PreviousTab extends KeyboardShortcut("[", { _ =>
+  case object PreviousTab extends KeyboardShortcut("[", "Select Previous Tab", { _ =>
     TabManager.selectPreviousTab()
   })
 

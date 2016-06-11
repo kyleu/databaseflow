@@ -29,10 +29,10 @@ object SearchManager {
     })
 
     searchInput.keyup { (e: JQueryEventObject) =>
-      onTextChange(searchInput.value().toString)
+      onTextChange(searchInput.value().toString.stripPrefix("/"))
     }
     searchInput.blur { (e: JQueryEventObject) =>
-      onTextChange(searchInput.value().toString)
+      onTextChange(searchInput.value().toString.stripPrefix("/"))
     }
   }
 
@@ -52,6 +52,8 @@ object SearchManager {
     }
     currentSearch = search
   }
+
+  def focus() = searchInput.focus()
 
   def openIfClosed(j: JQuery) = if (!j.hasClass("active")) {
     $(".collapsible-header", j).trigger("click")
