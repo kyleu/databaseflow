@@ -35,7 +35,7 @@ object DataFilterTemplate {
             }
           })
         ),
-        div(cls := "single-value")(
+        div(cls := "single-value" + (if (source.filterOp.contains(FilterOp.Between)) { " initially-hidden" } else { "" }))(
           div(cls := "input-field col s6")(
             if (source.filterOp.contains(FilterOp.Between)) {
               input(cls := "filter-single-val theme-text", `type` := "text")
@@ -44,7 +44,7 @@ object DataFilterTemplate {
             }
           )
         ),
-        div(cls := "double-value initially-hidden")(
+        div(cls := "double-value" + (if (source.filterOp.contains(FilterOp.Between)) { "" } else { " initially-hidden" }))(
           div(cls := "input-field col s3")(
             if (source.filterOp.contains(FilterOp.Between)) {
               input(cls := "filter-double-val-a theme-text", `type` := "text", value := source.filterValue.getOrElse("|").split('|')(0))
