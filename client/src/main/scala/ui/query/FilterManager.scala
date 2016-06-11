@@ -48,7 +48,11 @@ object FilterManager {
 
       val column = $(":selected", colSelect).`val`().toString
       val op = $(":selected", opSelect).`val`().toString
-      val v = singleVal.`val`().toString
+      val v = if (op == "btw") {
+        doubleValA.`val`().toString + "|" + doubleValB.`val`().toString
+      } else {
+        singleVal.`val`().toString
+      }
 
       val options = src.copy(
         filterColumn = Some(column),

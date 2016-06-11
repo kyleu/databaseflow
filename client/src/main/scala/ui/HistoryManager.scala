@@ -43,5 +43,5 @@ object HistoryManager {
     }
   }
 
-  def refresh() = NetworkMessage.sendMessage(GetQueryHistory(100, 0))
+  def refresh() = NetworkMessage.sendMessage(GetQueryHistory())
 }

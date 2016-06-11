@@ -24,8 +24,7 @@ object DataFilterTemplate {
               option(selected)(c.name)
             } else {
               option(c.name)
-            })),
-          label("Column")
+            }))
         ),
         div(cls := "input-field col s2")(
           select(cls := "filter-select filter-op-select theme-text")(FilterOp.values.map { op =>
@@ -34,23 +33,31 @@ object DataFilterTemplate {
             } else {
               option(value := op.key)(op.symbol)
             }
-          }),
-          label("Op")
+          })
         ),
         div(cls := "single-value")(
           div(cls := "input-field col s6")(
-            input(cls := "filter-single-val theme-text", `type` := "text"),
-            label("Value")
+            if (source.filterOp.contains(FilterOp.Between)) {
+              input(cls := "filter-single-val theme-text", `type` := "text")
+            } else {
+              input(cls := "filter-single-val theme-text", `type` := "text", value := source.filterValue.getOrElse(""))
+            }
           )
         ),
         div(cls := "double-value initially-hidden")(
           div(cls := "input-field col s3")(
-            input(cls := "filter-double-val-a theme-text", `type` := "text"),
-            label("Value 1")
+            if (source.filterOp.contains(FilterOp.Between)) {
+              input(cls := "filter-double-val-a theme-text", `type` := "text", value := source.filterValue.getOrElse("|").split('|')(0))
+            } else {
+              input(cls := "filter-double-val-a theme-text", `type` := "text")
+            }
           ),
           div(cls := "input-field col s3")(
-            input(cls := "filter-double-val-b theme-text", `type` := "text"),
-            label("Value 2")
+            if (source.filterOp.contains(FilterOp.Between)) {
+              input(cls := "filter-double-val-b theme-text", `type` := "text", value := source.filterValue.getOrElse("|").split('|')(1))
+            } else {
+              input(cls := "filter-double-val-b theme-text", `type` := "text")
+            }
           )
         )
       ),
