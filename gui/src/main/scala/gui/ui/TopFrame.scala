@@ -1,10 +1,12 @@
 package gui.ui
 
+import java.net.URI
 import javax.swing.BorderFactory
 
 import gui.web.WebApp
 
 import scala.swing._
+import scala.swing.event.MouseClicked
 
 class TopFrame(app: WebApp) extends MainFrame {
   title = "Database Flow"
@@ -28,21 +30,8 @@ class TopFrame(app: WebApp) extends MainFrame {
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   }
 
-  private[this] val linkLabel = new Label("http://localhost:4000", None.orNull, Alignment.Left) {
-    font = CustomFonts.regularText
-    foreground = Colors.black
-    background = Colors.white
-    cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
-    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-  }
-
   private[this] val statusPanel = new BorderPanel {
     layout(statusLabel) = BorderPanel.Position.North
-    background = Colors.white
-  }
-
-  private[this] val linkPanel = new BorderPanel {
-    layout(linkLabel) = BorderPanel.Position.South
     background = Colors.white
   }
 
@@ -55,21 +44,33 @@ class TopFrame(app: WebApp) extends MainFrame {
   private[this] val panel = new BorderPanel {
     layout(titlePanel) = BorderPanel.Position.North
     layout(statusPanel) = BorderPanel.Position.Center
-    layout(linkPanel) = BorderPanel.Position.South
   }
 
   contents = panel
 
   menuBar = new FrameMenu()
 
-  size = new Dimension(320, 170)
+  size = new Dimension(320, 140)
 
   peer.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE)
 
   background = Colors.white
 
+  listenTo(statusLabel.mouse.clicks)
+  reactions += {
+    case x: MouseClicked => if (java.awt.Desktop.isDesktopSupported) {
+      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4000"))
+    }
+  }
+
   def onStart() = {
-    statusLabel.text = "Server started."
+    statusLabel.text = "http://localhost:4000"
+    statusLabel.cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
+    statusLabel.xAlignment = Alignment.Center
+
+    if (java.awt.Desktop.isDesktopSupported) {
+      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4000"))
+    }
   }
 
   override def closeOperation() = {
