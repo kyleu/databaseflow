@@ -11,16 +11,9 @@ import scalatags.Text.tags2.time
 
 object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
-    val hiddenClass = qr.source.flatMap(_.sortedColumn) match {
-      case Some(_) => "initially-hidden"
-      case None => ""
-    }
     val content = div(id := resultId.toString)(
       div(cls := "row-status-display")(
-        qr.source match {
-          case Some(_) => a(href := "#", cls := s"results-filter-link right theme-text $hiddenClass")("Filter")
-          case None => span()
-        },
+        a(href := "#", cls := s"results-filter-link right theme-text")("Filter"),
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
         p(
           s"${utils.NumberUtils.withCommas(qr.rowsAffected)} ",

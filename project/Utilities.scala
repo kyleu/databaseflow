@@ -1,5 +1,5 @@
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
-import net.virtualvoid.sbt.graph.Plugin.graphSettings
+import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import sbt.Keys._
 import sbt._
 
