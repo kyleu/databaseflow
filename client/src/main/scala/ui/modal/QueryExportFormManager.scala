@@ -2,7 +2,7 @@ package ui.modal
 
 import java.util.UUID
 
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 
 import scala.scalajs.js
 

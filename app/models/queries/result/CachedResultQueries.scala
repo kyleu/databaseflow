@@ -3,11 +3,11 @@ package models.queries.result
 import java.sql.Timestamp
 import java.util.UUID
 
-import models.database.{ Row, Statement }
+import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.result.CachedResult
 import services.schema.JdbcHelper
-import utils.{ DateUtils, JdbcUtils }
+import utils.{DateUtils, JdbcUtils}
 
 object CachedResultQueries extends BaseQueries[CachedResult] {
   override protected val tableName = "query_results"

@@ -6,13 +6,13 @@ import models.RequestMessage
 import models.query.RowDataOptions
 import models.schema.FilterOp
 import org.scalajs.dom
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 import ui._
-import ui.metadata.{ MetadataManager, ModelListManager }
-import ui.modal.{ ConfirmManager, QueryExportFormManager, QuerySaveFormManager }
+import ui.metadata.{MetadataManager, ModelListManager}
+import ui.modal.{ConfirmManager, QueryExportFormManager, QuerySaveFormManager}
 import ui.query._
 import ui.search.SearchManager
-import utils.{ JQueryUtils, Logging, NetworkMessage }
+import utils.{JQueryUtils, Logging, NetworkMessage}
 
 import scala.scalajs.js
 

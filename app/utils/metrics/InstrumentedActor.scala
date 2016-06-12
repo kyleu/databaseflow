@@ -1,7 +1,7 @@
 package utils.metrics
 
 import akka.actor.Actor
-import nl.grons.metrics.scala.{ Timer, Meter }
+import nl.grons.metrics.scala.{Timer, Meter}
 
 trait InstrumentedActor extends Actor with Instrumented {
   def receiveRequest: PartialFunction[Any, Unit]

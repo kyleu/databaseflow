@@ -2,16 +2,16 @@ package services.socket
 
 import java.util.UUID
 
-import akka.actor.{ ActorRef, Props }
+import akka.actor.{ActorRef, Props}
 import models._
 import models.query.SavedQuery
 import models.schema.Schema
 import models.user.User
 import services.data.SampleDatabaseService
-import services.query.{ PlanExecutionService, QueryCheckService, QueryExecutionService }
+import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService}
 import services.user.QueryHistoryService
 import utils.metrics.InstrumentedActor
-import utils.{ Config, Logging }
+import utils.{Config, Logging}
 
 object SocketService {
   def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String) = {

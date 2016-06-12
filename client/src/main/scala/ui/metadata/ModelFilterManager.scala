@@ -1,7 +1,7 @@
 package ui.metadata
 
 import org.scalajs.dom
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import org.scalajs.jquery.{JQuery, jQuery => $}
 
 case class ModelFilterManager(queryPanel: JQuery) {
   var activeFilter: Option[String] = None

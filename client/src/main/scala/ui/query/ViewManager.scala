@@ -7,11 +7,11 @@ import models.query.RowDataOptions
 import models.schema.View
 import models.template._
 import models.template.view.ViewDetailTemplate
-import models.{ GetViewDetail, SubmitQuery }
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import models.{GetViewDetail, SubmitQuery}
+import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.metadata.MetadataManager
 import ui.modal.QueryExportFormManager
-import ui.{ ProgressManager, UserManager, _ }
+import ui.{ProgressManager, UserManager, _}
 
 object ViewManager extends ViewDetailHelper {
   var openViews = Map.empty[String, UUID]

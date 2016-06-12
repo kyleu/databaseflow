@@ -1,6 +1,6 @@
 package controllers
 
-import com.mohiva.play.silhouette.api.actions.{ SecuredRequest, UserAwareRequest }
+import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 import models.auth.AuthEnv
 import models.settings.SettingKey
 import models.user.Role
@@ -9,7 +9,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services.settings.SettingsService
 import utils.metrics.Instrumented
-import utils.{ ApplicationContext, Logging }
+import utils.{ApplicationContext, Logging}
 
 import scala.concurrent.Future
 

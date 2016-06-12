@@ -1,6 +1,6 @@
 package services.sandbox
 
-import models.database.{ Row, SingleRowQuery }
+import models.database.{Row, SingleRowQuery}
 import models.queries.connection.ConnectionSettingsQueries
 import services.database.MasterDatabase
 import services.schema.SchemaService
@@ -8,7 +8,7 @@ import upickle.json
 import utils.ApplicationContext
 
 import scala.concurrent.Future
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object DatabaseTest extends SandboxTask {
   override def id = "dbtest"

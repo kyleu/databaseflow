@@ -1,7 +1,7 @@
 package utils
 
 import org.scalajs.dom
-import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 
 object JQueryUtils {
   def clickHandler(jq: JQuery, f: (JQuery) => Unit) = {

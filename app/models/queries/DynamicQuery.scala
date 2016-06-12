@@ -2,7 +2,7 @@ package models.queries
 
 import java.sql.ResultSetMetaData
 
-import models.database.{ Query, Row }
+import models.database.{Query, Row}
 import models.query.QueryResult
 
 object DynamicQuery {

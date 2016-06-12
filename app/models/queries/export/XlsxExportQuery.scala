@@ -1,10 +1,10 @@
 package models.queries.export
 
 import java.io.OutputStream
-import java.sql.{ Date, Time, Timestamp }
+import java.sql.{Date, Time, Timestamp}
 import java.util.GregorianCalendar
 
-import models.database.{ Query, Row }
+import models.database.{Query, Row}
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.util.WorkbookUtil
 import org.apache.poi.xssf.streaming.SXSSFWorkbook

@@ -4,10 +4,10 @@ import java.util.UUID
 
 import models.query.RowDataOptions
 import models.schema.Schema
-import models.template.{ Icons, ModelListTemplate }
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import models.template.{Icons, ModelListTemplate}
+import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query._
-import ui.{ TabManager, WorkspaceManager }
+import ui.{TabManager, WorkspaceManager}
 
 import scalatags.Text.all._
 

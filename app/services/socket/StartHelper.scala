@@ -4,11 +4,11 @@ import models._
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import models.schema.Schema
-import services.database.{ DatabaseWorkerPool, MasterDatabase }
+import services.database.{DatabaseWorkerPool, MasterDatabase}
 import services.schema.SchemaService
-import utils.{ ExceptionUtils, Logging }
+import utils.{ExceptionUtils, Logging}
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 trait StartHelper extends Logging { this: SocketService =>
   protected[this] def attemptConnect() = MasterDatabase.databaseFor(connectionId) match {

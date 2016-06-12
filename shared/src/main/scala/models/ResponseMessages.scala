@@ -3,9 +3,9 @@ package models
 import java.util.UUID
 
 import models.audit.AuditRecord
-import models.plan.{ PlanError, PlanResult }
-import models.query.{ QueryError, QueryResult, SavedQuery }
-import models.schema.{ Procedure, Schema, Table, View }
+import models.plan.{PlanError, PlanResult}
+import models.query.{QueryError, QueryResult, SavedQuery}
+import models.schema.{Procedure, Schema, Table, View}
 import models.user.UserPreferences
 
 sealed trait ResponseMessage
@@ -27,7 +27,7 @@ case class TableResultResponse(tables: Seq[Table]) extends ResponseMessage
 case class ViewResultResponse(views: Seq[View]) extends ResponseMessage
 case class ProcedureResultResponse(procedures: Seq[Procedure]) extends ResponseMessage
 
-case class QueryHistoryResponse(history: Seq[AuditRecord])
+case class QueryHistoryResponse(history: Seq[AuditRecord]) extends ResponseMessage
 
 case class QueryCheckResponse(queryId: UUID, error: Option[String] = None, line: Option[Int] = None, position: Option[Int] = None) extends ResponseMessage
 case class QueryResultRowCount(id: UUID, queryId: UUID, resultId: UUID, count: Int, durationMs: Int) extends ResponseMessage

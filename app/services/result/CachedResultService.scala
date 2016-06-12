@@ -5,7 +5,7 @@ import java.util.UUID
 import models.ddl.DdlQueries
 import models.queries.result.CachedResultQueries
 import models.result.CachedResult
-import services.database.{ MasterDatabase, ResultCacheDatabase }
+import services.database.{MasterDatabase, ResultCacheDatabase}
 import services.schema.MetadataTables
 import utils.Logging
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

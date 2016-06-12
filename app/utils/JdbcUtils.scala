@@ -1,12 +1,12 @@
 package utils
 
-import java.sql.{ SQLSyntaxErrorException, Timestamp }
+import java.sql.{SQLSyntaxErrorException, Timestamp}
 import java.util.UUID
 
 import com.mysql.jdbc.exceptions.MySQLStatementCancelledException
 import models.database.Row
 import models.query.QueryError
-import models.{ QueryErrorResponse, ResponseMessage }
+import models.{QueryErrorResponse, ResponseMessage}
 import org.joda.time.LocalDateTime
 import org.postgresql.jdbc.PgArray
 import org.postgresql.util.PSQLException

@@ -1,6 +1,6 @@
 package models.database
 
-import java.sql.{ Connection, Savepoint }
+import java.sql.{Connection, Savepoint}
 import java.util.UUID
 
 import scala.collection.mutable.ListBuffer

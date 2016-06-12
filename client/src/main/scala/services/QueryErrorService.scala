@@ -1,7 +1,7 @@
 package services
 
 import models.template.query.QueryErrorTemplate
-import models.{ QueryCheckResponse, QueryErrorResponse }
+import models.{QueryCheckResponse, QueryErrorResponse}
 import ui.ProgressManager
 
 object QueryErrorService {

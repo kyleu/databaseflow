@@ -2,8 +2,8 @@ package services.plan
 
 import java.util.UUID
 
-import models.plan.{ PlanError, PlanResult }
-import upickle.{ Js, json }
+import models.plan.{PlanError, PlanResult}
+import upickle.{Js, json}
 
 object PostgresParseService extends PlanParseService("postgres") {
   override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {

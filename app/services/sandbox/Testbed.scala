@@ -6,7 +6,7 @@ import services.schema.SchemaService
 import utils.ApplicationContext
 
 import scala.concurrent.Future
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object Testbed extends SandboxTask {
   override def id = "testbed"

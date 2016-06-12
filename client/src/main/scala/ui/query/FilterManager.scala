@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult.Source
 import models.schema.FilterOp
-import org.scalajs.jquery.{ JQuery, JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 
 object FilterManager {
   def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source) = {

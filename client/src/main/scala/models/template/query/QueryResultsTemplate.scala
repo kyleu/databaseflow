@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import models.template.StaticPanelTemplate
-import models.template.results.{ DataFilterTemplate, DataTableTemplate }
+import models.template.results.{DataFilterTemplate, DataTableTemplate}
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time

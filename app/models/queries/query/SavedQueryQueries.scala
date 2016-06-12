@@ -2,7 +2,7 @@ package models.queries.query
 
 import java.util.UUID
 
-import models.database.{ Row, Statement }
+import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.query.SavedQuery
 import utils.DateUtils

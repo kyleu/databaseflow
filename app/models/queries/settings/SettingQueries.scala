@@ -1,8 +1,8 @@
 package models.queries.settings
 
-import models.database.{ Row, Statement }
+import models.database.{Row, Statement}
 import models.queries.BaseQueries
-import models.settings.{ Setting, SettingKey }
+import models.settings.{Setting, SettingKey}
 
 object SettingQueries extends BaseQueries[Setting] {
   override protected val tableName = "setting_values"

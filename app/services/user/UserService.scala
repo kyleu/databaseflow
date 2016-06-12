@@ -3,7 +3,7 @@ package services.user
 import java.util.UUID
 
 import models.queries.auth._
-import models.user.{ Role, User }
+import models.user.{Role, User}
 import services.database.MasterDatabase
 import utils.Logging
 import utils.cache.UserCache

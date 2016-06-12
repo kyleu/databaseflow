@@ -1,7 +1,7 @@
 package services.settings
 
 import models.queries.settings.SettingQueries
-import models.settings.{ Setting, SettingKey }
+import models.settings.{Setting, SettingKey}
 import services.database.MasterDatabase
 
 object SettingsService {

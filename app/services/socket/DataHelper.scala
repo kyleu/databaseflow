@@ -5,11 +5,11 @@ import java.util.UUID
 import models._
 import models.engine.EngineQueries
 import models.queries.DynamicQuery
-import models.query.{ QueryResult, RowDataOptions }
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.ForeignKey
-import services.database.{ DatabaseWorkerPool, ResultCacheDatabase }
+import services.database.{DatabaseWorkerPool, ResultCacheDatabase}
 import services.schema.SchemaService
-import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
+import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 trait DataHelper extends Logging { this: SocketService =>
   protected[this] def handleGetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = key match {

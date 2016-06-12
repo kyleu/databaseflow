@@ -7,10 +7,10 @@ import models.engine.DatabaseEngine
 import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui._
 import ui.modal.ConfirmManager
-import ui.query.{ ProcedureManager, SavedQueryManager, TableManager, ViewManager }
+import ui.query.{ProcedureManager, SavedQueryManager, TableManager, ViewManager}
 
 object MetadataManager {
   var engine: Option[DatabaseEngine] = None

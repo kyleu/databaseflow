@@ -5,10 +5,10 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models.engine.rdbms.Oracle
 import models.queries.DynamicQuery
-import models.{ PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError }
-import services.database.{ DatabaseConnection, DatabaseWorkerPool }
+import models.{PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError}
+import services.database.{DatabaseConnection, DatabaseWorkerPool}
 import services.plan.PlanParseService
-import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
+import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 object PlanExecutionService extends Logging {
   private[this] def getResult(db: DatabaseConnection, queryId: UUID, sql: String, explainSql: String, resultId: UUID) = {

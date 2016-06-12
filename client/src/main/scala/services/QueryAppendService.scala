@@ -2,10 +2,10 @@ package services
 
 import java.util.UUID
 
-import models.query.{ QueryResult, RowDataOptions }
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 import ui.query.TableManager
 import utils.JQueryUtils
 

@@ -2,7 +2,7 @@ package services.plan
 
 import java.util.UUID
 
-import models.plan.{ PlanError, PlanResult }
+import models.plan.{PlanError, PlanResult}
 import services.plan.OracleParseHelper.PlanEntry
 
 import scala.util.control.NonFatal

@@ -5,11 +5,11 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models._
-import models.query.{ QueryResult, SavedQuery }
-import models.result.{ CachedResult, CachedResultQuery }
+import models.query.{QueryResult, SavedQuery}
+import models.result.{CachedResult, CachedResultQuery}
 import models.user.User
-import services.database.{ DatabaseConnection, DatabaseWorkerPool }
-import utils.{ DateUtils, ExceptionUtils, JdbcUtils, Logging }
+import services.database.{DatabaseConnection, DatabaseWorkerPool}
+import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 import scala.util.control.NonFatal
 

@@ -2,7 +2,7 @@ package models.query
 
 import java.util.UUID
 
-import models.schema.{ ColumnType, FilterOp }
+import models.schema.{ColumnType, FilterOp}
 
 object QueryResult {
   case class Col(

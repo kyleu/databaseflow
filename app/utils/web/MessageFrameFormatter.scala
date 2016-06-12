@@ -1,9 +1,9 @@
 package utils.web
 
-import models.{ MalformedRequest, RequestMessage, ResponseMessage }
+import models.{MalformedRequest, RequestMessage, ResponseMessage}
 import play.api.mvc.WebSocket.MessageFlowTransformer
-import upickle.{ Js, json }
-import utils.{ JsonSerializers, Logging }
+import upickle.{Js, json}
+import utils.{JsonSerializers, Logging}
 
 import scala.util.control.NonFatal
 

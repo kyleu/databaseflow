@@ -4,13 +4,13 @@ import java.util.UUID
 
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordHasher
-import com.mohiva.play.silhouette.api.{ LoginEvent, LoginInfo, SignUpEvent }
+import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
-import models.user.{ User, UserForms, UserPreferences }
+import models.user.{User, UserForms, UserPreferences}
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.user.{ UserSearchService, UserService }
+import services.user.{UserSearchService, UserService}
 import utils.ApplicationContext
 
 import scala.concurrent.Future

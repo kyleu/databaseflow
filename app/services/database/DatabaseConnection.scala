@@ -8,7 +8,7 @@ import com.codahale.metrics.MetricRegistry
 import com.zaxxer.hikari.HikariDataSource
 import models.database._
 import models.engine.DatabaseEngine
-import services.database.transaction.{ TransactionManager, TransactionProvider }
+import services.database.transaction.{TransactionManager, TransactionProvider}
 import utils.metrics.Instrumented
 
 import scala.util.control.NonFatal

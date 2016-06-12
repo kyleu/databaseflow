@@ -1,6 +1,6 @@
 package services.database.ssl
 
-import java.net.{ Socket, InetAddress }
+import java.net.{Socket, InetAddress}
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl._
 

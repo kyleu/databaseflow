@@ -7,9 +7,9 @@ import akka.actor.ActorRef
 import models.QueryResultResponse
 import models.database.Row
 import models.queries.DynamicQuery
-import models.queries.result.{ CreateResultTable, InsertResultRow }
+import models.queries.result.{CreateResultTable, InsertResultRow}
 import models.query.QueryResult
-import models.schema.ColumnType.{ ArrayType, UnknownType }
+import models.schema.ColumnType.{ArrayType, UnknownType}
 import services.database.ResultCacheDatabase
 import utils.Logging
 

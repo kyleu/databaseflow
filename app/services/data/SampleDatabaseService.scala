@@ -7,13 +7,13 @@ import models.database.Statement
 import models.engine.DatabaseEngine
 import models.engine.rdbms._
 import models.query.SqlParser
-import models.{ BatchQueryStatus, TableResultResponse }
-import services.database.{ DatabaseConnection, DatabaseWorkerPool }
+import models.{BatchQueryStatus, TableResultResponse}
+import services.database.{DatabaseConnection, DatabaseWorkerPool}
 import services.schema.SchemaService
-import utils.{ DateUtils, ExceptionUtils, Logging }
+import utils.{DateUtils, ExceptionUtils, Logging}
 
 import scala.io.Source
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 object SampleDatabaseService extends Logging {
   def schedule(db: DatabaseConnection, queryId: UUID, out: ActorRef) = {

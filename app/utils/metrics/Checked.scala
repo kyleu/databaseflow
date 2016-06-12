@@ -2,7 +2,7 @@ package utils.metrics
 
 import com.codahale.metrics.health.HealthCheckRegistry
 import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck
-import nl.grons.metrics.scala.{ MetricName, CheckedBuilder }
+import nl.grons.metrics.scala.{MetricName, CheckedBuilder}
 import utils.Config
 
 object Checked {

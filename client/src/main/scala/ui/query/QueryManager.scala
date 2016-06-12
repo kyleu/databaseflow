@@ -3,9 +3,9 @@ package ui.query
 import java.util.UUID
 
 import models.template.Icons
-import models.{ CheckQuery, SubmitQuery }
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
-import ui.{ EditorManager, ProgressManager, TabManager }
+import models.{CheckQuery, SubmitQuery}
+import org.scalajs.jquery.{JQuery, jQuery => $}
+import ui.{EditorManager, ProgressManager, TabManager}
 import utils.NetworkMessage
 
 import scala.scalajs.js

@@ -2,14 +2,14 @@ package ui.query
 
 import java.util.UUID
 
-import models.{ QueryDeleteRequest, QuerySaveRequest }
+import models.{QueryDeleteRequest, QuerySaveRequest}
 import models.query.SavedQuery
 import models.template.Icons
 import models.template.query.QueryEditorTemplate
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import ui.modal.{ ConfirmManager, QueryExportFormManager, QuerySaveFormManager }
-import ui.{ EditorManager, TabManager, UserManager }
+import ui.modal.{ConfirmManager, QueryExportFormManager, QuerySaveFormManager}
+import ui.{EditorManager, TabManager, UserManager}
 import utils.NetworkMessage
 
 object SavedQueryManager {

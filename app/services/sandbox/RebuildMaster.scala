@@ -1,6 +1,6 @@
 package services.sandbox
 
-import services.data.{ MasterDdl, SeedData }
+import services.data.{MasterDdl, SeedData}
 import services.database.MasterDatabase
 import utils.ApplicationContext
 

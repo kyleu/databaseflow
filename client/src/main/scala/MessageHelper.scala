@@ -1,6 +1,6 @@
 import models._
 import services._
-import ui.UserManager
+import ui.{HistoryManager, UserManager}
 import utils.Logging
 
 trait MessageHelper { this: DatabaseFlow =>
@@ -16,6 +16,8 @@ trait MessageHelper { this: DatabaseFlow =>
     case trr: TableResultResponse => ModelResultsService.handleTableResultResponse(trr.tables)
     case vrr: ViewResultResponse => ModelResultsService.handleViewResultResponse(vrr.views)
     case prr: ProcedureResultResponse => ModelResultsService.handleProcedureResultResponse(prr.procedures)
+
+    case qhr: QueryHistoryResponse => HistoryManager.handleQueryHistoryResponse(qhr.history)
 
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
     case qrr: QueryResultResponse => handleQueryResultResponse(qrr)

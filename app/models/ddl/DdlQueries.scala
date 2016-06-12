@@ -1,6 +1,6 @@
 package models.ddl
 
-import models.database.{ Row, SingleRowQuery, Statement }
+import models.database.{Row, SingleRowQuery, Statement}
 import models.engine.DatabaseEngine
 
 object DdlQueries {

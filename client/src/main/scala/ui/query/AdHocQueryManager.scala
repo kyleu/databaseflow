@@ -3,13 +3,13 @@ package ui.query
 import java.util.UUID
 
 import models.engine.EngineQueries
-import models.query.{ RowDataOptions, SavedQuery }
+import models.query.{RowDataOptions, SavedQuery}
 import models.template.Icons
 import models.template.query.QueryEditorTemplate
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 import ui.TabManager
 import ui.metadata.MetadataManager
-import ui.modal.{ QueryExportFormManager, QuerySaveFormManager }
+import ui.modal.{QueryExportFormManager, QuerySaveFormManager}
 
 import scala.util.Random
 

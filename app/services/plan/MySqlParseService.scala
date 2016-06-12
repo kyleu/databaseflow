@@ -2,9 +2,9 @@ package services.plan
 
 import java.util.UUID
 
-import models.plan.{ PlanError, PlanNode, PlanResult }
+import models.plan.{PlanError, PlanNode, PlanResult}
 import services.plan.mysql.QueryBlockParser
-import upickle.{ Js, json }
+import upickle.{Js, json}
 
 import scala.util.control.NonFatal
 

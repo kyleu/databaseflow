@@ -2,7 +2,7 @@ package models.database
 
 import java.sql.Timestamp
 
-import org.joda.time.{ LocalDateTime, LocalDate, DateTime, ReadableInstant }
+import org.joda.time.{LocalDateTime, LocalDate, DateTime, ReadableInstant}
 import utils.DateUtils
 
 object Conversions {

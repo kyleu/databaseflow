@@ -4,7 +4,7 @@ import java.sql.DatabaseMetaData
 
 import models.database.Row
 import models.queries.QueryTranslations
-import models.schema.{ Procedure, ProcedureParam }
+import models.schema.{Procedure, ProcedureParam}
 import utils.NullUtils
 
 object MetadataProcedures {

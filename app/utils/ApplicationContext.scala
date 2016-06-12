@@ -2,7 +2,7 @@ package utils
 
 import java.util.TimeZone
 
-import akka.actor.{ ActorSystem, Props }
+import akka.actor.{ActorSystem, Props}
 import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
 import models.auth.AuthEnv
@@ -11,9 +11,9 @@ import play.api.Environment
 import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
-import play.api.mvc.{ Action, RequestHeader, Results }
+import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
-import services.database.{ MasterDatabase, ResultCacheDatabase }
+import services.database.{MasterDatabase, ResultCacheDatabase}
 import services.notification.NotificationService
 import services.settings.SettingsService
 import services.supervisor.ActorSupervisor

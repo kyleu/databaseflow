@@ -8,8 +8,6 @@ case class AuditRecord(
   owner: Option[UUID],
   connection: UUID,
   status: AuditStatus,
-  attributes: Map[String, String],
-  properties: Map[String, Int],
   elapsed: Int,
   occurred: Long
 )

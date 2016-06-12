@@ -1,6 +1,6 @@
 package utils.cache
 
-import net.sf.ehcache.{ CacheManager, Element }
+import net.sf.ehcache.{CacheManager, Element}
 import org.apache.commons.lang3.reflect.TypeUtils
 import utils.Config
 

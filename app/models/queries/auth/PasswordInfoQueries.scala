@@ -3,7 +3,7 @@ package models.queries.auth
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import models.queries.BaseQueries
-import models.database.{ Row, Statement }
+import models.database.{Row, Statement}
 import utils.DateUtils
 
 object PasswordInfoQueries extends BaseQueries[PasswordInfo] {

@@ -8,10 +8,10 @@ import models.query.RowDataOptions
 import models.schema.Table
 import models.template._
 import models.template.tbl.TableDetailTemplate
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui.modal.QueryExportFormManager
-import ui.{ UserManager, _ }
+import ui.{UserManager, _}
 
 object TableManager extends TableDetailHelper {
   private[this] var openTables = Map.empty[String, UUID]

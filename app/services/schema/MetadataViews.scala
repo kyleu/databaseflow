@@ -1,8 +1,8 @@
 package services.schema
 
-import java.sql.{ Connection, DatabaseMetaData }
+import java.sql.{Connection, DatabaseMetaData}
 
-import models.database.{ Query, Row }
+import models.database.{Query, Row}
 import models.engine.rdbms.MySQL
 import models.schema.View
 import services.database.DatabaseConnection

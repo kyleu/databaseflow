@@ -1,9 +1,9 @@
 package services.schema
 
-import java.sql.{ Connection, DatabaseMetaData, Timestamp }
+import java.sql.{Connection, DatabaseMetaData, Timestamp}
 
-import models.database.{ Query, Row }
-import models.engine.rdbms.{ MySQL, PostgreSQL }
+import models.database.{Query, Row}
+import models.engine.rdbms.{MySQL, PostgreSQL}
 import models.schema.Table
 import services.database.DatabaseConnection
 import utils.NullUtils

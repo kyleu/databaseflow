@@ -1,10 +1,10 @@
 package models.database
 
-import java.sql.{ Connection, PreparedStatement, Types }
+import java.sql.{Connection, PreparedStatement, Types}
 import java.util.UUID
 
 import services.query.QueryExecutionService
-import utils.{ Logging, NullUtils }
+import utils.{Logging, NullUtils}
 
 import scala.annotation.tailrec
 

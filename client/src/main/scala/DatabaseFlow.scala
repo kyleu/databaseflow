@@ -1,4 +1,4 @@
-import services.{ InitService, NotificationService }
+import services.{InitService, NotificationService}
 
 import scala.scalajs.js.annotation.JSExport
 

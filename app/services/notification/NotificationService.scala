@@ -3,7 +3,7 @@ package services.notification
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import upickle.Js
-import utils.{ Config, Logging }
+import utils.{Config, Logging}
 
 import scala.concurrent.Future
 

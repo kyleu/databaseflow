@@ -1,7 +1,7 @@
 package models.template.query
 
-import models.template.{ Icons, StaticPanelTemplate }
-import models.{ PlanErrorResponse, QueryErrorResponse }
+import models.template.{Icons, StaticPanelTemplate}
+import models.{PlanErrorResponse, QueryErrorResponse}
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time

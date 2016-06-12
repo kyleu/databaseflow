@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import models.query.{ RowDataOptions, SavedQuery }
+import models.query.{RowDataOptions, SavedQuery}
 
 sealed trait RequestMessage
 

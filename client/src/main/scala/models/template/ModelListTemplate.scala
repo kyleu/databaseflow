@@ -3,7 +3,7 @@ package models.template
 import java.util.UUID
 
 import models.query.SavedQuery
-import models.schema.{ Procedure, Table, View }
+import models.schema.{Procedure, Table, View}
 import utils.NumberUtils
 
 import scalatags.Text.TypedTag

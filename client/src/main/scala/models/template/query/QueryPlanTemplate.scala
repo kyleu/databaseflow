@@ -2,7 +2,7 @@ package models.template.query
 
 import models.PlanResultResponse
 import models.plan.PlanNode
-import models.template.{ Icons, StaticPanelTemplate }
+import models.template.{Icons, StaticPanelTemplate}
 
 import scalatags.Text.all._
 import scalatags.Text.tags2.time

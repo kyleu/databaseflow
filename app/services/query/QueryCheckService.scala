@@ -4,11 +4,11 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import com.microsoft.sqlserver.jdbc.SQLServerException
-import models.{ QueryCheckResponse, ResponseMessage }
+import models.{QueryCheckResponse, ResponseMessage}
 import org.h2.jdbc.JdbcSQLException
 import org.postgresql.util.PSQLException
-import services.database.{ DatabaseWorkerPool, MasterDatabase }
-import utils.{ ExceptionUtils, Logging }
+import services.database.{DatabaseWorkerPool, MasterDatabase}
+import utils.{ExceptionUtils, Logging}
 
 object QueryCheckService extends Logging {
   @SuppressWarnings(Array("CatchThrowable"))

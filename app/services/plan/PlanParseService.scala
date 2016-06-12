@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.engine.rdbms._
-import models.plan.{ PlanError, PlanResult }
+import models.plan.{PlanError, PlanResult}
 import models.queries.DynamicQuery
 import utils.Logging
 

@@ -2,9 +2,9 @@ package ui.metadata
 
 import java.util.UUID
 
-import models.template.{ Icons, StaticPanelTemplate }
-import models.{ BatchQueryStatus, CreateSampleDatabase }
-import org.scalajs.jquery.{ jQuery => $ }
+import models.template.{Icons, StaticPanelTemplate}
+import models.{BatchQueryStatus, CreateSampleDatabase}
+import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.modal.ConfirmManager
 import ui.TabManager

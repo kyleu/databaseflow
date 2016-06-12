@@ -1,10 +1,10 @@
 package models.result
 
 import akka.actor.ActorRef
-import models.database.{ Query, Row }
+import models.database.{Query, Row}
 import models.query.QueryResult
 import models.schema.ColumnType.LongType
-import models.{ QueryResultRowCount, ResponseMessage }
+import models.{QueryResultRowCount, ResponseMessage}
 import services.result.CachedResultService
 import utils.DateUtils
 

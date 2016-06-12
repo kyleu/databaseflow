@@ -4,8 +4,8 @@ import java.net.URI
 
 import gui.web.WebApp
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.{ Mode, Play }
-import play.core.server.{ NettyServer, ServerConfig }
+import play.api.{Mode, Play}
+import play.core.server.{NettyServer, ServerConfig}
 
 class WebApplication() extends WebApp {
   private[this] lazy val app = new GuiceApplicationBuilder().build()

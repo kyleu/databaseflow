@@ -1,6 +1,6 @@
 package ui
 
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 
 object WorkspaceManager {
   lazy val workspace = $("#workspace")

@@ -3,7 +3,7 @@ package services.schema
 import java.util.UUID
 
 import models.schema.Schema
-import services.database.{ DatabaseConnection, DatabaseWorkerPool }
+import services.database.{DatabaseConnection, DatabaseWorkerPool}
 import utils.Logging
 
 import scala.util.Try

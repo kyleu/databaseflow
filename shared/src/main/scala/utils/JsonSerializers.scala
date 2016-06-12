@@ -3,7 +3,7 @@ package utils
 import enumeratum.UPickler
 import models.plan.PlanNode
 import models.schema.ColumnType
-import models.{ RequestMessage, ResponseMessage }
+import models.{RequestMessage, ResponseMessage}
 import upickle.Js
 import upickle.default._
 
@@ -33,19 +33,15 @@ object JsonSerializers {
     case x: Js.Obj => readPlanNode(x)
   }
 
-  private[this] def writePlanNode(node: PlanNode): Js.Value = {
-    Js.Obj(
-      "title" -> writeJs(node.title),
-      "nodeType" -> writeJs(node.nodeType),
-      "costs" -> writeJs(node.costs),
-      "properties" -> writeJs(node.properties),
-      "tags" -> writeJs(node.tags),
-      "children" -> Js.Arr(node.children.map(writePlanNode): _*)
-    )
-  }
-  implicit val planNodeWriter = Writer[PlanNode] {
-    case x => writePlanNode(x)
-  }
+  private[this] def writePlanNode(node: PlanNode): Js.Value = Js.Obj(
+    "title" -> writeJs(node.title),
+    "nodeType" -> writeJs(node.nodeType),
+    "costs" -> writeJs(node.costs),
+    "properties" -> writeJs(node.properties),
+    "tags" -> writeJs(node.tags),
+    "children" -> Js.Arr(node.children.map(writePlanNode): _*)
+  )
+  implicit val planNodeWriter = Writer[PlanNode] { case x => writePlanNode(x) }
 
   // Wire messages
   def readRequestMessage(json: Js.Value) = readJs[RequestMessage](json)

@@ -1,9 +1,9 @@
 package services.socket
 
 import models._
-import models.schema.{ Procedure, Table, View }
+import models.schema.{Procedure, Table, View}
 import services.database.DatabaseWorkerPool
-import services.schema.{ MetadataProcedures, MetadataTables, MetadataViews, SchemaService }
+import services.schema.{MetadataProcedures, MetadataTables, MetadataViews, SchemaService}
 import utils.ExceptionUtils
 
 trait DetailHelper { this: SocketService =>

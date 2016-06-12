@@ -1,10 +1,10 @@
 package services.database
 
-import models.database.{ Query, Statement }
+import models.database.{Query, Statement}
 import utils.Logging
 
 import scala.concurrent.forkjoin.ForkJoinPool
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 object DatabaseWorkerPool extends Logging {
   private[this] implicit val ctx: ExecutionContext = {

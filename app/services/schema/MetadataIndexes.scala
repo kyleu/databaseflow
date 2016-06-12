@@ -3,7 +3,7 @@ package services.schema
 import java.sql.DatabaseMetaData
 
 import models.database.Row
-import models.schema.{ Index, IndexColumn, Table }
+import models.schema.{Index, IndexColumn, Table}
 
 object MetadataIndexes {
   def getIndexes(metadata: DatabaseMetaData, t: Table) = {

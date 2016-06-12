@@ -4,7 +4,7 @@ import java.lang.management.ManagementFactory
 
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.jvm._
-import nl.grons.metrics.scala.{ MetricName, InstrumentedBuilder }
+import nl.grons.metrics.scala.{MetricName, InstrumentedBuilder}
 import utils.Config
 
 object Instrumented {

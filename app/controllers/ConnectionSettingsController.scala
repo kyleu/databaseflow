@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
 import services.connection.ConnectionSettingsService
-import utils.{ ApplicationContext, EncryptUtils }
+import utils.{ApplicationContext, EncryptUtils}
 
 import scala.concurrent.Future
 

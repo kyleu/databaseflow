@@ -1,6 +1,6 @@
 package models.queries
 
-import models.database.{ FlatSingleRowQuery, Query, Row, Statement }
+import models.database.{FlatSingleRowQuery, Query, Row, Statement}
 import utils.Config
 
 object BaseQueries {

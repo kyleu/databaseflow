@@ -3,12 +3,12 @@ package services
 import java.util.UUID
 
 import models.query.SavedQuery
-import models.schema.{ Procedure, Table, View }
-import models.{ BatchQueryStatus, SavedQueryResultResponse, SchemaResultResponse }
-import org.scalajs.jquery.{ jQuery => $ }
+import models.schema.{Procedure, Table, View}
+import models.{BatchQueryStatus, SavedQueryResultResponse, SchemaResultResponse}
+import org.scalajs.jquery.{jQuery => $}
 import ui.metadata._
 import ui.modal.QuerySaveFormManager
-import ui.query.{ ProcedureManager, SavedQueryManager, TableManager, ViewManager }
+import ui.query.{ProcedureManager, SavedQueryManager, TableManager, ViewManager}
 
 object ModelResultsService {
   private[this] var receivedSavedQueryResponse = false

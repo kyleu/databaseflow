@@ -1,6 +1,6 @@
 package ui.modal
 
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 
 import scala.scalajs.js
 

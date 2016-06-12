@@ -1,6 +1,6 @@
-import models.{ Ping, RequestMessage }
+import models.{Ping, RequestMessage}
 import services.NavigationService
-import utils.{ JsonSerializers, NetworkSocket }
+import utils.{JsonSerializers, NetworkSocket}
 
 import scala.scalajs.js.timers._
 

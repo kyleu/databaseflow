@@ -1,6 +1,6 @@
 package utils
 
-import org.joda.time.{ LocalDateTime, LocalTime, LocalDate }
+import org.joda.time.{LocalDateTime, LocalTime, LocalDate}
 
 object Formatter {
   def niceDate(d: LocalDate) = d.toString("EEEE, MMM dd, yyyy")

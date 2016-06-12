@@ -3,10 +3,11 @@ package ui
 import java.util.UUID
 
 import models.GetQueryHistory
-import models.template.{ HistoryTemplate, Icons }
-import org.scalajs.jquery.{ jQuery => $ }
+import models.audit.AuditRecord
+import models.template.{HistoryTemplate, Icons}
+import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{ JQueryUtils, NetworkMessage }
+import utils.{JQueryUtils, NetworkMessage}
 
 import scalatags.Text.all._
 
@@ -28,7 +29,7 @@ object HistoryManager {
         QueryManager.closeQuery(historyId)
       }
 
-      TabManager.addTab(historyId, "history", "History", Icons.history, close)
+      TabManager.addTab(historyId, "history", "Query History", Icons.history, close)
       QueryManager.activeQueries = QueryManager.activeQueries :+ historyId
 
       val queryPanel = $(s"#panel-$historyId")
@@ -41,6 +42,10 @@ object HistoryManager {
 
       isOpen = true
     }
+  }
+
+  def handleQueryHistoryResponse(history: Seq[AuditRecord]) = {
+    utils.Logging.info("History!")
   }
 
   def refresh() = NetworkMessage.sendMessage(GetQueryHistory())

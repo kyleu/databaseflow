@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.query.SavedQuery
-import models.template.{ Icons, StaticPanelTemplate }
+import models.template.{Icons, StaticPanelTemplate}
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._

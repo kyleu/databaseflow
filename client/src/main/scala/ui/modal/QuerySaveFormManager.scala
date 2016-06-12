@@ -2,9 +2,9 @@ package ui.modal
 
 import models.QuerySaveRequest
 import models.query.SavedQuery
-import org.scalajs.jquery.{ jQuery => $ }
+import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
-import ui.query.{ QueryManager, SavedQueryManager }
+import ui.query.{QueryManager, SavedQueryManager}
 import utils.NetworkMessage
 
 import scala.scalajs.js

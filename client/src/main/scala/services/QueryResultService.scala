@@ -4,12 +4,12 @@ import java.util.UUID
 
 import models.QueryResultRowCount
 import models.query.QueryResult.Source
-import models.query.{ QueryResult, RowDataOptions }
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
-import org.scalajs.jquery.{ JQuery, jQuery => $ }
+import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.ProgressManager
-import ui.query.{ FilterManager, RowDataManager, TableManager }
+import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.JQueryUtils
 
 import scala.scalajs.js
@@ -90,7 +90,9 @@ object QueryResultService {
     val workspace = $(s"#workspace-${qrrc.queryId}")
     val panel = $(s"#${qrrc.resultId}", workspace)
     val rowCountEl = $(".total-row-count", panel)
-    rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
+    if (qrrc.count > 100) {
+      rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
+    }
     val timingEl = $(".total-duration", panel)
     timingEl.text(utils.NumberUtils.withCommas(qrrc.durationMs).toString)
   }

@@ -3,9 +3,9 @@ package models.queries.auth
 import java.util.UUID
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import models.database.{ FlatSingleRowQuery, Row, SingleRowQuery, Statement }
+import models.database.{FlatSingleRowQuery, Row, SingleRowQuery, Statement}
 import models.queries.BaseQueries
-import models.user.{ Role, User, UserPreferences }
+import models.user.{Role, User, UserPreferences}
 import upickle.default._
 import utils.JdbcUtils
 

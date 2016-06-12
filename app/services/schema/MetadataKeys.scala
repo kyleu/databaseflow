@@ -3,7 +3,7 @@ package services.schema
 import java.sql.DatabaseMetaData
 
 import models.database.Row
-import models.schema.{ Reference, ForeignKey, PrimaryKey, Table }
+import models.schema.{Reference, ForeignKey, PrimaryKey, Table}
 
 object MetadataKeys {
   def getPrimaryKey(metadata: DatabaseMetaData, table: Table) = {

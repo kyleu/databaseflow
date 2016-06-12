@@ -2,10 +2,10 @@ package ui
 
 import java.util.UUID
 
-import models.template.{ HelpTemplate, Icons }
-import org.scalajs.jquery.{ jQuery => $ }
+import models.template.{HelpTemplate, Icons}
+import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{ JQueryUtils, TipsAndTricks }
+import utils.{JQueryUtils, TipsAndTricks}
 
 import scala.util.Random
 import scalatags.Text.all._

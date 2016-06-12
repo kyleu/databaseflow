@@ -1,7 +1,7 @@
 package models.template
 
 import models.query.SavedQuery
-import models.schema.{ Procedure, Table, View }
+import models.schema.{Procedure, Table, View}
 import utils.DomUtils
 
 import scalatags.Text.all._

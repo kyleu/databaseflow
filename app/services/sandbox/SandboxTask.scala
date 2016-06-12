@@ -1,6 +1,6 @@
 package services.sandbox
 
-import utils.{ ApplicationContext, Logging }
+import utils.{ApplicationContext, Logging}
 
 import scala.concurrent.Future
 

@@ -3,7 +3,7 @@ package models.queries.connection
 import java.util.UUID
 
 import models.connection.ConnectionSettings
-import models.database.{ Row, Statement }
+import models.database.{Row, Statement}
 import models.engine.DatabaseEngine
 import models.queries.BaseQueries
 import utils.EncryptUtils

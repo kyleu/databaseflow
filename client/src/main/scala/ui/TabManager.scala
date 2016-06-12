@@ -3,7 +3,7 @@ package ui
 import java.util.UUID
 
 import models.template.Icons
-import org.scalajs.jquery.{ JQueryEventObject, jQuery => $ }
+import org.scalajs.jquery.{JQueryEventObject, jQuery => $}
 import utils.NullUtils
 
 import scala.scalajs.js

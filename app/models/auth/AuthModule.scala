@@ -1,22 +1,22 @@
 package models.auth
 
-import com.google.inject.{ AbstractModule, Provides }
-import com.mohiva.play.silhouette.api.crypto.{ AuthenticatorEncoder, CookieSigner, Crypter, CrypterAuthenticatorEncoder }
+import com.google.inject.{AbstractModule, Provides}
+import com.mohiva.play.silhouette.api.crypto.{AuthenticatorEncoder, CookieSigner, Crypter, CrypterAuthenticatorEncoder}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util._
-import com.mohiva.play.silhouette.api.{ Environment, EventBus, Silhouette, SilhouetteProvider }
-import com.mohiva.play.silhouette.impl.authenticators.{ CookieAuthenticator, CookieAuthenticatorService }
+import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
+import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, CookieAuthenticatorService}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import com.mohiva.play.silhouette.impl.util.{ DefaultFingerprintGenerator, PlayCacheLayer, SecureRandomIDGenerator }
+import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, PlayCacheLayer, SecureRandomIDGenerator}
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
-import com.mohiva.play.silhouette.crypto.{ JcaCookieSigner, JcaCookieSignerSettings, JcaCrypter, JcaCrypterSettings }
+import com.mohiva.play.silhouette.crypto.{JcaCookieSigner, JcaCookieSignerSettings, JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
-import services.user.{ PasswordInfoService, UserSearchService }
+import services.user.{PasswordInfoService, UserSearchService}
 import utils.Config
 
 object AuthModule {

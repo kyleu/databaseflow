@@ -4,9 +4,9 @@ import java.util.UUID
 
 import enumeratum._
 import ui.metadata.MetadataManager
-import ui.query.{ AdHocQueryManager, QueryManager }
+import ui.query.{AdHocQueryManager, QueryManager}
 import ui.search.SearchManager
-import ui.{ EditorManager, HelpManager, TabManager }
+import ui.{EditorManager, HelpManager, TabManager}
 
 sealed abstract class KeyboardShortcut(val pattern: String, val desc: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
 
