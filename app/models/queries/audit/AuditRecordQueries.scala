@@ -3,7 +3,7 @@ package models.queries.audit
 import java.util.UUID
 
 import models.audit.{AuditRecord, AuditStatus, AuditType}
-import models.database.Row
+import models.database.{Query, Row}
 import models.queries.BaseQueries
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
@@ -13,6 +13,19 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
 
   val insert = Insert
   val search = Search
+
+  case class GetMatching(connectionId: UUID, userId: Option[UUID], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
+    private[this] val whereClause = userId match {
+      case Some(uid) => " and owner = ?"
+      case None => " and owner is null"
+    }
+    override def sql: String = s"select * from $tableName where connection = ?$whereClause limit $limit offset $offset"
+    override def values = userId match {
+      case Some(uid) => Seq(connectionId, uid)
+      case None => Seq(connectionId)
+    }
+    override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toSeq
+  }
 
   override protected def fromRow(row: Row) = {
     AuditRecord(

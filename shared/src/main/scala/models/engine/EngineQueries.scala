@@ -43,7 +43,8 @@ object EngineQueries {
           case FilterOp.Like if !fVal.contains('%') => s"'%$fVal%'"
           case _ => s"'$fVal'"
         }
-        s" where ${engine.leftQuoteIdentifier}$col${engine.rightQuoteIdentifier} ${op.sqlSymbol} $modifiedVal" + whereClauseAdditions.map(" and " + _).getOrElse("")
+        val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
+        s" where ${engine.leftQuoteIdentifier}$col${engine.rightQuoteIdentifier} ${op.sqlSymbol} $modifiedVal$additions"
       case None => whereClauseAdditions.map(" where" + _).getOrElse("")
     }
     val orderByClause = options.orderByCol.map { orderCol =>

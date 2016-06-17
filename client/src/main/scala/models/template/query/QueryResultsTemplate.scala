@@ -13,7 +13,7 @@ object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val content = div(id := resultId.toString)(
       div(cls := "row-status-display")(
-        a(href := "#", cls := s"results-filter-link right theme-text")("Filter"),
+        a(href := "#", cls := "results-filter-link right theme-text")("Filter"),
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
         p(
           s"${utils.NumberUtils.withCommas(qr.rowsAffected)} ",

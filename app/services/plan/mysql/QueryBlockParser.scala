@@ -19,6 +19,7 @@ object QueryBlockParser {
         case "nested_loop" => parseNestedLoop(nodeType._2)
         case "union_result" => parseUnionResult(nodeType._2)
         case "table" => parseTable(nodeType._2)
+        case "grouping_operation" => parseGroupingOperation(nodeType._2)
         case x => throw new IllegalStateException(s"Unable to parse children from node type [$x].")
       }
     case x => throw new IllegalStateException(s"Invalid query block type [${x.getClass.getSimpleName}].")
@@ -63,6 +64,18 @@ object QueryBlockParser {
       case x => throw new IllegalStateException(x.toString)
     },
       children = Nil
+    )
+  }
+
+  private[this] def parseGroupingOperation(el: Js.Value) = {
+    val obj = (el match {
+      case o: Js.Obj => o
+      case x => throw new IllegalStateException(s"Grouping operation element is of type [${x.getClass.getSimpleName}].")
+    }).value.toMap
+    PlanNode(
+      title = "Grouping Operation",
+      nodeType = "Grouping Operation",
+      children = Seq(parseNestedLoop(obj("nested_loop")))
     )
   }
 }

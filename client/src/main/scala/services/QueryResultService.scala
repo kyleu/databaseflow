@@ -94,6 +94,6 @@ object QueryResultService {
       rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
     }
     val timingEl = $(".total-duration", panel)
-    timingEl.text(utils.NumberUtils.withCommas(qrrc.durationMs).toString)
+    timingEl.text(utils.NumberUtils.withCommas(qrrc.durationMs))
   }
 }

@@ -21,7 +21,7 @@ object CreateResultTable {
           case Some(sc) => s"decimal($pr, $sc)"
           case None => s"decimal($pr)"
         }
-        case None => s"decimal"
+        case None => "decimal"
       }
       case BooleanType => "boolean"
       case ByteType => engine match {

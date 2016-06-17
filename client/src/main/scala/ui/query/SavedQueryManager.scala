@@ -9,7 +9,7 @@ import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui.modal.{ConfirmManager, QueryExportFormManager, QuerySaveFormManager}
-import ui.{EditorManager, TabManager, UserManager}
+import ui.{TabManager, UserManager}
 import utils.NetworkMessage
 
 object SavedQueryManager {
@@ -59,24 +59,20 @@ object SavedQueryManager {
     utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
       QueryExportFormManager.show(savedQuery.id, QueryManager.getSql(savedQuery.id), savedQuery.name)
     })
-
     utils.JQueryUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       sql = QueryManager.getSql(savedQuery.id)
     )))
-
     utils.JQueryUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = QueryManager.getSql(savedQuery.id)
     )))
-
     utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       val newSavedQuery = savedQuery.copy(
         sql = QueryManager.getSql(savedQuery.id)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })
-
     utils.JQueryUtils.clickHandler($(".delete-query-link", queryPanel), (jq) => {
       def callback(b: Boolean): Unit = {
         if (b) {

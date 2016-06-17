@@ -48,13 +48,13 @@ class AuthModule extends AbstractModule with ScalaModule {
   }
 
   @Provides
-  def provideAuthenticatorCrypter(configuration: Configuration): Crypter = {
+  def provideAuthenticatorCrypter(): Crypter = {
     val settings = JcaCrypterSettings(AuthModule.encKey)
     new JcaCrypter(settings)
   }
 
   @Provides
-  def provideCookieSigner(configuration: Configuration): CookieSigner = {
+  def provideCookieSigner(): CookieSigner = {
     val config = new JcaCookieSignerSettings(AuthModule.encKey)
     new JcaCookieSigner(config)
   }

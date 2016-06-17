@@ -45,7 +45,7 @@ object HistoryManager {
   }
 
   def handleQueryHistoryResponse(history: Seq[AuditRecord]) = {
-    utils.Logging.info("History!")
+    utils.Logging.info("History: " + history)
   }
 
   def refresh() = NetworkMessage.sendMessage(GetQueryHistory())

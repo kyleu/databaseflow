@@ -61,7 +61,7 @@ object TabManager {
       if (idx == -1 || openTabs.length <= 1) {
         openTabs.headOption.foreach(x => selectTab(x._1))
       } else if (idx == openTabs.length - 1) {
-        selectTab(openTabs.head._1)
+        selectTab(openTabs.headOption.getOrElse(throw new IllegalStateException())._1)
       } else {
         selectTab(openTabs(idx + 1)._1)
       }
