@@ -8,6 +8,10 @@ import models.{QueryResultRowCount, ResponseMessage}
 import services.result.CachedResultService
 import utils.DateUtils
 
+object CachedResultQuery {
+  val maxRows = 50000
+}
+
 case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
   val startMs = DateUtils.nowMillis
 
@@ -46,7 +50,8 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
 
         val partialRowData = collection.mutable.ArrayBuffer(transformedData)
 
-        rows.foreach { row =>
+        while (rowCount < CachedResultQuery.maxRows && rows.hasNext) {
+          val row = rows.next()
           rowCount += 1
           val data = CachedResultQueryHelper.dataFor(row, columnsWithIndex)
           val transformedData = if (containsRowNum) {
@@ -61,8 +66,8 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
           }
           if (rowCount == 101) {
             val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
-            CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
             CachedResultQueryHelper.sendResult(result, out, columnsPlus, partialRowData, firstMessageElapsed, moreRowsAvailable = true)
+            CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
           }
         }
 
@@ -74,7 +79,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
 
         val duration = (DateUtils.nowMillis - startMs).toInt
         CachedResultService.completeCacheResult(result.resultId, rowCount, duration)
-        QueryResultRowCount(result.resultId, result.queryId, result.resultId, rowCount, duration)
+        QueryResultRowCount(result.resultId, result.queryId, result.resultId, rowCount, rowCount == CachedResultQuery.maxRows, duration)
       } else {
         val elapsed = (DateUtils.nowMillis - startMs).toInt
         CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, columns, Seq(firstRowData), elapsed)

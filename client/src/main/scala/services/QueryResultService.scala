@@ -90,7 +90,9 @@ object QueryResultService {
     val workspace = $(s"#workspace-${qrrc.queryId}")
     val panel = $(s"#${qrrc.resultId}", workspace)
     val rowCountEl = $(".total-row-count", panel)
-    if (qrrc.count > 100) {
+    if (qrrc.overflow) {
+      rowCountEl.text(s" of at least ${utils.NumberUtils.withCommas(qrrc.count)} ")
+    } else if (qrrc.count > 100) {
       rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
     }
     val timingEl = $(".total-duration", panel)
