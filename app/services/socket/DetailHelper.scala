@@ -61,6 +61,6 @@ trait DetailHelper { this: SocketService =>
       val json = upickle.json.read(data)
       dc ! ClientTraceResponse(id, json)
     case None =>
-      log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active brawl.")
+      log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active connection.")
   }
 }

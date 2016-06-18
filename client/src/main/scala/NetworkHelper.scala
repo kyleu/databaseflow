@@ -1,11 +1,12 @@
 import models.{Ping, RequestMessage}
-import services.NavigationService
+import services.{NavigationService, NotificationService}
+import ui.modal.ReconnectManager
 import utils.{JsonSerializers, NetworkSocket}
 
 import scala.scalajs.js.timers._
 
 trait NetworkHelper { this: DatabaseFlow =>
-  protected[this] val socket = new NetworkSocket(onSocketConnect, onSocketMessage, onSocketError, onSocketClose)
+  private[this] var socket = new NetworkSocket(onSocketConnect, onSocketMessage, onSocketError, onSocketClose)
 
   protected[this] var latencyMs: Option[Int] = None
 
@@ -31,7 +32,14 @@ trait NetworkHelper { this: DatabaseFlow =>
   }
 
   protected[this] def onSocketClose(): Unit = {
-    utils.Logging.warn("Socket closed.")
+    val callback = () => {
+      utils.Logging.info("Attempting to reconnect.")
+      socket.open(NavigationService.socketUrl)
+    }
+    ReconnectManager.show(callback, NotificationService.getLastError match {
+      case Some(e) => s"${e._1}: ${e._2}"
+      case None => "The connection to the server was closed."
+    })
   }
 
   def sendMessage(rm: RequestMessage): Unit = {

@@ -37,9 +37,10 @@
       </div>
     </div>
 
-    @views.html.query.confirmModal(user)
-    @views.html.query.saveModal(user)
-    @views.html.query.exportModal(user, connectionId)
+    @views.html.modal.confirmModal(user)
+    @views.html.modal.reconnectModal(user)
+    @views.html.modal.saveModal(user)
+    @views.html.modal.exportModal(user, connectionId)
   </main>
 
   @if(debug) {

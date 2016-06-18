@@ -1,5 +1,6 @@
 package services.socket
 
+import akka.actor.PoisonPill
 import models._
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
@@ -16,6 +17,8 @@ trait StartHelper extends Logging { this: SocketService =>
     case Left(x) =>
       log.warn("Error attempting to connect to database.", x)
       out ! ServerError("Database Connect Failed", x.getMessage)
+      out ! PoisonPill
+      self ! PoisonPill
       None
   }
 

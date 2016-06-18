@@ -11,7 +11,7 @@ import scala.concurrent.Future
 class NotificationService @javax.inject.Inject() (ws: WSClient, config: Config) extends Logging {
   private[this] val defaultIcon = "http://databaseflow.com/assets/images/ui/favicon/favicon.png"
 
-  def alert(msg: String, channel: String = "#general", username: String = "Puzzle Brawl", iconUrl: String = defaultIcon) = if (config.slackEnabled) {
+  def alert(msg: String, channel: String = "#general", username: String = "Database Flow", iconUrl: String = defaultIcon) = if (config.slackEnabled) {
     val body = Js.Obj(
       "channel" -> Js.Str(channel),
       "username" -> Js.Str(username),

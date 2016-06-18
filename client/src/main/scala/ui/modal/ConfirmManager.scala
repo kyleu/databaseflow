@@ -13,14 +13,14 @@ object ConfirmManager {
   private[this] val linkFalse = $("#confirm-false-link", modal)
 
   def init() = {
-    utils.JQueryUtils.clickHandler($("#confirm-true-link", modal), (jq) => {
+    utils.JQueryUtils.clickHandler(linkTrue, (jq) => {
       activeCallback match {
         case Some(cb) => cb(true)
         case None => throw new IllegalStateException("No active callback.")
       }
     })
 
-    utils.JQueryUtils.clickHandler($("#confirm-false-link", modal), (jq) => activeCallback match {
+    utils.JQueryUtils.clickHandler(linkFalse, (jq) => activeCallback match {
       case Some(cb) => cb(false)
       case None => throw new IllegalStateException("No active callback.")
     })
