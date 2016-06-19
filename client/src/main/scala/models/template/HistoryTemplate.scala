@@ -1,11 +1,13 @@
 package models.template
 
+import models.audit.AuditRecord
+
 import scalatags.Text.all._
 
 object HistoryTemplate {
-  def content() = {
+  val panel = {
     val content = div(id := "history-panel")(
-      div("Loading query history...")
+      div(cls := "history-content")("Loading query history...")
     )
 
     StaticPanelTemplate.cardRow(
@@ -15,5 +17,13 @@ object HistoryTemplate {
         div(a(cls := "refresh-history-link", href := "")("Refresh"))
       )
     )
+  }
+
+  def content(h: Seq[AuditRecord]) = {
+    if (h.isEmpty) {
+      p("It looks like you haven't run any queries. Get started!")
+    } else {
+      p(s"Wow, ${h.length} queries! Good job!")
+    }
   }
 }

@@ -19,9 +19,7 @@ object HistoryManager {
     if (isOpen) {
       TabManager.selectTab(historyId)
     } else {
-      val template = HistoryTemplate.content()
-      val panelHtml = div(id := s"panel-$historyId", cls := "workspace-panel")(template)
-
+      val panelHtml = div(id := s"panel-$historyId", cls := "workspace-panel")(HistoryTemplate.panel)
       WorkspaceManager.append(panelHtml.toString)
 
       def close() = {
@@ -33,19 +31,20 @@ object HistoryManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ historyId
 
       val queryPanel = $(s"#panel-$historyId")
-
       JQueryUtils.clickHandler($(".refresh-history-link", queryPanel), e => {
         refresh()
       })
 
       refresh()
-
       isOpen = true
     }
   }
 
   def handleQueryHistoryResponse(history: Seq[AuditRecord]) = {
-    utils.Logging.info("History: " + history)
+    val queryPanel = $(s"#panel-$historyId")
+    val content = $(".history-content", queryPanel)
+
+    content.html(HistoryTemplate.content(history).toString)
   }
 
   def refresh() = NetworkMessage.sendMessage(GetQueryHistory())

@@ -11,8 +11,8 @@ case object CreateAuditRecordTable extends CreateTableStatement("audit_records")
       "connection" uuid not null,
 
       "status" $varchar(32) not null,
-      "attributes" $varchar(2048) not null,
-      "properties" $varchar(2048) not null,
+      "context" $varchar(2048),
+      "sql" text,
       "elapsed" int not null
     );
 

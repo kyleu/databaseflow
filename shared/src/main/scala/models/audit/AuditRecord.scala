@@ -8,6 +8,8 @@ case class AuditRecord(
   owner: Option[UUID],
   connection: UUID,
   status: AuditStatus,
+  context: Option[String],
+  sql: Option[String],
   elapsed: Int,
   occurred: Long
 )
