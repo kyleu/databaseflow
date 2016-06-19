@@ -23,7 +23,25 @@ object HistoryTemplate {
     if (h.isEmpty) {
       p("It looks like you haven't run any queries. Get started!")
     } else {
-      p(s"Wow, ${h.length} queries! Good job!")
+      div(
+        p(s"Wow, ${h.length} queries! Good job!"),
+        table(cls := "")(
+          thead(
+            tr(th("Id"), th("Type"), th("Status"), th("Context"), th("SQL"), th("Occurred"), th("Actions")),
+            tbody(h.map { history =>
+              tr(
+                td(history.id.toString),
+                td(history.auditType.toString),
+                td(history.status.toString),
+                td(history.context),
+                td(history.sql),
+                td(history.occurred),
+                td(a(data("audit-id") := history.id.toString, href := "#", cls := "audit-remove")("Remove"))
+              )
+            })
+          )
+        )
+      )
     }
   }
 }

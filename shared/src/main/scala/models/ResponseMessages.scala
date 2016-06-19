@@ -27,7 +27,8 @@ case class TableResultResponse(tables: Seq[Table]) extends ResponseMessage
 case class ViewResultResponse(views: Seq[View]) extends ResponseMessage
 case class ProcedureResultResponse(procedures: Seq[Procedure]) extends ResponseMessage
 
-case class QueryHistoryResponse(history: Seq[AuditRecord]) extends ResponseMessage
+case class AuditRecordResponse(history: Seq[AuditRecord]) extends ResponseMessage
+case class AuditRecordRemoved(id: UUID) extends ResponseMessage
 
 case class QueryCheckResponse(queryId: UUID, error: Option[String] = None, line: Option[Int] = None, position: Option[Int] = None) extends ResponseMessage
 case class QueryResultRowCount(id: UUID, queryId: UUID, resultId: UUID, count: Int, overflow: Boolean, durationMs: Int) extends ResponseMessage

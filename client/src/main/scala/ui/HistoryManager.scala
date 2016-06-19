@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.GetQueryHistory
+import models.GetAuditHistory
 import models.audit.AuditRecord
 import models.template.{HistoryTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
@@ -40,12 +40,11 @@ object HistoryManager {
     }
   }
 
-  def handleQueryHistoryResponse(history: Seq[AuditRecord]) = {
+  def handleAuditHistoryResponse(history: Seq[AuditRecord]) = {
     val queryPanel = $(s"#panel-$historyId")
     val content = $(".history-content", queryPanel)
-
     content.html(HistoryTemplate.content(history).toString)
   }
 
-  def refresh() = NetworkMessage.sendMessage(GetQueryHistory())
+  def refresh() = NetworkMessage.sendMessage(GetAuditHistory())
 }

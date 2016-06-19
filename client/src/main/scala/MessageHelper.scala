@@ -17,7 +17,7 @@ trait MessageHelper { this: DatabaseFlow =>
     case vrr: ViewResultResponse => ModelResultsService.handleViewResultResponse(vrr.views)
     case prr: ProcedureResultResponse => ModelResultsService.handleProcedureResultResponse(prr.procedures)
 
-    case qhr: QueryHistoryResponse => HistoryManager.handleQueryHistoryResponse(qhr.history)
+    case arr: AuditRecordResponse => HistoryManager.handleAuditHistoryResponse(arr.history)
 
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
     case qrr: QueryResultResponse => handleQueryResultResponse(qrr)
