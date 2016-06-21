@@ -21,22 +21,21 @@ object HistoryTemplate {
 
   def content(h: Seq[AuditRecord]) = {
     if (h.isEmpty) {
-      p("It looks like you haven't run any queries. Get started!")
+      p("It looks like you haven't run any queries for this database. Get started!")
     } else {
       div(
-        p(s"Wow, ${h.length} queries! Good job!"),
-        table(cls := "")(
+        table(cls := "history-table")(
           thead(
             tr(th("Id"), th("Type"), th("Status"), th("Context"), th("SQL"), th("Occurred"), th("Actions")),
             tbody(h.map { history =>
-              tr(
+              tr(id := s"history-${history.id}")(
                 td(history.id.toString),
                 td(history.auditType.toString),
                 td(history.status.toString),
                 td(history.context),
-                td(history.sql),
+                td(pre(history.sql)),
                 td(history.occurred),
-                td(a(data("audit-id") := history.id.toString, href := "#", cls := "audit-remove")("Remove"))
+                td(a(data("audit") := history.id.toString, href := "#", cls := "audit-remove")("Remove"))
               )
             })
           )

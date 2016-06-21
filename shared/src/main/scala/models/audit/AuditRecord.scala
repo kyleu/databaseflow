@@ -10,6 +10,8 @@ case class AuditRecord(
   status: AuditStatus,
   context: Option[String],
   sql: Option[String],
+  error: Option[String],
+  rowsAffected: Option[Int],
   elapsed: Int,
   occurred: Long
 )

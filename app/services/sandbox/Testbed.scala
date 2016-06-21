@@ -22,6 +22,8 @@ object Testbed extends SandboxTask {
     status = AuditStatus.OK,
     context = Some("ctx"),
     sql = Some("sql"),
+    error = None,
+    rowsAffected = None,
     elapsed = 10,
     occurred = 1000
   )

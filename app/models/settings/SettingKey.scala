@@ -9,8 +9,8 @@ sealed abstract class SettingKey(
     val id: String,
     val title: String,
     val description: String,
-    val keyType: ColumnType,
-    val default: String
+    val keyType: ColumnType = BooleanType,
+    val default: String = "true"
 ) extends EnumEntry {
   override def toString = id
 }
@@ -19,9 +19,13 @@ object SettingKey extends Enum[SettingKey] {
   case object AllowGuests extends SettingKey(
     id = "allow-guests",
     title = "Allow Guests",
-    description = "Determines if anonymous users are allowed.",
-    keyType = BooleanType,
-    default = "true"
+    description = "Determines if anonymous users are allowed."
+  )
+
+  case object AllowAuditRemoval extends SettingKey(
+    id = "allow-audit-removal",
+    title = "Allow Audit Removal",
+    description = "Determines if users are allowed to tremove audit records from the system."
   )
 
   case object QueryCacheConnection extends SettingKey(

@@ -5,9 +5,11 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models._
+import models.audit.AuditType
 import models.query.{QueryResult, SavedQuery}
 import models.result.{CachedResult, CachedResultQuery}
 import models.user.User
+import services.audit.AuditRecordService
 import services.database.{DatabaseConnection, DatabaseWorkerPool}
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
@@ -37,11 +39,15 @@ object QueryExecutionService extends Logging {
   }
 
   def handleRunQuery(db: DatabaseConnection, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
+    val startMs = DateUtils.nowMillis
+    val auditId = UUID.randomUUID
+
     def work() = {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
         val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
+        AuditRecordService.start(auditId, AuditType.Query, owner, connectionId, Some("context"), Some(sql))
         val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
@@ -60,10 +66,18 @@ object QueryExecutionService extends Logging {
 
     def onSuccess(rm: ResponseMessage) = {
       activeQueries.remove(resultId)
+      val rowCount = rm match {
+        case m: QueryResultResponse => m.result.rowsAffected
+        case _ => throw new IllegalStateException()
+      }
+      AuditRecordService.complete(auditId, rowCount, (DateUtils.nowMillis - startMs).toInt)
       out ! rm
     }
 
-    def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanError", t)
+    def onFailure(t: Throwable) = {
+      AuditRecordService.error(auditId, t.getMessage, (DateUtils.nowMillis - startMs).toInt)
+      ExceptionUtils.actorErrorFunction(out, "PlanError", t)
+    }
 
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }

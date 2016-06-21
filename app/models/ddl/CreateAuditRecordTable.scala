@@ -13,7 +13,10 @@ case object CreateAuditRecordTable extends CreateTableStatement("audit_records")
       "status" $varchar(32) not null,
       "context" $varchar(2048),
       "sql" text,
-      "elapsed" int not null
+      "error" text,
+      "rows_affected" int,
+      "elapsed" int not null,
+      "occurred" timestamp not null
     );
 
     create index "idx_${tableName}_user" on "$tableName" ("owner");
