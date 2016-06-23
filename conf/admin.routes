@@ -1,12 +1,13 @@
-GET         /users                     controllers.admin.UserController.users
-GET         /users/:id                 controllers.admin.UserController.view(id: java.util.UUID)
+GET         /users                      controllers.admin.UserController.users
+GET         /users/:id                  controllers.admin.UserController.view(id: java.util.UUID)
+GET         /users/:id/remove           controllers.admin.UserController.remove(id: java.util.UUID)
 
-GET         /settings                  controllers.admin.SettingsController.settings
-POST        /settings                  controllers.admin.SettingsController.saveSettings
+GET         /settings                   controllers.admin.SettingsController.settings
+POST        /settings                   controllers.admin.SettingsController.saveSettings
 
-GET         /results                   controllers.admin.ResultCacheController.results
-GET         /results/remove/:id        controllers.admin.ResultCacheController.removeResult(id: java.util.UUID)
-GET         /results/orphan/:id        controllers.admin.ResultCacheController.removeOrphan(id)
+GET         /results                    controllers.admin.ResultCacheController.results
+GET         /results/remove/:id         controllers.admin.ResultCacheController.removeResult(id: java.util.UUID)
+GET         /results/orphan/:id         controllers.admin.ResultCacheController.removeOrphan(id)
 
-GET         /activity                  controllers.admin.ActivityController.activity
-GET         /activity/remove/:id       controllers.admin.ActivityController.removeAudit(id: java.util.UUID)
+GET         /activity                   controllers.admin.ActivityController.activity
+GET         /activity/remove/:id        controllers.admin.ActivityController.removeAudit(id: java.util.UUID)

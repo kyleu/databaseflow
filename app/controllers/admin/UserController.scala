@@ -22,4 +22,9 @@ class UserController @javax.inject.Inject() (
     val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(s"Invalid user [$id]."))
     Future.successful(Ok(views.html.admin.view(request.identity, ctx.config.debug, user)))
   }
+
+  def remove(id: UUID) = withSession("admin-users") { implicit request =>
+    userService.remove(id)
+    Future.successful(Redirect(controllers.admin.routes.UserController.users()))
+  }
 }

@@ -2,6 +2,7 @@ package services.user
 
 import java.util.UUID
 
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.queries.auth._
 import models.user.{Role, User}
 import services.database.MasterDatabase
@@ -26,6 +27,7 @@ class UserService @javax.inject.Inject() () extends Logging {
   def remove(userId: UUID) = {
     val startTime = System.nanoTime
     MasterDatabase.conn.transaction { conn =>
+      MasterDatabase.conn.executeUpdate(PasswordInfoQueries.removeById(Seq(CredentialsProvider.ID, userId.toString)))
       val users = MasterDatabase.conn.executeUpdate(UserQueries.removeById(Seq(userId)))
       UserCache.removeUser(userId)
       val timing = ((System.nanoTime - startTime) / 1000000).toInt
