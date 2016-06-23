@@ -7,8 +7,11 @@ import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.queries.audit.AuditRecordQueries
 import models.user.User
 import models.{AuditRecordRemoved, AuditRecordResponse, GetAuditHistory}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.MasterDatabase
 import utils.DateUtils
+
+import scala.concurrent.Future
 
 object AuditRecordService {
   def getAll = MasterDatabase.conn.query(AuditRecordQueries.getAll())
@@ -18,14 +21,18 @@ object AuditRecordService {
     out ! AuditRecordResponse(matching)
   }
 
-  def removeAudit(user: Option[User], id: UUID, out: ActorRef) = {
-    val success = delete(id) == 1
-    if (success) {
-      out ! AuditRecordRemoved(id)
-    }
+  def removeAudit(id: UUID, out: ActorRef) = if (delete(id) == 1) {
+    out ! AuditRecordRemoved(id)
   }
 
-  def start(auditId: UUID, t: AuditType, owner: Option[UUID], connection: UUID, context: Option[String], sql: Option[String]) = insert(AuditRecord(
+  def start(
+    auditId: UUID,
+    t: AuditType,
+    owner: Option[UUID] = None,
+    connection: Option[UUID] = None,
+    context: Option[String] = None,
+    sql: Option[String] = None
+  ) = insert(AuditRecord(
     id = auditId,
     auditType = t,
     owner = owner,
@@ -39,27 +46,32 @@ object AuditRecordService {
     occurred = DateUtils.nowMillis
   ))
 
-  def complete(auditId: UUID, rowsAffected: Int, elapsed: Int) = {
-    MasterDatabase.conn.executeUpdate(AuditRecordQueries.Complete(auditId, rowsAffected, elapsed))
+  def complete(auditId: UUID, newType: AuditType, rowsAffected: Int, elapsed: Int) = {
+    MasterDatabase.conn.executeUpdate(AuditRecordQueries.Complete(auditId, newType, rowsAffected, elapsed))
   }
   def error(auditId: UUID, message: String, elapsed: Int) = {
     MasterDatabase.conn.executeUpdate(AuditRecordQueries.Error(auditId, message, elapsed))
   }
 
-  def insert(t: AuditType, owner: Option[UUID], connection: UUID, context: Option[String], sql: Option[String], elapsed: Int): Int = insert(AuditRecord(
-    id = UUID.randomUUID,
-    auditType = t,
-    owner = owner,
-    connection = connection,
-    status = AuditStatus.OK,
-    context = context,
-    sql = sql,
-    error = None,
-    rowsAffected = None,
-    elapsed = elapsed,
-    occurred = DateUtils.nowMillis
-  ))
-  def insert(auditRecord: AuditRecord): Int = MasterDatabase.conn.executeUpdate(AuditRecordQueries.insert(auditRecord))
+  def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], context: Option[String] = None, sql: Option[String] = None, elapsed: Int = 0) = {
+    insert(AuditRecord(
+      id = UUID.randomUUID,
+      auditType = t,
+      owner = owner,
+      connection = connection,
+      status = AuditStatus.OK,
+      context = context,
+      sql = sql,
+      error = None,
+      rowsAffected = None,
+      elapsed = elapsed,
+      occurred = DateUtils.nowMillis
+    ))
+  }
+
+  def insert(auditRecord: AuditRecord): Future[Unit] = Future {
+    MasterDatabase.conn.executeUpdate(AuditRecordQueries.insert(auditRecord))
+  }
 
   def delete(id: UUID) = MasterDatabase.conn.executeUpdate(AuditRecordQueries.removeById(id))
 }

@@ -9,11 +9,10 @@ object AuditType extends Enum[AuditType] {
   case object EditConnection extends AuditType
   case object DeleteConnection extends AuditType
   case object Connect extends AuditType
-  case object SaveQuery extends AuditType
-  case object DeleteQuery extends AuditType
+  case object Disconnect extends AuditType
+  case object SaveQuery extends AuditType // TODO
+  case object DeleteQuery extends AuditType // TODO
   case object Query extends AuditType
-  case object Explain extends AuditType
-  case object Analyze extends AuditType
   case object Execute extends AuditType
 
   override def values = findValues

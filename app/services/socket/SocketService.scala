@@ -4,6 +4,7 @@ import java.util.UUID
 
 import akka.actor.{ActorRef, Props}
 import models._
+import models.audit.AuditType
 import models.query.SavedQuery
 import models.schema.Schema
 import models.user.User
@@ -38,6 +39,8 @@ class SocketService(
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
+  AuditRecordService.create(AuditType.Connect, user.map(_.id), Some(connectionId))
+
   override def preStart() = onStart()
 
   override def receiveRequest = {
@@ -62,7 +65,7 @@ class SocketService(
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QueryExecutionService.handleQueryDeleteRequest(user, qdr.id, out) }
 
     case gqh: GetAuditHistory => timeReceive(gqh) { AuditRecordService.handleGetAuditHistory(db.connectionId, user, gqh, out) }
-    case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.removeAudit(user, rqh.id, out) }
+    case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.removeAudit(rqh.id, out) }
 
     case csd: CreateSampleDatabase => timeReceive(csd) { SampleDatabaseService.schedule(db, csd.queryId, out) }
 
@@ -72,6 +75,7 @@ class SocketService(
   }
 
   override def postStop() = {
+    AuditRecordService.create(AuditType.Disconnect, user.map(_.id), Some(connectionId))
     supervisor ! SocketStopped(id)
   }
 

@@ -49,7 +49,7 @@
               <td>@r.lastAccessed.toString("yyyy-MM-dd HH:mm:ss")</td>
               <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
               <td>
-                <a href="@routes.AdminController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
+                <a href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
               </td>
             </tr>
             <tr>
@@ -71,7 +71,7 @@
                 @orphans.map { o =>
                   <li>
                     @o (<a href="@controllers.routes.QueryController.main(services.database.ResultCacheDatabase.conn.connectionId)#table-@o">view</a>,
-                    <a href="@routes.AdminController.removeOrphan(o)">remove</a>)
+                    <a href="@controllers.admin.routes.ResultCacheController.removeOrphan(o)">remove</a>)
                   </li>
                 }
                 </ul>
@@ -83,6 +83,6 @@
     }
   </div>
   <div class="card-action">
-    <a class="theme-text" href="@routes.HomeController.index()">Back to Connection List</a>
+    <a class="theme-text" href="@controllers.routes.HomeController.index()">Back to Connection List</a>
   </div>
 }

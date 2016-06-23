@@ -22,6 +22,7 @@ object QueryExecutionService extends Logging {
     log.info(s"Saving query as [${sq.id}].")
     try {
       val result = SavedQueryService.save(sq, user.map(_.id))
+      AuditRecordService.create(AuditType.SaveQuery, user.map(_.id), None, Some(result.id.toString))
       out ! QuerySaveResponse(savedQuery = result)
     } catch {
       case NonFatal(x) => out ! QuerySaveResponse(error = Some(x.getMessage), savedQuery = sq)
@@ -32,6 +33,7 @@ object QueryExecutionService extends Logging {
     log.info(s"Deleting query [$id].")
     try {
       SavedQueryService.delete(id, user.map(_.id))
+      AuditRecordService.create(AuditType.DeleteQuery, user.map(_.id), None, Some(id.toString))
       out ! QueryDeleteResponse(id = id)
     } catch {
       case NonFatal(x) => out ! QueryDeleteResponse(id = id, error = Some(x.getMessage))
@@ -47,7 +49,7 @@ object QueryExecutionService extends Logging {
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
         val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
-        AuditRecordService.start(auditId, AuditType.Query, owner, connectionId, Some("context"), Some(sql))
+        AuditRecordService.start(auditId, AuditType.Query, owner, Some(connectionId), None, Some(sql))
         val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
@@ -66,11 +68,12 @@ object QueryExecutionService extends Logging {
 
     def onSuccess(rm: ResponseMessage) = {
       activeQueries.remove(resultId)
-      val rowCount = rm match {
-        case m: QueryResultResponse => m.result.rowsAffected
+      val (rowCount, isStatement) = rm match {
+        case m: QueryResultResponse => m.result.rowsAffected -> m.result.isStatement
         case _ => throw new IllegalStateException()
       }
-      AuditRecordService.complete(auditId, rowCount, (DateUtils.nowMillis - startMs).toInt)
+      val newType = if (isStatement) { AuditType.Execute } else { AuditType.Query }
+      AuditRecordService.complete(auditId, newType, rowCount, (DateUtils.nowMillis - startMs).toInt)
       out ! rm
     }
 

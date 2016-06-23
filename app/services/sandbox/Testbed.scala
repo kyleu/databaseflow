@@ -18,7 +18,7 @@ object Testbed extends SandboxTask {
     id = UUID.randomUUID,
     auditType = AuditType.SignIn,
     owner = None,
-    connection = UUID.randomUUID,
+    connection = Some(UUID.randomUUID),
     status = AuditStatus.OK,
     context = Some("ctx"),
     sql = Some("sql"),

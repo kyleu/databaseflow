@@ -5,9 +5,11 @@ import com.mohiva.play.silhouette.api.{LoginEvent, LogoutEvent}
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
+import models.audit.AuditType
 import models.user.UserForms
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.audit.AuditRecordService
 import services.user.UserSearchService
 import utils.ApplicationContext
 
@@ -34,6 +36,7 @@ class AuthenticationController @javax.inject.Inject() (
               ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
                 ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
                 ctx.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
+                  AuditRecordService.create(AuditType.SignIn, Some(user.id), None)
                   ctx.silhouette.env.authenticatorService.embed(v, result)
                 }
               }
@@ -51,6 +54,7 @@ class AuthenticationController @javax.inject.Inject() (
     val result = Redirect(controllers.routes.HomeController.index())
 
     request.identity.foreach { user =>
+      AuditRecordService.create(AuditType.SignOut, Some(user.id), None)
       ctx.silhouette.env.eventBus.publish(LogoutEvent(user, request))
     }
     request.authenticator match {

@@ -18,9 +18,9 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   val search = Search
   def removeById(id: UUID) = RemoveById(Seq(id))
 
-  case class Complete(id: UUID, rowsAffected: Int, elapsed: Int) extends Statement {
-    override def sql = s"update $tableName set status = ?, rowsAffected = ?, elapsed = ? where id = ?"
-    override def values = Seq(AuditStatus.OK, rowsAffected, elapsed, id)
+  case class Complete(id: UUID, newType: AuditType, rowsAffected: Int, elapsed: Int) extends Statement {
+    override def sql = s"update $tableName set audit_type = ?, status = ?, rowsAffected = ?, elapsed = ? where id = ?"
+    override def values = Seq(newType.toString, AuditStatus.OK, rowsAffected, elapsed, id)
   }
   case class Error(id: UUID, message: String, elapsed: Int) extends Statement {
     override def sql = s"update $tableName set status = ?, error = ?, elapsed = ? where id = ?"
@@ -45,7 +45,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
 
     auditType = AuditType.withName(row.as[String]("audit_type")),
     owner = row.asOpt[UUID]("owner"),
-    connection = row.as[UUID]("connection"),
+    connection = row.asOpt[UUID]("connection"),
     status = AuditStatus.withName(row.as[String]("status")),
 
     context = row.asOpt[String]("context"),
