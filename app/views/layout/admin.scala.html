@@ -7,23 +7,23 @@
     @views.html.components.userDropdown(user)
 
     <nav id="topnav" class="@user.fold("blue-grey")(_.preferences.theme) lighten-2">
-      <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+      <a href="@controllers.routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
 
       <ul class="left hide-on-small-only">
         @if(activeSection == "settings") {
-          <li class="active"><a href="@routes.AdminController.settings()">Settings</a></li>
+          <li class="active"><a href="@controllers.admin.routes.SettingsController.settings()">Settings</a></li>
         } else {
-          <li><a href="@routes.AdminController.settings()">Settings</a></li>
+          <li><a href="@controllers.admin.routes.SettingsController.settings()">Settings</a></li>
         }
         @if(activeSection == "users") {
-          <li class="active"><a href="@routes.AdminController.users()">Users</a></li>
+          <li class="active"><a href="@controllers.admin.routes.UserController.users()">Users</a></li>
         } else {
-          <li><a href="@routes.AdminController.users()">Users</a></li>
+          <li><a href="@controllers.admin.routes.UserController.users()">Users</a></li>
         }
         @if(activeSection == "results") {
-          <li class="active"><a href="@routes.AdminController.results()">Results</a></li>
+          <li class="active"><a href="@controllers.admin.routes.ResultCacheController.results()">Results</a></li>
         } else {
-          <li><a href="@routes.AdminController.results()">Results</a></li>
+          <li><a href="@controllers.admin.routes.ResultCacheController.results()">Results</a></li>
         }
       </ul>
 

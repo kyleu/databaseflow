@@ -2,9 +2,11 @@ package controllers
 
 import java.util.UUID
 
+import models.audit.AuditType
 import models.connection.ConnectionSettings
 import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
+import services.audit.AuditRecordService
 import services.connection.ConnectionSettingsService
 import utils.{ApplicationContext, EncryptUtils}
 
@@ -26,7 +28,10 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
 
   def save(connectionId: UUID) = withSession("save") { implicit request =>
     val connOpt = ConnectionSettingsService.getById(connectionId)
-    val conn = connOpt.getOrElse(ConnectionSettings(id = connectionId))
+    val conn = connOpt match {
+      case Some(c) => c
+      case None => ConnectionSettings(id = connectionId)
+    }
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
         val title = ConnectionForm.form.value.fold("New Connection")(_.name)
@@ -39,17 +44,20 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
           public = cf.public,
           engine = DatabaseEngine.get(cf.engine),
           url = cf.url,
-          username = cf.username,
-          password = cf.password
+          username = cf.username
         )
         val updated = if (cf.password.isEmpty) {
-          almostUpdated.copy(password = EncryptUtils.encrypt(almostUpdated.password))
+          almostUpdated.copy(password = almostUpdated.password)
         } else {
           almostUpdated.copy(password = EncryptUtils.encrypt(cf.password))
         }
         connOpt match {
-          case Some(existing) => ConnectionSettingsService.update(updated)
-          case None => ConnectionSettingsService.insert(updated)
+          case Some(existing) =>
+            ConnectionSettingsService.update(updated)
+            AuditRecordService.create(AuditType.EditConnection, request.identity.map(_.id), None, Some(updated.id.toString))
+          case None =>
+            ConnectionSettingsService.insert(updated)
+            AuditRecordService.create(AuditType.CreateConnection, request.identity.map(_.id), None, Some(updated.id.toString))
         }
         Redirect(routes.QueryController.main(connectionId))
       }
@@ -59,6 +67,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
 
   def delete(connectionId: UUID) = withSession("delete") { implicit request =>
     ConnectionSettingsService.delete(connectionId)
+    AuditRecordService.create(AuditType.DeleteConnection, request.identity.map(_.id), None, Some(connectionId.toString))
     Future.successful(Redirect(routes.HomeController.index()))
   }
 }

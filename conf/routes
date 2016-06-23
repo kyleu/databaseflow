@@ -13,12 +13,8 @@ GET         /q/:conn/websocket               controllers.QueryController.connect
 POST        /q/:conn/export                  controllers.QueryController.export(conn: java.util.UUID)
 
 # Admin
-GET         /admin/settings                  controllers.AdminController.settings
-POST        /admin/settings                  controllers.AdminController.saveSettings
-GET         /admin/users                     controllers.AdminController.users
-GET         /admin/results                   controllers.AdminController.results
-GET         /admin/results/remove/:id        controllers.AdminController.removeResult(id: java.util.UUID)
-GET         /admin/results/orphan/:id        controllers.AdminController.removeOrphan(id)
+->          /admin                           admin.Routes
+
 GET         /sandbox                         controllers.SandboxController.list
 GET         /sandbox/:key                    controllers.SandboxController.sandbox(key)
 
@@ -34,9 +30,6 @@ GET         /signout                         controllers.auth.AuthenticationCont
 
 GET         /profile                         controllers.ProfileController.view()
 POST        /profile                         controllers.ProfileController.save()
-
-#SSL Verification
-GET         /.well-known/*file               controllers.SslVerificationController.at(file)
 
 # Assets
 GET         /favicon.ico                     controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
