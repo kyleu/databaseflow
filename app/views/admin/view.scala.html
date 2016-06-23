@@ -1,0 +1,14 @@
+@(self: Option[models.user.User], debug: Boolean, user: models.user.User)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.admin(self, "users", messages("admin.users.title"), debug = debug) {
+  <div class="card-content">
+    <div class="card-title"><i class="fa @models.template.Icons.user"></i> @user.username</div>
+
+    <div class="row">
+      TODO
+    </div>
+  </div>
+  <div class="card-action">
+    <a class="theme-text" href="@routes.HomeController.index()">Back to Connection List</a>
+  </div>
+}

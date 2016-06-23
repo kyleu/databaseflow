@@ -25,6 +25,11 @@
         } else {
           <li><a href="@controllers.admin.routes.ResultCacheController.results()">Results</a></li>
         }
+        @if(activeSection == "activity") {
+          <li class="active"><a href="@controllers.admin.routes.ActivityController.activity()">Activity</a></li>
+        } else {
+          <li><a href="@controllers.admin.routes.ActivityController.activity()">Activity</a></li>
+        }
       </ul>
 
       <ul class="right hide-on-small-only">

@@ -15,14 +15,15 @@ import scala.concurrent.Future
 
 object AuditRecordService {
   def getAll = MasterDatabase.conn.query(AuditRecordQueries.getAll())
+  def getFiltered(userId: Option[UUID]) = getAll
 
   def handleGetAuditHistory(connectionId: UUID, user: Option[User], gqh: GetAuditHistory, out: ActorRef) = {
     val matching = MasterDatabase.conn.query(AuditRecordQueries.GetMatching(connectionId, user.map(_.id), gqh.limit, gqh.offset))
     out ! AuditRecordResponse(matching)
   }
 
-  def removeAudit(id: UUID, out: ActorRef) = if (delete(id) == 1) {
-    out ! AuditRecordRemoved(id)
+  def removeAudit(id: UUID, out: Option[ActorRef]) = if (delete(id) == 1) {
+    out.foreach(_ ! AuditRecordRemoved(id))
   }
 
   def start(
