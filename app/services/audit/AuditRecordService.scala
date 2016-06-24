@@ -9,12 +9,13 @@ import models.user.User
 import models.{AuditRecordRemoved, AuditRecordResponse, GetAuditHistory}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.MasterDatabase
-import utils.DateUtils
+import utils.{DateUtils, Logging}
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
-object AuditRecordService {
-  def getAll = MasterDatabase.conn.query(AuditRecordQueries.getAll())
+object AuditRecordService extends Logging {
+  def getAll = MasterDatabase.conn.query(AuditRecordQueries.getAll)
   def getFiltered(userId: Option[UUID]) = getAll
 
   def handleGetAuditHistory(connectionId: UUID, user: Option[User], gqh: GetAuditHistory, out: ActorRef) = {
@@ -70,8 +71,10 @@ object AuditRecordService {
     ))
   }
 
-  def insert(auditRecord: AuditRecord): Future[Unit] = Future {
+  def insert(auditRecord: AuditRecord) = Future {
     MasterDatabase.conn.executeUpdate(AuditRecordQueries.insert(auditRecord))
+  }.onFailure {
+    case NonFatal(x) => log.warn(s"Unable to log audit [$auditRecord].", x)
   }
 
   def delete(id: UUID) = MasterDatabase.conn.executeUpdate(AuditRecordQueries.removeById(id))

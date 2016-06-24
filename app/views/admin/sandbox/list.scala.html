@@ -2,7 +2,7 @@
 @layout.simple(user, "Sandbox List", debug = true) {
   <ul>
     @services.sandbox.SandboxTask.all.map { s =>
-      <li><a href="@routes.SandboxController.sandbox(s.id)">@s.name</a></li>
+      <li><a href="@controllers.admin.routes.SandboxController.sandbox(s.id)">@s.name</a></li>
     }
   </ul>
 }

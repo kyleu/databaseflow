@@ -13,14 +13,14 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   override protected val columns = Seq("id", "audit_type", "owner", "connection", "status", "context", "sql", "error", "rows_affected", "elapsed", "occurred")
   override protected val searchColumns = Seq("id", "status", "context", "sql", "error")
 
-  val getAll = GetAll
+  val getAll = GetAll(orderBy = "occurred desc")
   val insert = Insert
   val search = Search
   def removeById(id: UUID) = RemoveById(Seq(id))
 
   case class Complete(id: UUID, newType: AuditType, rowsAffected: Int, elapsed: Int) extends Statement {
-    override def sql = s"update $tableName set audit_type = ?, status = ?, rowsAffected = ?, elapsed = ? where id = ?"
-    override def values = Seq(newType.toString, AuditStatus.OK, rowsAffected, elapsed, id)
+    override def sql = s"update $tableName set audit_type = ?, status = ?, rows_affected = ?, elapsed = ? where id = ?"
+    override def values = Seq(newType.toString, AuditStatus.OK.toString, rowsAffected, elapsed, id)
   }
   case class Error(id: UUID, message: String, elapsed: Int) extends Statement {
     override def sql = s"update $tableName set status = ?, error = ?, elapsed = ? where id = ?"

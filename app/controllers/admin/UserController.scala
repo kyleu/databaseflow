@@ -15,12 +15,12 @@ class UserController @javax.inject.Inject() (
     userSearchService: UserSearchService
 ) extends BaseController {
   def users = withSession("admin-users") { implicit request =>
-    Future.successful(Ok(views.html.admin.users(request.identity, ctx.config.debug, userService.getAll)))
+    Future.successful(Ok(views.html.admin.user.list(request.identity, ctx.config.debug, userService.getAll)))
   }
 
   def view(id: UUID) = withSession("admin-users") { implicit request =>
     val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(s"Invalid user [$id]."))
-    Future.successful(Ok(views.html.admin.view(request.identity, ctx.config.debug, user)))
+    Future.successful(Ok(views.html.admin.user.view(request.identity, ctx.config.debug, user)))
   }
 
   def remove(id: UUID) = withSession("admin-users") { implicit request =>

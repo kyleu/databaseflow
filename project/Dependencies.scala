@@ -53,7 +53,7 @@ object Dependencies {
   }
 
   object Export {
-    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.2"
+    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.3"
     val xlsx = "org.apache.poi" % "poi-ooxml" % "3.14"
   }
 

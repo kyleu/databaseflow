@@ -18,7 +18,7 @@ class ResultCacheController @javax.inject.Inject() (override val ctx: Applicatio
   def results = withSession("admin-results") { implicit request =>
     val rows = CachedResultService.getAll
     val tables = CachedResultService.getTables
-    Future.successful(Ok(views.html.admin.results(request.identity, ctx.config.debug, rows, tables)))
+    Future.successful(Ok(views.html.admin.cache.results(request.identity, ctx.config.debug, rows, tables)))
   }
 
   def removeResult(id: UUID) = withSession("admin-remove-result") { implicit request =>

@@ -70,7 +70,8 @@ object QueryExecutionService extends Logging {
       activeQueries.remove(resultId)
       val (rowCount, isStatement) = rm match {
         case m: QueryResultResponse => m.result.rowsAffected -> m.result.isStatement
-        case _ => throw new IllegalStateException()
+        case m: QueryResultRowCount => m.count -> false
+        case _ => throw new IllegalStateException(rm.getClass.getSimpleName)
       }
       val newType = if (isStatement) { AuditType.Execute } else { AuditType.Query }
       AuditRecordService.complete(auditId, newType, rowCount, (DateUtils.nowMillis - startMs).toInt)

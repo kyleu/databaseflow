@@ -12,6 +12,7 @@
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Type</th>
               <th>Owner</th>
               <th>Connection</th>
@@ -25,16 +26,19 @@
           <tbody>
           @activity.map { a =>
             <tr>
-              <td>@a.auditType</td>
+              <td><i class="fa @a.auditType.icon"></i></td>
+              <td>@a.auditType.title</td>
               <td>@a.owner.map { o =>
                 <a href="@controllers.admin.routes.UserController.view(o)">@userService.retrieve(o).map(_.username)</a>
-              }</td>
+              }.getOrElse("Guest")</td>
               <td title="@a.connection">@a.connection.map { c =>
                 <a href="@routes.ConnectionSettingsController.editForm(c)">@services.connection.ConnectionSettingsService.getById(c).map(_.name)</a>
-              }</td>
+              }.getOrElse("N/A")</td>
               <td>@a.status</td>
               <td>@a.rowsAffected.map(utils.NumberUtils.withCommas)</td>
-              <td>@utils.NumberUtils.withCommas(a.elapsed)ms</td>
+              <td>@if(a.elapsed > 0) {
+                @utils.NumberUtils.withCommas(a.elapsed)ms
+              }</td>
               <td>@utils.DateUtils.fromMillis(a.occurred).toString("yyyy-MM-dd HH:mm:ss")</td>
               <td>
                 <a href="@controllers.admin.routes.ActivityController.removeAudit(a.id)"><i class="fa @models.template.Icons.close"></i></a>
@@ -42,12 +46,12 @@
             </tr>
             @a.sql.map { s =>
               <tr>
-                <td colspan="12"><code>SQL: @s</code></td>
+                <td colspan="8"><code>SQL: @s</code></td>
               </tr>
             }
             @a.error.map { e =>
               <tr>
-                <td colspan="12"><code>Error: @e</code></td>
+                <td colspan="8"><code>Error: @e</code></td>
               </tr>
             }
           }

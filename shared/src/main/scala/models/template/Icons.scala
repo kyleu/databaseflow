@@ -9,6 +9,15 @@ object Icons {
   val search = "fa-search"
   val error = "fa-exclamation"
 
+  val signIn = "fa-sign-in"
+  val signOut = "fa-sign-out"
+
+  val star = "fa-star"
+  val starOpen = "fa-star-o"
+
+  val edit = "fa-edit"
+  val recycle = "fa-recycle"
+
   val feedback = "fa-at"
   val help = "fa-key"
   val history = "fa-clock-o"
@@ -57,4 +66,6 @@ object Icons {
   val relation = "fa-external-link"
 
   val procedure = "fa-code"
+
+  val sliders = "fa-sliders"
 }
