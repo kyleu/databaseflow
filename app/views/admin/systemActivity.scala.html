@@ -1,6 +1,19 @@
-@(user: Option[models.user.User], debug: Boolean, activity: Seq[models.audit.AuditRecord], userService: services.user.UserSearchService)(
+@(
+    user: Option[models.user.User],
+    debug: Boolean,
+    activity: Seq[models.audit.AuditRecord],
+    orderBy: Option[(String, Boolean)],
+    limit: Int,
+    userService: services.user.UserSearchService
+)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.admin(user, "activity", messages("admin.activity.title"), debug = debug) {
+)@layout.admin(
+  user,
+  "activity",
+  messages("admin.activity.title"),
+  debug = debug,
+  scripts = Seq(routes.Assets.versioned("lib/momentjs/min/moment.min.js").url)
+) {
   <div class="card-content">
     <div class="card-title"><i class="fa @models.template.Icons.cache"></i> @messages("admin.activity.title")</div>
 
@@ -9,12 +22,15 @@
       @if(activity.isEmpty) {
         <div style="padding: 10px;">No activity recorded in database.</div>
       } else {
-        @views.html.activity.listTable(activity, userService)
+        @views.html.activity.listTable(activity, orderBy, Some(controllers.admin.routes.ActivityController.removeAudit), Some(userService))
       }
     </div>
   </div>
   <div class="card-action">
     <a class="theme-text" href="@controllers.routes.HomeController.index()">Back to Connection List</a>
+    @if(activity.size == limit) {
+      <a class="right-btn theme-text load-more-link" href="">Load @limit More</a>
+    }
   </div>
   @views.html.activity.listScript()
 }

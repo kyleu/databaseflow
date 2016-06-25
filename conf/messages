@@ -22,7 +22,9 @@ authentication.form.password = Password
 authentication.invalid.credentials = Invalid credentials
 
 # Profile
+profile.activity.title = User Activity
 profile.save = Save Changes
+profile.cancel = Cancel
 profile.form.username = Name
 profile.form.theme = Theme
 
@@ -30,7 +32,7 @@ profile.form.theme = Theme
 admin.settings.title = Settings
 admin.users.title = User Management
 admin.results.title = Cached Results
-admin.activity.title = User Activity
+admin.activity.title = System Activity
 
 # Static
 static.copyright = © 2016 Database Flow

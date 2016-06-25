@@ -1,62 +1,33 @@
-@(activity: Seq[models.audit.AuditRecord], userService: services.user.UserSearchService)
+@(
+    activity: Seq[models.audit.AuditRecord],
+    orderBy: Option[(String, Boolean)],
+    removeCall: Option[(java.util.UUID) => Call],
+    userService: Option[services.user.UserSearchService]
+)
+@th(key: String) = {
+  @if(orderBy.map(_._1).contains(key)) {
+    <th>@key</th>
+  } else {
+    <th>@key</th>
+  }
+}
 <table class="audit-list-table bordered highlight">
   <thead>
     <tr>
       <th></th>
-      <th>Type</th>
-      <th>Owner</th>
-      <th>Connection</th>
-      <th>Status</th>
-      <th>Rows</th>
-      <th>Elapsed</th>
-      <th>Occurred</th>
+      @th("Type")
+      @if(userService.isDefined) { @th("Owner") }
+      @th("Connection")
+      @th("Status")
+      @th("Rows")
+      @th("Elapsed")
+      @th("Occurred")
       <th></th>
     </tr>
   </thead>
   <tbody>
     @activity.map { a =>
-      <tr>
-        <td><i class="fa @a.auditType.icon"></i></td>
-        <td>@if(a.sql.isDefined) {
-          <a href="" class="audit-sql-toggle" data-id="@a.id">@a.auditType.title</a>
-        } else {
-          @a.auditType.title
-        }</td>
-        <td>@a.owner.map { o =>
-        <a href="@controllers.admin.routes.UserController.view(o)">@userService.retrieve(o).map(_.username)</a>
-        }.getOrElse("Guest")</td>
-        <td title="@a.connection">@a.connection.map { c =>
-        <a href="@routes.ConnectionSettingsController.editForm(c)">@services.connection.ConnectionSettingsService.getById(c).map(_.name)</a>
-        }.getOrElse("N/A")</td>
-        <td>@if(a.error.isDefined) {
-          <a href="" class="audit-error-toggle" data-id="@a.id">@a.status</a>
-        } else {
-          @a.status
-        }
-        </td>
-        <td>@a.rowsAffected.map(utils.NumberUtils.withCommas)</td>
-        <td>@if(a.elapsed > 0) {
-          @utils.NumberUtils.withCommas(a.elapsed)ms
-        }</td>
-        <td>@defining(utils.DateUtils.fromMillis(a.occurred)) { dt =>
-          @defining(dt.toString("yyyy-MM-dd HH:mm:ss") + " UTC") { dtString =>
-            <time class="timeago" title="@dtString" data-datetime="@utils.DateUtils.toIsoString(dt)">@dtString</time>
-          }
-        }</td>
-        <td>
-          <a href="@controllers.admin.routes.ActivityController.removeAudit(a.id)"><i class="fa @models.template.Icons.close"></i></a>
-        </td>
-      </tr>
-      @a.sql.map { s =>
-        <tr class="audit-row" id="audit-sql-row-@a.id">
-          <td colspan="8"><code>SQL: @s</code></td>
-        </tr>
-      }
-      @a.error.map { e =>
-        <tr class="audit-row" id="audit-error-row-@a.id">
-          <td colspan="8"><code>Error: @e</code></td>
-        </tr>
-      }
+      @listRow(a, removeCall, userService)
     }
   </tbody>
 </table>

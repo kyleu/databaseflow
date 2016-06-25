@@ -1,0 +1,45 @@
+@(a: models.audit.AuditRecord, removeCall: Option[(java.util.UUID) => Call], userService: Option[services.user.UserSearchService])
+<tr>
+  <td><i class="fa @a.auditType.icon"></i></td>
+  <td>@if(a.sql.isDefined) {
+    <a class="theme-text audit-sql-toggle" href="" data-id="@a.id">@a.auditType.title</a>
+  } else {
+    @a.auditType.title
+  }</td>
+  @userService.map { us =>
+    <td>@a.owner.map { o =>
+    <a class="theme-text" href="@controllers.admin.routes.UserController.view(o)">@us.retrieve(o).map(_.username)</a>
+    }.getOrElse("Guest")</td>
+  }
+  <td title="@a.connection">@a.connection.map { c =>
+  <a class="theme-text" href="@routes.QueryController.main(c)">@services.connection.ConnectionSettingsService.getById(c).map(_.name)</a>
+  }.getOrElse("N/A")</td>
+  <td>@if(a.error.isDefined) {
+    <a class="theme-text audit-error-toggle" href="" data-id="@a.id">@a.status</a>
+  } else {
+    @a.status
+  }
+  </td>
+  <td>@a.rowsAffected.map(utils.NumberUtils.withCommas)</td>
+  <td>@if(a.elapsed > 0) {
+    @utils.NumberUtils.withCommas(a.elapsed)ms
+  }</td>
+  <td>@defining(utils.DateUtils.fromMillis(a.occurred)) { dt =>
+    @defining(dt.toString("yyyy-MM-dd HH:mm:ss") + " UTC") { dtString =>
+      <time class="timeago" title="@dtString" data-datetime="@utils.DateUtils.toIsoString(dt)">@dtString</time>
+    }
+  }</td>
+  @removeCall.map { call => <td>
+    <a class="theme-text" href="@call(a.id)"><i class="fa @models.template.Icons.close"></i></a>
+  </td> }
+</tr>
+@a.sql.map { s =>
+  <tr class="audit-row" id="audit-sql-row-@a.id">
+    <td colspan="9"><code>SQL: @s</code></td>
+  </tr>
+}
+@a.error.map { e =>
+  <tr class="audit-row" id="audit-error-row-@a.id">
+    <td colspan="9"><code>Error: @e</code></td>
+  </tr>
+}

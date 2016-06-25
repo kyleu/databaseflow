@@ -1,10 +1,10 @@
-@(user: Option[models.user.User], activeSection: String, title: String, debug: Boolean)(content: Html)(
+@(user: Option[models.user.User], activeSection: String, title: String, debug: Boolean, scripts: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(
   user = user,
   title = title,
   debug = false,
-  scripts = Seq(routes.Assets.versioned("lib/momentjs/min/moment.min.js").url)
+  scripts = scripts
 ) {
   <header>
     @views.html.layout.themeStyles(user.fold("blue-grey")(_.preferences.theme))

@@ -1,0 +1,40 @@
+@(
+    user: Option[models.user.User],
+    debug: Boolean,
+    activity: Seq[models.audit.AuditRecord],
+    orderBy: Option[(String, Boolean)],
+    limit: Int,
+    removeCall: Option[(java.util.UUID) => Call]
+)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.simple(
+  user,
+  messages("profile.activity.title"),
+  debug = debug,
+  scripts = Seq(routes.Assets.versioned("lib/momentjs/min/moment.min.js").url)
+) {
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-title"><i class="fa @models.template.Icons.cache"></i> @messages("profile.activity.title")</div>
+          <div class="row">
+            <div class="col s12">
+            @if(activity.isEmpty) {
+              <div style="padding: 10px;">No activity recorded in database.</div>
+            } else {
+              @views.html.activity.listTable(activity, orderBy, removeCall, None)
+            }
+          </div>
+        </div>
+        <div class="card-action">
+          <a class="theme-text" href="@controllers.routes.HomeController.index()">Back to Connection List</a>
+          @if(activity.size == limit) {
+            <a class="right-btn theme-text load-more-link" href="">Load @limit More</a>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  @views.html.activity.listScript()
+}

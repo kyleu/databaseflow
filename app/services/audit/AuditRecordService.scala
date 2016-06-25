@@ -15,6 +15,8 @@ import scala.concurrent.Future
 import scala.util.control.NonFatal
 
 object AuditRecordService extends Logging {
+  val rowLimit = 100
+
   def getAll = MasterDatabase.conn.query(AuditRecordQueries.getAll)
   def getFiltered(userId: Option[UUID]) = getAll
 
