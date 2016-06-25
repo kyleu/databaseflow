@@ -32,7 +32,6 @@ object AuditRecordService extends Logging {
     t: AuditType,
     owner: Option[UUID] = None,
     connection: Option[UUID] = None,
-    context: Option[String] = None,
     sql: Option[String] = None
   ) = insert(AuditRecord(
     id = auditId,
@@ -40,7 +39,6 @@ object AuditRecordService extends Logging {
     owner = owner,
     connection = connection,
     status = AuditStatus.Started,
-    context = context,
     sql = sql,
     error = None,
     rowsAffected = None,
@@ -55,14 +53,13 @@ object AuditRecordService extends Logging {
     MasterDatabase.conn.executeUpdate(AuditRecordQueries.Error(auditId, message, elapsed))
   }
 
-  def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], context: Option[String] = None, sql: Option[String] = None, elapsed: Int = 0) = {
+  def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], sql: Option[String] = None, elapsed: Int = 0) = {
     insert(AuditRecord(
       id = UUID.randomUUID,
       auditType = t,
       owner = owner,
       connection = connection,
       status = AuditStatus.OK,
-      context = context,
       sql = sql,
       error = None,
       rowsAffected = None,

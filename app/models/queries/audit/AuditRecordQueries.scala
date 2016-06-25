@@ -10,8 +10,8 @@ import models.queries.BaseQueries
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
 
   override protected val tableName = "audit_records"
-  override protected val columns = Seq("id", "audit_type", "owner", "connection", "status", "context", "sql", "error", "rows_affected", "elapsed", "occurred")
-  override protected val searchColumns = Seq("id", "status", "context", "sql", "error")
+  override protected val columns = Seq("id", "audit_type", "owner", "connection", "status", "sql", "error", "rows_affected", "elapsed", "occurred")
+  override protected val searchColumns = Seq("id", "status", "sql", "error")
 
   val getAll = GetAll(orderBy = "occurred desc")
   val insert = Insert
@@ -24,7 +24,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   }
   case class Error(id: UUID, message: String, elapsed: Int) extends Statement {
     override def sql = s"update $tableName set status = ?, error = ?, elapsed = ? where id = ?"
-    override def values = Seq(AuditStatus.Error, message, elapsed, id)
+    override def values = Seq(AuditStatus.Error.toString, message, elapsed, id)
   }
 
   case class GetMatching(connectionId: UUID, userId: Option[UUID], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
@@ -48,9 +48,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     connection = row.asOpt[UUID]("connection"),
     status = AuditStatus.withName(row.as[String]("status")),
 
-    context = row.asOpt[String]("context"),
     sql = row.asOpt[String]("sql"),
-
     error = row.asOpt[String]("error"),
     rowsAffected = row.asOpt[Int]("rows_affected"),
 
@@ -60,6 +58,6 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
 
   override protected def toDataSeq(ar: AuditRecord) = Seq[Any](
     ar.id, ar.auditType.toString, ar.owner, ar.connection, ar.status.toString,
-    ar.context, ar.sql, ar.error, ar.rowsAffected, ar.elapsed, new java.sql.Timestamp(ar.occurred)
+    ar.sql, ar.error, ar.rowsAffected, ar.elapsed, new java.sql.Timestamp(ar.occurred)
   )
 }

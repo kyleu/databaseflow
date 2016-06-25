@@ -20,7 +20,6 @@ object Testbed extends SandboxTask {
     owner = None,
     connection = Some(UUID.randomUUID),
     status = AuditStatus.OK,
-    context = Some("ctx"),
     sql = Some("sql"),
     error = None,
     rowsAffected = None,

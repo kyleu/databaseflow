@@ -32,7 +32,6 @@ object HistoryTemplate {
                 td(history.id.toString),
                 td(history.auditType.toString),
                 td(history.status.toString),
-                td(history.context),
                 td(pre(cls := "sql-pre")(history.sql)),
                 td(history.occurred),
                 td(a(data("audit") := history.id.toString, href := "#", cls := "audit-remove")("Remove"))

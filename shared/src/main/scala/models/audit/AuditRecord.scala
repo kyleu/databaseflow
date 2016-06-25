@@ -8,7 +8,6 @@ case class AuditRecord(
   owner: Option[UUID],
   connection: Option[UUID],
   status: AuditStatus,
-  context: Option[String],
   sql: Option[String],
   error: Option[String],
   rowsAffected: Option[Int],

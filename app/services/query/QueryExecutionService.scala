@@ -49,7 +49,7 @@ object QueryExecutionService extends Logging {
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
         val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
-        AuditRecordService.start(auditId, AuditType.Query, owner, Some(connectionId), None, Some(sql))
+        AuditRecordService.start(auditId, AuditType.Query, owner, Some(connectionId), Some(sql))
         val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
@@ -68,13 +68,14 @@ object QueryExecutionService extends Logging {
 
     def onSuccess(rm: ResponseMessage) = {
       activeQueries.remove(resultId)
-      val (rowCount, isStatement) = rm match {
-        case m: QueryResultResponse => m.result.rowsAffected -> m.result.isStatement
-        case m: QueryResultRowCount => m.count -> false
+      rm match {
+        case m: QueryResultResponse =>
+          val newType = if (m.result.isStatement) { AuditType.Execute } else { AuditType.Query }
+          AuditRecordService.complete(auditId, newType, m.result.rowsAffected, (DateUtils.nowMillis - startMs).toInt)
+        case m: QueryResultRowCount => AuditRecordService.complete(auditId, AuditType.Query, m.count, (DateUtils.nowMillis - startMs).toInt)
+        case m: QueryErrorResponse => AuditRecordService.error(auditId, m.error.message, (DateUtils.nowMillis - startMs).toInt)
         case _ => throw new IllegalStateException(rm.getClass.getSimpleName)
       }
-      val newType = if (isStatement) { AuditType.Execute } else { AuditType.Query }
-      AuditRecordService.complete(auditId, newType, rowCount, (DateUtils.nowMillis - startMs).toInt)
       out ! rm
     }
 

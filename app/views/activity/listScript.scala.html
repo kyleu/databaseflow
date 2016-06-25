@@ -1,0 +1,57 @@
+@()<script>
+  var table;
+
+  function momentUpdate() {
+    var dates = $('time.timeago', table);
+    dates.each(function(i, e) {
+      var el = $(e);
+      var date = moment(el.data("datetime"));
+      el.text(date.fromNow().toString());
+    });
+
+    return dates.length > 0;
+  }
+
+  function tick() {
+    if(momentUpdate()) {
+      window.setInterval(tick, 1000)
+    }
+  }
+
+  function initSqlToggles() {
+    var toggles = $('.audit-sql-toggle', table);
+    toggles.click(function() {
+      var jq = $(this);
+      var id = jq.data("id");
+      var row = $("#audit-sql-row-" + id);
+      if(row.css("display") === "table-row") {
+        row.css("display", "none");
+      } else {
+        row.css("display", "table-row");
+      }
+      return false;
+    })
+  }
+
+  function initErrorToggles() {
+    var toggles = $('.audit-error-toggle', table);
+    toggles.click(function() {
+      var jq = $(this);
+      var id = jq.data("id");
+      var row = $("#audit-error-row-" + id);
+      if(row.css("display") === "table-row") {
+        row.css("display", "none");
+      } else {
+        row.css("display", "table-row");
+      }
+      return false;
+    })
+  }
+
+  $(function() {
+    table = $('.audit-list-table');
+    tick();
+    initSqlToggles();
+    initErrorToggles();
+  });
+</script>
