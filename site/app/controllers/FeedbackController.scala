@@ -2,9 +2,9 @@ package controllers
 
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{ I18nSupport, MessagesApi }
-import play.api.libs.json.{ JsObject, JsString }
-import play.api.mvc.{ Action, Controller }
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.libs.json.{JsObject, JsString}
+import play.api.mvc.{Action, Controller}
 import services.FeedbackService
 import services.FeedbackService.Feedback
 

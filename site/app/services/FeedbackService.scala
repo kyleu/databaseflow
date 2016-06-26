@@ -1,7 +1,7 @@
 package services
 
-import java.nio.file.{ Files, Paths }
-import java.util.{ Base64, UUID }
+import java.nio.file.{Files, Paths}
+import java.util.{Base64, UUID}
 
 object FeedbackService {
   case class Feedback(id: UUID, email: String, content: String)

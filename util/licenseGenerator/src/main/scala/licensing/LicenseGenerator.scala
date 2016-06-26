@@ -1,6 +1,6 @@
 package licensing
 
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{Files, Paths}
 import java.util.Base64
 
 object LicenseGenerator {
@@ -18,7 +18,7 @@ object LicenseGenerator {
       val content = Files.readAllBytes(file)
       val decoded = Base64.getDecoder.decode(content)
       val str = EncryptUtils.decrypt(decoded)
-      License(str)
+      License.fromString(str)
     } else {
       throw new IllegalArgumentException(s"License already exists for [$id].")
     }
@@ -30,7 +30,7 @@ object LicenseGenerator {
     if ((!overwrite) && Files.exists(file)) {
       throw new IllegalArgumentException(s"License already exists for [${license.id}] and cannot be overwritten.")
     } else {
-      val encrypted = EncryptUtils.encrypt(license.id).toArray
+      val encrypted = EncryptUtils.encrypt(license.toString).toArray
       val encoded = Base64.getEncoder.encode(encrypted)
       Files.write(file, encoded)
     }

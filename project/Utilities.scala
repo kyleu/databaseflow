@@ -17,7 +17,7 @@ object Utilities {
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   )
     .settings(
-      libraryDependencies += Dependencies.Utils.crypto
+      libraryDependencies ++= Seq(Dependencies.Utils.crypto, Dependencies.Utils.enumeratum)
     )
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)

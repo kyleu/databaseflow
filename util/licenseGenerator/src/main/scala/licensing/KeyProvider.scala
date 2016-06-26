@@ -1,6 +1,6 @@
 package licensing
 
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{Files, Paths}
 import java.util.Base64
 
 import xyz.wiedenhoeft.scalacrypt._

@@ -11,7 +11,7 @@ object Entrypoint extends App {
   //val decrypted = EncryptUtils.decrypt(encrypted)
   //println("Decrypted: " + decrypted)
 
-  LicenseGenerator.saveLicense(License("kyle@databaseflow.com"), overwrite = true)
+  LicenseGenerator.saveLicense(License.fromString("kyle@databaseflow.com"), overwrite = true)
   LicenseGenerator.listLicenses().foreach(println)
 
   println(LicenseGenerator.loadLicense("kyle@databaseflow.com"))

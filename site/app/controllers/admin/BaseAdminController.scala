@@ -1,6 +1,6 @@
 package controllers.admin
 
-import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 
 import scala.concurrent.Future

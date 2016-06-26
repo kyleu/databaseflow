@@ -1,6 +1,6 @@
 package controllers.admin
 
-import licensing.{ License, LicenseGenerator }
+import licensing.{License, LicenseEdition, LicenseGenerator}
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.MessagesApi
@@ -10,7 +10,14 @@ import scala.concurrent.Future
 object LicenseController {
   val licenseForm = Form(
     mapping(
-      "email" -> email
+      "id" -> uuid,
+      "user" -> email,
+      "edition" -> nonEmptyText.transform(
+        (s) => LicenseEdition.Personal: LicenseEdition,
+        (x: LicenseEdition) => x.toString
+      ),
+      "issued" -> longNumber,
+      "version" -> ignored(1)
     )(License.apply)(License.unapply)
   )
 }
