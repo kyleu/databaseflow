@@ -16,4 +16,6 @@ lazy val site = Site.site
 
 lazy val iconCreator = Utilities.iconCreator
 
+lazy val licenseModels = Utilities.licenseModels
+
 lazy val licenseGenerator = Utilities.licenseGenerator

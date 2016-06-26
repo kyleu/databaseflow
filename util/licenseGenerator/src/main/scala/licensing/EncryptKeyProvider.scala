@@ -5,19 +5,11 @@ import java.util.Base64
 
 import xyz.wiedenhoeft.scalacrypt._
 
-object KeyProvider {
-  private[this] val keyDir = "./util/licenseGenerator/src/main/resources/keys/"
-
-  private[this] val decryptKeyFilename = "license-decrypt.key"
-  lazy val decryptKey = {
-    val decryptKeyContent = Files.readAllBytes(Paths.get(keyDir, decryptKeyFilename))
-    val decryptKeyContentDecoded = Base64.getDecoder.decode(decryptKeyContent).toSeq
-    decryptKeyContentDecoded.toKey[RSAKey].get
-  }
-
+object EncryptKeyProvider {
+  private[this] val encryptKeyDir = "./util/licenseGenerator/src/main/resources/keys/"
   private[this] val encryptKeyFilename = "license-encrypt.key"
   lazy val encryptKey = {
-    val encryptKeyContent = Files.readAllBytes(Paths.get(keyDir, encryptKeyFilename))
+    val encryptKeyContent = Files.readAllBytes(Paths.get(encryptKeyDir, encryptKeyFilename))
     val encryptKeyContentDecoded = Base64.getDecoder.decode(encryptKeyContent).toSeq
     encryptKeyContentDecoded.toKey[RSAKey].get
   }
@@ -29,7 +21,7 @@ object KeyProvider {
     val newPrivateKey = privateKeyContentDecoded.toKey[RSAKey]
     println("Private Key:")
     println(privateKeyContent.map(_.toChar).mkString)
-    Files.write(Paths.get(keyDir, decryptKeyFilename), privateKeyContent)
+    Files.write(Paths.get(DecryptKeyProvider.decryptKeyDir, DecryptKeyProvider.decryptKeyFilename), privateKeyContent)
 
     val publicKey = privateKey.publicKey
     val publicKeyContent = Base64.getEncoder.encode(publicKey.bytes.toArray)
@@ -37,6 +29,6 @@ object KeyProvider {
     val newPublicKey = publicKeyContentDecoded.toKey[RSAKey]
     println("Public Key:")
     println(publicKeyContent.map(_.toChar).mkString)
-    Files.write(Paths.get(keyDir, encryptKeyFilename), publicKeyContent)
+    Files.write(Paths.get(encryptKeyDir, encryptKeyFilename), publicKeyContent)
   }
 }

@@ -24,7 +24,7 @@ object LicenseGenerator {
   def loadLicense(id: UUID) = {
     val content = getContent(id)
     val decoded = Base64.getDecoder.decode(content)
-    val str = EncryptUtils.decrypt(decoded)
+    val str = DecryptUtils.decrypt(decoded)
     License.fromString(str)
   }
 

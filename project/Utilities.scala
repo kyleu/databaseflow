@@ -12,8 +12,8 @@ object Utilities {
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
 
-  lazy val licenseGenerator = (project in file("util/licenseGenerator")).settings(
-    name := "license-generator",
+  lazy val licenseModels = (project in file("util/licenseModels")).settings(
+    name := "license-models",
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   )
     .settings(
@@ -22,4 +22,14 @@ object Utilities {
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
+
+  lazy val licenseGenerator = (project in file("util/licenseGenerator")).settings(
+    name := "license-generator",
+    ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  )
+    .settings(Shared.commonSettings: _*)
+    .settings(graphSettings: _*)
+    .settings(scalariformSettings: _*)
+    .dependsOn(licenseModels)
+    .aggregate(licenseModels)
 }

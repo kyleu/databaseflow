@@ -14,7 +14,7 @@ object License {
 
     val id = UUID.fromString(split.headOption.getOrElse(throw new IllegalStateException()))
     val user = split(1)
-    val edition = LicenseEdition.Personal // TODO split(2)
+    val edition = LicenseEdition.withName(split(2))
     val issued = split(3).toLong
     val version = split(4).toInt
     License(id, user, edition, issued, version)

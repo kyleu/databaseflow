@@ -32,7 +32,7 @@ object Server {
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
-      Export.csv, Export.xlsx, Ui.swing, Utils.scalaGuice,
+      Export.csv, Export.xlsx, Ui.swing, Utils.crypto, Utils.scalaGuice,
       Testing.scalaTest
     )
   }
@@ -77,4 +77,6 @@ object Server {
     .dependsOn(Shared.sharedJvm)
     .aggregate(Database.dblibs)
     .dependsOn(Database.dblibs)
+    .dependsOn(Utilities.licenseModels)
+    .aggregate(Utilities.licenseModels)
 }
