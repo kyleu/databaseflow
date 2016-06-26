@@ -15,5 +15,6 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+**/licenses
 
 buildinfo.properties
