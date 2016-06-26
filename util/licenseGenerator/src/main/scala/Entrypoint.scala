@@ -1,7 +1,11 @@
+import java.util.UUID
+
 import licensing._
 
 object Entrypoint extends App {
   println("License Generator")
+
+  val uuid = UUID.fromString("99999999-9999-9999-9999-999999999999")
 
   //KeyProvider.generateKeys()
 
@@ -11,8 +15,16 @@ object Entrypoint extends App {
   //val decrypted = EncryptUtils.decrypt(encrypted)
   //println("Decrypted: " + decrypted)
 
-  LicenseGenerator.saveLicense(License.fromString("kyle@databaseflow.com"), overwrite = true)
+  val l = License(
+    id = uuid,
+    user = "kyle@databaseflow.com",
+    edition = LicenseEdition.Personal,
+    issued = 0,
+    version = 1
+  )
+
+  LicenseGenerator.saveLicense(l, overwrite = true)
   LicenseGenerator.listLicenses().foreach(println)
 
-  println(LicenseGenerator.loadLicense("kyle@databaseflow.com"))
+  println(LicenseGenerator.loadLicense(uuid))
 }

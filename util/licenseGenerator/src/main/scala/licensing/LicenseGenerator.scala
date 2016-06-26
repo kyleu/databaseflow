@@ -1,27 +1,31 @@
 package licensing
 
 import java.nio.file.{Files, Paths}
-import java.util.Base64
+import java.util.{Base64, UUID}
 
 object LicenseGenerator {
   private[this] val licenseDir = "./util/licenseGenerator/src/main/resources/licenses/"
 
   def listLicenses() = {
     val dir = new java.io.File(licenseDir)
-    dir.listFiles.filter(_.getName.endsWith(".license")).map(_.getName.stripSuffix(".license"))
+    dir.listFiles.filter(_.getName.endsWith(".license")).map(_.getName.stripSuffix(".license")).map(UUID.fromString)
   }
 
-  def loadLicense(id: String) = {
+  def getContent(id: UUID) = {
     val filename = id + ".license"
     val file = Paths.get(licenseDir, filename)
     if (Files.exists(file)) {
-      val content = Files.readAllBytes(file)
-      val decoded = Base64.getDecoder.decode(content)
-      val str = EncryptUtils.decrypt(decoded)
-      License.fromString(str)
+      Files.readAllBytes(file)
     } else {
-      throw new IllegalArgumentException(s"License already exists for [$id].")
+      throw new IllegalArgumentException(s"License [$id] does not exist.")
     }
+  }
+
+  def loadLicense(id: UUID) = {
+    val content = getContent(id)
+    val decoded = Base64.getDecoder.decode(content)
+    val str = EncryptUtils.decrypt(decoded)
+    License.fromString(str)
   }
 
   def saveLicense(license: License, overwrite: Boolean = false) = {
@@ -36,7 +40,7 @@ object LicenseGenerator {
     }
   }
 
-  def removeLicense(id: String) = {
+  def removeLicense(id: UUID) = {
     val filename = id + ".license"
     val file = Paths.get(licenseDir, filename)
     if (Files.exists(file)) {

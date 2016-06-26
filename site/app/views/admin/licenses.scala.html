@@ -1,4 +1,4 @@
-@(licenses: Seq[String])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple("Database Flow Licenses") {
+@(licenses: Seq[licensing.License])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple("Database Flow Licenses") {
   <div class="row">
     <div class="col s12">
       <div class="card">
@@ -10,16 +10,27 @@
             <table class="bordered highlight">
               <thead>
                 <tr>
-                  <th>Email Address</th>
+                  <th>ID</th>
+                  <th>Email</th>
+                  <th>Edition</th>
+                  <th>Issued</th>
+                  <th>Version</th>
                   <th style="text-align: right;">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 @licenses.map { l =>
                   <tr>
-                    <td>@l</td>
+                    <td>@l.id</td>
+                    <td>@l.user</td>
+                    <td>@l.edition.title</td>
+                    <td>@java.time.LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(l.issued), java.util.TimeZone.getDefault.toZoneId)</td>
+                    <td>@l.version</td>
                     <td style="text-align: right;">
-                      <a href="@controllers.admin.routes.LicenseController.remove(l)" title="Remove License" onclick="return confirm('You sure?');">
+                      <a href="@controllers.admin.routes.LicenseController.download(l.id)" title="Download License">
+                        <i class="fa fa-download"></i>
+                      </a>
+                      <a href="@controllers.admin.routes.LicenseController.remove(l.id)" title="Remove License" onclick="return confirm('You sure?');">
                         <i class="fa fa-remove"></i>
                       </a>
                     </td>

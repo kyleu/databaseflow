@@ -1,5 +1,7 @@
 package controllers.admin
 
+import java.util.UUID
+
 import licensing.{License, LicenseEdition, LicenseGenerator}
 import play.api.data.Forms._
 import play.api.data._
@@ -26,7 +28,9 @@ object LicenseController {
 class LicenseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseAdminController {
   def list() = withSession("license-list") { (username, request) =>
     implicit val req = request
-    val licenses = LicenseGenerator.listLicenses()
+    val licenses = LicenseGenerator.listLicenses().map { x =>
+      LicenseGenerator.loadLicense(x)
+    }
     Future.successful(Ok(views.html.admin.licenses(licenses)))
   }
 
@@ -47,9 +51,15 @@ class LicenseController @javax.inject.Inject() (implicit override val messagesAp
     Future.successful(action)
   }
 
-  def remove(id: String) = withSession("license-remove") { (username, request) =>
+  def download(id: UUID) = withSession("license-download") { (username, request) =>
+    implicit val req = request
+    val content = LicenseGenerator.getContent(id)
+    Future.successful(Ok(content).as("application/octet-stream").withHeaders("Content-Disposition" -> s"attachment; filename=$id.license"))
+  }
+
+  def remove(id: UUID) = withSession("license-remove") { (username, request) =>
     implicit val req = request
     LicenseGenerator.removeLicense(id)
-    Future.successful(Redirect(controllers.admin.routes.LicenseController.list()).flashing("success" -> "Feedback removed."))
+    Future.successful(Redirect(controllers.admin.routes.LicenseController.list()).flashing("success" -> "License removed."))
   }
 }
