@@ -10,12 +10,12 @@
 
     <div class="row">
       <div class="col s12">
-        <em>@user.profile.providerKey</em>
+        @user.profile.providerKey
       </div>
     </div>
   </div>
   <div class="card-action">
-    <a class="theme-text right" href="@controllers.admin.routes.UserController.edit(user.id)">Edit</a>
-    <a class="theme-text" href="@controllers.admin.routes.UserController.users()">Back to User List</a>
+    <a class="theme-text right" href="@controllers.admin.routes.UserController.edit(user.id)">Save</a>
+    <a class="theme-text" href="@controllers.admin.routes.UserController.view(user.id)">Cancel</a>
   </div>
 }

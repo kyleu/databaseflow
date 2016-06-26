@@ -47,6 +47,7 @@ object MasterDatabase extends Logging {
   }
 
   private[this] var connOpt: Option[DatabaseConnection] = None
+  def isOpen = connOpt.isDefined
 
   def open() = {
     connOpt.foreach(x => throw new IllegalStateException("History database already open."))

@@ -3,6 +3,7 @@ GET         /sandbox/:key               controllers.admin.SandboxController.sand
 
 GET         /users                      controllers.admin.UserController.users
 GET         /users/:id                  controllers.admin.UserController.view(id: java.util.UUID)
+GET         /users/:id/edit             controllers.admin.UserController.edit(id: java.util.UUID)
 GET         /users/:id/remove           controllers.admin.UserController.remove(id: java.util.UUID)
 
 GET         /settings                   controllers.admin.SettingsController.settings

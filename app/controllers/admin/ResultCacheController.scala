@@ -4,21 +4,19 @@ import java.util.UUID
 
 import controllers.BaseController
 import models.ddl.DdlQueries
-import models.settings.SettingKey
 import services.database.ResultCacheDatabase
 import services.result.CachedResultService
-import services.settings.SettingsService
-import services.user.UserService
+import services.user.UserSearchService
 import utils.ApplicationContext
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ResultCacheController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserService) extends BaseController {
+class ResultCacheController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserSearchService) extends BaseController {
   def results = withSession("admin-results") { implicit request =>
     val rows = CachedResultService.getAll
     val tables = CachedResultService.getTables
-    Future.successful(Ok(views.html.admin.cache.results(request.identity, ctx.config.debug, rows, tables)))
+    Future.successful(Ok(views.html.admin.cache.results(request.identity, ctx.config.debug, rows, tables, userService)))
   }
 
   def removeResult(id: UUID) = withSession("admin-remove-result") { implicit request =>

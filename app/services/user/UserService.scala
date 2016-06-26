@@ -11,6 +11,8 @@ import utils.cache.UserCache
 
 @javax.inject.Singleton
 class UserService @javax.inject.Inject() () extends Logging {
+  def getById(id: UUID) = MasterDatabase.conn.query(UserQueries.getById(Seq(id)))
+
   def save(user: User, update: Boolean = false): User = {
     log.info(s"${if (update) { "Updating" } else { "Creating" }} user [$user].")
     val statement = if (update) {
@@ -27,7 +29,9 @@ class UserService @javax.inject.Inject() () extends Logging {
   def remove(userId: UUID) = {
     val startTime = System.nanoTime
     MasterDatabase.conn.transaction { conn =>
-      MasterDatabase.conn.executeUpdate(PasswordInfoQueries.removeById(Seq(CredentialsProvider.ID, userId.toString)))
+      getById(userId).map { user =>
+        MasterDatabase.conn.executeUpdate(PasswordInfoQueries.removeById(Seq(user.profile.providerID, user.profile.providerKey)))
+      }
       val users = MasterDatabase.conn.executeUpdate(UserQueries.removeById(Seq(userId)))
       UserCache.removeUser(userId)
       val timing = ((System.nanoTime - startTime) / 1000000).toInt
