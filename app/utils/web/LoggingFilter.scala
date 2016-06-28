@@ -12,7 +12,7 @@ import utils.metrics.Instrumented
 
 import scala.concurrent.Future
 
-class PlayLoggingFilter @Inject() (override implicit val mat: Materializer) extends Filter with Logging with Instrumented {
+class LoggingFilter @Inject() (override implicit val mat: Materializer) extends Filter with Logging with Instrumented {
   val prefix = "databaseflow.requests."
 
   val knownStatuses = Seq(

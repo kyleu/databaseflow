@@ -9,7 +9,7 @@ import play.api.routing.Router
 import utils.Logging
 import scala.concurrent._
 
-class PlayErrorHandler @Inject() (
+class ErrorHandler @Inject() (
     env: Environment, config: Configuration, sourceMapper: OptionalSourceMapper, router: Provider[Router]
 ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with Logging {
 

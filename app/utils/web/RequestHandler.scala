@@ -6,7 +6,7 @@ import play.api.mvc.RequestHeader
 import play.api.routing.Router
 import utils.Logging
 
-class PlayRequestHandler @Inject() (
+class RequestHandler @Inject() (
     errorHandler: HttpErrorHandler,
     configuration: HttpConfiguration,
     filters: HttpFilters,
