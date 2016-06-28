@@ -17,13 +17,12 @@ object LicenseService extends Logging {
     if (Files.exists(file)) {
       val content = Files.readAllBytes(file)
       val decoded = Base64.getDecoder.decode(content)
-      val s = DecryptUtils.decrypt(decoded)
-      val l = License.fromString(s)
+      val decrypted = DecryptUtils.decrypt(decoded)
+      val l = License.fromString(decrypted)
       log.info(s" ::: Database Flow ${l.edition.title}, registered to [${l.user}].")
       license = Some(l)
     } else {
       log.info(s" ::: Database Flow Trial Edition.")
-      None
     }
   }
 

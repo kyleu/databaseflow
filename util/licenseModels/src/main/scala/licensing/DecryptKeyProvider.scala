@@ -1,16 +1,22 @@
 package licensing
 
-import java.nio.file.{Files, Paths}
 import java.util.Base64
 
 import xyz.wiedenhoeft.scalacrypt._
 
+import scala.util.{Failure, Success}
+
 object DecryptKeyProvider {
-  val decryptKeyDir = "./util/licenseModels/src/main/resources/keys/"
-  val decryptKeyFilename = "license-decrypt.key"
+  val decryptKeyFilename = "keys/license-decrypt.key"
   lazy val decryptKey = {
-    val decryptKeyContent = Files.readAllBytes(Paths.get(decryptKeyDir, decryptKeyFilename))
+    val decryptKeyContent = {
+      val f = this.getClass.getClassLoader.getResourceAsStream(decryptKeyFilename)
+      Stream.continually(f.read()).takeWhile(_ != -1).map(_.toByte).toArray
+    }
     val decryptKeyContentDecoded = Base64.getDecoder.decode(decryptKeyContent).toSeq
-    decryptKeyContentDecoded.toKey[RSAKey].get
+    decryptKeyContentDecoded.toKey[RSAKey] match {
+      case Success(key) => key
+      case Failure(x) => throw x
+    }
   }
 }
