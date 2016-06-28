@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.database.{Row, Statement}
 import models.engine.DatabaseEngine
 import models.queries.BaseQueries
-import utils.EncryptUtils
+import utils.PasswordEncryptUtils
 
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
@@ -42,10 +42,10 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     engine = DatabaseEngine.get(row.as[String]("engine")),
     url = row.as[String]("url"),
     username = row.as[String]("username"),
-    password = EncryptUtils.decrypt(row.as[String]("password"))
+    password = PasswordEncryptUtils.decrypt(row.as[String]("password"))
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = {
-    Seq[Any](q.id, q.name, q.owner, q.public, q.description, q.engine.toString, q.url, q.username, EncryptUtils.encrypt(q.password))
+    Seq[Any](q.id, q.name, q.owner, q.public, q.description, q.engine.toString, q.url, q.username, PasswordEncryptUtils.encrypt(q.password))
   }
 }

@@ -8,7 +8,7 @@ import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
 import services.audit.AuditRecordService
 import services.connection.ConnectionSettingsService
-import utils.{ApplicationContext, EncryptUtils}
+import utils.{ApplicationContext, PasswordEncryptUtils}
 
 import scala.concurrent.Future
 
@@ -49,7 +49,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
         val updated = if (cf.password.isEmpty) {
           almostUpdated.copy(password = almostUpdated.password)
         } else {
-          almostUpdated.copy(password = EncryptUtils.encrypt(cf.password))
+          almostUpdated.copy(password = PasswordEncryptUtils.encrypt(cf.password))
         }
         connOpt match {
           case Some(existing) =>
