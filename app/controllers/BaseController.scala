@@ -7,6 +7,7 @@ import models.user.Role
 import play.api.i18n.I18nSupport
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
+import services.licensing.LicenseService
 import services.settings.SettingsService
 import utils.metrics.Instrumented
 import utils.{ApplicationContext, Logging}

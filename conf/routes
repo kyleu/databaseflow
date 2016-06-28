@@ -25,10 +25,11 @@ GET         /signin                          controllers.auth.AuthenticationCont
 POST        /signin                          controllers.auth.AuthenticationController.authenticateCredentials
 GET         /signout                         controllers.auth.AuthenticationController.signOut
 
-GET         /activity                        controllers.ProfileController.activity()
+GET         /activity                        controllers.ProfileController.activity
+GET         /activity/all/remove             controllers.ProfileController.removeAllAudits()
 GET         /activity/:id/remove             controllers.ProfileController.removeAudit(id: java.util.UUID)
-GET         /profile                         controllers.ProfileController.view()
-POST        /profile                         controllers.ProfileController.save()
+GET         /profile                         controllers.ProfileController.view
+POST        /profile                         controllers.ProfileController.save
 
 # Assets
 GET         /favicon.ico                     controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")

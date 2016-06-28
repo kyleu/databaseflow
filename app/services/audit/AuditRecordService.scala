@@ -6,7 +6,7 @@ import akka.actor.ActorRef
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.queries.audit.AuditRecordQueries
 import models.user.User
-import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory}
+import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory, RemoveAuditHistory}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.MasterDatabase
 import utils.{DateUtils, Logging}
@@ -25,8 +25,24 @@ object AuditRecordService extends Logging {
     out ! AuditRecordResponse(matching)
   }
 
+  def handleRemoveAuditHistory(userId: Option[UUID], connectionId: Option[UUID], rqh: RemoveAuditHistory, out: ActorRef) = rqh.id match {
+    case Some(auditId) => AuditRecordService.removeAudit(auditId, Some(out))
+    case None => userId match {
+      case Some(id) => AuditRecordService.removeAuditsForUser(id, connectionId, Some(out))
+      case None => AuditRecordService.removeAuditsForGuest(connectionId, Some(out))
+    }
+  }
+
   def removeAudit(id: UUID, out: Option[ActorRef]) = if (delete(id) == 1) {
-    out.foreach(_ ! AuditRecordRemoved(id))
+    out.foreach(_ ! AuditRecordRemoved(Some(id)))
+  }
+
+  def removeAuditsForUser(userId: UUID, connectionId: Option[UUID], out: Option[ActorRef]) = if (deleteAllForUser(userId, connectionId) > 1) {
+    out.foreach(_ ! AuditRecordRemoved(None))
+  }
+
+  def removeAuditsForGuest(connectionId: Option[UUID], out: Option[ActorRef]) = if (deleteAllForGuest(connectionId) > 1) {
+    out.foreach(_ ! AuditRecordRemoved(None))
   }
 
   def start(
@@ -77,4 +93,7 @@ object AuditRecordService extends Logging {
   }
 
   def delete(id: UUID) = MasterDatabase.conn.executeUpdate(AuditRecordQueries.removeById(id))
+  def deleteAllForUser(userId: UUID, connectionId: Option[UUID]) = MasterDatabase.conn.executeUpdate(AuditRecordQueries.RemoveForUser(userId, connectionId))
+  def deleteAllForGuest(connectionId: Option[UUID]) = MasterDatabase.conn.executeUpdate(AuditRecordQueries.RemoveForAnonymous(connectionId))
+  def deleteAll() = MasterDatabase.conn.executeUpdate(AuditRecordQueries.RemoveAll)
 }

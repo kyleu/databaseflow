@@ -10,11 +10,11 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class SettingsController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserService) extends BaseController {
-  def settings = withSession("admin-settings") { implicit request =>
+  def settings = withAdminSession("admin-settings") { implicit request =>
     Future.successful(Ok(views.html.admin.settings(request.identity, ctx.config.debug, SettingsService.getAll.map(s => s.key -> s.value).toMap)))
   }
 
-  def saveSettings = withSession("admin-settings-save") { implicit request =>
+  def saveSettings = withAdminSession("admin-settings-save") { implicit request =>
     val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException()).flatMap(x => x._2.headOption.map(x._1 -> _)).toSeq
     form.foreach { x =>
       SettingKey.withNameOption(x._1) match {

@@ -66,7 +66,7 @@ class SocketService(
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QueryExecutionService.handleQueryDeleteRequest(user, qdr.id, out) }
 
     case gqh: GetQueryHistory => timeReceive(gqh) { AuditRecordService.handleGetQueryHistory(db.connectionId, user, gqh, out) }
-    case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.removeAudit(rqh.id, Some(out)) }
+    case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.handleRemoveAuditHistory(user.map(_.id), Some(connectionId), rqh, out) }
 
     case csd: CreateSampleDatabase => timeReceive(csd) { SampleDatabaseService.schedule(db, csd.queryId, out) }
 

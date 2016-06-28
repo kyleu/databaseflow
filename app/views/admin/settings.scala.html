@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], debug: Boolean, settings: Map[models.settings.SettingKey, String])(
+@(user: models.user.User, debug: Boolean, settings: Map[models.settings.SettingKey, String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )
 

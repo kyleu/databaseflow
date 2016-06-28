@@ -8,7 +8,6 @@ import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
-
   override protected val tableName = "audit_records"
   override protected val columns = Seq("id", "audit_type", "owner", "connection", "status", "sql", "error", "rows_affected", "elapsed", "occurred")
   override protected val searchColumns = Seq("id", "status", "sql", "error")
@@ -25,6 +24,30 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   case class Error(id: UUID, message: String, elapsed: Int) extends Statement {
     override def sql = s"update $tableName set status = ?, error = ?, elapsed = ? where id = ?"
     override def values = Seq(AuditStatus.Error.toString, message, elapsed, id)
+  }
+
+  case class RemoveForUser(userId: UUID, connectionId: Option[UUID]) extends Statement {
+    override def sql = connectionId match {
+      case Some(c) => s"delete from $tableName where owner = ? and connection = ?"
+      case None => s"delete from $tableName where owner = ?"
+    }
+    override def values = connectionId match {
+      case Some(c) => Seq(userId, c)
+      case None => Seq(userId)
+    }
+  }
+  case class RemoveForAnonymous(connectionId: Option[UUID]) extends Statement {
+    override def sql = connectionId match {
+      case Some(c) => s"delete from $tableName where owner = is null and connection = ?"
+      case None => s"delete from $tableName where owner is null"
+    }
+    override def values = connectionId match {
+      case Some(c) => Seq(c)
+      case None => Seq()
+    }
+  }
+  case object RemoveAll extends Statement {
+    override def sql = s"truncate $tableName"
   }
 
   case class GetMatchingQueries(connectionId: UUID, userId: Option[UUID], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {

@@ -76,7 +76,7 @@ trait BaseQueries[T] {
     override val sql = s"""delete from "$tableName" where $idWhereClause"""
   }
 
-  protected case class Count(override val sql: String, override val values: Seq[Any]) extends Query[Int] {
+  protected case class Count(override val sql: String, override val values: Seq[Any] = Nil) extends Query[Int] {
     override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c").toInt
   }
 

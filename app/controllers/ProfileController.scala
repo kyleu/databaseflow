@@ -13,11 +13,11 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class ProfileController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserService) extends BaseController {
-  def view() = withSession("view") { implicit request =>
+  def view = withSession("view") { implicit request =>
     Future.successful(Ok(views.html.profile.view(request.identity, debug = false)))
   }
 
-  def save() = withSession("view") { implicit request =>
+  def save = withSession("view") { implicit request =>
     val user = request.identity.getOrElse(throw new IllegalStateException("Not logged in."))
     UserForms.profileForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.profile.view(request.identity, debug = false))),
@@ -32,7 +32,7 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
     )
   }
 
-  def activity() = withSession("activity") { implicit request =>
+  def activity = withSession("activity") { implicit request =>
     val audits = AuditRecordService.getFiltered(request.identity.map(_.id))
     val removeCall = if (SettingsService(SettingKey.AllowAuditRemoval) == "true") {
       Some(controllers.routes.ProfileController.removeAudit _)
@@ -45,5 +45,14 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
   def removeAudit(id: UUID) = withSession("remove-audit") { implicit request =>
     AuditRecordService.removeAudit(id, None)
     Future.successful(Redirect(controllers.routes.ProfileController.activity()).flashing("success" -> s"Removed activity [$id]."))
+  }
+
+  def removeAllAudits() = withSession("remove-audit") { implicit request =>
+    request.identity match {
+      case Some(u) => AuditRecordService.deleteAllForUser(u.id, None)
+      case None => AuditRecordService.deleteAllForGuest(None)
+    }
+
+    Future.successful(Redirect(controllers.routes.ProfileController.activity()).flashing("success" -> s"Removed all user activity."))
   }
 }

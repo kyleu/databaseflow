@@ -7,9 +7,12 @@ import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
-import models.user.{User, UserForms, UserPreferences}
+import models.queries.auth.UserQueries
+import models.user.{Role, User, UserForms, UserPreferences}
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.database.MasterDatabase
+import services.licensing.LicenseService
 import services.user.{UserSearchService, UserService}
 import utils.ApplicationContext
 
@@ -41,11 +44,20 @@ class RegistrationController @javax.inject.Inject() (
           )
           case None =>
             val authInfo = hasher.hash(data.password)
+            val firstUser = MasterDatabase.conn.query(UserQueries.count) == 0
+            val roles: Set[Role] = if (LicenseService.isPersonalEdition) {
+              Set(Role.User, Role.Admin)
+            } else if (firstUser) {
+              Set(Role.User, Role.Admin)
+            } else {
+              Set(Role.User)
+            }
             val user = User(
               id = UUID.randomUUID,
               username = Some(data.username),
+              preferences = UserPreferences(),
               profile = loginInfo,
-              preferences = UserPreferences()
+              roles = roles
             )
             val userSaved = userService.save(user)
             for {

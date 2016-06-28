@@ -15,7 +15,8 @@ object HistoryTemplate {
       content = content,
       iconAndTitle = Some(Icons.history -> "Query History"),
       actions = Seq(
-        div(a(cls := "refresh-history-link", href := "")("Refresh"))
+        div(a(cls := "right-btn remove-all-history-link theme-text", href := "")("Remove All History")),
+        div(a(cls := "refresh-history-link theme-text", href := "")("Refresh"))
       )
     )
   }

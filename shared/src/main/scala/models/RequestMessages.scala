@@ -28,6 +28,6 @@ case class QueryDeleteRequest(id: UUID) extends RequestMessage
 
 case class GetQueryHistory(limit: Int = 100, offset: Int = 0) extends RequestMessage
 case class InsertAuditHistory(id: UUID) extends RequestMessage
-case class RemoveAuditHistory(id: UUID) extends RequestMessage
+case class RemoveAuditHistory(id: Option[UUID]) extends RequestMessage
 
 case class CreateSampleDatabase(queryId: UUID) extends RequestMessage

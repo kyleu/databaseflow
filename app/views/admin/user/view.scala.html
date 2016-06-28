@@ -1,11 +1,11 @@
-@(self: Option[models.user.User], debug: Boolean, user: models.user.User)(
+@(self: models.user.User, debug: Boolean, user: models.user.User)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(self, "users", messages("admin.users.title"), debug = debug) {
   <div class="card-content">
     <div class="card-title">
       <i class="fa @models.template.Icons.user"></i>
       @user.username
-      @if(self.exists(_.id == user.id)) { <span>(You)</span> }
+      @if(self.id == user.id) { <span>(You)</span> }
     </div>
 
     <div class="row">

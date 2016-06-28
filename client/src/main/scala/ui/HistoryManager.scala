@@ -5,6 +5,7 @@ import java.util.UUID
 import models.{GetQueryHistory, RemoveAuditHistory}
 import models.audit.AuditRecord
 import models.template.{HistoryTemplate, Icons}
+import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
 import utils.{JQueryUtils, NetworkMessage}
@@ -35,6 +36,13 @@ object HistoryManager {
         refresh()
       })
 
+      val msg = "This will remove all activity history for this connection. Are you sure?"
+      JQueryUtils.clickHandler($(".remove-all-history-link", queryPanel), e => {
+        if (dom.window.confirm(msg)) {
+          NetworkMessage.sendMessage(RemoveAuditHistory(None))
+        }
+      })
+
       refresh()
       isOpen = true
     }
@@ -47,19 +55,23 @@ object HistoryManager {
 
     JQueryUtils.clickHandler($(".audit-remove", content), (e) => {
       val id = UUID.fromString(e.data("audit").toString)
-      NetworkMessage.sendMessage(RemoveAuditHistory(id))
+      NetworkMessage.sendMessage(RemoveAuditHistory(Some(id)))
     })
 
     JQueryUtils.relativeTime()
   }
 
-  def handleAuditHistoryRemoved(id: UUID): Unit = {
+  def handleAuditHistoryRemoved(id: Option[UUID]): Unit = {
     val queryPanel = $(s"#panel-$historyId")
-    val row = $(s"#history-$id", queryPanel)
+
+    val row = id match {
+      case Some(auditId) => $(s"#history-$auditId", queryPanel)
+      case None => $(s".history-table tbody tr", queryPanel)
+    }
     row.remove()
 
-    val remaining = $(".history-table tr", queryPanel)
-    if (remaining.length == 1) {
+    val remaining = $(".history-table tbody tr", queryPanel)
+    if (remaining.length == 0) {
       val content = $(".history-content", queryPanel)
       content.html(HistoryTemplate.content(Nil).toString)
     }

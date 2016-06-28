@@ -13,18 +13,18 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class ResultCacheController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserSearchService) extends BaseController {
-  def results = withSession("admin-results") { implicit request =>
+  def results = withAdminSession("admin-results") { implicit request =>
     val rows = CachedResultService.getAll
     val tables = CachedResultService.getTables
     Future.successful(Ok(views.html.admin.cache.results(request.identity, ctx.config.debug, rows, tables, userService)))
   }
 
-  def removeResult(id: UUID) = withSession("admin-remove-result") { implicit request =>
+  def removeResult(id: UUID) = withAdminSession("admin-remove-result") { implicit request =>
     CachedResultService.remove(id)
     Future.successful(Redirect(controllers.admin.routes.ResultCacheController.results()).flashing("success" -> s"Removed result [$id]."))
   }
 
-  def removeOrphan(id: String) = withSession("admin-remove-orphan") { implicit request =>
+  def removeOrphan(id: String) = withAdminSession("admin-remove-orphan") { implicit request =>
     ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable(id)(ResultCacheDatabase.conn.engine))
     Future.successful(Redirect(controllers.admin.routes.ResultCacheController.results()).flashing("success" -> s"Removed orphan [$id]."))
   }

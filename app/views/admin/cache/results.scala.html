@@ -1,10 +1,4 @@
-@(
-    user: Option[models.user.User],
-    debug: Boolean,
-    rows: Seq[models.result.CachedResult],
-    tables: Set[String],
-    userService: services.user.UserSearchService
-)(
+@(user: models.user.User, debug: Boolean, rows: Seq[models.result.CachedResult], tables: Set[String], userService: services.user.UserSearchService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(user, "results", messages("admin.results.title"), debug = debug) {
   <div class="card-content">

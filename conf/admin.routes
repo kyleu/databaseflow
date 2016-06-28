@@ -14,4 +14,5 @@ GET         /results/remove/:id         controllers.admin.ResultCacheController.
 GET         /results/orphan/:id         controllers.admin.ResultCacheController.removeOrphan(id)
 
 GET         /activity                   controllers.admin.ActivityController.activity
+GET         /activity/remove/all        controllers.admin.ActivityController.removeAllAudits()
 GET         /activity/remove/:id        controllers.admin.ActivityController.removeAudit(id: java.util.UUID)
