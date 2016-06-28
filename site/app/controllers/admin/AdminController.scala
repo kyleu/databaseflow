@@ -7,7 +7,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class AdminController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseAdminController {
-  def index() = withSession("index") { (username, request) =>
+  def index() = withAdminSession { (username, request) =>
     implicit val req = request
     Future.successful(Ok(views.html.admin.index(username)))
   }

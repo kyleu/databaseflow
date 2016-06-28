@@ -2,6 +2,7 @@ import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import sbt.Keys._
 import sbt._
+import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.Universal
 
 object Packaging {
   private[this] lazy val iconGlob = sys.props("os.name").toLowerCase match {
@@ -23,12 +24,24 @@ object Packaging {
     jdkPackagerType := "installer",
     jdkPackagerJVMArgs := Seq("-Xmx2g"),
     jdkPackagerToolkit := SwingToolkit,
-    jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value)
+    jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value),
+    javaOptions in Universal ++= Seq(
+      "-J-Xmx2048m",
+      "-J-Xms256m",
+      "-Dproject=databaseflow"
+    )
   )
 
   val teamSettings = Seq(
     topLevelDirectory := Some("database-flow"),
     packageSummary := description.value,
-    packageDescription := "Database Flow helps you do all sorts of cool stuff with your database."
+    packageDescription := "Database Flow helps you do all sorts of cool stuff with your database.",
+    javaOptions in Universal ++= Seq(
+      "-J-Xmx2048m",
+      "-J-Xms256m",
+      "-Dhttp.port=4000",
+      "-Dhttps.port=4443",
+      "-Dproject=databaseflow"
+    )
   )
 }

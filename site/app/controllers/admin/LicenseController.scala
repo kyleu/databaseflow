@@ -26,7 +26,7 @@ object LicenseController {
 
 @javax.inject.Singleton
 class LicenseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseAdminController {
-  def list() = withSession("license-list") { (username, request) =>
+  def list() = withAdminSession { (username, request) =>
     implicit val req = request
     val licenses = LicenseGenerator.listLicenses().map { x =>
       LicenseGenerator.loadLicense(x)
@@ -34,12 +34,12 @@ class LicenseController @javax.inject.Inject() (implicit override val messagesAp
     Future.successful(Ok(views.html.admin.licenses(licenses)))
   }
 
-  def form() = withSession("license-form") { (username, request) =>
+  def form() = withAdminSession { (username, request) =>
     implicit val req = request
     Future.successful(Ok(views.html.admin.licenseForm()))
   }
 
-  def save() = withSession("license-save") { (username, request) =>
+  def save() = withAdminSession { (username, request) =>
     implicit val req = request
     val action = LicenseController.licenseForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.admin.licenseForm()),
@@ -51,13 +51,13 @@ class LicenseController @javax.inject.Inject() (implicit override val messagesAp
     Future.successful(action)
   }
 
-  def download(id: UUID) = withSession("license-download") { (username, request) =>
+  def download(id: UUID) = withAdminSession { (username, request) =>
     implicit val req = request
     val content = LicenseGenerator.getContent(id)
     Future.successful(Ok(content).as("application/octet-stream").withHeaders("Content-Disposition" -> s"attachment; filename=$id.license"))
   }
 
-  def remove(id: UUID) = withSession("license-remove") { (username, request) =>
+  def remove(id: UUID) = withAdminSession { (username, request) =>
     implicit val req = request
     LicenseGenerator.removeLicense(id)
     Future.successful(Redirect(controllers.admin.routes.LicenseController.list()).flashing("success" -> "License removed."))

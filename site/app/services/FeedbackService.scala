@@ -20,7 +20,7 @@ object FeedbackService {
     val file = Paths.get(feedbackDir, filename)
     if (Files.exists(file)) {
       val lines = Files.readAllLines(file).asScala
-      Feedback(id, lines.head, lines.tail.mkString("\n"))
+      Feedback(id, lines.headOption.getOrElse(""), lines.tail.mkString("\n"))
     } else {
       throw new IllegalArgumentException(s"Feedback already exists for [$id].")
     }
