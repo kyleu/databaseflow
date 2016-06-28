@@ -6,7 +6,7 @@ import akka.actor.ActorRef
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.queries.audit.AuditRecordQueries
 import models.user.User
-import models.{AuditRecordRemoved, AuditRecordResponse, GetAuditHistory}
+import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.MasterDatabase
 import utils.{DateUtils, Logging}
@@ -20,8 +20,8 @@ object AuditRecordService extends Logging {
   def getAll = MasterDatabase.conn.query(AuditRecordQueries.getAll)
   def getFiltered(userId: Option[UUID]) = getAll
 
-  def handleGetAuditHistory(connectionId: UUID, user: Option[User], gqh: GetAuditHistory, out: ActorRef) = {
-    val matching = MasterDatabase.conn.query(AuditRecordQueries.GetMatching(connectionId, user.map(_.id), gqh.limit, gqh.offset))
+  def handleGetQueryHistory(connectionId: UUID, user: Option[User], gqh: GetQueryHistory, out: ActorRef) = {
+    val matching = MasterDatabase.conn.query(AuditRecordQueries.GetMatchingQueries(connectionId, user.map(_.id), gqh.limit, gqh.offset))
     out ! AuditRecordResponse(matching)
   }
 

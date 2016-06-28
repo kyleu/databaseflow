@@ -2,7 +2,7 @@ package ui
 
 import java.util.UUID
 
-import models.{GetAuditHistory, RemoveAuditHistory}
+import models.{GetQueryHistory, RemoveAuditHistory}
 import models.audit.AuditRecord
 import models.template.{HistoryTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
@@ -49,6 +49,8 @@ object HistoryManager {
       val id = UUID.fromString(e.data("audit").toString)
       NetworkMessage.sendMessage(RemoveAuditHistory(id))
     })
+
+    JQueryUtils.relativeTime()
   }
 
   def handleAuditHistoryRemoved(id: UUID): Unit = {
@@ -63,5 +65,5 @@ object HistoryManager {
     }
   }
 
-  def refresh() = NetworkMessage.sendMessage(GetAuditHistory())
+  def refresh() = NetworkMessage.sendMessage(GetQueryHistory())
 }
