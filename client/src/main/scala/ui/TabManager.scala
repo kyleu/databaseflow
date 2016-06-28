@@ -13,7 +13,8 @@ object TabManager {
   private[this] var openTabs = Seq.empty[(UUID, String, () => Unit)]
   private[this] var activeTab: Option[UUID] = None
 
-  private[this] lazy val tabBar = $("#query-tabs")
+  private[this] lazy val tabContainer = $(".tab-container")
+  private[this] lazy val tabBar = $("#query-tabs", tabContainer)
   private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
 
   def initIfNeeded() = if (!initialized) {
@@ -34,6 +35,11 @@ object TabManager {
 
   def addTab(id: UUID, ctx: String, title: String, icon: String, onClose: () => Unit) = {
     openTabs = openTabs :+ ((id, ctx, onClose))
+    if (openTabs.length == 1) {
+      tabContainer.hide()
+    } else {
+      tabContainer.show()
+    }
     tabBar.append(s"""<li id="tab-$id" class="tab col s3"><a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a></li>""")
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
@@ -52,6 +58,11 @@ object TabManager {
     tabCloseOp.foreach { _() }
     $(s"#tab-$queryId").remove()
     $(".tabs .indicator").remove()
+    if (openTabs.length == 1) {
+      tabContainer.hide()
+    } else {
+      tabContainer.show()
+    }
     dynamicTabBar.tabs()
   }
 
