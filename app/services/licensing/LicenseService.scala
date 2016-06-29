@@ -22,7 +22,7 @@ object LicenseService extends Logging {
       log.info(s" ::: Database Flow ${l.edition.title}, registered to [${l.user}].")
       license = Some(l)
     } else {
-      log.info(s" ::: Database Flow Trial Edition.")
+      log.info(" ::: Database Flow Trial Edition.")
     }
   }
 

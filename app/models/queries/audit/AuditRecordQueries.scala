@@ -43,7 +43,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     }
     override def values = connectionId match {
       case Some(c) => Seq(c)
-      case None => Seq()
+      case None => Seq.empty
     }
   }
   case object RemoveAll extends Statement {

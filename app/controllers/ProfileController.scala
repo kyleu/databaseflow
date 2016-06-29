@@ -53,6 +53,6 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
       case None => AuditRecordService.deleteAllForGuest(None)
     }
 
-    Future.successful(Redirect(controllers.routes.ProfileController.activity()).flashing("success" -> s"Removed all user activity."))
+    Future.successful(Redirect(controllers.routes.ProfileController.activity()).flashing("success" -> "Removed all user activity."))
   }
 }

@@ -66,7 +66,7 @@ object HistoryManager {
 
     val row = id match {
       case Some(auditId) => $(s"#history-$auditId", queryPanel)
-      case None => $(s".history-table tbody tr", queryPanel)
+      case None => $(".history-table tbody tr", queryPanel)
     }
     row.remove()
 

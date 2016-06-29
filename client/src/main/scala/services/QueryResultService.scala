@@ -24,8 +24,7 @@ object QueryResultService {
       val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
       ProgressManager.completeProgress(result.queryId, resultId, content)
 
-      val workspace = $(s"#workspace-${result.queryId}")
-      val panel = $(s"#$resultId", workspace)
+      val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
       val resultEl = $(".query-result-table", panel)
 
       JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
@@ -87,15 +86,13 @@ object QueryResultService {
   }
 
   def handleResultRowCount(qrrc: QueryResultRowCount) = {
-    val workspace = $(s"#workspace-${qrrc.queryId}")
-    val panel = $(s"#${qrrc.resultId}", workspace)
+    val panel = $(s"#${qrrc.resultId}", $(s"#workspace-${qrrc.queryId}"))
     val rowCountEl = $(".total-row-count", panel)
     if (qrrc.overflow) {
       rowCountEl.text(s" of at least ${utils.NumberUtils.withCommas(qrrc.count)} ")
     } else if (qrrc.count > 100) {
       rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
     }
-    val timingEl = $(".total-duration", panel)
-    timingEl.text(utils.NumberUtils.withCommas(qrrc.durationMs))
+    $(".total-duration", panel).text(utils.NumberUtils.withCommas(qrrc.durationMs))
   }
 }

@@ -23,6 +23,6 @@ class ActivityController @javax.inject.Inject() (override val ctx: ApplicationCo
 
   def removeAllAudits() = withAdminSession("admin-remove-audit") { implicit request =>
     AuditRecordService.deleteAll()
-    Future.successful(Redirect(controllers.admin.routes.ActivityController.activity()).flashing("success" -> s"Removed all system activity."))
+    Future.successful(Redirect(controllers.admin.routes.ActivityController.activity()).flashing("success" -> "Removed all system activity."))
   }
 }
