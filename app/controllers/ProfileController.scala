@@ -33,7 +33,7 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
   }
 
   def activity = withSession("activity") { implicit request =>
-    val audits = AuditRecordService.getFiltered(request.identity.map(_.id))
+    val audits = AuditRecordService.getForUser(request.identity.map(_.id))
     val removeCall = if (SettingsService(SettingKey.AllowAuditRemoval) == "true") {
       Some(controllers.routes.ProfileController.removeAudit _)
     } else {

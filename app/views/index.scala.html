@@ -16,7 +16,9 @@
         </div>
         <div class="card-action">
           <a class="theme-text" href="@controllers.routes.ConnectionSettingsController.addNew()">New Connection</a>
-          <a class="right-btn theme-text" href="@controllers.admin.routes.SettingsController.settings()">Settings</a>
+          @if(user.exists(_.roles.contains(models.user.Role.Admin))) {
+            <a class="right-btn theme-text" href="@controllers.admin.routes.SettingsController.settings()">Admin</a>
+          }
         </div>
       </div>
     </div>

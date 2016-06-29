@@ -16,7 +16,7 @@
 ) {
   <div class="card-content">
     <div style="float: right;">
-      <a class="theme-text" href="@controllers.routes.ProfileController.removeAllAudits()" onclick="return confirm('Are you sure you wish to remove all your activity?');">Remove All Activity</a>
+      <a class="theme-text" href="@controllers.admin.routes.ActivityController.removeAllAudits()" onclick="return confirm('Are you sure you wish to remove all system activity?');">Remove All Activity</a>
     </div>
 
     <div class="card-title"><i class="fa @models.template.Icons.cache"></i> @messages("admin.activity.title")</div>

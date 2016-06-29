@@ -4,7 +4,7 @@ import java.sql.Timestamp
 import java.util.UUID
 
 import models.audit.{AuditRecord, AuditStatus, AuditType}
-import models.database.{Query, Row, Statement}
+import models.database.{Row, Statement}
 import models.queries.BaseQueries
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
@@ -50,21 +50,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     override def sql = s"truncate $tableName"
   }
 
-  case class GetMatchingQueries(connectionId: UUID, userId: Option[UUID], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
-    private[this] val whereClause = userId match {
-      case Some(uid) => " and \"owner\" = ?"
-      case None => " and \"owner\" is null"
-    }
-    private[this] val typeWhere = s"audit_type in ('${AuditType.Query}', '${AuditType.Execute}')"
-    override def sql: String = s"""select * from "$tableName" where "connection" = ?$whereClause and $typeWhere limit $limit offset $offset"""
-    override def values = userId match {
-      case Some(uid) => Seq(connectionId, uid)
-      case None => Seq(connectionId)
-    }
-    override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
-  }
-
-  override protected def fromRow(row: Row) = AuditRecord(
+  override def fromRow(row: Row) = AuditRecord(
     id = row.as[UUID]("id"),
 
     auditType = AuditType.withName(row.as[String]("audit_type")),

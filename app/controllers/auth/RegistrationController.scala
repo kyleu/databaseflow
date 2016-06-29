@@ -68,7 +68,7 @@ class RegistrationController @javax.inject.Inject() (
             } yield {
               ctx.silhouette.env.eventBus.publish(SignUpEvent(userSaved, request))
               ctx.silhouette.env.eventBus.publish(LoginEvent(userSaved, request))
-              result
+              result.flashing("success" -> "You're all set!")
             }
         }
       }

@@ -3,6 +3,7 @@ package services.sandbox
 import services.data.{MasterDdl, SeedData}
 import services.database.MasterDatabase
 import utils.ApplicationContext
+import utils.cache.{CacheService, UserCache}
 
 import scala.concurrent.Future
 
@@ -16,6 +17,7 @@ object RebuildMaster extends SandboxTask {
     MasterDdl.wipe(MasterDatabase.conn)
     MasterDdl.update(MasterDatabase.conn)
     SeedData.insert()
+    CacheService.clear()
     Future.successful("Rebuilt!")
   }
 }

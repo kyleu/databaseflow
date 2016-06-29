@@ -12,7 +12,7 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class ActivityController @javax.inject.Inject() (override val ctx: ApplicationContext, userSearchService: UserSearchService) extends BaseController {
   def activity = withAdminSession("admin-activity") { implicit request =>
-    val audits = AuditRecordService.getFiltered(None)
+    val audits = AuditRecordService.getAll
     Future.successful(Ok(views.html.admin.systemActivity(request.identity, ctx.config.debug, audits, None, AuditRecordService.rowLimit, userSearchService)))
   }
 
