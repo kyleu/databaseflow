@@ -6,6 +6,10 @@ import models.engine.DatabaseEngine
 import models.engine.rdbms._
 import models.plan.{PlanError, PlanResult}
 import models.queries.DynamicQuery
+import services.plan.h2.H2ParseService
+import services.plan.mysql.MySqlParseService
+import services.plan.oracle.OracleParseService
+import services.plan.postgres.PostgresParseService
 import utils.Logging
 
 object PlanParseService {

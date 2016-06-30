@@ -1,4 +1,4 @@
-package services.plan
+package services.plan.oracle
 
 import models.plan.PlanNode
 import org.joda.time.format.PeriodFormatterBuilder

@@ -1,9 +1,8 @@
-package services.plan
+package services.plan.postgres
 
 import models.plan.PlanNode
 import upickle.Js
-
-import services.plan.PostgresParseKeys._
+import PostgresParseKeys._
 
 object PostgresNodeParser {
   def nodeFor(jsVal: Js.Value): PlanNode = jsVal match {
@@ -15,9 +14,7 @@ object PostgresNodeParser {
         case x => throw new IllegalStateException(s"Unable to parse plans from [$x]")
       }.getOrElse(Nil)
 
-      val props = params.filter { p =>
-        p._1 != keyPlans && p._1 != keyNodeType
-      }.map(p => p._1 -> (p._2 match {
+      val props = params.filterNot(_._1 == keyPlans).map(p => p._1 -> (p._2 match {
         case s: Js.Str => s.value
         case n: Js.Num => n.value.toString
         case s: Js.Arr => "[" + s.value.mkString(", ") + "]"
@@ -28,24 +25,24 @@ object PostgresNodeParser {
       }))
 
       val costs = PlanNode.Costs(
-        estimatedRows = params.get(keyPlanRows).fold(0) {
-          case n: Js.Num => n.value.toInt
-          case _ => 0
-        },
+        estimatedRows = params.get(keyPlanRows) match {
+        case Some(n: Js.Num) => n.value.toInt
+        case _ => 0
+      },
         actualRows = params.get(keyActualRows).map {
           case n: Js.Num => n.value.toInt
           case _ => 0
         },
-        estimatedDuration = params.get("???").fold(0) {
-          case n: Js.Num => n.value.toInt
+        estimatedDuration = params.get("???") match {
+          case Some(n: Js.Num) => n.value.toInt
           case _ => 0
         },
         actualDuration = params.get(keyActualTotalTime).map {
           case n: Js.Num => n.value.toInt
           case _ => 0
         },
-        estimatedCost = params.get("???").fold(0) {
-          case n: Js.Num => n.value.toInt
+        estimatedCost = params.get("???") match {
+          case Some(n: Js.Num) => n.value.toInt
           case _ => 0
         },
         actualCost = params.get(keyTotalCost).map {
@@ -53,8 +50,6 @@ object PostgresNodeParser {
           case _ => 0
         }
       )
-
-      val tags = Nil
 
       PlanNode(
         title = params.get(keyNodeType).fold("?") {
@@ -64,7 +59,6 @@ object PostgresNodeParser {
         nodeType = "?",
         costs = costs,
         properties = props,
-        tags = tags,
         children = children
       )
     case x => throw new IllegalStateException(s"Invalid node type [${x.getClass.getName}]")

@@ -1,4 +1,4 @@
-package services.plan
+package services.plan.postgres
 
 object PostgresParseKeys {
   val keyNodeType = "Node Type"

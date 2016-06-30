@@ -1,10 +1,10 @@
-package test
+package test.query
 
 import models.engine.EngineQueries
-import models.engine.rdbms.{ MySQL, PostgreSQL, SqlServer }
+import models.engine.rdbms.{MySQL, PostgreSQL, SqlServer}
 import models.query.RowDataOptions
 import models.schema.FilterOp
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class EngineQueriesTest extends FlatSpec with Matchers {
   val rdoLimit = RowDataOptions(
@@ -38,12 +38,12 @@ class EngineQueriesTest extends FlatSpec with Matchers {
 
   it should "output SQL Server where clause syntax" in {
     val sql = EngineQueries.selectFrom("X", rdoCol)(SqlServer)
-    sql should be("select * from [X] where y = 'z'")
+    sql should be("select * from [X] where [y] = 'z'")
   }
 
   it should "output PostgreSQL where clause syntax" in {
     val sql = EngineQueries.selectFrom("X", rdoCol)(PostgreSQL)
-    sql should be("select * from \"X\" where y = 'z'")
+    sql should be("select * from \"X\" where \"y\" = 'z'")
   }
 
   it should "output a proper order by clause" in {

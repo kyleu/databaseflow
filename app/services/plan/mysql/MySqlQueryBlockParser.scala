@@ -3,7 +3,7 @@ package services.plan.mysql
 import models.plan.PlanNode
 import upickle.Js
 
-object QueryBlockParser {
+object MySqlQueryBlockParser {
   def parseQueryBlock(depth: Int, json: Js.Value) = json match {
     case o: Js.Obj =>
       val params = o.value.toMap

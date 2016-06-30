@@ -1,7 +1,7 @@
-package test
+package test.plan
 
 import models.engine.rdbms.MySQL
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class MySqlPlanParseTest extends FlatSpec with Matchers {
   "MySQL Plan Parser" should "load basic MySQL plan" in {

@@ -19,11 +19,10 @@ object JsonSerializers {
       nodeType = readJs[String](x("nodeType")),
       costs = readJs[PlanNode.Costs](x("costs")),
       properties = readJs[Map[String, String]](x("properties")),
-      tags = readJs[Seq[String]](x("tags")),
       children = x("children") match {
         case a: Js.Arr => a.value.map(n => readPlanNode(n match {
           case o: Js.Obj => o
-          case x => throw new IllegalStateException(x.toString)
+          case ex => throw new IllegalStateException(ex.toString)
         }))
         case other => throw new IllegalArgumentException(other.toString)
       }
@@ -38,7 +37,6 @@ object JsonSerializers {
     "nodeType" -> writeJs(node.nodeType),
     "costs" -> writeJs(node.costs),
     "properties" -> writeJs(node.properties),
-    "tags" -> writeJs(node.tags),
     "children" -> Js.Arr(node.children.map(writePlanNode): _*)
   )
   implicit val planNodeWriter = Writer[PlanNode] { case x => writePlanNode(x) }

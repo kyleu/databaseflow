@@ -1,7 +1,7 @@
-package test
+package test.plan
 
 import models.query.SqlParser
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 object SqlParserTest {
   val testQueryOne = "select * from foo"

@@ -1,9 +1,9 @@
-package services.plan
+package services.plan.mysql
 
 import java.util.UUID
 
 import models.plan.{PlanError, PlanNode, PlanResult}
-import services.plan.mysql.QueryBlockParser
+import services.plan.PlanParseService
 import upickle.{Js, json}
 
 import scala.util.control.NonFatal
@@ -41,7 +41,7 @@ object MySqlParseService extends PlanParseService("mysql") {
     case o: Js.Obj =>
       val params = o.value.toMap
       params.get("query_block") match {
-        case Some(el) => QueryBlockParser.parseQueryBlock(1, el)
+        case Some(el) => MySqlQueryBlockParser.parseQueryBlock(1, el)
         case _ => throw new IllegalStateException("Missing [query_block] element.")
       }
     case x => throw new IllegalStateException(s"Invalid node type [${x.getClass.getName}].")

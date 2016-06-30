@@ -1,7 +1,7 @@
-package test
+package test.plan
 
 import models.engine.rdbms.PostgreSQL
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class PostgresPlanParseTest extends FlatSpec with Matchers {
   "PostgreSQL Plan Parser" should "load basic PostgreSQL plan" in {
@@ -11,6 +11,7 @@ class PostgresPlanParseTest extends FlatSpec with Matchers {
 
   it should "load complex PostgreSQL plan" in {
     val result = PlanParseTestHelper.test("postgres-complicated-query", PostgreSQL)
+    PlanParseTestHelper.debugPlanResult(result)
     1 should be(1)
   }
 

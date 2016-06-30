@@ -1,8 +1,9 @@
-package services.plan
+package services.plan.postgres
 
 import java.util.UUID
 
 import models.plan.{PlanError, PlanResult}
+import services.plan.PlanParseService
 import upickle.{Js, json}
 
 object PostgresParseService extends PlanParseService("postgres") {
