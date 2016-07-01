@@ -11,8 +11,8 @@ import scala.io.Source
 
 object PlanParseTestHelper extends Logging {
   private[this] def load(key: String) = {
-    val sql = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(s"$key.sql"))
-    val plan = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(s"$key.json"))
+    val sql = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(s"plan/$key.sql"))
+    val plan = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(s"plan/$key.json"))
 
     val sqlContents = sql.getLines.toSeq.mkString("\n")
     val planContents = plan.getLines.toSeq.mkString("\n")
@@ -31,14 +31,18 @@ object PlanParseTestHelper extends Logging {
 
   def debugPlanResult(r: PlanResult) = {
     log.info(s"Plan output for [${r.queryId}]:")
-    log.info(" Title                       | Type           | Props | ERows  | ARows  | EDur   | ADur   | ECost  | ACost  | ACostX ")
-    log.info("-----------------------------|----------------|-------|--------|--------|--------|--------|--------|--------|--------")
+    log.info(" Title                       | Relation           | Output             " +
+      "| Type           | Props | ERows  | ARows  | EDur   | ADur   | ECost  | ACost  | ACostX ")
+    log.info("-----------------------------|--------------------|--------------------" +
+      "|----------------|-------|--------|--------|--------|--------|--------|--------|--------")
     debugNode(r.node, 0)
   }
 
   private[this] def debugNode(node: PlanNode, depth: Int): Unit = {
-    val title = ((0 until depth).map(i => "  ").mkString + node.title).padTo(27, ' ')
+    val title = ((0 until depth).map(i => "  ").mkString + node.title).padTo(27, ' ').substring(0, 27)
     val tp = node.nodeType.toString.padTo(14, ' ')
+    val rel = node.relation.map(_.toString).getOrElse("").padTo(18, ' ').substring(0, 18)
+    val output = node.output.map(_.toString).getOrElse("").padTo(18, ' ').substring(0, 18)
     val props = node.properties.size.toString.padTo(5, ' ')
     val eRows = node.costs.estimatedRows.toString.padTo(6, ' ')
     val aRows = node.costs.actualRows.map(_.toString).getOrElse("").padTo(6, ' ')
@@ -47,7 +51,7 @@ object PlanParseTestHelper extends Logging {
     val eCost = node.costs.estimatedCost.toString.padTo(6, ' ')
     val aCost = node.costs.actualCost.map(_.toString).getOrElse("").padTo(6, ' ')
     val aCostX = node.actualCostWithoutChildren.map(_.toString).getOrElse("").padTo(6, ' ')
-    log.info(s" $title | $tp | $props | $eRows | $aRows | $eDur | $aDur | $eCost | $aCost | $aCostX")
+    log.info(s" $title | $rel | $output | $tp | $props | $eRows | $aRows | $eDur | $aDur | $eCost | $aCost | $aCostX")
     node.children.foreach(n => debugNode(n, depth + 1))
   }
 }

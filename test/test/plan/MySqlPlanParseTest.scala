@@ -11,6 +11,7 @@ class MySqlPlanParseTest extends FlatSpec with Matchers {
 
   it should "load complex MySQL plan" in {
     val result = PlanParseTestHelper.test("mysql-complicated-query", MySQL)
+    PlanParseTestHelper.debugPlanResult(result)
     1 should be(1)
   }
 

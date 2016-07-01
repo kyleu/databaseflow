@@ -36,6 +36,8 @@ object OracleParseHelper {
 
     PlanNode(
       title = me.name.getOrElse(me.operation),
+      relation = None,
+      output = None,
       nodeType = me.operation,
       children = children.map(nodeFor),
       costs = PlanNode.Costs(

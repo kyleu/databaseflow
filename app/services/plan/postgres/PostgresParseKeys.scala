@@ -16,6 +16,7 @@ object PostgresParseKeys {
   val keyJoinType = "Join Type"
   val keyIndexName = "Index Name"
   val keyHashCondition = "Hash Cond"
+  val keyOutput = "Output"
 
   val tagPlan = "plan_"
 }

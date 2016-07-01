@@ -1,4 +1,4 @@
-package test.plan
+package test.query
 
 import models.query.SqlParser
 import org.scalatest.{FlatSpec, Matchers}

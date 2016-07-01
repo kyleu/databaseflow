@@ -1,62 +1,45 @@
 package services.plan.postgres
 
 import models.plan.PlanNode
+import services.plan.postgres.PostgresParseKeys._
 import upickle.Js
-import PostgresParseKeys._
 
 object PostgresNodeParser {
   def nodeFor(jsVal: Js.Value): PlanNode = jsVal match {
     case o: Js.Obj =>
       val params = o.value.toMap
 
+      val nodeType = params.get(keyNodeType) match {
+        case Some(s: Js.Str) => s.value
+        case x => throw new IllegalStateException("Missing node type parameter: " + x.toString)
+      }
+
       val children = params.get(keyPlans).map {
         case plans: Js.Arr => plans.value.map(nodeFor)
         case x => throw new IllegalStateException(s"Unable to parse plans from [$x]")
       }.getOrElse(Nil)
 
-      val props = params.filterNot(_._1 == keyPlans).map(p => p._1 -> (p._2 match {
-        case s: Js.Str => s.value
-        case n: Js.Num => n.value.toString
-        case s: Js.Arr => "[" + s.value.mkString(", ") + "]"
-        case Js.False => "false"
-        case Js.True => "true"
-        case o: Js.Obj => "{" + o.value.map(v => v._1 + ": " + v._2).mkString(", ") + "}"
-        case x => throw new IllegalStateException(s"Invalid param type [${x.getClass.getName}].")
-      }))
+      val relation = PostgresParseHelper.getRelation(params.get(keyHashCondition))
+      val output = PostgresParseHelper.getOutput(params.get(keyOutput))
+      val props = PostgresParseHelper.getProperties(params)
+      val costs = PostgresParseHelper.getCosts(params)
 
-      val costs = PlanNode.Costs(
-        estimatedRows = params.get(keyPlanRows) match {
-        case Some(n: Js.Num) => n.value.toInt
-        case _ => 0
-      },
-        actualRows = params.get(keyActualRows).map {
-          case n: Js.Num => n.value.toInt
-          case _ => 0
-        },
-        estimatedDuration = params.get("???") match {
-          case Some(n: Js.Num) => n.value.toInt
-          case _ => 0
-        },
-        actualDuration = params.get(keyActualTotalTime).map {
-          case n: Js.Num => n.value.toInt
-          case _ => 0
-        },
-        estimatedCost = params.get("???") match {
-          case Some(n: Js.Num) => n.value.toInt
-          case _ => 0
-        },
-        actualCost = params.get(keyTotalCost).map {
-          case n: Js.Num => n.value.toInt
-          case _ => 0
+      val joinType = params.get(keyJoinType).map {
+        case s: Js.Str => s.value
+        case _ => ""
+      }
+      val title = joinType.map(_ + " ").getOrElse("") + nodeType + {
+        relation match {
+          case Some(r) => " on " + r
+          case None => ""
         }
-      )
+      }
 
       PlanNode(
-        title = params.get(keyNodeType).fold("?") {
-          case s: Js.Str => s.value
-          case x => throw new IllegalStateException(x.toString)
-        },
-        nodeType = "?",
+        title = title,
+        nodeType = nodeType,
+        relation = relation,
+        output = output,
         costs = costs,
         properties = props,
         children = children

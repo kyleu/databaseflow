@@ -13,21 +13,21 @@ object JsonSerializers {
   private[this] implicit val columnTypeWriter = UPickler.writer(ColumnType)
 
   // Recursive structures
-  private[this] def readPlanNode(x: Js.Value): PlanNode = {
-    PlanNode(
-      title = readJs[String](x("title")),
-      nodeType = readJs[String](x("nodeType")),
-      costs = readJs[PlanNode.Costs](x("costs")),
-      properties = readJs[Map[String, String]](x("properties")),
-      children = x("children") match {
-        case a: Js.Arr => a.value.map(n => readPlanNode(n match {
-          case o: Js.Obj => o
-          case ex => throw new IllegalStateException(ex.toString)
-        }))
-        case other => throw new IllegalArgumentException(other.toString)
-      }
-    )
-  }
+  private[this] def readPlanNode(x: Js.Value): PlanNode = PlanNode(
+    title = readJs[String](x("title")),
+    nodeType = readJs[String](x("nodeType")),
+    relation = readJs[Option[String]](x("relation")),
+    output = readJs[Option[String]](x("output")),
+    costs = readJs[PlanNode.Costs](x("costs")),
+    properties = readJs[Map[String, String]](x("properties")),
+    children = x("children") match {
+      case a: Js.Arr => a.value.map(n => readPlanNode(n match {
+        case o: Js.Obj => o
+        case ex => throw new IllegalStateException(ex.toString)
+      }))
+      case other => throw new IllegalArgumentException(other.toString)
+    }
+  )
   implicit val planNodeReader = Reader[PlanNode] {
     case x: Js.Obj => readPlanNode(x)
   }
@@ -35,6 +35,8 @@ object JsonSerializers {
   private[this] def writePlanNode(node: PlanNode): Js.Value = Js.Obj(
     "title" -> writeJs(node.title),
     "nodeType" -> writeJs(node.nodeType),
+    "relation" -> writeJs(node.relation),
+    "output" -> writeJs(node.output),
     "costs" -> writeJs(node.costs),
     "properties" -> writeJs(node.properties),
     "children" -> Js.Arr(node.children.map(writePlanNode): _*)

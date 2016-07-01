@@ -39,6 +39,8 @@ object MySqlQueryBlockParser {
     PlanNode(
       title = "Nested Loop",
       nodeType = "Nested Loop",
+      relation = None,
+      output = None,
       children = children
     )
   }
@@ -46,6 +48,8 @@ object MySqlQueryBlockParser {
   private[this] def parseUnionResult(el: Js.Value) = PlanNode(
     title = "Union Result",
     nodeType = el.toString,
+    relation = None,
+    output = None,
     children = Nil
   )
 
@@ -63,6 +67,8 @@ object MySqlQueryBlockParser {
       case s: Js.Str => s.value
       case x => throw new IllegalStateException(x.toString)
     },
+      relation = None,
+      output = None,
       children = Nil
     )
   }
@@ -75,6 +81,8 @@ object MySqlQueryBlockParser {
     PlanNode(
       title = "Grouping Operation",
       nodeType = "Grouping Operation",
+      relation = None,
+      output = None,
       children = Seq(parseNestedLoop(obj("nested_loop")))
     )
   }

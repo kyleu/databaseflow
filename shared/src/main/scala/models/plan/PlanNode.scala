@@ -12,22 +12,14 @@ object PlanNode {
     lazy val estimatedRowsFactor = actualRows.map(estimatedRows / _)
     lazy val estimatedDurationFactor = actualDuration.map(estimatedDuration / _)
     lazy val estimatedCostFactor = actualCost.map(estimatedCost / _)
-
-    override def toString = {
-      "" +
-        (if (estimatedRows > 0) { s"EstRows: $estimatedRows " } else { "" }) +
-        actualRows.map(a => s"ActRows: $a ").getOrElse("") +
-        (if (estimatedDuration > 0) { s"EstDur: $estimatedDuration " } else { "" }) +
-        actualDuration.map(a => s"ActDur: $a ").getOrElse("") +
-        (if (estimatedCost > 0) { s"EstCost: $estimatedCost " } else { "" }) +
-        actualCost.map(a => s"ActCost: $a ").getOrElse("")
-    }
   }
 }
 
 case class PlanNode(
     title: String,
     nodeType: String,
+    relation: Option[String],
+    output: Option[String],
     costs: PlanNode.Costs = PlanNode.Costs(),
     properties: Map[String, String] = Map.empty,
     children: Seq[PlanNode] = Nil
@@ -38,4 +30,9 @@ case class PlanNode(
   lazy val actualDurationWithoutChildren = costs.actualDuration.map(_ - children.flatMap(_.costs.actualDuration).sum)
   lazy val estimatedCostWithoutChildren = costs.estimatedCost - children.map(_.costs.estimatedCost).sum
   lazy val actualCostWithoutChildren = costs.actualCost.map(_ - children.flatMap(_.costs.actualCost).sum)
+  lazy val costPercentage = {
+    val c = costs.actualCost.getOrElse(costs.estimatedCost)
+    val ch = actualCostWithoutChildren.getOrElse(estimatedCostWithoutChildren)
+    ch / c
+  }
 }
