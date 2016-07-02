@@ -31,9 +31,4 @@ case class PlanNode(
   lazy val estimatedCostWithoutChildren = costs.estimatedCost - children.map(_.costs.estimatedCost).sum
   lazy val actualCostWithoutChildren = costs.actualCost.map(_ - children.flatMap(_.costs.actualCost).sum)
   lazy val costWithoutChildren = actualCostWithoutChildren.getOrElse(estimatedCostWithoutChildren)
-  lazy val costPercentage = {
-    val c = costs.actualCost.getOrElse(costs.estimatedCost)
-    val ch = actualCostWithoutChildren.getOrElse(estimatedCostWithoutChildren)
-    ch / c
-  }
 }

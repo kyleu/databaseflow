@@ -6,7 +6,7 @@ resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releas
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.4")
 
 // SBT-Web plugins
-addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.0.0") // 1.1.0 won't hot-compile
+addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.1.1")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-jshint" % "1.0.4")
 

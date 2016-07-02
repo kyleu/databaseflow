@@ -14,7 +14,7 @@ object QueryPlanTemplate {
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree")(
-            ul(forNode(pr.result.node, "root-node"))
+            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.actualCost.getOrElse(pr.result.node.costs.estimatedCost): Int))
           )
         ),
         div(cls := "clear")
@@ -33,10 +33,18 @@ object QueryPlanTemplate {
     )
   }
 
-  private[this] def forNode(node: PlanNode, className: String, depth: Int = 0): Modifier = {
+  private[this] def forNode(node: PlanNode, className: String, totalCost: Int, depth: Int = 0): Modifier = {
+    val costPercentageString = {
+      val own = node.actualCostWithoutChildren.getOrElse(node.estimatedCostWithoutChildren)
+      val pct = (own.toDouble / totalCost.toDouble) * 100
+      val pctString = Math.round(pct)
+      val est = if (node.costs.actualCost.isDefined) { "" } else { "~" }
+      est + pctString + "%"
+    }
+
     val divContents = div(cls := "node z-depth-1")(
       div(cls := "node-title")(
-        div(cls := "node-percentage")(node.costPercentage + "%"),
+        div(cls := "node-percentage")(costPercentageString),
         div(cls := "node-cost")(utils.NumberUtils.withCommas(node.costWithoutChildren) + "ms"),
         div(node.title),
         div(cls := "node-summary")(em(node.relation.getOrElse(""): String))
@@ -58,7 +66,7 @@ object QueryPlanTemplate {
     if (node.children.isEmpty) {
       li(cls := className)(divContents)
     } else {
-      val kids = node.children.map(n => forNode(n, s"depth-$depth-child", depth + 1))
+      val kids = node.children.map(n => forNode(n, s"depth-$depth-child", totalCost, depth + 1))
       li(cls := className)(divContents, ul(kids: _*))
     }
   }
