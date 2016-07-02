@@ -19,7 +19,7 @@ case class PlanNode(
     title: String,
     nodeType: String,
     relation: Option[String],
-    output: Option[String],
+    output: Option[Seq[String]],
     costs: PlanNode.Costs = PlanNode.Costs(),
     properties: Map[String, String] = Map.empty,
     children: Seq[PlanNode] = Nil
@@ -30,6 +30,7 @@ case class PlanNode(
   lazy val actualDurationWithoutChildren = costs.actualDuration.map(_ - children.flatMap(_.costs.actualDuration).sum)
   lazy val estimatedCostWithoutChildren = costs.estimatedCost - children.map(_.costs.estimatedCost).sum
   lazy val actualCostWithoutChildren = costs.actualCost.map(_ - children.flatMap(_.costs.actualCost).sum)
+  lazy val costWithoutChildren = actualCostWithoutChildren.getOrElse(estimatedCostWithoutChildren)
   lazy val costPercentage = {
     val c = costs.actualCost.getOrElse(costs.estimatedCost)
     val ch = actualCostWithoutChildren.getOrElse(estimatedCostWithoutChildren)

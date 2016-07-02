@@ -17,7 +17,7 @@ object JsonSerializers {
     title = readJs[String](x("title")),
     nodeType = readJs[String](x("nodeType")),
     relation = readJs[Option[String]](x("relation")),
-    output = readJs[Option[String]](x("output")),
+    output = readJs[Option[Seq[String]]](x("output")),
     costs = readJs[PlanNode.Costs](x("costs")),
     properties = readJs[Map[String, String]](x("properties")),
     children = x("children") match {

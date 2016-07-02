@@ -13,10 +13,10 @@ object PostgresParseHelper {
 
   def getOutput(o: Option[Value]) = o.map {
     case r: Js.Arr => r.value.map {
-      case s: Js.Str => s.value
+      case s: Js.Str => s.value.trim
       case _ => throw new IllegalStateException("Output parameter is not an array.")
-    }.mkString(", ")
-    case _ => ""
+    }
+    case _ => Nil
   }
 
   def getProperties(params: Map[String, Value]) = params.filterNot(_._1 == keyPlans).map(p => p._1 -> (p._2 match {

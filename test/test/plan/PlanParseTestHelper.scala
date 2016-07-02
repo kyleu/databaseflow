@@ -42,7 +42,7 @@ object PlanParseTestHelper extends Logging {
     val title = ((0 until depth).map(i => "  ").mkString + node.title).padTo(27, ' ').substring(0, 27)
     val tp = node.nodeType.toString.padTo(14, ' ')
     val rel = node.relation.map(_.toString).getOrElse("").padTo(18, ' ').substring(0, 18)
-    val output = node.output.map(_.toString).getOrElse("").padTo(18, ' ').substring(0, 18)
+    val output = node.output.map(_.mkString(", ")).getOrElse("").padTo(18, ' ').substring(0, 18)
     val props = node.properties.size.toString.padTo(5, ' ')
     val eRows = node.costs.estimatedRows.toString.padTo(6, ' ')
     val aRows = node.costs.actualRows.map(_.toString).getOrElse("").padTo(6, ' ')

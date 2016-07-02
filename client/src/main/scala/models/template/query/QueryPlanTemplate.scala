@@ -34,10 +34,25 @@ object QueryPlanTemplate {
   }
 
   private[this] def forNode(node: PlanNode, className: String, depth: Int = 0): Modifier = {
+    val summary = node.nodeType + node.relation.map(" on " + _).getOrElse("")
     val divContents = div(cls := "node z-depth-1")(
-      div(cls := "node-title")(node.title),
+      div(cls := "node-title")(
+        div(cls := "node-cost")(node.costWithoutChildren + "ms"),
+        div(cls := "node-percentage")("%" + node.costPercentage),
+        div(node.title),
+        div(cls := "node-summary")(summary)
+      ),
       div(cls := "node-details")(
-        "Costs: ", node.costs.toString
+        node.output match {
+          case Some(o) => ul(cls := "")(o.map(x => li(x)))
+          case None => span()
+        },
+        div(cls := "node-properties")(
+          table(cls := "bordered highlight")(
+            thead(tr("Name"), tr("Value")),
+            tbody(node.properties.map(x => tr(td(x._1), td(x._2))).toSeq)
+          )
+        )
       )
     )
 
