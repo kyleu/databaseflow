@@ -46,12 +46,13 @@ object QueryPlanNodeDetailTemplate {
         div(cls := "col s12 l6")(
           div(cls := "z-depth-1")(
             table(cls := "bordered highlight") {
-              node.output.map { o =>
-                tbody(
-                  tr(th(colspan := 2)("Output")),
-                  o.map(x => tr(td(x)))
-                )
-              }.getOrElse(tbody())
+              tbody(
+                tr(th(colspan := 2)("Output")),
+                node.output match {
+                  case Some(o) => o.map(x => tr(td(x)))
+                  case None => Seq(tr(td("No output available.")))
+                }
+              )
             }
           )
         ),
@@ -60,9 +61,13 @@ object QueryPlanNodeDetailTemplate {
             table(cls := "bordered highlight")(
               tbody(
                 tr(th(colspan := 2)("Properties")),
-                node.properties.map { p =>
-                  tr(td(style := "white-space: nowrap;")(p._1), td(p._2))
-                }.toSeq
+                if (node.properties.isEmpty) {
+                  Seq(tr(td("No properties available.")))
+                } else {
+                  node.properties.map { p =>
+                    tr(td(style := "white-space: nowrap;")(p._1), td(p._2))
+                  }.toSeq
+                }
               )
             )
           )
