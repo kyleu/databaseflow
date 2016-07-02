@@ -19,10 +19,14 @@ object PostgresParseHelper {
     case _ => Nil
   }
 
-  def getProperties(params: Map[String, Value]) = params.filterNot(_._1 == keyPlans).map(p => p._1 -> (p._2 match {
+  private[this] val blacklistedProperties = Seq(keyPlans, keyOutput)
+  def getProperties(params: Map[String, Value]) = params.filterNot(p => blacklistedProperties.contains(p._1)).map(p => p._1 -> (p._2 match {
     case s: Js.Str => s.value
     case n: Js.Num => n.value.toString
-    case s: Js.Arr => "[" + s.value.mkString(", ") + "]"
+    case s: Js.Arr => "[" + s.value.map {
+      case js: Js.Str => js.value
+      case _ => "?"
+    }.mkString(", ") + "]"
     case Js.False => "false"
     case Js.True => "true"
     case o: Js.Obj => "{" + o.value.map(v => v._1 + ": " + v._2).mkString(", ") + "}"

@@ -81,46 +81,4 @@
     width: 0;
     height: 20px;
   }
-
-  li {
-    .node {
-      border: 1px solid #ccc;
-      padding: 5px 10px;
-      color: #666;
-      font-size: 14px;
-      white-space: nowrap;
-      display: inline-block;
-
-      transition: all 0.5s;
-      -webkit-transition: all 0.5s;
-      -moz-transition: all 0.5s;
-    }
-
-    .node-title {
-      cursor: pointer;
-    }
-
-    .node-details {
-      display: none;
-    }
-
-    .node:hover, .node:hover + ul li .node {
-      background: #fff;
-      color: #000;
-      border: 1px solid #aaa;
-    }
-
-    //.node:hover+ul li::after,
-    //.node:hover+ul li::before,
-    //.node:hover+ul::before,
-    //.node:hover+ul ul::before{
-    //  border-color:  #aaa;
-    //}
-  }
-
-  .open {
-    .node-details {
-      display: block;
-    }
-  }
 }

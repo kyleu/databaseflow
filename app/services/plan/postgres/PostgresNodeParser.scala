@@ -14,26 +14,21 @@ object PostgresNodeParser {
         case x => throw new IllegalStateException("Missing node type parameter: " + x.toString)
       }
 
+      val joinType = params.get(keyJoinType).map {
+        case s: Js.Str => s.value
+        case _ => ""
+      }
+      val title = joinType.map(_ + " ").getOrElse("") + nodeType
+
       val children = params.get(keyPlans).map {
         case plans: Js.Arr => plans.value.map(nodeFor)
         case x => throw new IllegalStateException(s"Unable to parse plans from [$x]")
       }.getOrElse(Nil)
 
-      val relation = PostgresParseHelper.getRelation(params.get(keyHashCondition))
+      val relation = PostgresParseHelper.getRelation(params.get(keyRelationName).orElse(params.get(keyHashCondition)))
       val output = PostgresParseHelper.getOutput(params.get(keyOutput))
       val props = PostgresParseHelper.getProperties(params)
       val costs = PostgresParseHelper.getCosts(params)
-
-      val joinType = params.get(keyJoinType).map {
-        case s: Js.Str => s.value
-        case _ => ""
-      }
-      val title = joinType.map(_ + " ").getOrElse("") + nodeType + {
-        relation match {
-          case Some(r) => " on " + r
-          case None => ""
-        }
-      }
 
       PlanNode(
         title = title,

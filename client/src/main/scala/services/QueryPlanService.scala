@@ -3,7 +3,6 @@ package services
 import java.util.UUID
 
 import models._
-import models.template._
 import models.template.query.{QueryErrorTemplate, QueryPlanTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
