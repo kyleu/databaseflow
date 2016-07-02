@@ -1,5 +1,7 @@
 package models.plan
 
+import java.util.UUID
+
 object PlanNode {
   case class Costs(
       estimatedRows: Int = 0,
@@ -11,6 +13,7 @@ object PlanNode {
       estimatedCost: Option[Int] = None,
       actualCost: Option[Int] = None
   ) {
+    lazy val totalCost = actualCost.orElse(estimatedCost).getOrElse(0)
     lazy val estimatedRowsFactor = actualRows.map(estimatedRows / _)
     lazy val estimatedDurationFactor = actualDuration.flatMap(a => estimatedDuration.map(_ / a))
     lazy val estimatedCostFactor = actualCost.flatMap(c => estimatedCost.map(_ / c))
@@ -18,6 +21,7 @@ object PlanNode {
 }
 
 case class PlanNode(
+    id: UUID,
     title: String,
     nodeType: String,
     relation: Option[String],
@@ -36,4 +40,6 @@ case class PlanNode(
   lazy val estimatedCostWithoutChildren = costs.estimatedCost.map(_ - children.flatMap(_.costs.estimatedCost).sum)
   lazy val actualCostWithoutChildren = costs.actualCost.map(_ - children.flatMap(_.costs.actualCost).sum)
   lazy val costWithoutChildren = actualCostWithoutChildren.orElse(estimatedCostWithoutChildren)
+
+  def withChildren(): Seq[PlanNode] = Seq(this) ++ children.flatMap(_.withChildren())
 }

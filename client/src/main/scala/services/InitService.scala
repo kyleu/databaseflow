@@ -9,7 +9,7 @@ import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import ui._
 import ui.metadata.{MetadataManager, ModelListManager}
-import ui.modal.{ConfirmManager, QueryExportFormManager, QuerySaveFormManager, ReconnectManager}
+import ui.modal._
 import ui.query._
 import ui.search.SearchManager
 import utils.{JQueryUtils, Logging, NetworkMessage}
@@ -33,6 +33,7 @@ object InitService {
     ReconnectManager.init()
     QuerySaveFormManager.init()
     QueryExportFormManager.init()
+    PlanNodeDetailManager.init()
     Logging.debug("Database Flow has started.")
     connect()
   }

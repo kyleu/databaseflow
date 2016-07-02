@@ -1,5 +1,7 @@
 package services.plan.mysql
 
+import java.util.UUID
+
 import models.plan.PlanNode
 import upickle.Js
 
@@ -37,6 +39,7 @@ object MySqlQueryBlockParser {
       case _ => Nil
     }
     PlanNode(
+      id = UUID.randomUUID,
       title = "Nested Loop",
       nodeType = "Nested Loop",
       relation = None,
@@ -46,6 +49,7 @@ object MySqlQueryBlockParser {
   }
 
   private[this] def parseUnionResult(el: Js.Value) = PlanNode(
+    id = UUID.randomUUID,
     title = "Union Result",
     nodeType = el.toString,
     relation = None,
@@ -59,6 +63,7 @@ object MySqlQueryBlockParser {
       case x => throw new IllegalStateException(s"Table element is of type [${x.getClass.getSimpleName}].")
     }).value.toMap
     PlanNode(
+      id = UUID.randomUUID,
       title = obj("table_name") match {
       case s: Js.Str => s.value
       case x => throw new IllegalStateException(x.toString)
@@ -79,6 +84,7 @@ object MySqlQueryBlockParser {
       case x => throw new IllegalStateException(s"Grouping operation element is of type [${x.getClass.getSimpleName}].")
     }).value.toMap
     PlanNode(
+      id = UUID.randomUUID,
       title = "Grouping Operation",
       nodeType = "Grouping Operation",
       relation = None,

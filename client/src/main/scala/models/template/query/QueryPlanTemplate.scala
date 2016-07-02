@@ -14,7 +14,7 @@ object QueryPlanTemplate {
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree")(
-            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.actualCost.orElse(pr.result.node.costs.estimatedCost).getOrElse(0): Int))
+            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.totalCost: Int))
           )
         ),
         div(cls := "clear")
@@ -42,28 +42,14 @@ object QueryPlanTemplate {
       est + pctString + "%"
     }
 
-    val divContents = div(cls := "node z-depth-1")(
-      div(cls := "node-title")(
-        div(cls := "node-percentage")(costPercentageString),
-        div(cls := "node-stat-divider")("|"),
-        div(cls := "node-duration") {
-          node.durationWithoutChildren.map(d => d + "ms").orElse(node.costWithoutChildren.map(utils.NumberUtils.withCommas)).getOrElse(""): String
-        },
-        div(node.title),
-        div(cls := "node-summary")(em(node.relation.getOrElse(""): String))
-      ),
-      div(cls := "node-details")(
-        node.output match {
-          case Some(o) => div(cls := "node-output")(o.map(x => span(x + " ")))
-          case None => span()
-        },
-        div(cls := "node-properties")(
-          table(cls := "bordered highlight")(
-            thead(tr(th("Name"), th("Value"))),
-            tbody(node.properties.map(x => tr(td(x._1), td(x._2))).toSeq)
-          )
-        )
-      )
+    val divContents = div(id := "plan-node-" + node.id, cls := "node z-depth-1")(
+      div(cls := "node-percentage")(costPercentageString),
+      div(cls := "node-stat-divider")("|"),
+      div(cls := "node-duration")(node.durationWithoutChildren.map { d =>
+        BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble + "ms"
+      }.orElse(node.costWithoutChildren.map(utils.NumberUtils.withCommas)).getOrElse(""): String),
+      div(node.title),
+      div(cls := "node-summary")(em(node.relation.getOrElse(""): String))
     )
 
     if (node.children.isEmpty) {

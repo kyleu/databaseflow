@@ -1,5 +1,7 @@
 package services.plan.oracle
 
+import java.util.UUID
+
 import models.plan.PlanNode
 import org.joda.time.format.PeriodFormatterBuilder
 
@@ -35,6 +37,7 @@ object OracleParseHelper {
     }
 
     PlanNode(
+      id = UUID.randomUUID,
       title = me.name.getOrElse(me.operation),
       relation = None,
       output = None,

@@ -6,6 +6,7 @@ import models._
 import models.template.query.{QueryErrorTemplate, QueryPlanTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
+import ui.modal.PlanNodeDetailManager
 import utils.JQueryUtils
 
 object QueryPlanService {
@@ -23,10 +24,12 @@ object QueryPlanService {
     val chart = $(".plan-chart", panel)
     val raw = $(".plan-raw", panel)
 
-    JQueryUtils.clickHandler($(".node-title", panel), (x) => {
-      x.parent().toggleClass("open")
-      workOutPlanWidth(pr.id)
-    })
+    val nodes = pr.result.node.withChildren()
+    nodes.foreach { node =>
+      JQueryUtils.clickHandler($(s"#plan-node-${node.id}", panel), (x) => {
+        PlanNodeDetailManager.show(node, pr.result.node.costs.totalCost)
+      })
+    }
 
     val planViewToggle = $(".plan-view-toggle", workspace)
     var showingChart = true

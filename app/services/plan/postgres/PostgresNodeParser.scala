@@ -1,5 +1,7 @@
 package services.plan.postgres
 
+import java.util.UUID
+
 import models.plan.PlanNode
 import services.plan.postgres.PostgresParseKeys._
 import upickle.Js
@@ -31,6 +33,7 @@ object PostgresNodeParser {
       val costs = PostgresParseHelper.getCosts(params)
 
       PlanNode(
+        id = UUID.randomUUID,
         title = title,
         nodeType = nodeType,
         relation = relation,

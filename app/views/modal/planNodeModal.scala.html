@@ -1,0 +1,9 @@
+@(user: Option[models.user.User])
+<div id="plan-node-modal" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <div id="plan-node-modal-content">Loading...</div>
+  </div>
+  <div class="modal-footer">
+    <a id="plan-node-ok-link" href="#" class="modal-action waves-effect waves-light btn @user.fold("blue-grey")(_.preferences.theme)">OK</a>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 package utils
 
+import java.util.UUID
+
 import enumeratum.UPickler
 import models.plan.PlanNode
 import models.schema.ColumnType
@@ -14,6 +16,7 @@ object JsonSerializers {
 
   // Recursive structures
   private[this] def readPlanNode(x: Js.Value): PlanNode = PlanNode(
+    id = readJs[UUID](x("id")),
     title = readJs[String](x("title")),
     nodeType = readJs[String](x("nodeType")),
     relation = readJs[Option[String]](x("relation")),
@@ -33,6 +36,7 @@ object JsonSerializers {
   }
 
   private[this] def writePlanNode(node: PlanNode): Js.Value = Js.Obj(
+    "id" -> writeJs(node.id),
     "title" -> writeJs(node.title),
     "nodeType" -> writeJs(node.nodeType),
     "relation" -> writeJs(node.relation),
