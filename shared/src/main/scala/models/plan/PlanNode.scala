@@ -42,4 +42,12 @@ case class PlanNode(
   lazy val costWithoutChildren = actualCostWithoutChildren.orElse(estimatedCostWithoutChildren)
 
   def withChildren(): Seq[PlanNode] = Seq(this) ++ children.flatMap(_.withChildren())
+
+  def costPercentageString(totalCost: Int) = {
+    val own = actualCostWithoutChildren.orElse(estimatedCostWithoutChildren).getOrElse(0)
+    val pct = (own.toDouble / totalCost.toDouble) * 100
+    val pctString = Math.round(pct)
+    val est = if (costs.actualCost.isDefined) { "" } else { "~" }
+    est + pctString + "%"
+  }
 }

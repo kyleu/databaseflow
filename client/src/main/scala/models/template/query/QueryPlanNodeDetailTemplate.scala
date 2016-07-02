@@ -9,7 +9,7 @@ object QueryPlanNodeDetailTemplate {
     div(cls := "")(
       div(cls := "row")(
         div(cls := "col s12")(
-          h5(node.title)
+          h5(div(style := "float: right;")(s"${node.costPercentageString(totalCost)} of cost"), node.title)
         )
       ),
       div(cls := "row")(
@@ -43,7 +43,7 @@ object QueryPlanNodeDetailTemplate {
         )
       ),
       div(cls := "row")(
-        div(cls := "col s12 m6")(
+        div(cls := "col s12 l6")(
           div(cls := "z-depth-1")(
             table(cls := "bordered highlight") {
               node.output.map { o =>
@@ -55,7 +55,7 @@ object QueryPlanNodeDetailTemplate {
             }
           )
         ),
-        div(cls := "col s12 m6")(
+        div(cls := "col s12 l6")(
           div(cls := "z-depth-1")(
             table(cls := "bordered highlight")(
               tbody(

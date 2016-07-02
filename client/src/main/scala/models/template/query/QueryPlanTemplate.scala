@@ -34,16 +34,8 @@ object QueryPlanTemplate {
   }
 
   private[this] def forNode(node: PlanNode, className: String, totalCost: Int, depth: Int = 0): Modifier = {
-    val costPercentageString = {
-      val own = node.actualCostWithoutChildren.orElse(node.estimatedCostWithoutChildren).getOrElse(0)
-      val pct = (own.toDouble / totalCost.toDouble) * 100
-      val pctString = Math.round(pct)
-      val est = if (node.costs.actualCost.isDefined) { "" } else { "~" }
-      est + pctString + "%"
-    }
-
     val divContents = div(id := "plan-node-" + node.id, cls := "node z-depth-1")(
-      div(cls := "node-percentage")(costPercentageString),
+      div(cls := "node-percentage")(node.costPercentageString(totalCost)),
       div(cls := "node-stat-divider")("|"),
       div(cls := "node-duration")(node.durationWithoutChildren.map { d =>
         BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble + "ms"
