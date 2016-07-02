@@ -42,18 +42,12 @@ object PostgresParseHelper {
       case n: Js.Num => n.value.toInt
       case _ => 0
     },
-    estimatedDuration = params.get("???") match {
-      case Some(n: Js.Num) => n.value.toInt
-      case _ => 0
-    },
+    estimatedDuration = None,
     actualDuration = params.get(keyActualTotalTime).map {
-      case n: Js.Num => n.value.toInt
+      case n: Js.Num => n.value
       case _ => 0
     },
-    estimatedCost = params.get("???") match {
-      case Some(n: Js.Num) => n.value.toInt
-      case _ => 0
-    },
+    estimatedCost = None,
     actualCost = params.get(keyTotalCost).map {
       case n: Js.Num => n.value.toInt
       case _ => 0

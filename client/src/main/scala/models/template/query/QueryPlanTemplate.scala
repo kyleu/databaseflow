@@ -14,7 +14,7 @@ object QueryPlanTemplate {
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree")(
-            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.actualCost.getOrElse(pr.result.node.costs.estimatedCost): Int))
+            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.actualCost.orElse(pr.result.node.costs.estimatedCost).getOrElse(0): Int))
           )
         ),
         div(cls := "clear")
@@ -35,7 +35,7 @@ object QueryPlanTemplate {
 
   private[this] def forNode(node: PlanNode, className: String, totalCost: Int, depth: Int = 0): Modifier = {
     val costPercentageString = {
-      val own = node.actualCostWithoutChildren.getOrElse(node.estimatedCostWithoutChildren)
+      val own = node.actualCostWithoutChildren.orElse(node.estimatedCostWithoutChildren).getOrElse(0)
       val pct = (own.toDouble / totalCost.toDouble) * 100
       val pctString = Math.round(pct)
       val est = if (node.costs.actualCost.isDefined) { "" } else { "~" }
@@ -45,7 +45,10 @@ object QueryPlanTemplate {
     val divContents = div(cls := "node z-depth-1")(
       div(cls := "node-title")(
         div(cls := "node-percentage")(costPercentageString),
-        div(cls := "node-cost")(utils.NumberUtils.withCommas(node.costWithoutChildren) + "ms"),
+        div(cls := "node-stat-divider")("|"),
+        div(cls := "node-duration") {
+          node.durationWithoutChildren.map(d => d + "ms").orElse(node.costWithoutChildren.map(utils.NumberUtils.withCommas)).getOrElse(""): String
+        },
         div(node.title),
         div(cls := "node-summary")(em(node.relation.getOrElse(""): String))
       ),

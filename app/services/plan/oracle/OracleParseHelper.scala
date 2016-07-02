@@ -42,8 +42,8 @@ object OracleParseHelper {
       children = children.map(nodeFor),
       costs = PlanNode.Costs(
         estimatedRows = stringToInt(me.rows),
-        estimatedDuration = durationToInt(me.time),
-        estimatedCost = me.cost
+        estimatedDuration = Some(durationToDouble(me.time)),
+        estimatedCost = Some(me.cost)
       )
     )
   }
@@ -56,7 +56,5 @@ object OracleParseHelper {
 
   private[this] val formatter = new PeriodFormatterBuilder().appendHours().appendLiteral(":").appendMinutes().appendLiteral(":").appendSeconds().toFormatter
 
-  private[this] def durationToInt(s: String) = {
-    formatter.parsePeriod(s).toStandardSeconds.getSeconds
-  }
+  private[this] def durationToDouble(s: String) = formatter.parsePeriod(s).toStandardSeconds.getSeconds.toDouble
 }
