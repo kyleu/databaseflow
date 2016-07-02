@@ -4,14 +4,9 @@ import java.util.UUID
 
 object PlanNode {
   case class Costs(
-      estimatedRows: Int = 0,
-      actualRows: Option[Int] = None,
-
-      estimatedDuration: Option[Double] = None,
-      actualDuration: Option[Double] = None,
-
-      estimatedCost: Option[Int] = None,
-      actualCost: Option[Int] = None
+      estimatedRows: Int = 0, actualRows: Option[Int] = None,
+      estimatedDuration: Option[Double] = None, actualDuration: Option[Double] = None,
+      estimatedCost: Option[Int] = None, actualCost: Option[Int] = None
   ) {
     lazy val totalCost = actualCost.orElse(estimatedCost).getOrElse(0)
     lazy val estimatedRowsFactor = actualRows.map(estimatedRows / _)
@@ -21,11 +16,11 @@ object PlanNode {
 }
 
 case class PlanNode(
-    id: UUID,
+    id: UUID = UUID.randomUUID,
     title: String,
     nodeType: String,
-    relation: Option[String],
-    output: Option[Seq[String]],
+    relation: Option[String] = None,
+    output: Option[Seq[String]] = None,
     costs: PlanNode.Costs = PlanNode.Costs(),
     properties: Map[String, String] = Map.empty,
     children: Seq[PlanNode] = Nil

@@ -15,14 +15,11 @@ object Testbed extends SandboxTask {
   override def description = ""
 
   def randomRecord() = AuditRecord(
-    id = UUID.randomUUID,
     auditType = AuditType.SignIn,
     owner = None,
     connection = Some(UUID.randomUUID),
     status = AuditStatus.OK,
     sql = Some("sql"),
-    error = None,
-    rowsAffected = None,
     elapsed = 10,
     occurred = 1000
   )

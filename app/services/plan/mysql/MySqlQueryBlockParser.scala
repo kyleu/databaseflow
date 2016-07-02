@@ -1,7 +1,5 @@
 package services.plan.mysql
 
-import java.util.UUID
-
 import models.plan.PlanNode
 import upickle.Js
 
@@ -27,7 +25,6 @@ object MySqlQueryBlockParser {
     case x => throw new IllegalStateException(s"Invalid query block type [${x.getClass.getSimpleName}].")
   }
 
-  @SuppressWarnings(Array("AsInstanceOf"))
   private[this] def parseNestedLoop(el: Js.Value) = {
     val children = el match {
       case a: Js.Arr => a.value.map { v =>
@@ -38,44 +35,30 @@ object MySqlQueryBlockParser {
       }
       case _ => Nil
     }
-    PlanNode(
-      id = UUID.randomUUID,
-      title = "Nested Loop",
-      nodeType = "Nested Loop",
-      relation = None,
-      output = None,
-      children = children
-    )
+    PlanNode(title = "Nested Loop", nodeType = "Nested Loop", children = children)
   }
 
-  private[this] def parseUnionResult(el: Js.Value) = PlanNode(
-    id = UUID.randomUUID,
-    title = "Union Result",
-    nodeType = el.toString,
-    relation = None,
-    output = None,
-    children = Nil
-  )
+  private[this] def parseUnionResult(el: Js.Value) = {
+    PlanNode(title = "Union Result", nodeType = el.toString)
+  }
 
   private[this] def parseTable(el: Js.Value) = {
     val obj = (el match {
       case o: Js.Obj => o
       case x => throw new IllegalStateException(s"Table element is of type [${x.getClass.getSimpleName}].")
     }).value.toMap
-    PlanNode(
-      id = UUID.randomUUID,
-      title = obj("table_name") match {
+
+    val title = obj("table_name") match {
       case s: Js.Str => s.value
       case x => throw new IllegalStateException(x.toString)
-    },
-      nodeType = obj("access_type") match {
+    }
+
+    val nodeType = obj("access_type") match {
       case s: Js.Str => s.value
       case x => throw new IllegalStateException(x.toString)
-    },
-      relation = None,
-      output = None,
-      children = Nil
-    )
+    }
+
+    PlanNode(title = title, nodeType = nodeType)
   }
 
   private[this] def parseGroupingOperation(el: Js.Value) = {
@@ -84,11 +67,8 @@ object MySqlQueryBlockParser {
       case x => throw new IllegalStateException(s"Grouping operation element is of type [${x.getClass.getSimpleName}].")
     }).value.toMap
     PlanNode(
-      id = UUID.randomUUID,
       title = "Grouping Operation",
       nodeType = "Grouping Operation",
-      relation = None,
-      output = None,
       children = Seq(parseNestedLoop(obj("nested_loop")))
     )
   }

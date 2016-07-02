@@ -3,14 +3,14 @@ package models.audit
 import java.util.UUID
 
 case class AuditRecord(
-  id: UUID,
+  id: UUID = UUID.randomUUID,
   auditType: AuditType,
   owner: Option[UUID],
   connection: Option[UUID],
-  status: AuditStatus,
+  status: AuditStatus = AuditStatus.OK,
   sql: Option[String],
-  error: Option[String],
-  rowsAffected: Option[Int],
+  error: Option[String] = None,
+  rowsAffected: Option[Int] = None,
   elapsed: Int,
   occurred: Long
 )

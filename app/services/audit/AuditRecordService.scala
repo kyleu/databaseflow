@@ -71,20 +71,14 @@ object AuditRecordService extends Logging {
     MasterDatabase.conn.executeUpdate(AuditRecordQueries.Error(auditId, message, elapsed))
   }
 
-  def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], sql: Option[String] = None, elapsed: Int = 0) = {
-    insert(AuditRecord(
-      id = UUID.randomUUID,
-      auditType = t,
-      owner = owner,
-      connection = connection,
-      status = AuditStatus.OK,
-      sql = sql,
-      error = None,
-      rowsAffected = None,
-      elapsed = elapsed,
-      occurred = DateUtils.nowMillis
-    ))
-  }
+  def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], sql: Option[String] = None, elapsed: Int = 0) = insert(AuditRecord(
+    auditType = t,
+    owner = owner,
+    connection = connection,
+    sql = sql,
+    elapsed = elapsed,
+    occurred = DateUtils.nowMillis
+  ))
 
   def insert(auditRecord: AuditRecord) = Future {
     MasterDatabase.conn.executeUpdate(AuditRecordQueries.insert(auditRecord))

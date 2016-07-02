@@ -33,7 +33,6 @@ object PostgresNodeParser {
       val costs = PostgresParseHelper.getCosts(params)
 
       PlanNode(
-        id = UUID.randomUUID,
         title = title,
         nodeType = nodeType,
         relation = relation,
