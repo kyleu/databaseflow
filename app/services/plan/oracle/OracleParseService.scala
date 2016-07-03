@@ -49,13 +49,15 @@ object OracleParseService extends PlanParseService("oracle") {
       occurred = startMs
     ))
   } catch {
-    case NonFatal(x) => Left(PlanError(
-      queryId = queryId,
-      sql = sql,
-      code = x.getClass.getSimpleName,
-      message = x.getMessage,
-      raw = Some(plan),
-      occurred = startMs
-    ))
+    case NonFatal(x) =>
+      log.warn("Error parsing Oracle query.", x)
+      Left(PlanError(
+        queryId = queryId,
+        sql = sql,
+        code = x.getClass.getSimpleName,
+        message = x.getMessage,
+        raw = Some(plan),
+        occurred = startMs
+      ))
   }
 }

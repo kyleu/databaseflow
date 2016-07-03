@@ -6,6 +6,8 @@ import models.plan.{PlanError, PlanResult}
 import services.plan.PlanParseService
 import upickle.{Js, json}
 
+import scala.util.control.NonFatal
+
 object PostgresParseService extends PlanParseService("postgres") {
   override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {
     val json = upickle.json.read(plan)
@@ -28,22 +30,36 @@ object PostgresParseService extends PlanParseService("postgres") {
     ret
   }
 
-  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value, startMs: Long) = plan match {
-    case o: Js.Obj => Right(PlanResult(
-      queryId = queryId,
-      action = "Action",
-      sql = sql,
-      raw = json.write(plan, 2),
-      node = PostgresNodeParser.nodeFor(o),
-      occurred = startMs
-    ))
-    case x => Left(PlanError(
-      queryId = queryId,
-      sql = sql,
-      code = x.getClass.getSimpleName,
-      message = s"Invalid JSON [${json.write(plan)}].",
-      raw = Some(json.write(plan, 2)),
-      occurred = startMs
-    ))
+  private[this] def parsePlan(sql: String, queryId: UUID, plan: Js.Value, startMs: Long) = try {
+    plan match {
+      case o: Js.Obj => Right(PlanResult(
+        queryId = queryId,
+        action = "Action",
+        sql = sql,
+        raw = json.write(plan, 2),
+        node = PostgresNodeParser.nodeFor(o),
+        occurred = startMs
+      ))
+      case x =>
+        Left(PlanError(
+          queryId = queryId,
+          sql = sql,
+          code = x.getClass.getSimpleName,
+          message = s"Invalid JSON [${json.write(plan)}].",
+          raw = Some(json.write(plan, 2)),
+          occurred = startMs
+        ))
+    }
+  } catch {
+    case NonFatal(x) =>
+      log.warn("Error parsing Postgres query.", x)
+      Left(PlanError(
+        queryId = queryId,
+        sql = sql,
+        code = x.getClass.getSimpleName,
+        message = x.getMessage,
+        raw = Some(json.write(plan, 2)),
+        occurred = startMs
+      ))
   }
 }
