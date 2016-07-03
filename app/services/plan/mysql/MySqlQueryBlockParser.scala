@@ -65,8 +65,10 @@ object MySqlQueryBlockParser {
     val nodeType = props.get(MySqlParseKeys.keyAccessType).orElse(message).getOrElse("Table")
     val rows = obj.get("rows").map(_.num.toInt)
 
+    val children = subview.toSeq
+
     val costs = PlanNode.Costs(actualRows = rows)
-    PlanNode(title = title, nodeType = nodeType, relation = relation, costs = costs, properties = props)
+    PlanNode(title = title, nodeType = nodeType, relation = relation, costs = costs, properties = props, children = children)
   }
 
   private[this] def parseGroupingOperation(el: Js.Value) = {

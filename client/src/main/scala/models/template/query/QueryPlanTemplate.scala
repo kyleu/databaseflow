@@ -38,7 +38,7 @@ object QueryPlanTemplate {
       div(cls := "node-percentage")(node.costPercentageString(totalCost)),
       div(cls := "node-stat-divider")("|"),
       div(cls := "node-duration")(node.durationWithoutChildren.map { d =>
-        BigDecimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble + "ms"
+        BigDecimal.decimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble + "ms"
       }.orElse(node.costWithoutChildren.map(utils.NumberUtils.withCommas)).getOrElse(""): String),
       div(node.title),
       div(cls := "node-summary")(em(node.relation.getOrElse(""): String))

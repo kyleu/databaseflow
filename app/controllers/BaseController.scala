@@ -38,7 +38,7 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
   }
 
   def withSession(action: String)(block: (UserAwareRequest[AuthEnv, AnyContent]) => Future[Result]) = ctx.silhouette.UserAwareAction.async { implicit request =>
-    if (SettingsService(SettingKey.AllowGuests) == "false" && request.identity.isEmpty) {
+    if (LicenseService.isTeamEdition && request.identity.isEmpty) {
       Future.successful(Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing(
         "error" -> "You must sign in or register before accessing Database Flow."
       ))

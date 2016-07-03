@@ -57,12 +57,9 @@ class ApplicationContext @javax.inject.Inject() (
     SharedMetricRegistries.remove("default")
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
-    LicenseService.readLicense()
-
     MasterDatabase.open()
-
     SettingsService.load()
-
+    LicenseService.readLicense()
     ResultCacheDatabase.open()
 
     lifecycle.addStopHook(() => Future.successful(stop()))

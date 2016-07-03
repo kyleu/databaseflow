@@ -16,16 +16,16 @@ sealed abstract class SettingKey(
 }
 
 object SettingKey extends Enum[SettingKey] {
-  case object AllowGuests extends SettingKey(
-    id = "allow-guests",
-    title = "Allow Guests",
-    description = "Determines if anonymous users are allowed."
-  )
-
   case object AllowAuditRemoval extends SettingKey(
     id = "allow-audit-removal",
     title = "Allow Audit Removal",
-    description = "Determines if users are allowed to tremove audit records from the system."
+    description = "Determines if users are allowed to remove audit records from the system."
+  )
+
+  case object LicenseContent extends SettingKey(
+    id = "license-content",
+    title = "License Content",
+    description = "Contains the software license content."
   )
 
   case object QueryCacheConnection extends SettingKey(

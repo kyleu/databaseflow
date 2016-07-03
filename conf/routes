@@ -18,6 +18,11 @@ POST        /q/:conn/export                  controllers.QueryController.export(
 # Utility
 GET         /*path/                          controllers.HomeController.untrail(path: String)
 
+# License
+GET         /license                         controllers.LicenseController.form()
+POST        /license                         controllers.LicenseController.save()
+
+
 # Authentication
 GET         /signup                          controllers.auth.RegistrationController.registrationForm
 POST        /signup                          controllers.auth.RegistrationController.register
