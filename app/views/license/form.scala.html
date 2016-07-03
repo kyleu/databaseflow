@@ -1,6 +1,6 @@
-@(user: Option[models.user.User], debug: Boolean, license: Option[licensing.License], licenseContent: Option[String])(
+@(debug: Boolean, license: Option[licensing.License], licenseContent: Option[String])(
   implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(user = user, title = Messages("license.new.form", utils.Config.projectName), debug = debug) {
+)@layout.simple(user = None, title = Messages("license.new.form", utils.Config.projectName), debug = debug) {
   <form method="post" action="@controllers.routes.LicenseController.save()">
     <div class="row">
       <div class="col s12">
@@ -10,18 +10,22 @@
               @Messages("license.new.form")
             </span>
             <div class="row">
-              <div class="input-field col s12">
+              <div class="col s12">
                 @license.map { l =>
                   @l.edition.title, licensed to [@l.user].
-                }.getOrElse {
-                  Please add a license.
                 }
+                <p>To obtain a license, please sign up for free at <a href="https://databaseflow.com">databaseflow.com</a></p>
               </div>
-            </div>
-            <div class="row">
               <div class="input-field col s12">
-                <textarea id="license-content" name="content" class="materialize-textarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">@licenseContent.getOrElse("")</textarea>
-                <label for="license-content">License Content</label>
+                <textarea
+                  name="content"
+                  class="materialize-textarea"
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="License Content"
+                >@licenseContent.getOrElse("")</textarea>
               </div>
             </div>
           </div>

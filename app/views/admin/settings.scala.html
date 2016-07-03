@@ -1,4 +1,4 @@
-@(user: models.user.User, debug: Boolean, settings: Map[models.settings.SettingKey, String])(
+@(user: Option[models.user.User], debug: Boolean, settings: Map[models.settings.SettingKey, String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )
 
@@ -21,6 +21,17 @@
       <div class="card-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.settings.title")</div>
 
       <div class="row">
+        @settingPanel(AllowRegistration) {
+          <div class="row">
+            <div class="col s12">
+              <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(settings(AllowRegistration) == "true") { checked="checked" } />
+              <label for="@AllowRegistration.id-true">Yes</label>
+              <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(settings(AllowRegistration) == "false") { checked="checked" } />
+              <label for="@AllowRegistration.id-false">No</label>
+            </div>
+          </div>
+        }
+
         @settingPanel(QueryCacheConnection) {
           <div class="row">
             <div class="col s12 input-field">

@@ -1,4 +1,4 @@
-@(user: models.user.User, debug: Boolean, users: Seq[models.user.User])(
+@(user: Option[models.user.User], debug: Boolean, users: Seq[models.user.User])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(user, "users", messages("admin.users.title"), debug = debug) {
   <div class="card-content">

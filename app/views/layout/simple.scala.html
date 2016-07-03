@@ -21,6 +21,9 @@
       @flash.get("error").map { err =>
         <div class="flash-error z-depth-1">@err</div>
       }
+      @flash.get("success").map { success =>
+        <div class="flash-success z-depth-1">@success</div>
+      }
       @content
     </div>
   </main>
