@@ -1,46 +1,35 @@
 package services.plan.postgres
 
-import java.util.UUID
-
 import models.plan.PlanNode
 import services.plan.postgres.PostgresParseKeys._
 import upickle.Js
+import utils.JsonUtils
 
 object PostgresNodeParser {
-  def nodeFor(jsVal: Js.Value): PlanNode = jsVal match {
-    case o: Js.Obj =>
-      val params = o.value.toMap
+  private[this] val blacklistedProperties = Seq(keyPlans, keyOutput)
 
-      val nodeType = params.get(keyNodeType) match {
-        case Some(s: Js.Str) => s.value
-        case x => throw new IllegalStateException("Missing node type parameter: " + x.toString)
-      }
+  def nodeFor(json: Js.Value): PlanNode = {
+    val params = json.obj
 
-      val joinType = params.get(keyJoinType).map {
-        case s: Js.Str => s.value
-        case _ => ""
-      }
-      val title = joinType.map(_ + " ").getOrElse("") + nodeType
+    val nodeType = params(keyNodeType).str
+    val joinType = params.get(keyJoinType).map(_.str)
+    val title = joinType.map(_ + " ").getOrElse("") + nodeType
 
-      val children = params.get(keyPlans).map {
-        case plans: Js.Arr => plans.value.map(nodeFor)
-        case x => throw new IllegalStateException(s"Unable to parse plans from [$x]")
-      }.getOrElse(Nil)
+    val children = params.get(keyPlans).map(_.arr.map(nodeFor)).getOrElse(Nil)
 
-      val relation = PostgresParseHelper.getRelation(params.get(keyRelationName).orElse(params.get(keyHashCondition)))
-      val output = PostgresParseHelper.getOutput(params.get(keyOutput))
-      val props = PostgresParseHelper.getProperties(params)
-      val costs = PostgresParseHelper.getCosts(params)
+    val relation = params.get(keyRelationName).orElse(params.get(keyHashCondition)).map(_.str)
+    val output = PostgresParseHelper.getOutput(params.get(keyOutput))
+    val props = JsonUtils.toStringMap(params.filterNot(p => blacklistedProperties.contains(p._1)))
+    val costs = PostgresParseHelper.getCosts(params)
 
-      PlanNode(
-        title = title,
-        nodeType = nodeType,
-        relation = relation,
-        output = output,
-        costs = costs,
-        properties = props,
-        children = children
-      )
-    case x => throw new IllegalStateException(s"Invalid node type [${x.getClass.getName}]")
+    PlanNode(
+      title = title,
+      nodeType = nodeType,
+      relation = relation,
+      output = output,
+      costs = costs,
+      properties = props,
+      children = children
+    )
   }
 }

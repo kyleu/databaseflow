@@ -12,15 +12,6 @@
       },
       {
         "table": {
-          "table_name": "address",
-          "access_type": "ALL",
-          "rows": 652,
-          "filtered": 100,
-          "using_join_buffer": "Block Nested Loop"
-        }
-      },
-      {
-        "table": {
           "table_name": "city",
           "access_type": "ALL",
           "rows": 775,

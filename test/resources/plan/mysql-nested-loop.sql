@@ -1,1 +1,1 @@
-select * from actor, city, address limit 5;
+select * from actor, city limit 5;

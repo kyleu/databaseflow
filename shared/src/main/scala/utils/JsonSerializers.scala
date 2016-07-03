@@ -33,6 +33,7 @@ object JsonSerializers {
   )
   implicit val planNodeReader = Reader[PlanNode] {
     case x: Js.Obj => readPlanNode(x)
+    case other => throw new IllegalArgumentException(s"Invalid Plan Node [${other.getClass.getSimpleName}].")
   }
 
   private[this] def writePlanNode(node: PlanNode): Js.Value = Js.Obj(

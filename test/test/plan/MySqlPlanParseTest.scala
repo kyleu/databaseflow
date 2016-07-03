@@ -6,6 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class MySqlPlanParseTest extends FlatSpec with Matchers {
   "MySQL Plan Parser" should "load basic MySQL plan" in {
     val result = PlanParseTestHelper.test("mysql-nested-loop", MySQL)
+    PlanParseTestHelper.debugPlanResult(result)
     1 should be(1)
   }
 
