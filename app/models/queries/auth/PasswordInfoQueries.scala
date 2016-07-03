@@ -2,6 +2,7 @@ package models.queries.auth
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.queries.BaseQueries
 import models.database.{Row, Statement}
 import utils.DateUtils
@@ -32,4 +33,9 @@ object PasswordInfoQueries extends BaseQueries[PasswordInfo] {
   )
 
   override protected def toDataSeq(p: PasswordInfo) = Seq(p.hasher, p.password, p.salt, DateUtils.now)
+
+  case class UpdateEmail(originalEmail: String, email: String) extends Statement {
+    override def sql = s"""update $tableName set "key" = ? where key = ? and provider = ?"""
+    override def values = Seq(email, originalEmail, CredentialsProvider.ID)
+  }
 }

@@ -80,4 +80,9 @@ object UserQueries extends BaseQueries[User] {
     val prefs = write(u.preferences)
     Seq(u.id, u.username, prefs, u.profile.providerKey, roles, u.created)
   }
+
+  case class UpdateFields(id: UUID, username: String, email: String, roles: Set[Role]) extends Statement {
+    override def sql: String = s"update $tableName set username = ?, email = ?, roles = ? where id = ?"
+    override def values = Seq(username, email, roles.map(_.toString).mkString(","), id)
+  }
 }

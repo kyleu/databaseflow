@@ -5,6 +5,7 @@ import models.settings.SettingKey
 import services.settings.SettingsService
 import services.user.UserService
 import utils.ApplicationContext
+import utils.web.FormUtils
 
 import scala.concurrent.Future
 
@@ -15,7 +16,7 @@ class SettingsController @javax.inject.Inject() (override val ctx: ApplicationCo
   }
 
   def saveSettings = withAdminSession("admin-settings-save") { implicit request =>
-    val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException()).flatMap(x => x._2.headOption.map(x._1 -> _)).toSeq
+    val form = FormUtils.getForm(request)
     form.foreach { x =>
       SettingKey.withNameOption(x._1) match {
         case Some(settingKey) => SettingsService.set(settingKey, x._2)

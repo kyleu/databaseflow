@@ -15,7 +15,7 @@ import services.connection.ConnectionSettingsService
 import services.database.MasterDatabase
 import services.socket.SocketService
 import utils.{ApplicationContext, DateUtils, FileUtils}
-import utils.web.MessageFrameFormatter
+import utils.web.{FormUtils, MessageFrameFormatter}
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
@@ -49,11 +49,11 @@ class QueryController @javax.inject.Inject() (
   }
 
   def export(connectionId: UUID) = withSession("export") { implicit request =>
-    val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException("Invalid request"))
+    val form = FormUtils.getForm(request)
 
-    val sql = form.get("sql").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [sql] parameter."))
-    val format = form.get("format").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [format] parameter."))
-    val filename = form.get("filename").flatMap(_.headOption).getOrElse(throw new IllegalArgumentException("Missing [filename] parameter."))
+    val sql = form.getOrElse("sql", throw new IllegalArgumentException("Missing [sql] parameter."))
+    val format = form.getOrElse("format", throw new IllegalArgumentException("Missing [format] parameter."))
+    val filename = form.getOrElse("filename", throw new IllegalArgumentException("Missing [filename] parameter."))
 
     val db = MasterDatabase.db(connectionId)
 
@@ -75,10 +75,10 @@ class QueryController @javax.inject.Inject() (
         file.delete
       }))
     } catch {
-      case NonFatal(t) =>
+      case NonFatal(ex) =>
         file.delete
-        log.warn(s"Unable to export query for sql [$sql].", t)
-        Future.successful(InternalServerError(s"Unable to export query: [${t.getClass.getSimpleName}: ${t.getMessage}]"))
+        log.warn(s"Unable to export query for sql [$sql].", ex)
+        Future.successful(InternalServerError(s"Unable to export query: [${ex.getClass.getSimpleName}: ${ex.getMessage}]"))
     }
   }
 }

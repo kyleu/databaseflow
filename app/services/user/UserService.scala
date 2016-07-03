@@ -2,6 +2,8 @@ package services.user
 
 import java.util.UUID
 
+import com.mohiva.play.silhouette.api.LoginInfo
+import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.queries.auth._
 import models.user.{Role, User}
@@ -10,7 +12,7 @@ import utils.Logging
 import utils.cache.UserCache
 
 @javax.inject.Singleton
-class UserService @javax.inject.Inject() () extends Logging {
+class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Logging {
   def getById(id: UUID) = MasterDatabase.conn.query(UserQueries.getById(Seq(id)))
 
   def save(user: User, update: Boolean = false): User = {
@@ -50,4 +52,16 @@ class UserService @javax.inject.Inject() () extends Logging {
   }
 
   def getAll = MasterDatabase.conn.query(UserQueries.getAll("\"username\""))
+
+  def update(id: UUID, username: String, email: String, password: Option[String], roles: Set[Role], originalEmail: String) = {
+    MasterDatabase.conn.executeUpdate(UserQueries.UpdateFields(id, username, email, roles))
+    if (email != originalEmail) {
+      MasterDatabase.conn.executeUpdate(PasswordInfoQueries.UpdateEmail(originalEmail, email))
+    }
+    password.map { p =>
+      val loginInfo = LoginInfo(CredentialsProvider.ID, email)
+      val authInfo = hasher.hash(p)
+      MasterDatabase.conn.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
+    }
+  }
 }

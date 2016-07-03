@@ -12,6 +12,11 @@
       <div class="col s12">
         <em>@user.profile.providerKey</em>
       </div>
+      @if(user.roles.contains(models.user.Role.Admin)) {
+        <div class="col s12">
+          <em>Administrator</em>
+        </div>
+      }
     </div>
   </div>
   <div class="card-action">

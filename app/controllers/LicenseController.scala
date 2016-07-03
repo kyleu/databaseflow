@@ -4,6 +4,7 @@ import models.settings.SettingKey
 import services.licensing.LicenseService
 import services.settings.SettingsService
 import utils.ApplicationContext
+import utils.web.FormUtils
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -17,11 +18,8 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
   }
 
   def save() = withoutSession("license-form") { implicit request =>
-    val form = request.body.asFormUrlEncoded match {
-      case Some(f) => f
-      case None => throw new IllegalStateException("Missing license form.")
-    }
-    val content = form.get("content").flatMap(_.headOption).getOrElse(throw new IllegalStateException("Missing license content.")).trim
+    val form = FormUtils.getForm(request)
+    val content = form.getOrElse("content", throw new IllegalStateException("Missing license content.")).trim
 
     LicenseService.parseLicense(content) match {
       case Success(l) =>
