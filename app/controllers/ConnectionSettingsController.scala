@@ -68,6 +68,6 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
   def delete(connectionId: UUID) = withSession("delete") { implicit request =>
     ConnectionSettingsService.delete(connectionId)
     AuditRecordService.create(AuditType.DeleteConnection, request.identity.map(_.id), None, Some(connectionId.toString))
-    Future.successful(Redirect(routes.HomeController.index()))
+    Future.successful(Redirect(routes.HomeController.home()))
   }
 }

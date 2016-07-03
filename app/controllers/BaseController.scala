@@ -24,7 +24,7 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
         if (authorized) {
           block(request)
         } else {
-          Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("error" -> "You must have admin rights to access that page."))
+          Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> "You must have admin rights to access that page."))
         }
       }
     }

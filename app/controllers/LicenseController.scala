@@ -25,7 +25,7 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
       case Success(l) =>
         SettingsService.set(SettingKey.LicenseContent, content)
         LicenseService.readLicense()
-        Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> "License updated successfully."))
+        Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("success" -> "License updated successfully."))
       case Failure(x) =>
         val msg = x match {
           case _ if content.isEmpty => "Please paste your license in the form below."

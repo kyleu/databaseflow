@@ -8,7 +8,7 @@
   }</td>
   @userService.map { us =>
     <td>@a.owner.map { o =>
-    <a class="theme-text" href="@controllers.admin.routes.UserController.view(o)">@us.retrieve(o).map(_.username)</a>
+    <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(o)">@us.retrieve(o).map(_.username)</a>
     }.getOrElse("Guest")</td>
   }
   <td title="@a.connection">@a.connection.map { c =>

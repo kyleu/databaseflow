@@ -1,0 +1,42 @@
+@(self: Option[models.user.User], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.admin(self, "users", messages("admin.users.title"), debug = debug) {
+  <form action="@controllers.admin.routes.UserCreateController.newUser()" method="post">
+    <div class="card-content">
+      <div class="card-title">
+        <i class="fa @models.template.Icons.user"></i> New User
+      </div>
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="input-username" type="text" class="form-control validate" name="username" value="" />
+          <label for="input-username">@Messages("registration.form.username")</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="input-email" type="email" class="form-control validate" name="email" value="" />
+          <label for="input-email">@Messages("registration.form.email")</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="input-password" type="password" class="form-control validate" name="password" value="" />
+          <label for="input-password">@Messages("registration.form.password")</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <p>
+            <input type="checkbox" name="isAdmin" id="admin-checkbox" />
+            <label for="admin-checkbox">Administrator</label>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card-action">
+      <a class="theme-text right" onclick="$('form').submit();return false;">Create</a>
+      <a class="theme-text" href="@controllers.admin.routes.UserEditController.users()">Cancel</a>
+    </div>
+  </form>
+}

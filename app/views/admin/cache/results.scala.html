@@ -32,7 +32,7 @@
                 <a class="theme-text" href="@routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
               </td>
               <td>@r.owner.map { o =>
-                <a class="theme-text" href="@controllers.admin.routes.UserController.view(o)">@userService.retrieve(o).map(_.username)</a>
+                <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(o)">@userService.retrieve(o).map(_.username)</a>
               }.getOrElse("Guest")</td>
               <td>@r.status</td>
               <td>@r.columns</td>
@@ -84,6 +84,6 @@
     }
   </div>
   <div class="card-action">
-    <a class="theme-text" href="@controllers.routes.HomeController.index()">Back to Connection List</a>
+    <a class="theme-text" href="@controllers.routes.HomeController.home()">Back to Connection List</a>
   </div>
 }

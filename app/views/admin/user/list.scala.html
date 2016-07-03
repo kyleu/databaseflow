@@ -20,14 +20,16 @@
           @users.map { u =>
             <tr>
               <td>
-                <a class="theme-text" href="@controllers.admin.routes.UserController.view(u.id)">@u.username.getOrElse("(not set)")</a>
+                <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(u.id)">@u.username.getOrElse("(not set)")</a>
               </td>
               <td>@u.profile.providerKey</td>
               <td><div class="theme-swatch" style="background-color: @models.user.Themes.map(u.preferences.theme)"></div></td>
               <td>@u.roles.toSeq.sortBy(_.entryName).mkString(", ")</td>
               <td>@utils.Formatter.niceDate(u.created.toLocalDate)</td>
               <td>
-                <a class="theme-text" onclick="return confirm('Are you certain you want to delete this user (@u.username)?');" href="@controllers.admin.routes.UserController.remove(u.id)"><i class="fa fa-close"></i></a>
+                @defining(s"return confirm('Are you certain you want to delete this user (${u.username.getOrElse("Unknown")})?');") { onClick =>
+                  <a class="theme-text" onclick="@onClick" href="@controllers.admin.routes.UserEditController.remove(u.id)"><i class="fa fa-close"></i></a>
+                }
               </td>
             </tr>
           }
@@ -36,6 +38,7 @@
     </div>
   </div>
   <div class="card-action">
-    <a class="theme-text" href="@routes.HomeController.index()">Back to Connection List</a>
+    <a class="theme-text right right-btn" href="@controllers.admin.routes.UserCreateController.newUser()">New User</a>
+    <a class="theme-text" href="@routes.HomeController.home()">Back to Connection List</a>
   </div>
 }

@@ -23,6 +23,6 @@ class SettingsController @javax.inject.Inject() (override val ctx: ApplicationCo
         case None => log.warn(s"Attempt to save invalid setting [${x._1}].")
       }
     }
-    Future.successful(Redirect(controllers.routes.HomeController.index()))
+    Future.successful(Redirect(controllers.routes.HomeController.home()))
   }
 }

@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class HomeController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
-  def index() = withSession("index") { implicit request =>
+  def home() = withSession("home") { implicit request =>
     val connections = ConnectionSettingsService.getVisible(request.identity.map(_.id))
     Future.successful(Ok(views.html.index(request.identity, ctx.config.debug, connections)))
   }

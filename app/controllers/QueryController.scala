@@ -33,7 +33,7 @@ class QueryController @javax.inject.Inject() (
     val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
     Future.successful(activeDb match {
       case Some((name, id)) => Ok(views.html.query.main(request.identity, ctx.config.debug, id, name, UUID.randomUUID))
-      case None => Redirect(routes.HomeController.index())
+      case None => Redirect(routes.HomeController.home())
     })
   }
 

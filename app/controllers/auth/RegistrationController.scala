@@ -64,7 +64,7 @@ class RegistrationController @javax.inject.Inject() (
               authInfo <- authInfoRepository.add(loginInfo, authInfo)
               authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
               value <- ctx.silhouette.env.authenticatorService.init(authenticator)
-              result <- ctx.silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.HomeController.index()))
+              result <- ctx.silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.HomeController.home()))
             } yield {
               ctx.silhouette.env.eventBus.publish(SignUpEvent(userSaved, request))
               ctx.silhouette.env.eventBus.publish(LoginEvent(userSaved, request))

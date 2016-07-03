@@ -7,7 +7,7 @@
     @views.html.components.userDropdown(user)
 
     <nav id="topnav" class="@user.fold("blue-grey")(_.preferences.theme) lighten-2">
-      <a href="@routes.HomeController.index()" class="brand-logo center">@utils.Config.projectName</a>
+      <a href="@routes.HomeController.home()" class="brand-logo center">@utils.Config.projectName</a>
       <ul class="right hide-on-small-only">
         <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
           @user.flatMap(_.username).getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>

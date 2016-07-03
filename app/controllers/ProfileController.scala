@@ -27,7 +27,7 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
         )
         val newUser = user.copy(username = Some(profileData.username), preferences = newPrefs)
         userService.save(newUser, update = true)
-        Future.successful(Redirect(controllers.routes.HomeController.index()))
+        Future.successful(Redirect(controllers.routes.HomeController.home()))
       }
     )
   }

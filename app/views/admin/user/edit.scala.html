@@ -1,7 +1,7 @@
 @(self: Option[models.user.User], debug: Boolean, user: models.user.User)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(self, "users", messages("admin.users.title"), debug = debug) {
-  <form action="@controllers.admin.routes.UserController.save(user.id)" method="post">
+  <form action="@controllers.admin.routes.UserEditController.save(user.id)" method="post">
     <div class="card-content">
       <div class="card-title">
         <i class="fa @models.template.Icons.user"></i>
@@ -42,7 +42,7 @@
     </div>
     <div class="card-action">
       <a class="theme-text right" onclick="$('form').submit();return false;">Save</a>
-      <a class="theme-text" href="@controllers.admin.routes.UserController.view(user.id)">Cancel</a>
+      <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(user.id)">Cancel</a>
     </div>
   </form>
 }

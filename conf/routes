@@ -1,4 +1,4 @@
-GET         /                                controllers.HomeController.index
+GET         /                                controllers.HomeController.home
 GET         /ping                            controllers.HomeController.ping(timestamp: Long)
 
 # Connection Management

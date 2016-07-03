@@ -30,7 +30,7 @@ class AuthenticationController @javax.inject.Inject() (
       form => Future.successful(BadRequest(views.html.auth.signin(form))),
       credentials => {
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(controllers.routes.HomeController.index())
+          val result = Redirect(controllers.routes.HomeController.home())
           userSearchService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
@@ -51,7 +51,7 @@ class AuthenticationController @javax.inject.Inject() (
   }
 
   def signOut = withSession("signout") { implicit request =>
-    val result = Redirect(controllers.routes.HomeController.index())
+    val result = Redirect(controllers.routes.HomeController.home())
 
     request.identity.foreach { user =>
       AuditRecordService.create(AuditType.SignOut, Some(user.id), None)

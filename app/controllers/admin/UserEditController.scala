@@ -2,6 +2,8 @@ package controllers.admin
 
 import java.util.UUID
 
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.util.PasswordHasher
 import controllers.BaseController
 import models.user.Role
 import services.user.{UserSearchService, UserService}
@@ -11,10 +13,12 @@ import utils.web.FormUtils
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class UserController @javax.inject.Inject() (
+class UserEditController @javax.inject.Inject() (
     override val ctx: ApplicationContext,
     userService: UserService,
-    userSearchService: UserSearchService
+    userSearchService: UserSearchService,
+    authInfoRepository: AuthInfoRepository,
+    hasher: PasswordHasher
 ) extends BaseController {
   def users = withAdminSession("admin-users") { implicit request =>
     Future.successful(Ok(views.html.admin.user.list(request.identity, ctx.config.debug, userService.getAll)))
@@ -42,18 +46,27 @@ class UserController @javax.inject.Inject() (
       case Some(x) => Some(x)
       case None => None
     }
-    val newRoles = if (form.get("isAdmin").contains("true")) {
+    val isAdmin = form.get("isAdmin").contains("true")
+    val newRoles = if (isAdmin) {
       user.roles + Role.Admin
     } else {
       user.roles.filter(_ == Role.Admin)
     }
 
-    userService.update(id, newUsername, newEmail, newPassword, newRoles, user.profile.providerKey)
-    Future.successful(Redirect(controllers.admin.routes.UserController.view(id)))
+    if (newUsername.isEmpty) {
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> s"Username was empty."))
+    } else if (newEmail.isEmpty) {
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> s"Email Address was empty."))
+    } else if (isSelf && (!isAdmin) && user.roles.contains(Role.Admin)) {
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> s"You cannot remove the admin role from your own account."))
+    } else {
+      userService.update(id, newUsername, newEmail, newPassword, newRoles, user.profile.providerKey)
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.view(id)))
+    }
   }
 
   def remove(id: UUID) = withAdminSession("admin-user-remove") { implicit request =>
     userService.remove(id)
-    Future.successful(Redirect(controllers.admin.routes.UserController.users()))
+    Future.successful(Redirect(controllers.admin.routes.UserEditController.users()))
   }
 }
