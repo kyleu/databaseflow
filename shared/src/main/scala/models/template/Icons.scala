@@ -43,6 +43,7 @@ object Icons {
 
   val newQuery = "fa-plus-square-o"
   val refresh = "fa-refresh"
+  val filter = "fa-filter"
 
   val export = "fa-file-o"
   val transaction = "fa-cube"

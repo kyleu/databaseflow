@@ -12,11 +12,7 @@ object DataFilterTemplate {
     div()
   } else {
     val source = r.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]"))
-    val hiddenClass = source.filterColumn match {
-      case Some(_) => ""
-      case None => "initially-hidden"
-    }
-    div(cls := s"filter-container $hiddenClass z-depth-1")(
+    div(cls := s"filter-container initially-hidden z-depth-1")(
       div(cls := "row")(
         div(cls := "input-field col s4")(
           select(cls := "filter-select filter-col-select theme-text")(r.columns.map(c =>

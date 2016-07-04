@@ -8,12 +8,13 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 
 object FilterManager {
   def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source) = {
+    val filterContainer = $(".filter-container", panel)
+    var filterShown = false
     utils.JQueryUtils.clickHandler($(".results-filter-link", panel), (jq) => {
-      $(".row-status-display", panel).hide()
-      $(".filter-container", panel).show()
+      if (filterShown) { filterContainer.hide() } else { filterContainer.show() }
+      filterShown = !filterShown
     })
     utils.JQueryUtils.clickHandler($(".results-filter-cancel", panel), (jq) => {
-      $(".row-status-display", panel).show()
       $(".filter-container", panel).hide()
     })
 

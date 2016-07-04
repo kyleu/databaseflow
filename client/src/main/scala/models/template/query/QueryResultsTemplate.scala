@@ -3,7 +3,8 @@ package models.template.query
 import java.util.UUID
 
 import models.query.QueryResult
-import models.template.StaticPanelTemplate
+import models.schema.FilterOp
+import models.template.{Icons, StaticPanelTemplate}
 import models.template.results.{DataFilterTemplate, DataTableTemplate}
 
 import scalatags.Text.all._
@@ -12,6 +13,21 @@ import scalatags.Text.tags2.time
 object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val content = div(id := resultId.toString)(
+      div(qr.source.flatMap(_.filterColumn) match {
+        case Some(column) =>
+          val op = qr.source.flatMap(_.filterOp).getOrElse(FilterOp.Equal).symbol
+          val v = qr.source.flatMap(_.filterValue).getOrElse("?")
+          div(cls := "active-filter z-depth-1")(
+            div(cls := "filter-cancel-link")(i(cls := "theme-text fa " + Icons.close)),
+            i(cls := "fa " + Icons.filter),
+            "Active Filter: ",
+            strong(column),
+            s" $op ",
+            strong(v)
+          )
+        case None => ""
+      }),
+
       div(cls := "row-status-display")(
         a(href := "#", cls := "results-filter-link right theme-text")("Filter"),
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
@@ -23,14 +39,7 @@ object QueryResultsTemplate {
           " in [",
           span(cls := "total-duration")(durationMs.toString),
           "ms]."
-        ),
-        div(qr.source.flatMap(_.filterColumn) match {
-          case Some(column) =>
-            val op = qr.source.flatMap(_.filterOp).getOrElse("?")
-            val v = qr.source.flatMap(_.filterValue).getOrElse("?")
-            s"$column $op $v"
-          case None => ""
-        })
+        )
       ),
 
       DataFilterTemplate.forResults(qr, resultId),

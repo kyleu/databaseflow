@@ -34,15 +34,16 @@ object QueryResultService {
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
       })
 
-      result.source match {
-        case Some(src) => onComplete(result, src, panel, resultId)
-        case None => // No op
+      result.source.foreach { src =>
+        onComplete(result, src, panel, resultId)
+        JQueryUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
+          utils.Logging.info("!!!")
+        })
       }
 
       val sqlEl = $(".query-result-sql", panel)
-      val sqlLink = $(".results-sql-link", panel)
       var sqlShown = false
-      utils.JQueryUtils.clickHandler(sqlLink, (jq) => {
+      utils.JQueryUtils.clickHandler($(".results-sql-link", panel), (jq) => {
         if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
         sqlShown = !sqlShown
       })
