@@ -1,8 +1,19 @@
 GET         /                            controllers.HomeController.index
 
+# Feedback
 GET         /feedback                    controllers.FeedbackController.feedbackForm
 OPTIONS     /feedback                    controllers.FeedbackController.feedbackOptions()
 POST        /feedback                    controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
+
+# Downloads
+GET         /download/personal           controllers.DownloadController.personalEdition()
+GET         /download/team               controllers.DownloadController.teamEdition()
+
+# Purchasing
+GET         /pricing                     controllers.PurchaseController.pricing()
+POST        /purchase                    controllers.PurchaseController.purchaseTeamEdition()
+GET         /license/request             controllers.PurchaseController.requestForm()
+POST        /license/request             controllers.PurchaseController.licenseRequest()
 
 # Admin Section
 ->          /admin                       admin.Routes
