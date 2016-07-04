@@ -30,7 +30,7 @@ object PurchaseController {
 @javax.inject.Singleton
 class PurchaseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends Controller with I18nSupport {
   def pricing() = Action.async { implicit request =>
-    Future.successful(Ok("OK"))
+    Future.successful(Ok(views.html.purchase.purchase()))
   }
 
   def purchaseTeamEdition() = Action.async { implicit request =>
@@ -38,7 +38,7 @@ class PurchaseController @javax.inject.Inject() (implicit override val messagesA
   }
 
   def requestForm() = Action.async { implicit request =>
-    Future.successful(Ok("OK"))
+    Future.successful(Ok(views.html.purchase.licenseForm()))
   }
 
   def licenseRequest() = Action.async { implicit request =>

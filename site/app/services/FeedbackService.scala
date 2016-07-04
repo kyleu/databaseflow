@@ -22,7 +22,7 @@ object FeedbackService {
       val lines = Files.readAllLines(file).asScala
       Feedback(id, lines.headOption.getOrElse(""), lines.tail.mkString("\n"))
     } else {
-      throw new IllegalArgumentException(s"Feedback already exists for [$id].")
+      throw new IllegalArgumentException(s"Feedback does not exist for [$id].")
     }
   }
 
