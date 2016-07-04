@@ -5,7 +5,7 @@ import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.Future
 
-object HomeController {
+object SiteController {
   val cors = Seq(
     "Access-Control-Allow-Headers" -> "Content-Type,x-requested-with,Authorization,Access-Control-Allow-Origin",
     "Access-Control-Allow-Methods" -> "GET,POST,OPTIONS",
@@ -15,8 +15,12 @@ object HomeController {
 }
 
 @javax.inject.Singleton
-class HomeController @javax.inject.Inject() (implicit val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class SiteController @javax.inject.Inject() (implicit val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  def splash() = Action.async { implicit request =>
+    Future.successful(Ok(views.html.splash()).withHeaders(SiteController.cors: _*))
+  }
+
   def index() = Action.async { implicit request =>
-    Future.successful(Ok(views.html.index()).withHeaders(HomeController.cors: _*))
+    Future.successful(Ok(views.html.index()).withHeaders(SiteController.cors: _*))
   }
 }

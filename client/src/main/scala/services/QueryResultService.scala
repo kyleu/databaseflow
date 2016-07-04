@@ -34,12 +34,7 @@ object QueryResultService {
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
       })
 
-      result.source.foreach { src =>
-        onComplete(result, src, panel, resultId)
-        JQueryUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
-          utils.Logging.info("!!!")
-        })
-      }
+      result.source.foreach(src => onComplete(result, src, panel, resultId))
 
       val sqlEl = $(".query-result-sql", panel)
       var sqlShown = false
@@ -68,6 +63,11 @@ object QueryResultService {
       val col = j.data("col").toString
       val asc = j.data("dir").toString == "asc"
       val newOptions = options.copy(orderByCol = Some(col), orderByAsc = Some(!asc))
+      RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
+    })
+
+    JQueryUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
+      val newOptions = options.copy(filterCol = None, filterOp = None, filterVal = None)
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
     })
 

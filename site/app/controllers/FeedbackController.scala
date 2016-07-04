@@ -27,7 +27,7 @@ class FeedbackController @javax.inject.Inject() (implicit val messagesApi: Messa
   }
 
   def feedbackOptions() = Action.async { implicit request =>
-    Future.successful(Ok("OK").withHeaders(HomeController.cors: _*))
+    Future.successful(Ok("OK").withHeaders(SiteController.cors: _*))
   }
 
   def postFeedback(ajax: Boolean) = Action.async { implicit request =>
@@ -39,11 +39,11 @@ class FeedbackController @javax.inject.Inject() (implicit val messagesApi: Messa
         if (ajax) {
           Ok(JsObject(Seq("status" -> JsString("OK"))))
         } else {
-          Redirect(controllers.routes.HomeController.index()).flashing("success" -> "Thanks for your feedback!")
+          Redirect(controllers.routes.SiteController.index()).flashing("success" -> "Thanks for your feedback!")
         }
       }
     )
 
-    Future.successful(action.withHeaders(HomeController.cors: _*))
+    Future.successful(action.withHeaders(SiteController.cors: _*))
   }
 }

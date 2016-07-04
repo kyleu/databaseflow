@@ -1,7 +1,5 @@
 package models.template
 
-import ui.UserManager
-
 import scalatags.Text.all._
 
 object FeedbackTemplate {
@@ -10,9 +8,10 @@ object FeedbackTemplate {
       div(cls := "row")(
         form(cls := "col s12")(
           div(cls := "row")(
-            div(cls := "col s12")(
-              p("Thanks for your feedback. If you'd like to be notified when we reply, please include an email address.")
-            ),
+            div(cls := "col s12")(p(
+              "Thanks for your feedback. This will send your message directly to the creators of Database Flow. " +
+                "If you'd like to be notified when we reply, please include an email address."
+            )),
             div(cls := "input-field col s12")(
               input(id := "feedback-email-input", cls := "validate", `type` := "email", value := email, placeholder := "Email Address")()
             ),

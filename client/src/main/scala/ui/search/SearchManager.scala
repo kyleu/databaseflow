@@ -53,7 +53,10 @@ object SearchManager {
     currentSearch = search
   }
 
-  def focus() = searchInput.focus()
+  def focus() = {
+    clearSearch()
+    searchInput.focus()
+  }
 
   def openIfClosed(j: JQuery) = if (!j.hasClass("active")) {
     $(".collapsible-header", j).trigger("click")

@@ -16,7 +16,7 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
     if (request.getQueryString("p").contains("np")) {
       Future.successful(Redirect(controllers.admin.routes.AdminController.index()).withSession("admin-role" -> id))
     } else {
-      Future.successful(Redirect(controllers.routes.HomeController.index()).withNewSession)
+      Future.successful(Redirect(controllers.routes.SiteController.index()).withNewSession)
     }
   }
 }
