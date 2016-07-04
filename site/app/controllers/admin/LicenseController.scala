@@ -15,7 +15,7 @@ object LicenseController {
       "id" -> uuid,
       "user" -> email,
       "edition" -> nonEmptyText.transform(
-        (s) => LicenseEdition.Personal: LicenseEdition,
+        (s) => LicenseEdition.withName(s),
         (x: LicenseEdition) => x.toString
       ),
       "issued" -> longNumber,
@@ -28,9 +28,7 @@ object LicenseController {
 class LicenseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseAdminController {
   def list() = withAdminSession { (username, request) =>
     implicit val req = request
-    val licenses = LicenseGenerator.listLicenses().map { x =>
-      LicenseGenerator.loadLicense(x)
-    }
+    val licenses = LicenseGenerator.listLicenses().map(LicenseGenerator.loadLicense)
     Future.successful(Ok(views.html.admin.licenses(licenses)))
   }
 

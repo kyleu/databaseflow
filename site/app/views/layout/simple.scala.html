@@ -1,8 +1,14 @@
-@(title: String)(content: Html)(
+@(title: String, isAdmin: Boolean = false)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(title) {
   <header>
     <nav id="topnav" class="blue-grey lighten-2">
+      @if(isAdmin) {
+        <ul class="left hide-on-small-only">
+          <li><a href="@controllers.admin.routes.LicenseController.list()">Licenses</a></li>
+          <li><a href="@controllers.admin.routes.FeedbackController.list()">Feedback</a></li>
+        </ul>
+      }
       <a href="@routes.HomeController.index()" class="brand-logo center">Database Flow</a>
     </nav>
   </header>

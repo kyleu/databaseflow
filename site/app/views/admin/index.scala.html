@@ -1,4 +1,5 @@
-@(username: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple("Database Flow Admin") {
+@(username: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@layout.simple("Database Flow Admin", isAdmin = true) {
   <div class="row">
     <div class="col s12">
       <div class="card">
