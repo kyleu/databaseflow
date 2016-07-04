@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.user.{Role, User, UserPreferences}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.user.{UserSearchService, UserService}
+import services.user.UserService
 import utils.ApplicationContext
 import utils.web.FormUtils
 
@@ -19,7 +19,6 @@ import scala.concurrent.Future
 class UserCreateController @javax.inject.Inject() (
     override val ctx: ApplicationContext,
     userService: UserService,
-    userSearchService: UserSearchService,
     authInfoRepository: AuthInfoRepository,
     hasher: PasswordHasher
 ) extends BaseController {
@@ -36,9 +35,9 @@ class UserCreateController @javax.inject.Inject() (
     val username = form("username").trim
 
     if (username.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> s"Username was empty."))
+      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> "Username was empty."))
     } else if (loginInfo.providerKey.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> s"Email Address was empty."))
+      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> "Email Address was empty."))
     } else {
       val user = User(
         id = id,

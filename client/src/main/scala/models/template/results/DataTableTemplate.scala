@@ -51,7 +51,7 @@ object DataTableTemplate {
         } else {
           span(x)
         }
-        case _ => span(s"$x (${col.t})")
+        case _ => span(x)
       }) -> true
       case None => span(title := "Null")("∅") -> false
       // scalastyle:off

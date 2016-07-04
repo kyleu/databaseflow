@@ -14,5 +14,4 @@ object Role extends Enum[Role] {
 
   object Admin extends Role("admin")
   object User extends Role("user")
-  object Unknown extends Role("unknown")
 }

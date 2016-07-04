@@ -2,8 +2,6 @@ package controllers.admin
 
 import java.util.UUID
 
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.PasswordHasher
 import controllers.BaseController
 import models.user.Role
 import services.user.{UserSearchService, UserService}
@@ -16,9 +14,7 @@ import scala.concurrent.Future
 class UserEditController @javax.inject.Inject() (
     override val ctx: ApplicationContext,
     userService: UserService,
-    userSearchService: UserSearchService,
-    authInfoRepository: AuthInfoRepository,
-    hasher: PasswordHasher
+    userSearchService: UserSearchService
 ) extends BaseController {
   def users = withAdminSession("admin-users") { implicit request =>
     Future.successful(Ok(views.html.admin.user.list(request.identity, ctx.config.debug, userService.getAll)))
@@ -54,11 +50,11 @@ class UserEditController @javax.inject.Inject() (
     }
 
     if (newUsername.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> s"Username was empty."))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> "Username was empty."))
     } else if (newEmail.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> s"Email Address was empty."))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> "Email Address was empty."))
     } else if (isSelf && (!isAdmin) && user.roles.contains(Role.Admin)) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> s"You cannot remove the admin role from your own account."))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> "You cannot remove your own admin role."))
     } else {
       userService.update(id, newUsername, newEmail, newPassword, newRoles, user.profile.providerKey)
       Future.successful(Redirect(controllers.admin.routes.UserEditController.view(id)))
