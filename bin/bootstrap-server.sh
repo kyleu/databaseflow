@@ -29,3 +29,5 @@ sudo -u postgres nano /etc/postgresql/9.3/main/postgresql.conf
 
 sudo -u postgres nano /etc/postgresql/9.3/main/pg_hba.conf
 # host     all            all             X.X.X.X/32         md5
+
+# https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04
