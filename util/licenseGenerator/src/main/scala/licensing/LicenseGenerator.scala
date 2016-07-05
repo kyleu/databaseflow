@@ -3,8 +3,10 @@ package licensing
 import java.nio.file.{Files, Paths}
 import java.util.{Base64, UUID}
 
+import cache.FileCacheService
+
 object LicenseGenerator {
-  private[this] val licenseDir = "./util/licenseGenerator/src/main/resources/licenses/"
+  private[this] val licenseDir = FileCacheService.cacheDir + "/licenses"
 
   def listLicenses() = {
     val dir = new java.io.File(licenseDir)

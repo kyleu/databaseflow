@@ -5,13 +5,14 @@ import java.util.Base64
 
 import xyz.wiedenhoeft.scalacrypt._
 
+import scala.io.Source
 import scala.util.{Failure, Success}
 
 object EncryptKeyProvider {
-  private[this] val encryptKeyDir = "./util/licenseGenerator/src/main/resources/keys/"
-  private[this] val encryptKeyFilename = "license-encrypt.key"
+  private[this] val encryptKeyPath = "keys/license-encrypt.key"
   lazy val encryptKey = {
-    val encryptKeyContent = Files.readAllBytes(Paths.get(encryptKeyDir, encryptKeyFilename))
+    val is = getClass.getClassLoader.getResourceAsStream(encryptKeyPath)
+    val encryptKeyContent = Source.fromInputStream(is).map(_.toByte).toArray
     val encryptKeyContentDecoded = Base64.getDecoder.decode(encryptKeyContent).toSeq
     encryptKeyContentDecoded.toKey[RSAKey] match {
       case Success(content) => content
@@ -34,6 +35,6 @@ object EncryptKeyProvider {
     val newPublicKey = publicKeyContentDecoded.toKey[RSAKey]
     println("Public Key:")
     println(publicKeyContent.map(_.toChar).mkString)
-    Files.write(Paths.get(encryptKeyDir, encryptKeyFilename), publicKeyContent)
+    Files.write(Paths.get("./tmp/license-encrypt.key"), publicKeyContent)
   }
 }

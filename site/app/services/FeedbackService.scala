@@ -1,12 +1,14 @@
 package services
 
 import java.nio.file.{Files, Paths}
-import java.util.{Base64, UUID}
+import java.util.UUID
+
+import cache.FileCacheService
 
 object FeedbackService {
   case class Feedback(id: UUID, email: String, content: String)
 
-  private[this] val feedbackDir = "./tmp/feedback/"
+  private[this] val feedbackDir = FileCacheService.cacheDir + "/feedback"
 
   def list() = {
     val dir = new java.io.File(feedbackDir)
