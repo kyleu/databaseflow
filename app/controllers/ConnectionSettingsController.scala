@@ -46,8 +46,8 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
           url = cf.url,
           username = cf.username
         )
-        val updated = if (cf.password.isEmpty) {
-          almostUpdated.copy(password = almostUpdated.password)
+        val updated = if (cf.password.trim.isEmpty) {
+          almostUpdated.copy(password = conn.password)
         } else {
           almostUpdated.copy(password = PasswordEncryptUtils.encrypt(cf.password))
         }
