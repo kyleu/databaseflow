@@ -33,11 +33,11 @@ trait BaseQueries[T] {
   ) = {
     BaseQueries.trim(s"""
       select ${columns.map("\"" + _ + "\"").mkString(", ")} from "$tableName"
-      ${whereClause.fold("")(x => s" where $x")}
-      ${groupBy.fold("")(x => s" group by $x")}
-      ${orderBy.fold("")(x => s" order by $x")}
-      ${limit.fold("")(x => s" limit $x")}
-      ${offset.fold("")(x => s" offset $x")}
+      ${whereClause.map(x => s" where $x").getOrElse("")}
+      ${groupBy.map(x => s" group by $x").getOrElse("")}
+      ${orderBy.map(x => s" order by $x").getOrElse("")}
+      ${limit.map(x => s" limit $x").getOrElse("")}
+      ${offset.map(x => s" offset $x").getOrElse("")}
     """)
   }
 

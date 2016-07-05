@@ -10,6 +10,7 @@ dist
 /db
 /out
 /build
+/cache
 /.idea_modules
 /.classpath
 /.project

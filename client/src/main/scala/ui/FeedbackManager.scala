@@ -48,7 +48,7 @@ object FeedbackManager {
   private[this] def submitFeedback(email: String, content: String) = {
     utils.Logging.info(s"Feedback from [$email]: $content")
 
-    val url = "http://databaseflow.dev/feedback?ajax=true"
+    val url = "https://databaseflow.com/feedback?ajax=true"
     $.ajax(js.Dynamic.literal(
       url = url,
       data = js.Dynamic.literal(
