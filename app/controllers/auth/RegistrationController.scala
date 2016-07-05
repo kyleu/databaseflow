@@ -13,6 +13,7 @@ import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.MasterDatabase
 import services.licensing.LicenseService
+import services.settings.SettingsService
 import services.user.{UserSearchService, UserService}
 import utils.ApplicationContext
 
@@ -27,10 +28,17 @@ class RegistrationController @javax.inject.Inject() (
     hasher: PasswordHasher
 ) extends BaseController {
   def registrationForm = withoutSession("form") { implicit request =>
-    Future.successful(Ok(views.html.auth.register(UserForms.registrationForm)))
+    if (SettingsService.allowRegistration) {
+      Future.successful(Ok(views.html.auth.register(UserForms.registrationForm)))
+    } else {
+      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> "You cannot sign up at this time. Contact your administrator."))
+    }
   }
 
   def register = withoutSession("register") { implicit request =>
+    if (!SettingsService.allowRegistration) {
+      throw new IllegalStateException("Unable to sign up at this time. Contact your administrator.")
+    }
     UserForms.registrationForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.auth.register(form))),
       data => {

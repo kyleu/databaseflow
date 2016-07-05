@@ -36,7 +36,13 @@
           </div>
         </div>
         <div>
-          <p style="text-align: center;">Not a member? <a class="theme-text" href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign up now</a></p>
+          <p style="text-align: center;">
+            @if(services.settings.SettingsService.allowRegistration) {
+              Not a member? <a class="theme-text" href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign up now</a>.
+            } else {
+              Registration is disabled on this server. Contact your administrator to get an account.
+            }
+          </p>
         </div>
       </div>
     </div>

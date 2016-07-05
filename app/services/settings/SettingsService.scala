@@ -9,6 +9,7 @@ object SettingsService {
   private[this] var settingsMap = Map.empty[SettingKey, String]
 
   def apply(key: SettingKey) = settingsMap.getOrElse(key, key.default)
+  def asBool(key: SettingKey) = apply(key) == "true"
 
   def load() = {
     settingsMap = MasterDatabase.conn.query(SettingQueries.getAll()).map(s => s.key -> s.value).toMap
@@ -35,4 +36,7 @@ object SettingsService {
     }
     settings = SettingKey.values.map(k => Setting(k, settingsMap.getOrElse(k, k.default)))
   }
+
+  def allowRegistration = asBool(SettingKey.AllowRegistration)
+  def allowAuditRemoval = asBool(SettingKey.AllowAuditRemoval)
 }

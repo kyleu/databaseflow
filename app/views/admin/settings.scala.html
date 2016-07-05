@@ -2,10 +2,9 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )
 
-@import models.settings.SettingKey
 @import models.settings.SettingKey._
 
-@settingPanel(key: SettingKey)(content: Html) = {
+@settingPanel(key: models.settings.SettingKey)(content: Html) = {
   <div class="col s12">
     <div class="z-depth-1 setting-panel">
       <strong>@key.title</strong>
@@ -24,10 +23,12 @@
         @settingPanel(AllowRegistration) {
           <div class="row">
             <div class="col s12">
-              <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(settings(AllowRegistration) == "true") { checked="checked" } />
-              <label for="@AllowRegistration.id-true">Yes</label>
-              <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(settings(AllowRegistration) == "false") { checked="checked" } />
-              <label for="@AllowRegistration.id-false">No</label>
+              @defining(services.settings.SettingsService.allowRegistration) { allowRegistration =>
+                <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(allowRegistration) { checked="checked" }></input>
+                <label for="@AllowRegistration.id-true">Yes</label>
+                <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(!allowRegistration) { checked="checked" }></input>
+                <label for="@AllowRegistration.id-false">No</label>
+              }
             </div>
           </div>
         }
