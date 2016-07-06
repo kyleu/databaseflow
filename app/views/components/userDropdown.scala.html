@@ -2,7 +2,9 @@
 @defining(user.fold("blue-grey")(_.preferences.theme) + "-text") { theme =>
   <ul id="dropdown-user" class="dropdown-content">
     @if(user.isEmpty) {
-    <li><a class="@theme" href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign Up</a></li>
+    @if(services.settings.SettingsService.allowRegistration) { <li>
+      <a class="@theme" href="@controllers.auth.routes.RegistrationController.registrationForm()">Sign Up</a>
+    </li> }
     <li><a class="@theme" href="@controllers.auth.routes.AuthenticationController.signInForm()">Sign In</a></li>
     } else {
     <li><a class="@theme" href="@routes.ProfileController.activity()">Activity</a></li>

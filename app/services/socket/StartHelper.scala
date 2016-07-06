@@ -12,7 +12,7 @@ import utils.{ExceptionUtils, Logging}
 import scala.util.{Failure, Success, Try}
 
 trait StartHelper extends Logging { this: SocketService =>
-  protected[this] def attemptConnect() = MasterDatabase.databaseFor(connectionId) match {
+  protected[this] def attemptConnect() = MasterDatabase.databaseFor(user, connectionId) match {
     case Right(d) => Some(d)
     case Left(x) =>
       log.warn("Error attempting to connect to database.", x)

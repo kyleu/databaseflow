@@ -14,9 +14,11 @@
         <div>@c.description</div>
         <em style="display : block ;">@c.url</em>
         <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin : 10px 0 ;">Query</a>
-        @if(c.id != services.database.MasterDatabase.connectionId) {
-          @if(c.owner.isEmpty || user.forall(u => c.owner.contains(u.id))) {
-            <a href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn theme">Settings</a>
+        @defining(services.connection.ConnectionSettingsService.canEdit(user, c)) { canEdit =>
+          @if(canEdit._1) {
+            <a title="@canEdit._2" href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn theme">Settings</a>
+          } else {
+            <!-- Cannot edit. @canEdit._2 -->
           }
         }
       </div>
