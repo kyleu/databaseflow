@@ -1,3 +1,4 @@
+@import models.template.Icons
 @(user: Option[models.user.User], conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 ) @layout.simple(user, "Edit " + title, debug = false) {
@@ -41,8 +42,8 @@
               <label for="form-password">Password</label>
             </div>
 
-            @views.html.connection.readPermissions(conn.read)
-            @views.html.connection.editPermissions(conn.edit)
+            @views.html.connection.permissions("read", conn.read, Icons.user, "Available To")
+            @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, "Editable By")
           </div>
         </div>
         <div class="card-action">

@@ -1,0 +1,39 @@
+@(key: String, v: String, icon: String, title: String)
+<div class="input-field col s12 m6">
+  <div class="card-panel option-panel">
+    <h6><i class="fa @{icon}"></i> @title</h6>
+    <p>
+      @if(v == "visitor") {
+        <input id="form-@key-visitor" name="@key" type="radio" value="visitor" checked="checked" />
+      } else {
+        <input id="form-@key-visitor" name="@key" type="radio" value="visitor" />
+      }
+      <label for="form-@key-visitor">Everyone</label>
+    </p>
+    <p>
+      @if(v == "user") {
+        <input id="form-@key-user" name="@key" type="radio" value="user" checked="checked" />
+      } else {
+        <input id="form-@key-user" name="@key" type="radio" value="user" />
+      }
+      <label for="form-@key-user">Registered Users</label>
+    </p>
+    <p>
+      @if(v == "admin") {
+        <input id="form-@key-admin" name="@key" type="radio" value="admin" checked="checked" />
+      } else {
+        <input id="form-@key-admin" name="@key" type="radio" value="admin" />
+      }
+      <label for="form-@key-admin">Administrators</label>
+    </p>
+    <p>
+      @if(v == "private") {
+        <input id="form-@key-private" name="@key" type="radio" value="private" checked="checked" />
+      } else {
+        <input id="form-@key-private" name="@key" type="radio" value="private" />
+      }
+      <label for="form-@key-private">Only Myself</label>
+    </p>
+    <div class="clear" style="padding-bottom: 20px;"></div>
+  </div>
+</div>
