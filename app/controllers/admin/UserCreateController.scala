@@ -31,10 +31,8 @@ class UserCreateController @javax.inject.Inject() (
     val id = UUID.randomUUID
     val loginInfo = LoginInfo(CredentialsProvider.ID, form("email").trim)
     val role = form.get("role") match {
-      case Some("admin") => Role.Admin
-      case Some("user") => Role.User
-      case Some("visitor") => Role.Visitor
-      case x => throw new IllegalStateException(s"Missing role: [$x].")
+      case Some(r) => Role.withName(r)
+      case None => Role.Visitor
     }
     val username = form("username").trim
 

@@ -8,6 +8,7 @@ import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.queries.auth.UserQueries
+import models.settings.SettingKey
 import models.user.{Role, User, UserForms, UserPreferences}
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -53,12 +54,10 @@ class RegistrationController @javax.inject.Inject() (
           case None =>
             val authInfo = hasher.hash(data.password)
             val firstUser = MasterDatabase.conn.query(UserQueries.count) == 0
-            val role: Role = if (LicenseService.isPersonalEdition) {
-              Role.Admin
-            } else if (firstUser) {
+            val role: Role = if (firstUser) {
               Role.Admin
             } else {
-              Role.User
+              Role.withName(SettingsService(SettingKey.DefaultNewUserRole))
             }
             val user = User(
               id = UUID.randomUUID,
