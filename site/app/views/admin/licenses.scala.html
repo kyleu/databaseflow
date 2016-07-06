@@ -12,6 +12,7 @@
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Name</th>
                   <th>Email</th>
                   <th>Edition</th>
                   <th>Issued</th>
@@ -22,8 +23,11 @@
               <tbody>
                 @licenses.map { l =>
                   <tr>
-                    <td title="@l.id">@l.id.toString.substring(0, 8)</td>
-                    <td>@l.user</td>
+                    <td title="@l.id">
+                      <a href="@controllers.routes.PurchaseController.licenseView(l.id)">@l.id.toString.substring(0, 8)</a>
+                    </td>
+                    <td>@l.name</td>
+                    <td>@l.email</td>
                     <td>@l.edition.title</td>
                     <td>@java.time.LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(l.issued), java.util.TimeZone.getDefault.toZoneId)</td>
                     <td>@l.version</td>

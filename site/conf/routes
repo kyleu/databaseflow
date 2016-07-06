@@ -15,6 +15,8 @@ GET         /pricing                     controllers.PurchaseController.pricing(
 POST        /purchase                    controllers.PurchaseController.purchaseTeamEdition()
 GET         /license/request             controllers.PurchaseController.requestForm()
 POST        /license/request             controllers.PurchaseController.licenseRequest()
+GET         /license/:id/view            controllers.PurchaseController.licenseView(id: java.util.UUID)
+GET         /license/:id/download        controllers.PurchaseController.licenseDownload(id: java.util.UUID)
 
 # Admin Section
 ->          /admin                       admin.Routes
