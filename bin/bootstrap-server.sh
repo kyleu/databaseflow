@@ -19,10 +19,17 @@ sudo -u postgres psql postgres
 # \password postgres
 
 sudo -u postgres createdb databaseflow
+sudo -u postgres createdb demo
 
 sudo -u postgres createuser --superuser databaseflow
+sudo -u postgres createuser demo
+
 sudo -u postgres psql postgres
 # \password databaseflow
+# \password demo
+# grant connect on database demo to demo;
+# GRANT USAGE ON SCHEMA public TO demo;
+# GRANT SELECT ON ALL TABLES IN SCHEMA public TO demo;
 
 sudo -u postgres nano /etc/postgresql/9.3/main/postgresql.conf
 # listen_addresses = '*'

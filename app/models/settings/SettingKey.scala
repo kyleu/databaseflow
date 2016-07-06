@@ -15,6 +15,13 @@ object SettingKey extends Enum[SettingKey] {
     default = "true"
   )
 
+  case object DefaultNewUserRole extends SettingKey(
+    id = "default-new-user-role",
+    title = "Default New User Role",
+    description = "Determines the role to assign newly-registered users.",
+    default = "user"
+  )
+
   case object AllowAuditRemoval extends SettingKey(
     id = "allow-audit-removal",
     title = "Allow Audit Removal",

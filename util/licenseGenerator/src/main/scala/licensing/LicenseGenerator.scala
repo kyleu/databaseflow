@@ -5,6 +5,8 @@ import java.util.{Base64, UUID}
 
 import cache.FileCacheService
 
+import scala.util.{Failure, Success}
+
 object LicenseGenerator {
   private[this] val licenseDir = FileCacheService.cacheDir + "/licenses"
 
@@ -27,7 +29,10 @@ object LicenseGenerator {
     val content = getContent(id)
     val decoded = Base64.getDecoder.decode(content)
     val str = DecryptUtils.decrypt(decoded)
-    License.fromString(str)
+    License.fromString(str) match {
+      case Success(l) => l
+      case Failure(x) => throw x
+    }
   }
 
   def saveLicense(license: License, overwrite: Boolean = false) = {

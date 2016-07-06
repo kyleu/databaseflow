@@ -1,6 +1,5 @@
 package services.licensing
 
-import java.nio.file.{Files, Paths}
 import java.util.Base64
 
 import licensing.{DecryptUtils, License, LicenseEdition}
@@ -21,20 +20,25 @@ object LicenseService extends Logging {
       license = None
       licenseContent = None
     } else {
-      val l = parseLicense(content) match {
-        case Success(lic) => lic
-        case Failure(x) => throw x
+      license = parseLicense(content) match {
+        case Success(lic) =>
+          log.info(s" ::: Database Flow ${lic.edition.title}, registered to [${lic.name}] (${lic.email}).")
+          licenseContent = Some(content)
+          Some(lic)
+        case Failure(x) =>
+          log.warn(s"Unable to parse license [$content].", x)
+          None
       }
-      log.info(s" ::: Database Flow ${l.edition.title}, registered to [${l.user}].")
-      license = Some(l)
-      licenseContent = Some(content)
     }
   }
 
   def parseLicense(content: String) = Try {
     val decoded = Base64.getDecoder.decode(content)
     val decrypted = DecryptUtils.decrypt(decoded)
-    License.fromString(decrypted)
+    License.fromString(decrypted) match {
+      case Success(l) => l
+      case Failure(x) => throw x
+    }
   }
 
   def getLicense = license
