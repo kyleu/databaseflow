@@ -17,7 +17,7 @@ object Site {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit,
+      Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit, Commerce.stripe,
       Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome

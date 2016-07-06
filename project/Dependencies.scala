@@ -88,6 +88,10 @@ object Dependencies {
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }
 
+  object Commerce {
+    val stripe = "com.stripe" % "stripe-java" % "2.6.0"
+  }
+
   object Utils {
     val scapegoatVersion = "1.2.1"
     val enumeratumVersion = "1.4.4"

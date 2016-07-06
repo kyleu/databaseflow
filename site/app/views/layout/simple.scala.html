@@ -1,6 +1,6 @@
-@(title: String, isAdmin: Boolean = false)(content: Html)(
+@(title: String, isAdmin: Boolean = false, scripts: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.materialize(title) {
+)@layout.materialize(title, scripts = scripts) {
   <header>
     <nav id="topnav" class="blue-grey lighten-2">
       @if(isAdmin) {
