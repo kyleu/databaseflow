@@ -1,6 +1,6 @@
-@(form: Form[controllers.PurchaseController.LicenseForm])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(form: Form[controllers.UserLicenseController.LicenseForm])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.simple(title = Messages("personal.license.new")) {
-  <form method="post" action="@controllers.routes.PurchaseController.licenseRequest()">
+  <form method="post" action="@controllers.routes.UserLicenseController.licenseRequest()">
     <input type="hidden" name="edition" value="@licensing.LicenseEdition.Personal" />
     <div class="row">
       <div class="col s12">

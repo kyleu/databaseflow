@@ -13,10 +13,12 @@ GET         /download/team               controllers.DownloadController.teamEdit
 # Purchasing
 GET         /pricing                     controllers.PurchaseController.pricing()
 POST        /purchase                    controllers.PurchaseController.purchaseTeamEdition()
-GET         /license/request             controllers.PurchaseController.requestForm()
-POST        /license/request             controllers.PurchaseController.licenseRequest()
-GET         /license/:id/view            controllers.PurchaseController.licenseView(id: java.util.UUID)
-GET         /license/:id/download        controllers.PurchaseController.licenseDownload(id: java.util.UUID)
+
+# License Request
+GET         /license/request             controllers.UserLicenseController.requestForm()
+POST        /license/request             controllers.UserLicenseController.licenseRequest()
+GET         /license/:id/view            controllers.UserLicenseController.licenseView(id: java.util.UUID)
+GET         /license/:id/download        controllers.UserLicenseController.licenseDownload(id: java.util.UUID)
 
 # Admin Section
 ->          /admin                       admin.Routes

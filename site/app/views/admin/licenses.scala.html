@@ -24,7 +24,7 @@
                 @licenses.map { l =>
                   <tr>
                     <td title="@l.id">
-                      <a href="@controllers.routes.PurchaseController.licenseView(l.id)">@l.id.toString.substring(0, 8)</a>
+                      <a href="@controllers.routes.UserLicenseController.licenseView(l.id)">@l.id.toString.substring(0, 8)</a>
                     </td>
                     <td>@l.name</td>
                     <td>@l.email</td>
