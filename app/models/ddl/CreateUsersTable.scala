@@ -7,7 +7,7 @@ case object CreateUsersTable extends CreateTableStatement("dbf_users") {
       "username" $varchar(256),
       "prefs" $varchar(4096) not null,
       "email" $varchar(1024) not null,
-      "roles" $varchar(512) not null,
+      "role" $varchar(64) not null,
       "created" timestamp not null
     );
 

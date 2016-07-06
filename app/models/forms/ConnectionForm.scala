@@ -11,7 +11,8 @@ object ConnectionForm {
       "url" -> nonEmptyText,
       "databaseUsername" -> text,
       "databasePassword" -> text,
-      "public" -> boolean
+      "read" -> nonEmptyText,
+      "edit" -> nonEmptyText
     )(ConnectionForm.apply)(ConnectionForm.unapply)
   )
 }
@@ -22,5 +23,6 @@ case class ConnectionForm(
   url: String,
   username: String,
   password: String,
-  public: Boolean
+  read: String,
+  edit: String
 )

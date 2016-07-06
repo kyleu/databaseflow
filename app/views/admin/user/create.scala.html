@@ -28,8 +28,14 @@
       <div class="row">
         <div class="input-field col s12">
           <p>
-            <input type="checkbox" name="isAdmin" id="admin-checkbox" />
-            <label for="admin-checkbox">Administrator</label>
+            <input type="radio" name="role" value="admin" id="admin-radio" />
+            <label for="admin-radio">Administrator</label>
+
+            <input type="radio" name="role" id="user-radio" value="user" />
+            <label for="user-radio">Normal User</label>
+
+            <input type="radio" name="role" id="visitor-radio" value="visitor" checked="checked" />
+            <label for="visitor-radio">Visitor</label>
           </p>
         </div>
       </div>

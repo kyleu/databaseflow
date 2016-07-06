@@ -11,7 +11,7 @@
             <th>Username</th>
             <th>Email</th>
             <th>Theme</th>
-            <th>Roles</th>
+            <th>Role</th>
             <th>Created</th>
             <th></th>
           </tr>
@@ -24,7 +24,7 @@
               </td>
               <td>@u.profile.providerKey</td>
               <td><div class="theme-swatch" style="background-color: @models.user.Themes.map(u.preferences.theme)"></div></td>
-              <td>@u.roles.toSeq.sortBy(_.entryName).mkString(", ")</td>
+              <td>@u.role</td>
               <td>@utils.Formatter.niceDate(u.created.toLocalDate)</td>
               <td>
                 @defining(s"return confirm('Are you certain you want to delete this user (${u.username.getOrElse("Unknown")})?');") { onClick =>

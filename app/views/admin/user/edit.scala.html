@@ -30,12 +30,26 @@
       <div class="row">
         <div class="input-field col s12">
           <p>
-            @if(user.roles.contains(models.user.Role.Admin)) {
-              <input type="checkbox" name="isAdmin" id="admin-checkbox" checked="checked" />
+            @if(user.role == models.user.Role.Admin) {
+              <input type="radio" name="role" value="admin" id="admin-radio" checked="checked" />
             } else {
-              <input type="checkbox" name="isAdmin" id="admin-checkbox" />
+              <input type="radio" name="role" value="admin" id="admin-radio" />
             }
-            <label for="admin-checkbox">Administrator</label>
+            <label for="admin-radio">Administrator</label>
+
+            @if(user.role == models.user.Role.User) {
+              <input type="radio" name="role" id="user-radio" value="user" checked="checked" />
+            } else {
+              <input type="radio" name="role" id="user-radio" value="user" />
+            }
+            <label for="user-radio">Normal User</label>
+
+            @if(user.role == models.user.Role.Visitor) {
+              <input type="radio" name="role" id="visitor-radio" value="visitor" checked="checked" />
+            } else {
+              <input type="radio" name="role" id="visitor-radio" value="visitor" />
+            }
+            <label for="visitor-radio">Visitor</label>
           </p>
         </div>
       </div>

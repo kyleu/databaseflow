@@ -14,6 +14,11 @@
   </div>
 }
 
+@roleRadio(r: models.user.Role, selected: models.user.Role) = {
+  <input type="radio" id="role-@r" name="@DefaultNewUserRole.id" value="@r" @if(selected == r) { checked="checked" }></input>
+  <label for="role-@r">@r</label>
+}
+
 @layout.admin(user, "settings", messages("admin.settings.title"), debug = debug) {
   <form action="@controllers.admin.routes.SettingsController.saveSettings()" method="post">
     <div class="card-content">
@@ -23,12 +28,24 @@
         @settingPanel(AllowRegistration) {
           <div class="row">
             <div class="col s12">
-              @defining(services.settings.SettingsService.allowRegistration) { allowRegistration =>
-                <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(allowRegistration) { checked="checked" }></input>
-                <label for="@AllowRegistration.id-true">Yes</label>
-                <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(!allowRegistration) { checked="checked" }></input>
-                <label for="@AllowRegistration.id-false">No</label>
-              }
+            @defining(services.settings.SettingsService.allowRegistration) { allowRegistration =>
+              <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(allowRegistration) { checked="checked" }></input>
+              <label for="@AllowRegistration.id-true">Yes</label>
+              <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(!allowRegistration) { checked="checked" }></input>
+              <label for="@AllowRegistration.id-false">No</label>
+            }
+            </div>
+          </div>
+        }
+
+        @settingPanel(DefaultNewUserRole) {
+          <div class="row">
+            <div class="col s12">
+            @defining(models.user.Role.withName(services.settings.SettingsService(DefaultNewUserRole))) { newUserRole =>
+              @roleRadio(models.user.Role.Visitor, newUserRole)
+              @roleRadio(models.user.Role.User, newUserRole)
+              @roleRadio(models.user.Role.Admin, newUserRole)
+            }
             </div>
           </div>
         }

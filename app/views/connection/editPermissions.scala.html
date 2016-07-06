@@ -1,0 +1,39 @@
+@(edit: String)
+<div class="input-field col s12 m6">
+  <div class="card-panel option-panel">
+    <h6><i class="fa @models.template.Icons.user"></i> Editable By</h6>
+    <p>
+      @if(edit == "visitor") {
+        <input id="form-edit-visitor" name="edit" type="radio" value="visitor" checked="checked" />
+      } else {
+        <input id="form-edit-visitor" name="edit" type="radio" value="visitor" />
+      }
+      <label for="form-edit-visitor">Everyone</label>
+    </p>
+    <p>
+      @if(edit == "user") {
+        <input id="form-edit-user" name="edit" type="radio" value="user" checked="checked" />
+      } else {
+        <input id="form-edit-user" name="edit" type="radio" value="user" />
+      }
+      <label for="form-read-user">Registered Users</label>
+    </p>
+    <p>
+      @if(edit == "admin") {
+        <input id="form-edit-admin" name="edit" type="radio" value="admin" checked="checked" />
+      } else {
+        <input id="form-edit-admin" name="edit" type="radio" value="admin" />
+      }
+      <label for="form-edit-admin">Administrators</label>
+    </p>
+    <p>
+      @if(edit == "private") {
+        <input id="form-edit-private" name="edit" type="radio" value="private" checked="checked" />
+      } else {
+        <input id="form-edit-private" name="edit" type="radio" value="private" />
+      }
+      <label for="form-edit-private">Only Myself</label>
+    </p>
+    <div class="clear" style="padding-bottom: 20px;"></div>
+  </div>
+</div>

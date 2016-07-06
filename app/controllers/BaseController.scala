@@ -2,7 +2,6 @@ package controllers
 
 import com.mohiva.play.silhouette.api.actions.UserAwareRequest
 import models.auth.AuthEnv
-import models.user.Role
 import play.api.i18n.I18nSupport
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
@@ -20,7 +19,7 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
   def withAdminSession(action: String)(block: (UserAwareRequest[AuthEnv, AnyContent]) => Future[Result]) = {
     ctx.silhouette.UserAwareAction.async { implicit request =>
       metrics.timer(action).timeFuture {
-        val authorized = LicenseService.isPersonalEdition || request.identity.exists(_.roles.contains(Role.Admin))
+        val authorized = LicenseService.isPersonalEdition || request.identity.exists(_.isAdmin)
         if (authorized) {
           block(request)
         } else {

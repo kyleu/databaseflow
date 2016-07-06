@@ -53,19 +53,19 @@ class RegistrationController @javax.inject.Inject() (
           case None =>
             val authInfo = hasher.hash(data.password)
             val firstUser = MasterDatabase.conn.query(UserQueries.count) == 0
-            val roles: Set[Role] = if (LicenseService.isPersonalEdition) {
-              Set(Role.User, Role.Admin)
+            val role: Role = if (LicenseService.isPersonalEdition) {
+              Role.Admin
             } else if (firstUser) {
-              Set(Role.User, Role.Admin)
+              Role.Admin
             } else {
-              Set(Role.User)
+              Role.User
             }
             val user = User(
               id = UUID.randomUUID,
               username = Some(data.username),
               preferences = UserPreferences(),
               profile = loginInfo,
-              roles = roles
+              role = role
             )
             val userSaved = userService.save(user)
             for {

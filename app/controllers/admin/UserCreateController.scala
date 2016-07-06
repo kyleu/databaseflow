@@ -30,8 +30,12 @@ class UserCreateController @javax.inject.Inject() (
     val form = FormUtils.getForm(request)
     val id = UUID.randomUUID
     val loginInfo = LoginInfo(CredentialsProvider.ID, form("email").trim)
-    val isAdmin = form.get("isAdmin").contains("true")
-    val roles = if (isAdmin) { Set[Role](Role.User, Role.Admin) } else { Set[Role](Role.User) }
+    val role = form.get("role") match {
+      case Some("admin") => Role.Admin
+      case Some("user") => Role.User
+      case Some("visitor") => Role.Visitor
+      case x => throw new IllegalStateException(s"Missing role: [$x].")
+    }
     val username = form("username").trim
 
     if (username.isEmpty) {
@@ -44,7 +48,7 @@ class UserCreateController @javax.inject.Inject() (
         username = Some(username),
         preferences = UserPreferences(),
         profile = loginInfo,
-        roles = roles
+        role = role
       )
       val userSaved = userService.save(user)
       val authInfo = hasher.hash(form("password"))

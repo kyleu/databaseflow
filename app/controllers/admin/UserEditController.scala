@@ -42,21 +42,21 @@ class UserEditController @javax.inject.Inject() (
       case Some(x) => Some(x)
       case None => None
     }
-    val isAdmin = form.get("isAdmin").contains("true")
-    val newRoles = if (isAdmin) {
-      user.roles + Role.Admin
-    } else {
-      user.roles.filter(_ == Role.Admin)
+    val role = form.get("role") match {
+      case Some("admin") => Role.Admin
+      case Some("user") => Role.User
+      case Some("visitor") => Role.Visitor
+      case x => throw new IllegalStateException(s"Missing role: [$x].")
     }
 
     if (newUsername.isEmpty) {
       Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> "Username was empty."))
     } else if (newEmail.isEmpty) {
       Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> "Email Address was empty."))
-    } else if (isSelf && (!isAdmin) && user.roles.contains(Role.Admin)) {
+    } else if (isSelf && (role != Role.Admin) && user.role == Role.Admin) {
       Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> "You cannot remove your own admin role."))
     } else {
-      userService.update(id, newUsername, newEmail, newPassword, newRoles, user.profile.providerKey)
+      userService.update(id, newUsername, newEmail, newPassword, role, user.profile.providerKey)
       Future.successful(Redirect(controllers.admin.routes.UserEditController.view(id)))
     }
   }

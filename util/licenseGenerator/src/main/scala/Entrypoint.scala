@@ -17,10 +17,8 @@ object Entrypoint extends App {
 
   val l = License(
     id = uuid,
-    user = "kyle@databaseflow.com",
-    edition = LicenseEdition.Personal,
-    issued = 0,
-    version = 1
+    name = "Kyle",
+    email = "kyle@databaseflow.com"
   )
 
   LicenseGenerator.saveLicense(l, overwrite = true)

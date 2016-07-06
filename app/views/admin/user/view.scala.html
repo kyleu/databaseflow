@@ -12,11 +12,17 @@
       <div class="col s12">
         <em>@user.profile.providerKey</em>
       </div>
-      @if(user.roles.contains(models.user.Role.Admin)) {
-        <div class="col s12">
+      <div class="col s12">
+        @if(user.role == models.user.Role.Admin) {
           <em>Administrator</em>
-        </div>
-      }
+        } else {
+          @if(user.role == models.user.Role.User) {
+            <em>Normal User</em>
+          } else {
+            <em>Visitor</em>
+          }
+        }
+      </div>
     </div>
   </div>
   <div class="card-action">

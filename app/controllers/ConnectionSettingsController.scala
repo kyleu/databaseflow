@@ -41,13 +41,14 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
         val almostUpdated = conn.copy(
           name = cf.name,
           owner = conn.owner.orElse(request.identity.map(_.id)),
-          public = cf.public,
+          read = cf.read,
+          edit = cf.edit,
           engine = DatabaseEngine.get(cf.engine),
           url = cf.url,
           username = cf.username
         )
         val updated = if (cf.password.trim.isEmpty) {
-          almostUpdated.copy(password = conn.password)
+          almostUpdated.copy(password = PasswordEncryptUtils.encrypt(conn.password))
         } else {
           almostUpdated.copy(password = PasswordEncryptUtils.encrypt(cf.password))
         }

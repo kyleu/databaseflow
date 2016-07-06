@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.connection.ConnectionSettings
 import models.queries.connection.ConnectionSettingsQueries
+import models.user.User
 import services.database.MasterDatabase
 
 object ConnectionSettingsService {
@@ -19,7 +20,7 @@ object ConnectionSettingsService {
   )
 
   def getAll = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll()) :+ masterConnectionSettings
-  def getVisible(userId: Option[UUID]) = MasterDatabase.conn.query(ConnectionSettingsQueries.getVisible(userId)) :+ masterConnectionSettings
+  def getVisible(user: Option[User]) = MasterDatabase.conn.query(ConnectionSettingsQueries.getVisible(user)) :+ masterConnectionSettings
 
   def getById(id: UUID) = if (id == MasterDatabase.connectionId) {
     Some(masterConnectionSettings)

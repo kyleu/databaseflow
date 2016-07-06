@@ -44,7 +44,7 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
   def enableAdmin(user: User) = {
     val adminCount = MasterDatabase.conn.query(UserQueries.CountAdmins)
     if (adminCount == 0) {
-      MasterDatabase.conn.executeUpdate(UserQueries.SetRoles(user.id, user.roles + Role.Admin))
+      MasterDatabase.conn.executeUpdate(UserQueries.SetRole(user.id, Role.Admin))
       UserCache.removeUser(user.id)
     } else {
       throw new IllegalStateException("An admin already exists.")
@@ -53,8 +53,8 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
 
   def getAll = MasterDatabase.conn.query(UserQueries.getAll("\"username\""))
 
-  def update(id: UUID, username: String, email: String, password: Option[String], roles: Set[Role], originalEmail: String) = {
-    MasterDatabase.conn.executeUpdate(UserQueries.UpdateFields(id, username, email, roles))
+  def update(id: UUID, username: String, email: String, password: Option[String], role: Role, originalEmail: String) = {
+    MasterDatabase.conn.executeUpdate(UserQueries.UpdateFields(id, username, email, role))
     if (email != originalEmail) {
       MasterDatabase.conn.executeUpdate(PasswordInfoQueries.UpdateEmail(originalEmail, email))
     }

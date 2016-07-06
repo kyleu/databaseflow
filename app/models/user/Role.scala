@@ -14,4 +14,5 @@ object Role extends Enum[Role] {
 
   object Admin extends Role("admin")
   object User extends Role("user")
+  object Visitor extends Role("visitor")
 }
