@@ -5,7 +5,7 @@ import models._
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import models.schema.Schema
-import services.database.{DatabaseWorkerPool, MasterDatabase}
+import services.database.{DatabaseWorkerPool, MasterDatabase, MasterDatabaseConnection}
 import services.schema.SchemaService
 import utils.{ExceptionUtils, Logging}
 
@@ -31,7 +31,7 @@ trait StartHelper extends Logging { this: SocketService =>
     val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
     def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) { out ! SavedQueryResultResponse(savedQueries, 0) }
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
-    DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
+    DatabaseWorkerPool.submitQuery(sqq, MasterDatabaseConnection.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
 
     refreshSchema(false)
   }

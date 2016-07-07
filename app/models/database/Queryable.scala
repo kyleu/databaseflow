@@ -74,5 +74,5 @@ trait Queryable extends Logging {
   def apply[A](query: RawQuery[A]): A
   def transaction[A](f: Transaction => A): A
 
-  def query[A](query: RawQuery[A]): A = apply(query)
+  def query[A](q: RawQuery[A]): A = apply(q)
 }

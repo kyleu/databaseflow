@@ -5,22 +5,11 @@ import java.util.UUID
 import models.connection.ConnectionSettings
 import models.queries.connection.ConnectionSettingsQueries
 import models.user.{Role, User}
-import services.database.MasterDatabase
+import services.database.{MasterDatabase, MasterDatabaseConnection}
 
 object ConnectionSettingsService {
-
-  val masterConnectionSettings = ConnectionSettings(
-    id = MasterDatabase.connectionId,
-    engine = MasterDatabase.engine,
-    name = s"${utils.Config.projectName} Storage",
-    description = s"Internal storage used by ${utils.Config.projectName}.",
-    url = MasterDatabase.url,
-    username = MasterDatabase.username,
-    password = MasterDatabase.password
-  )
-
-  def getAll = MasterDatabase.conn.query(ConnectionSettingsQueries.getAll()) :+ masterConnectionSettings
-  def getVisible(user: Option[User]) = MasterDatabase.conn.query(ConnectionSettingsQueries.getVisible(user)) :+ masterConnectionSettings
+  def getAll = MasterDatabaseConnection.query(ConnectionSettingsQueries.getAll()) ++ MasterDatabaseConnection.settings.toSeq
+  def getVisible(user: Option[User]) = MasterDatabaseConnection.query(ConnectionSettingsQueries.getVisible(user)) ++ MasterDatabaseConnection.settings.toSeq
 
   def canRead(user: Option[User], cs: ConnectionSettings) = matchPermissions(user, cs, cs.read)
   def canEdit(user: Option[User], cs: ConnectionSettings) = if (cs.id == services.database.MasterDatabase.connectionId) {
@@ -36,39 +25,42 @@ object ConnectionSettingsService {
       } else {
         perm match {
           case "admin" => if (u.role == Role.Admin) {
-            true -> "Administrators may edit this connection."
+            true -> s"Administrators may $perm this connection."
           } else {
-            false -> "Only administrators are allowed to edit this connection."
+            false -> s"Only administrators are allowed to $perm this connection."
           }
           case "user" => if (u.role == Role.Admin || u.role == Role.User) {
-            true -> "All normal users may edit this connection."
+            true -> s"All normal users may $perm this connection."
           } else {
-            false -> "Visitors are not allowed to edit this connection."
+            false -> s"Visitors are not allowed to $perm this connection."
           }
-          case "visitor" => true -> "All users, including visitors, may edit this connection."
+          case "visitor" => true -> s"All users, including visitors, may $perm this connection."
           case "private" => if (cs.owner.isDefined) {
-            false -> "Only the owner of this connection may edit it."
+            false -> s"Only the owner of this connection may $perm it."
           } else {
-            true -> "Anyone may edit this connection."
+            true -> s"Anyone may $perm this connection."
           }
           case x => false -> x.toString
         }
       }
     case None =>
       if (cs.owner.isEmpty || cs.edit == "visitor") {
-        true -> "Visitors are allowed to edit this connection."
+        true -> s"Visitors are allowed to $perm this connection."
       } else {
-        false -> "Visitors are not allowed to edit this connection."
+        false -> s"Visitors are not allowed to $perm this connection."
       }
   }
 
   def getById(id: UUID) = if (id == MasterDatabase.connectionId) {
-    Some(masterConnectionSettings)
+    MasterDatabaseConnection.settings
   } else {
-    MasterDatabase.conn.query(ConnectionSettingsQueries.getById(id))
+    MasterDatabaseConnection.query(ConnectionSettingsQueries.getById(id))
   }
 
-  def insert(connSettings: ConnectionSettings) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
-  def update(connSettings: ConnectionSettings) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
-  def delete(id: UUID) = MasterDatabase.conn.executeUpdate(ConnectionSettingsQueries.removeById(id))
+  def insert(connSettings: ConnectionSettings) = MasterDatabaseConnection.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
+  def update(connSettings: ConnectionSettings) = {
+    MasterDatabase.flush(connSettings.id)
+    MasterDatabaseConnection.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
+  }
+  def delete(id: UUID) = MasterDatabaseConnection.executeUpdate(ConnectionSettingsQueries.removeById(id))
 }
