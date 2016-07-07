@@ -1,5 +1,6 @@
 package controllers.admin
 
+import licensing.License
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
 
@@ -18,5 +19,10 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
     } else {
       Future.successful(Redirect(controllers.routes.SiteController.index()).withNewSession)
     }
+  }
+
+  def sandbox() = Action.async { implicit request =>
+    val license = License(name = "License Holder", email = "email@databaseflow.com")
+    Future.successful(Ok(views.html.email.personalLicenseNotification(license)))
   }
 }

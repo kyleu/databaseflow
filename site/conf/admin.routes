@@ -1,5 +1,6 @@
 # Admin Section
 GET         /                           controllers.admin.AdminController.index()
+GET         /sandbox                    controllers.admin.AdminController.sandbox()
 GET         /enable/:id                 controllers.admin.AdminController.enable(id)
 
 GET         /licenses                   controllers.admin.LicenseController.list()

@@ -3,6 +3,7 @@ package models.user
 import scala.util.Random
 
 object Themes {
+  // TODO Darken most of these.
   val all = Seq(
     "red" -> "#f44336",
     "pink" -> "#e91e63",
