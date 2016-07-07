@@ -7,6 +7,7 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, Controller}
+import services.EmailService
 
 import scala.concurrent.Future
 
@@ -26,7 +27,7 @@ object UserLicenseController {
 }
 
 @javax.inject.Singleton
-class UserLicenseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class UserLicenseController @javax.inject.Inject() (implicit val messagesApi: MessagesApi, emailService: EmailService) extends Controller with I18nSupport {
   def requestForm() = Action.async { implicit request =>
     Future.successful(Ok(views.html.purchase.licenseForm(UserLicenseController.licenseForm)))
   }
@@ -39,6 +40,9 @@ class UserLicenseController @javax.inject.Inject() (implicit override val messag
       f => {
         val license = License(name = f.name, email = f.email, edition = f.edition)
         LicenseGenerator.saveLicense(license)
+        val licenseContent = new String(LicenseGenerator.getContent(license.id))
+        emailService.onLicenseCreate(license.id, license.name, license.email, license.edition.toString, license.issued, license.version, licenseContent)
+
         Future.successful(Redirect(controllers.routes.UserLicenseController.licenseView(license.id)))
       }
     )

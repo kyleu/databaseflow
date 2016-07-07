@@ -6,6 +6,7 @@ GET         /licenses                   controllers.admin.LicenseController.list
 GET         /licenses/new               controllers.admin.LicenseController.form()
 POST        /licenses/new               controllers.admin.LicenseController.save()
 GET         /licenses/:id/download      controllers.admin.LicenseController.download(id: java.util.UUID)
+GET         /licenses/:id/email         controllers.admin.LicenseController.email(id: java.util.UUID)
 GET         /licenses/:id/remove        controllers.admin.LicenseController.remove(id: java.util.UUID)
 
 GET         /feedback                   controllers.admin.FeedbackController.list()

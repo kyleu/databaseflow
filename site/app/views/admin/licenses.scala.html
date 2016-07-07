@@ -32,6 +32,9 @@
                     <td>@java.time.LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(l.issued), java.util.TimeZone.getDefault.toZoneId)</td>
                     <td>@l.version</td>
                     <td style="text-align: right;">
+                      <a href="@controllers.admin.routes.LicenseController.email(l.id)" title="Resend License Email">
+                        <i class="fa fa-envelope-o"></i>
+                      </a>
                       <a href="@controllers.admin.routes.LicenseController.download(l.id)" title="Download License">
                         <i class="fa fa-download"></i>
                       </a>
