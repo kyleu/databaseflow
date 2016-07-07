@@ -4,9 +4,10 @@ import java.nio.file.{Files, Paths}
 import java.util.UUID
 
 import cache.FileCacheService
+import org.joda.time.LocalDateTime
 
 object FeedbackService {
-  case class Feedback(id: UUID, email: String, content: String)
+  case class Feedback(id: UUID, email: String, content: String, created: LocalDateTime = new LocalDateTime())
 
   private[this] val feedbackDir = FileCacheService.cacheDir + "/feedback"
 
@@ -34,7 +35,7 @@ object FeedbackService {
     if ((!overwrite) && Files.exists(file)) {
       throw new IllegalArgumentException(s"Feedback already exists for [${feedback.id}] and cannot be overwritten.")
     } else {
-      val text = feedback.email + "\n" + feedback.content
+      val text = feedback.email + "\n" + feedback.content + "\nv1"
       Files.write(file, text.getBytes)
     }
   }
