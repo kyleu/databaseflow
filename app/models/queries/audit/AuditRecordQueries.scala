@@ -18,18 +18,18 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   def removeById(id: UUID) = RemoveById(Seq(id))
 
   case class Complete(id: UUID, newType: AuditType, rowsAffected: Int, elapsed: Int) extends Statement {
-    override def sql = s"update $tableName set audit_type = ?, status = ?, rows_affected = ?, elapsed = ? where id = ?"
+    override def sql = s"""update "$tableName" set "audit_type" = ?, "status" = ?, "rows_affected" = ?, "elapsed" = ? where "id" = ?"""
     override def values = Seq(newType.toString, AuditStatus.OK.toString, rowsAffected, elapsed, id)
   }
   case class Error(id: UUID, message: String, elapsed: Int) extends Statement {
-    override def sql = s"update $tableName set status = ?, error = ?, elapsed = ? where id = ?"
+    override def sql = s"""update "$tableName" set "status" = ?, "error" = ?, "elapsed" = ? where "id" = ?"""
     override def values = Seq(AuditStatus.Error.toString, message, elapsed, id)
   }
 
   case class RemoveForUser(userId: UUID, connectionId: Option[UUID]) extends Statement {
     override def sql = connectionId match {
-      case Some(c) => s"delete from $tableName where owner = ? and connection = ?"
-      case None => s"delete from $tableName where owner = ?"
+      case Some(c) => s"""delete from "$tableName" where "owner" = ? and "connection" = ?"""
+      case None => s"""delete from "$tableName" where "owner" = ?"""
     }
     override def values = connectionId match {
       case Some(c) => Seq(userId, c)
@@ -38,8 +38,8 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   }
   case class RemoveForAnonymous(connectionId: Option[UUID]) extends Statement {
     override def sql = connectionId match {
-      case Some(c) => s"delete from $tableName where owner = is null and connection = ?"
-      case None => s"delete from $tableName where owner is null"
+      case Some(c) => s"""delete from "$tableName" where "owner" = is null and "connection" = ?"""
+      case None => s"""delete from "$tableName" where "owner" is null"""
     }
     override def values = connectionId match {
       case Some(c) => Seq(c)
