@@ -1,6 +1,8 @@
 package controllers.admin
 
-import licensing.License
+import java.util.UUID
+
+import licensing.{License, LicenseEdition}
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
 
@@ -22,7 +24,14 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
   }
 
   def sandbox() = Action.async { implicit request =>
-    val license = License(name = "License Holder", email = "email@databaseflow.com")
-    Future.successful(Ok(views.html.email.personalLicenseNotification(license)))
+    Future.successful(Ok(views.html.email.personalLicenseMessage(
+      id = UUID.randomUUID,
+      name = "License Holder",
+      email = "email@databaseflow.com",
+      edition = LicenseEdition.Personal.title,
+      issued = 0,
+      version = 1,
+      content = "[License Content]"
+    )))
   }
 }

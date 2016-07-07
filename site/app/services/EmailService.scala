@@ -2,19 +2,19 @@ package services
 
 import java.util.UUID
 
-import org.springframework.context.ApplicationContext
 import play.api.libs.mailer.{Email, MailerClient}
 
 @javax.inject.Singleton
 class EmailService @javax.inject.Inject() (mailerClient: MailerClient) {
   def onLicenseCreate(id: UUID, name: String, email: String, edition: String, issued: Long, version: Int, content: String) = {
-    sendNotification("Personal License Issued", s"""<html><body>
-      <div>$id</div>
-    </body></html>""")
+    sendNotification(s"$edition License issued to [$email]", views.html.email.personalLicenseNotification(id, name, email, edition, issued, version, content).toString)
 
-    sendMessage(name, email, "Your Database Flow Personal Edition License", s"""<html><body>
-      <div>Good work!</div>
-    </body></html>""")
+    sendMessage(
+      name = name,
+      address = email,
+      subject = s"Your Database Flow $edition License",
+      htmlBody = views.html.email.personalLicenseMessage(id, name, email, edition, issued, version, content).toString
+    )
   }
 
   def sendNotification(subject: String, htmlBody: String) = {
