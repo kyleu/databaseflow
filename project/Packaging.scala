@@ -24,7 +24,7 @@ object Packaging {
     )
   )
 
-  val soloSettings = packagingSettings ++ Seq(
+  val guiSettings = packagingSettings ++ Seq(
     mainClass in Compile := Some("DatabaseFlow"),
 
     rpmVendor := "Database Flow",
@@ -37,5 +37,5 @@ object Packaging {
     jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value)
   )
 
-  val teamSettings = packagingSettings
+  val serviceSettings = packagingSettings
 }

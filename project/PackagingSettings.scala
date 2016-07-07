@@ -1,4 +1,4 @@
 object PackagingSettings {
-  val serverApp = true
-  val settings = Packaging.teamSettings
+  val serverApp = false
+  val settings = Packaging.guiSettings
 }
