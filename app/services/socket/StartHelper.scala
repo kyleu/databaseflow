@@ -5,14 +5,14 @@ import models._
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import models.schema.Schema
-import services.database.{DatabaseWorkerPool, MasterDatabase, MasterDatabaseConnection}
+import services.database.{DatabaseWorkerPool, DatabaseRegistry, MasterDatabase}
 import services.schema.SchemaService
 import utils.{ExceptionUtils, Logging}
 
 import scala.util.{Failure, Success, Try}
 
 trait StartHelper extends Logging { this: SocketService =>
-  protected[this] def attemptConnect() = MasterDatabase.databaseFor(user, connectionId) match {
+  protected[this] def attemptConnect() = DatabaseRegistry.databaseFor(user, connectionId) match {
     case Right(d) => Some(d)
     case Left(x) =>
       log.warn("Error attempting to connect to database.", x)
@@ -31,7 +31,7 @@ trait StartHelper extends Logging { this: SocketService =>
     val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
     def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) { out ! SavedQueryResultResponse(savedQueries, 0) }
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
-    DatabaseWorkerPool.submitQuery(sqq, MasterDatabaseConnection.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
+    DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
 
     refreshSchema(false)
   }

@@ -12,7 +12,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.ConnectionSettingsService
-import services.database.MasterDatabase
+import services.database.DatabaseRegistry
 import services.socket.SocketService
 import utils.{ApplicationContext, DateUtils, FileUtils}
 import utils.web.{FormUtils, MessageFrameFormatter}
@@ -55,7 +55,7 @@ class QueryController @javax.inject.Inject() (
     val format = form.getOrElse("format", throw new IllegalArgumentException("Missing [format] parameter."))
     val filename = form.getOrElse("filename", throw new IllegalArgumentException("Missing [filename] parameter."))
 
-    val db = MasterDatabase.db(connectionId)
+    val db = DatabaseRegistry.db(connectionId)
 
     val ts = DateUtils.now.toString("yyyy-MM-dd")
     val finalName = s"Database Flow $filename Export $ts"

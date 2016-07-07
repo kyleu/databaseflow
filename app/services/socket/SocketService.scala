@@ -10,7 +10,7 @@ import models.schema.Schema
 import models.user.User
 import services.audit.AuditRecordService
 import services.data.SampleDatabaseService
-import services.database.MasterDatabaseConnection
+import services.database.MasterDatabase
 import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService}
 import utils.metrics.InstrumentedActor
 import utils.{Config, Logging}
@@ -76,7 +76,7 @@ class SocketService(
   }
 
   override def postStop() = {
-    if (MasterDatabaseConnection.isOpen) {
+    if (MasterDatabase.isOpen) {
       AuditRecordService.create(AuditType.Disconnect, user.map(_.id), Some(connectionId))
     }
     supervisor ! SocketStopped(id)

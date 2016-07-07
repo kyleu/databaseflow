@@ -7,7 +7,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException
 import models.{QueryCheckResponse, ResponseMessage}
 import org.h2.jdbc.JdbcSQLException
 import org.postgresql.util.PSQLException
-import services.database.{DatabaseWorkerPool, MasterDatabase}
+import services.database.{DatabaseWorkerPool, DatabaseRegistry}
 import utils.{ExceptionUtils, Logging}
 
 object QueryCheckService extends Logging {
@@ -15,7 +15,7 @@ object QueryCheckService extends Logging {
   def handleCheckQuery(connectionId: UUID, queryId: UUID, sql: String, out: ActorRef) = {
     def work() = {
       //log.info(s"Checking query [$queryId] sql [$sql].")
-      val db = MasterDatabase.db(connectionId)
+      val db = DatabaseRegistry.db(connectionId)
       db.withConnection { conn =>
         try {
           val stmt = conn.prepareStatement(sql)

@@ -14,7 +14,7 @@ object ResultCacheDatabase extends Logging {
 
     val uuid = UUID.fromString(SettingsService(SettingKey.QueryCacheConnection))
 
-    connOpt = Some(MasterDatabase.db(uuid))
+    connOpt = Some(DatabaseRegistry.db(uuid))
 
     log.info(s"Result Cache database started as user [${conn.username}] against url [${conn.url}].")
   }

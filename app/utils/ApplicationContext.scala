@@ -13,7 +13,7 @@ import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
-import services.database.{MasterDatabase, MasterDatabaseConnection, ResultCacheDatabase}
+import services.database.{DatabaseRegistry, MasterDatabase, ResultCacheDatabase}
 import services.licensing.LicenseService
 import services.notification.NotificationService
 import services.settings.SettingsService
@@ -57,7 +57,7 @@ class ApplicationContext @javax.inject.Inject() (
     SharedMetricRegistries.remove("default")
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
-    MasterDatabaseConnection.open()
+    MasterDatabase.open()
     SettingsService.load()
     LicenseService.readLicense()
     ResultCacheDatabase.open()
@@ -69,7 +69,7 @@ class ApplicationContext @javax.inject.Inject() (
   log.info(s"Actor Supervisor [${supervisor.path}] started for [${utils.Config.projectId}].")
 
   private[this] def stop() = {
-    MasterDatabase.close()
+    DatabaseRegistry.close()
     ResultCacheDatabase.close()
     SharedMetricRegistries.remove("default")
   }

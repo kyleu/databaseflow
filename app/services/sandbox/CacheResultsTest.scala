@@ -7,7 +7,7 @@ import models.query.QueryResult
 import models.result.{CachedResult, CachedResultQuery, CachedResultQueryHelper}
 import models.schema.ColumnType._
 import services.connection.ConnectionSettingsService
-import services.database.{MasterDatabase, ResultCacheDatabase}
+import services.database.{DatabaseRegistry, ResultCacheDatabase}
 import services.result.CachedResultService
 import utils.ApplicationContext
 
@@ -29,7 +29,7 @@ object CacheResultsTest extends SandboxTask {
     val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
     CachedResultService.insertCacheResult(model)
 
-    MasterDatabase.db(connectionId).executeUnknown(CachedResultQuery(model, None))
+    DatabaseRegistry.db(connectionId).executeUnknown(CachedResultQuery(model, None))
 
     val columns = Seq(
       QueryResult.Col("v", StringType, precision = Some(128)),

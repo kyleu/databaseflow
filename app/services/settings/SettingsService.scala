@@ -2,7 +2,7 @@ package services.settings
 
 import models.queries.settings.SettingQueries
 import models.settings.{Setting, SettingKey}
-import services.database.MasterDatabaseConnection
+import services.database.MasterDatabase
 
 object SettingsService {
   private[this] var settings = Seq.empty[Setting]
@@ -12,7 +12,7 @@ object SettingsService {
   def asBool(key: SettingKey) = apply(key) == "true"
 
   def load() = {
-    settingsMap = MasterDatabaseConnection.query(SettingQueries.getAll()).map(s => s.key -> s.value).toMap
+    settingsMap = MasterDatabase.query(SettingQueries.getAll()).map(s => s.key -> s.value).toMap
     settings = SettingKey.values.map(k => Setting(k, settingsMap.getOrElse(k, k.default)))
   }
 
@@ -24,9 +24,9 @@ object SettingsService {
     val s = Setting(key, value)
     if (s.isDefault) {
       settingsMap = settingsMap - key
-      MasterDatabaseConnection.executeUpdate(SettingQueries.removeById(key))
+      MasterDatabase.executeUpdate(SettingQueries.removeById(key))
     } else {
-      MasterDatabaseConnection.transaction { t =>
+      MasterDatabase.transaction { t =>
         t.query(SettingQueries.getById(key)) match {
           case Some(setting) => t.executeUpdate(SettingQueries.Update(s))
           case None => t.executeUpdate(SettingQueries.insert(s))

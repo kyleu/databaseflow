@@ -5,11 +5,11 @@ import java.util.UUID
 import models.connection.ConnectionSettings
 import models.queries.connection.ConnectionSettingsQueries
 import models.user.{Role, User}
-import services.database.{MasterDatabase, MasterDatabaseConnection}
+import services.database.{DatabaseRegistry, MasterDatabase}
 
 object ConnectionSettingsService {
-  def getAll = MasterDatabaseConnection.query(ConnectionSettingsQueries.getAll()) ++ MasterDatabaseConnection.settings.toSeq
-  def getVisible(user: Option[User]) = MasterDatabaseConnection.query(ConnectionSettingsQueries.getVisible(user)) ++ MasterDatabaseConnection.settings.toSeq
+  def getAll = MasterDatabase.query(ConnectionSettingsQueries.getAll()) ++ MasterDatabase.settings.toSeq
+  def getVisible(user: Option[User]) = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user)) ++ MasterDatabase.settings.toSeq
 
   def canRead(user: Option[User], cs: ConnectionSettings) = matchPermissions(user, cs, cs.read)
   def canEdit(user: Option[User], cs: ConnectionSettings) = if (cs.id == services.database.MasterDatabase.connectionId) {
@@ -52,15 +52,15 @@ object ConnectionSettingsService {
   }
 
   def getById(id: UUID) = if (id == MasterDatabase.connectionId) {
-    MasterDatabaseConnection.settings
+    MasterDatabase.settings
   } else {
-    MasterDatabaseConnection.query(ConnectionSettingsQueries.getById(id))
+    MasterDatabase.query(ConnectionSettingsQueries.getById(id))
   }
 
-  def insert(connSettings: ConnectionSettings) = MasterDatabaseConnection.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
+  def insert(connSettings: ConnectionSettings) = MasterDatabase.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
   def update(connSettings: ConnectionSettings) = {
-    MasterDatabase.flush(connSettings.id)
-    MasterDatabaseConnection.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
+    DatabaseRegistry.flush(connSettings.id)
+    MasterDatabase.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
   }
-  def delete(id: UUID) = MasterDatabaseConnection.executeUpdate(ConnectionSettingsQueries.removeById(id))
+  def delete(id: UUID) = MasterDatabase.executeUpdate(ConnectionSettingsQueries.removeById(id))
 }

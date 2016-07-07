@@ -6,7 +6,7 @@ import models.ddl.DdlQueries
 import models.queries.result.CachedResultQueries
 import models.result.CachedResult
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.database.{MasterDatabaseConnection, ResultCacheDatabase}
+import services.database.{MasterDatabase, ResultCacheDatabase}
 import services.schema.MetadataTables
 import utils.Logging
 
@@ -16,25 +16,25 @@ import scala.util.control.NonFatal
 object CachedResultService extends Logging {
   def insertCacheResult(result: CachedResult) = {
     log.info(s"Caching result [$result].")
-    MasterDatabaseConnection.query(CachedResultQueries.findBy(result.queryId, result.owner)).foreach { existing =>
+    MasterDatabase.query(CachedResultQueries.findBy(result.queryId, result.owner)).foreach { existing =>
       Future(remove(existing.resultId))
     }
-    MasterDatabaseConnection.executeUpdate(CachedResultQueries.insert(result))
+    MasterDatabase.executeUpdate(CachedResultQueries.insert(result))
     result
   }
 
   def setFirstMessageDuration(resultId: UUID, firstMessageDuration: Int) = {
-    MasterDatabaseConnection.executeUpdate(CachedResultQueries.SetFirstMessageDuration(resultId, firstMessageDuration))
+    MasterDatabase.executeUpdate(CachedResultQueries.SetFirstMessageDuration(resultId, firstMessageDuration))
   }
 
   def completeCacheResult(resultId: UUID, rowCount: Int, duration: Int) = {
-    MasterDatabaseConnection.executeUpdate(CachedResultQueries.Complete(resultId, rowCount, duration))
+    MasterDatabase.executeUpdate(CachedResultQueries.Complete(resultId, rowCount, duration))
   }
 
-  def getAll = MasterDatabaseConnection.query(CachedResultQueries.getAll(orderBy = "\"created\" desc"))
+  def getAll = MasterDatabase.query(CachedResultQueries.getAll(orderBy = "\"created\" desc"))
 
   def remove(resultId: UUID) = {
-    MasterDatabaseConnection.executeUpdate(CachedResultQueries.removeById(resultId))
+    MasterDatabase.executeUpdate(CachedResultQueries.removeById(resultId))
     try {
       ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable("result_" + resultId.toString.replaceAllLiterally("-", ""))(ResultCacheDatabase.conn.engine))
     } catch {

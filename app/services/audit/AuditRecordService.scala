@@ -8,7 +8,7 @@ import models.queries.audit.{AuditRecordQueries, AuditReportQueries}
 import models.user.User
 import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory, RemoveAuditHistory}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.database.MasterDatabaseConnection
+import services.database.MasterDatabase
 import utils.{DateUtils, Logging}
 
 import scala.concurrent.Future
@@ -17,11 +17,11 @@ import scala.util.control.NonFatal
 object AuditRecordService extends Logging {
   val rowLimit = 100
 
-  def getAll = MasterDatabaseConnection.query(AuditRecordQueries.getAll)
-  def getForUser(userId: Option[UUID]) = MasterDatabaseConnection.query(AuditReportQueries.GetForUser(userId))
+  def getAll = MasterDatabase.query(AuditRecordQueries.getAll)
+  def getForUser(userId: Option[UUID]) = MasterDatabase.query(AuditReportQueries.GetForUser(userId))
 
   def handleGetQueryHistory(connectionId: UUID, user: Option[User], gqh: GetQueryHistory, out: ActorRef) = {
-    val matching = MasterDatabaseConnection.query(AuditReportQueries.GetMatchingQueries(connectionId, user.map(_.id), gqh.limit, gqh.offset))
+    val matching = MasterDatabase.query(AuditReportQueries.GetMatchingQueries(connectionId, user.map(_.id), gqh.limit, gqh.offset))
     out ! AuditRecordResponse(matching)
   }
 
@@ -65,10 +65,10 @@ object AuditRecordService extends Logging {
   ))
 
   def complete(auditId: UUID, newType: AuditType, rowsAffected: Int, elapsed: Int) = {
-    MasterDatabaseConnection.executeUpdate(AuditRecordQueries.Complete(auditId, newType, rowsAffected, elapsed))
+    MasterDatabase.executeUpdate(AuditRecordQueries.Complete(auditId, newType, rowsAffected, elapsed))
   }
   def error(auditId: UUID, message: String, elapsed: Int) = {
-    MasterDatabaseConnection.executeUpdate(AuditRecordQueries.Error(auditId, message, elapsed))
+    MasterDatabase.executeUpdate(AuditRecordQueries.Error(auditId, message, elapsed))
   }
 
   def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], sql: Option[String] = None, elapsed: Int = 0) = insert(AuditRecord(
@@ -81,15 +81,15 @@ object AuditRecordService extends Logging {
   ))
 
   def insert(auditRecord: AuditRecord) = Future {
-    MasterDatabaseConnection.executeUpdate(AuditRecordQueries.insert(auditRecord))
+    MasterDatabase.executeUpdate(AuditRecordQueries.insert(auditRecord))
   }.onFailure {
     case NonFatal(x) => log.warn(s"Unable to log audit [$auditRecord].", x)
   }
 
-  def delete(id: UUID) = MasterDatabaseConnection.executeUpdate(AuditRecordQueries.removeById(id))
+  def delete(id: UUID) = MasterDatabase.executeUpdate(AuditRecordQueries.removeById(id))
   def deleteAllForUser(userId: UUID, connectionId: Option[UUID]) = {
-    MasterDatabaseConnection.executeUpdate(AuditRecordQueries.RemoveForUser(userId, connectionId))
+    MasterDatabase.executeUpdate(AuditRecordQueries.RemoveForUser(userId, connectionId))
   }
-  def deleteAllForGuest(connectionId: Option[UUID]) = MasterDatabaseConnection.executeUpdate(AuditRecordQueries.RemoveForAnonymous(connectionId))
-  def deleteAll() = MasterDatabaseConnection.executeUpdate(AuditRecordQueries.RemoveAll)
+  def deleteAllForGuest(connectionId: Option[UUID]) = MasterDatabase.executeUpdate(AuditRecordQueries.RemoveForAnonymous(connectionId))
+  def deleteAll() = MasterDatabase.executeUpdate(AuditRecordQueries.RemoveAll)
 }

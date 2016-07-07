@@ -3,55 +3,74 @@ package services.database
 import java.util.UUID
 
 import models.connection.ConnectionSettings
-import models.database.PoolSettings
-import models.user.User
-import services.connection.ConnectionSettingsService
+import models.database._
+import models.engine.rdbms._
+import services.data.MasterDdl
 import utils.Logging
 
 import scala.util.control.NonFatal
 
 object MasterDatabase extends Logging {
-  private[this] val databases = collection.mutable.HashMap.empty[UUID, (DatabaseConnection, ConnectionSettings)]
-
   val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
-  private[this] def resultFor(c: (Boolean, String), db: DatabaseConnection) = if (c._1) {
-    Right(db)
-  } else {
-    Left(new IllegalAccessError("Not authorized to view this connection. " + c._2))
-  }
+  private[this] val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
+  private[this] val (fallbackEngine, fallbackUrl) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
 
-  def databaseFor(user: Option[User], connectionId: UUID) = databases.get(connectionId) match {
-    case Some(c) => resultFor(ConnectionSettingsService.canRead(user, c._2), c._1)
-    case None =>
-      val c = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
-      val cs = PoolSettings(
-        connectionId = connectionId,
-        name = Some(c.id.toString),
-        engine = c.engine,
-        url = c.url,
-        username = c.username,
-        password = c.password
-      )
-      try {
-        val ret = DatabaseConnectionService.connect(cs)
-        databases(connectionId) = ret -> c
-        resultFor(ConnectionSettingsService.canRead(user, c), ret)
-      } catch {
-        case NonFatal(x) => Left(x)
-      }
-  }
+  private[this] val username = "databaseflow"
+  private[this] val password = "flow"
 
-  def db(connectionId: UUID) = databaseFor(None, connectionId) match {
-    case Right(x) => x
-    case Left(x) => throw x
-  }
+  private[this] var connOpt: Option[DatabaseConnection] = None
 
-  def flush(connectionId: UUID) = databases.remove(connectionId).foreach(_._1.close())
+  var settings: Option[ConnectionSettings] = None
+
+  def conn = connOpt.getOrElse(throw new IllegalStateException("Master database connection not open."))
+
+  def isOpen = connOpt.isDefined
+  def open() = {
+    connOpt.foreach(x => throw new IllegalStateException("History database already open."))
+
+    settings = Some(ConnectionSettings(
+      id = MasterDatabase.connectionId,
+      engine = engine,
+      name = s"${utils.Config.projectName} Storage",
+      description = s"Internal storage used by ${utils.Config.projectName}.",
+      url = url,
+      username = username,
+      password = password
+    ))
+
+    val database = try {
+      val ret = DatabaseRegistry.db(MasterDatabase.connectionId)
+      log.info("Using PostgreSQL for caches and configuration.")
+      ret
+    } catch {
+      case NonFatal(origEx) =>
+        val path = "/opt/databaseflow" // TODO
+        log.info(s"Using a local H2 database located in [$path].")
+        log.info("To use PostgreSQL, configure PostgreSQL port 5432 to listen on [localhost], username [databaseflow], password [flow].")
+        settings = settings.map(cs => cs.copy(engine = fallbackEngine, url = fallbackUrl))
+        try {
+          DatabaseRegistry.db(MasterDatabase.connectionId)
+        } catch {
+          case NonFatal(ex) => throw new IllegalStateException(ex.getClass.getSimpleName + ": " + ex.getMessage, origEx)
+        }
+    }
+
+    log.info(s"Master database started as user [$username] against url [${settings.map(_.url).getOrElse("?")}].")
+
+    MasterDdl.update(database)
+
+    connOpt = Some(database)
+  }
 
   def close() = {
-    databases.values.foreach(_._1.close())
-    databases.clear()
-    MasterDatabaseConnection.close()
+    connOpt.foreach(_.close())
+    connOpt = None
+    log.info("Master database connection closed.")
   }
+
+  def query[A](q: RawQuery[A]) = conn.query(q)
+  def executeUnknown[A](q: Query[A], resultId: Option[UUID] = None) = conn.executeUnknown(q, resultId)
+  def executeUpdate(s: Statement) = conn.executeUpdate(s)
+  def transaction[A](f: Transaction => A) = conn.transaction(f)
 }
