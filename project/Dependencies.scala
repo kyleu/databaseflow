@@ -13,8 +13,8 @@ object Dependencies {
     private[this] val version = "2.5.4"
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
-    val playTest = "com.typesafe.play" %% "play-test" % version
-    val playMailer = "com.typesafe.play" %% "play-mailer" % "4.0.0"
+    val playTest = "com.typesafe.play" %% "play-test" % version % "test"
+    val playMailer = "com.typesafe.play" %% "play-mailer" % "5.0.0"
   }
 
   object Akka {
@@ -25,7 +25,7 @@ object Dependencies {
     val cluster = "com.typesafe.akka" %% "akka-cluster" % version
     val clusterMetrics = "com.typesafe.akka" %% "akka-cluster-metrics" % version
     val clusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % version
-    val testkit = "com.typesafe.akka" %% "akka-testkit" % version
+    val testkit = "com.typesafe.akka" %% "akka-testkit" % version % "test"
   }
 
   object Authentication {
@@ -96,7 +96,7 @@ object Dependencies {
     val scapegoatVersion = "1.2.1"
     val enumeratumVersion = "1.4.4"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
-    val commonsIo = "commons-io" % "commons-io" % "2.4"
+    val commonsIo = "commons-io" % "commons-io" % "2.5"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
   }

@@ -27,13 +27,12 @@ object Server {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit,
-      Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
+      Cache.ehCache, Akka.actor, Akka.logging, Play.playFilters, Play.playWs,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
-      Export.csv, Export.xlsx, Ui.swing, Utils.crypto, Utils.scalaGuice,
-      Testing.scalaTest
+      Export.csv, Export.xlsx, Ui.swing, Utils.crypto, Utils.scalaGuice, Utils.commonsIo,
+      Akka.testkit, Play.playTest, Testing.scalaTest
     )
   }
 
