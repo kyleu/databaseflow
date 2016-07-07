@@ -39,8 +39,7 @@ class UserLicenseController @javax.inject.Inject() (implicit val messagesApi: Me
       },
       f => {
         val license = License(name = f.name, email = f.email, edition = f.edition)
-        LicenseGenerator.saveLicense(license)
-        val licenseContent = new String(LicenseGenerator.getContent(license.id))
+        val licenseContent = LicenseGenerator.saveLicense(license)
         emailService.onLicenseCreate(license.id, license.name, license.email, license.edition.title, license.issued, license.version, licenseContent)
 
         Future.successful(Redirect(controllers.routes.UserLicenseController.licenseView(license.id)))

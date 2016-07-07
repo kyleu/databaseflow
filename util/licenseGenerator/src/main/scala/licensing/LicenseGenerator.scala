@@ -44,6 +44,7 @@ object LicenseGenerator {
       val encrypted = EncryptUtils.encrypt(license.toString).toArray
       val encoded = Base64.getEncoder.encode(encrypted)
       Files.write(file, encoded)
+      new String(encoded)
     }
   }
 
