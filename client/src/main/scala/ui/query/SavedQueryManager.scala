@@ -15,6 +15,7 @@ import utils.NetworkMessage
 object SavedQueryManager {
   var savedQueries = Map.empty[UUID, SavedQuery]
   var openSavedQueries = Set.empty[UUID]
+  var usernameMap = Map.empty[UUID, String]
 
   def deleteQuery(id: UUID) = {
     openSavedQueries = openSavedQueries - id
@@ -23,7 +24,8 @@ object SavedQueryManager {
     $("#saved-query-link-" + id).remove()
   }
 
-  def updateSavedQueries(sqs: Seq[SavedQuery]) = {
+  def updateSavedQueries(sqs: Seq[SavedQuery], usernames: Map[UUID, String]) = {
+    usernameMap = usernameMap ++ usernames
     sqs.foreach { sq =>
       savedQueries = savedQueries + (sq.id -> sq)
 

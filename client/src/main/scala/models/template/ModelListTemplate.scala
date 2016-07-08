@@ -10,14 +10,27 @@ import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 object ModelListTemplate {
-  def forSavedQueries(queryId: UUID, savedQueries: Seq[SavedQuery]) = {
+  def forSavedQueries(queryId: UUID, savedQueries: Seq[SavedQuery], usernameMap: Map[UUID, String], selfId: UUID) = {
     val cols = Seq("Name", "Owner", "Read", "Edit", "Connection")
     val rows = savedQueries.map(sq => tr(
       td(a(cls := "list-link theme-text", data("name") := sq.id.toString, href := s"#saved-query-${sq.id}")(sq.name)),
-      td(sq.owner.map(o => span(o.toString)).getOrElse(em("None"))),
+      td(sq.owner match {
+        case Some(o) => usernameMap.get(o) match {
+          case Some(username) => span(username)
+          case None => em("Unknown")
+        }
+        case None => em("None")
+      }),
       td(sq.read),
       td(sq.edit),
-      td(sq.connection.map(c => span(c.toString)).getOrElse(em("None")))
+      td(sq.connection match {
+        case Some(o) => if (selfId == o) {
+          span("This Connection")
+        } else {
+          em("Unknown Connection")
+        }
+        case None => em("All Connections")
+      })
     ))
     forModels(queryId, "Saved Queries", tableFor(cols, rows))
   }

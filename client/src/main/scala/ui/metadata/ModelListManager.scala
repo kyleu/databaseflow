@@ -6,6 +6,7 @@ import models.query.RowDataOptions
 import models.schema.Schema
 import models.template.{Icons, ModelListTemplate}
 import org.scalajs.jquery.{JQuery, jQuery => $}
+import services.NavigationService
 import ui.query._
 import ui.{TabManager, WorkspaceManager}
 
@@ -80,7 +81,12 @@ object ModelListManager {
   }
 
   private[this] def getTemplate(key: String, queryId: UUID, schema: Schema) = key match {
-    case "saved-query" => ModelListTemplate.forSavedQueries(queryId, SavedQueryManager.savedQueries.values.toSeq.sortBy(_.name))
+    case "saved-query" => ModelListTemplate.forSavedQueries(
+      queryId,
+      SavedQueryManager.savedQueries.values.toSeq.sortBy(_.name),
+      SavedQueryManager.usernameMap,
+      NavigationService.connectionId
+    )
     case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))
     case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))
     case "procedure" => ModelListTemplate.forProcedures(queryId, schema.procedures.sortBy(_.name))

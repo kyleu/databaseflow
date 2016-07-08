@@ -19,7 +19,7 @@ object ModelResultsService {
   }
 
   def handleSavedQueryResponse(sqrr: SavedQueryResultResponse) = {
-    SavedQueryManager.updateSavedQueries(sqrr.savedQueries)
+    SavedQueryManager.updateSavedQueries(sqrr.savedQueries, sqrr.usernames)
     if (!receivedSavedQueryResponse) {
       receivedSavedQueryResponse = true
       if (receivedSchemaResultResponse) {

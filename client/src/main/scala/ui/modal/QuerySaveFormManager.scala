@@ -57,7 +57,7 @@ object QuerySaveFormManager {
       error match {
         case Some(err) => utils.Logging.error("Cannot save query: " + err)
         case None =>
-          SavedQueryManager.updateSavedQueries(Seq(sq))
+          SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
           if (!SavedQueryManager.openSavedQueries.contains(sq.id)) {
             QueryManager.closeQuery(sq.id)
           }
@@ -65,7 +65,7 @@ object QuerySaveFormManager {
       }
       modal.closeModal()
     } else {
-      SavedQueryManager.updateSavedQueries(Seq(sq))
+      SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
     }
   }
 
