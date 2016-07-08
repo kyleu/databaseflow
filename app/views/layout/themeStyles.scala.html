@@ -1,43 +1,42 @@
-@(color: String)
-<style type="text/css">@defining(models.user.Themes.map(color)) { themeColor =>
+@(theme: models.template.Theme)<style type="text/css">
   /* Tabs */
-  .tabs .tab a { color: @themeColor; }
-  .tabs .tab a:hover { color: @themeColor; }
-  .tabs .tab.disabled a { color: @themeColor; }
-  .tabs .indicator { background-color: @themeColor; }
+  .tabs .tab a { color: @theme.color; }
+  .tabs .tab a:hover { color: @theme.color; }
+  .tabs .tab.disabled a { color: @theme.color; }
+  .tabs .indicator { background-color: @theme.color; }
 
   /* Search */
-  ul#main-menu li.search .search-wrapper input#search:focus { border-bottom: 2px solid @themeColor !important; }
+  ul#main-menu li.search .search-wrapper input#search:focus { border-bottom: 2px solid @theme.color !important; }
 
   /* Forms */
   [type="radio"]:checked+label:after {
-    border-color: @themeColor;
-    background-color: @themeColor;
+    border-color: @theme.color;
+    background-color: @theme.color;
   }
 
   .input-field label {
     color: #000;
   }
   .input-field input[type=text]:focus + label, .input-field input[type=password]:focus + label {
-    color: @themeColor;
+    color: @theme.color;
   }
   .input-field input[type=text]:focus, .input-field input[type=password]:focus {
-    border-bottom: 1px solid @themeColor;
-    box-shadow: 0 1px 0 0 @themeColor;
+    border-bottom: 1px solid @theme.color;
+    box-shadow: 0 1px 0 0 @theme.color;
   }
   .input-field .prefix.active {
-    color: @themeColor;
+    color: @theme.color;
   }
 
   .dropdown-content.select-dropdown span {
-    color: @themeColor !important;
+    color: @theme.color !important;
   }
 
   .theme {
-    background-color: @themeColor !important;
+    background-color: @theme.color !important;
   }
   .theme-text {
-    color: @themeColor !important;
+    color: @theme.color !important;
   }
   a.theme-text:hover {
     color: #999 !important;
@@ -47,6 +46,6 @@
   .tree li .node:hover+ul li::before,
   .tree li .node:hover+ul::before,
   .tree li .node:hover+ul ul::before{
-    border-color: @themeColor;
+    border-color: @theme.color;
   }
-}</style>
+</style>

@@ -15,8 +15,6 @@ object QuerySaveFormManager {
 
   private[this] val inputName = $("#input-query-name", modal)
   private[this] val inputDescription = $("#input-query-description", modal)
-  private[this] val inputPublicTrue = $("#input-query-public-true", modal)
-  private[this] val inputPublicFalse = $("#input-query-public-false", modal)
   private[this] val inputConnectionTrue = $("#input-query-connection-true", modal)
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
@@ -29,10 +27,19 @@ object QuerySaveFormManager {
     inputName.value(savedQuery.name)
     inputDescription.value(savedQuery.description.getOrElse(""))
 
-    if (savedQuery.public) {
-      inputPublicTrue.prop("checked", true)
-    } else {
-      inputPublicFalse.prop("checked", true)
+    savedQuery.read match {
+      case "visitor" => $("#input-query-read-visitor", modal).prop("checked", true)
+      case "user" => $("#input-query-read-user", modal).prop("checked", true)
+      case "admin" => $("#input-query-read-admin", modal).prop("checked", true)
+      case "private" => $("#input-query-read-private", modal).prop("checked", true)
+      case x => throw new IllegalStateException(x)
+    }
+    savedQuery.edit match {
+      case "visitor" => $("#input-query-edit-visitor", modal).prop("checked", true)
+      case "user" => $("#input-query-edit-user", modal).prop("checked", true)
+      case "admin" => $("#input-query-edit-admin", modal).prop("checked", true)
+      case "private" => $("#input-query-edit-private", modal).prop("checked", true)
+      case x => throw new IllegalStateException(x)
     }
     savedQuery.connection match {
       case Some(conn) => inputConnectionTrue.prop("checked", true)
@@ -72,11 +79,14 @@ object QuerySaveFormManager {
     } else {
       Some(NavigationService.connectionId)
     }
+    val read = $("input[name=read]:checked", modal).value().toString
+    val edit = $("input[name=edit]:checked", modal).value().toString
     val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
       name = inputName.value().toString,
       description = desc,
       connection = conn,
-      public = inputPublicTrue.is(":checked")
+      read = read,
+      edit = edit
     )
     NetworkMessage.sendMessage(QuerySaveRequest(updated))
   }

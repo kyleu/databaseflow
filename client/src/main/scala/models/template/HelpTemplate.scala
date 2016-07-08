@@ -15,8 +15,8 @@ object HelpTemplate {
             h5("Tips and Tricks"),
             div(id := "tip-detail")("Loading..."),
             div(
-              div(style := "float: left;")(a(cls := "previous-tip-link", href := "")("Previous")),
-              div(style := "float: right;")(a(cls := "next-tip-link", href := "")("Next")),
+              div(cls := "left")(a(cls := "previous-tip-link theme-text", href := "")("Previous")),
+              div(cls := "right")(a(cls := "next-tip-link theme-text", href := "")("Next")),
               div(style := "clear: both;")
             )
           )

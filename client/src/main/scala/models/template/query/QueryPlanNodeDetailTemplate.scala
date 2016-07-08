@@ -9,7 +9,7 @@ object QueryPlanNodeDetailTemplate {
     div(cls := "")(
       div(cls := "row")(
         div(cls := "col s12")(
-          h5(div(style := "float: right;")(s"${node.costPercentageString(totalCost)} of cost"), node.title)
+          h5(div(cls := "right")(s"${node.costPercentageString(totalCost)} of cost"), node.title)
         )
       ),
       div(cls := "row")(

@@ -13,6 +13,8 @@
                 <tr>
                   <th>ID</th>
                   <th>Email</th>
+                  <th>Version</th>
+                  <th>Occurred</th>
                   <th style="text-align: right;">Actions</th>
                 </tr>
               </thead>
@@ -20,7 +22,9 @@
                 @feedbacks.map { fb =>
                   <tr>
                     <td>@fb.id</td>
-                    <td>@fb.email</td>
+                    <td>@fb.from</td>
+                    <td>@fb.version</td>
+                    <td>@fb.occurred</td>
                     <td style="text-align: right;">
                       <a href="@controllers.admin.routes.FeedbackController.remove(fb.id)" title="Remove Feedback" onclick="return confirm('You sure?');">
                         <i class="fa fa-remove"></i>
@@ -28,7 +32,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="3">
+                    <td colspan="5">
                       <pre>@fb.content</pre>
                     </td>
                   </tr>

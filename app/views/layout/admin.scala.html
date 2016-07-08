@@ -7,11 +7,11 @@
   scripts = scripts
 ) {
   <header>
-    @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse("blue-grey"))
+    @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey))
 
     @views.html.components.userDropdown(user)
 
-    <nav id="topnav" class="@user.map(_.preferences.theme).getOrElse("blue-grey") lighten-2">
+    <nav id="topnav" class="theme">
       <a href="@controllers.routes.HomeController.home()" class="brand-logo center">@utils.Config.projectName</a>
 
       <ul class="left hide-on-small-only">
@@ -63,7 +63,7 @@
     </div>
   </main>
 
-  <footer class="page-footer @user.map(_.preferences.theme).getOrElse("blue-grey") lighten-2">
+  <footer class="page-footer theme lighten-2">
     <div class="footer-copyright">
       @messages("static.copyright")
       <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>

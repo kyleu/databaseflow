@@ -15,7 +15,7 @@
   scripts = Seq(routes.Assets.versioned("lib/momentjs/min/moment.min.js").url)
 ) {
   <div class="card-content">
-    <div style="float: right;">
+    <div class="right">
       <a class="theme-text" href="@controllers.admin.routes.ActivityController.removeAllAudits()" onclick="return confirm('Are you sure you wish to remove all system activity?');">Remove All Activity</a>
     </div>
 
@@ -34,7 +34,7 @@
   <div class="card-action">
     <a class="theme-text" href="@controllers.routes.HomeController.home()">Back to Connection List</a>
     @if(activity.size == limit) {
-      <a class="right-btn theme-text load-more-link" href="">Load @limit More</a>
+      <a class="right-link theme-text load-more-link" href="">Load @limit More</a>
     }
   </div>
   @views.html.activity.listScript()

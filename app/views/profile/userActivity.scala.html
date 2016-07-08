@@ -16,8 +16,8 @@
   <div class="row">
     <div class="col s12 card">
       <div class="card-content">
-        <div style="float: right;">
-          <a class="theme-text" href="@controllers.routes.ProfileController.removeAllAudits()" onclick="return confirm('Are you sure you wish to remove all your activity?');">Remove All Activity</a>
+        <div class="right">
+          <a class="theme-text" href="@controllers.routes.UserActivityController.removeAllAudits()" onclick="return confirm('Are you sure you wish to remove all your activity?');">Remove All Activity</a>
         </div>
         <div class="card-title"><i class="fa @models.template.Icons.cache"></i> @messages("profile.activity.title")</div>
         <div class="row">
@@ -33,7 +33,7 @@
       <div class="card-action">
         <a class="theme-text" href="@controllers.routes.HomeController.home()">Back to Connection List</a>
         @if(activity.size == limit) {
-          <a class="right-btn theme-text load-more-link" href="">Load @limit More</a>
+          <a class="right-link theme-text load-more-link" href="">Load @limit More</a>
         }
       </div>
     </div>

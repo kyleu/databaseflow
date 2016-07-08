@@ -2,7 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(title, scripts = scripts) {
   <header>
-    <nav id="topnav" class="blue-grey lighten-2">
+    <nav id="topnav" class="theme">
       @if(isAdmin) {
         <ul class="left hide-on-small-only">
           <li><a href="@controllers.admin.routes.LicenseController.list()">Licenses</a></li>
@@ -25,7 +25,7 @@
     </div>
   </main>
 
-  <footer class="page-footer blue-grey lighten-2">
+  <footer class="page-footer theme">
     <div class="footer-copyright">
       @messages("static.copyright")
       <a class="grey-text text-lighten-4 right" href="http://databaseflow.com">About</a>

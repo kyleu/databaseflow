@@ -1,4 +1,4 @@
-@(id: java.util.UUID, email: String, content: String, created: org.joda.time.LocalDateTime)<html>
+@(id: java.util.UUID, from: String, content: String, occurred: org.joda.time.LocalDateTime)<html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +11,8 @@
       <div>
         <ul>
           <li>ID: @id</li>
-          <li>Email: @email</li>
-          <li>Created: @created</li>
+          <li>Email: @from</li>
+          <li>Created: @occurred</li>
         </ul>
       </div>
       <div>

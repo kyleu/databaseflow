@@ -18,17 +18,47 @@
             <div class="card-panel option-panel">
               <h6><i class="fa @models.template.Icons.user"></i> Available To</h6>
               <p>
-                <input id="input-query-public-true" name="public" type="radio" value="true" checked="checked" />
-                <label for="input-query-public-true">Everyone</label>
+                <input id="input-query-read-visitor" name="read" type="radio" value="visitor" />
+                <label for="input-query-read-visitor">Everyone</label>
               </p>
               <p>
-                <input id="input-query-public-false" name="public" type="radio" value="false" />
-                <label for="input-query-public-false">Only Myself</label>
+                <input id="input-query-read-user" name="read" type="radio" value="user" />
+                <label for="input-query-read-user">Registered Users</label>
+              </p>
+              <p>
+                <input id="input-query-read-admin" name="read" type="radio" value="admin" />
+                <label for="input-query-read-admin">Administrators</label>
+              </p>
+              <p>
+                <input id="input-query-read-private" name="read" type="radio" value="private" />
+                <label for="input-query-read-private">Only Myself</label>
               </p>
               <div class="clear"></div>
             </div>
           </div>
           <div class="input-field col s12 m6">
+            <div class="card-panel option-panel">
+              <h6><i class="fa @models.template.Icons.user"></i> Editable By</h6>
+              <p>
+                <input id="input-query-edit-visitor" name="edit" type="radio" value="visitor" />
+                <label for="input-query-edit-visitor">Everyone</label>
+              </p>
+              <p>
+                <input id="input-query-edit-user" name="edit" type="radio" value="user" />
+                <label for="input-query-edit-user">Registered Users</label>
+              </p>
+              <p>
+                <input id="input-query-edit-admin" name="edit" type="radio" value="admin" />
+                <label for="input-query-edit-admin">Administrators</label>
+              </p>
+              <p>
+                <input id="input-query-edit-private" name="edit" type="radio" value="private" />
+                <label for="input-query-edit-private">Only Myself</label>
+              </p>
+              <div class="clear"></div>
+            </div>
+          </div>
+          <div class="input-field col s12">
             <div class="card-panel option-panel">
               <h6><i class="fa @models.template.Icons.database"></i> Available From</h6>
               <p>
@@ -47,7 +77,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a id="input-query-cancel-link" href="#" class="modal-action waves-effect waves-light btn-flat">Cancel</a>
-    <a id="input-query-save-link" href="#" class="modal-action waves-effect waves-light btn @user.fold("blue-grey")(_.preferences.theme)">Save</a>
+    <a id="input-query-save-link" href="#" class="modal-action right btn theme waves-effect waves-light">Save</a>
+    <a id="input-query-cancel-link" href="#" class="modal-action right btn-flat theme-text">Cancel</a>
+    <div style="clear: both;"></div>
   </div>
 </div>

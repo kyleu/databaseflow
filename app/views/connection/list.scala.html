@@ -4,16 +4,14 @@
   <li>
     <div class="collapsible-header">
       <em class="right">@c.engine.name</em>
-      @defining(user.fold("blue-grey")(_.preferences.theme)) { theme =>
-        <i class="@theme-text fa @models.template.Icons.database"></i>
-      }
+      <i class="theme-text fa @models.template.Icons.database"></i>
       @c.name
     </div>
     <div class="collapsible-body">
       <div style="padding : 25px ;">
         <div>@c.description</div>
         <em style="display : block ;">@c.url</em>
-        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin : 10px 0 ;">Query</a>
+        <a href="@routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">Query</a>
         @defining(services.connection.ConnectionSettingsService.canEdit(user, c)) { canEdit =>
           @if(canEdit._1) {
             <a title="@canEdit._2" href="@routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn theme">Settings</a>

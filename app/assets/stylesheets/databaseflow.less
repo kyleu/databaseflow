@@ -13,6 +13,10 @@ main {
   }
 }
 
+.btn, .btn-flat {
+  text-transform: none !important;
+}
+
 // Panels
 .card {
   .card-content {
@@ -23,9 +27,8 @@ main {
   }
 
   .card-action {
-    a:not(.btn):not(.btn-large):not(.btn-floating), button:not(.btn):not(.btn-large):not(.btn-floating) {
-      text-transform: none;
-      cursor: pointer;
+    a, button {
+      text-transform: none !important;
       &:hover {
         color: #888;
       }

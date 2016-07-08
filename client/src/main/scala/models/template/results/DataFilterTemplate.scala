@@ -60,7 +60,7 @@ object DataFilterTemplate {
       div(cls := "row")(
         div(cls := "col s12")(
           button(cls := "btn theme right waves-effect waves-light results-filter-go")("Filter"),
-          button(cls := "btn-flat waves-effect waves-light right results-filter-cancel")("Cancel")
+          button(cls := "btn-flat right results-filter-cancel")("Cancel")
         )
       )
     )
