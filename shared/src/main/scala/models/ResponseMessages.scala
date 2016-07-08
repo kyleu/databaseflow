@@ -20,7 +20,7 @@ case class Disconnected(reason: String) extends ResponseMessage
 
 case class UserSettings(userId: Option[UUID], username: Option[String], email: Option[String], preferences: Option[UserPreferences]) extends ResponseMessage
 
-case class SavedQueryResultResponse(savedQueries: Seq[SavedQuery], durationMs: Int) extends ResponseMessage
+case class SavedQueryResultResponse(savedQueries: Seq[SavedQuery], usernames: Map[UUID, String], durationMs: Int) extends ResponseMessage
 
 case class SchemaResultResponse(schema: Schema) extends ResponseMessage
 case class TableResultResponse(tables: Seq[Table]) extends ResponseMessage

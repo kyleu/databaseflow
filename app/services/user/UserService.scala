@@ -11,8 +11,17 @@ import services.database.MasterDatabase
 import utils.Logging
 import utils.cache.UserCache
 
+object UserService {
+  var instance: Option[UserService] = None
+}
+
 @javax.inject.Singleton
-class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Logging {
+class UserService @javax.inject.Inject() (hasher: PasswordHasher, passwordInfoService: PasswordInfoService) extends Logging {
+  UserService.instance match {
+    case Some(_) => throw new IllegalStateException("User Service already initialized.")
+    case None => UserService.instance = Some(this)
+  }
+
   def getById(id: UUID) = MasterDatabase.query(UserQueries.getById(Seq(id)))
 
   def save(user: User, update: Boolean = false): User = {
@@ -27,6 +36,8 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
   }
 
   def isUsernameInUse(name: String) = MasterDatabase.query(UserQueries.IsUsernameInUse(name))
+
+  def usernameLookup(id: UUID) = MasterDatabase.query(UserQueries.GetUsername(id))
 
   def remove(userId: UUID) = {
     val startTime = System.nanoTime

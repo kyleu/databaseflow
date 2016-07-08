@@ -8,6 +8,7 @@ import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import models.user.{Role, User}
 import services.database.{DatabaseWorkerPool, MasterDatabase}
+import services.user.UserService
 import utils.ExceptionUtils
 
 object SavedQueryService {
@@ -15,10 +16,15 @@ object SavedQueryService {
   def canEdit(user: Option[User], sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "edit", sq.edit)
 
   def getForUser(user: Option[User], connectionId: UUID, out: ActorRef) = {
+    val startMs = System.currentTimeMillis
     val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
     def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) {
       val viewable = savedQueries.filter(sq => canRead(user, sq)._1)
-      out ! SavedQueryResultResponse(viewable, 0)
+      val elapsedMs = (System.currentTimeMillis - startMs).toInt
+      val usernameMap = viewable.flatMap(_.owner).flatMap(uuid => UserService.instance.flatMap { inst =>
+        UserService.instance.flatMap(inst => inst.usernameLookup(uuid).map(uuid -> _))
+      }).toMap
+      out ! SavedQueryResultResponse(viewable, usernameMap, elapsedMs)
     }
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)

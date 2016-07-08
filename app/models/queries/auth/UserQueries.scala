@@ -3,12 +3,11 @@ package models.queries.auth
 import java.util.UUID
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import models.database.{FlatSingleRowQuery, Row, SingleRowQuery, Statement}
+import models.database._
 import models.queries.BaseQueries
 import models.user.{Role, User, UserPreferences}
 import upickle.default._
 import utils.JdbcUtils
-
 import utils.JsonSerializers.{themeReader, themeWriter}
 
 object UserQueries extends BaseQueries[User] {
@@ -25,9 +24,15 @@ object UserQueries extends BaseQueries[User] {
   val removeById = RemoveById
 
   case class IsUsernameInUse(name: String) extends SingleRowQuery[Boolean] {
-    override val sql = """select count(*) as c from \"users\" where \"username\" = ?"""
+    override val sql = s"""select count(*) as c from "$tableName" where "username" = ?"""
     override val values = Seq(name)
     override def map(row: Row) = row.as[Long]("c") != 0L
+  }
+
+  case class GetUsername(id: UUID) extends Query[Option[String]] {
+    override val sql = s"""select username from "$tableName" where "id" = ?"""
+    override val values = Seq(id)
+    override def reduce(rows: Iterator[Row]) = rows.toSeq.headOption.map(_.as[String]("username"))
   }
 
   case class UpdateUser(u: User) extends Statement {
