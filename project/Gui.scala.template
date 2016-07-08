@@ -1,4 +1,4 @@
 object PackagingSettings {
-  val serverApp = false
+  val serviceApp = false
   val settings = Packaging.guiSettings
 }
