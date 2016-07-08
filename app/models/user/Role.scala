@@ -21,7 +21,7 @@ object Role extends Enum[Role] {
   def matchPermissions(user: Option[User], owner: Option[UUID], model: String, perm: String, value: String) = user match {
     case Some(u) =>
       if (owner.contains(u.id)) {
-        true -> "You are the owner of this connection."
+        true -> s"You are the owner of this $model."
       } else {
         value match {
           case "admin" => if (u.role == Role.Admin) {
@@ -38,7 +38,7 @@ object Role extends Enum[Role] {
           case "private" => if (owner.isDefined) {
             false -> s"Only the owner of this $model may $perm it."
           } else {
-            true -> s"Anyone may $perm this connection."
+            true -> s"Anyone may $perm this $model."
           }
           case x => false -> x.toString
         }

@@ -5,7 +5,6 @@ import java.util.UUID
 import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.query.SavedQuery
-import models.user.Role
 import utils.DateUtils
 
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
@@ -16,21 +15,20 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
-  def getForUser(userIdAndRole: Option[(UUID, Role)], connectionId: UUID) = {
-    val ownerClause = userIdAndRole match {
+  def getForUser(userId: Option[UUID], connectionId: UUID) = {
+    val ownerClause = userId match {
       case Some(uid) => s"""("owner" = ? or "owner" is null)"""
       case None => s"""("owner" is null)"""
     }
-    val permClause = s"""(($ownerClause and "read" = 'private'))"""
-    val connectionClause = """ and ("connection" = ? or "connection" is null)"""
+    val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
 
-    val values = userIdAndRole match {
-      case Some(uid) => Seq(uid._1, connectionId)
+    val values = userId match {
+      case Some(uid) => Seq(uid, connectionId)
       case None => Seq(connectionId)
     }
 
     GetAll(
-      whereClause = Some(permClause + connectionClause),
+      whereClause = Some(permClause + """ and ("connection" = ? or "connection" is null)"""),
       orderBy = "\"name\"",
       values = values
     )

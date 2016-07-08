@@ -6,14 +6,20 @@ import akka.actor.ActorRef
 import models.SavedQueryResultResponse
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
-import models.user.Role
+import models.user.{Role, User}
 import services.database.{DatabaseWorkerPool, MasterDatabase}
 import utils.ExceptionUtils
 
 object SavedQueryService {
-  def getForUser(user: Option[(UUID, Role)], connectionId: UUID, out: ActorRef) = {
-    val sqq = SavedQueryQueries.getForUser(user, connectionId)
-    def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) { out ! SavedQueryResultResponse(savedQueries, 0) }
+  def canRead(user: Option[User], sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "read", sq.read)
+  def canEdit(user: Option[User], sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "edit", sq.edit)
+
+  def getForUser(user: Option[User], connectionId: UUID, out: ActorRef) = {
+    val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
+    def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) {
+      val viewable = savedQueries.filter(sq => canRead(user, sq)._1)
+      out ! SavedQueryResultResponse(viewable, 0)
+    }
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
   }
