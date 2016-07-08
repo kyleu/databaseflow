@@ -1,18 +1,25 @@
 package controllers
 
-import java.util.UUID
-
-import models.settings.SettingKey
+import com.mohiva.play.silhouette.api.exceptions.ProviderException
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.user.UserForms
-import services.audit.AuditRecordService
-import services.settings.SettingsService
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.user.UserService
 import utils.ApplicationContext
+import utils.web.FormUtils
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ProfileController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserService) extends BaseController {
+class ProfileController @javax.inject.Inject() (
+    override val ctx: ApplicationContext,
+    userService: UserService,
+    authInfoRepository: AuthInfoRepository,
+    credentialsProvider: CredentialsProvider,
+    hasher: PasswordHasher
+) extends BaseController {
   def view = withSession("view") { implicit request =>
     Future.successful(Ok(views.html.profile.view(request.identity, debug = false)))
   }
@@ -32,27 +39,35 @@ class ProfileController @javax.inject.Inject() (override val ctx: ApplicationCon
     )
   }
 
-  def activity = withSession("activity") { implicit request =>
-    val audits = AuditRecordService.getForUser(request.identity.map(_.id))
-    val removeCall = if (SettingsService.asBool(SettingKey.AllowAuditRemoval)) {
-      Some(controllers.routes.ProfileController.removeAudit _)
-    } else {
-      None
-    }
-    Future.successful(Ok(views.html.profile.userActivity(request.identity, ctx.config.debug, audits, None, AuditRecordService.rowLimit, removeCall)))
+  def changePasswordForm = withSession("change-password-form") { implicit request =>
+    Future.successful(Ok(views.html.profile.changePassword(request.identity, ctx.config.debug)))
   }
 
-  def removeAudit(id: UUID) = withSession("remove-audit") { implicit request =>
-    AuditRecordService.removeAudit(id, None)
-    Future.successful(Redirect(controllers.routes.ProfileController.activity()).flashing("success" -> s"Removed activity [$id]."))
-  }
-
-  def removeAllAudits() = withSession("remove-audit") { implicit request =>
-    request.identity match {
-      case Some(u) => AuditRecordService.deleteAllForUser(u.id, None)
-      case None => AuditRecordService.deleteAllForGuest(None)
-    }
-
-    Future.successful(Redirect(controllers.routes.ProfileController.activity()).flashing("success" -> "Removed all user activity."))
+  def changePassword = withSession("change-password") { implicit request =>
+    def errorResponse(msg: String) = Redirect(controllers.routes.ProfileController.changePasswordForm()).flashing("error" -> msg)
+    UserForms.changePasswordForm.bindFromRequest().fold(
+      formWithErrors => {
+        Future.successful(errorResponse(FormUtils.errorsToString(formWithErrors.errors)))
+      },
+      changePass => {
+        if (changePass.newPassword != changePass.confirm) {
+          Future.successful(errorResponse("Passwords do not match."))
+        } else {
+          val email = request.identity.map(_.profile.providerKey).getOrElse {
+            throw new IllegalStateException("You must be logged in. How did you even get here?")
+          }
+          credentialsProvider.authenticate(Credentials(email, changePass.oldPassword)).flatMap { loginInfo =>
+            val okResponse = Redirect(controllers.routes.ProfileController.view()).flashing("success" -> "Password changed.")
+            for {
+              _ <- authInfoRepository.update(loginInfo, hasher.hash(changePass.newPassword))
+              authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
+              result <- ctx.silhouette.env.authenticatorService.renew(authenticator, okResponse)
+            } yield result
+          }.recover {
+            case e: ProviderException => errorResponse(s"Old password does not match (${e.getMessage}).")
+          }
+        }
+      }
+    )
   }
 }

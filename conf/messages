@@ -22,9 +22,14 @@ authentication.form.password = Password
 authentication.invalid.credentials = Invalid credentials
 
 # Profile
+profile.title = User Profile
 profile.activity.title = User Activity
 profile.save = Save Changes
 profile.cancel = Cancel
+profile.change.password = Change Password
+profile.change.password.old = Old Password
+profile.change.password.new = New Password
+profile.change.password.confirm = Confirm New Password
 profile.form.username = Name
 profile.form.theme = Theme
 

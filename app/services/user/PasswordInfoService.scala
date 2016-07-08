@@ -10,8 +10,10 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class PasswordInfoService @javax.inject.Inject() () extends DelegableAuthInfoDAO[PasswordInfo] {
+  def getByLoginInfo(loginInfo: LoginInfo) = MasterDatabase.query(PasswordInfoQueries.getById(Seq(loginInfo.providerID, loginInfo.providerKey)))
+
   override def find(loginInfo: LoginInfo) = {
-    Future.successful(MasterDatabase.query(PasswordInfoQueries.getById(Seq(loginInfo.providerID, loginInfo.providerKey))))
+    Future.successful(getByLoginInfo(loginInfo))
   }
 
   override def add(loginInfo: LoginInfo, authInfo: PasswordInfo) = {
@@ -19,8 +21,12 @@ class PasswordInfoService @javax.inject.Inject() () extends DelegableAuthInfoDAO
     Future.successful(authInfo)
   }
 
-  override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
+  def updatePassword(loginInfo: LoginInfo, authInfo: PasswordInfo) = {
     MasterDatabase.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
+  }
+
+  override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
+    updatePassword(loginInfo, authInfo)
     Future.successful(authInfo)
   }
 

@@ -38,9 +38,8 @@ class UserEditController @javax.inject.Inject() (
     val newUsername = form("username")
     val newEmail = form("email")
     val newPassword = form.get("password") match {
-      case Some("original") => None
-      case Some(x) => Some(x)
-      case None => None
+      case Some(x) if x != "original" => Some(x)
+      case _ => None
     }
     val role = form.get("role") match {
       case Some("admin") => Role.Admin

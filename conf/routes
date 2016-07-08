@@ -22,7 +22,6 @@ GET         /*path/                          controllers.HomeController.untrail(
 GET         /license                         controllers.LicenseController.form()
 POST        /license                         controllers.LicenseController.save()
 
-
 # Authentication
 GET         /signup                          controllers.auth.RegistrationController.registrationForm
 POST        /signup                          controllers.auth.RegistrationController.register
@@ -30,11 +29,16 @@ GET         /signin                          controllers.auth.AuthenticationCont
 POST        /signin                          controllers.auth.AuthenticationController.authenticateCredentials
 GET         /signout                         controllers.auth.AuthenticationController.signOut
 
-GET         /activity                        controllers.ProfileController.activity
-GET         /activity/all/remove             controllers.ProfileController.removeAllAudits()
-GET         /activity/:id/remove             controllers.ProfileController.removeAudit(id: java.util.UUID)
+# Activity
+GET         /activity                        controllers.UserActivityController.activity
+GET         /activity/all/remove             controllers.UserActivityController.removeAllAudits()
+GET         /activity/:id/remove             controllers.UserActivityController.removeAudit(id: java.util.UUID)
+
+# Profile
 GET         /profile                         controllers.ProfileController.view
 POST        /profile                         controllers.ProfileController.save
+GET         /password/change                 controllers.ProfileController.changePasswordForm
+POST        /password/change                 controllers.ProfileController.changePassword
 
 # Assets
 GET         /favicon.ico                     controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
