@@ -1,16 +1,14 @@
 package services
 
-import java.util.UUID
-
 import com.stripe.Stripe
-import com.stripe.model.{Account, Charge, Customer}
+import com.stripe.model.Charge
 import com.stripe.net.RequestOptions.RequestOptionsBuilder
-import play.api.Logger
+import utils.Logging
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
-object StripePaymentService {
+object StripePaymentService extends Logging {
   private[this] val apiKey = "sk_test_TFOOJlY3yildKTaMUVG5fFPH"
   private[this] val requestOptions = new RequestOptionsBuilder().setApiKey(apiKey).build()
 
@@ -31,7 +29,7 @@ object StripePaymentService {
   }
 
   private[this] def fix(params: Map[String, AnyRef]): java.util.Map[String, AnyRef] = params.map {
-    case (k, v: Map[_, _]) => k -> fix(v.asInstanceOf[Map[String, AnyRef]])
+    case (k, v: Map[String @unchecked, AnyRef @unchecked]) => k -> fix(v)
     case x => x
   }.asJava
 
@@ -50,7 +48,7 @@ object StripePaymentService {
       "customer" -> token.email.getOrElse("Unknown User"),
       "description" -> description
     )
-    Logger.info(s"Redeeming [$token].")
+    log.info(s"Redeeming [$token].")
 
     createCharge(params)
   }
