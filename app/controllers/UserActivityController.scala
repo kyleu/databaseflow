@@ -5,13 +5,12 @@ import java.util.UUID
 import models.settings.SettingKey
 import services.audit.AuditRecordService
 import services.settings.SettingsService
-import services.user.UserService
 import utils.ApplicationContext
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class UserActivityController @javax.inject.Inject() (override val ctx: ApplicationContext, userService: UserService) extends BaseController {
+class UserActivityController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def activity = withSession("activity") { implicit request =>
     val audits = AuditRecordService.getForUser(request.identity.map(_.id))
     val removeCall = if (SettingsService.asBool(SettingKey.AllowAuditRemoval)) {

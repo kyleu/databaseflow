@@ -40,7 +40,7 @@ object Role extends Enum[Role] {
           } else {
             true -> s"Anyone may $perm this $model."
           }
-          case x => false -> x.toString
+          case x => false -> x
         }
       }
     case None =>

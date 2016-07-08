@@ -16,7 +16,7 @@ object UserService {
 }
 
 @javax.inject.Singleton
-class UserService @javax.inject.Inject() (hasher: PasswordHasher, passwordInfoService: PasswordInfoService) extends Logging {
+class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Logging {
   UserService.instance match {
     case Some(_) => throw new IllegalStateException("User Service already initialized.")
     case None => UserService.instance = Some(this)

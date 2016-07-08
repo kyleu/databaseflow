@@ -17,8 +17,8 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   def getById(id: UUID) = GetById(Seq(id))
   def getForUser(userId: Option[UUID], connectionId: UUID) = {
     val ownerClause = userId match {
-      case Some(uid) => s"""("owner" = ? or "owner" is null)"""
-      case None => s"""("owner" is null)"""
+      case Some(uid) => """("owner" = ? or "owner" is null)"""
+      case None => """("owner" is null)"""
     }
     val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
 
