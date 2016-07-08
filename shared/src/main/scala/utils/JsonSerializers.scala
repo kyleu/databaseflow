@@ -5,6 +5,7 @@ import java.util.UUID
 import enumeratum.UPickler
 import models.plan.PlanNode
 import models.schema.ColumnType
+import models.template.Theme
 import models.{RequestMessage, ResponseMessage}
 import upickle.Js
 import upickle.default._
@@ -13,6 +14,9 @@ object JsonSerializers {
   // Enumerations
   private[this] implicit val columnTypeReader = UPickler.reader(ColumnType)
   private[this] implicit val columnTypeWriter = UPickler.writer(ColumnType)
+
+  implicit val themeReader = UPickler.reader(Theme)
+  implicit val themeWriter = UPickler.writer(Theme)
 
   // Recursive structures
   private[this] def readPlanNode(x: Js.Value): PlanNode = PlanNode(

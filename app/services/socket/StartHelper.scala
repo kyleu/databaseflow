@@ -2,10 +2,9 @@ package services.socket
 
 import akka.actor.PoisonPill
 import models._
-import models.queries.query.SavedQueryQueries
-import models.query.SavedQuery
 import models.schema.Schema
-import services.database.{DatabaseWorkerPool, DatabaseRegistry, MasterDatabase}
+import services.database.{DatabaseRegistry, DatabaseWorkerPool}
+import services.query.SavedQueryService
 import services.schema.SchemaService
 import utils.{ExceptionUtils, Logging}
 
@@ -28,10 +27,7 @@ trait StartHelper extends Logging { this: SocketService =>
     supervisor ! SocketStarted(user, id, self)
     out ! UserSettings(user.map(_.id), currentUsername, user.map(_.profile.providerKey), userPreferences)
 
-    val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)
-    def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) { out ! SavedQueryResultResponse(savedQueries, 0) }
-    def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
-    DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
+    val sqq = SavedQueryService.getForUser(user.map(u => u.id -> u.role), connectionId, out)
 
     refreshSchema(false)
   }

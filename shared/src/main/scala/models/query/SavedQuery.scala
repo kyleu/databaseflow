@@ -10,7 +10,8 @@ case class SavedQuery(
 
   owner: Option[UUID] = None,
   connection: Option[UUID] = None,
-  public: Boolean = false,
+  read: String = "visitor",
+  edit: String = "private",
 
   lastRan: Option[Long] = None,
 

@@ -2,11 +2,22 @@ package services.query
 
 import java.util.UUID
 
+import akka.actor.ActorRef
+import models.SavedQueryResultResponse
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
-import services.database.MasterDatabase
+import models.user.Role
+import services.database.{DatabaseWorkerPool, MasterDatabase}
+import utils.ExceptionUtils
 
 object SavedQueryService {
+  def getForUser(user: Option[(UUID, Role)], connectionId: UUID, out: ActorRef) = {
+    val sqq = SavedQueryQueries.getForUser(user, connectionId)
+    def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) { out ! SavedQueryResultResponse(savedQueries, 0) }
+    def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
+    DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
+  }
+
   def save(sq: SavedQuery, userId: Option[UUID] = None) = {
     MasterDatabase.query(SavedQueryQueries.getById(sq.id)) match {
       case Some(existing) =>

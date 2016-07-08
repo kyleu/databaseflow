@@ -11,7 +11,8 @@ case object CreateSavedQueriesTable extends CreateTableStatement("saved_queries"
 
       "owner" uuid,
       "connection" uuid,
-      "public" boolean not null default false,
+      "read" $varchar(64) not null,
+      "edit" $varchar(64) not null,
       "last_ran" timestamp,
       "created" timestamp not null,
       "updated" timestamp not null

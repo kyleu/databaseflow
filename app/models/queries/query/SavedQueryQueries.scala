@@ -5,25 +5,34 @@ import java.util.UUID
 import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.query.SavedQuery
+import models.user.Role
 import utils.DateUtils
 
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val tableName = "saved_queries"
-  override protected val columns = Seq("id", "name", "description", "sql", "owner", "connection", "public", "last_ran", "created", "updated")
+  override protected val columns = Seq("id", "name", "description", "sql", "owner", "connection", "read", "edit", "last_ran", "created", "updated")
   override protected val searchColumns = Seq("id", "name", "description", "sql", "owner", "connection")
 
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
-  def getForUser(userId: Option[UUID], connectionId: UUID) = {
-    val ownerClause = userId match {
-      case Some(uid) => Seq(uid, connectionId) -> "(\"owner\" = ? or \"owner\" is null) and (\"connection\" = ? or \"connection\" is null)"
-      case None => Seq(connectionId) -> "\"owner\" is null and (\"connection\" = ? or \"connection\" is null)"
+  def getForUser(userIdAndRole: Option[(UUID, Role)], connectionId: UUID) = {
+    val ownerClause = userIdAndRole match {
+      case Some(uid) => s"""("owner" = ? or "owner" is null)"""
+      case None => s"""("owner" is null)"""
     }
+    val permClause = s"""(($ownerClause and "read" = 'private'))"""
+    val connectionClause = """ and ("connection" = ? or "connection" is null)"""
+
+    val values = userIdAndRole match {
+      case Some(uid) => Seq(uid._1, connectionId)
+      case None => Seq(connectionId)
+    }
+
     GetAll(
-      whereClause = Some(ownerClause._2),
+      whereClause = Some(permClause + connectionClause),
       orderBy = "\"name\"",
-      values = ownerClause._1
+      values = values
     )
   }
   val search = Search
@@ -35,8 +44,8 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   }
 
   case class UpdateSavedQuery(sq: SavedQuery) extends Statement {
-    override val sql = updateSql(Seq("name", "description", "sql", "owner", "connection", "public", "updated"))
-    override val values = Seq[Any](sq.name, sq.description, sq.sql, sq.owner, sq.connection, sq.public, DateUtils.now, sq.id)
+    override val sql = updateSql(Seq("name", "description", "sql", "owner", "connection", "read", "edit", "updated"))
+    override val values = Seq[Any](sq.name, sq.description, sq.sql, sq.owner, sq.connection, sq.read, sq.edit, DateUtils.now, sq.id)
   }
 
   override protected def fromRow(row: Row) = {
@@ -49,7 +58,8 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
 
       owner = row.asOpt[UUID]("owner"),
       connection = row.asOpt[UUID]("connection"),
-      public = row.as[Boolean]("public"),
+      read = row.as[String]("read"),
+      edit = row.as[String]("edit"),
 
       lastRan = row.asOpt[java.sql.Timestamp]("last_ran").map(_.getTime),
       created = row.as[java.sql.Timestamp]("created").getTime,
@@ -58,6 +68,6 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   }
 
   override protected def toDataSeq(q: SavedQuery) = Seq[Any](
-    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.public, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
+    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.read, q.edit, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
   )
 }

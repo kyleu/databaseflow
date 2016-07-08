@@ -23,6 +23,17 @@ footer.page-footer {
   }
 }
 
+.theme {
+  background-color: #607d8b !important;
+}
+.theme-text {
+  color: #607d8b !important;
+}
+a.theme-text:hover {
+  color: #999 !important;
+}
+
+
 // Navbar
 .nb-container {
   height: 48px;
@@ -50,18 +61,20 @@ footer.page-footer {
 
 // Panels
 .card {
-  .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
-    text-transform: none;
-    cursor: pointer;
-    &:hover {
-      color: #888;
-    }
-  }
-
   .card-content {
     .card-title {
       line-height: 28px;
       margin-bottom: 10px;
+    }
+  }
+
+  .card-action {
+    .btn .btn-flat {
+      text-transform: none !important;
+      cursor: pointer;
+      &:hover {
+        color: #888;
+      }
     }
   }
 }

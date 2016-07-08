@@ -1,7 +1,5 @@
 package services.data
 
-import java.util.UUID
-
 import models.connection.ConnectionSettings
 import models.engine.rdbms._
 import models.query.SavedQuery
@@ -59,8 +57,8 @@ object SeedData {
   }
 
   private[this] def addSavedQueries() = {
-    SavedQueryService.save(SavedQuery(name = "Saved Query 1", sql = "select * from stuff1", public = true))
-    SavedQueryService.save(SavedQuery(name = "Saved Query 2", sql = "select * from stuff2", public = true))
-    SavedQueryService.save(SavedQuery(name = "Saved Query 3", sql = "select * from stuff3", public = true))
+    SavedQueryService.save(SavedQuery(name = "Saved Query 1", sql = "select * from stuff1", read = "visitor", edit = "private"))
+    SavedQueryService.save(SavedQuery(name = "Saved Query 2", sql = "select * from stuff2", read = "visitor", edit = "private"))
+    SavedQueryService.save(SavedQuery(name = "Saved Query 3", sql = "select * from stuff3", read = "visitor", edit = "private"))
   }
 }
