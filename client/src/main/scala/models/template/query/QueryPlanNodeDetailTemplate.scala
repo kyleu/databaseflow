@@ -42,36 +42,38 @@ object QueryPlanNodeDetailTemplate {
           )
         )
       ),
-      div(cls := "row")(
-        div(cls := "col s12 l6")(
-          div(cls := "z-depth-1")(
-            table(cls := "bordered highlight") {
-              tbody(
-                tr(th(colspan := 2)("Output")),
-                node.output match {
-                  case Some(o) => o.map(x => tr(td(x)))
-                  case None => Seq(tr(td("No output available.")))
-                }
-              )
-            }
-          )
-        ),
-        div(cls := "col s12 l6")(
-          div(cls := "z-depth-1")(
-            table(cls := "bordered highlight")(
-              tbody(
-                tr(th(colspan := 2)("Properties")),
-                if (node.properties.isEmpty) {
-                  Seq(tr(td("No properties available.")))
-                } else {
+      if (node.properties.isEmpty) {
+        div()
+      } else {
+        div(cls := "row")(
+          div(cls := "col s12")(
+            div(cls := "z-depth-1")(
+              table(cls := "bordered highlight")(
+                tbody(
+                  tr(th(colspan := 2)("Properties")),
                   node.properties.map { p =>
                     tr(td(style := "white-space: nowrap;")(p._1), td(p._2))
                   }.toSeq
-                }
+                )
               )
             )
           )
         )
+      },
+      div(cls := "row")(
+        node.output match {
+          case None => div()
+          case Some(o) => div(cls := "col s12")(
+            div(cls := "z-depth-1")(
+              table(cls := "bordered highlight") {
+                tbody(
+                  tr(th(colspan := 2)("Output")),
+                  o.map(x => tr(td(x)))
+                )
+              }
+            )
+          )
+        }
       )
     )
   }

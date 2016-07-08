@@ -41,7 +41,7 @@ class EmailService @javax.inject.Inject() (mailerClient: MailerClient) extends L
       mailerClient.send(email)
     }
     f.onSuccess {
-      case x => log.warn(s"Successfully sent email to [$address].")
+      case x => log.info(s"Successfully sent email to [$address].")
     }
     f.onFailure {
       case x => log.warn(s"Unable to send email to [$address].", x)
