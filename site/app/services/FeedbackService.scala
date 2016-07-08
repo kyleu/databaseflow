@@ -7,7 +7,7 @@ import cache.FileCacheService
 import org.joda.time.LocalDateTime
 
 object FeedbackService {
-  case class Feedback(id: UUID, email: String, content: String, created: LocalDateTime = new LocalDateTime())
+  case class Feedback(id: UUID, from: String, content: String, version: Int, occurred: LocalDateTime = new LocalDateTime())
 
   private[this] val feedbackDir = FileCacheService.cacheDir + "/feedback"
 
@@ -23,7 +23,12 @@ object FeedbackService {
     val file = Paths.get(feedbackDir, filename)
     if (Files.exists(file)) {
       val lines = Files.readAllLines(file).asScala
-      Feedback(id, lines.headOption.getOrElse(""), lines.tail.mkString("\n"))
+      val name = lines.headOption.getOrElse("")
+      val content = lines.tail.dropRight(1).mkString("\n")
+      val last = lines.tail.lastOption.getOrElse("0:0").split(':')
+      val version = last.headOption.getOrElse("0").toInt
+      val occurred = new LocalDateTime(last.lastOption.getOrElse("0").toLong)
+      Feedback(id, name, content, version, occurred)
     } else {
       throw new IllegalArgumentException(s"Feedback does not exist for [$id].")
     }
@@ -35,7 +40,7 @@ object FeedbackService {
     if ((!overwrite) && Files.exists(file)) {
       throw new IllegalArgumentException(s"Feedback already exists for [${feedback.id}] and cannot be overwritten.")
     } else {
-      val text = feedback.email + "\n" + feedback.content + "\nv1"
+      val text = feedback.from + "\n" + feedback.content + "\nv1"
       Files.write(file, text.getBytes)
     }
   }

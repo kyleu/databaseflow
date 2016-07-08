@@ -12,7 +12,7 @@ mv ./target/universal/jdkpackager/bundles/databaseflow-1.0.0-MacAppStore.pkg ./b
 mv ./target/universal/jdkpackager/bundles/databaseflow-1.0.0.dmg ./build/osx/databaseflow-gui.dmg
 mv ./target/universal/jdkpackager/bundles/databaseflow-1.0.0.pkg ./build/osx/databaseflow-gui.pkg
 
-./bin/build/switch-server.sh
+./bin/build/switch-service.sh
 
 sbt-nodebug universal:packageBin
 mv ./target/universal/databaseflow-1.0.0.zip ./build/osx/databaseflow-service.zip

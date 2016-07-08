@@ -34,7 +34,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
     }
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
-        val title = ConnectionForm.form.value.fold("New Connection")(_.name)
+        val title = formWithErrors.value.map(_.name).getOrElse("New Connection")
         BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
       },
       cf => {

@@ -17,6 +17,7 @@ object FeedbackController {
       "id" -> uuid,
       "email" -> email,
       "content" -> nonEmptyText,
+      "version" -> ignored(1),
       "created" -> ignored(new LocalDateTime())
     )(Feedback.apply)(Feedback.unapply)
   )
@@ -37,7 +38,7 @@ class FeedbackController @javax.inject.Inject() (implicit val messagesApi: Messa
       formWithErrors => BadRequest(views.html.feedbackForm()),
       feedback => {
         FeedbackService.save(feedback)
-        emailService.onFeedbackSubmitted(feedback.id, feedback.email, feedback.content, feedback.created)
+        emailService.onFeedbackSubmitted(feedback.id, feedback.from, feedback.content, feedback.occurred)
 
         if (ajax) {
           Ok(JsObject(Seq("status" -> JsString("OK"))))
