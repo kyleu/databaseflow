@@ -27,7 +27,7 @@ object QueryPlanService {
     val nodes = pr.result.node.withChildren()
     nodes.foreach { node =>
       JQueryUtils.clickHandler($(s"#plan-node-${node.id}", panel), (x) => {
-        PlanNodeDetailManager.show(node, pr.result.node.costs.totalCost)
+        PlanNodeDetailManager.show(node, pr.result.node.costs.cost.getOrElse(0))
       })
     }
 

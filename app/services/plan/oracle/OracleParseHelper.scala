@@ -42,8 +42,8 @@ object OracleParseHelper {
       children = children.map(nodeFor),
       costs = PlanNode.Costs(
         estimatedRows = stringToInt(me.rows),
-        estimatedDuration = Some(durationToDouble(me.time)),
-        estimatedCost = Some(me.cost)
+        duration = Some(durationToDouble(me.time)),
+        cost = Some(me.cost)
       )
     )
   }

@@ -32,9 +32,9 @@ object PlanParseTestHelper extends Logging {
   def debugPlanResult(r: PlanResult) = {
     log.info(s"Plan output for [${r.queryId}]:")
     log.info(" Title                       | Relation           | Output             " +
-      "| Type           | Props | ERows  | ARows  | EDur   | ADur   | ECost  | ACost  | ACostX ")
+      "| Type           | Props | ERows  | ARows  | ADur   | ACost  | ACostX ")
     log.info("-----------------------------|--------------------|--------------------" +
-      "|----------------|-------|--------|--------|--------|--------|--------|--------|--------")
+      "|----------------|-------|--------|--------|--------|--------|--------")
     debugNode(r.node, 0)
   }
 
@@ -46,12 +46,10 @@ object PlanParseTestHelper extends Logging {
     val props = node.properties.size.toString.padTo(5, ' ')
     val eRows = node.costs.estimatedRows.toString.padTo(6, ' ')
     val aRows = node.costs.actualRows.map(_.toString).getOrElse("").padTo(6, ' ')
-    val eDur = node.costs.estimatedDuration.toString.padTo(6, ' ')
-    val aDur = node.costs.actualDuration.map(_.toString).getOrElse("").padTo(6, ' ')
-    val eCost = node.costs.estimatedCost.toString.padTo(6, ' ')
-    val aCost = node.costs.actualCost.map(_.toString).getOrElse("").padTo(6, ' ')
-    val aCostX = node.actualCostWithoutChildren.map(_.toString).getOrElse("").padTo(6, ' ')
-    log.info(s" $title | $rel | $output | $tp | $props | $eRows | $aRows | $eDur | $aDur | $eCost | $aCost | $aCostX")
+    val aDur = node.costs.duration.map(_.toString).getOrElse("").padTo(6, ' ')
+    val aCost = node.costs.cost.map(_.toString).getOrElse("").padTo(6, ' ')
+    val aCostX = node.costWithoutChildren.map(_.toString).getOrElse("").padTo(6, ' ')
+    log.info(s" $title | $rel | $output | $tp | $props | $eRows | $aRows | $aDur | $aCost | $aCostX")
     node.children.foreach(n => debugNode(n, depth + 1))
   }
 }

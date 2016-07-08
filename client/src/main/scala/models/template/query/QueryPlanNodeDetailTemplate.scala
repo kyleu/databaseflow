@@ -18,24 +18,15 @@ object QueryPlanNodeDetailTemplate {
             table(cls := "bordered highlight") {
               tbody(
                 tr(
-                  th(colspan := "2")("Rows"),
-                  th(colspan := "2")("Duration"),
-                  th(colspan := "2")("Cost")
-                ),
-                tr(
-                  th(style := "width: 16%")("Est"), th(style := "width: 17%")("Actual"),
-                  th(style := "width: 17%")("Est"), th(style := "width: 17%")("Actual"),
-                  th(style := "width: 16%")("Est"), th(style := "width: 17%")("Actual")
+                  th(style := "width: 25%")("Est Rows"), th(style := "width: 25%")("Actual Rows"),
+                  th(style := "width: 25%")("Duration"), th(style := "width: 25%")("Cost")
                 ),
                 tr(
                   td(utils.NumberUtils.withCommas(node.costs.estimatedRows)),
                   td(node.costs.actualRows.map(utils.NumberUtils.withCommas).getOrElse(""): String),
 
-                  td(node.costs.estimatedDuration.map(_ + "ms").getOrElse(""): String),
-                  td(node.costs.actualDuration.map(_ + "ms").getOrElse(""): String),
-
-                  td(node.costs.estimatedCost.map(utils.NumberUtils.withCommas).getOrElse(""): String),
-                  td(node.costs.actualCost.map(utils.NumberUtils.withCommas).getOrElse(""): String)
+                  td(node.costs.duration.map(_ + "ms").getOrElse(""): String),
+                  td(node.costs.cost.map(utils.NumberUtils.withCommas).getOrElse(""): String)
                 )
               )
             }

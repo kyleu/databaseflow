@@ -27,7 +27,7 @@ object MySqlQueryBlockParser {
 
   private[this] def parseNestedLoop(el: Js.Value) = {
     val children = el.arr.map(v => parseTable(v.obj(MySqlParseKeys.keyTable)))
-    val rows = children.map(c => c.costs.actualRows.orElse(c.costs.estimatedCost).getOrElse(0)).product
+    val rows = children.map(c => c.costs.actualRows.getOrElse(c.costs.estimatedRows)).product
     val costs = PlanNode.Costs(actualRows = if (rows != 0) { Some(rows) } else { None })
     PlanNode(title = "Nested Loop", nodeType = "Nested Loop", costs = costs, children = children)
   }

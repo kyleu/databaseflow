@@ -14,7 +14,7 @@ object QueryPlanTemplate {
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree")(
-            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.totalCost: Int))
+            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.cost.getOrElse(0): Int))
           )
         ),
         div(cls := "clear")
