@@ -68,7 +68,7 @@ object Dependencies {
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
     val fontAwesome = "org.webjars" % "font-awesome" % "4.6.3"
     val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
-    val moment = "org.webjars" % "momentjs" % "2.13.0"
+    val moment = "org.webjars" % "momentjs" % "2.14.1"
   }
 
   object Ui {
@@ -89,7 +89,7 @@ object Dependencies {
   }
 
   object Commerce {
-    val stripe = "com.stripe" % "stripe-java" % "2.6.0"
+    val stripe = "com.stripe" % "stripe-java" % "2.6.1"
   }
 
   object Utils {
