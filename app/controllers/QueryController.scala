@@ -13,7 +13,7 @@ import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.ConnectionSettingsService
 import services.database.DatabaseRegistry
-import services.file.FileService
+import services.config.ConfigFileService
 import services.socket.SocketService
 import utils.web.{FormUtils, MessageFrameFormatter}
 import utils.{ApplicationContext, DateUtils}
@@ -61,7 +61,7 @@ class QueryController @javax.inject.Inject() (
     val ts = DateUtils.now.toString("yyyy-MM-dd")
     val finalName = s"Database Flow $filename Export $ts"
 
-    val file = FileService.getTempFile(finalName, format)
+    val file = ConfigFileService.getTempFile(finalName, format)
     val fos = new FileOutputStream(file)
     val query = format match {
       case "csv" => CsvExportQuery(sql, format, fos)

@@ -14,7 +14,7 @@ import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
 import services.database.{DatabaseRegistry, MasterDatabase, ResultCacheDatabase}
-import services.file.FileService
+import services.config.ConfigFileService
 import services.licensing.LicenseService
 import services.notification.NotificationService
 import services.settings.SettingsService
@@ -58,7 +58,7 @@ class ApplicationContext @javax.inject.Inject() (
     SharedMetricRegistries.remove("default")
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
-    FileService.init()
+    ConfigFileService.init()
     MasterDatabase.open()
     SettingsService.load()
     LicenseService.readLicense()

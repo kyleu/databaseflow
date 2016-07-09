@@ -4,8 +4,8 @@ import java.util.UUID
 
 import models.connection.ConnectionSettings
 import models.database._
-import models.engine.rdbms._
 import services.data.MasterDdl
+import services.config.{ConfigFileService, DatabaseConfig}
 import utils.Logging
 
 import scala.util.control.NonFatal
@@ -13,8 +13,16 @@ import scala.util.control.NonFatal
 object MasterDatabase extends Logging {
   val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
-  private[this] val (engine, url) = PostgreSQL -> "jdbc:postgresql://localhost:5432/databaseflow?stringtype=unspecified"
-  private[this] val (fallbackEngine, fallbackUrl) = H2 -> "jdbc:h2:./tmp/databaseflow-master"
+  private[this] val config = {
+    val cfg = ConfigFileService.config.getConfig("databaseflow.master")
+    DatabaseConfig.fromConfig(cfg)
+  }
+
+  private[this] val finalUrl = if (config.url.isEmpty || config.url == "default") {
+    s"jdbc:h2:${ConfigFileService.configDir.getAbsolutePath}/databaseflow"
+  } else {
+    config.url
+  }
 
   private[this] val username = "databaseflow"
   private[this] val password = "flow"
@@ -31,29 +39,20 @@ object MasterDatabase extends Logging {
 
     settings = Some(ConnectionSettings(
       id = MasterDatabase.connectionId,
-      engine = engine,
+      engine = config.engine,
       name = s"${utils.Config.projectName} Storage",
       description = s"Internal storage used by ${utils.Config.projectName}.",
-      url = url,
+      url = finalUrl,
       username = username,
       password = password
     ))
 
     val database = try {
       val ret = DatabaseRegistry.db(MasterDatabase.connectionId)
-      log.info("Using PostgreSQL for caches and configuration.")
+      log.info(s"Connected to master database using engine [${config.engine}] with url [$finalUrl].")
       ret
     } catch {
-      case NonFatal(origEx) =>
-        val path = "/opt/databaseflow" // TODO
-        log.info(s"Using a local H2 database located in [$path].")
-        log.info("To use PostgreSQL, configure PostgreSQL port 5432 to listen on [localhost], username [databaseflow], password [flow].")
-        settings = settings.map(cs => cs.copy(engine = fallbackEngine, url = fallbackUrl))
-        try {
-          DatabaseRegistry.db(MasterDatabase.connectionId)
-        } catch {
-          case NonFatal(ex) => throw new IllegalStateException(ex.getClass.getSimpleName + ": " + ex.getMessage, origEx)
-        }
+      case NonFatal(ex) => throw new IllegalStateException(s"Unable to connect to master database using engine [${config.engine}] with url [$finalUrl].", ex)
     }
 
     log.info(s"Master database started as user [$username] against url [${settings.map(_.url).getOrElse("?")}].")
