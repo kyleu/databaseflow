@@ -6,6 +6,7 @@ import models.connection.ConnectionSettings
 import models.database.PoolSettings
 import models.user.User
 import services.connection.ConnectionSettingsService
+import services.database.core.MasterDatabase
 import utils.Logging
 
 import scala.util.control.NonFatal

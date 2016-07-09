@@ -8,7 +8,7 @@ import models.queries.audit.{AuditRecordQueries, AuditReportQueries}
 import models.user.User
 import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory, RemoveAuditHistory}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.database.MasterDatabase
+import services.database.core.MasterDatabase
 import utils.{DateUtils, Logging}
 
 import scala.concurrent.Future

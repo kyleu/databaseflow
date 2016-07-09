@@ -49,7 +49,7 @@
         <div class="card-action">
           <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
           <a class="right btn-flat theme-text" href="@routes.HomeController.home()">Cancel</a>
-          @if((!isNew) && conn.id != services.database.MasterDatabase.connectionId) {
+          @if((!isNew) && conn.id != services.database.core.MasterDatabase.connectionId) {
             <a class="btn-flat theme-text" onclick="onDelete();return false;">Delete</a>
           }
           <div style="clear: both;"></div>

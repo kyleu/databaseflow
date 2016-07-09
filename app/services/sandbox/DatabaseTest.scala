@@ -2,7 +2,8 @@ package services.sandbox
 
 import models.database.{Row, SingleRowQuery}
 import models.queries.connection.ConnectionSettingsQueries
-import services.database.{DatabaseRegistry, MasterDatabase}
+import services.database.DatabaseRegistry
+import services.database.core.MasterDatabase
 import services.schema.SchemaService
 import upickle.json
 import utils.ApplicationContext

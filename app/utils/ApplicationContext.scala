@@ -13,9 +13,10 @@ import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
-import services.database.{DatabaseRegistry, MasterDatabase, ResultCacheDatabase}
 import services.config.ConfigFileService
 import services.data.MasterDdl
+import services.database.DatabaseRegistry
+import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.licensing.LicenseService
 import services.notification.NotificationService
 import services.settings.SettingsService

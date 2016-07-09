@@ -4,7 +4,7 @@ import java.util.UUID
 
 import controllers.BaseController
 import models.ddl.DdlQueries
-import services.database.ResultCacheDatabase
+import services.database.core.ResultCacheDatabase
 import services.result.CachedResultService
 import services.user.UserSearchService
 import utils.ApplicationContext

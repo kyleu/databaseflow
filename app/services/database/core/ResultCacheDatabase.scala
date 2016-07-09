@@ -1,4 +1,4 @@
-package services.database
+package services.database.core
 
 import java.util.UUID
 

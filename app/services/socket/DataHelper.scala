@@ -7,7 +7,8 @@ import models.engine.EngineQueries
 import models.queries.DynamicQuery
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.ForeignKey
-import services.database.{DatabaseWorkerPool, ResultCacheDatabase}
+import services.database.DatabaseWorkerPool
+import services.database.core.ResultCacheDatabase
 import services.schema.SchemaService
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 

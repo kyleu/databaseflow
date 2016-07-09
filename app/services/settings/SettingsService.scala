@@ -2,7 +2,7 @@ package services.settings
 
 import models.queries.settings.SettingQueries
 import models.settings.{Setting, SettingKey}
-import services.database.MasterDatabase
+import services.database.core.MasterDatabase
 
 object SettingsService {
   private[this] var settings = Seq.empty[Setting]

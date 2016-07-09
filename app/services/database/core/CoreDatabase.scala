@@ -1,9 +1,10 @@
-package services.database
+package services.database.core
 
 import java.util.UUID
 
 import models.connection.ConnectionSettings
 import services.config.{ConfigFileService, DatabaseConfig}
+import services.database.{DatabaseConnection, DatabaseRegistry}
 import utils.Logging
 
 import scala.util.control.NonFatal

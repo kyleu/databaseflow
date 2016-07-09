@@ -6,7 +6,7 @@ import models.ddl.DdlQueries
 import models.queries.result.CachedResultQueries
 import models.result.CachedResult
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.database.{MasterDatabase, ResultCacheDatabase}
+import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.MetadataTables
 import utils.Logging
 

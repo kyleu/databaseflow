@@ -7,7 +7,8 @@ import models.query.QueryResult
 import models.result.{CachedResult, CachedResultQuery, CachedResultQueryHelper}
 import models.schema.ColumnType._
 import services.connection.ConnectionSettingsService
-import services.database.{DatabaseRegistry, ResultCacheDatabase}
+import services.database.DatabaseRegistry
+import services.database.core.ResultCacheDatabase
 import services.result.CachedResultService
 import utils.ApplicationContext
 

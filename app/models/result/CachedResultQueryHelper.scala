@@ -10,7 +10,7 @@ import models.queries.DynamicQuery
 import models.queries.result.{CreateResultTable, InsertResultRow}
 import models.query.QueryResult
 import models.schema.ColumnType.{ArrayType, UnknownType}
-import services.database.ResultCacheDatabase
+import services.database.core.ResultCacheDatabase
 import utils.Logging
 
 object CachedResultQueryHelper extends Logging {

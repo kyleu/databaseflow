@@ -12,7 +12,7 @@ import models.settings.SettingKey
 import models.user.{Role, User, UserForms, UserPreferences}
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.database.MasterDatabase
+import services.database.core.MasterDatabase
 import services.settings.SettingsService
 import services.user.{UserSearchService, UserService}
 import utils.ApplicationContext

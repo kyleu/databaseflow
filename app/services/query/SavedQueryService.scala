@@ -7,7 +7,8 @@ import models.SavedQueryResultResponse
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import models.user.{Role, User}
-import services.database.{DatabaseWorkerPool, MasterDatabase}
+import services.database.DatabaseWorkerPool
+import services.database.core.MasterDatabase
 import services.user.UserService
 import utils.ExceptionUtils
 

@@ -1,7 +1,7 @@
 package models.settings
 
 import enumeratum._
-import services.database.MasterDatabase
+import services.database.core.MasterDatabase
 
 sealed abstract class SettingKey(val id: String, val title: String, val description: String, val default: String) extends EnumEntry {
   override def toString = id

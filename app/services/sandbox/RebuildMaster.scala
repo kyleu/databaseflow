@@ -1,7 +1,7 @@
 package services.sandbox
 
 import services.data.{MasterDdl, SeedData}
-import services.database.MasterDatabase
+import services.database.core.MasterDatabase
 import utils.ApplicationContext
 import utils.cache.CacheService
 
