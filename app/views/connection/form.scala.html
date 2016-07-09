@@ -44,6 +44,11 @@
 
             @views.html.connection.permissions("read", conn.read, Icons.user, "Available To")
             @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, "Editable By")
+
+            <div class="input-field col s12">
+              <input id="form-description" name="description" type="text" value="@conn.description" />
+              <label for="form-description">Description</label>
+            </div>
           </div>
         </div>
         <div class="card-action">

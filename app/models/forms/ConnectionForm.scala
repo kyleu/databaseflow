@@ -11,6 +11,7 @@ object ConnectionForm {
       "url" -> nonEmptyText,
       "databaseUsername" -> text,
       "databasePassword" -> text,
+      "description" -> text,
       "read" -> nonEmptyText,
       "edit" -> nonEmptyText
     )(ConnectionForm.apply)(ConnectionForm.unapply)
@@ -23,6 +24,7 @@ case class ConnectionForm(
   url: String,
   username: String,
   password: String,
+  description: String,
   read: String,
   edit: String
 )
