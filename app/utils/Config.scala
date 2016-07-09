@@ -1,7 +1,5 @@
 package utils
 
-import java.net.InetAddress
-
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSettings
 import play.api.{Environment, Mode}
 
@@ -9,22 +7,12 @@ object Config {
   val projectId = "databaseflow"
   val projectName = "Database Flow"
   val version = "0.1"
-  val hostname = InetAddress.getLocalHost.getHostName
   val pageSize = 100
 }
 
 @javax.inject.Singleton
 class Config @javax.inject.Inject() (val cnf: play.api.Configuration, env: Environment) {
   val debug = env.mode == Mode.Dev
-
-  val fileCacheDir = cnf.getString("cache.dir").getOrElse("./cache")
-
-  // Admin
-  val adminEmail = cnf.getString("admin.email").getOrElse(throw new IllegalStateException("Missing admin email."))
-
-  // Notifications
-  val slackEnabled = cnf.getBoolean("slack.enabled").getOrElse(false)
-  val slackUrl = cnf.getString("slack.url").getOrElse("no_url_provided")
 
   // Metrics
   val jmxEnabled = cnf.getBoolean("metrics.jmx.enabled").getOrElse(true)

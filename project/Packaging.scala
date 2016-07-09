@@ -16,7 +16,7 @@ object Packaging {
     topLevelDirectory := Some("database-flow"),
     packageSummary := description.value,
     packageDescription := description.value,
-    packageDescription in Debian := "Database Flow Debian Package",
+    packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",
     debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
