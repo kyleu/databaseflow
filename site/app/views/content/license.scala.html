@@ -3,12 +3,28 @@
     <div class="card">
       <div class="card-content">
         <span class="card-title">Get a License</span>
-        <div class="row">
+        <div class="row" style="margin-top: 16px;">
           <div class="col s12 m6">
-            <a href="@controllers.routes.UserLicenseController.requestForm()">Get Free Personal Edition License</a>
+            <div class="z-depth-1">
+              <table>
+                <tbody>
+                  <tr>
+                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.UserLicenseController.requestForm()">Get Free Personal Edition License</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="col s12 m6">
-            <a href="@controllers.routes.PurchaseController.pricing()">Buy Team Edition Now</a>
+            <div class="z-depth-1">
+              <table>
+                <tbody>
+                  <tr>
+                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.PurchaseController.pricing()">Buy Team Edition Now</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
