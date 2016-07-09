@@ -22,6 +22,13 @@ object SettingKey extends Enum[SettingKey] {
     default = "user"
   )
 
+  case object AddConnectionRole extends SettingKey(
+    id = "add-connection-role",
+    title = "Add Connection Role",
+    description = "Determines the role required to create new connections.",
+    default = "visitor"
+  )
+
   case object AllowAuditRemoval extends SettingKey(
     id = "allow-audit-removal",
     title = "Allow Audit Removal",
@@ -39,7 +46,7 @@ object SettingKey extends Enum[SettingKey] {
   case object QueryCacheConnection extends SettingKey(
     id = "query-cache-connection",
     title = "Query Cache Connection",
-    description = "Connection used for query caching (H2 or PostgreSQL only).",
+    description = "Connection used for query result caching (H2 or PostgreSQL only).",
     default = MasterDatabase.connectionId.toString
   )
 

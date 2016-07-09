@@ -4,8 +4,8 @@
 
 @import models.settings.SettingKey._
 
-@settingPanel(key: models.settings.SettingKey)(content: Html) = {
-  <div class="col s12">
+@settingPanel(key: models.settings.SettingKey, colWidth: Int = 12)(content: Html) = {
+  <div class="col s12 m@colWidth">
     <div class="z-depth-1 setting-panel">
       <strong>@key.title</strong>
       <div class="setting-input">@content</div>
@@ -14,10 +14,10 @@
   </div>
 }
 
-@roleRadio(r: models.user.Role, selected: models.user.Role) = {
+@roleRadio(name: String, r: models.user.Role, selected: models.user.Role) = {
   <div>
-    <input type="radio" id="role-@r" name="@DefaultNewUserRole.id" value="@r" @if(selected == r) { checked="checked" }></input>
-    <label for="role-@r">@r</label>
+    <input type="radio" id="role-@name-@r" name="@name" value="@r" @if(selected == r) { checked="checked" }></input>
+    <label for="role-@name-@r">@r</label>
   </div>
 }
 
@@ -44,13 +44,25 @@
           </div>
         }
 
-        @settingPanel(DefaultNewUserRole) {
+        @settingPanel(DefaultNewUserRole, 6) {
           <div class="row">
             <div class="col s12">
             @defining(models.user.Role.withName(services.settings.SettingsService(DefaultNewUserRole))) { newUserRole =>
-              @roleRadio(models.user.Role.Visitor, newUserRole)
-              @roleRadio(models.user.Role.User, newUserRole)
-              @roleRadio(models.user.Role.Admin, newUserRole)
+              @roleRadio(DefaultNewUserRole.id, models.user.Role.Visitor, newUserRole)
+              @roleRadio(DefaultNewUserRole.id, models.user.Role.User, newUserRole)
+              @roleRadio(DefaultNewUserRole.id, models.user.Role.Admin, newUserRole)
+            }
+            </div>
+          </div>
+        }
+
+        @settingPanel(AddConnectionRole, 6) {
+          <div class="row">
+            <div class="col s12">
+            @defining(models.user.Role.withName(services.settings.SettingsService(AddConnectionRole))) { addConnectionRole =>
+              @roleRadio(AddConnectionRole.id, models.user.Role.Visitor, addConnectionRole)
+              @roleRadio(AddConnectionRole.id, models.user.Role.User, addConnectionRole)
+              @roleRadio(AddConnectionRole.id, models.user.Role.Admin, addConnectionRole)
             }
             </div>
           </div>
@@ -58,18 +70,20 @@
 
         @settingPanel(QueryCacheConnection) {
           <div class="row">
-            <div class="col s12 input-field">
-              <select id="@QueryCacheConnection.id-select" name="@QueryCacheConnection.id">
-              @defining(settings(QueryCacheConnection)) { connection =>
-                @defining(services.connection.ConnectionSettingsService.getAll.filter { dbc =>
-                  dbc.engine == models.engine.rdbms.H2 || dbc.engine == models.engine.rdbms.PostgreSQL
-                }) { connections =>
-                  @connections.map { c =>
-                    <option value="@c.id" @if(c.id.toString == connection) { selected="selected" }>@c.name</option>
+            <div class="col s12">
+              <div class="input-field">
+                <select id="@QueryCacheConnection.id-select" name="@QueryCacheConnection.id">
+                @defining(settings(QueryCacheConnection)) { connection =>
+                  @defining(services.connection.ConnectionSettingsService.getAll.filter { dbc =>
+                    dbc.engine == models.engine.rdbms.H2 || dbc.engine == models.engine.rdbms.PostgreSQL
+                  }) { connections =>
+                    @connections.map { c =>
+                      <option value="@c.id" @if(c.id.toString == connection) { selected="selected" }>@c.name</option>
+                    }
                   }
                 }
-              }
-              </select>
+                </select>
+              </div>
             </div>
           </div>
         }

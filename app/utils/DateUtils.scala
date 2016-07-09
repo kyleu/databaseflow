@@ -17,4 +17,8 @@ object DateUtils {
   def fromMillis(millis: Long) = new LocalDateTime(millis, DateTimeZone.UTC)
 
   def toIsoString(ldt: LocalDateTime) = fmt.print(ldt.toDateTime)
+
+  def niceDate(d: LocalDate) = d.toString("EEEE, MMM dd, yyyy")
+  def niceTime(d: LocalTime) = d.toString("HH:mm:ss")
+  def niceDateTime(dt: LocalDateTime) = s"${niceDate(dt.toLocalDate)} ${niceTime(dt.toLocalTime)} UTC"
 }

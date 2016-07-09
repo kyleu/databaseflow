@@ -5,6 +5,7 @@ import java.util.UUID
 import enumeratum._
 
 sealed abstract class Role(override val entryName: String) extends EnumEntry {
+  def qualifies(target: Role): Boolean
   override def toString = entryName
 }
 
@@ -14,9 +15,15 @@ object Role extends Enum[Role] {
 
   override def values = findValues
 
-  object Admin extends Role("admin")
-  object User extends Role("user")
-  object Visitor extends Role("visitor")
+  object Admin extends Role("admin") {
+    override def qualifies(target: Role) = true
+  }
+  object User extends Role("user") {
+    override def qualifies(target: Role) = target == Role.User || target == Role.Visitor
+  }
+  object Visitor extends Role("visitor") {
+    override def qualifies(target: Role) = target == Role.Visitor
+  }
 
   def matchPermissions(user: Option[User], owner: Option[UUID], model: String, perm: String, value: String) = user match {
     case Some(u) =>
