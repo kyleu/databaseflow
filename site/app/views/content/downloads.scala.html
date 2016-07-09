@@ -1,0 +1,26 @@
+@()<div class="row">
+  <div class="col s12">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">Downloads</span>
+        <div class="row">
+          <div class="col s12 m4">
+            <div>macOS</div>
+            <a href="@controllers.routes.DownloadController.download("osx", "service")">.zip</a>
+            <a href="@controllers.routes.DownloadController.download("osx", "gui")">.dmg</a>
+          </div>
+          <div class="col s12 m4">
+            <div>Windows</div>
+            <a href="@controllers.routes.DownloadController.download("windows", "service")">.zip</a>
+            <a href="@controllers.routes.DownloadController.download("windows", "gui")">.msi</a>
+          </div>
+          <div class="col s12 m4">
+            <div>Linux</div>
+            <a href="@controllers.routes.DownloadController.download("linux", "service")">.tgz</a>
+            <a href="@controllers.routes.DownloadController.download("linux", "deb")">.deb</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

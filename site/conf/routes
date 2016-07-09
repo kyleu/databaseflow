@@ -7,8 +7,7 @@ OPTIONS     /feedback                    controllers.FeedbackController.feedback
 POST        /feedback                    controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
 
 # Downloads
-GET         /download/personal           controllers.DownloadController.personalEdition()
-GET         /download/team               controllers.DownloadController.teamEdition()
+GET         /download/:os/:variant       controllers.DownloadController.download(os, variant)
 
 # Purchasing
 GET         /pricing                     controllers.PurchaseController.pricing()
