@@ -16,7 +16,7 @@ object Packaging {
     packageSummary := description.value,
     packageDescription := "Database Flow helps you do all sorts of cool stuff with your database.",
     javaOptions in Universal ++= Seq(
-      "-J-Xmx2048m",
+      "-J-Xmx2g",
       "-J-Xms256m",
       "-Dhttp.port=4000",
       "-Dhttps.port=4443",
