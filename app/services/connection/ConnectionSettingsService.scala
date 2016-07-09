@@ -5,7 +5,7 @@ import java.util.UUID
 import models.connection.ConnectionSettings
 import models.queries.connection.ConnectionSettingsQueries
 import models.user.{Role, User}
-import services.database.{DatabaseRegistry, MasterDatabase}
+import services.database.{DatabaseRegistry, MasterDatabase, ResultCacheDatabase}
 
 object ConnectionSettingsService {
   def getAll = MasterDatabase.query(ConnectionSettingsQueries.getAll()) ++ MasterDatabase.settings.toSeq
@@ -20,6 +20,8 @@ object ConnectionSettingsService {
 
   def getById(id: UUID) = if (id == MasterDatabase.connectionId) {
     MasterDatabase.settings
+  } else if (id == ResultCacheDatabase.connectionId) {
+    ResultCacheDatabase.settings
   } else {
     MasterDatabase.query(ConnectionSettingsQueries.getById(id))
   }

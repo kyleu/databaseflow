@@ -67,26 +67,6 @@
             </div>
           </div>
         }
-
-        @settingPanel(QueryCacheConnection) {
-          <div class="row">
-            <div class="col s12">
-              <div class="input-field">
-                <select id="@QueryCacheConnection.id-select" name="@QueryCacheConnection.id">
-                @defining(settings(QueryCacheConnection)) { connection =>
-                  @defining(services.connection.ConnectionSettingsService.getAll.filter { dbc =>
-                    dbc.engine == models.engine.rdbms.H2 || dbc.engine == models.engine.rdbms.PostgreSQL
-                  }) { connections =>
-                    @connections.map { c =>
-                      <option value="@c.id" @if(c.id.toString == connection) { selected="selected" }>@c.name</option>
-                    }
-                  }
-                }
-                </select>
-              </div>
-            </div>
-          </div>
-        }
       </div>
     </div>
     <div class="card-action">
@@ -95,11 +75,4 @@
       <div style="clear: both;"></div>
     </div>
   </form>
-
-  <script>
-    $(function() {
-      $('#@QueryCacheConnection.id-select').material_select();
-    });
-  </script>
-
 }

@@ -24,9 +24,6 @@ object MasterDatabase extends Logging {
     config.url
   }
 
-  private[this] val username = "databaseflow"
-  private[this] val password = "flow"
-
   private[this] var connOpt: Option[DatabaseConnection] = None
 
   var settings: Option[ConnectionSettings] = None
@@ -35,7 +32,7 @@ object MasterDatabase extends Logging {
 
   def isOpen = connOpt.isDefined
   def open() = {
-    connOpt.foreach(x => throw new IllegalStateException("History database already open."))
+    connOpt.foreach(x => throw new IllegalStateException("Master database connection already open."))
 
     settings = Some(ConnectionSettings(
       id = MasterDatabase.connectionId,
@@ -43,19 +40,17 @@ object MasterDatabase extends Logging {
       name = s"${utils.Config.projectName} Storage",
       description = s"Internal storage used by ${utils.Config.projectName}.",
       url = finalUrl,
-      username = username,
-      password = password
+      username = config.username,
+      password = config.password
     ))
 
     val database = try {
-      val ret = DatabaseRegistry.db(MasterDatabase.connectionId)
-      log.info(s"Connected to master database using engine [${config.engine}] with url [$finalUrl].")
-      ret
+      DatabaseRegistry.db(MasterDatabase.connectionId)
     } catch {
       case NonFatal(ex) => throw new IllegalStateException(s"Unable to connect to master database using engine [${config.engine}] with url [$finalUrl].", ex)
     }
 
-    log.info(s"Master database started as user [$username] against url [${settings.map(_.url).getOrElse("?")}].")
+    log.info(s"Master database started as user [${config.username}] against url [$finalUrl].")
 
     MasterDdl.update(database)
 

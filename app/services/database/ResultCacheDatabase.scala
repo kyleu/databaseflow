@@ -2,28 +2,62 @@ package services.database
 
 import java.util.UUID
 
-import models.settings.SettingKey
-import services.settings.SettingsService
+import models.connection.ConnectionSettings
+import services.config.{ConfigFileService, DatabaseConfig}
 import utils.Logging
 
+import scala.util.control.NonFatal
+
 object ResultCacheDatabase extends Logging {
-  private[this] var connOpt: Option[DatabaseConnection] = None
+  val connectionId = UUID.fromString("11111111-1111-1111-1111-111111111111")
 
-  def open() = {
-    connOpt.foreach(x => throw new IllegalStateException("Result Cache database already open."))
-
-    val uuid = UUID.fromString(SettingsService(SettingKey.QueryCacheConnection))
-
-    connOpt = Some(DatabaseRegistry.db(uuid))
-
-    log.info(s"Result Cache database started as user [${conn.username}] against url [${conn.url}].")
+  private[this] val config = {
+    val cfg = ConfigFileService.config.getConfig("databaseflow.resultCache")
+    DatabaseConfig.fromConfig(cfg)
   }
 
-  def conn = connOpt.getOrElse(throw new IllegalStateException("Result Cache database connection not open."))
+  private[this] val finalUrl = if (config.url.isEmpty || config.url == "default") {
+    s"jdbc:h2:${ConfigFileService.configDir.getAbsolutePath}/result-cache"
+  } else {
+    config.url
+  }
+
+  private[this] var connOpt: Option[DatabaseConnection] = None
+
+  var settings: Option[ConnectionSettings] = None
+
+  def conn = connOpt.getOrElse(throw new IllegalStateException("Result cache database connection not open."))
+
+  def isOpen = connOpt.isDefined
+  def open() = {
+    connOpt.foreach(x => throw new IllegalStateException("Result cache database connection already open."))
+
+    settings = Some(ConnectionSettings(
+      id = ResultCacheDatabase.connectionId,
+      engine = config.engine,
+      name = s"${utils.Config.projectName} Result Cache",
+      description = s"Storage used by ${utils.Config.projectName} to cache query results.",
+      url = finalUrl,
+      username = config.username,
+      password = config.password
+    ))
+
+    val database = try {
+      DatabaseRegistry.db(ResultCacheDatabase.connectionId)
+    } catch {
+      case NonFatal(ex) =>
+        val msg = s"Unable to connect to result cache database using engine [${config.engine}] with url [$finalUrl]."
+        throw new IllegalStateException(msg, ex)
+    }
+
+    log.info(s"Result cache database started as user [${config.username}] against url [$finalUrl].")
+
+    connOpt = Some(database)
+  }
 
   def close() = {
     connOpt.foreach(_.close())
     connOpt = None
-    log.info("Result Cache database closed.")
+    log.info("Result cache database connection closed.")
   }
 }

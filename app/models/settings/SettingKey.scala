@@ -43,12 +43,5 @@ object SettingKey extends Enum[SettingKey] {
     default = ""
   )
 
-  case object QueryCacheConnection extends SettingKey(
-    id = "query-cache-connection",
-    title = "Query Cache Connection",
-    description = "Connection used for query result caching (H2 or PostgreSQL only).",
-    default = MasterDatabase.connectionId.toString
-  )
-
   override val values = findValues
 }
