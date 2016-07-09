@@ -15,6 +15,7 @@ import play.api.mvc.{Action, RequestHeader, Results}
 import play.api.routing.Router
 import services.database.{DatabaseRegistry, MasterDatabase, ResultCacheDatabase}
 import services.config.ConfigFileService
+import services.data.MasterDdl
 import services.licensing.LicenseService
 import services.notification.NotificationService
 import services.settings.SettingsService
@@ -60,6 +61,7 @@ class ApplicationContext @javax.inject.Inject() (
 
     ConfigFileService.init()
     MasterDatabase.open()
+    MasterDdl.update(MasterDatabase.conn)
     SettingsService.load()
     LicenseService.readLicense()
     ResultCacheDatabase.open()
