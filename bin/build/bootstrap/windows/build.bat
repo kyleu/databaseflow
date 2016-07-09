@@ -5,7 +5,7 @@ cd databaseflow
 mkdir build\windows
 REM bin/activator/activator.bat "compile"
 cd bin/build
-windows.bat
+call windows.bat
 cd C:\Users\kyle\Desktop\build
 
 copy databaseflow\build\windows\*.* Y:\Projects\Personal\databaseflow\build\windows

@@ -1,4 +1,5 @@
 import com.typesafe.sbt.packager.Keys._
+import com.typesafe.sbt.packager.debian.DebianPlugin.autoImport.Debian
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import sbt.Keys._
 import sbt._
@@ -14,7 +15,9 @@ object Packaging {
   private[this] val packagingSettings = Seq(
     topLevelDirectory := Some("database-flow"),
     packageSummary := description.value,
-    packageDescription := "Database Flow helps you do all sorts of cool stuff with your database.",
+    packageDescription := description.value,
+    packageDescription in Debian := "Database Flow Debian Package",
+    debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
       "-J-Xms256m",
