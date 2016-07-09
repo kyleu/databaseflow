@@ -3,7 +3,7 @@ package models.engine
 import models.engine.rdbms._
 
 object DatabaseEngine {
-  val rdbmsEngines = Seq(DB2, H2, Informix, MySQL, Oracle, PostgreSQL, SqlServer)
+  val rdbmsEngines = Seq(H2, MySQL, Oracle, PostgreSQL, SqlServer)
 
   val all = rdbmsEngines
 
