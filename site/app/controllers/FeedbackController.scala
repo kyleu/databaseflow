@@ -6,8 +6,9 @@ import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsObject, JsString}
 import play.api.mvc.{Action, Controller}
-import services.{EmailService, FeedbackService}
-import services.FeedbackService.Feedback
+import services.feedback.FeedbackService
+import services.feedback.FeedbackService.Feedback
+import services.notification.NotificationService
 
 import scala.concurrent.Future
 
@@ -24,7 +25,10 @@ object FeedbackController {
 }
 
 @javax.inject.Singleton
-class FeedbackController @javax.inject.Inject() (implicit val messagesApi: MessagesApi, emailService: EmailService) extends Controller with I18nSupport {
+class FeedbackController @javax.inject.Inject() (
+    implicit
+    val messagesApi: MessagesApi, notificationService: NotificationService
+) extends Controller with I18nSupport {
   def feedbackForm() = Action.async { implicit request =>
     Future.successful(Ok(views.html.feedbackForm()))
   }
@@ -38,7 +42,7 @@ class FeedbackController @javax.inject.Inject() (implicit val messagesApi: Messa
       formWithErrors => BadRequest(views.html.feedbackForm()),
       feedback => {
         FeedbackService.save(feedback)
-        emailService.onFeedbackSubmitted(feedback.id, feedback.from, feedback.content, feedback.occurred)
+        notificationService.onFeedbackSubmitted(feedback.id, feedback.from, feedback.content, feedback.occurred)
 
         if (ajax) {
           Ok(JsObject(Seq("status" -> JsString("OK"))))

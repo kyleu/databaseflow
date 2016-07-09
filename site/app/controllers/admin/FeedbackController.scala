@@ -3,7 +3,7 @@ package controllers.admin
 import java.util.UUID
 
 import play.api.i18n.MessagesApi
-import services.FeedbackService
+import services.feedback.FeedbackService
 
 import scala.concurrent.Future
 

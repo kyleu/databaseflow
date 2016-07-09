@@ -1,4 +1,4 @@
-package services
+package services.payment
 
 import com.stripe.Stripe
 import com.stripe.model.Charge

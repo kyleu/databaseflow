@@ -6,7 +6,7 @@ import licensing.{License, LicenseEdition, LicenseGenerator}
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.MessagesApi
-import services.EmailService
+import services.notification.NotificationService
 import utils.web.PlayFormUtils
 
 import scala.concurrent.Future
@@ -28,7 +28,10 @@ object LicenseController {
 }
 
 @javax.inject.Singleton
-class LicenseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, emailService: EmailService) extends BaseAdminController {
+class LicenseController @javax.inject.Inject() (
+    implicit
+    override val messagesApi: MessagesApi, notificationService: NotificationService
+) extends BaseAdminController {
   def list() = withAdminSession { (username, request) =>
     implicit val req = request
     val licenses = LicenseGenerator.listLicenses().map(LicenseGenerator.loadLicense)
@@ -64,7 +67,7 @@ class LicenseController @javax.inject.Inject() (implicit override val messagesAp
   def email(licenseId: UUID) = withAdminSession { (username, request) =>
     val license = LicenseGenerator.loadLicense(licenseId)
     val licenseContent = new String(LicenseGenerator.getContent(licenseId))
-    emailService.onLicenseCreate(license.id, license.name, license.email, license.edition.title, license.issued, license.version, licenseContent)
+    notificationService.onLicenseCreate(license.id, license.name, license.email, license.edition.title, license.issued, license.version, licenseContent)
     Future.successful(Ok("Ok!"))
   }
 

@@ -18,7 +18,6 @@ import services.data.MasterDdl
 import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.licensing.LicenseService
-import services.notification.NotificationService
 import services.settings.SettingsService
 import services.supervisor.ActorSupervisor
 import utils.metrics.Instrumented
@@ -44,7 +43,6 @@ class ApplicationContext @javax.inject.Inject() (
     val config: Config,
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
-    val notificationService: NotificationService,
     val actorSystem: ActorSystem,
     val silhouette: Silhouette[AuthEnv]
 ) extends Logging {

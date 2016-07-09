@@ -1,4 +1,4 @@
-package services
+package services.feedback
 
 import java.nio.file.{Files, Paths}
 import java.util.UUID

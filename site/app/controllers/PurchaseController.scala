@@ -5,7 +5,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, Controller}
-import services.EmailService
+import services.notification.NotificationService
 import utils.web.PlayFormUtils
 
 import scala.concurrent.Future
@@ -26,7 +26,7 @@ object PurchaseController {
 @javax.inject.Singleton
 class PurchaseController @javax.inject.Inject() (
     implicit
-    override val messagesApi: MessagesApi, emailService: EmailService
+    override val messagesApi: MessagesApi, notificationService: NotificationService
 ) extends Controller with I18nSupport {
   def pricing() = Action.async { implicit request =>
     Future.successful(Ok(views.html.purchase.purchase()))
@@ -41,7 +41,7 @@ class PurchaseController @javax.inject.Inject() (
         val license = License(name = f.name, email = f.email, edition = LicenseEdition.Team)
 
         val licenseContent = LicenseGenerator.saveLicense(license)
-        emailService.onLicenseCreate(license.id, license.name, license.email, license.edition.title, license.issued, license.version, licenseContent)
+        notificationService.onLicenseCreate(license.id, license.name, license.email, license.edition.title, license.issued, license.version, licenseContent)
 
         Future.successful(Redirect(controllers.routes.UserLicenseController.licenseView(license.id)))
       }

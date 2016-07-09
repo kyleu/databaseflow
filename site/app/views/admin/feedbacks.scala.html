@@ -1,4 +1,4 @@
-@(feedbacks: Seq[services.FeedbackService.Feedback])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(feedbacks: Seq[services.feedback.FeedbackService.Feedback])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.simple("Database Flow Feedback", isAdmin = true) {
   <div class="row">
     <div class="col s12">
