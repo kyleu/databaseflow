@@ -27,15 +27,13 @@ object UserLicenseController {
 }
 
 @javax.inject.Singleton
-class UserLicenseController @javax.inject.Inject() (
-    implicit
-    val messagesApi: MessagesApi, notificationService: NotificationService
-) extends Controller with I18nSupport {
-  def requestForm() = Action.async { implicit request =>
+class UserLicenseController @javax.inject.Inject() (implicit val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
+
+  def requestForm() = act("user-license-form") { implicit request =>
     Future.successful(Ok(views.html.purchase.licenseForm(UserLicenseController.licenseForm)))
   }
 
-  def licenseRequest() = Action.async { implicit request =>
+  def licenseRequest() = act("user-license-request") { implicit request =>
     UserLicenseController.licenseForm.bindFromRequest.fold(
       formWithErrors => {
         Future.successful(BadRequest(views.html.purchase.licenseForm(formWithErrors)))
@@ -50,13 +48,13 @@ class UserLicenseController @javax.inject.Inject() (
     )
   }
 
-  def licenseView(id: UUID) = Action.async { implicit request =>
+  def licenseView(id: UUID) = act("user-license-view") { implicit request =>
     val license = LicenseGenerator.loadLicense(id)
     val content = LicenseGenerator.getContent(id)
     Future.successful(Ok(views.html.purchase.licenseView(license, new String(content))))
   }
 
-  def licenseDownload(id: UUID) = Action.async { implicit request =>
+  def licenseDownload(id: UUID) = act("user-license-download") { implicit request =>
     val content = LicenseGenerator.getContent(id)
     Future.successful(Ok(content).as("application/octet-stream").withHeaders("Content-Disposition" -> "attachment; filename=databaseflow.license"))
   }

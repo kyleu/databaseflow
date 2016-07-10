@@ -25,19 +25,16 @@ object FeedbackController {
 }
 
 @javax.inject.Singleton
-class FeedbackController @javax.inject.Inject() (
-    implicit
-    val messagesApi: MessagesApi, notificationService: NotificationService
-) extends Controller with I18nSupport {
-  def feedbackForm() = Action.async { implicit request =>
+class FeedbackController @javax.inject.Inject() (implicit val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
+  def feedbackForm() = act("feedback-form") { implicit request =>
     Future.successful(Ok(views.html.feedbackForm()))
   }
 
-  def feedbackOptions() = Action.async { implicit request =>
+  def feedbackOptions() = act("feedback-options") { implicit request =>
     Future.successful(Ok("OK").withHeaders(SiteController.cors: _*))
   }
 
-  def postFeedback(ajax: Boolean) = Action.async { implicit request =>
+  def postFeedback(ajax: Boolean) = act("feedback-post") { implicit request =>
     val action = FeedbackController.feedbackForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.feedbackForm()),
       feedback => {

@@ -1,14 +1,13 @@
 package controllers
 
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, Controller}
+import play.api.i18n.MessagesApi
+import play.api.mvc.Action
 import play.twirl.api.Html
-import utils.Logging
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class DownloadController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends Controller with I18nSupport with Logging {
+class DownloadController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
   private[this] val downloadDir = {
     val server = new java.io.File("/home/ubuntu/deploy/databaseflow-downloads")
     if (server.exists && server.isDirectory) {
@@ -24,7 +23,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
     }
   }
 
-  def download(os: String, variant: String) = Action.async { implicit request =>
+  def download(os: String, variant: String) = act(s"download-$os-$variant") { implicit request =>
     val filename = os match {
       case "osx" => variant match {
         case "service" => "osx/databaseflow.zip"

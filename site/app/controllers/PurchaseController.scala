@@ -3,8 +3,8 @@ package controllers
 import licensing.{License, LicenseEdition, LicenseGenerator}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, Controller}
+import play.api.i18n.MessagesApi
+import play.api.mvc.Action
 import services.notification.NotificationService
 import utils.web.PlayFormUtils
 
@@ -24,15 +24,14 @@ object PurchaseController {
 }
 
 @javax.inject.Singleton
-class PurchaseController @javax.inject.Inject() (
-    implicit
-    override val messagesApi: MessagesApi, notificationService: NotificationService
-) extends Controller with I18nSupport {
-  def pricing() = Action.async { implicit request =>
+class PurchaseController @javax.inject.Inject() (implicit
+  override val messagesApi: MessagesApi,
+    notificationService: NotificationService) extends BaseSiteController {
+  def pricing() = act("pricing") { implicit request =>
     Future.successful(Ok(views.html.purchase.purchase()))
   }
 
-  def purchaseTeamEdition() = Action.async { implicit request =>
+  def purchaseTeamEdition() = act("purchase-team-edition") { implicit request =>
     PurchaseController.stripePurchaseForm.bindFromRequest.fold(
       formWithErrors => {
         Future.successful(Redirect(controllers.routes.PurchaseController.pricing()).flashing("error" -> PlayFormUtils.errorsToString(formWithErrors.errors)))

@@ -19,26 +19,24 @@ object SiteController {
 }
 
 @javax.inject.Singleton
-class SiteController @javax.inject.Inject() (
-    implicit
-    val messagesApi: MessagesApi,
+class SiteController @javax.inject.Inject() (implicit
+  val messagesApi: MessagesApi,
     val actorSystem: ActorSystem,
-    val lifecycle: ApplicationLifecycle
-) extends Controller with I18nSupport {
+    val lifecycle: ApplicationLifecycle) extends BaseSiteController {
 
   val metricsConfig = MetricsConfig(jmxEnabled = true, graphiteEnabled = false, "127.0.0.1", 2003, servletEnabled = true, 9001)
   actorSystem.actorOf(MetricsServletActor.props(metricsConfig), "metrics-servlet")
   lifecycle.addStopHook(() => Future.successful(SharedMetricRegistries.remove("default")))
 
-  def splash() = Action.async { implicit request =>
+  def splash() = act("splash") { implicit request =>
     Future.successful(Ok(views.html.splash()).withHeaders(SiteController.cors: _*))
   }
 
-  def index() = Action.async { implicit request =>
+  def index() = act("index") { implicit request =>
     Future.successful(Ok(views.html.index()).withHeaders(SiteController.cors: _*))
   }
 
-  def robots() = Action.async { implicit request =>
+  def robots() = act("robots-txt") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow:"))
   }
 }
