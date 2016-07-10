@@ -38,7 +38,7 @@ object Server {
   private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
     name := Shared.projectId,
     maintainer := "Kyle Unverferth <kyle@databaseflow.com>",
-    description := "Database Flow is a modern sql client.",
+    description := "Database Flow",
 
     resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= dependencies,

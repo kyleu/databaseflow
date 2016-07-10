@@ -1,5 +1,6 @@
 import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.debian.DebianPlugin.autoImport.Debian
+import com.typesafe.sbt.packager.windows.WindowsPlugin.autoImport.Windows
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import sbt.Keys._
 import sbt._
@@ -13,11 +14,13 @@ object Packaging {
   }
 
   private[this] val packagingSettings = Seq(
-    topLevelDirectory := Some("database-flow"),
+    topLevelDirectory := Some("databaseflow"),
+    topLevelDirectory in Windows := Some("Database Flow"),
     packageSummary := description.value,
     packageDescription := description.value,
     packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",
     debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
+    makeBatScript := Some(file("./src/deploy/package/windows/databaseflow.bat")),
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
       "-J-Xms256m",
