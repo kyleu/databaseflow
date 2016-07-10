@@ -2,15 +2,16 @@ package controllers.admin
 
 import java.util.UUID
 
-import licensing.{License, LicenseEdition}
+import controllers.BaseSiteController
+import licensing.LicenseEdition
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class AdminController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseAdminController {
-  def index() = withAdminSession { (username, request) =>
+class AdminController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
+  def index() = withAdminSession("admin-index") { (username, request) =>
     implicit val req = request
     Future.successful(Ok(views.html.admin.index(username)))
   }
@@ -23,7 +24,8 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
     }
   }
 
-  def sandbox() = Action.async { implicit request =>
+  def sandbox() = withAdminSession("admin-sandbox") { (username, request) =>
+    implicit val req = request
     Future.successful(Ok(views.html.email.personalLicenseMessage(
       id = UUID.randomUUID,
       name = "License Holder",
