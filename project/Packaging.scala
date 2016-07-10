@@ -21,6 +21,8 @@ object Packaging {
     packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",
     debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
     makeBatScript := Some(file("./src/deploy/package/windows/databaseflow.bat")),
+    topLevelDirectory in Universal := None,
+
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
       "-J-Xms256m",

@@ -44,7 +44,6 @@ object Server {
     libraryDependencies ++= dependencies,
 
     scalaJSProjects := Seq(Client.client),
-
     routesGenerator := InjectedRoutesGenerator,
 
     // Sbt-Web

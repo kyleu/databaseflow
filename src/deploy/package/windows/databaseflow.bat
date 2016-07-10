@@ -4,18 +4,21 @@
 @REM JAVA_HOME - location of a JDK home dir (optional if java on path)
 @REM CFG_OPTS  - JVM options (optional)
 @REM Configuration:
+@REM DATABASEFLOW_config.txt found in the DATABASEFLOW_HOME.
 @setlocal enabledelayedexpansion
 
 @echo off
 
-set "APP_LIB_DIR=.\lib\"
+if "%DATABASEFLOW_HOME%"=="" set "DATABASEFLOW_HOME=%~dp0\\.."
+
+set "APP_LIB_DIR=%DATABASEFLOW_HOME%\lib\"
 
 rem Detect if we were double clicked, although theoretically A user could
 rem manually run cmd /c
 for %%x in (!cmdcmdline!) do if %%~x==/c set DOUBLECLICKED=1
 
 rem FIRST we load the config file of extra options.
-set "CFG_FILE=.\DATABASEFLOW_config.txt"
+set "CFG_FILE=%DATABASEFLOW_HOME%\DATABASEFLOW_config.txt"
 set CFG_OPTS=
 if exist "%CFG_FILE%" (
   FOR /F "tokens=* eol=# usebackq delims=" %%i IN ("%CFG_FILE%") DO (
