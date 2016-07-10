@@ -16,13 +16,13 @@ object LicenseService extends Logging {
   def readLicense() = {
     val content = SettingsService(SettingKey.LicenseContent)
     if (content.isEmpty) {
-      log.info(" ::: Database Flow Trial Edition.")
+      log.warn(" ::: Database Flow Trial Edition started.")
       license = None
       licenseContent = None
     } else {
       license = parseLicense(content) match {
         case Success(lic) =>
-          log.info(s" ::: Database Flow ${lic.edition.title}, registered to [${lic.name}] (${lic.email}).")
+          log.warn(s"Database Flow ${lic.edition.title}, registered to [${lic.name}] (${lic.email}).")
           licenseContent = Some(content)
           Some(lic)
         case Failure(x) =>
@@ -30,6 +30,7 @@ object LicenseService extends Logging {
           None
       }
     }
+    log.warn(s" - Head to http://localhost:4000 to get started!")
   }
 
   def parseLicense(content: String) = Try {

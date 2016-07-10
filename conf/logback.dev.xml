@@ -1,16 +1,17 @@
 <configuration>
-  <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>/home/ubuntu/logs/databaseflow.log</file>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%date - [%level] - from %logger in %thread %n%message%n%xException%n</pattern>
+      <charset>UTF-8</charset>
+      <pattern>%-5coloredLevel %d{HH:mm:ss.SSS} %cyan(%logger{15}): %msg%n%xException</pattern>
     </encoder>
   </appender>
+
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/home/ubuntu/logs/databaseflow.log</file>
+    <file>logs/databaseflow.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>/home/ubuntu/logs/databaseflow.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>logs/databaseflow.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>50MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>
@@ -20,12 +21,6 @@
     <encoder>
       <charset>UTF-8</charset>
       <pattern>[%level] %date from %logger in %thread %n%message%n%xException%n</pattern>
-    </encoder>
-  </appender>
-
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%coloredLevel - %date - %logger{15} - %message%n%xException{20}</pattern>
     </encoder>
   </appender>
 
