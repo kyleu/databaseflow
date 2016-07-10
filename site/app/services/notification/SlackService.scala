@@ -1,6 +1,5 @@
 package services.notification
 
-import com.typesafe.config.Config
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import upickle.Js

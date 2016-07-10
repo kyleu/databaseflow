@@ -1,0 +1,20 @@
+package controllers.admin
+
+import play.api.i18n.MessagesApi
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.ws.WSClient
+
+@javax.inject.Singleton
+class MetricsController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, ws: WSClient) extends BaseAdminController {
+  def view() = withAdminSession { (username, request) =>
+    implicit val req = request
+
+    val url = "http://localhost:9001/metrics?pretty=true"
+    val call = ws.url(url).withHeaders("Accept" -> "application/json")
+    val f = call.get()
+
+    f.map { json =>
+      Ok(views.html.admin.metrics(json.body))
+    }
+  }
+}
