@@ -37,4 +37,8 @@ class SiteController @javax.inject.Inject() (
   def index() = Action.async { implicit request =>
     Future.successful(Ok(views.html.index()).withHeaders(SiteController.cors: _*))
   }
+
+  def robots() = Action.async { implicit request =>
+    Future.successful(Ok("User-agent: *\nDisallow:"))
+  }
 }

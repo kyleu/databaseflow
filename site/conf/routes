@@ -1,5 +1,6 @@
 GET         /                            controllers.SiteController.splash
 GET         /site                        controllers.SiteController.index
+GET         /robots.txt                  controllers.SiteController.robots
 
 # Feedback
 GET         /feedback                    controllers.FeedbackController.feedbackForm

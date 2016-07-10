@@ -24,4 +24,8 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
   def ping(timestamp: Long) = withSession("ping") { implicit request =>
     Future.successful(Ok(timestamp.toString))
   }
+
+  def robots() = withSession("robots") { implicit request =>
+    Future.successful(Ok("User-agent: *\nDisallow: /"))
+  }
 }
