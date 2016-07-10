@@ -70,13 +70,19 @@ a.theme-text:hover {
 
   .card-action {
     .btn .btn-flat {
-      text-transform: none !important;
       cursor: pointer;
       &:hover {
         color: #888;
       }
     }
+    a, button {
+      text-transform: none !important;
+    }
   }
+}
+
+.btn, .btn-flat {
+  text-transform: none !important;
 }
 
 .flash-error, .flash-success {
@@ -99,7 +105,14 @@ a.theme-text:hover {
   white-space: pre-wrap;
   text-wrap: normal;
   word-break: break-all;
-  padding: 10px;
+  margin: 0;
+}
+
+.license-table {
+  margin-bottom: 15px;
+  th, td {
+    padding: 15px;
+  }
 }
 
 // Helper Classes
