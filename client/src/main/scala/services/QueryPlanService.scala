@@ -25,9 +25,11 @@ object QueryPlanService {
     val raw = $(".plan-raw", panel)
 
     val nodes = pr.result.node.withChildren()
+    val costs = pr.result.node.costs
+    val total = costs.cost.map(Left(_)).getOrElse(Right(costs.duration.orElse(costs.actualRows.map(_.toDouble)).getOrElse(costs.estimatedRows.toDouble)))
     nodes.foreach { node =>
       JQueryUtils.clickHandler($(s"#plan-node-${node.id}", panel), (x) => {
-        PlanNodeDetailManager.show(node, pr.result.node.costs.cost.getOrElse(0))
+        PlanNodeDetailManager.show(node, total)
       })
     }
 

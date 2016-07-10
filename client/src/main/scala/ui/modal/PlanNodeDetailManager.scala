@@ -18,8 +18,8 @@ object PlanNodeDetailManager {
     })
   }
 
-  def show(node: PlanNode, totalCost: Int) = {
-    val content = QueryPlanNodeDetailTemplate.forNode(node, totalCost)
+  def show(node: PlanNode, total: Either[Int, Double]) = {
+    val content = QueryPlanNodeDetailTemplate.forNode(node, total)
     modalContent.html(content.toString)
     modal.openModal()
   }

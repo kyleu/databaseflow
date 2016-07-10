@@ -5,11 +5,11 @@ import models.plan.PlanNode
 import scalatags.Text.all._
 
 object QueryPlanNodeDetailTemplate {
-  def forNode(node: PlanNode, totalCost: Int): Modifier = {
+  def forNode(node: PlanNode, total: Either[Int, Double]): Modifier = {
     div(cls := "")(
       div(cls := "row")(
         div(cls := "col s12")(
-          h5(div(cls := "right")(s"${node.costPercentageString(totalCost)} of cost"), node.title)
+          h5(div(cls := "right")(s"${node.percentageString(total)} of total"), node.title)
         )
       ),
       div(cls := "row")(

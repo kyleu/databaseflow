@@ -13,9 +13,13 @@ object QueryPlanTemplate {
       em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString), s" in [${pr.durationMs}ms]"),
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
-          div(cls := "tree")(
-            ul(forNode(pr.result.node, "root-node", pr.result.node.costs.cost.getOrElse(0): Int))
-          )
+          div(cls := "tree") {
+            val costs = pr.result.node.costs
+            val total = costs.cost.map(Left(_)).getOrElse {
+              Right(costs.duration.orElse(costs.actualRows.map(_.toDouble)).getOrElse(costs.estimatedRows.toDouble))
+            }
+            ul(forNode(pr.result.node, "root-node", total))
+          }
         ),
         div(cls := "clear")
       ),
@@ -33,9 +37,9 @@ object QueryPlanTemplate {
     )
   }
 
-  private[this] def forNode(node: PlanNode, className: String, totalCost: Int, depth: Int = 0): Modifier = {
+  private[this] def forNode(node: PlanNode, className: String, total: Either[Int, Double], depth: Int = 0): Modifier = {
     val divContents = div(id := "plan-node-" + node.id, cls := "node z-depth-1")(
-      div(cls := "node-percentage")(node.costPercentageString(totalCost)),
+      div(cls := "node-percentage")(node.percentageString(total)),
       div(cls := "node-stat-divider")("|"),
       div(cls := "node-duration")(node.durationWithoutChildren.map { d =>
         BigDecimal.decimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble + "ms"
@@ -47,7 +51,7 @@ object QueryPlanTemplate {
     if (node.children.isEmpty) {
       li(cls := className)(divContents)
     } else {
-      val kids = node.children.map(n => forNode(n, s"depth-$depth-child", totalCost, depth + 1))
+      val kids = node.children.map(n => forNode(n, s"depth-$depth-child", total, depth + 1))
       li(cls := className)(divContents, ul(kids: _*))
     }
   }

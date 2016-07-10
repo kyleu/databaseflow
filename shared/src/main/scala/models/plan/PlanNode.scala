@@ -31,9 +31,10 @@ case class PlanNode(
 
   def withChildren(): Seq[PlanNode] = Seq(this) ++ children.flatMap(_.withChildren())
 
-  def costPercentageString(totalCost: Int) = {
-    val own = costWithoutChildren.getOrElse(0)
-    val pct = (own.toDouble / totalCost.toDouble) * 100
+  def percentageString(total: Either[Int, Double]) = {
+    val own = costWithoutChildren.orElse(actualRowsWithoutChildren).getOrElse(estimatedRowsWithoutChildren)
+    val totalCostReduced = total.fold(cost => cost.toDouble, rows => rows)
+    val pct = (own.toDouble / totalCostReduced) * 100
     val pctString = Math.round(pct)
     val est = if (costs.cost.isDefined) { "" } else { "~" }
     est + pctString + "%"
