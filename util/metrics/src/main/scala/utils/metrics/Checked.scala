@@ -3,7 +3,6 @@ package utils.metrics
 import com.codahale.metrics.health.HealthCheckRegistry
 import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck
 import nl.grons.metrics.scala.{MetricName, CheckedBuilder}
-import utils.Config
 
 object Checked {
   val healthCheckRegistry = new HealthCheckRegistry()
@@ -11,6 +10,6 @@ object Checked {
 }
 
 trait Checked extends CheckedBuilder {
-  override lazy val metricBaseName = MetricName(Config.projectId)
+  override lazy val metricBaseName = MetricName("databaseflow")
   override val registry = Checked.healthCheckRegistry
 }

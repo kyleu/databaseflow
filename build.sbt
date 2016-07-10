@@ -14,6 +14,8 @@ lazy val server = Server.server
 
 lazy val site = Site.site
 
+lazy val metrics = Utilities.metrics
+
 lazy val iconCreator = Utilities.iconCreator
 
 lazy val licenseModels = Utilities.licenseModels

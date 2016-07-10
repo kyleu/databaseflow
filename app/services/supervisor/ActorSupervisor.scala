@@ -7,7 +7,7 @@ import akka.actor.SupervisorStrategy.Stop
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
-import utils.metrics.{InstrumentedActor, MetricsServletActor}
+import utils.metrics.{InstrumentedActor, MetricsConfig, MetricsServletActor}
 import utils.{ApplicationContext, DateUtils, Logging}
 
 object ActorSupervisor {
@@ -21,7 +21,14 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
   protected[this] val socketsCounter = metrics.counter("active-connections")
 
   override def preStart() {
-    context.actorOf(MetricsServletActor.props(ctx.config), "metrics-servlet")
+    context.actorOf(MetricsServletActor.props(MetricsConfig(
+      ctx.config.jmxEnabled,
+      ctx.config.graphiteEnabled,
+      ctx.config.graphiteServer,
+      ctx.config.graphitePort,
+      ctx.config.servletEnabled,
+      ctx.config.servletPort
+    )), "metrics-servlet")
   }
 
   override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy() {

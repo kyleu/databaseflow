@@ -1,7 +1,7 @@
 package utils
 
-import play.api.Logger
 import org.slf4j.LoggerFactory
+import play.api.Logger
 import utils.metrics.Instrumented
 
 object Logging extends Instrumented {
@@ -66,6 +66,6 @@ object Logging extends Instrumented {
 trait Logging {
   protected[this] val log = {
     val name = s"databaseflow.${this.getClass.getSimpleName.replace("$", "")}"
-    Logging.CustomLogger(name)
+    LoggerFactory.getLogger(name)
   }
 }

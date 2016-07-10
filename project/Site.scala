@@ -19,7 +19,6 @@ object Site {
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit, Commerce.stripe,
       Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
-      Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome
     )
   }
@@ -52,6 +51,8 @@ object Site {
   )
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .settings(siteSettings: _*)
+    .dependsOn(Utilities.metrics)
+    .aggregate(Utilities.metrics)
     .dependsOn(Utilities.licenseGenerator)
     .aggregate(Utilities.licenseGenerator)
 }

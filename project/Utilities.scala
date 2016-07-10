@@ -1,9 +1,22 @@
+import Dependencies.{ Akka, Metrics, Play }
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import sbt.Keys._
 import sbt._
 
 object Utilities {
+  lazy val metrics = (project in file("util/metrics")).settings(
+    name := "metrics",
+    ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  )
+    .settings(libraryDependencies ++= Seq(
+      Play.playLib, Akka.actor,
+      Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite
+    ))
+    .settings(Shared.commonSettings: _*)
+    .settings(graphSettings: _*)
+    .settings(scalariformSettings: _*)
+
   lazy val iconCreator = (project in file("util/iconCreator")).settings(
     name := "icon-creator",
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
@@ -16,9 +29,7 @@ object Utilities {
     name := "license-models",
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   )
-    .settings(
-      libraryDependencies ++= Seq(Dependencies.Utils.crypto, Dependencies.Utils.enumeratum)
-    )
+    .settings(libraryDependencies ++= Seq(Dependencies.Utils.crypto, Dependencies.Utils.enumeratum))
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)

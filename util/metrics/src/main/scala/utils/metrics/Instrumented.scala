@@ -5,7 +5,6 @@ import java.lang.management.ManagementFactory
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.jvm._
 import nl.grons.metrics.scala.{MetricName, InstrumentedBuilder}
-import utils.Config
 
 object Instrumented {
   val metricRegistry = new MetricRegistry()
@@ -18,6 +17,6 @@ object Instrumented {
 }
 
 trait Instrumented extends InstrumentedBuilder {
-  override lazy val metricBaseName = MetricName(s"${Config.projectId}.${getClass.getSimpleName.replaceAllLiterally("$", "")}")
+  override lazy val metricBaseName = MetricName(s"databaseflow.${getClass.getSimpleName.replaceAllLiterally("$", "")}")
   override val metricRegistry = Instrumented.metricRegistry
 }
