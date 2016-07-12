@@ -128,7 +128,7 @@ set _JAVA_OPTS=!_JAVA_OPTS! !_JAVA_PARAMS!
 :run
 
 set "APP_CLASSPATH="
-set "APP_MAIN_CLASS=-jar %APP_LIB_DIR%\databaseflow.databaseflow-1.0.0-launcher.jar"
+set "APP_MAIN_CLASS=-jar "%APP_LIB_DIR%\databaseflow.databaseflow-1.0.0-launcher.jar""
 
 if defined CUSTOM_MAIN_CLASS (
     set MAIN_CLASS=!CUSTOM_MAIN_CLASS!

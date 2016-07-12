@@ -51,6 +51,5 @@ object DatabaseRegistry extends Logging {
   def close() = {
     databases.values.foreach(_._1.close())
     databases.clear()
-    MasterDatabase.close()
   }
 }

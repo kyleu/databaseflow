@@ -1,5 +1,6 @@
 GET         /sandbox                    controllers.admin.SandboxController.list
 GET         /sandbox/:key               controllers.admin.SandboxController.sandbox(key)
+GET         /metrics                    controllers.admin.SandboxController.dumpMetrics
 
 GET         /users/new                  controllers.admin.UserCreateController.newUser()
 POST        /users/new                  controllers.admin.UserCreateController.saveNewUser()

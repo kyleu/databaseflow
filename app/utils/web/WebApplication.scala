@@ -4,7 +4,10 @@ import gui.web.WebApp
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Mode, Play}
 import play.core.server.{NettyServer, ServerConfig}
+import services.data.MasterDdl
+import services.database.core.MasterDatabase
 import services.licensing.LicenseService
+import services.settings.SettingsService
 
 class WebApplication() extends WebApp {
   private[this] lazy val app = new GuiceApplicationBuilder().build()
@@ -17,6 +20,9 @@ class WebApplication() extends WebApp {
 
   def start() = {
     if (!LicenseService.hasLicense) {
+      MasterDatabase.open()
+      MasterDdl.update(MasterDatabase.conn)
+      SettingsService.load()
       LicenseService.readLicense()
     }
 

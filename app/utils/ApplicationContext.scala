@@ -59,10 +59,12 @@ class ApplicationContext @javax.inject.Inject() (
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
     ConfigFileService.init()
-    MasterDatabase.open()
-    MasterDdl.update(MasterDatabase.conn)
-    SettingsService.load()
-    LicenseService.readLicense()
+    if (!MasterDatabase.isOpen) {
+      MasterDatabase.open()
+      MasterDdl.update(MasterDatabase.conn)
+      SettingsService.load()
+      LicenseService.readLicense()
+    }
     ResultCacheDatabase.open()
 
     lifecycle.addStopHook(() => Future.successful(stop()))
@@ -73,7 +75,6 @@ class ApplicationContext @javax.inject.Inject() (
 
   private[this] def stop() = {
     DatabaseRegistry.close()
-    ResultCacheDatabase.close()
     SharedMetricRegistries.remove("default")
   }
 }

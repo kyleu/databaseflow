@@ -64,7 +64,7 @@ object Server {
   )
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .enablePlugins(UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
-    .enablePlugins(if(PackagingSettings.serviceApp) { JavaServerAppPackaging } else { JavaAppPackaging })
+    .enablePlugins(JavaAppPackaging)
     .settings(serverSettings: _*)
     .aggregate(projectToRef(Client.client))
     .settings(PackagingSettings.settings: _*)

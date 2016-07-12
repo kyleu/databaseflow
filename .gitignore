@@ -9,8 +9,13 @@ dist
 /*.iml
 /db
 /out
-/build
+
 /cache
+
+/build/linux
+/build/osx
+/build/windows
+
 /.idea_modules
 /.classpath
 /.project
