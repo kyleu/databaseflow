@@ -45,7 +45,7 @@ object HelpTemplate {
         )
       )
     )
-    StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.help -> "Database Flow Help"))
+    StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.help -> span("Database Flow Help")))
   }
 
   private[this] def patternToRow(s: KeyboardShortcut) = tr(td(s.pattern), td(s.desc))

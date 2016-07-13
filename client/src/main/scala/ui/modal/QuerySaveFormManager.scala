@@ -67,6 +67,11 @@ object QuerySaveFormManager {
     } else {
       SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
     }
+    val status = $(s"#panel-${sq.id} .unsaved-status")
+    if (status.length != 1) {
+      throw new IllegalStateException(s"Panel has [${status.length}] status elements.")
+    }
+    status.hide()
   }
 
   private[this] def save() = {

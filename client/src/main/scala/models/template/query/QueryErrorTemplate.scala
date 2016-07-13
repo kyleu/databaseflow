@@ -20,7 +20,7 @@ object QueryErrorTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.error -> "Query Error"),
+      iconAndTitle = Some(Icons.error -> span("Query Error")),
       showClose = false
     )
   }
@@ -34,7 +34,7 @@ object QueryErrorTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.error -> "Plan Error"),
+      iconAndTitle = Some(Icons.error -> span("Plan Error")),
       showClose = false
     )
   }

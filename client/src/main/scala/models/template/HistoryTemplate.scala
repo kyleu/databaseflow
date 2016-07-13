@@ -13,7 +13,7 @@ object HistoryTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.history -> "Query History"),
+      iconAndTitle = Some(Icons.history -> span("Query History")),
       actions = Seq(
         div(a(cls := "right-link remove-all-history-link theme-text", href := "")("Remove All History")),
         div(a(cls := "refresh-history-link theme-text", href := "")("Refresh"))

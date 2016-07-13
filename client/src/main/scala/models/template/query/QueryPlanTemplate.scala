@@ -28,7 +28,7 @@ object QueryPlanTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.queryPlan -> "Query Plan"),
+      iconAndTitle = Some(Icons.queryPlan -> span("Query Plan")),
       actions = Seq(
         a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan"),
         div(style := "clear: both;")()

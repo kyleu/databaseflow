@@ -25,7 +25,7 @@ object FeedbackTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.feedback -> "Feedback"),
+      iconAndTitle = Some(Icons.feedback -> span("Feedback")),
       actions = Seq(
         a(href := "", cls := "theme-text right submit-feedback")("Submit Feedback"),
         div(style := "clear: both;")

@@ -12,6 +12,8 @@ import scalatags.Text.all._
 object QueryEditorTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
     Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
+    Some(a(cls := "run-active-query-link theme-text", href := "#")("Run Active")),
+    Some(a(cls := "run-selection-query-link theme-text", href := "#")("Run Selection")),
     Some(a(cls := "export-link theme-text", href := "#")("Export")),
     if (engine.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
     if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
@@ -43,8 +45,8 @@ object QueryEditorTemplate {
   private[this] def queryPanel(queryId: UUID, queryName: String, sql: String, icon: String, links: Seq[TypedTag[String]]) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(
-        div(id := s"sql-textarea-$queryId", cls := "sql-textarea", style := "width: 100%;")(sql),
-        Some(icon -> queryName),
+        div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
+        Some(icon -> span(queryName, span(cls := "unsaved-status", title := "This query has unsaved changes.")("*"))),
         actions = links
       ),
       div(id := s"workspace-$queryId")

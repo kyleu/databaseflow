@@ -23,7 +23,7 @@ object SampleDatabaseManager {
       div("Completed SQL statements: ", div(cls := "completed-statements")("0")),
       div("Remaining SQL statements: ", div(cls := "remaining-statements")("0"))
     )
-    QueryManager.workspace.append(StaticPanelTemplate.panel(queryId, "Loading Sample Database", content, Icons.database).render)
+    QueryManager.workspace.append(StaticPanelTemplate.panel(queryId, span("Loading Sample Database"), content, Icons.database).render)
     TabManager.addTab(queryId, "ctx-load", "Sample Database", Icons.database, () => Unit)
     NetworkMessage.sendMessage(CreateSampleDatabase(queryId))
     ConfirmManager.close()

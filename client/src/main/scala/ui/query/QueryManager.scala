@@ -2,14 +2,12 @@ package ui.query
 
 import java.util.UUID
 
-import models.template.Icons
 import models.{CheckQuery, SubmitQuery}
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.{EditorManager, ProgressManager, TabManager}
 import utils.NetworkMessage
 
 import scala.scalajs.js
-import scala.scalajs.js.timers.setTimeout
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
@@ -40,10 +38,13 @@ object QueryManager {
     wire($(".explain-query-link", queryPanel), "explain")
     wire($(".analyze-query-link", queryPanel), "analyze")
 
-    sqlEditor.selection.selectAll()
-    setTimeout(500) {
-      sqlEditor.focus()
-    }
+    val sel = sqlEditor.selection
+    sel.moveCursorFileEnd()
+    sel.on("changeSelection", () => {
+      val txt = sqlEditor.getSelectedText()
+      utils.Logging.info(s"Selected: [$txt].")
+    })
+    sqlEditor.focus()
 
     activeQueries = activeQueries :+ queryId
     sqlEditors = sqlEditors + (queryId -> sqlEditor)
@@ -57,7 +58,7 @@ object QueryManager {
   }
 
   def setSql(queryId: UUID, sql: String) = sqlEditors.get(queryId) match {
-    case Some(editor) => editor.setValue(sql)
+    case Some(editor) => editor.setValue(sql, editor.getCursorPosition())
     case None => // no op
   }
 

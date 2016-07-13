@@ -12,7 +12,7 @@ object ProgressTemplate {
           div("Loading for ", span(cls := "timer")("0"), " seconds..."),
           div(cls := "cancel-query-link", a(href := "#")("Cancel"))
         ),
-        iconAndTitle = Some(Icons.loading + " " + Icons.spin -> title),
+        iconAndTitle = Some(Icons.loading + " " + Icons.spin -> span(title)),
         showClose = false
       )
     )

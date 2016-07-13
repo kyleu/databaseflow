@@ -79,7 +79,7 @@ object ModelListTemplate {
   private[this] def forModels(queryId: UUID, name: String, t: TypedTag[String]) = {
     val searchBox = input(cls := "model-filter", placeholder := s"Filter $name", `type` := "text")
     val ret = div(
-      StaticPanelTemplate.cardRow(div(searchBox, t), Some(Icons.list -> name)),
+      StaticPanelTemplate.cardRow(div(searchBox, t), Some(Icons.list -> span(name))),
       div(id := s"workspace-$queryId")
     )
     name -> ret

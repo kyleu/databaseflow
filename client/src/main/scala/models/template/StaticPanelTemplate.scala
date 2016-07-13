@@ -6,14 +6,19 @@ import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 object StaticPanelTemplate {
-  def panel(queryId: UUID, title: String, content: TypedTag[String], icon: String) = {
+  def panel(queryId: UUID, title: TypedTag[String], content: TypedTag[String], icon: String) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       cardRow(content, Some(icon -> title)),
       div(id := s"workspace-$queryId")
     )
   }
 
-  def cardRow(content: TypedTag[String], iconAndTitle: Option[(String, String)] = None, actions: Seq[TypedTag[String]] = Nil, showClose: Boolean = true) = {
+  def cardRow(
+    content: TypedTag[String],
+    iconAndTitle: Option[(String, TypedTag[String])] = None,
+    actions: Seq[TypedTag[String]] = Nil,
+    showClose: Boolean = true
+  ) = {
     val closeEl = if (showClose) {
       Some(i(cls := s"right theme-text fa ${Icons.close}"))
     } else {
