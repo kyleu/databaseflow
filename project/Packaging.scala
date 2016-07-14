@@ -4,9 +4,8 @@ import com.typesafe.sbt.packager.windows.WindowsPlugin.autoImport.Windows
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import sbt.Keys._
 import sbt._
-import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.Universal
+import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.{ Universal, useNativeZip }
 import com.typesafe.sbt.packager.windows
-import com.typesafe.sbt.packager.windows._
 
 object Packaging {
   private[this] lazy val iconGlob = sys.props("os.name").toLowerCase match {
@@ -17,7 +16,7 @@ object Packaging {
 
   private[this] def isConf(x: (File, String)) = x._1.getAbsolutePath.contains("conf/")
 
-  private[this] val packagingSettings = Seq(
+  private[this] val packagingSettings = useNativeZip ++ Seq(
     topLevelDirectory in Universal := None,
     packageSummary := description.value,
     packageDescription := description.value,

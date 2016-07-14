@@ -5,7 +5,7 @@ import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.packager.Keys._
-import com.typesafe.sbt.packager.archetypes.{ JavaAppPackaging, JavaServerAppPackaging }
+import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.debian.DebianPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
@@ -18,6 +18,7 @@ import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
 import play.sbt.routes.RoutesKeys.routesGenerator
+import play.sbt.PlayImport.PlayKeys._
 import playscalajs.PlayScalaJS.autoImport._
 import sbt.Keys._
 import sbt.Project.projectToRef
@@ -34,7 +35,6 @@ object Server {
       Akka.testkit, Play.playTest, Testing.scalaTest
     )
   }
-
   private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
     name := Shared.projectId,
     maintainer := "Kyle Unverferth <kyle@databaseflow.com>",
@@ -45,6 +45,7 @@ object Server {
 
     scalaJSProjects := Seq(Client.client),
     routesGenerator := InjectedRoutesGenerator,
+    externalizeResources := false,
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,

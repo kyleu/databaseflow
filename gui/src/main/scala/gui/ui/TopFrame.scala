@@ -67,10 +67,6 @@ class TopFrame(app: WebApp) extends MainFrame {
     statusLabel.text = "http://localhost:4000"
     statusLabel.cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
     statusLabel.xAlignment = Alignment.Center
-
-    if (java.awt.Desktop.isDesktopSupported) {
-      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4000"))
-    }
   }
 
   override def closeOperation() = {
