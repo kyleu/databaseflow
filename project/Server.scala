@@ -58,24 +58,22 @@ object Server {
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")
   )
 
-  lazy val server = Project(
-    id = Shared.projectId,
-    base = file(".")
-  )
-    .enablePlugins(SbtWeb, play.sbt.PlayScala)
-    .enablePlugins(UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
-    .enablePlugins(JavaAppPackaging)
-    .settings(serverSettings: _*)
-    .aggregate(projectToRef(Client.client))
-    .settings(PackagingSettings.settings: _*)
-    .aggregate(Gui.gui)
-    .dependsOn(Gui.gui)
-    .aggregate(Shared.sharedJvm)
-    .dependsOn(Shared.sharedJvm)
-    .aggregate(Database.dblibs)
-    .dependsOn(Database.dblibs)
-    .dependsOn(Utilities.metrics)
-    .aggregate(Utilities.metrics)
-    .dependsOn(Utilities.licenseModels)
-    .aggregate(Utilities.licenseModels)
+  private[this] def withProjects(p: Project, includes: Seq[Project]) = includes.foldLeft(p) { (proj, inc) =>
+    proj.aggregate(inc).dependsOn(inc)
+  }
+
+  lazy val server = {
+    val ret = Project(
+      id = Shared.projectId,
+      base = file(".")
+    )
+      .enablePlugins(SbtWeb, play.sbt.PlayScala)
+      .enablePlugins(UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
+      .enablePlugins(JavaAppPackaging)
+      .settings(serverSettings: _*)
+      .aggregate(projectToRef(Client.client))
+      .settings(PackagingSettings.settings: _*)
+
+    withProjects(ret, Seq(Gui.gui, Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.licenseModels))
+  }
 }

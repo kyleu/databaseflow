@@ -12,8 +12,6 @@ import scalatags.Text.all._
 object QueryEditorTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
     Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
-    Some(a(cls := "run-active-query-link theme-text", href := "#")("Run Active")),
-    Some(a(cls := "run-selection-query-link theme-text", href := "#")("Run Selection")),
     Some(a(cls := "export-link theme-text", href := "#")("Export")),
     if (engine.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
     if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
