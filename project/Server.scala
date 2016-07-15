@@ -35,6 +35,7 @@ object Server {
       Akka.testkit, Play.playTest, Testing.scalaTest
     )
   }
+
   private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
     name := Shared.projectId,
     maintainer := "Kyle Unverferth <kyle@databaseflow.com>",
@@ -54,6 +55,9 @@ object Server {
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
+
+    // Getdown
+    Getdown.cmd <<= Getdown.task,
 
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")

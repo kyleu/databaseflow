@@ -24,6 +24,8 @@ addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.0")
 // App Packaging
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.2")
 
+libraryDependencies += "com.threerings" % "getdown" % "1.5"
+
 // Code Quality
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0") // scalastyle
 

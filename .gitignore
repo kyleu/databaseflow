@@ -15,6 +15,7 @@ dist
 /build/linux
 /build/osx
 /build/windows
+/build/getdown
 
 /.idea_modules
 /.classpath
