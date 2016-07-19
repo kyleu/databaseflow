@@ -2,7 +2,7 @@ package services.codegen
 
 import java.sql.JDBCType
 
-import models.codegen.{ Capabilities, Engine }
+import models.codegen.{Capabilities, Engine}
 import org.hibernate.dialect.Dialect
 import org.hibernate.dialect.function._
 
@@ -13,8 +13,6 @@ object CapabilitiesProvider {
     val dialect = DialectProvider.dialectFor(engine)
 
     val functions = getFunctions(dialect)
-
-    dialect.getQuerySequencesString
 
     val types = JDBCType.values.sortBy(_.toString).map { x =>
       try {

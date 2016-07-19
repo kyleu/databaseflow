@@ -16,13 +16,13 @@ case class DatabaseEngine(
     id: String,
     name: String,
     driverClass: String,
-    exampleUrl: String,
-
-    builtInFunctions: Seq[String] = Nil,
-    columnTypes: Seq[String] = Nil
+    exampleUrl: String
 ) {
-  def leftQuoteIdentifier: String = ""
-  def rightQuoteIdentifier: String = ""
+  def builtInFunctions: Seq[String] = Nil
+  def columnTypes: Seq[String] = Nil
+
+  def leftQuoteIdentifier: String = "\""
+  def rightQuoteIdentifier: String = "\""
 
   def explain: Option[(String) => String] = None
   def analyze: Option[(String) => String] = None
