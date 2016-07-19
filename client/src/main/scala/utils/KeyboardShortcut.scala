@@ -4,7 +4,7 @@ import java.util.UUID
 
 import enumeratum._
 import ui.metadata.MetadataManager
-import ui.query.{AdHocQueryManager, QueryManager}
+import ui.query.{AdHocQueryManager, QueryManager, SqlManager}
 import ui.search.SearchManager
 import ui.{EditorManager, HelpManager, TabManager}
 
@@ -20,7 +20,7 @@ object KeyboardShortcut extends Enum[KeyboardShortcut] {
   }, isGlobal = false)
 
   case object Blur extends KeyboardShortcut("esc", "Leave Editor", { uuid =>
-    QueryManager.blurEditor(uuid.getOrElse(throw new IllegalStateException()))
+    SqlManager.blurEditor(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
   case object Help extends KeyboardShortcut("?", "Help", { _ =>

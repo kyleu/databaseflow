@@ -30,7 +30,7 @@ object SavedQueryManager {
       savedQueries = savedQueries + (sq.id -> sq)
 
       if (openSavedQueries(sq.id)) {
-        QueryManager.setSql(sq.id, sq.sql)
+        SqlManager.setSql(sq.id, sq.sql)
       }
     }
     MetadataManager.updateSavedQueries(savedQueries.values.toSeq.sortBy(_.name))
@@ -59,19 +59,19 @@ object SavedQueryManager {
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
     utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-      QueryExportFormManager.show(savedQuery.id, QueryManager.getSql(savedQuery.id), savedQuery.name)
+      QueryExportFormManager.show(savedQuery.id, SqlManager.getSql(savedQuery.id), savedQuery.name)
     })
     utils.JQueryUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
-      sql = QueryManager.getSql(savedQuery.id)
+      sql = SqlManager.getSql(savedQuery.id)
     )))
     utils.JQueryUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
-      sql = QueryManager.getSql(savedQuery.id)
+      sql = SqlManager.getSql(savedQuery.id)
     )))
     utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       val newSavedQuery = savedQuery.copy(
-        sql = QueryManager.getSql(savedQuery.id)
+        sql = SqlManager.getSql(savedQuery.id)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })

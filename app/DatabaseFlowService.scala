@@ -4,6 +4,9 @@ object DatabaseFlowService {
   private[this] var app: Option[WebApplication] = None
 
   def main(args: Array[String]) {
+    if (args.headOption.contains("-v")) {
+      throw new IllegalArgumentException("Invalid argument.")
+    }
     app = Some(new WebApplication())
     app.foreach(_.start())
   }
