@@ -4,7 +4,7 @@
 ) @layout.simple(user, "Edit " + title, debug = false) {
   @components.formErrors(errors)
   <div class="row">
-    <form class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
+    <form id="connection-form" class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
       <div class="card">
         <div class="card-content">
           <span class="card-title">@title</span>
@@ -53,7 +53,8 @@
         </div>
         <div class="card-action">
           <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
-          <a class="right btn-flat theme-text" href="@routes.HomeController.home()">Cancel</a>
+          <a id="test-connection-button" class="right btn-flat theme-text" style="margin-right: 12px;" href="">Test</a>
+          <a class="theme-text" href="@routes.HomeController.home()">Cancel</a>
           @if((!isNew) && conn.id != services.database.core.MasterDatabase.connectionId) {
             <a class="btn-flat theme-text" onclick="onDelete();return false;">Delete</a>
           }
@@ -76,7 +77,7 @@
       var engineSelect = $('#form-engine');
       engineSelect.material_select();
       engineSelect.change(function(e) {
-        var newUrl = "jdbc:";
+        var newUrl = 'jdbc:';
         switch(e.currentTarget.value) {
           @models.engine.DatabaseEngine.all.map { de =>
             case '@de.id':
@@ -88,6 +89,27 @@
             break;
         }
         $('#form-url').val(newUrl);
+      });
+
+      $('#test-connection-button').on('click', function() {
+        var serialized = $('#connection-form').serializeArray();
+        var s;
+        var data = {};
+        for(s in serialized){
+          data[serialized[s]['name']] = serialized[s]['value']
+        }
+
+        $.post('@routes.ConnectionTestController.test(conn.id)', data, function(ret) {
+          if(ret.indexOf('ok:') === 0) {
+            Materialize.toast(ret.substring(3), 4000);
+          } else if(ret.indexOf('error:') === 0) {
+            Materialize.toast(ret.substring(7), 4000);
+          } else {
+            Materialize.toast(ret, 4000);
+          }
+        });
+
+        return false;
       });
     });
   </script>

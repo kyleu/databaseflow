@@ -35,7 +35,7 @@ object HistoryTemplate {
                 td(pre(cls := "sql-pre")(history.sql)),
                 {
                   val occurred = new scalajs.js.Date(history.occurred.toDouble)
-                  td(time(cls := "timeago", title := occurred.toISOString, "datetime".attr := occurred.toISOString)(occurred.toISOString))
+                  td(time(cls := "timeago", title := occurred.toISOString, attr("datetime") := occurred.toISOString)(occurred.toISOString))
                 },
                 td(a(data("audit") := history.id.toString, href := "#", cls := "audit-remove theme-text")(i(cls := "fa " + Icons.close)))
               )

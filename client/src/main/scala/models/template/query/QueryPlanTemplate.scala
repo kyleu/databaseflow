@@ -10,7 +10,7 @@ import scalatags.Text.tags2.time
 object QueryPlanTemplate {
   def forPlan(pr: PlanResultResponse, dateIsoString: String) = {
     val content = div(id := pr.id.toString)(
-      em("Executed ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString), s" in [${pr.durationMs}ms]"),
+      em("Executed ", time(cls := "timeago", attr("datetime") := dateIsoString)(dateIsoString), s" in [${pr.durationMs}ms]"),
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree") {

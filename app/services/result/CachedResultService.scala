@@ -5,6 +5,7 @@ import java.util.UUID
 import models.ddl.DdlQueries
 import models.queries.result.CachedResultQueries
 import models.result.CachedResult
+import org.joda.time.LocalDateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.MetadataTables
@@ -14,6 +15,12 @@ import scala.concurrent.Future
 import scala.util.control.NonFatal
 
 object CachedResultService extends Logging {
+  case class CleanupResult(orphans: Seq[String], removed: Seq[UUID], remainingCount: Int) {
+    override def toString = {
+      s"Query result cleanup removed [${removed.size}] results, along with [${orphans.size}] orphans, leaving [$remainingCount] remaining."
+    }
+  }
+
   def insertCacheResult(result: CachedResult) = {
     log.info(s"Caching result [$result].")
     MasterDatabase.query(CachedResultQueries.findBy(result.queryId, result.owner)).foreach { existing =>
@@ -33,7 +40,7 @@ object CachedResultService extends Logging {
 
   def getAll = MasterDatabase.query(CachedResultQueries.getAll(orderBy = "\"created\" desc"))
 
-  def remove(resultId: UUID) = {
+  def remove(resultId: UUID): Unit = {
     MasterDatabase.executeUpdate(CachedResultQueries.removeById(resultId))
     try {
       ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable("result_" + resultId.toString.replaceAllLiterally("-", ""))(ResultCacheDatabase.conn.engine))
@@ -51,5 +58,27 @@ object CachedResultService extends Logging {
     }
     val ret = MetadataTables.getTables(metadata, Option(conn.getCatalog), schema)
     ret.map(_.name).filter(_.startsWith("result_")).toSet
+  }
+
+  def cleanup(before: LocalDateTime) = {
+    val rows = CachedResultService.getAll
+    val tables = CachedResultService.getTables
+    val tableNames = rows.map(_.tableName).toSet
+    val orphans = tables.toSeq.filterNot(tableNames.contains).sorted
+    orphans.foreach { orphan =>
+      ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable(orphan)(ResultCacheDatabase.conn.engine))
+    }
+
+    val removed = rows.flatMap { row =>
+      if (row.created.isBefore(before)) {
+        remove(row.resultId)
+        Some(row.resultId)
+      } else {
+        None
+      }
+    }
+
+    val remaining = rows.size - removed.size
+    CleanupResult(orphans, removed, remaining)
   }
 }

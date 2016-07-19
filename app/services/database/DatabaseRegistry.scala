@@ -24,21 +24,36 @@ object DatabaseRegistry extends Logging {
     case Some(c) => resultFor(ConnectionSettingsService.canRead(user, c._2), c._1)
     case None =>
       val c = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
-      val cs = PoolSettings(
-        connectionId = connectionId,
-        name = Some(c.id.toString),
-        engine = c.engine,
-        url = c.url,
-        username = c.username,
-        password = c.password
-      )
       try {
-        val ret = DatabaseConnectionService.connect(cs)
+        val ret = connect(c, 8) match {
+          case Right(x) => x._1
+          case Left(x) => throw x
+        }
         databases(connectionId) = ret -> c
         resultFor(ConnectionSettingsService.canRead(user, c), ret)
       } catch {
         case NonFatal(x) => Left(x)
       }
+  }
+
+  def connect(c: ConnectionSettings, maxConnections: Int) = {
+    val cs = PoolSettings(
+      connectionId = c.id,
+      name = Some(c.id.toString),
+      engine = c.engine,
+      url = c.url,
+      username = c.username,
+      password = c.password,
+      maxSize = maxConnections
+    )
+    try {
+      val start = System.currentTimeMillis
+      val ret = DatabaseConnectionService.connect(cs)
+      val elapsed = (System.currentTimeMillis - start).toInt
+      Right(ret -> s"Successfully connected to [${c.url}] in [${elapsed}ms].")
+    } catch {
+      case NonFatal(x) => Left(x)
+    }
   }
 
   def db(connectionId: UUID) = databaseFor(None, connectionId) match {

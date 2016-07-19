@@ -30,7 +30,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "4.0.0-RC1"
+    private[this] val version = "4.0.0"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -38,13 +38,13 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.6"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.7"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.192"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0 is all different
-    val postgres = "org.postgresql" % "postgresql" % "9.4.1208"
+    val postgres = "org.postgresql" % "postgresql" % "9.4.1209"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
   }
@@ -81,21 +81,20 @@ object Dependencies {
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
-
     val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
-
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.9.v20160517"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.0.M0"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }
 
   object Commerce {
-    val stripe = "com.stripe" % "stripe-java" % "2.6.1"
+    val stripeVersion = "2.7.0"
+    val stripe = "com.stripe" % "stripe-java" % stripeVersion
   }
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.4"
+    val enumeratumVersion = "1.4.5"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"

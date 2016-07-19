@@ -2,11 +2,12 @@ package services.supervisor
 
 import java.util.UUID
 
-import akka.actor.{ActorRef, SupervisorStrategy, OneForOneStrategy}
+import akka.actor.{ActorRef, OneForOneStrategy, SupervisorStrategy}
 import akka.actor.SupervisorStrategy.Stop
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
+import services.result.CachedResultActor
 import utils.metrics.{InstrumentedActor, MetricsConfig, MetricsServletActor}
 import utils.{ApplicationContext, DateUtils, Logging}
 
@@ -29,6 +30,8 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
       ctx.config.servletEnabled,
       ctx.config.servletPort
     )), "metrics-servlet")
+
+    context.actorOf(CachedResultActor.props(), "result-cleanup")
   }
 
   override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy() {

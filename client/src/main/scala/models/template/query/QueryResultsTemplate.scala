@@ -35,7 +35,7 @@ object QueryResultsTemplate {
           s"${utils.NumberUtils.withCommas(qr.rowsAffected)} ",
           span(cls := "total-row-count"),
           " rows returned ",
-          time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString),
+          time(cls := "timeago", attr("datetime") := dateIsoString)(dateIsoString),
           " in [",
           span(cls := "total-duration")(durationMs.toString),
           "ms]."
@@ -65,7 +65,7 @@ object QueryResultsTemplate {
 
   def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int) = {
     val content = div(
-      p(s"${qr.rowsAffected} rows affected ", time(cls := "timeago", "datetime".attr := dateIsoString)(dateIsoString), s" in [${durationMs}ms]."),
+      p(s"${qr.rowsAffected} rows affected ", time(cls := "timeago", attr("datetime") := dateIsoString)(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
       )

@@ -10,7 +10,7 @@ object Client {
     persistLauncher := false,
     libraryDependencies ++= Seq(
       "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
-      "com.lihaoyi" %%% "scalatags" % "0.5.5",
+      "com.lihaoyi" %%% "scalatags" % "0.6.0",
       "com.lihaoyi" %%% "utest" % Dependencies.Testing.uTestVersion % "test"
     ),
     testFrameworks += new TestFramework("utest.runner.Framework"),
