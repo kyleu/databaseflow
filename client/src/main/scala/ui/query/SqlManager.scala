@@ -47,6 +47,29 @@ object SqlManager {
     case _ => ""
   }
 
+  def getActiveSql(queryId: UUID) = {
+    val editor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Missing editor for [$queryId]."))
+    val txt = editor.getSelectedText().toString
+    if (txt.isEmpty) {
+      val sql = editor.getValue().toString.stripSuffix(";")
+      val split = SqlParser.split(sql)
+      if (split.length > 1) {
+        val pos = editor.getCursorPosition()
+        val tgtIdx = editor.getSession().getDocument().positionToIndex(pos).toString.toInt
+        val idx = split.indexWhere(_._2 > tgtIdx)
+        if (idx == -1) {
+          split.lastOption.getOrElse(throw new IllegalStateException())._1
+        } else {
+          split(idx - 1)._1
+        }
+      } else {
+        sql
+      }
+    } else {
+      txt
+    }
+  }
+
   def setSql(queryId: UUID, sql: String) = sqlEditors.get(queryId) match {
     case Some(editor) => editor.setValue(sql, editor.getCursorPosition())
     case _ => // no op
