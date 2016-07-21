@@ -29,7 +29,7 @@ libraryDependencies += "com.threerings" % "getdown" % "1.5"
 // Code Quality
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0") // scalastyle
 
-addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.4")
+addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.4") // scapegoat
 
 addSbtPlugin("com.orrsella" % "sbt-stats" % "1.0.5") // stats
 

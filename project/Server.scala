@@ -8,6 +8,7 @@ import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.debian.DebianPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{Docker, dockerExposedPorts}
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
 import com.typesafe.sbt.packager.linux.LinuxPlugin
 import com.typesafe.sbt.packager.rpm.RpmPlugin
@@ -55,6 +56,12 @@ object Server {
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
+
+    // Docker
+    dockerExposedPorts := Seq(4000, 4443),
+    defaultLinuxInstallLocation in Docker := "/opt/databaseflow",
+    packageName in Docker := packageName.value,
+    version in Docker := version.value,
 
     // Getdown
     Getdown.cmd <<= Getdown.task,
