@@ -10,7 +10,6 @@ POST           /feedback                                controllers.FeedbackCont
 
 # Downloads
 GET            /download/:os/:variant                   controllers.DownloadController.download(os, variant)
-GET            /install/*path                           controllers.DownloadController.install(path)
 
 # Purchasing
 GET            /pricing                                 controllers.PurchaseController.pricing()

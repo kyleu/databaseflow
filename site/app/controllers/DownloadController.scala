@@ -22,8 +22,6 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
     }
   }
 
-  private[this] val installDir = new java.io.File(downloadDir, "getdown")
-
   def download(os: String, variant: String) = act(s"download-$os-$variant") { implicit request =>
     val filename = os match {
       case "osx" => variant match {
@@ -48,15 +46,6 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
       Future.successful(Ok.sendFile(file))
     } else {
       Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find that download.<!-- ${file.getAbsolutePath} --></body>")))
-    }
-  }
-
-  def install(path: String) = act(s"install-${path.replace('/', '.')}") { implicit request =>
-    val file = new java.io.File(installDir, path)
-    if (file.exists) {
-      Future.successful(Ok.sendFile(file))
-    } else {
-      Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find an installation file.<!-- ${file.getAbsolutePath} --></body>")))
     }
   }
 }

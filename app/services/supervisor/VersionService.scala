@@ -29,7 +29,7 @@ class VersionService @javax.inject.Inject() (ws: WSClient) extends Logging {
     } else if (VersionService.localVersion == v) {
       log.info(s"You are currently running the latest version of Database Flow.")
     } else if (VersionService.localVersion < v) {
-      log.warn(s"A new version of Database Flow is available! Run [bin/upgrade] to install the new version.")
+      log.warn(s"A new version of Database Flow is available. Head to [https://databaseflow.com] to download the new version.")
     } else {
       log.warn(s"You're somehow running a newer version of Database Flow than the public version.")
     }
