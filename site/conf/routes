@@ -1,30 +1,46 @@
-GET         /                            controllers.SiteController.splash
-GET         /site                        controllers.SiteController.index
-GET         /robots.txt                  controllers.SiteController.robots
+GET            /                                        controllers.SiteController.splash
+GET            /site                                    controllers.SiteController.index
+GET            /robots.txt                              controllers.SiteController.robots
+GET            /version                                 controllers.UpdateController.version
 
 # Feedback
-GET         /feedback                    controllers.FeedbackController.feedbackForm
-OPTIONS     /feedback                    controllers.FeedbackController.feedbackOptions()
-POST        /feedback                    controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
+GET            /feedback                                controllers.FeedbackController.feedbackForm
+OPTIONS        /feedback                                controllers.FeedbackController.feedbackOptions()
+POST           /feedback                                controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
 
 # Downloads
-GET         /download/:os/:variant       controllers.DownloadController.download(os, variant)
+GET            /download/:os/:variant                   controllers.DownloadController.download(os, variant)
 
 # Purchasing
-GET         /pricing                     controllers.PurchaseController.pricing()
-POST        /purchase                    controllers.PurchaseController.purchaseTeamEdition()
+GET            /pricing                                 controllers.PurchaseController.pricing()
+POST           /purchase                                controllers.PurchaseController.purchaseTeamEdition()
 
 # License Request
-GET         /license/request             controllers.UserLicenseController.requestForm()
-POST        /license/request             controllers.UserLicenseController.licenseRequest()
-GET         /license/:id/view            controllers.UserLicenseController.licenseView(id: java.util.UUID)
-GET         /license/:id/download        controllers.UserLicenseController.licenseDownload(id: java.util.UUID)
+GET            /license/request                         controllers.UserLicenseController.requestForm()
+POST           /license/request                         controllers.UserLicenseController.licenseRequest()
+GET            /license/:id/view                        controllers.UserLicenseController.licenseView(id: java.util.UUID)
+GET            /license/:id/download                    controllers.UserLicenseController.licenseDownload(id: java.util.UUID)
 
 # Admin Section
-->          /admin                       admin.Routes
+->             /admin                                   admin.Routes
 
 # Assets
-GET         /favicon.ico                 controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
-GET         /apple-touch-icon.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.png")
+GET            /browserconfig.xml                       controllers.Assets.at(path = "/public", file = "browserconfig.xml")
+GET            /manifest.json                           controllers.Assets.at(path = "/public", file = "manifest.json")
 
-GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
+GET            /android-chrome-192x192.png              controllers.Assets.at(path = "/public", file = "images/ui/favicon/android-chrome-192x192.png")
+GET            /android-chrome-512x512.png              controllers.Assets.at(path = "/public", file = "images/ui/favicon/android-chrome-512x512.png")
+GET            /apple-touch-icon-precomposed.png        controllers.Assets.at(path = "/public", file = "images/ui/favicon/apple-touch-icon-precomposed.png")
+GET            /apple-touch-icon.png                    controllers.Assets.at(path = "/public", file = "images/ui/favicon/apple-touch-icon.png")
+GET            /favicon-16x16.png                       controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon-16x16.png")
+GET            /favicon-32x32.png                       controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon-32x32.png")
+GET            /favicon.ico                             controllers.Assets.at(path = "/public", file = "images/ui/favicon/favicon.ico")
+GET            /icon-blue-grey@2x.png                   controllers.Assets.at(path = "/public", file = "images/ui/favicon/icon-blue-grey@2x.png")
+GET            /mstile-144x144.png                      controllers.Assets.at(path = "/public", file = "images/ui/favicon/mstile-144x144.png")
+GET            /mstile-150x150.png                      controllers.Assets.at(path = "/public", file = "images/ui/favicon/mstile-150x150.png")
+GET            /mstile-310x150.png                      controllers.Assets.at(path = "/public", file = "images/ui/favicon/mstile-310x150.png")
+GET            /mstile-310x310.png                      controllers.Assets.at(path = "/public", file = "images/ui/favicon/mstile-310x310.png")
+GET            /mstile-70x70.png                        controllers.Assets.at(path = "/public", file = "images/ui/favicon/mstile-70x70.png")
+GET            /safari-pinned-tab.svg                   controllers.Assets.at(path = "/public", file = "images/ui/favicon/safari-pinned-tab.svg")
+
+GET            /assets/*file                            controllers.Assets.versioned(path="/public", file: Asset)
