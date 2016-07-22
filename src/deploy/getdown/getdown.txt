@@ -1,11 +1,9 @@
 # Getdown control file for Database Flow
-
-# version = currently using timestamp versioning
-appbase = https://databaseflow.com/install/
+appbase = http://localhost:9000/install/
+version = 1
 
 # Configure the update UI
 ui.name = Database Flow
-ui.background_image = background.png
 ui.background = 999999
 ui.progress = 28, 176, 280, 21
 ui.progress_bar = 336600
@@ -16,14 +14,5 @@ ui.status_text = 000000
 # Jar files
 {{code}}
 
-# Latest version of getdown (not in our main classpath)
-# resource = getdown-new.jar
-
-# Non-code resources
-# resource = background.png
-
-# Parameters passed to the JVM
-jvmarg = -Xmx2048M
-
 # Main entry point
-class = DatabaseFlowService
+class = DatabaseFlowUpdated

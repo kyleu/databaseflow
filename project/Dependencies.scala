@@ -99,6 +99,7 @@ object Dependencies {
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
+    val getdown = "com.threerings" % "getdown" % "1.5"
   }
 
   object Testing {

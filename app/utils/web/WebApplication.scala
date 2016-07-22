@@ -9,7 +9,7 @@ import play.core.server.{NettyServer, ServerConfig}
 import services.data.MasterDdl
 import services.database.core.MasterDatabase
 import services.licensing.LicenseService
-import services.settings.SettingsService
+import services.supervisor.ActorSupervisor
 
 class WebApplication() extends WebApp {
   private[this] lazy val app = new GuiceApplicationBuilder().build()
@@ -21,12 +21,7 @@ class WebApplication() extends WebApp {
   def started = _started
 
   def start() = {
-    if (!LicenseService.hasLicense) {
-      MasterDatabase.open()
-      MasterDdl.update(MasterDatabase.conn)
-      SettingsService.load()
-      LicenseService.readLicense()
-    }
+    app.injector.instanceOf(classOf[ActorSupervisor]).startIfNeeded()
 
     val address = if (LicenseService.isPersonalEdition) { "127.0.0.1" } else { "0.0.0.0" }
 

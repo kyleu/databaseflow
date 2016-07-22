@@ -22,7 +22,9 @@ class CachedResultActor() extends InstrumentedActor with Logging {
   override def receiveRequest = {
     case c: CachedResultActor.Cleanup =>
       val ret = CachedResultService.cleanup(c.since.getOrElse(new LocalDateTime().minusDays(2)))
-      log.info(ret.toString)
+      if (ret.removed.nonEmpty || ret.orphans.nonEmpty) {
+        log.info(ret.toString)
+      }
       sender() ! ret
   }
 }

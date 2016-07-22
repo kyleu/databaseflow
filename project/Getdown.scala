@@ -5,6 +5,13 @@ import com.threerings.getdown.tools.Digester
 object Getdown {
   val cmd = TaskKey[Unit]("getdown", "Generates Getdown client")
 
+  val assets = Seq(
+    file("src/deploy/bin/upgrade-databaseflow") -> "bin/upgrade-databaseflow",
+    file("build/getdown/digest.txt") -> "digest.txt",
+    file("build/getdown/getdown.txt") -> "getdown.txt",
+    file("build/getdown/version.txt") -> "version.txt"
+  )
+
   def task = (sourceDirectory in Compile, target, streams, baseDirectory) map {
     (srcDir, target, s, dir) =>
 

@@ -32,7 +32,7 @@ object Server {
       Cache.ehCache, Akka.actor, Akka.logging, Play.playFilters, Play.playWs,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
-      Export.csv, Export.xlsx, Ui.swing, Utils.crypto, Utils.scalaGuice, Utils.commonsIo,
+      Export.csv, Export.xlsx, Ui.swing, Utils.crypto, Utils.scalaGuice, Utils.commonsIo, Utils.getdown,
       Akka.testkit, Play.playTest, Testing.scalaTest
     )
   }
@@ -64,7 +64,7 @@ object Server {
     version in Docker := version.value,
 
     // Getdown
-    Getdown.cmd <<= Getdown.task,
+    Getdown.cmd <<= Getdown.task.dependsOn(stage),
 
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")

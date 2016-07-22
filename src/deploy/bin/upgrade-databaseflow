@@ -1,0 +1,5 @@
+#!/bin/bash
+cd "`dirname $0`"
+cd ..
+java -jar lib/com.threerings.getdown-1.5.jar .
+echo "Upgrade complete. Please restart Database Flow."

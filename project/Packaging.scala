@@ -21,7 +21,7 @@ object Packaging {
     packageSummary := description.value,
     packageDescription := description.value,
 
-    mappings in Universal := (mappings in Universal).value.filterNot(isConf),
+    mappings in Universal := (mappings in Universal).value.filterNot(isConf) ++ Getdown.assets,
 
     // Linux Settings
     packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",

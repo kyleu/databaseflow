@@ -19,7 +19,7 @@ import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.licensing.LicenseService
 import services.settings.SettingsService
-import services.supervisor.ActorSupervisor
+import services.supervisor.{ActorSupervisor, VersionService}
 import utils.metrics.Instrumented
 
 import scala.concurrent.Future
@@ -44,7 +44,8 @@ class ApplicationContext @javax.inject.Inject() (
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
     val actorSystem: ActorSystem,
-    val silhouette: Silhouette[AuthEnv]
+    val silhouette: Silhouette[AuthEnv],
+    val versionService: VersionService
 ) extends Logging {
   if (ApplicationContext.initialized) {
     log.info("Skipping initialization after failure.")
@@ -59,12 +60,6 @@ class ApplicationContext @javax.inject.Inject() (
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
     ConfigFileService.init()
-    if (!MasterDatabase.isOpen) {
-      MasterDatabase.open()
-      MasterDdl.update(MasterDatabase.conn)
-      SettingsService.load()
-      LicenseService.readLicense()
-    }
     ResultCacheDatabase.open()
 
     lifecycle.addStopHook(() => Future.successful(stop()))
