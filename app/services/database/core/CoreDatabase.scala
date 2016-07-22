@@ -44,7 +44,7 @@ abstract class CoreDatabase extends Logging {
       engine = config.engine,
       name = title,
       description = description,
-      url = finalUrl,
+      urlOverride = Some(finalUrl),
       username = config.username,
       password = config.password
     ))

@@ -11,7 +11,9 @@ import utils.PasswordEncryptUtils
 
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
-  override protected val columns = Seq("id", "name", "owner", "read", "edit", "description", "engine", "url", "username", "password")
+  override protected val columns = Seq(
+    "id", "name", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
+  )
   override protected val searchColumns = columns
 
   val insert = Insert
@@ -47,8 +49,12 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   val removeById = RemoveById
 
   case class Update(cs: ConnectionSettings) extends Statement {
-    override def sql = updateSql(Seq("name", "owner", "read", "edit", "description", "engine", "url", "username", "password"))
-    override def values = Seq(cs.name, cs.owner, cs.read, cs.edit, cs.description, cs.engine.id, cs.url, cs.username, cs.password, cs.id)
+    override def sql = updateSql(Seq(
+      "name", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
+    ))
+    override def values = Seq(
+      cs.name, cs.owner, cs.read, cs.edit, cs.description, cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.id
+    )
   }
 
   override protected def fromRow(row: Row) = ConnectionSettings(
@@ -59,12 +65,16 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     edit = row.as[String]("edit"),
     description = row.as[String]("description"),
     engine = DatabaseEngine.get(row.as[String]("engine")),
-    url = row.as[String]("url"),
+    host = row.asOpt[String]("host"),
+    dbName = row.asOpt[String]("db_name"),
+    extra = row.asOpt[String]("extra"),
+    urlOverride = row.asOpt[String]("url_override"),
     username = row.as[String]("username"),
     password = PasswordEncryptUtils.decrypt(row.as[String]("password"))
   )
 
-  override protected def toDataSeq(q: ConnectionSettings) = {
-    Seq[Any](q.id, q.name, q.owner, q.read, q.edit, q.description, q.engine.toString, q.url, q.username, PasswordEncryptUtils.encrypt(q.password))
-  }
+  override protected def toDataSeq(q: ConnectionSettings) = Seq[Any](
+    q.id, q.name, q.owner, q.read, q.edit, q.description, q.engine.toString,
+    q.host, q.dbName, q.extra, q.urlOverride, q.username, PasswordEncryptUtils.encrypt(q.password)
+  )
 }

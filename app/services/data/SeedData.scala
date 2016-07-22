@@ -16,42 +16,42 @@ object SeedData {
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "PostgreSQL Sample",
       description = "The pagila sample database provided by the community.",
-      engine = PostgreSQL, url = "jdbc:postgresql://localhost:5432/pagila",
+      engine = PostgreSQL, host = Some("localhost"), dbName = Some("pagila"),
       username = "databaseflow", password = "flow"
     ))
 
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "MySQL Sample",
       description = "The salika sample database provided by the community.",
-      engine = MySQL, url = "jdbc:mysql://localhost/sakila",
+      engine = MySQL, host = Some("localhost"), dbName = Some("salika"),
       username = "root", password = ""
     ))
 
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "Oracle Test",
       description = "The test database for my Oracle VM.",
-      engine = Oracle, url = "jdbc:oracle:thin:@//10.211.55.5:1521/XE",
+      engine = Oracle, host = Some("10.211.55.5"), dbName = Some("XE"),
       username = "databaseflow", password = "flow"
     ))
 
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "SQL Server Test",
       description = "The test database for my SQL Server VM.",
-      engine = SqlServer, url = "jdbc:sqlserver://10.211.55.5:1433;databaseName=databaseflow",
+      engine = SqlServer, host = Some("10.211.55.5"), dbName = Some("databaseflow"),
       username = "databaseflow", password = "flow"
     ))
 
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "Local H2",
       description = "A scratchpad database to play around in.",
-      engine = H2, url = "jdbc:h2:~/database.h2db",
+      engine = H2, dbName = Some("~/database.h2db"),
       username = "", password = ""
     ))
 
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "AppThis Local",
       description = "The local database for AppThis v2.",
-      engine = MySQL, url = "jdbc:mysql://localhost/appthis_local",
+      engine = MySQL, host = Some("localhost"), dbName = Some("appthis_local"),
       username = "appthis", password = "Mah14Mah1"
     ))
   }

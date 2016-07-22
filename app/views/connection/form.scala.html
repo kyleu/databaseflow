@@ -27,8 +27,25 @@
               <label for="form-engine">Database Engine</label>
             </div>
 
+            <div class="input-field col s8 m4">
+              <input id="form-host" name="host" type="text" value="@conn.host" />
+              <label for="form-host">Host</label>
+            </div>
+
+            <div class="input-field col s4 m2">
+              <input id="form-port" name="port" type="text" value="@conn.port" />
+              <label for="form-port">Port</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+              <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" />
+              <label for="form-dbname">Database Name</label>
+            </div>
+
+            <input id="form-extra" name="extra" type="hidden" value="@conn.extra" />
+
             <div class="input-field col s12">
-              <input id="form-url" name="url" type="text" value="@conn.url" />
+              <input id="form-url" name="urlOverride" type="text" value="@conn.url" />
               <label for="form-url">Jdbc Url</label>
             </div>
 

@@ -9,4 +9,8 @@ object H2 extends DatabaseEngine(
   name = "H2",
   driverClass = "org.h2.Driver",
   exampleUrl = "jdbc:h2:~/database.h2db"
-) with H2Types with H2Functions
+) with H2Types with H2Functions {
+  override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+    dbName.map(n => s"jdbc:h2:$n").getOrElse(exampleUrl)
+  }
+}

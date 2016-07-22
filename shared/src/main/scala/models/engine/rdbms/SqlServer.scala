@@ -12,4 +12,8 @@ object SqlServer extends DatabaseEngine(
 ) with SqlServerTypes with SqlServerFunctions {
   override val leftQuoteIdentifier = "["
   override val rightQuoteIdentifier = "]"
+
+  override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+    s"jdbc:sqlserver://${host.getOrElse("localhost")}:${port.getOrElse(1433)};databaseName=${dbName.getOrElse("db")}"
+  }
 }

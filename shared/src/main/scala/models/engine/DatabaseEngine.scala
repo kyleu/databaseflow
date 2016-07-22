@@ -27,5 +27,7 @@ case class DatabaseEngine(
   def explain: Option[(String) => String] = None
   def analyze: Option[(String) => String] = None
 
+  def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = exampleUrl
+
   override def toString = id
 }

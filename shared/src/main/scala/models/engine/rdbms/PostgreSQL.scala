@@ -12,4 +12,8 @@ object PostgreSQL extends DatabaseEngine(
 ) with PostgreSQLTypes with PostgreSQLFunctions {
   override val explain = Some((sql: String) => { "explain (costs, verbose, format json) " + sql })
   override val analyze = Some((sql: String) => { "explain (analyze, costs, verbose, buffers, format json) " + sql })
+
+  override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+    s"jdbc:postgresql://${host.getOrElse("localhost")}:${port.getOrElse(5432)}/${dbName.getOrElse("db")}"
+  }
 }

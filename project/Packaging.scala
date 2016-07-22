@@ -25,6 +25,7 @@ object Packaging {
 
     // Linux Settings
     packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",
+    topLevelDirectory in Debian := Some("databaseflow"),
     debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
     rpmVendor := "Database Flow",
     linuxPackageMappings := linuxPackageMappings.value.filter(_.fileData.config != "false"),

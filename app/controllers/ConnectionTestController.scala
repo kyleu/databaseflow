@@ -22,7 +22,11 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
       cf => {
         val almostUpdated = ConnectionSettings(
           engine = DatabaseEngine.get(cf.engine),
-          url = cf.url,
+          host = if (cf.host.trim.isEmpty) { None } else { Some(cf.host) },
+          port = cf.port,
+          dbName = if (cf.dbName.trim.isEmpty) { None } else { Some(cf.dbName) },
+          extra = if (cf.extra.trim.isEmpty) { None } else { Some(cf.extra) },
+          urlOverride = if (cf.urlOverride.trim.isEmpty) { None } else { Some(cf.urlOverride) },
           username = cf.username
         )
         val updated = if (cf.password.trim.isEmpty) {
