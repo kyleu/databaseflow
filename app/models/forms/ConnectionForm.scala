@@ -8,11 +8,12 @@ object ConnectionForm {
     mapping(
       "name" -> nonEmptyText,
       "engine" -> nonEmptyText,
-      "host" -> text,
+      "toggle" -> nonEmptyText,
+      "host" -> optional(text),
       "port" -> optional(number),
-      "dbName" -> text,
-      "extra" -> text,
-      "urlOverride" -> text,
+      "dbName" -> optional(text),
+      "extra" -> optional(text),
+      "urlOverride" -> optional(text),
       "databaseUsername" -> text,
       "databasePassword" -> text,
       "description" -> text,
@@ -23,16 +24,19 @@ object ConnectionForm {
 }
 
 case class ConnectionForm(
-  name: String,
-  engine: String,
-  host: String,
-  port: Option[Int],
-  dbName: String,
-  extra: String,
-  urlOverride: String,
-  username: String,
-  password: String,
-  description: String,
-  read: String,
-  edit: String
-)
+    name: String,
+    engine: String,
+    toggle: String,
+    host: Option[String],
+    port: Option[Int],
+    dbName: Option[String],
+    extra: Option[String],
+    urlOverride: Option[String],
+    username: String,
+    password: String,
+    description: String,
+    read: String,
+    edit: String
+) {
+  def isUrl = toggle == "url"
+}

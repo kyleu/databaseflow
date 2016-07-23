@@ -8,6 +8,7 @@ object PostgreSQL extends DatabaseEngine(
   id = "postgres",
   name = "PostgreSQL",
   driverClass = "org.postgresql.Driver",
+  defaultPort = 5432,
   exampleUrl = "jdbc:postgresql://hostname/dbname"
 ) with PostgreSQLTypes with PostgreSQLFunctions {
   override val explain = Some((sql: String) => { "explain (costs, verbose, format json) " + sql })

@@ -8,6 +8,7 @@ object MySQL extends DatabaseEngine(
   id = "mysql",
   name = "MySQL",
   driverClass = "com.mysql.jdbc.Driver",
+  defaultPort = 3306,
   exampleUrl = "jdbc:mysql://localhost/test"
 ) with MySQLTypes with MySQLFunctions {
   override val leftQuoteIdentifier = "`"

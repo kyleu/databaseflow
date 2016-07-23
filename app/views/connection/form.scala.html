@@ -8,6 +8,8 @@
       <div class="card">
         <div class="card-content">
           <span class="card-title">@title</span>
+
+          <!-- Name, engine -->
           <div class="row" style="margin-bottom: 0;">
             <div class="input-field col s12 m6">
               <input id="form-name" name="name" type="text" value="@conn.name" />
@@ -26,29 +28,10 @@
               </select>
               <label for="form-engine">Database Engine</label>
             </div>
+          </div>
 
-            <div class="input-field col s8 m4">
-              <input id="form-host" name="host" type="text" value="@conn.host" />
-              <label for="form-host">Host</label>
-            </div>
-
-            <div class="input-field col s4 m2">
-              <input id="form-port" name="port" type="text" value="@conn.port" />
-              <label for="form-port">Port</label>
-            </div>
-
-            <div class="input-field col s12 m6">
-              <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" />
-              <label for="form-dbname">Database Name</label>
-            </div>
-
-            <input id="form-extra" name="extra" type="hidden" value="@conn.extra" />
-
-            <div class="input-field col s12">
-              <input id="form-url" name="urlOverride" type="text" value="@conn.url" />
-              <label for="form-url">Jdbc Url</label>
-            </div>
-
+          <!-- Username, password -->
+          <div class="row" style="margin-bottom: 0;">
             <div class="input-field col s12 m6">
               <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
               <label for="form-username">Username</label>
@@ -58,10 +41,65 @@
               <input id="form-password" name="databasePassword" type="password" value="" />
               <label for="form-password">Password</label>
             </div>
+          </div>
 
+          <!-- Radio selection -->
+          <div class="row" style="margin-bottom: 0;">
+            <div class="col s12">
+              <div class="card-panel option-panel">
+                <!-- Connection fields -->
+                <div class="row" style="margin-bottom: 0;">
+                  <div class="input-field col s4 m2">
+                    <div class="view-url-link">
+                      <input id="form-toggle-fields" name="toggle" type="radio" value="fields" @if(conn.urlOverride.isEmpty) { checked="checked" }>
+                      <label for="form-toggle-fields">Fields</label>
+                    </div>
+                  </div>
+
+                  <div class="input-field col s8 m4">
+                    <input id="form-host" name="host" type="text" value="@conn.host" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                    <label for="form-host">Host</label>
+                  </div>
+
+                  <div class="input-field col s4 m2">
+                    <input id="form-port" name="port" type="text" value="@conn.port.getOrElse(conn.engine.defaultPort)" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                    <label for="form-port">Port</label>
+                  </div>
+
+                  <div class="input-field col s8 m4">
+                    <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                    <label for="form-dbname">Database Name</label>
+                  </div>
+
+                  <input id="form-extra" name="extra" type="hidden" value="@conn.extra" />
+                </div>
+
+                <!-- Jdbc url -->
+                <div class="row" style="margin-bottom: 0;">
+                  <div class="input-field col s4 m2">
+                    <div class="view-keys-link">
+                      <input id="form-toggle-url" name="toggle" type="radio" value="url" @if(conn.urlOverride.isDefined) { checked="checked" }>
+                      <label for="form-toggle-url">URL</label>
+                    </div>
+                  </div>
+
+                  <div class="input-field col s8 m10">
+                    <input id="form-url-override" name="urlOverride" type="text" value="@conn.url" @if(conn.urlOverride.isEmpty) { disabled="disabled" } />
+                    <label for="form-url-override">Jdbc Url</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permissions -->
+          <div class="row" style="margin-bottom: 0;">
             @views.html.connection.permissions("read", conn.read, Icons.user, "Available To")
             @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, "Editable By")
+          </div>
 
+          <!-- Description -->
+          <div class="row" style="margin-bottom: 0;">
             <div class="input-field col s12">
               <input id="form-description" name="description" type="text" value="@conn.description" />
               <label for="form-description">Description</label>
@@ -91,14 +129,18 @@
     }
 
     $(function() {
+
+      // Engine select
       var engineSelect = $('#form-engine');
       engineSelect.material_select();
       engineSelect.change(function(e) {
         var newUrl = 'jdbc:';
+        var newPort = 0;
         switch(e.currentTarget.value) {
           @models.engine.DatabaseEngine.all.map { de =>
-            case '@de.id':
+          case '@de.id':
               newUrl = '@de.exampleUrl';
+              newPort = @de.defaultPort;
               break;
           }
           default:
@@ -106,8 +148,24 @@
             break;
         }
         $('#form-url').val(newUrl);
+        $('#form-port').val(newPort);
       });
 
+      // Field toggle
+      $('#form-toggle-fields').on('click', function() {
+        $('#form-host').prop('disabled', false);
+        $('#form-port').prop('disabled', false);
+        $('#form-dbname').prop('disabled', false);
+        $('#form-url-override').prop('disabled', true);
+      });
+      $('#form-toggle-url').on('click', function() {
+        $('#form-host').prop('disabled', true);
+        $('#form-port').prop('disabled', true);
+        $('#form-dbname').prop('disabled', true);
+        $('#form-url-override').prop('disabled', false);
+      });
+
+      // Test connection
       $('#test-connection-button').on('click', function() {
         var serialized = $('#connection-form').serializeArray();
         var s;

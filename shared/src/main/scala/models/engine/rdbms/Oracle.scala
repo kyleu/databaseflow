@@ -8,6 +8,7 @@ object Oracle extends DatabaseEngine(
   id = "oracle",
   name = "Oracle",
   driverClass = "oracle.jdbc.driver.OracleDriver",
+  defaultPort = 1521,
   exampleUrl = "jdbc:oracle:thin:@//hostname:1521/XE"
 ) with OracleTypes with OracleFunctions {
   override val explain = Some((sql: String) => { "explain plan for  " + sql })

@@ -16,6 +16,7 @@ case class DatabaseEngine(
     id: String,
     name: String,
     driverClass: String,
+    defaultPort: Int,
     exampleUrl: String
 ) {
   def builtInFunctions: Seq[String] = Nil

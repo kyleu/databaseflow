@@ -53,11 +53,11 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
             read = cf.read,
             edit = cf.edit,
             engine = DatabaseEngine.get(cf.engine),
-            host = if (cf.host.trim.isEmpty) { None } else { Some(cf.host) },
-            port = cf.port,
-            dbName = if (cf.dbName.trim.isEmpty) { None } else { Some(cf.dbName) },
-            extra = if (cf.extra.trim.isEmpty) { None } else { Some(cf.extra) },
-            urlOverride = if (cf.urlOverride.trim.isEmpty) { None } else { Some(cf.urlOverride) },
+            host = if (cf.isUrl) { None } else { cf.host },
+            port = if (cf.isUrl) { None } else { cf.port },
+            dbName = if (cf.isUrl) { None } else { cf.dbName },
+            extra = if (cf.isUrl) { None } else { cf.extra },
+            urlOverride = if (cf.isUrl) { cf.urlOverride } else { None },
             username = cf.username
           )
           val updated = if (cf.password.trim.isEmpty) {
