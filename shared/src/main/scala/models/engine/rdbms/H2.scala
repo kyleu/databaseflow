@@ -8,7 +8,6 @@ object H2 extends DatabaseEngine(
   id = "h2",
   name = "H2",
   driverClass = "org.h2.Driver",
-  defaultPort = 0,
   exampleUrl = "jdbc:h2:~/database.h2db"
 ) with H2Types with H2Functions {
   override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {

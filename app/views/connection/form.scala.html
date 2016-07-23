@@ -56,17 +56,17 @@
                     </div>
                   </div>
 
-                  <div class="input-field col s8 m4">
+                  <div id="host-input" class="input-field col s8 m4">
                     <input id="form-host" name="host" type="text" value="@conn.host" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
                     <label for="form-host">Host</label>
                   </div>
 
-                  <div class="input-field col s4 m2">
-                    <input id="form-port" name="port" type="text" value="@conn.port.getOrElse(conn.engine.defaultPort)" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                  <div id="port-input" class="input-field col s4 m2">
+                    <input id="form-port" name="port" type="text" value="@conn.port.orElse(conn.engine.defaultPort).getOrElse("")" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
                     <label for="form-port">Port</label>
                   </div>
 
-                  <div class="input-field col s8 m4">
+                  <div id="dbname-input" class="input-field col s8 m4">
                     <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
                     <label for="form-dbname">Database Name</label>
                   </div>
@@ -129,26 +129,37 @@
     }
 
     $(function() {
-
       // Engine select
       var engineSelect = $('#form-engine');
+      var hostInput = $('#host-input');
+      var portInput = $('#port-input');
+      var dbNameInput = $('#dbname-input');
       engineSelect.material_select();
       engineSelect.change(function(e) {
         var newUrl = 'jdbc:';
-        var newPort = 0;
+        var newPort = null;
+
         switch(e.currentTarget.value) {
           @models.engine.DatabaseEngine.all.map { de =>
           case '@de.id':
               newUrl = '@de.exampleUrl';
-              newPort = @de.defaultPort;
+              @if(de.defaultPort.isDefined) { newPort = @de.defaultPort; }
               break;
           }
           default:
             console.log('Unhandled engine [' + e.currentTarget.value + ']');
             break;
         }
-        $('#form-url').val(newUrl);
-        $('#form-port').val(newPort);
+        if(newPort === null) {
+          hostInput.hide();
+          $('#form-port').val("");
+          portInput.hide();
+        } else {
+          hostInput.show();
+          $('#form-port').val(newPort.toString());
+          portInput.show();
+        }
+        $('#form-url-override').val(newUrl);
       });
 
       // Field toggle

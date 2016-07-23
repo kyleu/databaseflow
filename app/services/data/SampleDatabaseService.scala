@@ -57,6 +57,7 @@ object SampleDatabaseService extends Logging {
       case MySQL => "Chinook_MySql.sql"
       case Oracle => "Chinook_Oracle.sql"
       case PostgreSQL => "Chinook_PostgreSql.sql"
+      case SQLite => "Chinook_Sqlite.sql"
       case SQLServer => "Chinook_SqlServer.sql"
       case x => throw new IllegalStateException(s"No sample database avilable for [${x.getClass.getSimpleName}].")
     }

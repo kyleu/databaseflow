@@ -8,7 +8,7 @@ object SQLServer extends DatabaseEngine(
   id = "sqlserver",
   name = "SQL Server",
   driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-  defaultPort = 1433,
+  defaultPort = Some(1433),
   exampleUrl = "jdbc:sqlserver://hostname:1433;databaseName=dbname"
 ) with SQLServerTypes with SQLServerFunctions {
   override val leftQuoteIdentifier = "["

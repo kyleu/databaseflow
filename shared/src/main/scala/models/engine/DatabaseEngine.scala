@@ -16,7 +16,7 @@ abstract class DatabaseEngine(
     val id: String,
     val name: String,
     val driverClass: String,
-    val defaultPort: Int,
+    val defaultPort: Option[Int] = None,
     val exampleUrl: String
 ) {
   def builtInFunctions: Seq[String] = Nil
