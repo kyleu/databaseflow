@@ -22,7 +22,7 @@ object EngineQueries {
         case Some(o) => s" limit $l offset $o"
         case None => s" limit $l"
       }
-      case Some(l) if engine == SqlServer => options.offset match {
+      case Some(l) if engine == SQLServer => options.offset match {
         case Some(o) => s" offset $o rows fetch next $l rows only"
         case None => s" offset 0 rows fetch next $l rows only"
       }

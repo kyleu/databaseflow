@@ -37,7 +37,7 @@ object SeedData {
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "SQL Server Test",
       description = "The test database for my SQL Server VM.",
-      engine = SqlServer, host = Some("10.211.55.5"), dbName = Some("databaseflow"),
+      engine = SQLServer, host = Some("10.211.55.5"), dbName = Some("databaseflow"),
       username = "databaseflow", password = "flow"
     ))
 

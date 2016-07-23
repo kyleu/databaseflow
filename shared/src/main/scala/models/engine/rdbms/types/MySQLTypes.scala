@@ -1,5 +1,4 @@
 /* Generated Code */
-// scalastyle:off
 package models.engine.rdbms.types
 
 import models.engine.DatabaseEngine
@@ -33,4 +32,3 @@ trait MySQLTypes extends DatabaseEngine {
     "longtext"
   )
 }
-// scalastyle:on

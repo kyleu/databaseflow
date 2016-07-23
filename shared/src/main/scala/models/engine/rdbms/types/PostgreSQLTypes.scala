@@ -1,5 +1,4 @@
 /* Generated Code */
-// scalastyle:off
 package models.engine.rdbms.types
 
 import models.engine.DatabaseEngine
@@ -35,4 +34,3 @@ trait PostgreSQLTypes extends DatabaseEngine {
     "varchar"
   )
 }
-// scalastyle:on

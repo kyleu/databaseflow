@@ -1,7 +1,7 @@
 package test.query
 
 import models.engine.EngineQueries
-import models.engine.rdbms.{MySQL, PostgreSQL, SqlServer}
+import models.engine.rdbms.{MySQL, PostgreSQL, SQLServer}
 import models.query.RowDataOptions
 import models.schema.FilterOp
 import org.scalatest.{FlatSpec, Matchers}
@@ -22,7 +22,7 @@ class EngineQueriesTest extends FlatSpec with Matchers {
   )
 
   "Engine Queries" should "output SQL Server limit syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoLimit)(SqlServer)
+    val sql = EngineQueries.selectFrom("X", rdoLimit)(SQLServer)
     sql should be("select * from [X] offset 0 rows fetch next 1000 rows only")
   }
 
@@ -37,7 +37,7 @@ class EngineQueriesTest extends FlatSpec with Matchers {
   }
 
   it should "output SQL Server where clause syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoCol)(SqlServer)
+    val sql = EngineQueries.selectFrom("X", rdoCol)(SQLServer)
     sql should be("select * from [X] where [y] = 'z'")
   }
 

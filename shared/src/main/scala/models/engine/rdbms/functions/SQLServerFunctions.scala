@@ -4,7 +4,7 @@ package models.engine.rdbms.functions
 
 import models.engine.DatabaseEngine
 
-trait SqlServerFunctions extends DatabaseEngine {
+trait SQLServerFunctions extends DatabaseEngine {
   override val builtInFunctions = Seq(
     "abs",
     "acos",

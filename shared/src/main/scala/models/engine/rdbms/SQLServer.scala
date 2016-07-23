@@ -1,16 +1,16 @@
 package models.engine.rdbms
 
 import models.engine.DatabaseEngine
-import models.engine.rdbms.functions.SqlServerFunctions
-import models.engine.rdbms.types.SqlServerTypes
+import models.engine.rdbms.functions.SQLServerFunctions
+import models.engine.rdbms.types.SQLServerTypes
 
-object SqlServer extends DatabaseEngine(
+object SQLServer extends DatabaseEngine(
   id = "sqlserver",
   name = "SQL Server",
   driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver",
   defaultPort = 1433,
   exampleUrl = "jdbc:sqlserver://hostname:1433;databaseName=dbname"
-) with SqlServerTypes with SqlServerFunctions {
+) with SQLServerTypes with SQLServerFunctions {
   override val leftQuoteIdentifier = "["
   override val rightQuoteIdentifier = "]"
 

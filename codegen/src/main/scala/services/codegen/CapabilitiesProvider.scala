@@ -12,19 +12,9 @@ object CapabilitiesProvider {
   def capabilitiesFor(engine: Engine) = {
     val dialect = DialectProvider.dialectFor(engine)
 
-    val functions = getFunctions(dialect)
+    val functions = dialect.functions()
 
-    val types = JDBCType.values.sortBy(_.toString).map { x =>
-      try {
-        val name = Option(dialect.getTypeName(x.getVendorTypeNumber)) match {
-          case Some(t) if t.indexOf('(') > -1 => Some(t.toString.substring(0, t.indexOf('(')))
-          case o => o
-        }
-        x.toString -> name
-      } catch {
-        case NonFatal(ex) => x.toString -> None
-      }
-    }
+    val types = dialect.types()
 
     Capabilities(
       engine = engine,
@@ -33,7 +23,7 @@ object CapabilitiesProvider {
     )
   }
 
-  private[this] def getFunctions(dialect: Dialect) = {
+  def getFunctions(dialect: Dialect) = {
     import collection.JavaConverters._
     dialect.getFunctions.asScala.toSeq.sortBy(_._1).map { f =>
       val name = f._1
@@ -49,6 +39,20 @@ object CapabilitiesProvider {
         case unknown => throw new IllegalArgumentException(s"Unhandled function type [${unknown.getClass.getName}].")
       }
       Capabilities.SqlFunction(name, typ)
+    }
+  }
+
+  def getTypes(dialect: Dialect) = {
+    JDBCType.values.sortBy(_.toString).map { x =>
+      try {
+        val name = Option(dialect.getTypeName(x.getVendorTypeNumber)) match {
+          case Some(t) if t.indexOf('(') > -1 => Some(t.substring(0, t.indexOf('(')))
+          case o => o
+        }
+        x.toString -> name
+      } catch {
+        case NonFatal(ex) => x.toString -> None
+      }
     }
   }
 }

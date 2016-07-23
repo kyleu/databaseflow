@@ -11,7 +11,7 @@ object CodeGenerator {
   val functionsDir = new java.io.File(rdbmsEngineSourceDir, "functions")
 
   def go() = {
-    Engine.values.map(CapabilitiesProvider.capabilitiesFor).foreach(writeCap)
+    Engine.values.filter(_.enabled).map(CapabilitiesProvider.capabilitiesFor).foreach(writeCap)
   }
 
   def writeCap(cap: Capabilities) = {
@@ -30,7 +30,6 @@ object CodeGenerator {
     val ret = collection.mutable.ArrayBuffer.empty[String]
     implicit val eng = cap.engine
     ret += "/* Generated Code */"
-    ret += "// scalastyle:off"
     ret += "package models.engine.rdbms.types"
     ret += ""
     ret += "import models.engine.DatabaseEngine"
@@ -40,7 +39,6 @@ object CodeGenerator {
     ret += cap.columnTypes.flatMap(_._2.map(x => s"    ${q(x)}")).mkString(",\n")
     ret += "  )"
     ret += "}"
-    ret += "// scalastyle:on"
     ret += ""
 
     ret.mkString("\n")

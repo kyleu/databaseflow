@@ -1,5 +1,4 @@
 /* Generated Code */
-// scalastyle:off
 package models.engine.rdbms.types
 
 import models.engine.DatabaseEngine
@@ -34,4 +33,3 @@ trait H2Types extends DatabaseEngine {
     "varchar"
   )
 }
-// scalastyle:on

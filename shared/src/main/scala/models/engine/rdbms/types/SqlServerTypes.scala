@@ -1,10 +1,9 @@
 /* Generated Code */
-// scalastyle:off
 package models.engine.rdbms.types
 
 import models.engine.DatabaseEngine
 
-trait SqlServerTypes extends DatabaseEngine {
+trait SQLServerTypes extends DatabaseEngine {
   override val columnTypes = Seq(
     "bigint",
     "binary",
@@ -33,4 +32,3 @@ trait SqlServerTypes extends DatabaseEngine {
     "varchar"
   )
 }
-// scalastyle:on
