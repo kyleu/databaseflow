@@ -12,6 +12,7 @@ dist
 
 /cache
 
+/build/*.gz
 /build/linux
 /build/osx
 /build/windows

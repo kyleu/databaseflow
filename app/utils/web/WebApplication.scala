@@ -31,8 +31,8 @@ class WebApplication() extends WebApp {
     server = Some(NettyServer.fromApplication(
       application = app,
       config = ServerConfig(
-        port = Some(4000),
-        sslPort = Some(4443),
+        port = Some(4260),
+        sslPort = Some(4263),
         address = address,
         mode = Mode.Prod
       )
@@ -40,7 +40,7 @@ class WebApplication() extends WebApp {
     _started = true
 
     if (java.awt.Desktop.isDesktopSupported) {
-      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4000"))
+      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4260"))
     }
   }
 

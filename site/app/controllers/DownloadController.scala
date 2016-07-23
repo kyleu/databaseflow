@@ -39,6 +39,10 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
         case "gui" => "windows/databaseflow.msi"
         case x => throw new IllegalStateException(s"Unknown variant [$variant].")
       }
+      case "docker" => variant match {
+        case "service" => "databaseflow.docker.gz"
+        case x => throw new IllegalStateException(s"Unknown variant [$variant].")
+      }
       case x => throw new IllegalStateException(s"Unknown os [$os].")
     }
     val file = new java.io.File(downloadDir, filename)

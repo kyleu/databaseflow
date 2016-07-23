@@ -59,12 +59,12 @@ class TopFrame(app: WebApp) extends MainFrame {
   listenTo(statusLabel.mouse.clicks)
   reactions += {
     case x: MouseClicked => if (java.awt.Desktop.isDesktopSupported) {
-      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4000"))
+      java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4260"))
     }
   }
 
   def onStart() = {
-    statusLabel.text = "http://localhost:4000"
+    statusLabel.text = "http://localhost:4260"
     statusLabel.cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
     statusLabel.xAlignment = Alignment.Center
   }

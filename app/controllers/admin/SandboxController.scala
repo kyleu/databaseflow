@@ -31,7 +31,7 @@ class SandboxController @javax.inject.Inject() (override val ctx: ApplicationCon
   }
 
   def dumpMetrics() = withAdminSession("sandbox.metrics") { implicit request =>
-    val url = "http://localhost:4001/metrics?pretty=true"
+    val url = "http://localhost:4261/metrics?pretty=true"
     val call = ws.url(url).withHeaders("Accept" -> "application/json")
     val f = call.get()
 

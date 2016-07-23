@@ -30,7 +30,7 @@ object LicenseService extends Logging {
           None
       }
     }
-    log.warn(" - Head to http://localhost:4000 to get started!")
+    log.warn(" - Head to http://localhost:4260 to get started!")
   }
 
   def parseLicense(content: String) = Try {

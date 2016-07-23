@@ -42,8 +42,8 @@ object Packaging {
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
       "-J-Xms256m",
-      "-Dhttp.port=4000",
-      "-Dhttps.port=4443",
+      "-Dhttp.port=4260",
+      "-Dhttps.port=4263",
       "-Dproject=databaseflow"
     )
   )

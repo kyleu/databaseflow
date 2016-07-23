@@ -58,7 +58,7 @@ object Server {
     JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
     // Docker
-    dockerExposedPorts := Seq(4000, 4443),
+    dockerExposedPorts := Seq(4260, 4261, 4262, 4263),
     defaultLinuxInstallLocation in Docker := "/opt/databaseflow",
     packageName in Docker := packageName.value,
     version in Docker := version.value,

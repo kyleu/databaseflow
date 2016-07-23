@@ -3,8 +3,6 @@
 @REM Environment:
 @REM JAVA_HOME - location of a JDK home dir (optional if java on path)
 @REM CFG_OPTS  - JVM options (optional)
-@REM Configuration:
-@REM DATABASEFLOW_config.txt found in the DATABASEFLOW_HOME.
 @setlocal enabledelayedexpansion
 
 @echo off
@@ -17,19 +15,8 @@ rem Detect if we were double clicked, although theoretically A user could
 rem manually run cmd /c
 for %%x in (!cmdcmdline!) do if %%~x==/c set DOUBLECLICKED=1
 
-rem FIRST we load the config file of extra options.
-set "CFG_FILE=%DATABASEFLOW_HOME%\DATABASEFLOW_config.txt"
 set CFG_OPTS=
-if exist "%CFG_FILE%" (
-  FOR /F "tokens=* eol=# usebackq delims=" %%i IN ("%CFG_FILE%") DO (
-    set DO_NOT_REUSE_ME=%%i
-    rem ZOMG (Part #2) WE use !! here to delay the expansion of
-    rem CFG_OPTS, otherwise it remains "" for this loop.
-    set CFG_OPTS=!CFG_OPTS! !DO_NOT_REUSE_ME!
-  )
-)
 
-rem We use the value of the JAVACMD environment variable if defined
 set _JAVACMD=%JAVACMD%
 
 if "%_JAVACMD%"=="" (
@@ -137,7 +124,7 @@ if defined CUSTOM_MAIN_CLASS (
 )
 
 rem Call the application and pass all arguments unchanged.
-"%_JAVACMD%" !_JAVA_OPTS! !DATABASEFLOW_OPTS! -Xmx2g -Xms256m -Dhttp.port=4000 -Dhttps.port=4443 -Dproject=databaseflow -cp "%APP_CLASSPATH%" %MAIN_CLASS% !_APP_ARGS!
+"%_JAVACMD%" !_JAVA_OPTS! !DATABASEFLOW_OPTS! -Xmx2g -Xms256m -Dhttp.port=4260 -Dhttps.port=4263 -Dproject=databaseflow -cp "%APP_CLASSPATH%" %MAIN_CLASS% !_APP_ARGS!
 
 @endlocal
 
