@@ -29,7 +29,7 @@ object SampleDatabaseManager {
     ConfirmManager.close()
   }
 
-  def process(bqs: BatchQueryStatus) = activeSample.map { queryId =>
+  def process(bqs: BatchQueryStatus) = activeSample.foreach { queryId =>
     val queryPanel = $(s"#panel-$queryId")
     $(".completed-statements", queryPanel).text(bqs.completedQueries.toString)
     $(".remaining-statements", queryPanel).text(bqs.remainingQueries.toString)
@@ -37,6 +37,7 @@ object SampleDatabaseManager {
       NotificationService.info("DatabaseLoaded", "The sample database was imported successfully.")
       TabManager.removeTab(queryId)
       queryPanel.remove()
+      ConfirmManager.close()
     }
   }
 }

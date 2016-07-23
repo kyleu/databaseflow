@@ -34,5 +34,8 @@ object ConfirmManager {
     modal.openModal()
   }
 
-  def close(): Unit = modal.closeModal()
+  def close(): Unit = {
+    modal.closeModal()
+    $(".lean-overlay").hide()
+  }
 }

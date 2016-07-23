@@ -33,7 +33,7 @@ object MetadataColumns {
       definition = row.asOpt[String]("COLUMN_DEF"),
       primaryKey = false, //row.as[Boolean]("?"),
       notNull = notNull == 0, // IS_NULLABLE?
-      autoIncrement = row.as[String]("IS_AUTOINCREMENT") == "YES",
+      autoIncrement = row.asOpt[String]("IS_AUTOINCREMENT").contains("YES"),
       columnType = QueryTranslations.forType(colType), // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeName = row.as[String]("TYPE_NAME"),
