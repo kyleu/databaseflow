@@ -8,33 +8,19 @@ import com.mohiva.play.silhouette.api.Silhouette
 import models.auth.AuthEnv
 import org.joda.time.DateTimeZone
 import play.api.Environment
-import play.api.http.HttpRequestHandler
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
-import play.api.mvc.{Action, RequestHeader, Results}
-import play.api.routing.Router
+import play.api.libs.ws.WSClient
 import services.config.ConfigFileService
-import services.data.MasterDdl
 import services.database.DatabaseRegistry
-import services.database.core.{MasterDatabase, ResultCacheDatabase}
-import services.licensing.LicenseService
-import services.settings.SettingsService
-import services.supervisor.{ActorSupervisor, VersionService}
+import services.database.core.ResultCacheDatabase
+import services.supervisor.ActorSupervisor
 import utils.metrics.Instrumented
 
 import scala.concurrent.Future
 
 object ApplicationContext {
   var initialized = false
-
-  class SimpleHttpRequestHandler @javax.inject.Inject() (router: Router) extends HttpRequestHandler {
-    def handlerForRequest(request: RequestHeader) = {
-      router.routes.lift(request) match {
-        case Some(handler) => (request, handler)
-        case None => (request, Action(Results.NotFound))
-      }
-    }
-  }
 }
 
 @javax.inject.Singleton
@@ -45,7 +31,7 @@ class ApplicationContext @javax.inject.Inject() (
     val playEnv: Environment,
     val actorSystem: ActorSystem,
     val silhouette: Silhouette[AuthEnv],
-    val versionService: VersionService
+    val ws: WSClient
 ) extends Logging {
   if (ApplicationContext.initialized) {
     log.info("Skipping initialization after failure.")
@@ -63,6 +49,8 @@ class ApplicationContext @javax.inject.Inject() (
     ResultCacheDatabase.open()
 
     lifecycle.addStopHook(() => Future.successful(stop()))
+
+    ActorSupervisor.startIfNeeded(ws)
   }
 
   val supervisor = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")

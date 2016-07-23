@@ -4,6 +4,7 @@ import java.net.URI
 
 import gui.web.WebApp
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.ws.WSClient
 import play.api.{Mode, Play}
 import play.core.server.{NettyServer, ServerConfig}
 import services.data.MasterDdl
@@ -21,7 +22,8 @@ class WebApplication() extends WebApp {
   def started = _started
 
   def start() = {
-    app.injector.instanceOf(classOf[ActorSupervisor]).startIfNeeded()
+    val ws = app.injector.instanceOf(classOf[WSClient])
+    ActorSupervisor.startIfNeeded(ws)
 
     val address = if (LicenseService.isPersonalEdition) { "127.0.0.1" } else { "0.0.0.0" }
 

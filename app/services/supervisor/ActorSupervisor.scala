@@ -7,6 +7,7 @@ import akka.actor.SupervisorStrategy.Stop
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
+import play.api.libs.ws.WSClient
 import services.data.MasterDdl
 import services.database.core.MasterDatabase
 import services.licensing.LicenseService
@@ -16,6 +17,14 @@ import utils.metrics.{InstrumentedActor, MetricsConfig, MetricsServletActor}
 import utils.{ApplicationContext, DateUtils, Logging}
 
 object ActorSupervisor {
+  def startIfNeeded(ws: WSClient) = if (!MasterDatabase.isOpen) {
+    MasterDatabase.open()
+    MasterDdl.update(MasterDatabase.conn)
+    SettingsService.load()
+    LicenseService.readLicense()
+    VersionService.upgradeIfNeeded(ws)
+  }
+
   case class SocketRecord(userId: Option[UUID], name: String, actorRef: ActorRef, started: LocalDateTime)
 }
 
@@ -36,20 +45,10 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
     )), "metrics-servlet")
 
     context.actorOf(CachedResultActor.props(), "result-cleanup")
-
-    startIfNeeded()
   }
 
   override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy() {
     case _ => Stop
-  }
-
-  def startIfNeeded() = if (!MasterDatabase.isOpen) {
-    MasterDatabase.open()
-    MasterDdl.update(MasterDatabase.conn)
-    SettingsService.load()
-    LicenseService.readLicense()
-    ctx.versionService.upgradeIfNeeded()
   }
 
   override def receiveRequest = {
