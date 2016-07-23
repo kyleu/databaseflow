@@ -1,19 +1,18 @@
-import gui.ui.TopFrame
 import utils.web.WebApplication
 
-import scala.swing._
+object DatabaseFlow {
+  private[this] var app: Option[WebApplication] = None
 
-object DatabaseFlow extends SimpleSwingApplication {
-  System.setProperty("apple.laf.useScreenMenuBar", "true")
-  System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Database Flow")
-
-  val app = new WebApplication()
-  override val top = new TopFrame(app)
-
-  new Thread(new Runnable {
-    override def run() = {
-      app.start()
-      top.onStart()
+  def main(args: Array[String]) {
+    if (args.headOption.contains("-v")) {
+      throw new IllegalArgumentException("Invalid argument.")
     }
-  }).start()
+    app = Some(new WebApplication())
+    app.foreach(_.start())
+  }
+
+  def restart() = app.foreach { a =>
+    a.stop()
+    a.start()
+  }
 }

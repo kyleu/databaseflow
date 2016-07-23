@@ -16,7 +16,7 @@ object Packaging {
 
   private[this] def isConf(x: (File, String)) = x._1.getAbsolutePath.contains("conf/")
 
-  private[this] val packagingSettings = useNativeZip ++ Seq(
+  val settings = useNativeZip ++ Seq(
     topLevelDirectory in Universal := None,
     packageSummary := description.value,
     packageDescription := description.value,
@@ -38,6 +38,8 @@ object Packaging {
     wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",
     wixProductLicense := None,//Some(file("src/deploy/package/windows/license.rtf")),
     wixFeatures := makeWindowsFeatures((mappings in Windows).value),
+
+    mainClass in Compile := Some("DatabaseFlow"),
 
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
@@ -78,18 +80,4 @@ object Packaging {
 
     Seq(corePackage, addBinToPath, menuLinks)
   }
-
-  val guiSettings = packagingSettings ++ Seq(
-    mainClass in Compile := Some("DatabaseFlow"),
-
-    jdkAppIcon := (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file),
-    jdkPackagerType := "installer",
-    jdkPackagerJVMArgs := Seq("-Xmx2g"),
-    jdkPackagerToolkit := SwingToolkit,
-    jdkPackagerProperties := Map("app.name" -> name.value, "app.version" -> version.value)
-  )
-
-  val serviceSettings = packagingSettings ++ Seq(
-    mainClass in Compile := Some("DatabaseFlowService")
-  )
 }

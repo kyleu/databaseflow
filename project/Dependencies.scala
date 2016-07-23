@@ -72,17 +72,13 @@ object Dependencies {
     val moment = "org.webjars" % "momentjs" % "2.14.1"
   }
 
-  object Ui {
-    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2"
-  }
-
   object Metrics {
     val metrics = "nl.grons" %% "metrics-scala" % "3.5.4"
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
     val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.0.M0"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.9.v20160517"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }

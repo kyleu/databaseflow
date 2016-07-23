@@ -10,4 +10,4 @@ cd databaseflow/bin/build/
 
 cd ../../..
 
-cp -R databaseflow/build/linux/* /media/psf/Home/Projects/Personal/databaseflow/build/linux
+cp -R databaseflow/build/* /media/psf/Home/Projects/Personal/databaseflow/build

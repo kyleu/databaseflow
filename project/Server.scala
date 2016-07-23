@@ -32,7 +32,7 @@ object Server {
       Cache.ehCache, Akka.actor, Akka.logging, Play.playFilters, Play.playWs,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
-      Export.csv, Export.xlsx, Ui.swing, Utils.crypto, Utils.scalaGuice, Utils.commonsIo,
+      Export.csv, Export.xlsx, Utils.crypto, Utils.scalaGuice, Utils.commonsIo,
       Akka.testkit, Play.playTest, Testing.scalaTest
     )
   }
@@ -75,14 +75,10 @@ object Server {
     val ret = Project(
       id = Shared.projectId,
       base = file(".")
-    )
-      .enablePlugins(SbtWeb, play.sbt.PlayScala)
-      .enablePlugins(UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin)
-      .enablePlugins(JavaAppPackaging)
-      .settings(serverSettings: _*)
-      .aggregate(projectToRef(Client.client))
-      .settings(PackagingSettings.settings: _*)
+    ).enablePlugins(SbtWeb, play.sbt.PlayScala).enablePlugins(
+      UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin, JavaAppPackaging
+    ).settings(serverSettings: _*).aggregate(projectToRef(Client.client)).settings(Packaging.settings: _*)
 
-    withProjects(ret, Seq(Gui.gui, Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.licenseModels))
+    withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.licenseModels))
   }
 }

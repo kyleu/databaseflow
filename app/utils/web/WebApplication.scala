@@ -2,17 +2,14 @@ package utils.web
 
 import java.net.URI
 
-import gui.web.WebApp
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
 import play.api.{Mode, Play}
 import play.core.server.{NettyServer, ServerConfig}
-import services.data.MasterDdl
-import services.database.core.MasterDatabase
 import services.licensing.LicenseService
 import services.supervisor.ActorSupervisor
 
-class WebApplication() extends WebApp {
+class WebApplication() {
   private[this] lazy val app = new GuiceApplicationBuilder().build()
 
   private[this] var server: Option[NettyServer] = None

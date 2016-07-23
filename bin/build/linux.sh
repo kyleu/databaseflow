@@ -2,8 +2,6 @@
 
 cd ../../
 
-./bin/build/switch-service.sh
-
 bin/activator/activator universal:packageZipTarball
 mv ./target/universal/databaseflow-1.0.0.tgz ./build/linux/databaseflow.tgz
 
