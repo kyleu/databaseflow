@@ -18,15 +18,24 @@ object EditorManager {
   }
 
   @SuppressWarnings(Array("UnusedMethodParameter"))
-  private[this] def completionsFor(editor: js.Any, session: js.Any, pos: js.Any, prefix: String, callback: js.Dynamic) {
+  private[this] def completionsFor(editor: js.Dynamic, session: js.Any, pos: js.Any, prefix: String, callback: js.Dynamic) {
     val schemaMatches = MetadataManager.schema.map { sch =>
       convertToJs(sch.tables.map(_.name), "table") ++ convertToJs(sch.views.map(_.name), "view") ++ convertToJs(sch.procedures.map(_.name), "procedure")
     }.getOrElse(Nil)
     val engineMatches = MetadataManager.engine.map { eng =>
       convertToJs(eng.builtInFunctions, "function") ++ convertToJs(eng.columnTypes, "type")
     }.getOrElse(Nil)
-
-    callback(utils.NullUtils.inst, js.Array(schemaMatches ++ engineMatches: _*))
+    val content = editor.getValue().toString
+    val tableMatches = MetadataManager.schema.map { sch =>
+      sch.tables.flatMap { t =>
+        if (content.contains(t.name)) {
+          Some(convertToJs(t.columns.map(_.name), "column"))
+        } else {
+          None
+        }
+      }.flatten
+    }.getOrElse(Nil)
+    callback(utils.NullUtils.inst, js.Array(schemaMatches ++ engineMatches ++ tableMatches: _*))
   }
 
   def initEditorFramework() = {

@@ -11,7 +11,7 @@ object SqlParser {
       sql(currentIndex) match {
         case x if x == '\\' => currentIndex += 2
         case x if x == '"' || x == '\'' || x == '`' => sql.indexOf(x.toInt, currentIndex + 1) match {
-          case -1 => throw new IllegalStateException(s"Unclosed [$x] string literal.")
+          case -1 => currentIndex = currentIndex + 1
           case idx => currentIndex = idx + 1
         }
         case x if x == '[' => sql.indexOf(']', currentIndex + 1) match {
