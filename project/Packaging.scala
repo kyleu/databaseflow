@@ -1,7 +1,9 @@
 import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.debian.DebianPlugin.autoImport.Debian
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{ dockerExposedPorts => _, dockerExposedVolumes => _, _ }
 import com.typesafe.sbt.packager.windows.WindowsPlugin.autoImport.Windows
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{Docker, dockerExposedPorts, dockerExposedVolumes}
 import sbt.Keys._
 import sbt._
 import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.{ Universal, useNativeZip }
@@ -38,6 +40,13 @@ object Packaging {
     wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",
     wixProductLicense := None,//Some(file("src/deploy/package/windows/license.rtf")),
     wixFeatures := makeWindowsFeatures((mappings in Windows).value),
+
+    // Docker
+    dockerExposedPorts := Seq(4260, 4261, 4262, 4263),
+    defaultLinuxInstallLocation in Docker := "/opt/databaseflow",
+    packageName in Docker := packageName.value,
+    dockerExposedVolumes := Seq("/opt/databaseflow"),
+    version in Docker := version.value,
 
     mainClass in Compile := Some("DatabaseFlow"),
 

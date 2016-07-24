@@ -2,12 +2,13 @@ package services.licensing
 
 import java.util.Base64
 
-import licensing.{DecryptUtils, License, LicenseEdition}
+import licensing.{ DecryptUtils, License, LicenseEdition }
 import models.settings.SettingKey
+import services.config.ConfigFileService
 import services.settings.SettingsService
 import utils.Logging
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 object LicenseService extends Logging {
   private[this] var licenseContent: Option[String] = None
@@ -30,7 +31,12 @@ object LicenseService extends Logging {
           None
       }
     }
-    log.warn(" - Head to http://localhost:4260 to get started!")
+    if(ConfigFileService.isDocker) {
+      log.warn(" - Head to http://[docker address]:4260 to get started!")
+      log.warn(" - Since this is a docker container, you'll need to expose port 4260, by using the command flag [-p 4260:4260].")
+    } else {
+      log.warn(" - Head to http://localhost:4260 to get started!")
+    }
   }
 
   def parseLicense(content: String) = Try {

@@ -1,6 +1,10 @@
 # Index Page
 index.welcome = Welcome to Database Flow! Here's a few words about the app. Maybe a slogan or something.
 
+# License
+license.new.form = License Details
+license.save = Save
+
 # Registration
 registration.title = Register
 registration.call.to.action = Register for {0}

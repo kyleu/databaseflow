@@ -24,7 +24,13 @@ object ConfigFileService extends Logging {
     val (homeDir, programFilename) = if (osName.contains("WIN")) {
       new java.io.File(System.getenv("APPDATA")) -> "Database Flow"
     } else {
-      new java.io.File(System.getProperty("user.home")) -> ".databaseflow"
+      val dir = System.getProperty("user.home")
+      val cleanDir = if(dir == "/usr/sbin") {
+        "/opt/databaseflow" // Docker bullshit
+      } else {
+        dir
+      }
+      new java.io.File(cleanDir) -> ".databaseflow"
     }
 
     if (homeDir.exists) {
@@ -38,6 +44,8 @@ object ConfigFileService extends Logging {
       throw new IllegalStateException(s"Cannot read home directory [$homeDir].")
     }
   }
+
+  val isDocker = configDir.getAbsolutePath.contains("/opt/databaseflow")
 
   val config = {
     val cfg = new java.io.File(configDir, "databaseflow.conf")
