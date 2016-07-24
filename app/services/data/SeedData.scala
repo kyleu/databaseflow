@@ -44,8 +44,13 @@ object SeedData {
     ConnectionSettingsService.insert(ConnectionSettings(
       name = "Local H2",
       description = "A scratchpad database to play around in.",
-      engine = H2, dbName = Some("~/database.h2db"),
-      username = "", password = ""
+      engine = H2, dbName = Some("~/database.h2db")
+    ))
+
+    ConnectionSettingsService.insert(ConnectionSettings(
+      name = "Local SQLite",
+      description = "A scratchpad database to play around in.",
+      engine = SQLite, dbName = Some("~/database.sqlite")
     ))
 
     ConnectionSettingsService.insert(ConnectionSettings(

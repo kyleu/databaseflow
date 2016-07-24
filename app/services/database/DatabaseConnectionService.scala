@@ -34,6 +34,7 @@ object DatabaseConnectionService {
       setUsername(cs.username)
       setPassword(cs.password)
       setConnectionTimeout(cs.maxWait)
+      setMinimumIdle(1)
       setMaximumPoolSize(cs.maxSize)
 
       setHealthCheckRegistry(Checked.healthCheckRegistry)

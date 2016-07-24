@@ -3,12 +3,9 @@ package models.engine
 import models.engine.rdbms._
 
 object DatabaseEngine {
-  val rdbmsEngines = Seq(H2, MySQL, Oracle, PostgreSQL, SQLite, SQLServer)
-
+  val rdbmsEngines = Seq(DB2, H2, Informix, MySQL, Oracle, PostgreSQL, SQLite, SQLServer)
   val all = rdbmsEngines
-
   private[this] val enginesById = all.map(x => x.id -> x).toMap
-
   def get(id: String) = enginesById.getOrElse(id, throw new IllegalArgumentException(s"No database engine registered as [$id]."))
 }
 
