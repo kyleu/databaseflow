@@ -28,7 +28,7 @@ object SqlManager {
 
   def getLinkTitle(queryId: UUID) = {
     val sqlEditor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Invalid editor for [$queryId]."))
-    val txt = sqlEditor.getSelectedText().toString
+    val txt = sqlEditor.getSelectedText().toString.trim
     if (txt.isEmpty) {
       val sql = sqlEditor.getValue().toString.stripSuffix(";")
       val split = SqlParser.split(sql)

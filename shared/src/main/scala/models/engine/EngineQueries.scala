@@ -17,16 +17,21 @@ object EngineQueries {
         case None => None
       }
     }
+    val preColumnsClause = options.offset match {
+      case Some(o) if engine == Informix => s" SKIP $o"
+      case _ => ""
+    }
     val postQueryClauses = options.limit match {
-      case Some(l) if engine == H2 || engine == MySQL || engine == PostgreSQL => options.offset match {
+      case Some(l) if engine == H2 || engine == MySQL || engine == PostgreSQL || engine == SQLite => options.offset match {
         case Some(o) => s" limit $l offset $o"
         case None => s" limit $l"
       }
+      case Some(l) if engine == Informix => s" limit $l"
       case Some(l) if engine == SQLServer => options.offset match {
         case Some(o) => s" offset $o rows fetch next $l rows only"
         case None => s" offset 0 rows fetch next $l rows only"
       }
-      case Some(e) => ""
+      case Some(e) => throw new IllegalStateException(s"No limit support for engine [$engine].")
       case None => options.offset match {
         case Some(o) => s" offset $o rows"
         case None => ""
@@ -51,7 +56,7 @@ object EngineQueries {
       val ordering = if (options.orderByAsc.contains(false)) { "desc" } else { "asc" }
       s" order by ${engine.leftQuoteIdentifier}$orderCol${engine.rightQuoteIdentifier} $ordering"
     }.getOrElse("")
-    val sql = s"select * from $quotedName$whereClause$orderByClause$postQueryClauses"
+    val sql = s"select$preColumnsClause * from $quotedName$whereClause$orderByClause$postQueryClauses"
     sql
   }
 }
