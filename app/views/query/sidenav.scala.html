@@ -1,9 +1,14 @@
-@()<ul id="main-menu" class="side-nav fixed">
+@(txSupported: Boolean)<ul id="main-menu" class="side-nav fixed">
   <li class="search">
     <div class="search-wrapper card">
       <input id="search" placeholder="Search" autocomplete="off" /><i class="fa @models.template.Icons.search"></i>
     </div>
   </li>
+  @if(txSupported) {<li>
+    <a id="begin-tx-link" class="top-nav-link waves-effect" href="#">
+      <i class="fa @models.template.Icons.beginTx menu-icon"></i> Begin Transaction
+    </a>
+  </li>}
   <li>
     <a id="new-query-link" class="top-nav-link waves-effect" href="#">
       <i class="fa @models.template.Icons.newQuery menu-icon"></i> New Query

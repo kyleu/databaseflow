@@ -41,6 +41,10 @@ object Icons {
   val database = "fa-database"
   val user = "fa-user"
 
+  val beginTx = "fa-calendar-plus-o"
+  val commitTx = "fa-calendar-check-o"
+  val rollbackTx = "fa-calendar-times-o"
+
   val newQuery = "fa-plus-square-o"
   val refresh = "fa-refresh"
   val filter = "fa-filter"

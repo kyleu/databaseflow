@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], debug: Boolean, connectionId: java.util.UUID, dbName: String, initialQuery: java.util.UUID)(
+@(user: Option[models.user.User], debug: Boolean, connectionId: java.util.UUID, dbName: String, txSupported: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.materialize(
   user = user,
@@ -10,7 +10,7 @@
   debug = debug
 ) {
   @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey))
-  @views.html.query.navbar(user, dbName)
+  @views.html.query.navbar(user, dbName, txSupported)
 
   <main class="indent">
     <div class="tab-container z-depth-1">

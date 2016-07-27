@@ -20,9 +20,8 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
   }
 
   val transactionProvider: TransactionProvider = new TransactionManager
-  def transaction[A](f: Transaction => A): A = transaction(logError = true, f)
-  def quietTransaction[A](f: Transaction => A): A = transaction(logError = false, f)
-  def transaction[A](logError: Boolean, f: Transaction => A): A = transaction(logError = logError, forceNew = false, f)
+
+  def transaction[A](f: Transaction => A): A = transaction(logError = true, forceNew = false, f)
 
   def transaction[A](logError: Boolean, forceNew: Boolean, f: Transaction => A): A = {
     if (!forceNew && transactionProvider.transactionExists) {
@@ -47,18 +46,6 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
     }
   }
 
-  def transactionScope[A](f: => A): A = transaction(logError = true, forceNew = false, (txn: Transaction) => {
-    transactionProvider.begin(txn)
-    try { f } finally { transactionProvider.end() }
-  })
-
-  def newTransactionScope[A](f: => A): A = transaction(logError = true, forceNew = true, (txn: Transaction) => {
-    transactionProvider.begin(txn)
-    try { f } finally { transactionProvider.end() }
-  })
-
-  def currentTransaction = transactionProvider.currentTransaction
-
   def apply[A](query: RawQuery[A]): A = if (transactionProvider.transactionExists) {
     transactionProvider.currentTransaction(query)
   } else {
@@ -81,8 +68,6 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
       try { time(statement.getClass) { executeUpdate(connection, statement) } } finally { connection.close() }
     }
   }
-
-  def rollback() = transactionProvider.rollback()
 
   def close() = if (source.isWrapperFor(classOf[HikariDataSource])) {
     source.unwrap(classOf[HikariDataSource]).close()

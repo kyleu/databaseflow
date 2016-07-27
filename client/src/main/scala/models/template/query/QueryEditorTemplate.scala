@@ -14,7 +14,8 @@ object QueryEditorTemplate {
     Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
     Some(a(cls := "export-link theme-text", href := "#")("Export")),
     if (engine.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
-    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
+    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None },
+    if (engine.transactionsSupported) { Some(a(cls := "tx-toggle-link theme-text", href := "#")("Tx")) } else { None }
   ).flatten
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {
@@ -22,19 +23,21 @@ object QueryEditorTemplate {
     queryPanel(queryId, queryName, sql, Icons.adHocQuery, links)
   }
 
+  val savedQueryEditLinks = Seq(
+    a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save"),
+    a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
+    a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
+    a(cls := "delete-query-link right theme-text", href := "#")("Delete")
+  )
+
+  val savedQueryViewLinks = Seq(a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New"))
+
   def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: Option[UUID]) = {
     val canEdit = userId.forall(uid => sq.owner.contains(uid))
     val modificationLinks = if (canEdit) {
-      Seq(
-        a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save"),
-        a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
-        a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
-        a(cls := "delete-query-link right theme-text", href := "#")("Delete")
-      )
+      savedQueryEditLinks
     } else {
-      Seq(
-        a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New")
-      )
+      savedQueryViewLinks
     }
     val links = linksFor(engine) ++ modificationLinks
     queryPanel(sq.id, sq.name, sq.sql, Icons.savedQuery, links)
@@ -43,14 +46,10 @@ object QueryEditorTemplate {
   private[this] def queryPanel(queryId: UUID, queryName: String, sql: String, icon: String, links: Seq[TypedTag[String]]) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(
-        div(
-          div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
-          div(cls := "sql-options-panel")(
-            em(cls := "sql-options-err-status")("No recent errors"),
-            div(cls := "sql-options-tx-status")(a(href := "", cls := "theme-text")("Begin Transaction"))
-          )
+        content = div(
+          div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql)
         ),
-        Some(icon -> span(queryName, span(cls := "unsaved-status", title := "This query has unsaved changes.")("*"))),
+        iconAndTitle = Some(icon -> span(queryName, span(cls := "unsaved-status", title := "This query has unsaved changes.")("*"))),
         actions = links
       ),
       div(id := s"workspace-$queryId")

@@ -30,7 +30,7 @@ case class ProcedureResultResponse(procedures: Seq[Procedure]) extends ResponseM
 case class AuditRecordResponse(history: Seq[AuditRecord]) extends ResponseMessage
 case class AuditRecordRemoved(id: Option[UUID]) extends ResponseMessage
 
-case class TransactionStatus(queryId: UUID, state: TransactionState, statementCount: Int) extends ResponseMessage
+case class TransactionStatus(state: TransactionState, statementCount: Int) extends ResponseMessage
 
 case class QueryCheckResponse(queryId: UUID, sql: String, error: Option[String], line: Option[Int] = None, position: Option[Int] = None) extends ResponseMessage
 case class QueryResultRowCount(id: UUID, queryId: UUID, resultId: UUID, count: Int, overflow: Boolean, durationMs: Int) extends ResponseMessage

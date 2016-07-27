@@ -39,6 +39,7 @@ object InitService {
   }
 
   private[this] def wireSideNav() = {
+    utils.JQueryUtils.clickHandler($("#begin-tx-link"), (jq) => TransactionService.beginTransaction())
     utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
     utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
     utils.JQueryUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())

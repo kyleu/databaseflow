@@ -40,14 +40,14 @@ object StaticPanelTemplate {
 
     div(cls := "row")(
       div(cls := "col s12")(
-        div(cls := "card")(
-          cardContent,
+        div(cls := "card")(Seq(
+          Some(cardContent),
           if (actions.isEmpty) {
-            div(cls := "card-action initially-hidden")()
+            None
           } else {
-            div(cls := "card-action")(actions)
+            Some(div(cls := "card-action")(actions))
           }
-        )
+        ).flatten: _*)
       )
     )
   }

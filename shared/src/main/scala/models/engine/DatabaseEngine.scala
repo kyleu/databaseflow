@@ -19,11 +19,13 @@ abstract class DatabaseEngine(
   def builtInFunctions: Seq[String] = Nil
   def columnTypes: Seq[String] = Nil
 
-  def leftQuoteIdentifier: String = "\""
-  def rightQuoteIdentifier: String = "\""
+  def leftQuoteIdentifier = "\""
+  def rightQuoteIdentifier = "\""
 
   def explain: Option[(String) => String] = None
   def analyze: Option[(String) => String] = None
+
+  def transactionsSupported = true
 
   def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = dbName match {
     case Some(d) => throw new IllegalStateException(s"Cannot form url for provided [$host:$port/$dbName:$extra].")

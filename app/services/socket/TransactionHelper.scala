@@ -1,5 +1,6 @@
 package services.socket
 
+import java.sql.Connection
 import java.util.UUID
 
 import models.TransactionStatus
@@ -7,17 +8,53 @@ import models.database.Transaction
 import models.query.TransactionState
 
 trait TransactionHelper { this: SocketService =>
-  private[this] val activeTransactions = collection.mutable.HashMap.empty[UUID, (Transaction, Int)]
+  private[this] var activeConnection: Option[Connection] = None
+  private[this] var activeTransaction: Option[Transaction] = None
+  private[this] var transactionStatementCount: Int = 0
 
-  def handleBeginTransaction(queryId: UUID) = {
-    out ! TransactionStatus(queryId = queryId, state = TransactionState.Started, 0)
+  private[this] def sendState(state: TransactionState) = out ! TransactionStatus(state = state, transactionStatementCount)
+
+  def handleBeginTransaction() = {
+    if(activeTransaction.isDefined) {
+      throw new IllegalStateException("Already in a transaction.")
+    }
+
+    val connection = db.source.getConnection
+    connection.setAutoCommit(false)
+    val transaction = new Transaction(connection)
+
+    activeConnection = Some(connection)
+    activeTransaction = Some(transaction)
+    transactionStatementCount = 0
+
+    sendState(TransactionState.Started)
   }
 
-  def handleRollbackTransaction(queryId: UUID) {
-    out ! TransactionStatus(queryId = queryId, state = TransactionState.RolledBack, 0)
+  def handleRollbackTransaction() = activeTransaction match {
+    case Some(tx) =>
+      tx.rollback()
+      tx.close()
+      activeTransaction = None
+
+      sendState(TransactionState.RolledBack)
+
+      activeConnection.foreach(_.close())
+      activeConnection = None
+      transactionStatementCount = 0
+    case None => throw new IllegalStateException("Not currently in a transaction.")
   }
 
-  def handleCommitTransaction(queryId: UUID) = {
-    out ! TransactionStatus(queryId = queryId, state = TransactionState.Committed, 0)
+  def handleCommitTransaction() = activeTransaction match {
+    case Some(tx) =>
+      tx.commit()
+      tx.close()
+      activeTransaction = None
+
+      sendState(TransactionState.RolledBack)
+
+      activeConnection.foreach(_.close())
+      activeConnection = None
+      transactionStatementCount = 0
+    case None => throw new IllegalStateException("Not currently in a transaction.")
   }
 }

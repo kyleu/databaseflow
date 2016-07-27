@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], dbName: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: Option[models.user.User], dbName: String, txSupported: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 <header>
   @views.html.components.userDropdown(user)
 
@@ -13,7 +13,7 @@
           </a></li>
         </ul>
 
-        @views.html.query.sidenav()
+        @views.html.query.sidenav(txSupported)
       </div>
     </nav>
   </div>

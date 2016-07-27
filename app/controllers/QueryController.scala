@@ -31,9 +31,9 @@ class QueryController @javax.inject.Inject() (
   private[this] implicit val t = new MessageFrameFormatter(ctx.config.debug).transformer
 
   def main(connectionId: UUID) = withSession(s"connection-$connectionId") { implicit request =>
-    val activeDb = ConnectionSettingsService.getById(connectionId).map(c => c.name -> c.id)
+    val activeDb = ConnectionSettingsService.getById(connectionId).map(c => (c.name, c.id, c.engine.transactionsSupported))
     Future.successful(activeDb match {
-      case Some((name, id)) => Ok(views.html.query.main(request.identity, ctx.config.debug, id, name, UUID.randomUUID))
+      case Some((name, id, txSupported)) => Ok(views.html.query.main(request.identity, ctx.config.debug, id, name, txSupported))
       case None => Redirect(routes.HomeController.home())
     })
   }
