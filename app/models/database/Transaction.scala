@@ -10,9 +10,9 @@ class Transaction(connection: Connection) extends Queryable {
 
   override def apply[A](query: RawQuery[A]): A = apply(connection, query)
 
-  def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int] = executeUnknown(connection, query, resultId)
+  override def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int] = executeUnknown(connection, query, resultId)
 
-  def executeUpdate(statement: Statement) = executeUpdate(connection, statement)
+  override def executeUpdate(statement: Statement) = executeUpdate(connection, statement)
 
   def rollback() {
     log.debug("Rolling back transaction")

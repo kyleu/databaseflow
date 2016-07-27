@@ -22,9 +22,9 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
 
-    case bt: BeginTransaction => timeReceive(bt) { handleBeginTransaction(bt.queryId) }
-    case rt: RollbackTransaction => timeReceive(rt) { handleRollbackTransaction(rt.queryId) }
-    case ct: CommitTransaction => timeReceive(ct) { handleCommitTransaction(ct.queryId) }
+    case BeginTransaction => timeReceive(BeginTransaction) { handleBeginTransaction() }
+    case RollbackTransaction => timeReceive(RollbackTransaction) { handleRollbackTransaction() }
+    case CommitTransaction => timeReceive(CommitTransaction) { handleCommitTransaction() }
 
     case cq: CheckQuery => timeReceive(cq) { QueryCheckService.handleCheckQuery(connectionId, cq.queryId, cq.sql, out) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
@@ -45,9 +45,9 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
   }
 
   private[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String, resultId: UUID) = action match {
-    case "run" => QueryExecutionService.handleRunQuery(db, queryId, sql, resultId, connectionId, user.map(_.id), out)
-    case "explain" => PlanExecutionService.handleExplainQuery(db, queryId, sql, resultId, out)
-    case "analyze" => PlanExecutionService.handleAnalyzeQuery(db, queryId, sql, resultId, out)
+    case "run" => QueryExecutionService.handleRunQuery(activeTransaction.getOrElse(db), queryId, sql, resultId, connectionId, user.map(_.id), out)
+    case "explain" => PlanExecutionService.handleExplainQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, resultId, out)
+    case "analyze" => PlanExecutionService.handleAnalyzeQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, resultId, out)
     case _ => throw new IllegalArgumentException(action)
   }
 

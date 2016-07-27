@@ -52,6 +52,8 @@ trait Queryable extends Logging {
     }
   }
 
+  def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int]
+
   def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID]): Either[A, Int] = {
     log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)

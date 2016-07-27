@@ -1,6 +1,6 @@
 package services.database
 
-import models.database.{Query, Statement}
+import models.database.{Query, Queryable, Statement}
 import utils.Logging
 
 import scala.concurrent.forkjoin.ForkJoinPool
@@ -11,15 +11,15 @@ object DatabaseWorkerPool extends Logging {
     ExecutionContext.fromExecutor(new ForkJoinPool(16))
   }
 
-  def submitQuery[T](q: Query[T], db: DatabaseConnection, onSuccess: (T) => Unit, onFailure: (Throwable) => Unit) = {
+  def submitQuery[T](q: Query[T], db: Queryable, onSuccess: (T) => Unit, onFailure: (Throwable) => Unit) = {
     submit(() => db.query(q), onSuccess, onFailure)
   }
 
-  def submitStatement(s: Statement, db: DatabaseConnection, onSuccess: (Int) => Unit, onFailure: (Throwable) => Unit) = {
+  def submitStatement(s: Statement, db: Queryable, onSuccess: (Int) => Unit, onFailure: (Throwable) => Unit) = {
     submit(() => db.executeUpdate(s), onSuccess, onFailure)
   }
 
-  def submitUnknown[T](q: Query[T], db: DatabaseConnection, onSuccess: (Either[T, Int]) => Unit, onFailure: (Throwable) => Unit) = {
+  def submitUnknown[T](q: Query[T], db: Queryable, onSuccess: (Either[T, Int]) => Unit, onFailure: (Throwable) => Unit) = {
     submit(() => db.executeUnknown(q), onSuccess, onFailure)
   }
 

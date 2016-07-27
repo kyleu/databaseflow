@@ -21,7 +21,7 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
 
   val transactionProvider: TransactionProvider = new TransactionManager
 
-  def transaction[A](f: Transaction => A): A = transaction(logError = true, forceNew = false, f)
+  override def transaction[A](f: Transaction => A): A = transaction(logError = true, forceNew = false, f)
 
   def transaction[A](logError: Boolean, forceNew: Boolean, f: Transaction => A): A = {
     if (!forceNew && transactionProvider.transactionExists) {
@@ -46,21 +46,21 @@ case class DatabaseConnection(connectionId: UUID, name: String, source: DataSour
     }
   }
 
-  def apply[A](query: RawQuery[A]): A = if (transactionProvider.transactionExists) {
+  override def apply[A](query: RawQuery[A]): A = if (transactionProvider.transactionExists) {
     transactionProvider.currentTransaction(query)
   } else {
     val connection = source.getConnection
     try { time(query.getClass) { apply(connection, query) } } finally { connection.close() }
   }
 
-  def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int] = if (transactionProvider.transactionExists) {
+  override def executeUnknown[A](query: Query[A], resultId: Option[UUID] = None): Either[A, Int] = if (transactionProvider.transactionExists) {
     transactionProvider.currentTransaction.executeUnknown(query, resultId)
   } else {
     val connection = source.getConnection
     try { time(query.getClass) { executeUnknown(connection, query, resultId) } } finally { connection.close() }
   }
 
-  def executeUpdate(statement: Statement) = {
+  override def executeUpdate(statement: Statement) = {
     if (transactionProvider.transactionExists) {
       transactionProvider.currentTransaction.executeUpdate(statement)
     } else {

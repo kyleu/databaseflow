@@ -1,7 +1,7 @@
 package services.data
 
+import models.database.Queryable
 import models.ddl._
-import services.database.DatabaseConnection
 import utils.Logging
 
 object MasterDdl extends Logging {
@@ -17,23 +17,23 @@ object MasterDdl extends Logging {
     CreateAuditRecordTable
   )
 
-  def update(db: DatabaseConnection) = {
+  def update(q: Queryable) = {
     tables.foreach { t =>
-      val exists = db.query(DdlQueries.DoesTableExist(t.tableName))
+      val exists = q.query(DdlQueries.DoesTableExist(t.tableName))
       if (exists) {
         Unit
       } else {
         log.info(s"Creating missing table [${t.tableName}].")
-        db.executeUpdate(t)
+        q.executeUpdate(t)
       }
     }
   }
 
-  def wipe(db: DatabaseConnection) = {
+  def wipe(q: Queryable) = {
     log.warn("Wiping database schema.")
     val tableNames = tables.reverseMap(_.tableName)
     tableNames.map { tableName =>
-      db.executeUpdate(DdlQueries.TruncateTable(tableName))
+      q.executeUpdate(DdlQueries.TruncateTable(tableName))
     }
   }
 }

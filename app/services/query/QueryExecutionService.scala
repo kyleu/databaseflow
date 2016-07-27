@@ -6,11 +6,12 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models._
 import models.audit.AuditType
+import models.database.Queryable
 import models.query.{QueryResult, SavedQuery}
 import models.result.{CachedResult, CachedResultQuery}
 import models.user.User
 import services.audit.AuditRecordService
-import services.database.{DatabaseConnection, DatabaseWorkerPool}
+import services.database.DatabaseWorkerPool
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 import scala.util.control.NonFatal
@@ -40,7 +41,7 @@ object QueryExecutionService extends Logging {
     }
   }
 
-  def handleRunQuery(db: DatabaseConnection, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
+  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
     val startMs = DateUtils.nowMillis
     val auditId = UUID.randomUUID
 
