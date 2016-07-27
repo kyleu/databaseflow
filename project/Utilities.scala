@@ -3,6 +3,8 @@ import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import sbt.Keys._
 import sbt._
+import io.gatling.sbt.GatlingPlugin
+import pl.project13.scala.sbt.JmhPlugin
 
 object Utilities {
   lazy val metrics = (project in file("util/metrics")).settings(
@@ -43,4 +45,16 @@ object Utilities {
     .settings(scalariformSettings: _*)
     .dependsOn(licenseModels)
     .aggregate(licenseModels)
+
+  lazy val benchmarking = (project in file("benchmarking")).settings(Shared.commonSettings: _*)
+    .settings(
+      name := "benchmarking",
+      libraryDependencies ++= Seq(
+        Dependencies.Testing.gatlingCore,
+        Dependencies.Testing.gatlingCharts
+      )
+    )
+    .enablePlugins(GatlingPlugin)
+    .enablePlugins(JmhPlugin)
+    .dependsOn(Shared.sharedJvm)
 }

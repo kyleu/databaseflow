@@ -132,7 +132,6 @@ for /f "tokens=3" %%g in ('java -version 2^>^&1 ^| findstr /i "version"') do (
 rem Strips away the " characters
 set JAVA_VERSION=%JAVA_VERSION:"=%
 
-rem TODO Check if there are existing mem settings in JAVA_OPTS/CFG_OPTS and use those instead of the below
 for /f "delims=. tokens=1-3" %%v in ("%JAVA_VERSION%") do (
     set MAJOR=%%v
     set MINOR=%%w

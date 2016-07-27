@@ -24,6 +24,11 @@ addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.0")
 // App Packaging
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.2")
 
+// Benchmarking
+addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.11")
+
+addSbtPlugin("io.gatling" % "gatling-sbt" % "2.1.7")
+
 // Code Quality
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0") // scalastyle
 

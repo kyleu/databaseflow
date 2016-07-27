@@ -19,3 +19,5 @@ lazy val iconCreator = Utilities.iconCreator
 lazy val licenseModels = Utilities.licenseModels
 
 lazy val licenseGenerator = Utilities.licenseGenerator
+
+lazy val benchmarking = Utilities.benchmarking

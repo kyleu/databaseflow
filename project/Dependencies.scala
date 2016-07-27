@@ -102,5 +102,7 @@ object Dependencies {
     val uTestVersion = "0.4.3"
     val utest = "com.lihaoyi" %% "utest" % uTestVersion % "test"
     val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+    val gatlingCore = "io.gatling" % "gatling-test-framework" % "2.1.7" % "test"
+    val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.1.7" % "test"
   }
 }
