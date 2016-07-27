@@ -20,15 +20,15 @@ object QueryCheckService extends Logging {
         try {
           val stmt = conn.prepareStatement(sql)
           stmt.getMetaData
-          QueryCheckResponse(queryId)
+          QueryCheckResponse(queryId, sql, error = None)
         } catch {
-          case x: JdbcSQLException => QueryCheckResponse(queryId, error = Some(x.getMessage))
-          case x: SQLServerException => QueryCheckResponse(queryId, error = Some(x.getMessage))
+          case x: JdbcSQLException => QueryCheckResponse(queryId, sql, error = Some(x.getMessage))
+          case x: SQLServerException => QueryCheckResponse(queryId, sql, error = Some(x.getMessage))
           case x: PSQLException =>
             val err = x.getServerErrorMessage
             val (line, position) = positionToLineAndPosition(sql, err.getPosition)
-            QueryCheckResponse(queryId, error = Some(x.getMessage), line = Some(line), position = Some(position))
-          case t: Throwable => QueryCheckResponse(queryId, error = Some(t.getClass.getSimpleName + ": " + t.getMessage))
+            QueryCheckResponse(queryId, sql, error = Some(x.getMessage), line = Some(line), position = Some(position))
+          case t: Throwable => QueryCheckResponse(queryId, sql, error = Some(t.getClass.getSimpleName + ": " + t.getMessage))
         }
       }
     }

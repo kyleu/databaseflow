@@ -3,7 +3,7 @@ import services.{InitService, NotificationService}
 import scala.scalajs.js.annotation.JSExport
 
 @JSExport
-class DatabaseFlow extends NetworkHelper with MessageHelper {
+class DatabaseFlow extends NetworkHelper with ResponseMessageHelper {
   val debug = true
 
   InitService.init(sendMessage, connect)

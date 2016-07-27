@@ -25,7 +25,7 @@ object InitService {
 
     js.Dynamic.global.$("select").material_select()
 
-    EditorManager.initEditorFramework()
+    EditorCreationHelper.initEditorFramework()
     SearchManager.init()
 
     ShortcutService.init()

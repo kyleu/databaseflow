@@ -6,6 +6,7 @@ import controllers.BaseSiteController
 import licensing.LicenseEdition
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
+import services.logging.LogService
 
 import scala.concurrent.Future
 
@@ -35,5 +36,10 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
       version = 1,
       content = "[License Content]"
     )))
+  }
+
+  def toggleLogging() = withAdminSession("toggle-logging") { (username, request) =>
+    LogService.enabled = !LogService.enabled
+    Future.successful(Ok(s"OK: ${LogService.enabled}"))
   }
 }

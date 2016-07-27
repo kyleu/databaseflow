@@ -34,7 +34,7 @@ object QueryManager {
     activeQueries = activeQueries :+ queryId
 
     updateName()
-    SqlManager.check(queryId, SqlManager.getSql(queryId))
+    SqlManager.check(queryId)
   }
 
   def closeQuery(queryId: UUID): Unit = {

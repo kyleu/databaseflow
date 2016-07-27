@@ -1,6 +1,7 @@
 # Admin Section
 GET         /                             controllers.admin.AdminController.index()
 GET         /sandbox                      controllers.admin.AdminController.sandbox()
+GET         /toggle-logging               controllers.admin.AdminController.toggleLogging()
 GET         /metrics                      controllers.admin.MetricsController.view()
 GET         /enable/:id                   controllers.admin.AdminController.enable(id)
 

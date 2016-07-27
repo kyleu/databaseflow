@@ -8,6 +8,9 @@ GET            /feedback                                controllers.FeedbackCont
 OPTIONS        /feedback                                controllers.FeedbackController.feedbackOptions()
 POST           /feedback                                controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
 
+# Newsletter
+POST           /newsletter                              controllers.NewsletterController.signup()
+
 # Downloads
 GET            /download/:os/:variant                   controllers.DownloadController.download(os, variant)
 

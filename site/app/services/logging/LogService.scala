@@ -8,6 +8,8 @@ import org.joda.time.format.DateTimeFormat
 import scala.io.Source
 
 object LogService {
+  var enabled = true
+
   private[this] val logStartPhrases = LogLevel.values.map(_.startPhrase)
 
   val logDir = new File("logs")

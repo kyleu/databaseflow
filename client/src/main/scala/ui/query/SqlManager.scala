@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.CheckQuery
 import models.query.SqlParser
-import ui.EditorManager
+import ui.EditorCreationHelper
 import utils.NetworkMessage
 
 import scala.scalajs.js
@@ -14,10 +14,10 @@ object SqlManager {
   var sqlChecks = Map.empty[UUID, String]
 
   def newEditor(queryId: UUID, onChange: (String) => Unit) = {
-    val editor = EditorManager.initSqlEditor(queryId, (s: String) => {
+    val editor = EditorCreationHelper.initSqlEditor(queryId, (s: String) => {
       val changed = !sqlChecks.get(queryId).contains(s)
       if (changed) {
-        check(queryId, s)
+        check(queryId)
         onChange(s)
       }
     })
@@ -41,6 +41,8 @@ object SqlManager {
       "Run Selection"
     }
   }
+
+  def getEditor(queryId: UUID) = sqlEditors.get(queryId)
 
   def getSql(queryId: UUID) = sqlEditors.get(queryId) match {
     case Some(editor) => editor.getValue().toString
@@ -75,7 +77,8 @@ object SqlManager {
     case _ => // no op
   }
 
-  def check(queryId: UUID, sql: String) = {
+  def check(queryId: UUID) = {
+    val sql = getActiveSql(queryId)
     sqlChecks = sqlChecks + (queryId -> sql)
     NetworkMessage.sendMessage(CheckQuery(queryId, sql))
   }

@@ -8,6 +8,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.RequestHeader
 import play.api.routing.Router
+import services.logging.LogService
 import services.notification.RequestLogging
 import utils.Logging
 
@@ -23,11 +24,13 @@ class PlayRequestHandler @Inject() (
   override def routeRequest(request: RequestHeader) = {
     if (!Option(request.path).exists(_.startsWith("/assets"))) {
       log.info(s"Request from [${request.remoteAddress}]: ${request.toString()}")
-      Future {
-        import RequestLogging.jsonFmt
-        val rl = RequestLogging(UUID.randomUUID, request)
-        val json = Json.toJson(rl)
-        log.info(Json.prettyPrint(json))
+      if (LogService.enabled) {
+        Future {
+          import RequestLogging.jsonFmt
+          val rl = RequestLogging(UUID.randomUUID, request)
+          val json = Json.toJson(rl)
+          log.info(Json.prettyPrint(json))
+        }
       }
     }
     super.routeRequest(request)

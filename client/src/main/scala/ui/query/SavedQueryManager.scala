@@ -92,6 +92,7 @@ object SavedQueryManager {
       } else {
         $(".unsaved-status", queryPanel).css("display", "inline")
       }
+      $(".run-query-link", queryPanel).text(SqlManager.getLinkTitle(savedQuery.id))
     }
 
     QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, onChange)

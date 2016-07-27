@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.audit.AuditRecord
 import models.plan.{PlanError, PlanResult}
-import models.query.{QueryError, QueryResult, SavedQuery}
+import models.query.{QueryError, QueryResult, SavedQuery, TransactionState}
 import models.schema.{Procedure, Schema, Table, View}
 import models.user.UserPreferences
 
@@ -30,7 +30,9 @@ case class ProcedureResultResponse(procedures: Seq[Procedure]) extends ResponseM
 case class AuditRecordResponse(history: Seq[AuditRecord]) extends ResponseMessage
 case class AuditRecordRemoved(id: Option[UUID]) extends ResponseMessage
 
-case class QueryCheckResponse(queryId: UUID, error: Option[String] = None, line: Option[Int] = None, position: Option[Int] = None) extends ResponseMessage
+case class TransactionStatus(queryId: UUID, state: TransactionState, statementCount: Int) extends ResponseMessage
+
+case class QueryCheckResponse(queryId: UUID, sql: String, error: Option[String], line: Option[Int] = None, position: Option[Int] = None) extends ResponseMessage
 case class QueryResultRowCount(id: UUID, queryId: UUID, resultId: UUID, count: Int, overflow: Boolean, durationMs: Int) extends ResponseMessage
 case class QueryResultResponse(id: UUID, result: QueryResult, durationMs: Int) extends ResponseMessage
 case class QueryErrorResponse(id: UUID, error: QueryError, durationMs: Int) extends ResponseMessage

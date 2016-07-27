@@ -13,41 +13,9 @@
   @views.html.content.demo()
   @views.html.content.downloads()
   @views.html.content.license()
-
-  <div class="row">
-    <div class="col s12">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">Other Actions</span>
-          <div class="row" style="margin-top: 16px;">
-            <div class="col s12 m6">
-              <div class="z-depth-1">
-                <table>
-                  <tbody>
-                    <tr>
-                      <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.FeedbackController.feedbackForm()">Feedback</a></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="col s12 m6">
-              <div class="z-depth-1">
-                <table>
-                  <tbody>
-                    <tr>
-                      <td style="text-align: center;"><a class="theme-text" href="@controllers.admin.routes.AdminController.index()">Admin</a></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @views.html.content.otherActions()
   @views.html.content.features()
   @views.html.content.comparison()
   @views.html.content.competition()
+  @views.html.content.newsletter()
 }

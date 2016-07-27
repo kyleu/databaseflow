@@ -43,7 +43,13 @@ object QueryEditorTemplate {
   private[this] def queryPanel(queryId: UUID, queryName: String, sql: String, icon: String, links: Seq[TypedTag[String]]) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(
-        div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
+        div(
+          div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
+          div(cls := "sql-options-panel")(
+            em(cls := "sql-options-err-status")("No recent errors"),
+            div(cls := "sql-options-tx-status")(a(href := "", cls := "theme-text")("Begin Transaction"))
+          )
+        ),
         Some(icon -> span(queryName, span(cls := "unsaved-status", title := "This query has unsaved changes.")("*"))),
         actions = links
       ),

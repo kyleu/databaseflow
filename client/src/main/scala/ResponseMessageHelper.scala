@@ -3,7 +3,7 @@ import services._
 import ui.{HistoryManager, UserManager}
 import utils.Logging
 
-trait MessageHelper { this: DatabaseFlow =>
+trait ResponseMessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
 
     case p: Pong => latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
@@ -20,8 +20,14 @@ trait MessageHelper { this: DatabaseFlow =>
     case arr: AuditRecordResponse => HistoryManager.handleAuditHistoryResponse(arr.history)
     case arr: AuditRecordRemoved => HistoryManager.handleAuditHistoryRemoved(arr.id)
 
+    case ts: TransactionStatus => utils.Logging.info("TransactionStatus: " + ts)
+
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
-    case qrr: QueryResultResponse => handleQueryResultResponse(qrr)
+    case qrr: QueryResultResponse => if (qrr.result.source.exists(_.dataOffset > 0)) {
+      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result)
+    } else {
+      QueryResultService.handleNewQueryResults(qrr.id, qrr.result, qrr.durationMs)
+    }
     case qrrc: QueryResultRowCount => QueryResultService.handleResultRowCount(qrrc)
     case qer: QueryErrorResponse => QueryErrorService.handleQueryErrorResponse(qer)
 
@@ -35,13 +41,5 @@ trait MessageHelper { this: DatabaseFlow =>
 
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")
-  }
-
-  private[this] def handleQueryResultResponse(qrr: QueryResultResponse) = {
-    if (qrr.result.source.exists(_.dataOffset > 0)) {
-      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result)
-    } else {
-      QueryResultService.handleNewQueryResults(qrr.id, qrr.result, qrr.durationMs)
-    }
   }
 }

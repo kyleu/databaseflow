@@ -61,6 +61,7 @@ object AdHocQueryManager {
       } else {
         $(".unsaved-status", queryPanel).css("display", "inline")
       }
+      $(".run-query-link", queryPanel).text(SqlManager.getLinkTitle(queryId))
     }
 
     QueryManager.addQuery(queryId, "Untitled Query", queryPanel, onChange)
