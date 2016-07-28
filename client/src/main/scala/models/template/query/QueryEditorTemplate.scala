@@ -14,8 +14,7 @@ object QueryEditorTemplate {
     Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
     Some(a(cls := "export-link theme-text", href := "#")("Export")),
     if (engine.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
-    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None },
-    if (engine.transactionsSupported) { Some(a(cls := "tx-toggle-link theme-text", href := "#")("Tx")) } else { None }
+    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
   ).flatten
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {

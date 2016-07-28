@@ -13,6 +13,12 @@
   @views.html.query.navbar(user, dbName, txSupported)
 
   <main class="indent">
+    <div id="tx-panel" class="initially-hidden">
+      <em class="status-label">No active transaction.</em>
+      <a href="commit" class="theme-text" id="commit-button">Commit</a>
+      <a href="rollback" class="theme-text" id="rollback-button">Rollback</a>
+    </div>
+
     <div class="tab-container z-depth-1">
       <ul id="query-tabs" class="tabs">
         <li id="tab-loading" class="tab col s3">
