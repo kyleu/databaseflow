@@ -8,7 +8,7 @@ trait TransactionHelper { this: SocketService =>
   protected[this] var activeTransaction: Option[Transaction] = None
   private[this] var transactionStatementCount: Int = 0
 
-  private[this] def sendState(state: TransactionState) = out ! TransactionStatus(state = state, transactionStatementCount)
+  private[this] def sendState(state: TransactionState) = out ! TransactionStatus(state = state, transactionStatementCount, occurred = System.currentTimeMillis)
 
   def handleBeginTransaction() = activeTransaction match {
     case Some(tx) => throw new IllegalStateException("Already in a transaction.")
@@ -41,7 +41,7 @@ trait TransactionHelper { this: SocketService =>
       tx.close()
       activeTransaction = None
 
-      sendState(TransactionState.RolledBack)
+      sendState(TransactionState.Committed)
 
       transactionStatementCount = 0
     case None => throw new IllegalStateException("Not currently in a transaction.")

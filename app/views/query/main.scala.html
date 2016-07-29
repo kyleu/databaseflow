@@ -14,9 +14,9 @@
 
   <main class="indent">
     <div id="tx-panel" class="initially-hidden">
-      <em class="status-label">No active transaction.</em>
-      <a href="commit" class="theme-text" id="commit-button">Commit</a>
-      <a href="rollback" class="theme-text" id="rollback-button">Rollback</a>
+      <em id="tx-status-msg">No active transaction.</em>
+      <a href="commit" class="theme-text" id="commit-button"><i class="fa @models.template.Icons.commitTx"></i> Commit Transaction</a>
+      <a href="rollback" class="theme-text" id="rollback-button"><i class="fa @models.template.Icons.rollbackTx"></i> Rollback</a>
     </div>
 
     <div class="tab-container z-depth-1">

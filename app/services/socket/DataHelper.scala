@@ -47,8 +47,12 @@ trait DataHelper extends Logging { this: SocketService =>
     def work() = {
       val startMs = DateUtils.nowMillis
       val optionsNewLimit = options.copy(limit = options.limit.map(_ + 1))
-      val database = if (cacheDb) { ResultCacheDatabase.conn } else { db }
-      val sql = EngineQueries.selectFrom(name, optionsNewLimit)(database.engine)
+      val (database, engine) = if (cacheDb) {
+        ResultCacheDatabase.conn -> ResultCacheDatabase.conn.engine
+      } else {
+        activeTransaction.getOrElse(db) -> db.engine
+      }
+      val sql = EngineQueries.selectFrom(name, optionsNewLimit)(engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
         val result = database.query(DynamicQuery(sql))
@@ -74,17 +78,7 @@ trait DataHelper extends Logging { this: SocketService =>
           data = trimmedData,
           rowsAffected = trimmedData.length,
           moreRowsAvailable = moreRowsAvailable,
-          source = Some(QueryResult.Source(
-            t = t,
-            name = name,
-            sortable = true,
-            sortedColumn = options.orderByCol,
-            sortedAscending = options.orderByAsc,
-            filterColumn = options.filterCol,
-            filterOp = options.filterOp,
-            filterValue = options.filterVal,
-            dataOffset = options.offset.getOrElse(0)
-          )),
+          source = Some(options.toSource(t, name)),
           occurred = startMs
         )
 

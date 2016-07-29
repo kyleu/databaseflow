@@ -1,98 +1,42 @@
-@(txSupported: Boolean)<ul id="main-menu" class="side-nav fixed">
+@(txSupported: Boolean)
+@topLevelLink(id: String, icon: String, title: String, href: String = "#") = {<li><a id="@id" class="top-nav-link waves-effect" href="@href">
+  <i class="fa @icon menu-icon theme-text"></i> @title
+</a><li>}
+@groupToggle(id: String, name: String) = {<li id="@id-list-toggle" class="bold list-toggle">
+  <a class="collapsible-header waves-effect" href="#list-@id">
+    <i class="fa @models.template.Icons.sectionClosed theme-text"></i>
+    <i class="fa @models.template.Icons.sectionOpen theme-text"></i>
+    <i data-key="@id" title="Show @name" class="show-list-link fa @models.template.Icons.sectionDetails"></i>
+    @name
+  </a>
+  <div class="collapsible-body">
+    <ul id="@id-list" class="submenu">
+      <li class="black-text"><em>Loading...</em></li>
+    </ul>
+  </div>
+</li>}
+
+<ul id="main-menu" class="side-nav fixed">
   <li class="search">
     <div class="search-wrapper card">
       <input id="search" placeholder="Search" autocomplete="off" /><i class="fa @models.template.Icons.search"></i>
     </div>
   </li>
-  @if(txSupported) {<li>
-    <a id="begin-tx-link" class="top-nav-link waves-effect" href="#">
-      <i class="fa @models.template.Icons.beginTx menu-icon"></i> Begin Transaction
-    </a>
-  </li>}
-  <li>
-    <a id="new-query-link" class="top-nav-link waves-effect" href="#">
-      <i class="fa @models.template.Icons.newQuery menu-icon"></i> New Query
-    </a>
-  </li>
-  <li>
-    <a id="sidenav-history-link" class="top-nav-link waves-effect" href="#history">
-      <i class="fa @models.template.Icons.history menu-icon"></i> Query History
-    </a>
-  </li>
-  <li>
-    <a id="sidenav-refresh-link" class="top-nav-link waves-effect" href="#">
-      <i class="fa @models.template.Icons.refresh menu-icon"></i> Refresh Schema
-    </a>
-  </li>
+  @if(txSupported) {
+    @topLevelLink("begin-tx-link", models.template.Icons.beginTx, "Begin Transaction")
+  }
+  @topLevelLink("new-query-link", models.template.Icons.newQuery, "New Query")
+  @topLevelLink("sidenav-history-link", models.template.Icons.history, "Query History", "#history")
+  @topLevelLink("sidenav-refresh-link", models.template.Icons.refresh, "Refresh Schema")
   <li class="no-padding">
     <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
-      <li id="saved-query-list-toggle" class="bold list-toggle">
-        <a class="collapsible-header waves-effect" href="#list-saved-query">
-          <i class="fa @models.template.Icons.sectionClosed"></i>
-          <i class="fa @models.template.Icons.sectionOpen"></i>
-          <i data-key="saved-query" title="Show Saved Query List" class="show-list-link fa @models.template.Icons.sectionDetails"></i>
-          Saved Queries
-        </a>
-        <div class="collapsible-body">
-          <ul id="saved-query-list" class="submenu">
-            <li class="black-text"><em>Loading...</em></li>
-          </ul>
-        </div>
-      </li>
-      <li id="table-list-toggle" class="bold list-toggle">
-        <a class="collapsible-header waves-effect" href="#list-table">
-          <i class="fa @models.template.Icons.sectionClosed"></i>
-          <i class="fa @models.template.Icons.sectionOpen"></i>
-          <i data-key="table" title="Show Table List" class="show-list-link fa @models.template.Icons.sectionDetails"></i>
-          Tables
-        </a>
-        <div class="collapsible-body">
-          <ul id="table-list" class="submenu">
-            <li class="black-text"><em>Loading...</em></li>
-          </ul>
-        </div>
-      </li>
-      <li id="view-list-toggle" class="bold list-toggle">
-        <a class="collapsible-header waves-effect" href="#list-view">
-          <i class="fa @models.template.Icons.sectionClosed"></i>
-          <i class="fa @models.template.Icons.sectionOpen"></i>
-          <i data-key="view" title="Show View List" class="show-list-link fa @models.template.Icons.sectionDetails"></i>
-          Views
-        </a>
-        <div class="collapsible-body">
-          <ul id="view-list" class="submenu">
-            <li class="black-text"><em>Loading...</em></li>
-          </ul>
-        </div>
-      </li>
-      <li id="procedure-list-toggle" class="bold list-toggle">
-        <a class="collapsible-header waves-effect" href="#list-procedure">
-          <i class="fa @models.template.Icons.sectionClosed"></i>
-          <i class="fa @models.template.Icons.sectionOpen"></i>
-          <i data-key="procedure" title="Show Procedure List" class="show-list-link fa @models.template.Icons.sectionDetails"></i>
-          Stored Procedures
-        </a>
-        <div class="collapsible-body">
-          <ul id="procedure-list" class="submenu">
-            <li class="black-text"><em>Loading...</em></li>
-          </ul>
-        </div>
-      </li>
+      @groupToggle("saved-query", "Saved Queries")
+      @groupToggle("table", "Tables")
+      @groupToggle("view", "Views")
+      @groupToggle("procedure", "Stored Procedures")
     </ul>
   </li>
-  <li>
-    <a id="sidenav-help-link" class="top-nav-link waves-effect" href="#help">
-      <i class="fa @models.template.Icons.help menu-icon"></i> Help
-    </a>
-  </li>
-  <li>
-    <a id="sidenav-feedback-link" class="top-nav-link waves-effect" href="#feedback">
-      <i class="fa @models.template.Icons.feedback menu-icon"></i> Feedback
-    </a>
-  </li>
-  <li>
-    <a id="sidenav-about-link" class="top-nav-link waves-effect" href="https://databaseflow.com" target="_blank">
-      <i class="fa @models.template.Icons.about menu-icon"></i> About @utils.Config.projectName
-    </a>
-  </li>
+  @topLevelLink("sidenav-help-link", models.template.Icons.help, "Help", "#help")
+  @topLevelLink("sidenav-feedback-link", models.template.Icons.feedback, "Feedback", "#feedback")
+  @topLevelLink("sidenav-about-link", models.template.Icons.about, "About " + utils.Config.projectName, "https://databaseflow.com")
 </ul>
