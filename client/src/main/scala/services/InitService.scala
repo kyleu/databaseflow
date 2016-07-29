@@ -12,16 +12,19 @@ import ui.metadata.{MetadataManager, ModelListManager}
 import ui.modal._
 import ui.query._
 import ui.search.SearchManager
-import utils.{JQueryUtils, Logging, NetworkMessage}
+import utils.{TemplateUtils, Logging, NetworkMessage}
 
 import scala.scalajs.js
 
 object InitService {
   def init(sendMessage: (RequestMessage) => Unit, connect: () => Unit) {
-    utils.Logging.installErrorHandler()
+    Logging.installErrorHandler()
     NetworkMessage.register(sendMessage)
     wireSideNav()
     installTimers()
+
+    TemplateUtils.clickHandler($("#commit-button"), (jq) => TransactionService.commitTransaction())
+    TemplateUtils.clickHandler($("#rollback-button"), (jq) => TransactionService.rollbackTransaction())
 
     js.Dynamic.global.$("select").material_select()
 
@@ -39,13 +42,13 @@ object InitService {
   }
 
   private[this] def wireSideNav() = {
-    utils.JQueryUtils.clickHandler($("#begin-tx-link"), (jq) => TransactionService.beginTransaction())
-    utils.JQueryUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
-    utils.JQueryUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
-    utils.JQueryUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
-    utils.JQueryUtils.clickHandler($("#sidenav-feedback-link"), (jq) => FeedbackManager.show())
-    utils.JQueryUtils.clickHandler($("#sidenav-refresh-link"), (jq) => MetadataManager.refreshSchema())
-    utils.JQueryUtils.clickHandler($("#sidenav-history-link"), (jq) => HistoryManager.show())
+    TemplateUtils.clickHandler($("#begin-tx-link"), (jq) => TransactionService.beginTransaction())
+    TemplateUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
+    TemplateUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
+    TemplateUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
+    TemplateUtils.clickHandler($("#sidenav-feedback-link"), (jq) => FeedbackManager.show())
+    TemplateUtils.clickHandler($("#sidenav-refresh-link"), (jq) => MetadataManager.refreshSchema())
+    TemplateUtils.clickHandler($("#sidenav-history-link"), (jq) => HistoryManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
@@ -71,7 +74,7 @@ object InitService {
               filterVal = Some(filter.tail.mkString("="))
             )
           } else {
-            utils.Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
+            Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
             RowDataOptions.empty
           }
           TableManager.tableDetail(name, options)
@@ -79,12 +82,12 @@ object InitService {
       case ("view", Some(id)) => ViewManager.viewDetail(id)
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
       case (key, id) =>
-        utils.Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
+        Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
         AdHocQueryManager.addNewQuery()
     }
   }
 
   def installTimers() = {
-    dom.window.setInterval(JQueryUtils.relativeTime _, 1000)
+    dom.window.setInterval(TemplateUtils.relativeTime _, 1000)
   }
 }

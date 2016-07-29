@@ -5,16 +5,17 @@ import java.util.UUID
 import models.query.QueryResult.Source
 import models.schema.FilterOp
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
+import utils.TemplateUtils
 
 object FilterManager {
   def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source) = {
     val filterContainer = $(".filter-container", panel)
     var filterShown = false
-    utils.JQueryUtils.clickHandler($(".results-filter-link", panel), (jq) => {
+    TemplateUtils.clickHandler($(".results-filter-link", panel), (jq) => {
       if (filterShown) { filterContainer.hide() } else { filterContainer.show() }
       filterShown = !filterShown
     })
-    utils.JQueryUtils.clickHandler($(".results-filter-cancel", panel), (jq) => {
+    TemplateUtils.clickHandler($(".results-filter-cancel", panel), (jq) => {
       $(".filter-container", panel).hide()
     })
 
@@ -43,7 +44,7 @@ object FilterManager {
       }
     }
 
-    utils.JQueryUtils.clickHandler($(".results-filter-go", panel), (jq) => {
+    TemplateUtils.clickHandler($(".results-filter-go", panel), (jq) => {
       $(".row-status-display", panel).show()
       $(".filter-container", panel).hide()
 

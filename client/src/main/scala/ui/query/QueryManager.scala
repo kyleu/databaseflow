@@ -5,6 +5,7 @@ import java.util.UUID
 import models.SubmitQuery
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.{ProgressManager, TabManager}
+import utils.{NetworkMessage, TemplateUtils}
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
@@ -14,11 +15,11 @@ object QueryManager {
   def addQuery(queryId: UUID, title: String, queryPanel: JQuery, onChange: (String) => Unit): Unit = {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
-    def wire(q: JQuery, action: String) = utils.JQueryUtils.clickHandler(q, (jq) => {
+    def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, (jq) => {
       val resultId = UUID.randomUUID
       ProgressManager.startProgress(queryId, resultId, title)
       val sql = SqlManager.getActiveSql(queryId)
-      utils.NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action), resultId))
+      NetworkMessage.sendMessage(SubmitQuery(queryId, sql, Some(action), resultId))
     })
 
     def updateName() = $(".run-query-link", queryPanel).text(SqlManager.getLinkTitle(queryId))

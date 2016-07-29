@@ -3,14 +3,14 @@ package models.template.query
 import models.PlanResultResponse
 import models.plan.PlanNode
 import models.template.{Icons, StaticPanelTemplate}
+import utils.{NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
-import scalatags.Text.tags2.time
 
 object QueryPlanTemplate {
   def forPlan(pr: PlanResultResponse, dateIsoString: String) = {
     val content = div(id := pr.id.toString)(
-      em("Executed ", time(cls := "timeago", attr("datetime") := dateIsoString)(dateIsoString), s" in [${pr.durationMs}ms]"),
+      em("Executed ", TemplateUtils.toTimeago(dateIsoString), s" in [${pr.durationMs}ms]"),
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree") {
@@ -43,7 +43,7 @@ object QueryPlanTemplate {
       div(cls := "node-stat-divider")("|"),
       div(cls := "node-duration")(node.durationWithoutChildren.map { d =>
         BigDecimal.decimal(d).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble + "ms"
-      }.orElse(node.costWithoutChildren.map(utils.NumberUtils.withCommas)).getOrElse(""): String),
+      }.orElse(node.costWithoutChildren.map(NumberUtils.withCommas)).getOrElse(""): String),
       div(node.title),
       div(cls := "node-summary")(em(node.relation.getOrElse(""): String))
     )

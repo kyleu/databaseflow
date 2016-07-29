@@ -10,6 +10,7 @@ import org.scalajs.jquery.{jQuery => $}
 import ui.TabManager
 import ui.metadata.MetadataManager
 import ui.modal.{QueryExportFormManager, QuerySaveFormManager}
+import utils.TemplateUtils
 
 import scala.util.Random
 
@@ -47,11 +48,11 @@ object AdHocQueryManager {
 
     val queryPanel = $(s"#panel-$queryId")
 
-    utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       QuerySaveFormManager.show(SavedQuery(queryId, queryName, sql = SqlManager.getSql(queryId)))
     })
 
-    utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
       QueryExportFormManager.show(queryId, SqlManager.getSql(queryId), "Export")
     })
 

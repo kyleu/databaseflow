@@ -3,9 +3,9 @@ package ui.query
 import java.util.UUID
 
 import models.schema.View
-import models.template._
 import models.template.view.ViewColumnDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
+import utils.Logging
 
 trait ViewDetailHelper {
   protected[this] def setViewDetails(uuid: UUID, view: View) = {
@@ -33,6 +33,6 @@ trait ViewDetailHelper {
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
-    utils.Logging.debug(s"View [${view.name}] loaded.")
+    Logging.debug(s"View [${view.name}] loaded.")
   }
 }

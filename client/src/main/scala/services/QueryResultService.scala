@@ -10,7 +10,7 @@ import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.ProgressManager
 import ui.query.{FilterManager, RowDataManager, TableManager}
-import utils.JQueryUtils
+import utils.{Logging, NumberUtils, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -27,7 +27,7 @@ object QueryResultService {
       val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
       val resultEl = $(".query-result-table", panel)
 
-      JQueryUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
+      TemplateUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
         val table = jq.data("rel-table").toString
         val col = jq.data("rel-col").toString
         val v = jq.data("rel-val").toString
@@ -38,7 +38,7 @@ object QueryResultService {
 
       val sqlEl = $(".query-result-sql", panel)
       var sqlShown = false
-      utils.JQueryUtils.clickHandler($(".results-sql-link", panel), (jq) => {
+      TemplateUtils.clickHandler($(".results-sql-link", panel), (jq) => {
         if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
         sqlShown = !sqlShown
       })
@@ -59,27 +59,27 @@ object QueryResultService {
     FilterManager.init(src.t, result.queryId, src.name, panel, src)
 
     val options = src.asRowDataOptions
-    JQueryUtils.clickHandler($(".sorted-title", panel), (j) => {
+    TemplateUtils.clickHandler($(".sorted-title", panel), (j) => {
       val col = j.data("col").toString
       val asc = j.data("dir").toString == "asc"
       val newOptions = options.copy(orderByCol = Some(col), orderByAsc = Some(!asc))
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
     })
 
-    JQueryUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
+    TemplateUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
       val newOptions = options.copy(filterCol = None, filterOp = None, filterVal = None)
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
     })
 
     val appendRowsLink = $(".append-rows-link", panel)
-    JQueryUtils.clickHandler(appendRowsLink, (j) => {
+    TemplateUtils.clickHandler(appendRowsLink, (j) => {
       val limit = appendRowsLink.data("limit").toString.toInt
       val offset = appendRowsLink.data("offset").toString.toInt match {
         case 0 => 100
         case x => x
       }
       val newOptions = options.copy(limit = Some(limit), offset = Some(offset))
-      utils.Logging.info(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}] and limit [$limit].")
+      Logging.debug(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}] and limit [$limit].")
       appendRowsLink.data("offset", offset + limit)
       appendRowsLink.hide()
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
@@ -90,10 +90,10 @@ object QueryResultService {
     val panel = $(s"#${qrrc.resultId}", $(s"#workspace-${qrrc.queryId}"))
     val rowCountEl = $(".total-row-count", panel)
     if (qrrc.overflow) {
-      rowCountEl.text(s" of at least ${utils.NumberUtils.withCommas(qrrc.count)} ")
+      rowCountEl.text(s" of at least ${NumberUtils.withCommas(qrrc.count)} ")
     } else if (qrrc.count > 100) {
-      rowCountEl.text(s" of ${utils.NumberUtils.withCommas(qrrc.count)} total ")
+      rowCountEl.text(s" of ${NumberUtils.withCommas(qrrc.count)} total ")
     }
-    $(".total-duration", panel).text(utils.NumberUtils.withCommas(qrrc.durationMs))
+    $(".total-duration", panel).text(NumberUtils.withCommas(qrrc.durationMs))
   }
 }

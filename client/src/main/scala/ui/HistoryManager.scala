@@ -8,7 +8,7 @@ import models.template.{HistoryTemplate, Icons}
 import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{JQueryUtils, NetworkMessage}
+import utils.{TemplateUtils, NetworkMessage}
 
 import scalatags.Text.all._
 
@@ -32,12 +32,12 @@ object HistoryManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ historyId
 
       val queryPanel = $(s"#panel-$historyId")
-      JQueryUtils.clickHandler($(".refresh-history-link", queryPanel), e => {
+      TemplateUtils.clickHandler($(".refresh-history-link", queryPanel), e => {
         refresh()
       })
 
       val msg = "This will remove all activity history for this connection. Are you sure?"
-      JQueryUtils.clickHandler($(".remove-all-history-link", queryPanel), e => {
+      TemplateUtils.clickHandler($(".remove-all-history-link", queryPanel), e => {
         if (dom.window.confirm(msg)) {
           NetworkMessage.sendMessage(RemoveAuditHistory(None))
         }
@@ -53,12 +53,12 @@ object HistoryManager {
     val content = $(".history-content", queryPanel)
     content.html(HistoryTemplate.content(history).toString)
 
-    JQueryUtils.clickHandler($(".audit-remove", content), (e) => {
+    TemplateUtils.clickHandler($(".audit-remove", content), (e) => {
       val id = UUID.fromString(e.data("audit").toString)
       NetworkMessage.sendMessage(RemoveAuditHistory(Some(id)))
     })
 
-    JQueryUtils.relativeTime()
+    TemplateUtils.relativeTime()
   }
 
   def handleAuditHistoryRemoved(id: Option[UUID]): Unit = {

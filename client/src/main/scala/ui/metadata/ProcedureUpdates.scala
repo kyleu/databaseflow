@@ -4,7 +4,7 @@ import models.schema.Procedure
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ProcedureManager
-import utils.DomUtils
+import utils.TemplateUtils
 
 object ProcedureUpdates {
   var procedures: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -22,7 +22,7 @@ object ProcedureUpdates {
       $("#procedure-list-toggle").css("display", "block")
       val procedureList = $("#procedure-list")
       procedureList.html(SidenavTemplate.procedures(ps).mkString("\n"))
-      utils.JQueryUtils.clickHandler($(".sidenav-link", procedureList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", procedureList), (jq) => {
         val name = jq.data("key").toString
         ProcedureManager.procedureDetail(name)
       })
@@ -30,7 +30,7 @@ object ProcedureUpdates {
       $("#procedure-list-toggle").css("display", "none")
     }
     procedures = Some(ps.map { x =>
-      val el = $("#procedure-link-" + DomUtils.cleanForId(x.name))
+      val el = $("#procedure-link-" + TemplateUtils.cleanForId(x.name))
       (x.name, el, $("span", el))
     })
 

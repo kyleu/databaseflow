@@ -5,7 +5,7 @@ import java.util.UUID
 import models.template.{HelpTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{JQueryUtils, TipsAndTricks}
+import utils.{TemplateUtils, TipsAndTricks}
 
 import scala.util.Random
 import scalatags.Text.all._
@@ -40,11 +40,11 @@ object HelpManager {
 
       tipContent.text(TipsAndTricks.values(tipIdx).content)
 
-      JQueryUtils.clickHandler($(".previous-tip-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".previous-tip-link", queryPanel), jq => {
         if (tipIdx == 0) { tipIdx = TipsAndTricks.values.length - 1 } else { tipIdx = tipIdx - 1 }
         tipContent.text(TipsAndTricks.values(tipIdx).content)
       })
-      JQueryUtils.clickHandler($(".next-tip-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".next-tip-link", queryPanel), jq => {
         if (tipIdx == TipsAndTricks.values.length - 1) { tipIdx = 0 } else { tipIdx = tipIdx + 1 }
         tipContent.text(TipsAndTricks.values(tipIdx).content)
       })

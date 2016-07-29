@@ -7,11 +7,10 @@ import models.template.query.{QueryErrorTemplate, QueryPlanTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
 import ui.modal.PlanNodeDetailManager
-import utils.JQueryUtils
+import utils.TemplateUtils
 
 object QueryPlanService {
   def handlePlanResultResponse(pr: PlanResultResponse) = {
-    //Logging.info(s"Received plan with [${pr.plan.maxRows}] rows.")
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
     val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString)
     ProgressManager.completeProgress(pr.result.queryId, pr.id, content)
@@ -28,7 +27,7 @@ object QueryPlanService {
     val costs = pr.result.node.costs
     val total = costs.cost.map(Left(_)).getOrElse(Right(costs.duration.orElse(costs.actualRows.map(_.toDouble)).getOrElse(costs.estimatedRows.toDouble)))
     nodes.foreach { node =>
-      JQueryUtils.clickHandler($(s"#plan-node-${node.id}", panel), (x) => {
+      TemplateUtils.clickHandler($(s"#plan-node-${node.id}", panel), (x) => {
         PlanNodeDetailManager.show(node, total)
       })
     }
@@ -36,7 +35,7 @@ object QueryPlanService {
     val planViewToggle = $(".plan-view-toggle", workspace)
     var showingChart = true
 
-    JQueryUtils.clickHandler(planViewToggle, (f) => {
+    TemplateUtils.clickHandler(planViewToggle, (f) => {
       if (showingChart) {
         planViewToggle.text("View Plan Chart")
         chart.hide()

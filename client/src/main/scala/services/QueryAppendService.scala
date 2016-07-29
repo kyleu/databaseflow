@@ -7,7 +7,7 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.TableManager
-import utils.JQueryUtils
+import utils.{Logging, TemplateUtils}
 
 object QueryAppendService {
   def handleAppendQueryResult(resultId: UUID, qr: QueryResult): Unit = {
@@ -20,7 +20,7 @@ object QueryAppendService {
 
     val newRows = $(s".result-$resultId", panel)
 
-    JQueryUtils.clickHandler($(".query-rel-link", newRows), (jq) => {
+    TemplateUtils.clickHandler($(".query-rel-link", newRows), (jq) => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
@@ -40,6 +40,6 @@ object QueryAppendService {
       additionalResults.show()
     }
 
-    utils.Logging.info(s"Appended [${qr.data.length}] rows to result [$resultId].")
+    Logging.debug(s"Appended [${qr.data.length}] rows to result [$resultId].")
   }
 }

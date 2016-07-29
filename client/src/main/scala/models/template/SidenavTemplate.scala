@@ -2,48 +2,29 @@ package models.template
 
 import models.query.SavedQuery
 import models.schema.{Procedure, Table, View}
-import utils.DomUtils
+import utils.TemplateUtils
 
 import scalatags.Text.all._
 
 object SidenavTemplate {
-  private[this] def savedQuery(sq: SavedQuery) = li(a(
-    id := "saved-query-link-" + sq.id,
+  private[this] def tagFor(tagId: String, key: String, link: String, name: String, icon: String) = li(a(
+    id := tagId,
     cls := "sidenav-link waves-effect waves-light",
-    data("key") := sq.id.toString,
-    href := "#saved-query-" + sq.id,
-    title := sq.name,
-    data("name") := sq.name
-  )(em(cls := s"fa ${Icons.savedQuery}"), span(sq.name)))
+    data("key") := key,
+    href := link,
+    title := name,
+    data("name") := name
+  )(em(cls := s"fa $icon theme-text"), span(name)))
+
+  private[this] def savedQuery(sq: SavedQuery) = tagFor("saved-query-link-" + sq.id, sq.id.toString, "#saved-query-" + sq.id, sq.name, Icons.savedQuery)
   def savedQueries(sqs: Seq[SavedQuery]) = sqs.map(savedQuery)
 
-  private[this] def table(t: Table) = li(a(
-    id := "table-link-" + DomUtils.cleanForId(t.name),
-    cls := "sidenav-link waves-effect waves-light",
-    data("key") := t.name,
-    href := "#table-" + t.name,
-    title := t.name,
-    data("name") := t.name
-  )(em(cls := s"fa ${Icons.tableClosed}"), span(t.name)))
+  private[this] def table(t: Table) = tagFor("table-link-" + TemplateUtils.cleanForId(t.name), t.name, "#table-" + t.name, t.name, Icons.tableClosed)
   def tables(tables: Seq[Table]) = tables.map(table)
 
-  private[this] def view(v: View) = li(a(
-    id := "view-link-" + DomUtils.cleanForId(v.name),
-    cls := "sidenav-link waves-effect waves-light",
-    data("key") := v.name,
-    href := "#view-" + v.name,
-    title := v.name,
-    data("name") := v.name
-  )(em(cls := s"fa ${Icons.view}"), span(v.name)))
+  private[this] def view(v: View) = tagFor("view-link-" + TemplateUtils.cleanForId(v.name), v.name, "#view-" + v.name, v.name, Icons.view)
   def views(views: Seq[View]) = views.map(view)
 
-  private[this] def procedure(p: Procedure) = li(a(
-    id := "procedure-link-" + DomUtils.cleanForId(p.name),
-    cls := "sidenav-link waves-effect waves-light",
-    data("key") := p.name,
-    href := "#procedure-" + p.name,
-    title := p.name,
-    data("name") := p.name
-  )(em(cls := s"fa ${Icons.procedure}"), span(p.name)))
+  private[this] def procedure(p: Procedure) = tagFor("procedure-link-" + TemplateUtils.cleanForId(p.name), p.name, "#view-" + p.name, p.name, Icons.procedure)
   def procedures(procedures: Seq[Procedure]) = procedures.map(procedure)
 }

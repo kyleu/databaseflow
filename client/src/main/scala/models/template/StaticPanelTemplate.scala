@@ -27,7 +27,7 @@ object StaticPanelTemplate {
 
     val titleEl = iconAndTitle.map { it =>
       div(cls := "card-title")(
-        i(cls := "title-icon fa " + it._1),
+        i(cls := s"title-icon fa ${it._1} theme-text"),
         span(cls := "title")(it._2)
       )
     }

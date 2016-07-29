@@ -1,6 +1,7 @@
 package models.template.query
 
 import models.plan.PlanNode
+import utils.NumberUtils
 
 import scalatags.Text.all._
 
@@ -22,11 +23,11 @@ object QueryPlanNodeDetailTemplate {
                   th(style := "width: 25%")("Duration"), th(style := "width: 25%")("Cost")
                 ),
                 tr(
-                  td(utils.NumberUtils.withCommas(node.costs.estimatedRows)),
-                  td(node.costs.actualRows.map(utils.NumberUtils.withCommas).getOrElse(""): String),
+                  td(NumberUtils.withCommas(node.costs.estimatedRows)),
+                  td(node.costs.actualRows.map(NumberUtils.withCommas).getOrElse(""): String),
 
                   td(node.costs.duration.map(_ + "ms").getOrElse(""): String),
-                  td(node.costs.cost.map(utils.NumberUtils.withCommas).getOrElse(""): String)
+                  td(node.costs.cost.map(NumberUtils.withCommas).getOrElse(""): String)
                 )
               )
             }

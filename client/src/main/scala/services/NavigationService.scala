@@ -2,6 +2,8 @@ package services
 
 import java.util.UUID
 
+import utils.Logging
+
 object NavigationService {
   private[this] lazy val loc = org.scalajs.dom.document.location
 
@@ -31,7 +33,7 @@ object NavigationService {
     case x if x.startsWith("view-") => "view" -> Some(x.substring(5))
     case x if x.startsWith("procedure-") => "procedure" -> Some(x.substring(10))
     case x =>
-      utils.Logging.warn(s"Unhandled initial action [$x].")
+      Logging.warn(s"Unhandled initial action [$x].")
       "new" -> None
   }
 }

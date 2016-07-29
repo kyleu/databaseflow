@@ -3,9 +3,9 @@ package ui.query
 import java.util.UUID
 
 import models.schema.Table
-import models.template._
 import models.template.tbl.{TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
 import org.scalajs.jquery.{jQuery => $}
+import utils.{Logging, NumberUtils}
 
 trait TableDetailHelper {
   protected[this] def setTableDetails(uuid: UUID, table: Table) = {
@@ -21,7 +21,7 @@ trait TableDetailHelper {
     table.rowCountEstimate match {
       case Some(cnt) =>
         $(".row-count", panel).show()
-        $(".row-count span", panel).text(utils.NumberUtils.withCommas(cnt))
+        $(".row-count span", panel).text(NumberUtils.withCommas(cnt))
       case None => $(".row-count", panel).hide()
     }
 
@@ -52,6 +52,6 @@ trait TableDetailHelper {
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
-    utils.Logging.debug(s"Table [${table.name}] loaded.")
+    Logging.debug(s"Table [${table.name}] loaded.")
   }
 }

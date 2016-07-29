@@ -20,7 +20,7 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case arr: AuditRecordResponse => HistoryManager.handleAuditHistoryResponse(arr.history)
     case arr: AuditRecordRemoved => HistoryManager.handleAuditHistoryRemoved(arr.id)
 
-    case ts: TransactionStatus => utils.Logging.info("TransactionStatus: " + ts)
+    case ts: TransactionStatus => TransactionService.handleTransactionStatus(ts.state, ts.statementCount, ts.occurred)
 
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
     case qrr: QueryResultResponse => if (qrr.result.source.exists(_.dataOffset > 0)) {

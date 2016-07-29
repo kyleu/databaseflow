@@ -61,8 +61,11 @@ object SearchFilterManager extends SearchFilterFields {
       o._1._2.show()
     }
     notMatched.foreach(_._1._2.hide())
-    if (matched.isEmpty) { SearchManager.closeIfOpen(toggle) } else { SearchManager.openIfClosed(toggle) }
-    //utils.Logging.info(s"Matched [${matched.size}] and skipped [${notMatched.size}] ${key}s.")
+    if (matched.isEmpty) {
+      SearchManager.closeIfOpen(toggle)
+    } else {
+      SearchManager.openIfClosed(toggle)
+    }
   }
 
   private[this] def matchKey(searches: Seq[String], key: (String, String)) = {

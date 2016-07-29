@@ -1,12 +1,12 @@
 import models.{Ping, RequestMessage}
 import services.{NavigationService, NotificationService}
 import ui.modal.ReconnectManager
-import utils.{JsonSerializers, NetworkSocket}
+import utils.{JsonSerializers, Logging, NetworkMessage, NetworkSocket}
 
 import scala.scalajs.js.timers._
 
 trait NetworkHelper { this: DatabaseFlow =>
-  private[this] var socket = new NetworkSocket(onSocketConnect, onSocketMessage, onSocketError, onSocketClose)
+  private[this] val socket = new NetworkSocket(onSocketConnect, onSocketMessage, onSocketError, onSocketClose)
 
   protected[this] var latencyMs: Option[Int] = None
 
@@ -16,7 +16,7 @@ trait NetworkHelper { this: DatabaseFlow =>
 
   private def sendPing(): Unit = {
     if (socket.connected) {
-      utils.NetworkMessage.sendMessage(Ping(System.currentTimeMillis))
+      NetworkMessage.sendMessage(Ping(System.currentTimeMillis))
     }
     setTimeout(10000)(sendPing())
   }
@@ -24,16 +24,16 @@ trait NetworkHelper { this: DatabaseFlow =>
   setTimeout(1000)(sendPing())
 
   protected[this] def onSocketConnect(): Unit = {
-    //utils.Logging.info(s"Socket connected.")
+    Logging.debug(s"Socket connected.")
   }
 
   protected[this] def onSocketError(error: String): Unit = {
-    utils.Logging.error(s"Socket error [$error].")
+    Logging.error(s"Socket error [$error].")
   }
 
   protected[this] def onSocketClose(): Unit = {
     val callback = () => {
-      utils.Logging.info("Attempting to reconnect.")
+      Logging.info("Attempting to reconnect Websocket.")
       socket.open(NavigationService.socketUrl)
     }
     ReconnectManager.show(callback, NotificationService.getLastError match {

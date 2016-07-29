@@ -8,9 +8,9 @@ import models.query.SavedQuery
 import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui._
 import ui.modal.ConfirmManager
 import ui.query.{ProcedureManager, SavedQueryManager, TableManager, ViewManager}
+import utils.{NetworkMessage, TemplateUtils}
 
 object MetadataManager {
   var engine: Option[DatabaseEngine] = None
@@ -29,7 +29,7 @@ object MetadataManager {
       $("#saved-query-list-toggle").css("display", "block")
       val savedQueryList = $("#saved-query-list")
       savedQueryList.html(SidenavTemplate.savedQueries(sqs).mkString("\n"))
-      utils.JQueryUtils.clickHandler($(".sidenav-link", savedQueryList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", savedQueryList), (jq) => {
         val id = UUID.fromString(jq.data("key").toString)
         SavedQueryManager.savedQueryDetail(id)
       })
@@ -46,7 +46,7 @@ object MetadataManager {
 
   def refreshSchema() = {
     pendingRefresh = true
-    utils.NetworkMessage.sendMessage(RefreshSchema)
+    NetworkMessage.sendMessage(RefreshSchema)
   }
 
   def updateSchema(sch: Schema, fullSchema: Boolean) = {

@@ -10,7 +10,7 @@ import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui.modal.{ConfirmManager, QueryExportFormManager, QuerySaveFormManager}
 import ui.{TabManager, UserManager}
-import utils.NetworkMessage
+import utils.{NetworkMessage, TemplateUtils}
 
 object SavedQueryManager {
   var savedQueries = Map.empty[UUID, SavedQuery]
@@ -58,24 +58,24 @@ object SavedQueryManager {
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
 
-    utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
       QueryExportFormManager.show(savedQuery.id, SqlManager.getSql(savedQuery.id), savedQuery.name)
     })
-    utils.JQueryUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
+    TemplateUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       sql = SqlManager.getSql(savedQuery.id)
     )))
-    utils.JQueryUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
+    TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = SqlManager.getSql(savedQuery.id)
     )))
-    utils.JQueryUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       val newSavedQuery = savedQuery.copy(
         sql = SqlManager.getSql(savedQuery.id)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })
-    utils.JQueryUtils.clickHandler($(".delete-query-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".delete-query-link", queryPanel), (jq) => {
       def callback(b: Boolean): Unit = {
         if (b) {
           NetworkMessage.sendMessage(QueryDeleteRequest(savedQuery.id))

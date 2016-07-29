@@ -6,9 +6,9 @@ import models.query.QueryResult
 import models.schema.FilterOp
 import models.template.{Icons, StaticPanelTemplate}
 import models.template.results.{DataFilterTemplate, DataTableTemplate}
+import utils.{NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
-import scalatags.Text.tags2.time
 
 object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
@@ -32,10 +32,10 @@ object QueryResultsTemplate {
         a(href := "#", cls := "results-filter-link right theme-text")("Filter"),
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
         p(
-          s"${utils.NumberUtils.withCommas(qr.rowsAffected)} ",
+          s"${NumberUtils.withCommas(qr.rowsAffected)} ",
           span(cls := "total-row-count"),
           " rows returned ",
-          time(cls := "timeago", attr("datetime") := dateIsoString)(dateIsoString),
+          TemplateUtils.toTimeago(dateIsoString),
           " in [",
           span(cls := "total-duration")(durationMs.toString),
           "ms]."
@@ -65,7 +65,7 @@ object QueryResultsTemplate {
 
   def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int) = {
     val content = div(
-      p(s"${qr.rowsAffected} rows affected ", time(cls := "timeago", attr("datetime") := dateIsoString)(dateIsoString), s" in [${durationMs}ms]."),
+      p(s"${qr.rowsAffected} rows affected ", TemplateUtils.toTimeago(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
       )

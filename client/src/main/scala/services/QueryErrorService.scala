@@ -15,6 +15,6 @@ object QueryErrorService {
 
   def handleQueryCheckResponse(qcr: QueryCheckResponse) = qcr.error match {
     case Some(err) => EditorManager.highlightError(qcr.queryId, qcr.sql, err, qcr.line, qcr.position)
-    case None => EditorManager.clearError(qcr.queryId, qcr.sql)
+    case None => EditorManager.clearError(qcr.queryId)
   }
 }

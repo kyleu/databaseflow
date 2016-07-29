@@ -5,7 +5,7 @@ import models.query.SavedQuery
 import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
 import ui.query.{QueryManager, SavedQueryManager}
-import utils.NetworkMessage
+import utils.{Logging, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -19,8 +19,8 @@ object QuerySaveFormManager {
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
   def init() = {
-    utils.JQueryUtils.clickHandler($("#input-query-cancel-link", modal), (jq) => modal.closeModal())
-    utils.JQueryUtils.clickHandler($("#input-query-save-link", modal), (jq) => save())
+    TemplateUtils.clickHandler($("#input-query-cancel-link", modal), (jq) => modal.closeModal())
+    TemplateUtils.clickHandler($("#input-query-save-link", modal), (jq) => save())
   }
 
   def show(savedQuery: SavedQuery) = {
@@ -55,7 +55,7 @@ object QuerySaveFormManager {
   def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = {
     if (activeQuery.exists(_.id == sq.id)) {
       error match {
-        case Some(err) => utils.Logging.error("Cannot save query: " + err)
+        case Some(err) => Logging.error("Cannot save query: " + err)
         case None =>
           SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
           if (!SavedQueryManager.openSavedQueries.contains(sq.id)) {

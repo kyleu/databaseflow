@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.template.Icons
 import org.scalajs.jquery.{JQueryEventObject, jQuery => $}
-import utils.NullUtils
+import utils.{NullUtils, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -45,7 +45,7 @@ object TabManager {
     dynamicTabBar.tabs()
 
     val queryPanel = $(s"#panel-$id")
-    utils.JQueryUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(s".${Icons.close}", queryPanel), (jq) => {
       onClose()
     })
 

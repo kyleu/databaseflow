@@ -9,6 +9,7 @@ import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.metadata.MetadataManager
 import ui.{TabManager, WorkspaceManager}
+import utils.{Logging, NetworkMessage, TemplateUtils}
 
 object ProcedureManager {
   var openProcedures = Map.empty[String, UUID]
@@ -28,7 +29,7 @@ object ProcedureManager {
 
       MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
         case Some(procedure) if procedure.params.nonEmpty => setProcedureDetails(queryId, procedure)
-        case _ => utils.NetworkMessage.sendMessage(GetProcedureDetail(name))
+        case _ => NetworkMessage.sendMessage(GetProcedureDetail(name))
       }
 
       def close() = {
@@ -42,7 +43,7 @@ object ProcedureManager {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      utils.JQueryUtils.clickHandler($(".call-link", queryPanel), (jq) => {
+      TemplateUtils.clickHandler($(".call-link", queryPanel), (jq) => {
         MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")
@@ -53,8 +54,8 @@ object ProcedureManager {
   }
 
   private[this] def callProcedure(queryId: UUID, procedure: Procedure) = {
-    utils.Logging.info(s"Calling procedure [$queryId]: " + procedure)
-    //utils.NetworkMessage.sendMessage(???)
+    Logging.debug(s"Calling procedure [$queryId]: " + procedure)
+    // NetworkMessage.sendMessage(???)
   }
 
   private[this] def setProcedureDetails(uuid: UUID, proc: Procedure) = {
@@ -67,6 +68,6 @@ object ProcedureManager {
       $(".description", panel).text(desc)
     }
 
-    utils.Logging.debug(s"Procedure [${proc.name}] loaded.")
+    Logging.debug(s"Procedure [${proc.name}] loaded.")
   }
 }

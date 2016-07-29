@@ -6,7 +6,7 @@ import org.scalajs.dom.raw.Event
 import scala.scalajs.js.Dynamic.global
 
 object Logging {
-  private[this] val showDebug = true
+  private[this] val showDebug = false
 
   def logJs(o: scalajs.js.Any) = {
     global.window.debug = o

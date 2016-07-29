@@ -12,6 +12,7 @@ import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui.modal.QueryExportFormManager
 import ui.{UserManager, _}
+import utils.{NetworkMessage, TemplateUtils}
 
 object TableManager extends TableDetailHelper {
   private[this] var openTables = Map.empty[String, UUID]
@@ -33,7 +34,7 @@ object TableManager extends TableDetailHelper {
 
         MetadataManager.schema.flatMap(_.tables.find(_.name == name)) match {
           case Some(table) if table.columns.nonEmpty => setTableDetails(queryId, table)
-          case _ => utils.NetworkMessage.sendMessage(GetTableDetail(name))
+          case _ => NetworkMessage.sendMessage(GetTableDetail(name))
         }
 
         def close() = {
@@ -47,7 +48,7 @@ object TableManager extends TableDetailHelper {
 
         QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-        utils.JQueryUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
+        TemplateUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
           val newOptions = options.copy(
             offset = None,
             limit = Some(UserManager.rowsReturned),
@@ -59,7 +60,7 @@ object TableManager extends TableDetailHelper {
           RowDataManager.showRowData("table", queryId, name, newOptions)
         })
 
-        utils.JQueryUtils.clickHandler($(".export-link", queryPanel), (jq) => {
+        TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
           implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
           QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name), name)
         })

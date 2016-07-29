@@ -3,7 +3,10 @@ package utils
 import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 
-object JQueryUtils {
+import scalatags.Text.all._
+import scalatags.Text.tags2.time
+
+object TemplateUtils {
   def clickHandler(jq: JQuery, f: (JQuery) => Unit) = {
     jq.click { (e: JQueryEventObject) =>
       f($(e.currentTarget))
@@ -26,4 +29,10 @@ object JQueryUtils {
       el.text(moment.fromNow().toString)
     }
   }
+
+  def cleanForId(s: String) = s.replaceAllLiterally("$", "")
+
+  def toIsoString(l: Long) = new scalajs.js.Date(l.toDouble).toISOString
+
+  def toTimeago(dt: String) = time(cls := "timeago", title := dt, attr("datetime") := dt)(dt)
 }

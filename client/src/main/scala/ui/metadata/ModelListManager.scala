@@ -9,24 +9,23 @@ import org.scalajs.jquery.{JQuery, jQuery => $}
 import services.NavigationService
 import ui.query._
 import ui.{TabManager, WorkspaceManager}
+import utils.TemplateUtils
 
 import scalatags.Text.all._
 
 object ModelListManager {
   var openLists = Map.empty[String, UUID]
 
-  private[this] def wire(queryPanel: JQuery, key: String) = {
-    utils.JQueryUtils.clickHandler($(".list-link", queryPanel), (jq) => {
-      val name = jq.data("name").toString
-      key match {
-        case "saved-query" => SavedQueryManager.savedQueryDetail(UUID.fromString(name))
-        case "table" => TableManager.tableDetail(name, RowDataOptions.empty)
-        case "view" => ViewManager.viewDetail(name)
-        case "procedure" => ProcedureManager.procedureDetail(name)
-        case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
-      }
-    })
-  }
+  private[this] def wire(queryPanel: JQuery, key: String) = TemplateUtils.clickHandler($(".list-link", queryPanel), (jq) => {
+    val name = jq.data("name").toString
+    key match {
+      case "saved-query" => SavedQueryManager.savedQueryDetail(UUID.fromString(name))
+      case "table" => TableManager.tableDetail(name, RowDataOptions.empty)
+      case "view" => ViewManager.viewDetail(name)
+      case "procedure" => ProcedureManager.procedureDetail(name)
+      case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
+    }
+  })
 
   def showList(key: String) = openLists.get(key) match {
     case Some(queryId) =>
@@ -58,7 +57,7 @@ object ModelListManager {
 
       val filterManager = ModelFilterManager(queryPanel)
 
-      utils.JQueryUtils.keyUpHandler($(".model-filter", queryPanel), (jq, key) => {
+      TemplateUtils.keyUpHandler($(".model-filter", queryPanel), (jq, key) => {
         if (key == 27) {
           jq.value("")
           filterManager.filter(None)
