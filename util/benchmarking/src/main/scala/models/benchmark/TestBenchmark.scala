@@ -2,8 +2,6 @@ package models.benchmark
 
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-import models.board.mutation.Mutation.AddGem
-import models.brawl.Brawl
 import org.openjdk.jmh.annotations._
 
 import scala.util.Random

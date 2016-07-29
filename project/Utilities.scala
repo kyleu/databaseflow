@@ -46,7 +46,7 @@ object Utilities {
     .dependsOn(licenseModels)
     .aggregate(licenseModels)
 
-  lazy val benchmarking = (project in file("benchmarking")).settings(Shared.commonSettings: _*)
+  lazy val benchmarking = (project in file("util/benchmarking")).settings(Shared.commonSettings: _*)
     .settings(
       name := "benchmarking",
       libraryDependencies ++= Seq(
