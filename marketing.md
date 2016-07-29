@@ -2,7 +2,7 @@
 
 An opinionated modern database interface.
 
-Running locally or on a shared server, Database Flow helps you discover and search your database from your web browser.
+Running locally or on a shared server, Database Flow helps you discover and search your database from a browser.
 
 ## License
 

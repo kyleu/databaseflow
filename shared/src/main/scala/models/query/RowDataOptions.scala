@@ -15,6 +15,18 @@ case class RowDataOptions(
     limit: Option[Int] = None,
     offset: Option[Int] = None
 ) {
+  def toSource(t: String, name: String) = QueryResult.Source(
+    t = t,
+    name = name,
+    sortable = true,
+    sortedColumn = orderByCol,
+    sortedAscending = orderByAsc,
+    filterColumn = filterCol,
+    filterOp = filterOp,
+    filterValue = filterVal,
+    dataOffset = offset.getOrElse(0)
+  )
+
   def isFiltered = filterCol.isDefined
 
   override def toString = Seq(

@@ -6,60 +6,61 @@
 
     <div class="row">
       <div class="col s12">
-      @if(rows.isEmpty) {
-        <div style="padding: 10px;">No cached results in database.</div>
-      } else {
-        <table class="bordered highlight">
-          <thead>
-            <tr>
-              <th>Connection</th>
-              <th>Owner</th>
-              <th>Status</th>
-              <th>Cols</th>
-              <th>Rows</th>
-              <th>Table</th>
-              <th>1st</th>
-              <th>Dur</th>
-              <th>Last Accessed</th>
-              <th>Created</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          @rows.map { r =>
-            <tr>
-              <td title="@r.connectionId">
-                <a class="theme-text" href="@routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
-              </td>
-              <td>@r.owner.map { o =>
-                <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(o)">@userService.retrieve(o).map(_.username)</a>
-              }.getOrElse("Guest")</td>
-              <td>@r.status</td>
-              <td>@r.columns</td>
-              <td>@utils.NumberUtils.withCommas(r.rows)</td>
-              <td>@if(tables.contains(r.tableName)) {
-                Ok
-              } else {
-                Missing
-              }</td>
-              <td>@{utils.NumberUtils.withCommas(r.firstMessage)}ms</td>
-              <td>@{utils.NumberUtils.withCommas(r.duration)}ms</td>
-              <td>@r.lastAccessed.toString("yyyy-MM-dd HH:mm:ss")</td>
-              <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
-              <td>
-                @defining(s"table-result_${r.resultId.toString.replaceAllLiterally("-", "")}") { hash =>
-                  <a title="View Results" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.connectionId)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
-                }
-                <a title="Remove Results" href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="12"><code>@r.sql</code></td>
-            </tr>
-          }
-          </tbody>
-        </table>
-      }
+        @if(rows.isEmpty) {
+          <div style="padding: 10px;">No cached results in database.</div>
+        } else {
+          <table class="bordered highlight">
+            <thead>
+              <tr>
+                <th>Connection</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Cols</th>
+                <th>Rows</th>
+                <th>Table</th>
+                <th>1st</th>
+                <th>Dur</th>
+                <th>Last Accessed</th>
+                <th>Created</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            @rows.map { r =>
+              <tr>
+                <td title="@r.connectionId">
+                  <a class="theme-text" href="@routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
+                </td>
+                <td>@r.owner.map { o =>
+                  <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(o)">@userService.retrieve(o).map(_.username)</a>
+                }.getOrElse("Guest")</td>
+                <td>@r.status</td>
+                <td>@r.columns</td>
+                <td>@utils.NumberUtils.withCommas(r.rows)</td>
+                <td>@if(tables.contains(r.tableName)) {
+                  Ok
+                } else {
+                  Missing
+                }</td>
+                <td>@{utils.NumberUtils.withCommas(r.firstMessage)}ms</td>
+                <td>@{utils.NumberUtils.withCommas(r.duration)}ms</td>
+                <td>@r.lastAccessed.toString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>
+                  @defining(s"table-result_${r.resultId.toString.replaceAllLiterally("-", "")}") { hash =>
+                    <a title="View Results" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.connectionId)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
+                  }
+                  <a title="Remove Results" href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="12"><code>@r.sql</code></td>
+              </tr>
+            }
+            </tbody>
+          </table>
+        }
+      </div>
     </div>
     @defining(rows.map(_.tableName).toSet) { tableNames =>
       @defining(tables.toSeq.filterNot(tableNames.contains).sorted) { orphans =>

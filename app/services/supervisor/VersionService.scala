@@ -21,13 +21,13 @@ object VersionService extends Logging {
 
   def upgradeIfNeeded(ws: WSClient) = loadServerVersion(ws).map { v =>
     if (v == -1) {
-      // No op, request failed.
+      log.info("We can't tell if you're running the latest version of Database Flow.")
     } else if (localVersion == v) {
-      log.info(s"You are currently running the latest version of Database Flow.")
+      log.info("You are currently running the latest version of Database Flow.")
     } else if (localVersion < v) {
-      log.warn(s"A new version of Database Flow is available. Head to [https://databaseflow.com] to download the new version.")
+      log.warn("A new version of Database Flow is available. Head to [https://databaseflow.com] to download the new version.")
     } else {
-      log.warn(s"You're somehow running a newer version of Database Flow than the public version.")
+      log.warn("You're somehow running a newer version of Database Flow than the public version.")
     }
   }
 }
