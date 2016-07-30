@@ -1,11 +1,9 @@
 /* Generated Code */
 // scalastyle:off
-package models.engine.rdbms.functions
+package models.engine.functions
 
-import models.engine.DatabaseEngine
-
-trait SQLServerFunctions extends DatabaseEngine {
-  override val builtInFunctions = Seq(
+object SQLServerFunctions extends FunctionProvider {
+  override val functions = Seq(
     "abs",
     "acos",
     "ascii",

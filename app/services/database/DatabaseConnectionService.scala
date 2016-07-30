@@ -13,7 +13,7 @@ object DatabaseConnectionService {
 
   def init() = if (!initialized) {
     initialized = true
-    DatabaseEngine.all.foreach { r =>
+    DatabaseEngine.values.foreach { r =>
       Class.forName(r.driverClass)
     }
   }

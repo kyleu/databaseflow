@@ -1,9 +1,7 @@
 /* Generated Code */
-package models.engine.rdbms.types
+package models.engine.types
 
-import models.engine.DatabaseEngine
-
-trait PostgreSQLTypes extends DatabaseEngine {
+object PostgreSQLTypes extends TypeProvider {
   override val columnTypes = Seq(
     "int8",
     "bytea",

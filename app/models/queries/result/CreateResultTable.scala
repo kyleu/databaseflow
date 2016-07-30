@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.database.Statement
 import models.engine.DatabaseEngine
-import models.engine.rdbms.PostgreSQL
+import models.engine.DatabaseEngine.PostgreSQL
 import models.query.QueryResult
 import models.schema.ColumnType._
 
@@ -50,7 +50,7 @@ object CreateResultTable {
 
       case x => throw new IllegalStateException(s"Unhandled column type [${col.t}].")
     }
-    s"${engine.leftQuoteIdentifier}${col.name}${engine.rightQuoteIdentifier} $colDeclaration"
+    s"${engine.cap.leftQuote}${col.name}${engine.cap.rightQuote} $colDeclaration"
   }
 }
 
@@ -58,16 +58,16 @@ case class CreateResultTable(resultId: UUID, columns: Seq[QueryResult.Col])(impl
   val tableName = s"result_${resultId.toString.replaceAllLiterally("-", "")}"
 
   override def sql = {
-    val quotedName = engine.leftQuoteIdentifier + tableName + engine.rightQuoteIdentifier
+    val quotedName = engine.cap.leftQuote + tableName + engine.cap.rightQuote
     val rowNumCol = if (columns.exists(_.name == "#")) {
       ""
     } else {
-      s"${engine.leftQuoteIdentifier}#${engine.rightQuoteIdentifier} integer not null,"
+      s"${engine.cap.leftQuote}#${engine.cap.rightQuote} integer not null,"
     }
 
     val columnStatements = columns.map(x => CreateResultTable.columnFor(x))
 
-    val pkName = engine.leftQuoteIdentifier + tableName + "_pk" + engine.rightQuoteIdentifier
+    val pkName = engine.cap.leftQuote + tableName + "_pk" + engine.cap.rightQuote
     val pkConstraint = s"""constraint $pkName primary key (\"#\")"""
 
     s"""create table $quotedName (

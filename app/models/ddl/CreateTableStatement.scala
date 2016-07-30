@@ -2,7 +2,7 @@ package models.ddl
 
 import models.database.Statement
 import models.engine.DatabaseEngine
-import models.engine.rdbms.PostgreSQL
+import models.engine.DatabaseEngine.PostgreSQL
 import services.database.core.MasterDatabase
 
 abstract class CreateTableStatement(val tableName: String, val eng: DatabaseEngine = {

@@ -60,7 +60,7 @@ object MetadataManager {
     sch.procedures.foreach(ProcedureManager.addProcedure)
 
     schema = Some(sch)
-    engine = Some(DatabaseEngine.get(sch.engine))
+    engine = Some(DatabaseEngine.withName(sch.engine))
 
     if (sch.tables.isEmpty) {
       val msg = "There are no tables. Would you like to load a sample database? You'll need to have permissions to create tables and indexes."

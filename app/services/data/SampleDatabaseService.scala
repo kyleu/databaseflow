@@ -4,8 +4,8 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models.database.Statement
-import models.engine.DatabaseEngine
-import models.engine.rdbms._
+import models.engine.DatabaseEngine._
+import models.engine._
 import models.query.SqlParser
 import models.{BatchQueryStatus, TableResultResponse}
 import services.database.{DatabaseConnection, DatabaseWorkerPool}

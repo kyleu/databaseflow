@@ -64,7 +64,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     read = row.as[String]("read"),
     edit = row.as[String]("edit"),
     description = row.as[String]("description"),
-    engine = DatabaseEngine.get(row.as[String]("engine")),
+    engine = DatabaseEngine.withName(row.as[String]("engine")),
     host = row.asOpt[String]("host"),
     dbName = row.asOpt[String]("db_name"),
     extra = row.asOpt[String]("extra"),

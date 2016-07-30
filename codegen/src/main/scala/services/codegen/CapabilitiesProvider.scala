@@ -19,7 +19,7 @@ object CapabilitiesProvider {
     Capabilities(
       engine = engine,
       columnTypes = types,
-      builtInFunctions = functions
+      functions = functions
     )
   }
 

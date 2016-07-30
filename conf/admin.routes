@@ -14,6 +14,9 @@ GET         /users/:id/remove           controllers.admin.UserEditController.rem
 GET         /settings                   controllers.admin.SettingsController.settings
 POST        /settings                   controllers.admin.SettingsController.saveSettings
 
+GET         /export                     controllers.admin.SystemExportController.systemExport
+GET         /import                     controllers.admin.SystemExportController.systemImport
+
 GET         /results                    controllers.admin.ResultCacheController.results
 GET         /results/remove/:id         controllers.admin.ResultCacheController.removeResult(id: java.util.UUID)
 GET         /results/orphan/:id         controllers.admin.ResultCacheController.removeOrphan(id)

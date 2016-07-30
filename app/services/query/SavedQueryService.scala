@@ -16,6 +16,11 @@ object SavedQueryService {
   def canRead(user: Option[User], sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "read", sq.read)
   def canEdit(user: Option[User], sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "edit", sq.edit)
 
+  def getVisible(user: Option[User]) = {
+    val sqq = SavedQueryQueries.getVisible(user.map(_.id))
+    MasterDatabase.conn.query(sqq)
+  }
+
   def getForUser(user: Option[User], connectionId: UUID, out: ActorRef) = {
     val startMs = System.currentTimeMillis
     val sqq = SavedQueryQueries.getForUser(user.map(_.id), connectionId)

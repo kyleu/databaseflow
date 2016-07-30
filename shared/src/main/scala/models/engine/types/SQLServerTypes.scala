@@ -1,9 +1,7 @@
 /* Generated Code */
-package models.engine.rdbms.types
+package models.engine.types
 
-import models.engine.DatabaseEngine
-
-trait SQLServerTypes extends DatabaseEngine {
+object SQLServerTypes extends TypeProvider {
   override val columnTypes = Seq(
     "bigint",
     "binary",

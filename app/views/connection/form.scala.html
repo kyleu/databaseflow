@@ -18,7 +18,7 @@
 
             <div class="input-field col s12 m6">
               <select id="form-engine" name="engine">
-                @models.engine.DatabaseEngine.all.map { e =>
+                @models.engine.DatabaseEngine.values.map { e =>
                   @if(e == conn.engine) {
                     <option value="@e.id" selected="selected">@e.name</option>
                   } else {
@@ -140,9 +140,9 @@
         var newPort = null;
 
         switch(e.currentTarget.value) {
-          @models.engine.DatabaseEngine.all.map { de =>
+          @models.engine.DatabaseEngine.values.map { de =>
           case '@de.id':
-              newUrl = '@de.exampleUrl';
+              newUrl = '@de.cap.exampleUrl';
               @if(de.defaultPort.isDefined) { newPort = @de.defaultPort; }
               break;
           }

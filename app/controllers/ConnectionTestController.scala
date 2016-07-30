@@ -21,7 +21,7 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
       },
       cf => {
         val almostUpdated = ConnectionSettings(
-          engine = DatabaseEngine.get(cf.engine),
+          engine = DatabaseEngine.withName(cf.engine),
           host = if (cf.isUrl) { None } else { cf.host },
           port = if (cf.isUrl) { None } else { cf.port },
           dbName = if (cf.isUrl) { None } else { cf.dbName },

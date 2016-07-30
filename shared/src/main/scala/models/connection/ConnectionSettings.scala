@@ -3,7 +3,7 @@ package models.connection
 import java.util.UUID
 
 import models.engine.DatabaseEngine
-import models.engine.rdbms.PostgreSQL
+import models.engine.DatabaseEngine.PostgreSQL
 
 object ConnectionSettings {
   val defaultEngine = PostgreSQL

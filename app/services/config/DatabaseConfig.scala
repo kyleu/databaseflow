@@ -2,14 +2,14 @@ package services.config
 
 import com.typesafe.config.Config
 import models.engine.DatabaseEngine
-import models.engine.rdbms.H2
+import models.engine.DatabaseEngine.H2
 
 import scala.util.control.NonFatal
 
 object DatabaseConfig {
   def fromConfig(cfg: Config) = {
     val engine = try {
-      DatabaseEngine.get(cfg.getString("db"))
+      DatabaseEngine.withName(cfg.getString("db"))
     } catch {
       case NonFatal(x) => H2
     }

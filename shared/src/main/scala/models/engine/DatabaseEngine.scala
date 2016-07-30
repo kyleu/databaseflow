@@ -1,36 +1,66 @@
 package models.engine
 
-import models.engine.rdbms._
+import models.engine.capabilities._
+import enumeratum._
 
-object DatabaseEngine {
-  val rdbmsEngines = Seq(DB2, H2, Informix, MySQL, Oracle, PostgreSQL, SQLite, SQLServer)
-  val all = rdbmsEngines
-  private[this] val enginesById = all.map(x => x.id -> x).toMap
-  def get(id: String) = enginesById.getOrElse(id, throw new IllegalArgumentException(s"No database engine registered as [$id]."))
-}
-
-abstract class DatabaseEngine(
-    val id: String,
-    val name: String,
-    val driverClass: String,
-    val defaultPort: Option[Int] = None,
-    val exampleUrl: String
-) {
-  def builtInFunctions: Seq[String] = Nil
-  def columnTypes: Seq[String] = Nil
-
-  def leftQuoteIdentifier = "\""
-  def rightQuoteIdentifier = "\""
-
-  def explain: Option[(String) => String] = None
-  def analyze: Option[(String) => String] = None
-
-  def transactionsSupported = true
-
-  def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = dbName match {
-    case Some(d) => throw new IllegalStateException(s"Cannot form url for provided [$host:$port/$dbName:$extra].")
-    case None => exampleUrl
+object DatabaseEngine extends Enum[DatabaseEngine] {
+  case object DB2 extends DatabaseEngine("db2", "DB2", "com.ibm.db2.jcc.DB2Driver", Some(50000), DB2Capabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:db2://${host.getOrElse("localhost")}:${port.getOrElse(50000)}/${dbName.getOrElse("db")}"
+    }
   }
 
+  case object H2 extends DatabaseEngine("h2", "H2", "org.h2.Driver", None, H2Capabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      dbName.map(n => s"jdbc:h2:$n").getOrElse(cap.exampleUrl)
+    }
+  }
+
+  case object Informix extends DatabaseEngine("informix", "Informix", "com.informix.jdbc.IfxDriver", Some(1533), InformixCapabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:informix-sqli://${host.getOrElse("localhost")}:${port.getOrElse(1533)}/${dbName.getOrElse("db")}:INFORMIXSERVER=${host.getOrElse("localhost")}"
+    }
+  }
+
+  case object MySQL extends DatabaseEngine("mysql", "MySQL", "com.mysql.jdbc.Driver", Some(3306), MySQLCapabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:mysql://${host.getOrElse("localhost")}:${port.getOrElse(3306)}/${dbName.getOrElse("db")}"
+    }
+  }
+
+  case object Oracle extends DatabaseEngine("oracle", "Oracle", "oracle.jdbc.driver.OracleDriver", Some(1521), OracleCapabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:oracle:thin:@//${host.getOrElse("localhost")}:${port.getOrElse(1521)}/${dbName.getOrElse("XE")}"
+    }
+  }
+
+  case object PostgreSQL extends DatabaseEngine("postgres", "PostgreSQL", "org.postgresql.Driver", Some(5432), PostgreSQLCapabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:postgresql://${host.getOrElse("localhost")}:${port.getOrElse(5432)}/${dbName.getOrElse("db")}"
+    }
+  }
+
+  case object SQLite extends DatabaseEngine("sqlite", "SQLite", "org.sqlite.JDBC", None, SQLiteCapabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:sqlite:${dbName.getOrElse("db")}"
+    }
+  }
+
+  case object SQLServer extends DatabaseEngine("sqlserver", "SQL Server", "com.microsoft.sqlserver.jdbc.SQLServerDriver", Some(1433), SQLServerCapabilities) {
+    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
+      s"jdbc:sqlserver://${host.getOrElse("localhost")}:${port.getOrElse(1433)};databaseName=${dbName.getOrElse("db")}"
+    }
+  }
+
+  override def values = findValues
+}
+
+sealed abstract class DatabaseEngine(
+    val id: String, val name: String, val driverClass: String, val defaultPort: Option[Int], val cap: EngineCapabilities
+) extends EnumEntry {
+  def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = dbName match {
+    case Some(d) => throw new IllegalStateException(s"Cannot form url for provided [$host:$port/$dbName:$extra].")
+    case None => cap.exampleUrl
+  }
   override def toString = id
 }

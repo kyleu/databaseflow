@@ -1,7 +1,7 @@
 package services.data
 
 import models.connection.ConnectionSettings
-import models.engine.rdbms._
+import models.engine.DatabaseEngine._
 import models.query.SavedQuery
 import services.connection.ConnectionSettingsService
 import services.query.SavedQueryService

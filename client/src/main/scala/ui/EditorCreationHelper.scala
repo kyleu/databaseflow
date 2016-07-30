@@ -22,7 +22,7 @@ object EditorCreationHelper {
       convertToJs(sch.tables.map(_.name), "table") ++ convertToJs(sch.views.map(_.name), "view") ++ convertToJs(sch.procedures.map(_.name), "procedure")
     }.getOrElse(Nil)
     val engineMatches = MetadataManager.engine.map { eng =>
-      convertToJs(eng.builtInFunctions, "function") ++ convertToJs(eng.columnTypes, "type")
+      convertToJs(eng.cap.functions, "function") ++ convertToJs(eng.cap.columnTypes, "type")
     }.getOrElse(Nil)
     val content = editor.getValue().toString
     val tableMatches = MetadataManager.schema.map { sch =>

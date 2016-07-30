@@ -1,5 +1,6 @@
 package utils
 
+import org.joda.time.LocalDateTime
 import upickle.Js
 
 object JsonUtils {
@@ -14,4 +15,11 @@ object JsonUtils {
   }
 
   def toStringMap(params: Map[String, Js.Value]): Map[String, String] = params.map(p => p._1 -> toString(p._2))
+
+  implicit val ldtWriter = upickle.default.Writer[LocalDateTime] { t =>
+    Js.Str(t.toString)
+  }
+  implicit val ldtReader = upickle.default.Reader[LocalDateTime] {
+    case Js.Str(str) => new LocalDateTime(str)
+  }
 }

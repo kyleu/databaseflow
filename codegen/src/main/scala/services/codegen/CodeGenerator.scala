@@ -6,7 +6,7 @@ import models.codegen.{Capabilities, Engine}
 import org.apache.commons.io.FileUtils
 
 object CodeGenerator {
-  val rdbmsEngineSourceDir = new java.io.File("./shared/src/main/scala/models/engine/rdbms")
+  val rdbmsEngineSourceDir = new java.io.File("./shared/src/main/scala/models/engine")
   val typesDir = new java.io.File(rdbmsEngineSourceDir, "types")
   val functionsDir = new java.io.File(rdbmsEngineSourceDir, "functions")
 
@@ -30,11 +30,9 @@ object CodeGenerator {
     val ret = collection.mutable.ArrayBuffer.empty[String]
     implicit val eng = cap.engine
     ret += "/* Generated Code */"
-    ret += "package models.engine.rdbms.types"
+    ret += "package models.engine.types"
     ret += ""
-    ret += "import models.engine.DatabaseEngine"
-    ret += ""
-    ret += s"trait ${eng.getClass.getSimpleName.stripSuffix("$")}Types extends DatabaseEngine {"
+    ret += s"object ${eng.getClass.getSimpleName.stripSuffix("$")}Types extends TypeProvider {"
     ret += "  override val columnTypes = Seq("
     ret += cap.columnTypes.flatMap(_._2.map(x => s"    ${q(x)}")).mkString(",\n")
     ret += "  )"
@@ -49,13 +47,11 @@ object CodeGenerator {
     implicit val eng = cap.engine
     ret += "/* Generated Code */"
     ret += "// scalastyle:off"
-    ret += "package models.engine.rdbms.functions"
+    ret += "package models.engine.functions"
     ret += ""
-    ret += "import models.engine.DatabaseEngine"
-    ret += ""
-    ret += s"trait ${eng.getClass.getSimpleName.stripSuffix("$")}Functions extends DatabaseEngine {"
-    ret += "  override val builtInFunctions = Seq("
-    ret += cap.builtInFunctions.map { f =>
+    ret += s"object ${eng.getClass.getSimpleName.stripSuffix("$")}Functions extends FunctionProvider {"
+    ret += "  override val functions = Seq("
+    ret += cap.functions.map { f =>
       s"    ${q(f.name)}"
     }.mkString(",\n")
     ret += "  )"

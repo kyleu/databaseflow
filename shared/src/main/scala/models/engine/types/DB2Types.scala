@@ -1,35 +1,32 @@
 /* Generated Code */
-package models.engine.rdbms.types
+package models.engine.types
 
-import models.engine.DatabaseEngine
-
-trait H2Types extends DatabaseEngine {
+object DB2Types extends TypeProvider {
   override val columnTypes = Seq(
     "bigint",
-    "binary",
-    "boolean",
+    "varchar",
+    "smallint",
     "blob",
-    "boolean",
+    "smallint",
     "char",
     "clob",
     "date",
-    "decimal",
     "double",
     "float",
     "integer",
     "nvarchar",
-    "longvarbinary",
-    "longvarchar",
+    "long varchar for bit data",
+    "long varchar",
     "nchar",
     "nclob",
-    "decimal",
+    "numeric",
     "nvarchar",
     "real",
     "smallint",
     "time",
     "timestamp",
-    "tinyint",
-    "binary",
+    "smallint",
+    "varchar",
     "varchar"
   )
 }

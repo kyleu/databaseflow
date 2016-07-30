@@ -15,7 +15,7 @@ object DdlQueries {
   }
 
   case class DropTable(tableName: String)(implicit val engine: DatabaseEngine) extends Statement {
-    override val sql = s"drop table ${engine.leftQuoteIdentifier}$tableName${engine.rightQuoteIdentifier}"
+    override val sql = s"drop table ${engine.cap.leftQuote}$tableName${engine.cap.rightQuote}"
   }
 
   def trim(s: String) = s.replaceAll("""[\s]+""", " ").trim

@@ -1,9 +1,7 @@
 /* Generated Code */
-package models.engine.rdbms.types
+package models.engine.types
 
-import models.engine.DatabaseEngine
-
-trait SQLiteTypes extends DatabaseEngine {
+object SQLiteTypes extends TypeProvider {
   override val columnTypes = Seq(
     "integer",
     "tinyint",

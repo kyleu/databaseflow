@@ -15,6 +15,26 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
+
+  def getVisible(userId: Option[UUID]) = {
+    val ownerClause = userId match {
+      case Some(uid) => """("owner" = ? or "owner" is null)"""
+      case None => """("owner" is null)"""
+    }
+    val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
+
+    val values = userId match {
+      case Some(uid) => Seq(uid)
+      case None => Nil
+    }
+
+    GetAll(
+      whereClause = Some(permClause),
+      orderBy = "\"name\"",
+      values = values
+    )
+  }
+
   def getForUser(userId: Option[UUID], connectionId: UUID) = {
     val ownerClause = userId match {
       case Some(uid) => """("owner" = ? or "owner" is null)"""

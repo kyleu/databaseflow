@@ -56,13 +56,16 @@ object AdHocQueryManager {
       QueryExportFormManager.show(queryId, SqlManager.getSql(queryId), "Export")
     })
 
+    val runQueryLink = $(".run-query-link", queryPanel)
+    val runQueryAllLink = $(".run-query-all-link", queryPanel)
+
     def onChange(s: String): Unit = {
       if (s == sql) {
         $(".unsaved-status", queryPanel).css("display", "none")
       } else {
         $(".unsaved-status", queryPanel).css("display", "inline")
       }
-      $(".run-query-link", queryPanel).text(SqlManager.getLinkTitle(queryId))
+      SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
     }
 
     QueryManager.addQuery(queryId, "Untitled Query", queryPanel, onChange)

@@ -3,7 +3,7 @@ package services.schema
 import java.sql.{Connection, DatabaseMetaData, Timestamp}
 
 import models.database.{Query, Row}
-import models.engine.rdbms.{MySQL, PostgreSQL}
+import models.engine.DatabaseEngine.{MySQL, PostgreSQL}
 import models.schema.Table
 import services.database.DatabaseConnection
 import utils.NullUtils
@@ -23,7 +23,7 @@ object MetadataTables {
   private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
-        override def sql = "show create table " + db.engine.leftQuoteIdentifier + table.name + db.engine.rightQuoteIdentifier
+        override def sql = "show create table " + db.engine.cap.leftQuote + table.name + db.engine.cap.rightQuote
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.headOption.getOrElse {
           throw new IllegalStateException("Missing column [Create Table].")
         }

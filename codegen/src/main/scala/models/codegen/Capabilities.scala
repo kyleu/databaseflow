@@ -7,5 +7,5 @@ object Capabilities {
 case class Capabilities(
   engine: Engine,
   columnTypes: Seq[(String, Option[String])] = Nil,
-  builtInFunctions: Seq[Capabilities.SqlFunction] = Nil
+  functions: Seq[Capabilities.SqlFunction] = Nil
 )

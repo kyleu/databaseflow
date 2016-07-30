@@ -19,6 +19,7 @@ object SettingsService {
   def isOverride(key: SettingKey) = settingsMap.isDefinedAt(key)
 
   def getAll = settings
+  def getOverrides = settings.filter(s => isOverride(s.key))
 
   def set(key: SettingKey, value: String) = {
     val s = Setting(key, value)

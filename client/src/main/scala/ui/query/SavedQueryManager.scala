@@ -86,13 +86,16 @@ object SavedQueryManager {
       ConfirmManager.show(callback = callback, content = msg, trueButton = "Delete")
     })
 
+    val runQueryLink = $(".run-query-link", queryPanel)
+    val runQueryAllLink = $(".run-query-all-link", queryPanel)
+
     def onChange(s: String): Unit = {
       if (s == savedQuery.sql) {
         $(".unsaved-status", queryPanel).css("display", "none")
       } else {
         $(".unsaved-status", queryPanel).css("display", "inline")
       }
-      $(".run-query-link", queryPanel).text(SqlManager.getLinkTitle(savedQuery.id))
+      SqlManager.updateLinks(savedQuery.id, runQueryLink, runQueryAllLink)
     }
 
     QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, onChange)

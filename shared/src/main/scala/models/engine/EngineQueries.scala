@@ -1,6 +1,6 @@
 package models.engine
 
-import models.engine.rdbms._
+import models.engine.DatabaseEngine._
 import models.query.RowDataOptions
 import models.schema.FilterOp
 
@@ -38,7 +38,7 @@ object EngineQueries {
       }
     }
 
-    val quotedName = engine.leftQuoteIdentifier + name + engine.rightQuoteIdentifier
+    val quotedName = engine.cap.leftQuote + name + engine.cap.rightQuote
     val whereClause = options.filterCol match {
       case Some(col) =>
         val op = options.filterOp.getOrElse(FilterOp.Equal)
@@ -49,12 +49,12 @@ object EngineQueries {
           case _ => s"'$fVal'"
         }
         val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
-        s" where ${engine.leftQuoteIdentifier}$col${engine.rightQuoteIdentifier} ${op.sqlSymbol} $modifiedVal$additions"
+        s" where ${engine.cap.leftQuote}$col${engine.cap.rightQuote} ${op.sqlSymbol} $modifiedVal$additions"
       case None => whereClauseAdditions.map(" where" + _).getOrElse("")
     }
     val orderByClause = options.orderByCol.map { orderCol =>
       val ordering = if (options.orderByAsc.contains(false)) { "desc" } else { "asc" }
-      s" order by ${engine.leftQuoteIdentifier}$orderCol${engine.rightQuoteIdentifier} $ordering"
+      s" order by ${engine.cap.leftQuote}$orderCol${engine.cap.rightQuote} $ordering"
     }.getOrElse("")
     val sql = s"select$preColumnsClause * from $quotedName$whereClause$orderByClause$postQueryClauses"
     sql

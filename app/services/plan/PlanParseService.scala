@@ -2,8 +2,8 @@ package services.plan
 
 import java.util.UUID
 
-import models.engine.DatabaseEngine
-import models.engine.rdbms._
+import models.engine.DatabaseEngine._
+import models.engine._
 import models.plan.{PlanError, PlanResult}
 import models.queries.DynamicQuery
 import services.plan.h2.H2ParseService
@@ -18,6 +18,7 @@ object PlanParseService {
     case MySQL => MySqlParseService.parse(sql, queryId, plan, startMs)
     case Oracle => OracleParseService.parse(sql, queryId, plan, startMs)
     case PostgreSQL => PostgresParseService.parse(sql, queryId, plan, startMs)
+    case x => throw new IllegalStateException("Engine [] does not support execution plans.")
   }
 
   def resultPlanString(result: DynamicQuery.Results)(implicit engine: DatabaseEngine) = engine match {

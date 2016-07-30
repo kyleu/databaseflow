@@ -1,11 +1,9 @@
 /* Generated Code */
 // scalastyle:off
-package models.engine.rdbms.functions
+package models.engine.functions
 
-import models.engine.DatabaseEngine
-
-trait InformixFunctions extends DatabaseEngine {
-  override val builtInFunctions = Seq(
+object InformixFunctions extends FunctionProvider {
+  override val functions = Seq(
     "abs",
     "avg",
     "bit_length",

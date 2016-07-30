@@ -10,8 +10,8 @@ import scalatags.Text.all._
 object ViewDetailTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
     Some(a(cls := "view-data-link theme-text", href := "#")("View First 100 Rows")),
-    if (engine.explain.isDefined) { Some(a(cls := "explain-view-link theme-text", href := "#")("Explain")) } else { None },
-    if (engine.analyze.isDefined) { Some(a(cls := "analyze-view-link theme-text", href := "#")("Analyze")) } else { None },
+    if (engine.cap.explain.isDefined) { Some(a(cls := "explain-view-link theme-text", href := "#")("Explain")) } else { None },
+    if (engine.cap.analyze.isDefined) { Some(a(cls := "analyze-view-link theme-text", href := "#")("Analyze")) } else { None },
     Some(a(cls := "right export-link theme-text first-right-link", href := "#")("Export"))
   ).flatten
 

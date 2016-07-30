@@ -1,9 +1,7 @@
 /* Generated Code */
-package models.engine.rdbms.types
+package models.engine.types
 
-import models.engine.DatabaseEngine
-
-trait OracleTypes extends DatabaseEngine {
+object OracleTypes extends TypeProvider {
   override val columnTypes = Seq(
     "number",
     "long raw",

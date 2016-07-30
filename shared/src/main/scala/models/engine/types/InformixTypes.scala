@@ -1,9 +1,7 @@
 /* Generated Code */
-package models.engine.rdbms.types
+package models.engine.types
 
-import models.engine.DatabaseEngine
-
-trait InformixTypes extends DatabaseEngine {
+object InformixTypes extends TypeProvider {
   override val columnTypes = Seq(
     "int8",
     "byte",

@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.CheckQuery
 import models.query.SqlParser
+import org.scalajs.jquery.JQuery
 import ui.EditorCreationHelper
 import utils.NetworkMessage
 
@@ -28,17 +29,25 @@ object SqlManager {
 
   def getLinkTitle(queryId: UUID) = {
     val sqlEditor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Invalid editor for [$queryId]."))
-    val txt = sqlEditor.getSelectedText().toString.trim
-    if (txt.isEmpty) {
-      val sql = sqlEditor.getValue().toString.stripSuffix(";")
-      val split = SqlParser.split(sql)
-      if (split.length > 1) {
-        "Run Active"
-      } else {
-        "Run"
-      }
+    val sql = sqlEditor.getValue().toString.stripSuffix(";")
+    val split = SqlParser.split(sql)
+    if (split.length > 1) {
+      "Run Active"
     } else {
-      "Run Selection"
+      "Run"
+    }
+  }
+
+  def updateLinks(queryId: UUID, runQueryLink: JQuery, runQueryAllLink: JQuery): Unit = {
+    val sqlEditor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Invalid editor for [$queryId]."))
+    val sql = sqlEditor.getValue().toString.stripSuffix(";")
+    val split = SqlParser.split(sql)
+    if (split.length > 1) {
+      runQueryLink.text("Run Active")
+      runQueryAllLink.css("display", "inline")
+    } else {
+      runQueryLink.text("Run")
+      runQueryAllLink.css("display", "none")
     }
   }
 

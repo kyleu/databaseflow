@@ -5,7 +5,7 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models.database.Queryable
 import models.engine.DatabaseEngine
-import models.engine.rdbms.Oracle
+import models.engine.DatabaseEngine.Oracle
 import models.queries.DynamicQuery
 import models.{PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError}
 import services.database.DatabaseWorkerPool
@@ -39,7 +39,7 @@ object PlanExecutionService extends Logging {
   }
 
   def handleExplainQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, resultId: UUID, out: ActorRef): Unit = {
-    engine.explain match {
+    engine.cap.explain match {
       case Some(explain) =>
         def work() = {
           val explainSql = explain(sql)
@@ -55,7 +55,7 @@ object PlanExecutionService extends Logging {
   }
 
   def handleAnalyzeQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, resultId: UUID, out: ActorRef): Unit = {
-    engine.analyze match {
+    engine.cap.analyze match {
       case Some(analyze) =>
         def work() = {
           val analyzeSql = analyze(sql)

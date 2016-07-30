@@ -12,9 +12,11 @@ import scalatags.Text.all._
 object QueryEditorTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
     Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
+    Some(a(cls := "run-query-all-link theme-text initially-hidden", href := "#")("Run All")),
+    Some(a(cls := "run-query-selection-link theme-text initially-hidden", href := "#")("Run Selection")),
     Some(a(cls := "export-link theme-text", href := "#")("Export")),
-    if (engine.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
-    if (engine.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
+    if (engine.cap.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
+    if (engine.cap.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
   ).flatten
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {
