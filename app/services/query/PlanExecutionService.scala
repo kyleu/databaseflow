@@ -15,7 +15,7 @@ import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 object PlanExecutionService extends Logging {
   private[this] def getResult(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, explainSql: String, resultId: UUID) = {
     val startMs = DateUtils.nowMillis
-    JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
+    JdbcUtils.sqlCatch(queryId, sql, startMs, resultId, 0) { () =>
       db.transaction { tx =>
         implicit val e = engine
 

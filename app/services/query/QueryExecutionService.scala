@@ -32,7 +32,7 @@ object QueryExecutionService extends Logging {
     def work() = {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
       val startMs = DateUtils.nowMillis
-      JdbcUtils.sqlCatch(queryId, sql._1, startMs, resultId) { () =>
+      JdbcUtils.sqlCatch(queryId, sql._1, startMs, resultId, sql._2) { () =>
         val model = CachedResult(resultId, queryId, connId, owner, sql = sql._1)
         AuditRecordService.start(auditId, AuditType.Query, owner, Some(connId), Some(sql._1))
         val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
@@ -64,7 +64,7 @@ object QueryExecutionService extends Logging {
       out ! rm
       if (remaining.nonEmpty) {
         val next = remaining.headOption.getOrElse(throw new IllegalStateException())
-        handleRunStatements(db, queryId, next -> (sql._2 + 1), resultId, connId, owner, out, remaining.tail)
+        handleRunStatements(db, queryId, next -> (sql._2 + 1), UUID.randomUUID, connId, owner, out, remaining.tail)
       }
     }
 

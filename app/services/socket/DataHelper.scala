@@ -54,7 +54,7 @@ trait DataHelper extends Logging { this: SocketService =>
       }
       val sql = EngineQueries.selectFrom(name, optionsNewLimit)(engine)
       log.info(s"Showing data for [$name] using sql [$sql].")
-      JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
+      JdbcUtils.sqlCatch(queryId, sql, startMs, resultId, 0) { () =>
         val result = database.query(DynamicQuery(sql))
 
         val (trimmedData, moreRowsAvailable) = options.limit match {

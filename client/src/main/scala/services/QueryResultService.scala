@@ -2,7 +2,6 @@ package services
 
 import java.util.UUID
 
-import models.QueryResultRowCount
 import models.query.QueryResult.Source
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
@@ -10,7 +9,7 @@ import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.ProgressManager
 import ui.query.{FilterManager, RowDataManager, TableManager}
-import utils.{Logging, NumberUtils, TemplateUtils}
+import utils.{Logging, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -19,9 +18,9 @@ object QueryResultService {
     val occurred = new scalajs.js.Date(result.occurred.toDouble)
     if (result.isStatement) {
       val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs, resultId, index)
-      ProgressManager.completeProgress(result.queryId, resultId, content)
+      ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
-      val panel = $(s"#$resultId-$index", $(s"#workspace-${result.queryId}"))
+      val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
       val sqlEl = $(".statement-result-sql", panel)
       var sqlShown = false
       TemplateUtils.clickHandler($(".results-sql-link", panel), (jq) => {
@@ -30,9 +29,9 @@ object QueryResultService {
       })
     } else {
       val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId, index)
-      ProgressManager.completeProgress(result.queryId, resultId, content)
+      ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
-      val panel = $(s"#$resultId-$index", $(s"#workspace-${result.queryId}"))
+      val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
       val resultEl = $(".query-result-table", panel)
 
       TemplateUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {

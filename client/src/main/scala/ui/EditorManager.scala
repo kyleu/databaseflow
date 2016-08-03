@@ -28,6 +28,15 @@ object EditorManager {
     runLink.click()
   }
 
+  def onRunAll(id: UUID) = {
+    val queryPanel = $(s"#panel-$id")
+    val runAllLink = $(".run-query-all-link", queryPanel)
+    if (runAllLink.length != 1) {
+      Logging.warn(s"Found [${queryPanel.length}] panels and [${runAllLink.length}] links for query [$id].")
+    }
+    runAllLink.click()
+  }
+
   def highlightErrors(queryId: UUID, results: Seq[QueryCheckResult]) = SqlManager.getEditor(queryId).foreach { editor =>
     val doc = editor.getSession().getDocument()
     val fullSql = editor.getValue().toString

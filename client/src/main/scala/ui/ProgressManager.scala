@@ -53,18 +53,23 @@ object ProgressManager {
     activeQueries = activeQueries + (queryId -> resultId)
   }
 
-  def completeProgress(queryId: UUID, resultId: UUID, content: TypedTag[String]): Unit = {
+  def completeProgress(queryId: UUID, resultId: UUID, index: Int, content: TypedTag[String]): Unit = {
     activeQueries.get(queryId) match {
       case Some(rid) if rid == resultId => // No op
       case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [$rid], not expected [$resultId].")
-      case None => throw new IllegalStateException(s"No active progress for query [$queryId].")
+      case None if index == 0 => throw new IllegalStateException(s"No active progress for query [$queryId].")
+      case None => // No op
     }
 
     val queryWorkspace = $(s"#workspace-$queryId", workspace)
     if (queryWorkspace.length != 1) {
       throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
     }
-    queryWorkspace.html(content.render)
+    if (index == 0) {
+      queryWorkspace.html(content.render)
+    } else {
+      queryWorkspace.append(content.render)
+    }
 
     TemplateUtils.relativeTime()
 

@@ -8,7 +8,7 @@ object QueryErrorService {
   def handleQueryErrorResponse(qer: QueryErrorResponse) = {
     val occurred = new scalajs.js.Date(qer.error.occurred.toDouble)
     val content = QueryErrorTemplate.forQueryError(qer, occurred.toISOString)
-    ProgressManager.completeProgress(qer.error.queryId, qer.id, content)
+    ProgressManager.completeProgress(qer.error.queryId, qer.id, qer.index, content)
   }
 
   def handleQueryCheckResponse(qcr: QueryCheckResponse) = {

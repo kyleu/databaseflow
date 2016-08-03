@@ -12,7 +12,7 @@ import utils.{Logging, TemplateUtils}
 object QueryAppendService {
   def handleAppendQueryResult(resultId: UUID, index: Int, qr: QueryResult): Unit = {
     val workspace = $(s"#workspace-${qr.queryId}")
-    val panel = $(s"#$resultId-$index", workspace)
+    val panel = $(s"#$resultId", workspace)
     val resultEl = $(".query-result-table tbody", panel)
 
     val content = QueryResultsTemplate.forAppend(qr, resultId)

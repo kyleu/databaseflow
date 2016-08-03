@@ -15,8 +15,12 @@ object KeyboardShortcut extends Enum[KeyboardShortcut] {
     EditorManager.onSave(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
-  case object Run extends KeyboardShortcut("mod+enter", "Run Query", { uuid =>
+  case object Run extends KeyboardShortcut("mod+enter", "Run Active Query", { uuid =>
     EditorManager.onRun(uuid.getOrElse(throw new IllegalStateException()))
+  }, isGlobal = false)
+
+  case object RunAll extends KeyboardShortcut("shift+mod+enter", "Run All Queries", { uuid =>
+    EditorManager.onRunAll(uuid.getOrElse(throw new IllegalStateException()))
   }, isGlobal = false)
 
   case object Blur extends KeyboardShortcut("esc", "Leave Editor", { uuid =>

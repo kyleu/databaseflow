@@ -13,7 +13,7 @@ object QueryPlanService {
   def handlePlanResultResponse(pr: PlanResultResponse) = {
     val occurred = new scalajs.js.Date(pr.result.occurred.toDouble)
     val content = QueryPlanTemplate.forPlan(pr, occurred.toISOString)
-    ProgressManager.completeProgress(pr.result.queryId, pr.id, content)
+    ProgressManager.completeProgress(pr.result.queryId, pr.id, 0, content)
 
     val workspace = $(s"#workspace-${pr.result.queryId}")
     val panel = $(s"#${pr.id}", workspace)
@@ -53,7 +53,7 @@ object QueryPlanService {
     val occurred = new scalajs.js.Date(per.error.occurred.toDouble)
     val content = QueryErrorTemplate.forPlanError(per, occurred.toISOString)
 
-    ProgressManager.completeProgress(per.error.queryId, per.id, content)
+    ProgressManager.completeProgress(per.error.queryId, per.id, 0, content)
   }
 
   private[this] def workOutPlanWidth(id: UUID) = {

@@ -52,14 +52,13 @@ object CachedResultQueryHelper extends Logging {
     QueryResultResponse(resultId, 0, getResultFor(queryId, sql, columns, mappedData), elapsedMs)
   }
 
-  def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[Any]]]) = {
-    val mappedData = data.map(_.map(_.map(DynamicQuery.transform)))
+  private[this] def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]]) = {
     QueryResult(
       queryId = queryId,
       sql = sql,
       columns = columns,
-      data = mappedData,
-      rowsAffected = mappedData.size
+      data = data,
+      rowsAffected = data.size
     )
   }
 

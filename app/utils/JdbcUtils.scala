@@ -15,7 +15,7 @@ import scala.io.Source
 import scala.util.control.NonFatal
 
 object JdbcUtils extends Logging {
-  def sqlCatch(queryId: UUID, sql: String, startMs: Long, resultId: UUID)(f: () => ResponseMessage) = try {
+  def sqlCatch(queryId: UUID, sql: String, startMs: Long, resultId: UUID, index: Int)(f: () => ResponseMessage) = try {
     f()
   } catch {
     case NonFatal(t) =>
@@ -26,13 +26,13 @@ object JdbcUtils extends Logging {
           val e = sqlEx.getServerErrorMessage
           val lineIndex = Source.fromString(sql).getLines().take(e.getLine - 1).map(_.length).sum
           val index = lineIndex + e.getPosition
-          QueryErrorResponse(resultId, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(index), startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(index), startMs), durationMs)
         case sqlEx: SQLSyntaxErrorException =>
-          QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case sqlEx: MySQLStatementCancelledException =>
-          QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case x =>
-          QueryErrorResponse(resultId, QueryError(queryId, sql, x.getClass.getSimpleName, x.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, x.getClass.getSimpleName, x.getMessage, occurred = startMs), durationMs)
       }
   }
 
