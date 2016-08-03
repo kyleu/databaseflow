@@ -74,9 +74,10 @@ object QueryResultsTemplate {
   }
 
   def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, index: Int) = {
+    val rowLabel = if (qr.rowsAffected == 1) { "row" } else { "rows" }
     val content = div(id := s"$resultId")(
       a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
-      p(s"${qr.rowsAffected} rows affected ", TemplateUtils.toTimeago(dateIsoString), s" in [${durationMs}ms]."),
+      p(s"${qr.rowsAffected} $rowLabel affected ", TemplateUtils.toTimeago(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
       )
