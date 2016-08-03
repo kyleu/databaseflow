@@ -3,13 +3,12 @@ package controllers.admin
 import controllers.BaseController
 import models.settings.ExportModel
 import models.user.Role
+import play.api.libs.json.Json
 import services.connection.ConnectionSettingsService
 import services.query.SavedQueryService
 import services.settings.SettingsService
 import services.user.UserService
-import upickle.default._
 import utils.ApplicationContext
-import utils.JsonUtils._
 
 import scala.concurrent.Future
 
@@ -25,8 +24,9 @@ class SystemExportController @javax.inject.Inject() (override val ctx: Applicati
     val savedQueries = SavedQueryService.getVisible(request.identity)
     val ret = ExportModel(settings, users, connections, savedQueries)
 
-    val json = write(ret, 2)
-    Future.successful(Ok(json).as("application/json"))
+    val json = ret.toString
+
+    Future.successful(Ok(json))
   }
 
   def systemImport = withAdminSession("admin-system-import") { implicit request =>
