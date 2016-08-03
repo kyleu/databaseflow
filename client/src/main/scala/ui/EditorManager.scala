@@ -35,12 +35,12 @@ object EditorManager {
     if (errors.isEmpty) {
       editor.getSession().clearAnnotations()
     } else {
-      val errorMarkers = errors.flatMap(r => getError(editor, doc, queryId, fullSql, r.sql, r.error.getOrElse(throw new IllegalArgumentException), r.index))
+      val errorMarkers = errors.flatMap(r => getError(doc, fullSql, r.sql, r.error.getOrElse(throw new IllegalArgumentException), r.index))
       editor.getSession().setAnnotations(js.Array(errorMarkers: _*))
     }
   }
 
-  private[this] def getError(editor: js.Dynamic, doc: js.Dynamic, queryId: UUID, fullSql: String, sql: String, error: String, index: Option[Int]) = {
+  private[this] def getError(doc: js.Dynamic, fullSql: String, sql: String, error: String, index: Option[Int]) = {
     fullSql.indexOf(sql) match {
       case -1 => None
       case sqlIndex =>

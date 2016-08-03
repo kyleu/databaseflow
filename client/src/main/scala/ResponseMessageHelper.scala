@@ -29,7 +29,7 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     } else {
       QueryResultService.handleNewQueryResults(qrr.id, qrr.index, qrr.result, qrr.durationMs)
     }
-    case qrrc: QueryResultRowCount => QueryResultService.handleResultRowCount(qrrc)
+    case qrrc: QueryResultRowCount => RowCountService.handleResultRowCount(qrrc)
     case qer: QueryErrorResponse => QueryErrorService.handleQueryErrorResponse(qer)
 
     case prr: PlanResultResponse => QueryPlanService.handlePlanResultResponse(prr)

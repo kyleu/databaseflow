@@ -93,15 +93,4 @@ object QueryResultService {
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
   }
-
-  def handleResultRowCount(qrrc: QueryResultRowCount) = {
-    val panel = $(s"#${qrrc.resultId}", $(s"#workspace-${qrrc.queryId}"))
-    val rowCountEl = $(".total-row-count", panel)
-    if (qrrc.overflow) {
-      rowCountEl.text(s" of at least ${NumberUtils.withCommas(qrrc.count)} ")
-    } else if (qrrc.count > 100) {
-      rowCountEl.text(s" of ${NumberUtils.withCommas(qrrc.count)} total ")
-    }
-    $(".total-duration", panel).text(NumberUtils.withCommas(qrrc.durationMs))
-  }
 }

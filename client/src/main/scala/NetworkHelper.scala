@@ -24,7 +24,7 @@ trait NetworkHelper { this: DatabaseFlow =>
   setTimeout(1000)(sendPing())
 
   protected[this] def onSocketConnect(): Unit = {
-    Logging.debug(s"Socket connected.")
+    Logging.debug("Socket connected.")
   }
 
   protected[this] def onSocketError(error: String): Unit = {

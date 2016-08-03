@@ -7,39 +7,14 @@ import akka.actor.ActorRef
 import models._
 import models.audit.AuditType
 import models.database.Queryable
-import models.query.{QueryResult, SavedQuery, SqlParser}
+import models.query.{QueryResult, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
-import models.user.User
 import services.audit.AuditRecordService
 import services.database.DatabaseWorkerPool
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
-import scala.util.control.NonFatal
-
 object QueryExecutionService extends Logging {
   private[this] val activeQueries = collection.mutable.HashMap.empty[UUID, PreparedStatement]
-
-  def handleQuerySaveRequest(user: Option[User], sq: SavedQuery, out: ActorRef) = {
-    log.info(s"Saving query as [${sq.id}].")
-    try {
-      val result = SavedQueryService.save(sq, user.map(_.id))
-      AuditRecordService.create(AuditType.SaveQuery, user.map(_.id), None, Some(result.id.toString))
-      out ! QuerySaveResponse(savedQuery = result)
-    } catch {
-      case NonFatal(x) => out ! QuerySaveResponse(error = Some(x.getMessage), savedQuery = sq)
-    }
-  }
-
-  def handleQueryDeleteRequest(user: Option[User], id: UUID, out: ActorRef) = {
-    log.info(s"Deleting query [$id].")
-    try {
-      SavedQueryService.delete(id, user.map(_.id))
-      AuditRecordService.create(AuditType.DeleteQuery, user.map(_.id), None, Some(id.toString))
-      out ! QueryDeleteResponse(id = id)
-    } catch {
-      case NonFatal(x) => out ! QueryDeleteResponse(id = id, error = Some(x.getMessage))
-    }
-  }
 
   def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
     val statements = SqlParser.split(sql)

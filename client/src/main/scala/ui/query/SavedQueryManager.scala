@@ -28,7 +28,6 @@ object SavedQueryManager {
     usernameMap = usernameMap ++ usernames
     sqs.foreach { sq =>
       savedQueries = savedQueries + (sq.id -> sq)
-
       if (openSavedQueries(sq.id)) {
         SqlManager.setSql(sq.id, sq.sql)
       }
@@ -37,11 +36,9 @@ object SavedQueryManager {
   }
 
   def savedQueryDetail(id: UUID) = openSavedQueries.find(_ == id) match {
-    case Some(queryId) =>
-      TabManager.selectTab(id)
+    case Some(queryId) => TabManager.selectTab(id)
     case None =>
-      val savedQuery = savedQueries.getOrElse(id, throw new IllegalStateException(s"Unknown saved query [$id]."))
-      addSavedQuery(savedQuery)
+      addSavedQuery(savedQueries.getOrElse(id, throw new IllegalStateException(s"Unknown saved query [$id].")))
       openSavedQueries = openSavedQueries + id
   }
 
@@ -57,7 +54,6 @@ object SavedQueryManager {
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
-
     TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
       QueryExportFormManager.show(savedQuery.id, SqlManager.getSql(savedQuery.id), savedQuery.name)
     })
@@ -90,11 +86,7 @@ object SavedQueryManager {
     val runQueryAllLink = $(".run-query-all-link", queryPanel)
 
     def onChange(s: String): Unit = {
-      if (s == savedQuery.sql) {
-        $(".unsaved-status", queryPanel).css("display", "none")
-      } else {
-        $(".unsaved-status", queryPanel).css("display", "inline")
-      }
+      $(".unsaved-status", queryPanel).css("display", if (s == savedQuery.sql) { "none" } else { "inline" })
       SqlManager.updateLinks(savedQuery.id, runQueryLink, runQueryAllLink)
     }
 

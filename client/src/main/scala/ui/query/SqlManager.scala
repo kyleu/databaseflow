@@ -27,17 +27,6 @@ object SqlManager {
     editor
   }
 
-  def getLinkTitle(queryId: UUID) = {
-    val sqlEditor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Invalid editor for [$queryId]."))
-    val sql = sqlEditor.getValue().toString.stripSuffix(";")
-    val split = SqlParser.split(sql)
-    if (split.length > 1) {
-      "Run Active"
-    } else {
-      "Run"
-    }
-  }
-
   def updateLinks(queryId: UUID, runQueryLink: JQuery, runQueryAllLink: JQuery): Unit = {
     val sqlEditor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Invalid editor for [$queryId]."))
     val sql = sqlEditor.getValue().toString.stripSuffix(";")

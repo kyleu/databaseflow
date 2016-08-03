@@ -5,7 +5,7 @@ import java.util.UUID
 import models._
 import services.audit.AuditRecordService
 import services.data.SampleDatabaseService
-import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService}
+import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService, QuerySaveService}
 import utils.Config
 import utils.metrics.InstrumentedActor
 
@@ -31,8 +31,8 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId) }
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
 
-    case qsr: QuerySaveRequest => timeReceive(qsr) { QueryExecutionService.handleQuerySaveRequest(user, qsr.query, out) }
-    case qdr: QueryDeleteRequest => timeReceive(qdr) { QueryExecutionService.handleQueryDeleteRequest(user, qdr.id, out) }
+    case qsr: QuerySaveRequest => timeReceive(qsr) { QuerySaveService.handleQuerySaveRequest(user, qsr.query, out) }
+    case qdr: QueryDeleteRequest => timeReceive(qdr) { QuerySaveService.handleQueryDeleteRequest(user, qdr.id, out) }
 
     case gqh: GetQueryHistory => timeReceive(gqh) { AuditRecordService.handleGetQueryHistory(db.connectionId, user, gqh, out) }
     case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.handleRemoveAuditHistory(user.map(_.id), Some(connectionId), rqh, out) }
