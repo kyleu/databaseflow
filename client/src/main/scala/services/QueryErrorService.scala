@@ -1,7 +1,5 @@
 package services
 
-import java.util.UUID
-
 import models.template.query.QueryErrorTemplate
 import models.{QueryCheckResponse, QueryErrorResponse}
 import ui.{EditorManager, ProgressManager}
@@ -13,8 +11,7 @@ object QueryErrorService {
     ProgressManager.completeProgress(qer.error.queryId, qer.id, content)
   }
 
-  def handleQueryCheckResponse(qcr: QueryCheckResponse) = qcr.error match {
-    case Some(err) => EditorManager.highlightError(qcr.queryId, qcr.sql, err, qcr.line, qcr.position)
-    case None => EditorManager.clearError(qcr.queryId)
+  def handleQueryCheckResponse(qcr: QueryCheckResponse) = {
+    EditorManager.highlightErrors(qcr.queryId, qcr.results)
   }
 }

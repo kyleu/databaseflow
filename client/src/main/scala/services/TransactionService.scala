@@ -38,6 +38,7 @@ object TransactionService {
   def handleTransactionStatus(state: TransactionState, statementCount: Int, occurred: Long) = state match {
     case TransactionState.Started => onStarted(statementCount, occurred)
     case TransactionState.NotStarted => onNotStarted()
+    case TransactionState.Running => onRunning(statementCount)
     case TransactionState.RolledBack => onRollback(statementCount)
     case TransactionState.Committed => onCommit(statementCount)
   }
@@ -57,6 +58,10 @@ object TransactionService {
 
   private[this] def onNotStarted() = {
     inTransaction = false
+  }
+
+  private[this] def onRunning(statementCount: Int) = {
+    utils.Logging.info("Running: " + statementCount)
   }
 
   private[this] def onRollback(statementCount: Int) = complete(

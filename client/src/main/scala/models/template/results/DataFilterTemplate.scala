@@ -8,10 +8,8 @@ import models.schema.FilterOp
 import scalatags.Text.all._
 
 object DataFilterTemplate {
-  def forResults(r: QueryResult, resultId: UUID) = if (r.isStatement || r.data.isEmpty) {
-    div()
-  } else {
-    val source = r.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]"))
+  def forResults(r: QueryResult, resultId: UUID) = {
+    val source = r.source.getOrElse(throw new IllegalStateException(s"Missing source for row data, result [$resultId]."))
     div(cls := "filter-container initially-hidden z-depth-1")(
       div(cls := "row")(
         div(cls := "input-field col s4")(

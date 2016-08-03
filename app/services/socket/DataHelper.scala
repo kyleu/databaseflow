@@ -83,7 +83,7 @@ trait DataHelper extends Logging { this: SocketService =>
         )
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
-        QueryResultResponse(resultId, qr, durationMs)
+        QueryResultResponse(resultId, 0, qr, durationMs)
       }
     }
     def onSuccess(rm: ResponseMessage) = out ! rm

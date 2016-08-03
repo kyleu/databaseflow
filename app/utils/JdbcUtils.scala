@@ -11,6 +11,7 @@ import org.joda.time.LocalDateTime
 import org.postgresql.jdbc.PgArray
 import org.postgresql.util.PSQLException
 
+import scala.io.Source
 import scala.util.control.NonFatal
 
 object JdbcUtils extends Logging {
@@ -23,7 +24,9 @@ object JdbcUtils extends Logging {
       t match {
         case sqlEx: PSQLException =>
           val e = sqlEx.getServerErrorMessage
-          QueryErrorResponse(resultId, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(e.getLine), Some(e.getPosition), startMs), durationMs)
+          val lineIndex = Source.fromString(sql).getLines().take(e.getLine - 1).map(_.length).sum
+          val index = lineIndex + e.getPosition
+          QueryErrorResponse(resultId, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(index), startMs), durationMs)
         case sqlEx: SQLSyntaxErrorException =>
           QueryErrorResponse(resultId, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
         case sqlEx: MySQLStatementCancelledException =>

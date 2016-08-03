@@ -43,7 +43,7 @@ case object OracleCapabilities extends EngineCapabilities(
 )
 
 case object PostgreSQLCapabilities extends EngineCapabilities(
-  functions = PostgreSQLFunctions.functions, columnTypes = PostgreSQLTypes.columnTypes,
+  functions = PostgreSQLFunctions.functions :+ "pg_sleep", columnTypes = PostgreSQLTypes.columnTypes,
   explain = Some((sql: String) => { "explain (costs, verbose, format json) " + sql }),
   analyze = Some((sql: String) => { "explain (analyze, costs, verbose, buffers, format json) " + sql }),
   exampleUrl = "jdbc:postgresql://hostname/dbname"

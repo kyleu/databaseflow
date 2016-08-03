@@ -65,6 +65,7 @@ object EditorCreationHelper {
     session.setMode("ace/mode/sql")
     session.setTabSize(2)
     session.on("change", () => onChange(editor.getValue().toString))
+    session.setOption("useWorker", false)
 
     ShortcutService.configureEditor(id)
 

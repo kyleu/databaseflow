@@ -7,7 +7,7 @@ import akka.actor.ActorRef
 import models._
 import models.audit.AuditType
 import models.database.Queryable
-import models.query.{QueryResult, SavedQuery}
+import models.query.{QueryResult, SavedQuery, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
 import models.user.User
 import services.audit.AuditRecordService
@@ -42,6 +42,14 @@ object QueryExecutionService extends Logging {
   }
 
   def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
+    val statements = SqlParser.split(sql)
+    statements.zipWithIndex.foreach { statement =>
+      // TODO
+      handleRunStatement(db, queryId, statement._1._1, statement._1._2, resultId, connectionId, owner, out)
+    }
+  }
+
+  def handleRunStatement(db: Queryable, queryId: UUID, sql: String, idx: Int, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
     val startMs = DateUtils.nowMillis
     val auditId = UUID.randomUUID
 
@@ -56,7 +64,7 @@ object QueryExecutionService extends Logging {
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
           case Left(rowCount) => rowCount
-          case Right(i) => QueryResultResponse(resultId, QueryResult(
+          case Right(i) => QueryResultResponse(resultId, idx, QueryResult(
             queryId = queryId,
             sql = sql,
             isStatement = true,

@@ -11,10 +11,10 @@ object QueryErrorTemplate {
     val content = div(id := qe.id.toString)(
       p("Executed ", TemplateUtils.toTimeago(dateIsoString), s" in [${qe.durationMs}ms]."),
       p(cls := "error-detail-message")(qe.error.message),
-      if (qe.error.position.isEmpty) {
+      if (qe.error.index.isEmpty) {
         ""
       } else {
-        s"Error encountered at position [${qe.error.line.getOrElse(0)}:${qe.error.position.getOrElse(0)}]."
+        s"Error encountered at index [${qe.error.index.getOrElse(0)}]."
       }
     )
 

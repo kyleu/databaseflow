@@ -87,7 +87,7 @@ object SqlManager {
   }
 
   def check(queryId: UUID) = {
-    val sql = getActiveSql(queryId)
+    val sql = getSql(queryId)
     sqlChecks = sqlChecks + (queryId -> sql)
     NetworkMessage.sendMessage(CheckQuery(queryId, sql))
   }

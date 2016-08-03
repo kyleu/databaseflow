@@ -12,6 +12,8 @@ import scalatags.Text.all._
 
 object QueryResultsTemplate {
   def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
+    val hasFilter = !(qr.isStatement || qr.data.isEmpty || qr.source.isEmpty)
+
     val content = div(id := resultId.toString)(
       div(qr.source.flatMap(_.filterColumn) match {
         case Some(column) =>
@@ -29,7 +31,11 @@ object QueryResultsTemplate {
       }),
 
       div(cls := "row-status-display")(
-        a(href := "#", cls := "results-filter-link right theme-text")("Filter"),
+        if (hasFilter) {
+          a(href := "#", cls := "results-filter-link right theme-text")("Filter")
+        } else {
+          span()
+        },
         a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
         p(
           s"${NumberUtils.withCommas(qr.rowsAffected)} ",
@@ -42,7 +48,11 @@ object QueryResultsTemplate {
         )
       ),
 
-      DataFilterTemplate.forResults(qr, resultId),
+      if (hasFilter) {
+        DataFilterTemplate.forResults(qr, resultId)
+      } else {
+        span()
+      },
 
       div(cls := "z-depth-1 query-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
@@ -63,8 +73,9 @@ object QueryResultsTemplate {
     )
   }
 
-  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int) = {
-    val content = div(
+  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
+    val content = div(id := resultId.toString)(
+      a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
       p(s"${qr.rowsAffected} rows affected ", TemplateUtils.toTimeago(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)
