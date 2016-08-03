@@ -60,7 +60,7 @@ object SqlManager {
 
   def getActiveSql(queryId: UUID) = {
     val editor = sqlEditors.getOrElse(queryId, throw new IllegalStateException(s"Missing editor for [$queryId]."))
-    val txt = editor.getSelectedText().toString
+    val txt = editor.getSelectedText().toString.stripSuffix(";")
     if (txt.isEmpty) {
       val sql = editor.getValue().toString.stripSuffix(";")
       val split = SqlParser.split(sql)

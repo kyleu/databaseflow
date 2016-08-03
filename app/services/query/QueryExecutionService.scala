@@ -43,30 +43,31 @@ object QueryExecutionService extends Logging {
 
   def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
     val statements = SqlParser.split(sql)
-    statements.zipWithIndex.foreach { statement =>
-      // TODO
-      handleRunStatement(db, queryId, statement._1._1, statement._1._2, resultId, connectionId, owner, out)
-    }
+    val first = statements.headOption.getOrElse(throw new IllegalStateException("Missing statement"))._1
+    val remaining = statements.tail.map(_._1)
+    handleRunStatements(db, queryId, first -> 0, resultId, connectionId, owner, out, remaining)
   }
 
-  def handleRunStatement(db: Queryable, queryId: UUID, sql: String, idx: Int, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
+  def handleRunStatements(
+    db: Queryable, queryId: UUID, sql: (String, Int), resultId: UUID, connId: UUID, owner: Option[UUID], out: ActorRef, remaining: Seq[String]
+  ): Unit = {
     val startMs = DateUtils.nowMillis
     val auditId = UUID.randomUUID
 
     def work() = {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
       val startMs = DateUtils.nowMillis
-      JdbcUtils.sqlCatch(queryId, sql, startMs, resultId) { () =>
-        val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
-        AuditRecordService.start(auditId, AuditType.Query, owner, Some(connectionId), Some(sql))
+      JdbcUtils.sqlCatch(queryId, sql._1, startMs, resultId) { () =>
+        val model = CachedResult(resultId, queryId, connId, owner, sql = sql._1)
+        AuditRecordService.start(auditId, AuditType.Query, owner, Some(connId), Some(sql._1))
         val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
           case Left(rowCount) => rowCount
-          case Right(i) => QueryResultResponse(resultId, idx, QueryResult(
+          case Right(i) => QueryResultResponse(resultId, sql._2, QueryResult(
             queryId = queryId,
-            sql = sql,
+            sql = sql._1,
             isStatement = true,
             rowsAffected = i,
             occurred = startMs
@@ -86,11 +87,15 @@ object QueryExecutionService extends Logging {
         case _ => throw new IllegalStateException(rm.getClass.getSimpleName)
       }
       out ! rm
+      if (remaining.nonEmpty) {
+        val next = remaining.headOption.getOrElse(throw new IllegalStateException())
+        handleRunStatements(db, queryId, next -> (sql._2 + 1), resultId, connId, owner, out, remaining.tail)
+      }
     }
 
     def onFailure(t: Throwable) = {
       AuditRecordService.error(auditId, t.getMessage, (DateUtils.nowMillis - startMs).toInt)
-      ExceptionUtils.actorErrorFunction(out, "PlanError", t)
+      ExceptionUtils.actorErrorFunction(out, "StatementError", t)
     }
 
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)

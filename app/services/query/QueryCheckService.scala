@@ -17,8 +17,8 @@ object QueryCheckService extends Logging {
     def work() = {
       //log.info(s"Checking query [$queryId] sql [$sql].")
       val db = DatabaseRegistry.db(connectionId)
-      val results = SqlParser.split(sql).map { s =>
-        db.withConnection { conn =>
+      val results = db.withConnection { conn =>
+        SqlParser.split(sql).map { s =>
           try {
             val stmt = conn.prepareStatement(s._1)
             stmt.getMetaData
