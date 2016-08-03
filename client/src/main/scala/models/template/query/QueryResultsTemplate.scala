@@ -11,10 +11,10 @@ import utils.{NumberUtils, TemplateUtils}
 import scalatags.Text.all._
 
 object QueryResultsTemplate {
-  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
+  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, index: Int) = {
     val hasFilter = !(qr.isStatement || qr.data.isEmpty || qr.source.isEmpty)
 
-    val content = div(id := resultId.toString)(
+    val content = div(id := s"$resultId-$index")(
       div(qr.source.flatMap(_.filterColumn) match {
         case Some(column) =>
           val op = qr.source.flatMap(_.filterOp).getOrElse(FilterOp.Equal).symbol
@@ -73,8 +73,8 @@ object QueryResultsTemplate {
     )
   }
 
-  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
-    val content = div(id := resultId.toString)(
+  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, index: Int) = {
+    val content = div(id := s"$resultId-$index")(
       a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
       p(s"${qr.rowsAffected} rows affected ", TemplateUtils.toTimeago(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
