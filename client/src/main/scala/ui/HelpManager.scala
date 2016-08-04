@@ -5,7 +5,7 @@ import java.util.UUID
 import models.template.{HelpTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{TemplateUtils, TipsAndTricks}
+import utils.{NetworkMessage, NumberUtils, TemplateUtils, TipsAndTricks}
 
 import scala.util.Random
 import scalatags.Text.all._
@@ -17,6 +17,7 @@ object HelpManager {
 
   def show() = {
     if (isOpen) {
+      updateCounts()
       TabManager.selectTab(helpId)
     } else {
       val panelHtml = div(id := s"panel-$helpId", cls := "workspace-panel")(HelpTemplate.content)
@@ -49,7 +50,22 @@ object HelpManager {
         tipContent.text(TipsAndTricks.values(tipIdx).content)
       })
 
+      updateCounts()
+
       isOpen = true
     }
+  }
+
+  private[this] def updateCounts() = {
+    val queryPanel = $(s"#panel-$helpId")
+
+    val latency = NetworkMessage.latencyMs.getOrElse(0)
+    $(".help-latency-label", queryPanel).text(NumberUtils.withCommas(latency))
+
+    val sentCount = utils.NetworkMessage.sentMessageCount
+    $(".help-sent-label", queryPanel).text(NumberUtils.withCommas(sentCount))
+
+    val receivedCount = utils.NetworkMessage.receivedMessageCount
+    $(".help-received-label", queryPanel).text(NumberUtils.withCommas(receivedCount))
   }
 }

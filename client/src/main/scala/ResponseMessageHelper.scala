@@ -1,12 +1,12 @@
 import models._
 import services._
 import ui.{HistoryManager, UserManager}
-import utils.Logging
+import utils.{Logging, NetworkMessage}
 
 trait ResponseMessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
 
-    case p: Pong => latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
+    case p: Pong => NetworkMessage.latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
 
     case us: UserSettings => UserManager.onUserSettings(us)
 

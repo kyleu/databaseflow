@@ -32,7 +32,7 @@ POST        /signin                                  controllers.auth.Authentica
 GET         /signout                                 controllers.auth.AuthenticationController.signOut
 
 # Activity
-GET         /activity                                controllers.UserActivityController.activity
+GET         /activity                                controllers.UserActivityController.activity(limit: Int ?= 100, offset: Int ?= 0)
 GET         /activity/all/remove                     controllers.UserActivityController.removeAllAudits()
 GET         /activity/:id/remove                     controllers.UserActivityController.removeAudit(id: java.util.UUID)
 

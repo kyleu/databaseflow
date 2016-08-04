@@ -12,7 +12,7 @@ object CachedResultQuery {
   val maxRows = 50000
 }
 
-case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
+case class CachedResultQuery(index: Int, result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
   val startMs = DateUtils.nowMillis
 
   override def sql: String = result.sql
@@ -66,7 +66,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
           }
           if (rowCount == 101) {
             val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
-            CachedResultQueryHelper.sendResult(result, out, columnsPlus, partialRowData, firstMessageElapsed, moreRowsAvailable = true)
+            CachedResultQueryHelper.sendResult(result, index, out, columnsPlus, partialRowData, firstMessageElapsed, moreRowsAvailable = true)
             CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
           }
         }
@@ -74,7 +74,7 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
         if (rowCount <= 100) {
           val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
           CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
-          CachedResultQueryHelper.sendResult(result, out, columnsPlus, partialRowData, firstMessageElapsed, moreRowsAvailable = false)
+          CachedResultQueryHelper.sendResult(result, index, out, columnsPlus, partialRowData, firstMessageElapsed, moreRowsAvailable = false)
         }
 
         val duration = (DateUtils.nowMillis - startMs).toInt
@@ -82,11 +82,11 @@ case class CachedResultQuery(result: CachedResult, out: Option[ActorRef]) extend
         QueryResultRowCount(result.resultId, result.queryId, result.resultId, rowCount, rowCount == CachedResultQuery.maxRows, duration)
       } else {
         val elapsed = (DateUtils.nowMillis - startMs).toInt
-        CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, columns, Seq(firstRowData), elapsed)
+        CachedResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, columns, Seq(firstRowData), elapsed)
       }
     } else {
       val elapsed = (DateUtils.nowMillis - startMs).toInt
-      CachedResultQueryHelper.getResultResponseFor(result.resultId, result.queryId, result.sql, Nil, Nil, elapsed)
+      CachedResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, Nil, Nil, elapsed)
     }
   }
 }

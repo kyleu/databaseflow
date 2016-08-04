@@ -57,7 +57,7 @@ object TableManager extends TableDetailHelper {
               case _ => None
             }
           )
-          RowDataManager.showRowData("table", queryId, name, newOptions)
+          RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
         })
 
         TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
@@ -69,7 +69,7 @@ object TableManager extends TableDetailHelper {
         queryId
     }
     if (options.isFiltered) {
-      RowDataManager.showRowData("table", qId, name, options.copy(limit = Some(UserManager.rowsReturned)))
+      RowDataManager.showRowData("table", qId, name, options.copy(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
     }
   }
 }

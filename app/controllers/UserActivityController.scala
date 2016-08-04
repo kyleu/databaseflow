@@ -11,14 +11,14 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class UserActivityController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
-  def activity = withSession("activity") { implicit request =>
-    val audits = AuditRecordService.getForUser(request.identity.map(_.id))
+  def activity(limit: Int, offset: Int) = withSession("activity") { implicit request =>
+    val audits = AuditRecordService.getForUser(request.identity.map(_.id), limit, offset)
     val removeCall = if (SettingsService.asBool(SettingKey.AllowAuditRemoval)) {
       Some(controllers.routes.UserActivityController.removeAudit _)
     } else {
       None
     }
-    Future.successful(Ok(views.html.profile.userActivity(request.identity, ctx.config.debug, audits, None, AuditRecordService.rowLimit, removeCall)))
+    Future.successful(Ok(views.html.profile.userActivity(request.identity, ctx.config.debug, audits, None, limit, offset, removeCall)))
   }
 
   def removeAudit(id: UUID) = withSession("remove-audit") { implicit request =>

@@ -7,11 +7,17 @@ import akka.actor.ActorRef
 import models._
 import models.audit.AuditType
 import models.database.Queryable
+import models.queries.result.CachedResultQueries
 import models.query.{QueryResult, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.audit.AuditRecordService
 import services.database.DatabaseWorkerPool
+import services.database.core.MasterDatabase
+import services.result.CachedResultService
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
+
+import scala.concurrent.Future
 
 object QueryExecutionService extends Logging {
   private[this] val activeQueries = collection.mutable.HashMap.empty[UUID, PreparedStatement]
@@ -34,8 +40,15 @@ object QueryExecutionService extends Logging {
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql._1, startMs, resultId, sql._2) { () =>
         val model = CachedResult(resultId, queryId, connId, owner, sql = sql._1)
-        AuditRecordService.start(auditId, AuditType.Query, owner, Some(connId), Some(sql._1))
-        val result = db.executeUnknown(CachedResultQuery(model, Some(out)), Some(resultId))
+        if (sql._2 == 0) {
+          MasterDatabase.query(CachedResultQueries.findBy(queryId, owner)).foreach { existing =>
+            Future(CachedResultService.remove(existing.resultId))
+          }
+        }
+
+        Future(AuditRecordService.start(auditId, AuditType.Query, owner, Some(connId), Some(sql._1)))
+
+        val result = db.executeUnknown(CachedResultQuery(sql._2, model, Some(out)), Some(resultId))
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {

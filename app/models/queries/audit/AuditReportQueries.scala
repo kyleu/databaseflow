@@ -8,11 +8,12 @@ import models.database.{Query, Row}
 object AuditReportQueries {
   val tableName = "audit_records"
 
-  case class GetForUser(userId: Option[UUID]) extends Query[Seq[AuditRecord]] {
-    override def sql = userId match {
-      case Some(uid) => s"select * from $tableName where owner = ?"
-      case None => s"select * from $tableName where owner is null"
+  case class GetForUser(userId: Option[UUID], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
+    private[this] val whereClause = userId match {
+      case Some(uid) => "owner = ?"
+      case None => "owner is null"
     }
+    override val sql = s"select * from $tableName where $whereClause limit $limit offset $offset"
     override def values = userId match {
       case Some(uid) => Seq(uid)
       case None => Seq.empty

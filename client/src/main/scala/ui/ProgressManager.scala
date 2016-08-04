@@ -28,7 +28,12 @@ object ProgressManager {
     if (queryWorkspace.length != 1) {
       throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
     }
-    queryWorkspace.html(html)
+    val existingResult = $(s"#$resultId", queryWorkspace)
+    if (existingResult.length == 0) {
+      queryWorkspace.html(html)
+    } else {
+      existingResult.html(html)
+    }
 
     val cancelLink = $(".cancel-query-link", queryWorkspace)
     TemplateUtils.clickHandler(cancelLink, (jq) => {
@@ -54,21 +59,19 @@ object ProgressManager {
   }
 
   def completeProgress(queryId: UUID, resultId: UUID, index: Int, content: TypedTag[String]): Unit = {
-    activeQueries.get(queryId) match {
-      case Some(rid) if rid == resultId => // No op
-      case Some(rid) => throw new IllegalStateException(s"Active progress for query [$queryId] is [$rid], not expected [$resultId].")
-      case None if index == 0 => throw new IllegalStateException(s"No active progress for query [$queryId].")
-      case None => // No op
-    }
-
     val queryWorkspace = $(s"#workspace-$queryId", workspace)
     if (queryWorkspace.length != 1) {
       throw new IllegalStateException(s"No query workspace available for result [$resultId] for query [$queryId].")
     }
-    if (index == 0) {
-      queryWorkspace.html(content.render)
+    val existingResult = $(s"#$resultId", queryWorkspace)
+    if (existingResult.length == 0) {
+      if (index == 0) {
+        queryWorkspace.html(content.render)
+      } else {
+        queryWorkspace.append(content.render)
+      }
     } else {
-      queryWorkspace.append(content.render)
+      existingResult.html(content.render)
     }
 
     TemplateUtils.relativeTime()

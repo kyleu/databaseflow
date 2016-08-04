@@ -8,7 +8,7 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import utils.TemplateUtils
 
 object FilterManager {
-  def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source) = {
+  def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, resultId: UUID) = {
     val filterContainer = $(".filter-container", panel)
     var filterShown = false
     TemplateUtils.clickHandler($(".results-filter-link", panel), (jq) => {
@@ -62,7 +62,7 @@ object FilterManager {
         filterValue = Some(v)
       ).asRowDataOptions
 
-      RowDataManager.showRowData(key, queryId, name, options)
+      RowDataManager.showRowData(key, queryId, name, options, resultId)
     })
   }
 }

@@ -63,19 +63,19 @@ object QueryResultService {
   private[this] def onComplete(result: QueryResult, src: Source, panel: JQuery, resultId: UUID) = {
     js.Dynamic.global.$(".filter-select", panel).material_select()
 
-    FilterManager.init(src.t, result.queryId, src.name, panel, src)
+    FilterManager.init(src.t, result.queryId, src.name, panel, src, resultId)
 
     val options = src.asRowDataOptions
     TemplateUtils.clickHandler($(".sorted-title", panel), (j) => {
       val col = j.data("col").toString
       val asc = j.data("dir").toString == "asc"
       val newOptions = options.copy(orderByCol = Some(col), orderByAsc = Some(!asc))
-      RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
+      RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
     TemplateUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
       val newOptions = options.copy(filterCol = None, filterOp = None, filterVal = None)
-      RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions)
+      RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
     val appendRowsLink = $(".append-rows-link", panel)

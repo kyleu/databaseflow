@@ -42,7 +42,7 @@ trait DataHelper extends Logging { this: SocketService =>
   }
 
   private[this] def handleShowDataResponse(
-    queryId: UUID, t: String, name: String, foreignKeys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID, cacheDb: Boolean
+    queryId: UUID, t: String, name: String, keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID, cacheDb: Boolean
   ) {
     def work() = {
       val startMs = DateUtils.nowMillis
@@ -62,7 +62,7 @@ trait DataHelper extends Logging { this: SocketService =>
           case _ => result.data -> false
         }
         val columnsWithRelations = result.cols.map { col =>
-          foreignKeys.find(_.references.exists(_.source == col.name)) match {
+          keys.find(_.references.exists(_.source == col.name)) match {
             case Some(fk) => col.copy(
               relationTable = Some(fk.targetTable),
               relationColumn = fk.references.find(_.source == col.name).map(_.target)

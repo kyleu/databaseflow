@@ -17,8 +17,8 @@ import scala.util.control.NonFatal
 object AuditRecordService extends Logging {
   val rowLimit = 100
 
-  def getAll = MasterDatabase.query(AuditRecordQueries.getAll)
-  def getForUser(userId: Option[UUID]) = MasterDatabase.query(AuditReportQueries.GetForUser(userId))
+  def getAll(limit: Int, offset: Int) = MasterDatabase.query(AuditRecordQueries.GetPage(None, limit, offset))
+  def getForUser(userId: Option[UUID], limit: Int, offset: Int) = MasterDatabase.query(AuditReportQueries.GetForUser(userId, limit, offset))
 
   def handleGetQueryHistory(connectionId: UUID, user: Option[User], gqh: GetQueryHistory, out: ActorRef) = {
     val matching = MasterDatabase.query(AuditReportQueries.GetMatchingQueries(connectionId, user.map(_.id), gqh.limit, gqh.offset))

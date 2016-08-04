@@ -49,7 +49,7 @@ object ViewManager extends ViewDetailHelper {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       TemplateUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
-        RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)))
+        RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
       })
 
       TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {

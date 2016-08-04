@@ -6,12 +6,10 @@ import models.ddl.DdlQueries
 import models.queries.result.CachedResultQueries
 import models.result.CachedResult
 import org.joda.time.LocalDateTime
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.MetadataTables
 import utils.Logging
 
-import scala.concurrent.Future
 import scala.util.control.NonFatal
 
 object CachedResultService extends Logging {
@@ -23,9 +21,6 @@ object CachedResultService extends Logging {
 
   def insertCacheResult(result: CachedResult) = {
     log.info(s"Caching result [$result].")
-    MasterDatabase.query(CachedResultQueries.findBy(result.queryId, result.owner)).foreach { existing =>
-      Future(remove(existing.resultId))
-    }
     MasterDatabase.executeUpdate(CachedResultQueries.insert(result))
     result
   }

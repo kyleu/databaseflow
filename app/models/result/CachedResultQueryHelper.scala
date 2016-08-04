@@ -47,9 +47,9 @@ object CachedResultQueryHelper extends Logging {
     ResultCacheDatabase.conn.executeUpdate(InsertResultRow(tableName, columnNames, data)(ResultCacheDatabase.conn.engine))
   }
 
-  def getResultResponseFor(resultId: UUID, queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[Any]]], elapsedMs: Int) = {
+  def getResultResponseFor(resultId: UUID, idx: Int, queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[Any]]], elapsedMs: Int) = {
     val mappedData = data.map(_.map(_.map(DynamicQuery.transform)))
-    QueryResultResponse(resultId, 0, getResultFor(queryId, sql, columns, mappedData), elapsedMs)
+    QueryResultResponse(resultId, idx, getResultFor(queryId, sql, columns, mappedData), elapsedMs)
   }
 
   private[this] def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]]) = {
@@ -64,6 +64,7 @@ object CachedResultQueryHelper extends Logging {
 
   def sendResult(
     result: CachedResult,
+    index: Int,
     out: Option[ActorRef],
     columns: Seq[QueryResult.Col],
     rowData: Seq[Seq[Option[Any]]],
@@ -72,7 +73,7 @@ object CachedResultQueryHelper extends Logging {
   ) = {
     out.foreach { o =>
       val mappedData = rowData.map(_.map(_.map(DynamicQuery.transform)))
-      val msg = QueryResultResponse(result.resultId, 0, QueryResult(
+      val msg = QueryResultResponse(result.resultId, index, QueryResult(
         queryId = result.queryId,
         sql = result.sql,
         columns = columns,

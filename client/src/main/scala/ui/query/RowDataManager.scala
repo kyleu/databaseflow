@@ -8,7 +8,7 @@ import ui.ProgressManager
 import utils.{Logging, NetworkMessage}
 
 object RowDataManager {
-  def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID = UUID.randomUUID): Unit = {
+  def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID): Unit = {
     Logging.debug(s"Showing [$key] row data for [$name] with options [$options].")
     if (options.offset.forall(_ == 0)) {
       ProgressManager.startProgress(queryId, resultId, name)

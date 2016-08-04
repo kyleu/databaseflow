@@ -15,7 +15,7 @@ trait NetworkHelper { this: DatabaseFlow =>
   }
 
   private def sendPing(): Unit = {
-    if (socket.connected) {
+    if (socket.isConnected) {
       NetworkMessage.sendMessage(Ping(System.currentTimeMillis))
     }
     setTimeout(10000)(sendPing())
@@ -43,7 +43,7 @@ trait NetworkHelper { this: DatabaseFlow =>
   }
 
   def sendMessage(rm: RequestMessage): Unit = {
-    if (socket.connected) {
+    if (socket.isConnected) {
       val json = JsonSerializers.writeRequestMessage(rm, debug)
       socket.send(json)
     } else {

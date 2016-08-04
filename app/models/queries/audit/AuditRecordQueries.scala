@@ -4,7 +4,7 @@ import java.sql.Timestamp
 import java.util.UUID
 
 import models.audit.{AuditRecord, AuditStatus, AuditType}
-import models.database.{Row, Statement}
+import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
@@ -12,7 +12,10 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   override protected val columns = Seq("id", "audit_type", "owner", "connection", "status", "sql", "error", "rows_affected", "elapsed", "occurred")
   override protected val searchColumns = Seq("id", "status", "sql", "error")
 
-  val getAll = GetAll(orderBy = "occurred desc")
+  case class GetPage(whereClause: Option[String], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
+    override val sql = getSql(whereClause = whereClause, orderBy = Some("occurred desc"), limit = Some(limit), offset = Some(offset))
+    override def reduce(rows: Iterator[Row]): List[AuditRecord] = rows.map(fromRow).toList
+  }
   val insert = Insert
   val search = Search
   def removeById(id: UUID) = RemoveById(Seq(id))

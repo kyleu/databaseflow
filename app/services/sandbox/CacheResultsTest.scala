@@ -30,7 +30,7 @@ object CacheResultsTest extends SandboxTask {
     val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
     CachedResultService.insertCacheResult(model)
 
-    DatabaseRegistry.db(connectionId).executeUnknown(CachedResultQuery(model, None))
+    DatabaseRegistry.db(connectionId).executeUnknown(CachedResultQuery(0, model, None))
 
     val columns = Seq(
       QueryResult.Col("v", StringType, precision = Some(128)),
