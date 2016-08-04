@@ -54,7 +54,7 @@ class ApplicationContext @javax.inject.Inject() (
   }
 
   val supervisor = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
-  log.info(s"Actor Supervisor [${supervisor.path}] started for [${utils.Config.projectId}].")
+  log.debug(s"Actor Supervisor [${supervisor.path}] started for [${utils.Config.projectId}].")
 
   private[this] def stop() = {
     DatabaseRegistry.close()

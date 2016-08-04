@@ -12,7 +12,7 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class UserActivityController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def activity(limit: Int, offset: Int) = withSession("activity") { implicit request =>
-    val audits = AuditRecordService.getForUser(request.identity.map(_.id), limit, offset)
+    val audits = AuditRecordService.getForUser(request.identity.id, limit, offset)
     val removeCall = if (SettingsService.asBool(SettingKey.AllowAuditRemoval)) {
       Some(controllers.routes.UserActivityController.removeAudit _)
     } else {
@@ -27,10 +27,7 @@ class UserActivityController @javax.inject.Inject() (override val ctx: Applicati
   }
 
   def removeAllAudits() = withSession("remove-audit") { implicit request =>
-    request.identity match {
-      case Some(u) => AuditRecordService.deleteAllForUser(u.id, None)
-      case None => AuditRecordService.deleteAllForGuest(None)
-    }
+    AuditRecordService.deleteAllForUser(request.identity.id, None)
     Future.successful(Redirect(controllers.routes.UserActivityController.activity()).flashing("success" -> "Removed all user activity."))
   }
 }

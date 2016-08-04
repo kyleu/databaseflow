@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], debug: Boolean, rows: Seq[models.result.CachedResult], tables: Set[String], userService: services.user.UserSearchService)(
+@(user: models.user.User, debug: Boolean, rows: Seq[models.result.CachedResult], tables: Set[String], userService: services.user.UserSearchService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(user, "results", messages("admin.results.title"), debug = debug) {
   <div class="card-content">
@@ -31,9 +31,9 @@
                 <td title="@r.connectionId">
                   <a class="theme-text" href="@routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
                 </td>
-                <td>@r.owner.map { o =>
-                  <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(o)">@userService.retrieve(o).map(_.username)</a>
-                }.getOrElse("Guest")</td>
+                <td>
+                  <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(r.owner)">@userService.getUsername(r.owner)</a>
+                </td>
                 <td>@r.status</td>
                 <td>@r.columns</td>
                 <td>@utils.NumberUtils.withCommas(r.rows)</td>

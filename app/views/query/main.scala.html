@@ -1,7 +1,7 @@
-@(user: Option[models.user.User], debug: Boolean, connectionId: java.util.UUID, dbName: String, txSupported: Boolean)(
+@(user: models.user.User, debug: Boolean, connectionId: java.util.UUID, dbName: String, txSupported: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.materialize(
-  user = user,
+  user = Some(user),
   title = dbName + " - " + utils.Config.projectName,
   scripts = Seq(
     routes.Assets.versioned("lib/momentjs/min/moment.min.js").url,
@@ -9,8 +9,8 @@
   ),
   debug = debug
 ) {
-  @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey))
-  @views.html.query.navbar(user, dbName, txSupported)
+  @views.html.layout.themeStyles(user.preferences.theme)
+  @views.html.query.navbar(Some(user), dbName, txSupported)
 
   <main class="indent">
     <div id="tx-panel" class="initially-hidden">
@@ -33,7 +33,7 @@
           <div class="col s12">
             <div class="card">
               <div class="card-content">
-                <span class="card-title">
+                <span id="loading-content" class="card-title">
                   Loading @dbName...
                 </span>
               </div>
@@ -43,11 +43,11 @@
       </div>
     </div>
 
-    @views.html.modal.confirmModal(user)
-    @views.html.modal.reconnectModal(user)
-    @views.html.modal.saveModal(user)
-    @views.html.modal.exportModal(user, connectionId)
-    @views.html.modal.planNodeModal(user)
+    @views.html.modal.confirmModal()
+    @views.html.modal.reconnectModal()
+    @views.html.modal.saveModal()
+    @views.html.modal.exportModal(connectionId)
+    @views.html.modal.planNodeModal()
   </main>
 
   @if(debug) {

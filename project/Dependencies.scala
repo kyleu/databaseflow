@@ -60,7 +60,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.3.9" // 0.4.0, 0.4.1 have a linking error
+    val version = "0.4.1"
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
@@ -91,7 +91,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.8"
+    val enumeratumVersion = "1.4.9"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"

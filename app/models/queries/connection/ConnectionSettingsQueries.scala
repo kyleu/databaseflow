@@ -19,25 +19,16 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getAll(orderBy: String = "\"name\"") = GetAll(orderBy = orderBy)
-  def getVisible(owner: Option[User], orderBy: String = "\"name\"") = {
-    val readPerms = owner match {
-      case Some(x) => if (x.role == Role.Admin) {
-        "\"read\" in ('visitor', 'user', 'admin')"
-      } else if (x.role == Role.User) {
-        "\"read\" in ('visitor', 'user')"
-      } else {
-        "\"read\" = 'visitor'"
-      }
-      case None => "\"read\" = 'visitor'"
+  def getVisible(owner: User, orderBy: String = "\"name\"") = {
+    val readPerms = if (owner.role == Role.Admin) {
+      "\"read\" in ('visitor', 'user', 'admin')"
+    } else if (owner.role == Role.User) {
+      "\"read\" in ('visitor', 'user')"
+    } else {
+      "\"read\" = 'visitor'"
     }
-    val ownerPerms = owner match {
-      case Some(o) => " or \"owner\" = ?"
-      case None => " or \"owner\" is null"
-    }
-    val values = owner match {
-      case Some(o) => Seq(o.id)
-      case None => Seq.empty
-    }
+    val ownerPerms = " or \"owner\" = ?"
+    val values = Seq(owner.id)
     GetAll(
       whereClause = Some(readPerms + ownerPerms),
       orderBy = orderBy,
@@ -60,7 +51,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected def fromRow(row: Row) = ConnectionSettings(
     id = row.as[UUID]("id"),
     name = row.as[String]("name"),
-    owner = row.asOpt[UUID]("owner"),
+    owner = row.as[UUID]("owner"),
     read = row.as[String]("read"),
     edit = row.as[String]("edit"),
     description = row.as[String]("description"),

@@ -2,6 +2,7 @@ package services.sandbox
 
 import models.database.{Row, SingleRowQuery}
 import models.queries.connection.ConnectionSettingsQueries
+import models.user.User
 import services.database.DatabaseRegistry
 import services.database.core.MasterDatabase
 import services.schema.SchemaService
@@ -25,7 +26,7 @@ object DatabaseTest extends SandboxTask {
     val connections = MasterDatabase.query(ConnectionSettingsQueries.getAll())
 
     val connTables = connections.map { c =>
-      val db = DatabaseRegistry.db(c.id)
+      val db = DatabaseRegistry.db(User.mock, c.id)
       val metadata = SchemaService.getSchema(db)
       c -> metadata
     }

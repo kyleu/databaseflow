@@ -2,10 +2,10 @@ package services.sandbox
 
 import java.util.UUID
 
-import com.fasterxml.jackson.databind.ser.std.UUIDSerializer
 import models.audit.{AuditRecord, AuditStatus, AuditType}
+import models.user.User
 import services.audit.AuditRecordService
-import utils.{ApplicationContext, DateUtils}
+import utils.ApplicationContext
 
 import scala.concurrent.Future
 
@@ -16,7 +16,7 @@ object Testbed extends SandboxTask {
 
   def randomRecord() = AuditRecord(
     auditType = AuditType.SignIn,
-    owner = None,
+    owner = User.mock.id,
     connection = Some(UUID.randomUUID),
     status = AuditStatus.OK,
     sql = Some("sql"),

@@ -2,13 +2,12 @@ package services.sandbox
 
 import java.util.UUID
 
-import models.queries.result.CreateResultTable
 import models.query.QueryResult
 import models.result.{CachedResult, CachedResultQuery, CachedResultQueryHelper}
 import models.schema.ColumnType._
+import models.user.User
 import services.connection.ConnectionSettingsService
 import services.database.DatabaseRegistry
-import services.database.core.ResultCacheDatabase
 import services.result.CachedResultService
 import utils.ApplicationContext
 
@@ -24,13 +23,12 @@ object CacheResultsTest extends SandboxTask {
     val resultId = UUID.randomUUID
     val queryId = UUID.randomUUID
     val connectionId = ConnectionSettingsService.getAll.find(_.name == "PostgreSQL Sample").getOrElse(throw new IllegalStateException()).id
-    val owner = None
     val sql = "select * from city"
 
-    val model = CachedResult(resultId, queryId, connectionId, owner, sql = sql)
+    val model = CachedResult(resultId, queryId, connectionId, User.mock.id, sql = sql)
     CachedResultService.insertCacheResult(model)
 
-    DatabaseRegistry.db(connectionId).executeUnknown(CachedResultQuery(0, model, None))
+    DatabaseRegistry.db(User.mock, connectionId).executeUnknown(CachedResultQuery(0, model, None))
 
     val columns = Seq(
       QueryResult.Col("v", StringType, precision = Some(128)),
@@ -57,8 +55,6 @@ object CacheResultsTest extends SandboxTask {
 
     //QueryResult.Col("unk", UnknownType)
     )
-
-    val statement = CreateResultTable(resultId, columns)(ResultCacheDatabase.conn.engine).sql
 
     CachedResultQueryHelper.createResultTable(UUID.randomUUID, columns)
 

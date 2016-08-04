@@ -36,7 +36,7 @@ class AuthenticationController @javax.inject.Inject() (
               ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
                 ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
                 ctx.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
-                  AuditRecordService.create(AuditType.SignIn, Some(user.id), None)
+                  AuditRecordService.create(AuditType.SignIn, user.id, None)
                   ctx.silhouette.env.authenticatorService.embed(v, result)
                 }
               }
@@ -53,13 +53,8 @@ class AuthenticationController @javax.inject.Inject() (
   def signOut = withSession("signout") { implicit request =>
     val result = Redirect(controllers.routes.HomeController.home())
 
-    request.identity.foreach { user =>
-      AuditRecordService.create(AuditType.SignOut, Some(user.id), None)
-      ctx.silhouette.env.eventBus.publish(LogoutEvent(user, request))
-    }
-    request.authenticator match {
-      case Some(auth) => ctx.silhouette.env.authenticatorService.discard(auth, result)
-      case None => Future.successful(result)
-    }
+    AuditRecordService.create(AuditType.SignOut, request.identity.id, None)
+    ctx.silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    ctx.silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
 }

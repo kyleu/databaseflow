@@ -54,7 +54,7 @@ class AuthModule extends AbstractModule with ScalaModule {
 
   @Provides
   def provideCookieSigner(): CookieSigner = {
-    val config = new JcaCookieSignerSettings(AuthModule.encKey)
+    val config = JcaCookieSignerSettings(AuthModule.encKey)
     new JcaCookieSigner(config)
   }
 

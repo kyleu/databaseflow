@@ -20,10 +20,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
   val getAll = GetAll
-  def findBy(queryId: UUID, owner: Option[UUID]) = owner match {
-    case Some(o) => GetAll(whereClause = Some(""""query_id" = ? and "owner" = ?"""), values = Seq(queryId, o))
-    case None => GetAll(whereClause = Some(""""query_id" = ? and "owner" is null"""), values = Seq(queryId))
-  }
+  def findBy(queryId: UUID, owner: UUID) = GetAll(whereClause = Some(""""query_id" = ? and "owner" = ?"""), values = Seq(queryId, owner))
   val search = Search
   val removeById = RemoveById
 
@@ -47,7 +44,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
       resultId = row.as[UUID]("id"),
       queryId = row.as[UUID]("query_id"),
       connectionId = row.as[UUID]("connection_id"),
-      owner = row.asOpt[UUID]("owner"),
+      owner = row.as[UUID]("owner"),
       status = row.as[String]("status"),
       sql = JdbcHelper.stringVal(row.as[Any]("sql")),
       columns = row.as[Int]("columns"),

@@ -9,7 +9,7 @@ case class CachedResult(
     resultId: UUID,
     queryId: UUID,
     connectionId: UUID,
-    owner: Option[UUID] = None,
+    owner: UUID,
     status: String = "starting",
     sql: String,
     columns: Int = 0,

@@ -1,5 +1,5 @@
 @(
-    user: Option[models.user.User],
+    user: models.user.User,
     debug: Boolean,
     activity: Seq[models.audit.AuditRecord],
     orderBy: Option[(String, Boolean)],
@@ -9,7 +9,7 @@
 )(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(
-  user,
+  Some(user),
   messages("profile.activity.title"),
   debug = debug,
   scripts = Seq(routes.Assets.versioned("lib/momentjs/min/moment.min.js").url)

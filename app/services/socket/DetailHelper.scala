@@ -47,7 +47,7 @@ trait DetailHelper { this: SocketService =>
   }
 
   protected[this] def handleSocketTrace() {
-    val ret = SocketTraceResponse(id, user.map(_.id), currentUsername)
+    val ret = SocketTraceResponse(id, user.id, user.username)
     sender() ! ret
   }
 

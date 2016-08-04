@@ -25,7 +25,7 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
     case qcr: QueryCancelledResponse => NotificationService.info("Query Cancelled", "Active query has been cancelled.")
     case qrr: QueryResultResponse => if (qrr.result.source.exists(_.dataOffset > 0)) {
-      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.index, qrr.result)
+      QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result)
     } else {
       QueryResultService.handleNewQueryResults(qrr.id, qrr.index, qrr.result, qrr.durationMs)
     }

@@ -17,7 +17,7 @@ object QueryResultService {
   def handleNewQueryResults(resultId: UUID, index: Int, result: QueryResult, durationMs: Int): Unit = {
     val occurred = new scalajs.js.Date(result.occurred.toDouble)
     if (result.isStatement) {
-      val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs, resultId, index)
+      val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs, resultId)
       ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
       val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
@@ -28,7 +28,7 @@ object QueryResultService {
         sqlShown = !sqlShown
       })
     } else {
-      val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId, index)
+      val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
       ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
       val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))

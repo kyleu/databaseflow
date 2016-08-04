@@ -50,7 +50,7 @@ object JsonSerializers {
     "properties" -> writeJs(node.properties),
     "children" -> Js.Arr(node.children.map(writePlanNode): _*)
   )
-  implicit val planNodeWriter = Writer[PlanNode] { case x => writePlanNode(x) }
+  implicit val planNodeWriter = Writer[PlanNode](x => writePlanNode(x))
 
   // Wire messages
   def readRequestMessage(json: Js.Value) = readJs[RequestMessage](json)

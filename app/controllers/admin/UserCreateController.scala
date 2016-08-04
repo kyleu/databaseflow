@@ -43,7 +43,7 @@ class UserCreateController @javax.inject.Inject() (
     } else {
       val user = User(
         id = id,
-        username = Some(username),
+        username = username,
         preferences = UserPreferences(),
         profile = loginInfo,
         role = role

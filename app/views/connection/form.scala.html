@@ -1,7 +1,7 @@
 @import models.template.Icons
-@(user: Option[models.user.User], conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
+@(user: models.user.User, conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-) @layout.simple(user, "Edit " + title, debug = false) {
+) @layout.simple(Some(user), "Edit " + title, debug = false) {
   @components.formErrors(errors)
   <div class="row">
     <form id="connection-form" class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
@@ -133,7 +133,6 @@
       var engineSelect = $('#form-engine');
       var hostInput = $('#host-input');
       var portInput = $('#port-input');
-      var dbNameInput = $('#dbname-input');
       engineSelect.material_select();
       engineSelect.change(function(e) {
         var newUrl = 'jdbc:';

@@ -21,6 +21,9 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
       },
       cf => {
         val almostUpdated = ConnectionSettings(
+          id = UUID.randomUUID,
+          name = cf.name,
+          owner = request.identity.id,
           engine = DatabaseEngine.withName(cf.engine),
           host = if (cf.isUrl) { None } else { cf.host },
           port = if (cf.isUrl) { None } else { cf.port },
@@ -31,11 +34,10 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
         )
         val updated = if (cf.password.trim.isEmpty) {
           val connOpt = ConnectionSettingsService.getById(connectionId)
-          val conn = connOpt match {
-            case Some(c) => c
-            case None => ConnectionSettings(id = connectionId)
-          }
-          almostUpdated.copy(password = conn.password)
+          almostUpdated.copy(password = connOpt match {
+            case Some(c) => c.password
+            case None => ""
+          })
         } else {
           almostUpdated.copy(password = cf.password)
         }

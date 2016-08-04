@@ -25,14 +25,13 @@ class ProfileController @javax.inject.Inject() (
   }
 
   def save = withSession("view") { implicit request =>
-    val user = request.identity.getOrElse(throw new IllegalStateException("Not logged in."))
     UserForms.profileForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.profile.view(request.identity, debug = false))),
       profileData => {
-        val newPrefs = user.preferences.copy(
+        val newPrefs = request.identity.preferences.copy(
           theme = profileData.theme
         )
-        val newUser = user.copy(username = Some(profileData.username), preferences = newPrefs)
+        val newUser = request.identity.copy(username = profileData.username, preferences = newPrefs)
         userService.save(newUser, update = true)
         Future.successful(Redirect(controllers.routes.HomeController.home()))
       }
@@ -53,9 +52,7 @@ class ProfileController @javax.inject.Inject() (
         if (changePass.newPassword != changePass.confirm) {
           Future.successful(errorResponse("Passwords do not match."))
         } else {
-          val email = request.identity.map(_.profile.providerKey).getOrElse {
-            throw new IllegalStateException("You must be logged in. How did you even get here?")
-          }
+          val email = request.identity.profile.providerKey
           credentialsProvider.authenticate(Credentials(email, changePass.oldPassword)).flatMap { loginInfo =>
             val okResponse = Redirect(controllers.routes.ProfileController.view()).flashing("success" -> "Password changed.")
             for {

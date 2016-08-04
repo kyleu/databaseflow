@@ -22,7 +22,7 @@ import scala.concurrent.Future
 object QueryExecutionService extends Logging {
   private[this] val activeQueries = collection.mutable.HashMap.empty[UUID, PreparedStatement]
 
-  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: Option[UUID], out: ActorRef) = {
+  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: UUID, out: ActorRef) = {
     val statements = SqlParser.split(sql)
     val first = statements.headOption.getOrElse(throw new IllegalStateException("Missing statement"))._1
     val remaining = statements.tail.map(_._1)
@@ -30,7 +30,7 @@ object QueryExecutionService extends Logging {
   }
 
   def handleRunStatements(
-    db: Queryable, queryId: UUID, sql: (String, Int), resultId: UUID, connId: UUID, owner: Option[UUID], out: ActorRef, remaining: Seq[String]
+    db: Queryable, queryId: UUID, sql: (String, Int), resultId: UUID, connId: UUID, owner: UUID, out: ActorRef, remaining: Seq[String]
   ): Unit = {
     val startMs = DateUtils.nowMillis
     val auditId = UUID.randomUUID

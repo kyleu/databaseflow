@@ -14,12 +14,9 @@ object ModelListTemplate {
     val cols = Seq("Name", "Owner", "Read", "Edit", "Connection")
     val rows = savedQueries.map(sq => tr(
       td(a(cls := "list-link theme-text", data("name") := sq.id.toString, href := s"#saved-query-${sq.id}")(sq.name)),
-      td(sq.owner match {
-        case Some(o) => usernameMap.get(o) match {
-          case Some(username) => span(username)
-          case None => em("Unknown")
-        }
-        case None => em("None")
+      td(usernameMap.get(sq.owner) match {
+        case Some(username) => span(username)
+        case None => em("Unknown")
       }),
       td(sq.read),
       td(sq.edit),

@@ -6,6 +6,7 @@ import models.schema.Schema
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
 import services.query.SavedQueryService
 import services.schema.SchemaService
+import services.supervisor.ActorSupervisor
 import utils.{ExceptionUtils, Logging}
 
 import scala.util.{Failure, Success, Try}
@@ -21,15 +22,17 @@ trait StartHelper extends Logging { this: SocketService =>
       None
   }
 
-  protected[this] def onStart() = {
-    log.info(s"Starting connection for user [${user.map(_.id).getOrElse("")}: ${currentUsername.getOrElse("")}].")
+  protected[this] def onStart() = ActorSupervisor.connectErrorCheck(user.id) match {
+    case Some(err) =>
+      out ! ServerError("Connection Error", err)
+    case None =>
+      log.info(s"Starting connection for user [${user.id}: ${user.username}].")
 
-    supervisor ! SocketStarted(user, id, self)
-    out ! UserSettings(user.map(_.id), currentUsername, user.map(_.profile.providerKey), userPreferences)
+      supervisor ! SocketStarted(user, id, self)
+      out ! UserSettings(user.id, user.username, user.profile.providerKey, user.preferences)
 
-    val sqq = SavedQueryService.getForUser(user, connectionId, out)
-
-    refreshSchema(false)
+      SavedQueryService.getForUser(user, connectionId, out)
+      refreshSchema(false)
   }
 
   protected[this] def refreshSchema(forceRefresh: Boolean) = {

@@ -1,15 +1,15 @@
-@(user: Option[models.user.User], activeSection: String, title: String, debug: Boolean, scripts: Seq[String] = Nil)(content: Html)(
+@(user: models.user.User, activeSection: String, title: String, debug: Boolean, scripts: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(
-  user = user,
+  user = Some(user),
   title = title,
   debug = false,
   scripts = scripts
 ) {
   <header>
-    @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey))
+    @views.html.layout.themeStyles(user.preferences.theme)
 
-    @views.html.components.userDropdown(user)
+    @views.html.components.userDropdown(Some(user))
 
     <nav id="topnav" class="theme">
       <a href="@controllers.routes.HomeController.home()" class="brand-logo center">@utils.Config.projectName</a>
@@ -39,7 +39,7 @@
 
       <ul class="right hide-on-small-only">
         <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
-          @user.map(_.username).getOrElse("Guest") <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
+          @user.username <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
         </a></li>
       </ul>
     </nav>

@@ -57,7 +57,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     id = row.as[UUID]("id"),
 
     auditType = AuditType.withName(row.as[String]("audit_type")),
-    owner = row.asOpt[UUID]("owner"),
+    owner = row.as[UUID]("owner"),
     connection = row.asOpt[UUID]("connection"),
     status = AuditStatus.withName(row.as[String]("status")),
 

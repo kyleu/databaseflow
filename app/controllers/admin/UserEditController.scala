@@ -33,7 +33,7 @@ class UserEditController @javax.inject.Inject() (
   def save(id: UUID) = withAdminSession("admin-user-save") { implicit request =>
     val form = FormUtils.getForm(request)
     val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(s"Invalid user [$id]."))
-    val isSelf = request.identity.exists(_.id == id)
+    val isSelf = request.identity.id == id
 
     val newUsername = form("username")
     val newEmail = form("email")

@@ -8,15 +8,14 @@ import models.query.{QueryCheckResult, SqlParser}
 import models.{QueryCheckResponse, ResponseMessage}
 import org.h2.jdbc.JdbcSQLException
 import org.postgresql.util.PSQLException
-import services.database.{DatabaseRegistry, DatabaseWorkerPool}
+import services.database.{DatabaseConnection, DatabaseWorkerPool}
 import utils.{ExceptionUtils, Logging}
 
 object QueryCheckService extends Logging {
   @SuppressWarnings(Array("CatchThrowable"))
-  def handleCheckQuery(connectionId: UUID, queryId: UUID, sql: String, out: ActorRef) = {
+  def handleCheckQuery(db: DatabaseConnection, queryId: UUID, sql: String, out: ActorRef) = {
     def work() = {
       //log.info(s"Checking query [$queryId] sql [$sql].")
-      val db = DatabaseRegistry.db(connectionId)
       val results = db.withConnection { conn =>
         SqlParser.split(sql).map { s =>
           try {

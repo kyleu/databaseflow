@@ -1,3 +1,4 @@
+import org.scalajs.jquery.{jQuery => $}
 import services.{InitService, NotificationService}
 
 import scala.scalajs.js.annotation.JSExport
@@ -9,6 +10,14 @@ class DatabaseFlow extends NetworkHelper with ResponseMessageHelper {
   InitService.init(sendMessage, connect)
 
   protected[this] def handleServerError(reason: String, content: String) = {
-    NotificationService.error(reason, content)
+    val lp = $("#loading-panel")
+    val isLoading = lp.css("display") == "block"
+    if (isLoading) {
+      $("#tab-loading").text("Connection Error")
+      val c = $("#loading-content", lp)
+      c.text(s"Error loading database ($reason): $content")
+    } else {
+      NotificationService.error(reason, content)
+    }
   }
 }

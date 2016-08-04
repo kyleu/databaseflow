@@ -13,9 +13,9 @@ object UserManager {
   val rowsReturned = 100
 
   def onUserSettings(us: UserSettings) = {
-    userId = us.userId
-    username = us.username
-    email = us.email
-    preferences = us.preferences
+    userId = Some(us.userId)
+    username = Some(us.username)
+    email = Some(us.email)
+    preferences = Some(us.preferences)
   }
 }

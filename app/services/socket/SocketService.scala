@@ -13,17 +13,15 @@ import services.database.core.MasterDatabase
 import utils.metrics.InstrumentedActor
 
 object SocketService {
-  def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String) = {
+  def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
     Props(SocketService(id.getOrElse(UUID.randomUUID), supervisor, connectionId, user, out, sourceAddress))
   }
 }
 
 case class SocketService(
-    id: UUID, supervisor: ActorRef, connectionId: UUID, user: Option[User], out: ActorRef, sourceAddress: String
+    id: UUID, supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String
 ) extends InstrumentedActor with StartHelper with RequestMessageHelper with TransactionHelper with DataHelper with DetailHelper {
 
-  protected[this] var currentUsername = user.flatMap(_.username)
-  protected[this] var userPreferences = user.map(_.preferences)
   protected[this] var dbOpt = attemptConnect()
   protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
 
@@ -32,13 +30,13 @@ case class SocketService(
 
   protected[this] var pendingDebugChannel: Option[ActorRef] = None
 
-  AuditRecordService.create(AuditType.Connect, user.map(_.id), Some(connectionId))
+  AuditRecordService.create(AuditType.Connect, user.id, Some(connectionId))
 
   override def preStart() = onStart()
 
   override def postStop() = {
     if (MasterDatabase.isOpen) {
-      AuditRecordService.create(AuditType.Disconnect, user.map(_.id), Some(connectionId))
+      AuditRecordService.create(AuditType.Disconnect, user.id, Some(connectionId))
     }
     supervisor ! SocketStopped(id)
   }

@@ -17,13 +17,13 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class ConnectionSettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
-    val conn = ConnectionSettings.empty
+    val conn = ConnectionSettings(UUID.randomUUID, "Empty Connection", request.identity.id)
     Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection", isNew = true)))
   }
 
   def editForm(id: UUID) = withSession("edit-form-" + id) { implicit request =>
     val addConnectionRole = Role.withName(SettingsService(models.settings.SettingKey.AddConnectionRole))
-    if (request.identity.exists(_.role.qualifies(addConnectionRole))) {
+    if (request.identity.role.qualifies(addConnectionRole)) {
       val conn = ConnectionSettingsService.getById(id).getOrElse {
         throw new IllegalArgumentException(s"Invalid connection [$id].")
       }
@@ -35,11 +35,11 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
 
   def save(connectionId: UUID) = withSession("save") { implicit request =>
     val addConnectionRole = Role.withName(SettingsService(models.settings.SettingKey.AddConnectionRole))
-    if (request.identity.exists(_.role.qualifies(addConnectionRole))) {
+    if (request.identity.role.qualifies(addConnectionRole)) {
       val connOpt = ConnectionSettingsService.getById(connectionId)
       val conn = connOpt match {
         case Some(c) => c
-        case None => ConnectionSettings(id = connectionId)
+        case None => ConnectionSettings(id = connectionId, name = "", owner = request.identity.id)
       }
       val result = ConnectionForm.form.bindFromRequest.fold(
         formWithErrors => {
@@ -49,7 +49,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
         cf => {
           val almostUpdated = conn.copy(
             name = cf.name,
-            owner = conn.owner.orElse(request.identity.map(_.id)),
+            owner = conn.owner,
             read = cf.read,
             edit = cf.edit,
             engine = DatabaseEngine.withName(cf.engine),
@@ -68,10 +68,10 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
           connOpt match {
             case Some(existing) =>
               ConnectionSettingsService.update(updated)
-              AuditRecordService.create(AuditType.EditConnection, request.identity.map(_.id), None, Some(updated.id.toString))
+              AuditRecordService.create(AuditType.EditConnection, request.identity.id, None, Some(updated.id.toString))
             case None =>
               ConnectionSettingsService.insert(updated)
-              AuditRecordService.create(AuditType.CreateConnection, request.identity.map(_.id), None, Some(updated.id.toString))
+              AuditRecordService.create(AuditType.CreateConnection, request.identity.id, None, Some(updated.id.toString))
           }
           Redirect(routes.QueryController.main(connectionId))
         }
@@ -84,7 +84,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
 
   def delete(connectionId: UUID) = withSession("delete") { implicit request =>
     ConnectionSettingsService.delete(connectionId)
-    AuditRecordService.create(AuditType.DeleteConnection, request.identity.map(_.id), None, Some(connectionId.toString))
+    AuditRecordService.create(AuditType.DeleteConnection, request.identity.id, None, Some(connectionId.toString))
     Future.successful(Redirect(routes.HomeController.home()))
   }
 }

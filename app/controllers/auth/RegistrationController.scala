@@ -60,7 +60,7 @@ class RegistrationController @javax.inject.Inject() (
             }
             val user = User(
               id = UUID.randomUUID,
-              username = Some(data.username),
+              username = data.username,
               preferences = UserPreferences(),
               profile = loginInfo,
               role = role

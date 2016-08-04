@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], connections: Seq[models.connection.ConnectionSettings])
+@(user: models.user.User, connections: Seq[models.connection.ConnectionSettings])
 <ul class="collapsible popout connection-list" data-collapsible="expandable">
 @connections.map { c =>
   <li>

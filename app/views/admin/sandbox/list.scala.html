@@ -1,5 +1,5 @@
-@(user: Option[models.user.User])(implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages)
-@layout.simple(user, "Sandbox List", debug = true) {
+@(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages)
+@layout.simple(Some(user), "Sandbox List", debug = true) {
   <ul>
     @services.sandbox.SandboxTask.all.map { s =>
       <li><a href="@controllers.admin.routes.SandboxController.sandbox(s.id)">@s.name</a></li>

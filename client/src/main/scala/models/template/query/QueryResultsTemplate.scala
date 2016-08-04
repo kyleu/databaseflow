@@ -11,7 +11,7 @@ import utils.{NumberUtils, TemplateUtils}
 import scalatags.Text.all._
 
 object QueryResultsTemplate {
-  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, index: Int) = {
+  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val hasFilter = !(qr.isStatement || qr.data.isEmpty || qr.source.isEmpty)
 
     val content = div(id := s"$resultId")(
@@ -73,7 +73,7 @@ object QueryResultsTemplate {
     )
   }
 
-  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, index: Int) = {
+  def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val rowLabel = if (qr.rowsAffected == 1) { "row" } else { "rows" }
     val content = div(id := s"$resultId")(
       a(href := "#", cls := "results-sql-link right theme-text")("SQL"),

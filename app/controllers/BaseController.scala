@@ -1,6 +1,6 @@
 package controllers
 
-import com.mohiva.play.silhouette.api.actions.UserAwareRequest
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import models.auth.AuthEnv
 import play.api.i18n.I18nSupport
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -16,10 +16,10 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
 
   override def messagesApi = ctx.messagesApi
 
-  def withAdminSession(action: String)(block: (UserAwareRequest[AuthEnv, AnyContent]) => Future[Result]) = {
-    ctx.silhouette.UserAwareAction.async { implicit request =>
+  def withAdminSession(action: String)(block: (SecuredRequest[AuthEnv, AnyContent]) => Future[Result]) = {
+    ctx.silhouette.SecuredAction.async { implicit request =>
       metrics.timer(action).timeFuture {
-        val authorized = LicenseService.isPersonalEdition || request.identity.exists(_.isAdmin)
+        val authorized = LicenseService.isPersonalEdition || request.identity.isAdmin
         if (authorized) {
           block(request)
         } else {
@@ -35,18 +35,20 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
     }
   }
 
-  def withSession(action: String)(block: (UserAwareRequest[AuthEnv, AnyContent]) => Future[Result]) = ctx.silhouette.UserAwareAction.async { implicit request =>
+  def withSession(action: String)(block: (SecuredRequest[AuthEnv, AnyContent]) => Future[Result]) = ctx.silhouette.UserAwareAction.async { implicit request =>
     if (!LicenseService.hasLicense) {
       Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing(
         "success" -> "Please configure your license for Database Flow."
       ))
-    } else if (LicenseService.isTeamEdition && request.identity.isEmpty) {
-      Future.successful(Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing(
-        "error" -> "You must sign in or register before accessing Database Flow."
-      ))
     } else {
-      metrics.timer(action).timeFuture {
-        block(request)
+      request.identity match {
+        case Some(u) => metrics.timer(action).timeFuture {
+          val auth = request.authenticator.getOrElse(throw new IllegalStateException("Somehow not logged in..."))
+          block(SecuredRequest(u, auth, request))
+        }
+        case None => Future.successful(Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing(
+          "error" -> "You must sign in or register before accessing Database Flow."
+        ))
       }
     }
   }

@@ -7,13 +7,12 @@ import models.engine.DatabaseEngine.PostgreSQL
 
 object ConnectionSettings {
   val defaultEngine = PostgreSQL
-  val empty = ConnectionSettings()
 }
 
 case class ConnectionSettings(
-    id: UUID = UUID.randomUUID,
-    name: String = "",
-    owner: Option[UUID] = None,
+    id: UUID,
+    name: String,
+    owner: UUID,
     read: String = "visitor",
     edit: String = "private",
     description: String = "",

@@ -1,5 +1,4 @@
-@(user: Option[models.user.User], connectionId: java.util.UUID)
-<div id="export-modal" class="modal">
+@(connectionId: java.util.UUID)<div id="export-modal" class="modal">
   <form action="@routes.QueryController.export(connectionId)" method="post">
     <input id="input-export-query-id" name="queryId" type="hidden" value="" />
     <input id="input-export-sql" name="sql" type="hidden" value="" />

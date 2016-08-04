@@ -16,17 +16,10 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
 
-  def getVisible(userId: Option[UUID]) = {
-    val ownerClause = userId match {
-      case Some(uid) => """("owner" = ? or "owner" is null)"""
-      case None => """("owner" is null)"""
-    }
+  def getVisible(userId: UUID) = {
+    val ownerClause = """("owner" = ? or "owner" is null)"""
     val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
-
-    val values = userId match {
-      case Some(uid) => Seq(uid)
-      case None => Nil
-    }
+    val values = Seq(userId)
 
     GetAll(
       whereClause = Some(permClause),
@@ -35,17 +28,10 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
     )
   }
 
-  def getForUser(userId: Option[UUID], connectionId: UUID) = {
-    val ownerClause = userId match {
-      case Some(uid) => """("owner" = ? or "owner" is null)"""
-      case None => """("owner" is null)"""
-    }
+  def getForUser(userId: UUID, connectionId: UUID) = {
+    val ownerClause = """"owner" = ?"""
     val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
-
-    val values = userId match {
-      case Some(uid) => Seq(uid, connectionId)
-      case None => Seq(connectionId)
-    }
+    val values = Seq(userId, connectionId)
 
     GetAll(
       whereClause = Some(permClause + """ and ("connection" = ? or "connection" is null)"""),
@@ -74,7 +60,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
       description = row.asOpt[String]("description"),
       sql = row.as[String]("sql"),
 
-      owner = row.asOpt[UUID]("owner"),
+      owner = row.as[UUID]("owner"),
       connection = row.asOpt[UUID]("connection"),
       read = row.as[String]("read"),
       edit = row.as[String]("edit"),

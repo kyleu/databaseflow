@@ -18,6 +18,8 @@ class UserSearchService @javax.inject.Inject() () extends IdentityService[User] 
     MasterDatabase.query(UserQueries.getById(Seq(id))).map(UserCache.cacheUser)
   }
 
+  def getUsername(id: UUID): Option[String] = UserCache.getUser(id).map(_.username).orElse(MasterDatabase.query(UserQueries.GetUsername(id)))
+
   def retrieve(username: String): Option[User] = MasterDatabase.query(UserQueries.FindUserByUsername(username))
 
   override def retrieve(loginInfo: LoginInfo) = UserCache.getUserByLoginInfo(loginInfo) match {

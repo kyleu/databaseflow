@@ -19,7 +19,7 @@ object UserQueries extends BaseQueries[User] {
   val getById = GetById
   def getAll(orderBy: String = "email") = GetAll(orderBy = orderBy)
   val count = Count(s"""select count(*) as c from "$tableName" """)
-  def searchCount(q: String, groupBy: Option[String] = None) = new SearchCount(q, groupBy)
+  def searchCount(q: String, groupBy: Option[String] = None) = SearchCount(q, groupBy)
   val search = Search
   val removeById = RemoveById
 
@@ -69,7 +69,7 @@ object UserQueries extends BaseQueries[User] {
 
   override protected def fromRow(row: Row) = {
     val id = row.as[UUID]("id")
-    val username = row.asOpt[String]("username")
+    val username = row.as[String]("username")
     val prefsString = row.as[String]("prefs")
     val preferences = read[UserPreferences](prefsString)
     val profile = LoginInfo("credentials", row.as[String]("email"))

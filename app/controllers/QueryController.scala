@@ -40,8 +40,8 @@ class QueryController @javax.inject.Inject() (
 
   def connect(connectionId: UUID) = WebSocket.acceptOrResult[RequestMessage, ResponseMessage] { request =>
     implicit val req = Request(request, AnyContentAsEmpty)
-    ctx.silhouette.UserAwareRequestHandler { userAwareRequest =>
-      Future.successful(HandlerResult(Ok, Some(userAwareRequest.identity)))
+    ctx.silhouette.SecuredRequestHandler { securedRequest =>
+      Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
     }.map {
       case HandlerResult(r, Some(user)) => Right(ActorFlow.actorRef { out =>
         SocketService.props(None, ctx.supervisor, connectionId, user, out, request.remoteAddress)
@@ -56,7 +56,10 @@ class QueryController @javax.inject.Inject() (
     val format = form.getOrElse("format", throw new IllegalArgumentException("Missing [format] parameter."))
     val filename = form.getOrElse("filename", throw new IllegalArgumentException("Missing [filename] parameter."))
 
-    val db = DatabaseRegistry.db(connectionId)
+    val db = DatabaseRegistry.databaseFor(request.identity, connectionId) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
 
     val ts = DateUtils.now.toString("yyyy-MM-dd")
     val finalName = s"Database Flow $filename Export $ts"

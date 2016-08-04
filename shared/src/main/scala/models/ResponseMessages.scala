@@ -18,7 +18,7 @@ case object SendTrace extends ResponseMessage
 case class DebugResponse(key: String, data: String) extends ResponseMessage
 case class Disconnected(reason: String) extends ResponseMessage
 
-case class UserSettings(userId: Option[UUID], username: Option[String], email: Option[String], preferences: Option[UserPreferences]) extends ResponseMessage
+case class UserSettings(userId: UUID, username: String, email: String, preferences: UserPreferences) extends ResponseMessage
 
 case class SavedQueryResultResponse(savedQueries: Seq[SavedQuery], usernames: Map[UUID, String], durationMs: Int) extends ResponseMessage
 

@@ -5,7 +5,6 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.queries.audit.{AuditRecordQueries, AuditReportQueries}
-import models.user.User
 import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory, RemoveAuditHistory}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.core.MasterDatabase
@@ -18,19 +17,16 @@ object AuditRecordService extends Logging {
   val rowLimit = 100
 
   def getAll(limit: Int, offset: Int) = MasterDatabase.query(AuditRecordQueries.GetPage(None, limit, offset))
-  def getForUser(userId: Option[UUID], limit: Int, offset: Int) = MasterDatabase.query(AuditReportQueries.GetForUser(userId, limit, offset))
+  def getForUser(userId: UUID, limit: Int, offset: Int) = MasterDatabase.query(AuditReportQueries.GetForUser(userId, limit, offset))
 
-  def handleGetQueryHistory(connectionId: UUID, user: Option[User], gqh: GetQueryHistory, out: ActorRef) = {
-    val matching = MasterDatabase.query(AuditReportQueries.GetMatchingQueries(connectionId, user.map(_.id), gqh.limit, gqh.offset))
+  def handleGetQueryHistory(connectionId: UUID, userId: UUID, gqh: GetQueryHistory, out: ActorRef) = {
+    val matching = MasterDatabase.query(AuditReportQueries.GetMatchingQueries(connectionId, userId, gqh.limit, gqh.offset))
     out ! AuditRecordResponse(matching)
   }
 
-  def handleRemoveAuditHistory(userId: Option[UUID], connectionId: Option[UUID], rqh: RemoveAuditHistory, out: ActorRef) = rqh.id match {
+  def handleRemoveAuditHistory(userId: UUID, connectionId: Option[UUID], rqh: RemoveAuditHistory, out: ActorRef) = rqh.id match {
     case Some(auditId) => AuditRecordService.removeAudit(auditId, Some(out))
-    case None => userId match {
-      case Some(id) => AuditRecordService.removeAuditsForUser(id, connectionId, Some(out))
-      case None => AuditRecordService.removeAuditsForGuest(connectionId, Some(out))
-    }
+    case None => AuditRecordService.removeAuditsForUser(userId, connectionId, Some(out))
   }
 
   def removeAudit(id: UUID, out: Option[ActorRef]) = if (delete(id) == 1) {
@@ -48,7 +44,7 @@ object AuditRecordService extends Logging {
   def start(
     auditId: UUID,
     t: AuditType,
-    owner: Option[UUID] = None,
+    owner: UUID,
     connection: Option[UUID] = None,
     sql: Option[String] = None
   ) = insert(AuditRecord(
@@ -71,7 +67,7 @@ object AuditRecordService extends Logging {
     MasterDatabase.executeUpdate(AuditRecordQueries.Error(auditId, message, elapsed))
   }
 
-  def create(t: AuditType, owner: Option[UUID], connection: Option[UUID], sql: Option[String] = None, elapsed: Int = 0) = insert(AuditRecord(
+  def create(t: AuditType, owner: UUID, connection: Option[UUID], sql: Option[String] = None, elapsed: Int = 0) = insert(AuditRecord(
     auditType = t,
     owner = owner,
     connection = connection,

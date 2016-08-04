@@ -33,8 +33,8 @@ object QueryEditorTemplate {
 
   val savedQueryViewLinks = Seq(a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New"))
 
-  def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: Option[UUID]) = {
-    val canEdit = userId.forall(uid => sq.owner.contains(uid))
+  def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: UUID) = {
+    val canEdit = userId == sq.owner
     val modificationLinks = if (canEdit) {
       savedQueryEditLinks
     } else {

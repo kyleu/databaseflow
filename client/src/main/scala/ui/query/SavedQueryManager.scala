@@ -44,7 +44,8 @@ object SavedQueryManager {
 
   private[this] def addSavedQuery(savedQuery: SavedQuery) = {
     val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, UserManager.userId).toString)
+    val userId = UserManager.userId.getOrElse(throw new IllegalStateException("Missing user details."))
+    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, userId).toString)
 
     def close() = {
       QueryManager.closeQuery(savedQuery.id)

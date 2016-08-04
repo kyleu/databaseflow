@@ -10,10 +10,10 @@ import services.database.core.{MasterDatabase, ResultCacheDatabase}
 
 object ConnectionSettingsService {
   def getAll = MasterDatabase.query(ConnectionSettingsQueries.getAll()) ++ MasterDatabase.settings.toSeq
-  def getVisible(user: Option[User]) = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user)) ++ MasterDatabase.settings.toSeq
+  def getVisible(user: User) = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user)) ++ MasterDatabase.settings.toSeq
 
-  def canRead(user: Option[User], cs: ConnectionSettings) = Role.matchPermissions(user, cs.owner, "connection", "read", cs.read)
-  def canEdit(user: Option[User], cs: ConnectionSettings) = if (cs.id == MasterDatabase.connectionId) {
+  def canRead(user: User, cs: ConnectionSettings) = Role.matchPermissions(user, cs.owner, "connection", "read", cs.read)
+  def canEdit(user: User, cs: ConnectionSettings) = if (cs.id == MasterDatabase.connectionId) {
     false -> "Cannot edit master database."
   } else {
     Role.matchPermissions(user, cs.owner, "connection", "edit", cs.edit)

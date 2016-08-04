@@ -50,7 +50,7 @@ object PlanExecutionService extends Logging {
         def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanExplainError", t)
         DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
       case None =>
-        out ! ServerError("explain-not-supported", s"Explain is not avaialble for [$engine].")
+        out ! ServerError("Not Supported", s"Explain is not avaialble for [$engine].")
     }
   }
 
@@ -66,7 +66,7 @@ object PlanExecutionService extends Logging {
         def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "PlanAnalyzeError", t)
         DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
       case None =>
-        out ! ServerError("analyze-not-supported", s"Analyze is not avaialble for [$engine].")
+        out ! ServerError("Not Supported", s"Analyze is not avaialble for [$engine].")
     }
   }
 }

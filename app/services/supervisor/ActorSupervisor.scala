@@ -25,13 +25,20 @@ object ActorSupervisor {
     VersionService.upgradeIfNeeded(ws)
   }
 
-  case class SocketRecord(userId: Option[UUID], name: String, actorRef: ActorRef, started: LocalDateTime)
+  case class SocketRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
+
+  protected val sockets = collection.mutable.HashMap.empty[UUID, SocketRecord]
+  def connectErrorCheck(userId: UUID) = if (LicenseService.isPersonalEdition && sockets.exists(_._2.userId != userId)) {
+    val name = sockets.find(_._2.userId != userId).map(_._2.name).getOrElse("a user")
+    Some(s"Personal Edition allows only one user to connect at a time, and [$name] is already connected.")
+  } else {
+    None
+  }
 }
 
 class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor with Logging {
   import services.supervisor.ActorSupervisor._
 
-  protected[this] val sockets = collection.mutable.HashMap.empty[UUID, SocketRecord]
   protected[this] val socketsCounter = metrics.counter("active-connections")
 
   override def preStart() {
@@ -64,28 +71,28 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
   }
 
   private[this] def handleGetSystemStatus() = {
-    val connectionStatuses = sockets.toList.sortBy(_._2.name).map(x => x._1 -> x._2.name)
+    val connectionStatuses = ActorSupervisor.sockets.toList.sortBy(_._2.name).map(x => x._1 -> x._2.name)
     sender() ! SystemStatus(connectionStatuses)
   }
 
-  private[this] def handleSendSocketTrace(ct: SendSocketTrace) = sockets.find(_._1 == ct.id) match {
+  private[this] def handleSendSocketTrace(ct: SendSocketTrace) = ActorSupervisor.sockets.find(_._1 == ct.id) match {
     case Some(c) => c._2.actorRef forward ct
-    case None => sender() ! ServerError(s"Unknown Socket [${ct.id}].", ct.id.toString)
+    case None => sender() ! ServerError(s"Unknown Socket", ct.id.toString)
   }
 
-  private[this] def handleSendClientTrace(ct: SendClientTrace) = sockets.find(_._1 == ct.id) match {
+  private[this] def handleSendClientTrace(ct: SendClientTrace) = ActorSupervisor.sockets.find(_._1 == ct.id) match {
     case Some(c) => c._2.actorRef forward ct
-    case None => sender() ! ServerError(s"Unknown Client Socket [${ct.id}].", ct.id.toString)
+    case None => sender() ! ServerError(s"Unknown Client Socket", ct.id.toString)
   }
 
-  protected[this] def handleSocketStarted(user: Option[User], socketId: UUID, socket: ActorRef) {
-    log.debug(s"Socket [$socketId] registered to [${user.map(_.username).getOrElse(user.map(_.id).getOrElse("Guest"))}] with path [${socket.path}].")
-    sockets(socketId) = SocketRecord(user.map(_.id), user.flatMap(_.username).getOrElse("Guest"), socket, DateUtils.now)
+  protected[this] def handleSocketStarted(user: User, socketId: UUID, socket: ActorRef) {
+    log.debug(s"Socket [$socketId] registered to [${user.username}] with path [${socket.path}].")
+    ActorSupervisor.sockets(socketId) = SocketRecord(user.id, user.username, socket, DateUtils.now)
     socketsCounter.inc()
   }
 
   protected[this] def handleSocketStopped(id: UUID) {
-    sockets.remove(id) match {
+    ActorSupervisor.sockets.remove(id) match {
       case Some(sock) =>
         socketsCounter.dec()
         log.debug(s"Connection [$id] [${sock.actorRef.path}] stopped.")

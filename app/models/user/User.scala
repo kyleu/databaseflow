@@ -7,12 +7,12 @@ import org.joda.time.LocalDateTime
 import utils.DateUtils
 
 object User {
-  val mock = User(UUID.fromString("11111111-1111-1111-1111-111111111111"), Some("Test User"), UserPreferences.empty, LoginInfo("anonymous", "guest"))
+  val mock = User(UUID.fromString("11111111-1111-1111-1111-111111111111"), "Test User", UserPreferences.empty, LoginInfo("anonymous", "guest"))
 }
 
 case class User(
     id: UUID,
-    username: Option[String] = None,
+    username: String,
     preferences: UserPreferences,
     profile: LoginInfo,
     role: Role = Role.Visitor,

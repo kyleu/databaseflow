@@ -8,7 +8,7 @@ case class SavedQuery(
   description: Option[String] = None,
   sql: String = "",
 
-  owner: Option[UUID] = None,
+  owner: UUID,
   connection: Option[UUID] = None,
   read: String = "visitor",
   edit: String = "private",

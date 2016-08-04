@@ -1,6 +1,6 @@
-@(user: Option[models.user.User], debug: Boolean)(
+@(user: models.user.User, debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(user, utils.Config.projectName, debug = debug) {
+)@layout.simple(Some(user), utils.Config.projectName, debug = debug) {
   <form id="profile-form" action="" method="post">
     <div class="row">
       <div class="col s12">
@@ -12,13 +12,11 @@
             <span class="card-title"><i class="fa @models.template.Icons.user"></i> @Messages("profile.title")</span>
             <div class="row">
               <div class="input-field col s12">
-              @defining(user.map(_.username).getOrElse("Guest")) { username =>
-                <input id="input-username" type="text" class="form-control validate" name="username" value="@username" />
+                <input id="input-username" type="text" class="form-control validate" name="username" value="@user.username" />
                 <label for="input-username" class="theme-text">@Messages("profile.form.username")</label>
-              }
               </div>
             </div>
-            <input id="input-theme" type="hidden" class="" name="theme" value="@user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey)" />
+            <input id="input-theme" type="hidden" class="" name="theme" value="@user.preferences.theme" />
             <label for="input-theme" class="theme-text">@Messages("profile.form.theme")</label>
             <div id="theme-choices">
               @models.template.Theme.values.map { t =>
@@ -40,7 +38,7 @@
 
   <script>
     $(function() {
-      var activeSwatch = '@user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey)';
+      var activeSwatch = '@user.preferences.theme';
 
       $(".swatch").click(function(e) {
         var el = $(e.currentTarget);

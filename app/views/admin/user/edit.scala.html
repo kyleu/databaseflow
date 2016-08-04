@@ -1,4 +1,4 @@
-@(self: Option[models.user.User], debug: Boolean, user: models.user.User)(
+@(self: models.user.User, debug: Boolean, user: models.user.User)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(self, "users", messages("admin.users.title"), debug = debug) {
   <form action="@controllers.admin.routes.UserEditController.save(user.id)" method="post">
@@ -6,12 +6,12 @@
       <div class="card-title">
         <i class="fa @models.template.Icons.user"></i>
         Edit @user.username
-        @if(self.map(_.id).contains(user.id)) { <span>(You)</span> }
+        @if(self.id == user.id) { <span>(You)</span> }
       </div>
 
       <div class="row">
         <div class="input-field col s12">
-          <input id="input-username" type="text" class="form-control validate" name="username" value="@user.username.getOrElse("")" />
+          <input id="input-username" type="text" class="form-control validate" name="username" value="@user.username" />
           <label for="input-username">@Messages("registration.form.username")</label>
         </div>
       </div>

@@ -3,6 +3,7 @@ package services.database.core
 import java.util.UUID
 
 import models.connection.ConnectionSettings
+import models.user.User
 import services.config.{ConfigFileService, DatabaseConfig}
 import services.database.{DatabaseConnection, DatabaseRegistry}
 import utils.Logging
@@ -41,16 +42,17 @@ abstract class CoreDatabase extends Logging {
 
     settings = Some(ConnectionSettings(
       id = connectionId,
-      engine = config.engine,
       name = title,
+      owner = User.mock.id,
       description = description,
       urlOverride = Some(finalUrl),
       username = config.username,
-      password = config.password
+      password = config.password,
+      engine = config.engine
     ))
 
     val database = try {
-      DatabaseRegistry.db(connectionId)
+      DatabaseRegistry.db(User.mock, connectionId)
     } catch {
       case NonFatal(ex) =>
         val msg = s"Unable to connect to ${name.toLowerCase} database using engine [${config.engine}] with url [$finalUrl]."

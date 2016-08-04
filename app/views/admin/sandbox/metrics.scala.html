@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], json: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(user: models.user.User, json: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.admin(user, "settings", "Database Flow Metrics", debug = false) {
   <div class="row">
     <div class="col s12">
