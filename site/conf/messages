@@ -1,6 +1,13 @@
+# General
+general.save = Save
+
 # Static
 static.copyright = © 2016 Database Flow
 
 # Licensing
 license.success = Your Database Flow License
 license.continue = Continue
+license.form.name = Name
+license.form.email = Email
+license.form.prompt = Fill out this form, and you'll get your license immediately.
+license.form.personal = New Personal License
