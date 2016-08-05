@@ -29,7 +29,7 @@ class RegistrationController @javax.inject.Inject() (
 ) extends BaseController {
   def registrationForm = withoutSession("form") { implicit request =>
     if (SettingsService.allowRegistration) {
-      Future.successful(Ok(views.html.auth.register(UserForms.registrationForm)))
+      Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm)))
     } else {
       Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> "You cannot sign up at this time. Contact your administrator."))
     }
@@ -40,7 +40,7 @@ class RegistrationController @javax.inject.Inject() (
       throw new IllegalStateException("Unable to sign up at this time. Contact your administrator.")
     }
     UserForms.registrationForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.auth.register(form))),
+      form => Future.successful(BadRequest(views.html.auth.register(request.identity, form))),
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userSearchService.retrieve(loginInfo).flatMap {

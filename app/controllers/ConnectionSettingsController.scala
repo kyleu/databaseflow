@@ -17,7 +17,7 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class ConnectionSettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
-    val conn = ConnectionSettings(UUID.randomUUID, "Empty Connection", request.identity.id)
+    val conn = ConnectionSettings(UUID.randomUUID, "", request.identity.id)
     Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection", isNew = true)))
   }
 

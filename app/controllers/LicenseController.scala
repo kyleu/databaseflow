@@ -14,10 +14,11 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
   def form() = withoutSession("license-form") { implicit request =>
     val lic = LicenseService.getLicense
     val licContent = LicenseService.getLicenseContent
-    Future.successful(Ok(views.html.license.form(ctx.config.debug, lic, licContent)))
+
+    Future.successful(Ok(views.html.license.form(request.identity, ctx.config.debug, lic, licContent)))
   }
 
-  def save() = withoutSession("license-form") { implicit request =>
+  def save() = withoutSession("license-save") { implicit request =>
     val form = FormUtils.getForm(request)
     val content = form.getOrElse("content", throw new IllegalStateException("Missing license content.")).trim
 

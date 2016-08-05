@@ -22,12 +22,12 @@ class AuthenticationController @javax.inject.Inject() (
     credentialsProvider: CredentialsProvider
 ) extends BaseController {
   def signInForm = withoutSession("form") { implicit request =>
-    Future.successful(Ok(views.html.auth.signin(UserForms.signInForm)))
+    Future.successful(Ok(views.html.auth.signin(request.identity, UserForms.signInForm)))
   }
 
   def authenticateCredentials = withoutSession("authenticate") { implicit request =>
     UserForms.signInForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.auth.signin(form))),
+      form => Future.successful(BadRequest(views.html.auth.signin(request.identity, form))),
       credentials => {
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
           val result = Redirect(controllers.routes.HomeController.home())
