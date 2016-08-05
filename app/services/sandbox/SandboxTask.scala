@@ -7,11 +7,7 @@ import scala.concurrent.Future
 object SandboxTask {
   val all = Seq(
     HtmlSandbox,
-    ShowSettings,
-    Testbed,
-    DatabaseTest,
-    CacheResultsTest,
-    RebuildMaster
+    Testbed
   )
 
   val byId = all.map(x => x.id -> x).toMap
