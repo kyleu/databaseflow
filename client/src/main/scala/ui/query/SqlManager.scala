@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.CheckQuery
 import models.query.SqlParser
+import org.scalajs.dom
 import org.scalajs.jquery.JQuery
 import ui.EditorCreationHelper
 import utils.NetworkMessage
@@ -77,8 +78,13 @@ object SqlManager {
 
   def check(queryId: UUID) = {
     val sql = getSql(queryId)
-    sqlChecks = sqlChecks + (queryId -> sql)
-    NetworkMessage.sendMessage(CheckQuery(queryId, sql))
+    dom.window.setTimeout(() => {
+      val currentSql = getSql(queryId)
+      if (currentSql == sql) {
+        sqlChecks = sqlChecks + (queryId -> sql)
+        NetworkMessage.sendMessage(CheckQuery(queryId, sql))
+      }
+    }, 2000)
   }
 
   def closeQuery(queryId: UUID): Unit = {
