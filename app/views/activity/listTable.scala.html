@@ -1,12 +1,20 @@
 @(
-    activity: Seq[models.audit.AuditRecord],
-    orderBy: Option[(String, Boolean)],
-    removeCall: Option[(java.util.UUID) => Call],
-    userService: Option[services.user.UserSearchService]
-)
+  activity: Seq[models.audit.AuditRecord],
+  orderBy: Option[(String, Boolean)],
+  removeCall: Option[(java.util.UUID) => Call],
+  userService: Option[services.user.UserSearchService]
+)(implicit messages: Messages)
+
 @th(key: String) = {
   @if(orderBy.map(_._1).contains(key)) {
-    <th>@key</th>
+    <th>
+      @key
+      @if(orderBy.exists(_._2)) {
+        <i class="fa @models.template.Icons.sortedAsc"></i>
+      } else {
+        <i class="fa @models.template.Icons.sortedDesc"></i>
+      }
+    </th>
   } else {
     <th>@key</th>
   }
@@ -15,13 +23,13 @@
   <thead>
     <tr>
       <th></th>
-      @th("Type")
-      @if(userService.isDefined) { @th("Owner") }
-      @th("Connection")
-      @th("Status")
-      @th("Rows")
-      @th("Elapsed")
-      @th("Occurred")
+      @th(messages("th.type"))
+      @if(userService.isDefined) { @th(messages("th.owner")) }
+      @th(messages("th.connection"))
+      @th(messages("th.status"))
+      @th(messages("th.rows"))
+      @th(messages("th.elapsed"))
+      @th(messages("th.occurred"))
       <th></th>
     </tr>
   </thead>

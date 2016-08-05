@@ -1,4 +1,4 @@
-@(connectionId: java.util.UUID)<div id="export-modal" class="modal">
+@(connectionId: java.util.UUID)(implicit messages: Messages)<div id="export-modal" class="modal">
   <form action="@routes.QueryController.export(connectionId)" method="post">
     <input id="input-export-query-id" name="queryId" type="hidden" value="" />
     <input id="input-export-sql" name="sql" type="hidden" value="" />
@@ -13,14 +13,14 @@
                   <input id="input-export-format-csv" name="format" type="radio" value="csv" checked="checked" />
                   <label for="input-export-format-csv">
                     <code>csv</code><br/>
-                    <em>Comma Separated Values</em>
+                    <em>@messages("modal.export.csv")</em>
                   </label>
                 </p>
                 <p>
                   <input id="input-export-format-xlsx" name="format" type="radio" value="xlsx" />
                   <label for="input-export-format-xlsx">
                     <code>xlsx</code><br/>
-                    <em>Microsoft Excel</em>
+                    <em>@messages("modal.export.excel")</em>
                   </label>
                 </p>
                 <div class="clear"></div>
@@ -31,8 +31,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="modal-action right btn theme waves-effect waves-light ">Export</button>
-      <a id="export-cancel-link" href="#" class="modal-action right btn-flat theme-text">Cancel</a>
+      <button type="submit" class="modal-action right btn theme waves-effect waves-light ">@messages("modal.export.action")</button>
+      <a id="export-cancel-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>
       <div style="clear: both;"></div>
     </div>
   </form>

@@ -1,10 +1,10 @@
-@()<div id="reconnect-modal" class="modal">
+@()(implicit messages: Messages)<div id="reconnect-modal" class="modal">
   <div class="modal-content">
-    <p>Connection error. Would you like to retry?</p>
-    <div id="reconnect-error-content">Unknown Error</div>
+    <p>@messages("modal.reconnect.prompt")</p>
+    <div id="reconnect-error-content"></div>
   </div>
   <div class="modal-footer">
-    <a id="reconnect-action-link" href="#" class="modal-action right btn theme waves-effect waves-light">Reconnect</a>
+    <a id="reconnect-action-link" href="#" class="modal-action right btn theme waves-effect waves-light">@messages("modal.reconnect.action")</a>
     <div style="clear: both;"></div>
   </div>
 </div>

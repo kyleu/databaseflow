@@ -7,17 +7,17 @@
         <div class="card">
           <div class="card-content">
             <div class="right">
-              <a class="theme-text" href="@controllers.routes.ProfileController.changePasswordForm">@Messages("profile.change.password")</a>
+              <a class="theme-text" href="@controllers.routes.ProfileController.changePasswordForm">@messages("profile.change.password")</a>
             </div>
-            <span class="card-title"><i class="fa @models.template.Icons.user"></i> @Messages("profile.title")</span>
+            <span class="card-title"><i class="fa @models.template.Icons.user"></i> @messages("profile.title")</span>
             <div class="row">
               <div class="input-field col s12">
                 <input id="input-username" type="text" class="form-control validate" name="username" value="@user.username" />
-                <label for="input-username" class="theme-text">@Messages("profile.form.username")</label>
+                <label for="input-username" class="theme-text">@messages("profile.form.username")</label>
               </div>
             </div>
             <input id="input-theme" type="hidden" class="" name="theme" value="@user.preferences.theme" />
-            <label for="input-theme" class="theme-text">@Messages("profile.form.theme")</label>
+            <label for="input-theme" class="theme-text">@messages("profile.form.theme")</label>
             <div id="theme-choices">
               @models.template.Theme.values.map { t =>
                 <div id="swatch-@t.id" class="swatch z-depth-1" data-name="@t.id" data-color="@t.color" style="background-color : @t.color;">
@@ -27,8 +27,8 @@
             </div>
           </div>
           <div class="card-action">
-            <button id="save-button" class="right btn theme waves-effect waves-light" type="submit">@Messages("profile.save")</button>
-            <a class="right btn-flat theme-text" href="@routes.HomeController.home()">@Messages("profile.cancel")</a>
+            <button id="save-button" class="right btn theme waves-effect waves-light" type="submit">@messages("profile.save")</button>
+            <a class="right btn-flat theme-text" href="@routes.HomeController.home()">@messages("profile.cancel")</a>
             <div style="clear: both;"></div>
           </div>
         </div>

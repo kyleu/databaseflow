@@ -1,9 +1,43 @@
+# General
+general.back.title = Back to Connection List
+general.sql = SQL
+general.error = Error
+general.about = About
+general.save = Save
+general.cancel = Cancel
+general.delete = Delete
+general.ok = OK
+general.edit = Edit
+
+# Table Headers
+th.columns = Cols
+th.connection = Connection
+th.created = Created
+th.duration = Dur
+th.elapsed = Elapsed
+th.email = Email
+th.edition = Edition
+th.first = 1st
+th.issued = Issued
+th.last.accessed = Last Accessed
+th.name = Name
+th.occurred = Occurred
+th.owner = Owner
+th.role = Role
+th.rows = Rows
+th.status = Status
+th.table = Table
+th.theme = Theme
+th.type = Type
+th.username = Username
+
 # Index Page
-index.welcome = Welcome to Database Flow! Here's a few words about the app. Maybe a slogan or something.
+index.welcome = Welcome to Database Flow! Here''s a few words about the app. Maybe a slogan or something.
+index.no.connections = Add your first connection by clicking the link below.
+index.new.connection = New Connection
 
 # License
 license.new.form = License Details
-license.save = Save
 
 # Registration
 registration.title = Register
@@ -17,31 +51,98 @@ registration.form.password = Password
 registration.form.password.confirm = Confirm Password
 
 registration.passwords.do.not.match = Passwords do not match
+registration.already.member = Already a member?
 
 # Authentication
 authentication.call.to.action = Sign in to {0}
 authentication.sign.in = Sign In
+authentication.sign.out = Sign Out
 authentication.form.email = Email Address
 authentication.form.password = Password
 authentication.invalid.credentials = Invalid credentials
+authentication.not.member = Not a member?
+authentication.registration.disabled = Registration is disabled on this server. Contact your administrator to get an account.
 
 # Profile
-profile.title = User Profile
-profile.activity.title = User Activity
+profile.title = Profile
 profile.save = Save Changes
 profile.cancel = Cancel
 profile.change.password = Change Password
 profile.change.password.old = Old Password
 profile.change.password.new = New Password
 profile.change.password.confirm = Confirm New Password
-profile.form.username = Name
+profile.form.username = Username
 profile.form.theme = Theme
 
+# Activity
+activity.title = Activity
+activity.profile.title = User Activity
+activity.admin.title = System Activity
+activity.no.results = No activity recorded in database.
+activity.load.more = Load {0} More
+activity.remove.all = Remove All Activity
+activity.confirm.remove.user = Are you sure you wish to remove all your activity?
+activity.confirm.remove.all = Are you sure you wish to all activity from the system?
+
+# Connection Form
+connection.permissions.available.to = Available To
+connection.permissions.editable.by = Editable By
+connection.name = Connection Name
+connection.engine = Database Engine
+connection.username = Username
+connection.password = Password
+connection.url = URL
+connection.fields = Fields
+connection.host = Host
+connection.port = Port
+connection.db.name = Database Name
+connection.jdbc.url = Jdbc URL
+connection.description = Description
+
+# Query
+query.title = Query
+query.loading = Loading {0}...
+query.search = Search
+query.tx.begin = Begin Transaction
+query.tx.none = No active transaction.
+query.tx.commit = Commit Transaction
+query.tx.rollback = Rollback
+query.sidenav.loading = Loading...
+query.sidenav.new = New Query
+query.sidenav.history = Query History
+query.sidenav.refresh = Refresh Schema
+query.sidenav.tables = Tables
+query.sidenav.views = Views
+query.sidenav.procedures = Stored Procedures
+query.sidenav.help = Help
+query.sidenav.feedback = Feedback
+query.sidenav.about = About {0}
+query.permissions.everyone = Everyone
+query.permissions.registered.users = Registered Users
+query.permissions.administrators = Administrators
+query.permissions.only.myself = Only Myself
+
+# Modals
+modal.confirm.prompt = Are you sure?
+modal.export.action = Export
+modal.export.csv = Comma Separated Values
+modal.export.excel = Microsoft Excel
+modal.reconnect.prompt = Connection error. Would you like to retry?
+modal.reconnect.action = Reconnect
+modal.save.query.name = Query Name
+modal.save.description = Description
+modal.save.available.from = Available From
+modal.save.all.databases = All Databases
+modal.save.this.database = This Database Only
+
 # Admin
+admin.title = Administration
+admin.index.title = Database Flow Administration
 admin.settings.title = Settings
-admin.users.title = User Management
 admin.results.title = Cached Results
-admin.activity.title = System Activity
+admin.import.title = System Import/Export
+admin.users.title = User Management
+admin.users.confirm = Are you certain you want to delete this user ({0})?
 
 # Static
 static.copyright = © 2016 Database Flow

@@ -1,10 +1,10 @@
 @(user: models.user.User, json: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.admin(user, "settings", "Database Flow Metrics", debug = false) {
+@layout.admin(user, "settings", s"${utils.Config.projectName} Metrics", debug = false) {
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">Database Flow Metrics</span>
+          <span class="card-title">@utils.Config.projectName Metrics</span>
           <pre class="z-depth-1" style="padding: 15px;">@json</pre>
         </div>
       </div>

@@ -1,0 +1,22 @@
+@(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@layout.admin(user, "", messages("admin.index.title"), debug = debug) {
+  <div class="card-content">
+    <div class="card-title">@messages("admin.index.title")</div>
+
+    <div class="row">
+      <div class="col s12">
+        Use the menu above or the links below to get started!
+        <ul>
+          <li><a class="theme-text" href="@controllers.admin.routes.SettingsController.settings()">Edit Settings</a></li>
+          <li><a class="theme-text" href="@controllers.admin.routes.UserEditController.users()">Manage Users</a></li>
+          <li><a class="theme-text" href="@controllers.admin.routes.ResultCacheController.results()">View Cached Query Results</a></li>
+          <li><a class="theme-text" href="@controllers.admin.routes.ActivityController.activity()">Show System Activity</a></li>
+          <li><a class="theme-text" href="@controllers.admin.routes.AdminController.importForm()">System Import/Export</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card-action">
+    <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.back.title")</a>
+  </div>
+}

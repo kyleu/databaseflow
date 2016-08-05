@@ -1,4 +1,4 @@
-@(key: String, v: String, icon: String, title: String)
+@(key: String, v: String, icon: String, title: String)(implicit messages: Messages)
 <div class="input-field col s12 m6">
   <div class="card-panel option-panel">
     <h6><i class="fa @{icon}"></i> @title</h6>
@@ -8,7 +8,7 @@
       } else {
         <input id="form-@key-visitor" name="@key" type="radio" value="visitor" />
       }
-      <label for="form-@key-visitor">Everyone</label>
+      <label for="form-@key-visitor">@messages("query.permissions.everyone")</label>
     </p>
     <p>
       @if(v == "user") {
@@ -16,7 +16,7 @@
       } else {
         <input id="form-@key-user" name="@key" type="radio" value="user" />
       }
-      <label for="form-@key-user">Registered Users</label>
+      <label for="form-@key-user">@messages("query.permissions.registered.users")</label>
     </p>
     <p>
       @if(v == "admin") {
@@ -24,7 +24,7 @@
       } else {
         <input id="form-@key-admin" name="@key" type="radio" value="admin" />
       }
-      <label for="form-@key-admin">Administrators</label>
+      <label for="form-@key-admin">@messages("query.permissions.administrators")</label>
     </p>
     <p>
       @if(v == "private") {
@@ -32,7 +32,7 @@
       } else {
         <input id="form-@key-private" name="@key" type="radio" value="private" />
       }
-      <label for="form-@key-private">Only Myself</label>
+      <label for="form-@key-private">@messages("query.permissions.only.myself")</label>
     </p>
     <div class="clear" style="padding-bottom: 20px;"></div>
   </div>

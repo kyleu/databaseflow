@@ -14,15 +14,15 @@
 
   <main class="indent">
     <div id="tx-panel" class="initially-hidden">
-      <em id="tx-status-msg">No active transaction.</em>
-      <a href="commit" class="theme-text" id="commit-button"><i class="fa @models.template.Icons.commitTx"></i> Commit Transaction</a>
-      <a href="rollback" class="theme-text" id="rollback-button"><i class="fa @models.template.Icons.rollbackTx"></i> Rollback</a>
+      <em id="tx-status-msg">@messages("query.tx.none")</em>
+      <a href="commit" class="theme-text" id="commit-button"><i class="fa @models.template.Icons.commitTx"></i> @messages("query.tx.commit")</a>
+      <a href="rollback" class="theme-text" id="rollback-button"><i class="fa @models.template.Icons.rollbackTx"></i> @messages("query.tx.rollback")</a>
     </div>
 
     <div class="tab-container z-depth-1">
       <ul id="query-tabs" class="tabs">
         <li id="tab-loading" class="tab col s3">
-          <a href="#loading-panel"><i class="fa @models.template.Icons.database"></i> Loading @dbName</a>
+          <a href="#loading-panel"><i class="fa @models.template.Icons.database"></i> @messages("query.loading", dbName)</a>
         </li>
       </ul>
     </div>
@@ -34,7 +34,7 @@
             <div class="card">
               <div class="card-content">
                 <span id="loading-content" class="card-title">
-                  Loading @dbName...
+                  @messages("query.loading", dbName)
                 </span>
               </div>
             </div>

@@ -1,4 +1,4 @@
-@(txSupported: Boolean)
+@(txSupported: Boolean)(implicit messages: Messages)
 @topLevelLink(id: String, icon: String, title: String, href: String = "#") = {<li><a id="@id" class="top-nav-link waves-effect" href="@href">
   <i class="fa @icon menu-icon theme-text"></i> @title
 </a><li>}
@@ -11,7 +11,7 @@
   </a>
   <div class="collapsible-body">
     <ul id="@id-list" class="submenu">
-      <li class="black-text"><em>Loading...</em></li>
+      <li class="black-text"><em>@messages("query.sidenav.loading")</em></li>
     </ul>
   </div>
 </li>}
@@ -19,24 +19,24 @@
 <ul id="main-menu" class="side-nav fixed">
   <li class="search">
     <div class="search-wrapper card">
-      <input id="search" placeholder="Search" autocomplete="off" /><i class="fa @models.template.Icons.search"></i>
+      <input id="search" placeholder="@messages("query.search")" autocomplete="off" /><i class="fa @models.template.Icons.search"></i>
     </div>
   </li>
   @if(txSupported) {
-    @topLevelLink("begin-tx-link", models.template.Icons.beginTx, "Begin Transaction")
+    @topLevelLink("begin-tx-link", models.template.Icons.beginTx, messages("query.tx.begin"))
   }
-  @topLevelLink("new-query-link", models.template.Icons.newQuery, "New Query")
-  @topLevelLink("sidenav-history-link", models.template.Icons.history, "Query History", "#history")
-  @topLevelLink("sidenav-refresh-link", models.template.Icons.refresh, "Refresh Schema")
+  @topLevelLink("new-query-link", models.template.Icons.newQuery, messages("query.sidenav.new"))
+  @topLevelLink("sidenav-history-link", models.template.Icons.history, messages("query.sidenav.history"), "#history")
+  @topLevelLink("sidenav-refresh-link", models.template.Icons.refresh, messages("query.sidenav.refresh"))
   <li class="no-padding">
     <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
       @groupToggle("saved-query", "Saved Queries")
-      @groupToggle("table", "Tables")
-      @groupToggle("view", "Views")
-      @groupToggle("procedure", "Stored Procedures")
+      @groupToggle("table", messages("query.sidenav.tables"))
+      @groupToggle("view", messages("query.sidenav.views"))
+      @groupToggle("procedure", messages("query.sidenav.procedures"))
     </ul>
   </li>
-  @topLevelLink("sidenav-help-link", models.template.Icons.help, "Help", "#help")
-  @topLevelLink("sidenav-feedback-link", models.template.Icons.feedback, "Feedback", "#feedback")
-  @topLevelLink("sidenav-about-link", models.template.Icons.about, "About " + utils.Config.projectName, "https://databaseflow.com")
+  @topLevelLink("sidenav-help-link", models.template.Icons.help, messages("query.sidenav.help"), "#help")
+  @topLevelLink("sidenav-feedback-link", models.template.Icons.feedback, messages("query.sidenav.feedback"), "#feedback")
+  @topLevelLink("sidenav-about-link", models.template.Icons.about, messages("query.sidenav.about", utils.Config.projectName), utils.Config.projectUrl)
 </ul>

@@ -1,7 +1,7 @@
 @import models.template.Icons
 @(user: models.user.User, conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-) @layout.simple(Some(user), "Edit " + title, debug = false) {
+)@layout.simple(Some(user), "Edit " + title, debug = false) {
   @components.formErrors(errors)
   <div class="row">
     <form id="connection-form" class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
@@ -13,7 +13,7 @@
           <div class="row" style="margin-bottom: 0;">
             <div class="input-field col s12 m6">
               <input id="form-name" name="name" type="text" value="@conn.name" />
-              <label for="form-name">Connection Name</label>
+              <label for="form-name">@messages("connection.name")</label>
             </div>
 
             <div class="input-field col s12 m6">
@@ -26,7 +26,7 @@
                   }
                 }
               </select>
-              <label for="form-engine">Database Engine</label>
+              <label for="form-engine">@messages("connection.engine")</label>
             </div>
           </div>
 
@@ -34,12 +34,12 @@
           <div class="row" style="margin-bottom: 0;">
             <div class="input-field col s12 m6">
               <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
-              <label for="form-username">Username</label>
+              <label for="form-username">@messages("connection.username")</label>
             </div>
 
             <div class="input-field col s12 m6">
               <input id="form-password" name="databasePassword" type="password" value="" />
-              <label for="form-password">Password</label>
+              <label for="form-password">@messages("connection.password")</label>
             </div>
           </div>
 
@@ -52,23 +52,23 @@
                   <div class="input-field col s4 m2">
                     <div class="view-url-link">
                       <input id="form-toggle-fields" name="toggle" type="radio" value="fields" @if(conn.urlOverride.isEmpty) { checked="checked" }>
-                      <label for="form-toggle-fields">Fields</label>
+                      <label for="form-toggle-fields">@messages("connection.fields")</label>
                     </div>
                   </div>
 
                   <div id="host-input" class="input-field col s8 m4">
                     <input id="form-host" name="host" type="text" value="@conn.host" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
-                    <label for="form-host">Host</label>
+                    <label for="form-host">@messages("connection.host")</label>
                   </div>
 
                   <div id="port-input" class="input-field col s4 m2">
                     <input id="form-port" name="port" type="text" value="@conn.port.orElse(conn.engine.defaultPort).getOrElse("")" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
-                    <label for="form-port">Port</label>
+                    <label for="form-port">@messages("connection.port")</label>
                   </div>
 
                   <div id="dbname-input" class="input-field col s8 m4">
                     <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
-                    <label for="form-dbname">Database Name</label>
+                    <label for="form-dbname">@messages("connection.db.name")</label>
                   </div>
 
                   <input id="form-extra" name="extra" type="hidden" value="@conn.extra" />
@@ -79,13 +79,13 @@
                   <div class="input-field col s4 m2">
                     <div class="view-keys-link">
                       <input id="form-toggle-url" name="toggle" type="radio" value="url" @if(conn.urlOverride.isDefined) { checked="checked" }>
-                      <label for="form-toggle-url">URL</label>
+                      <label for="form-toggle-url">@messages("connection.url")</label>
                     </div>
                   </div>
 
                   <div class="input-field col s8 m10">
                     <input id="form-url-override" name="urlOverride" type="text" value="@conn.url" @if(conn.urlOverride.isEmpty) { disabled="disabled" } />
-                    <label for="form-url-override">Jdbc Url</label>
+                    <label for="form-url-override">@messages("connection.jdbc.url")</label>
                   </div>
                 </div>
               </div>
@@ -94,24 +94,24 @@
 
           <!-- Permissions -->
           <div class="row" style="margin-bottom: 0;">
-            @views.html.connection.permissions("read", conn.read, Icons.user, "Available To")
-            @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, "Editable By")
+            @views.html.connection.permissions("read", conn.read, Icons.user, messages("connection.permissions.available.to"))
+            @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, messages("connection.permissions.editable.by"))
           </div>
 
           <!-- Description -->
           <div class="row" style="margin-bottom: 0;">
             <div class="input-field col s12">
               <input id="form-description" name="description" type="text" value="@conn.description" />
-              <label for="form-description">Description</label>
+              <label for="form-description">@messages("connection.description")</label>
             </div>
           </div>
         </div>
         <div class="card-action">
           <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
           <a id="test-connection-button" class="right btn-flat theme-text" style="margin-right: 12px;" href="">Test</a>
-          <a class="theme-text" href="@routes.HomeController.home()">Cancel</a>
+          <a class="theme-text" href="@routes.HomeController.home()">@messages("general.cancel")</a>
           @if((!isNew) && conn.id != services.database.core.MasterDatabase.connectionId) {
-            <a class="btn-flat theme-text" onclick="onDelete();return false;">Delete</a>
+            <a class="btn-flat theme-text" onclick="onDelete();return false;">@messages("general.delete")</a>
           }
           <div style="clear: both;"></div>
         </div>

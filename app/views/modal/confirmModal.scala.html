@@ -1,10 +1,10 @@
-@()<div id="confirm-modal" class="modal">
+@()(implicit messages: Messages)<div id="confirm-modal" class="modal">
   <div class="modal-content">
-    <p id="confirm-modal-content">Are you sure?</p>
+    <p id="confirm-modal-content">@messages("modal.confirm.prompt")</p>
   </div>
   <div class="modal-footer">
-    <a id="confirm-true-link" href="#" class="modal-action right btn theme waves-effect waves-light">Save</a>
-    <a id="confirm-false-link" href="#" class="modal-action right btn-flat theme-text">Cancel</a>
+    <a id="confirm-true-link" href="#" class="modal-action right btn theme waves-effect waves-light">@messages("general.save")</a>
+    <a id="confirm-false-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>
     <div style="clear: both;"></div>
   </div>
 </div>

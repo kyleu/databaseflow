@@ -1,72 +1,72 @@
-@()<div id="save-query-modal" class="modal">
+@()(implicit messages: Messages)<div id="save-query-modal" class="modal">
   <div class="modal-content">
     <div class="row">
       <form class="col s12">
         <div class="row">
           <div class="input-field col s12">
             <input id="input-query-name" type="text" class="validate" placeholder="">
-            <label for="input-query-name">Query Name</label>
+            <label for="input-query-name">@messages("modal.save.query.name")</label>
           </div>
           <div class="input-field col s12">
             <input id="input-query-description" type="text" class="validate" placeholder="">
-            <label for="input-query-description">Description</label>
+            <label for="input-query-description">@messages("modal.save.description")</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s12 m6">
             <div class="card-panel option-panel">
-              <h6><i class="fa @models.template.Icons.user"></i> Available To</h6>
+              <h6><i class="fa @models.template.Icons.user"></i> @messages("connection.permissions.available.to")</h6>
               <p>
                 <input id="input-query-read-visitor" name="read" type="radio" value="visitor" />
-                <label for="input-query-read-visitor">Everyone</label>
+                <label for="input-query-read-visitor">@messages("query.permissions.everyone")</label>
               </p>
               <p>
                 <input id="input-query-read-user" name="read" type="radio" value="user" />
-                <label for="input-query-read-user">Registered Users</label>
+                <label for="input-query-read-user">@messages("query.permissions.registered.users")</label>
               </p>
               <p>
                 <input id="input-query-read-admin" name="read" type="radio" value="admin" />
-                <label for="input-query-read-admin">Administrators</label>
+                <label for="input-query-read-admin">@messages("query.permissions.administrators")</label>
               </p>
               <p>
                 <input id="input-query-read-private" name="read" type="radio" value="private" />
-                <label for="input-query-read-private">Only Myself</label>
+                <label for="input-query-read-private">@messages("query.permissions.only.myself")</label>
               </p>
               <div class="clear"></div>
             </div>
           </div>
           <div class="input-field col s12 m6">
             <div class="card-panel option-panel">
-              <h6><i class="fa @models.template.Icons.user"></i> Editable By</h6>
+              <h6><i class="fa @models.template.Icons.user"></i> @messages("connection.permissions.editable.by")</h6>
               <p>
                 <input id="input-query-edit-visitor" name="edit" type="radio" value="visitor" />
-                <label for="input-query-edit-visitor">Everyone</label>
+                <label for="input-query-edit-visitor">@messages("query.permissions.everyone")</label>
               </p>
               <p>
                 <input id="input-query-edit-user" name="edit" type="radio" value="user" />
-                <label for="input-query-edit-user">Registered Users</label>
+                <label for="input-query-edit-user">@messages("query.permissions.registered.users")</label>
               </p>
               <p>
                 <input id="input-query-edit-admin" name="edit" type="radio" value="admin" />
-                <label for="input-query-edit-admin">Administrators</label>
+                <label for="input-query-edit-admin">@messages("query.permissions.administrators")</label>
               </p>
               <p>
                 <input id="input-query-edit-private" name="edit" type="radio" value="private" />
-                <label for="input-query-edit-private">Only Myself</label>
+                <label for="input-query-edit-private">@messages("query.permissions.only.myself")</label>
               </p>
               <div class="clear"></div>
             </div>
           </div>
           <div class="input-field col s12">
             <div class="card-panel option-panel">
-              <h6><i class="fa @models.template.Icons.database"></i> Available From</h6>
+              <h6><i class="fa @models.template.Icons.database"></i> @messages("modal.save.available.from")</h6>
               <p>
                 <input id="input-query-connection-true" name="connection" type="radio" value="true" checked="checked" />
-                <label for="input-query-connection-true">All Databases</label>
+                <label for="input-query-connection-true">@messages("modal.save.all.databases")</label>
               </p>
               <p>
                 <input id="input-query-connection-false" name="connection" type="radio" value="false" />
-                <label for="input-query-connection-false">This Database Only</label>
+                <label for="input-query-connection-false">@messages("modal.save.this.database")</label>
               </p>
               <div class="clear"></div>
             </div>
@@ -76,8 +76,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a id="input-query-save-link" href="#" class="modal-action right btn theme waves-effect waves-light">Save</a>
-    <a id="input-query-cancel-link" href="#" class="modal-action right btn-flat theme-text">Cancel</a>
+    <a id="input-query-save-link" href="#" class="modal-action right btn theme waves-effect waves-light">@messages("general.save")</a>
+    <a id="input-query-cancel-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>
     <div style="clear: both;"></div>
   </div>
 </div>

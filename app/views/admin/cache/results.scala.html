@@ -12,16 +12,16 @@
           <table class="bordered highlight">
             <thead>
               <tr>
-                <th>Connection</th>
-                <th>Owner</th>
-                <th>Status</th>
-                <th>Cols</th>
-                <th>Rows</th>
-                <th>Table</th>
-                <th>1st</th>
-                <th>Dur</th>
-                <th>Last Accessed</th>
-                <th>Created</th>
+                <th>@messages("th.connection")</th>
+                <th>@messages("th.owner")</th>
+                <th>@messages("th.status")</th>
+                <th>@messages("th.columns")</th>
+                <th>@messages("th.rows")</th>
+                <th>@messages("th.table")</th>
+                <th>@messages("th.first")</th>
+                <th>@messages("th.duration")</th>
+                <th>@messages("th.last.accessed")</th>
+                <th>@messages("th.created")</th>
                 <th></th>
               </tr>
             </thead>
@@ -85,6 +85,6 @@
     }
   </div>
   <div class="card-action">
-    <a class="theme-text" href="@controllers.routes.HomeController.home()">Back to Connection List</a>
+    <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.back.title")</a>
   </div>
 }
