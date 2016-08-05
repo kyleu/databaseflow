@@ -7,7 +7,7 @@ import models.database.{Row, Statement}
 import models.engine.DatabaseEngine
 import models.queries.BaseQueries
 import models.user.{Role, User}
-import utils.PasswordEncryptUtils
+import utils.{JdbcUtils, PasswordEncryptUtils}
 
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
@@ -59,7 +59,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     host = row.asOpt[String]("host"),
     dbName = row.asOpt[String]("db_name"),
     extra = row.asOpt[String]("extra"),
-    urlOverride = row.asOpt[String]("url_override"),
+    urlOverride = row.asOpt[Any]("url_override").map(JdbcUtils.extractString),
     username = row.as[String]("username"),
     password = PasswordEncryptUtils.decrypt(row.as[String]("password"))
   )

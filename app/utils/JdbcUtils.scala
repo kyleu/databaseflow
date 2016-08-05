@@ -7,6 +7,7 @@ import com.mysql.jdbc.exceptions.MySQLStatementCancelledException
 import models.database.Row
 import models.query.QueryError
 import models.{QueryErrorResponse, ResponseMessage}
+import org.h2.jdbc.JdbcClob
 import org.joda.time.LocalDateTime
 import org.postgresql.jdbc.PgArray
 import org.postgresql.util.PSQLException
@@ -45,5 +46,13 @@ object JdbcUtils extends Logging {
   def toSeq[T](row: Row, column: String): Seq[Any] = {
     val a = row.as[PgArray](column)
     a.getArray.asInstanceOf[Array[T]].toSeq
+  }
+
+  def trim(s: String) = s.replaceAll("""[\s]+""", " ").trim
+
+  def extractString(o: Any) = o match {
+    case s: String => s
+    case c: JdbcClob => c.getSubString(1, c.length().toInt)
+    case x => throw new IllegalStateException(x.toString)
   }
 }

@@ -30,7 +30,7 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class GetUsername(id: UUID) extends Query[Option[String]] {
-    override val sql = s"""select username from "$tableName" where "id" = ?"""
+    override val sql = s"""select "username" from "$tableName" where "id" = ?"""
     override val values = Seq(id)
     override def reduce(rows: Iterator[Row]) = rows.toSeq.headOption.map(_.as[String]("username"))
   }
