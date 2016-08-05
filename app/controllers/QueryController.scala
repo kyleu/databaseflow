@@ -62,7 +62,7 @@ class QueryController @javax.inject.Inject() (
     }
 
     val ts = DateUtils.now.toString("yyyy-MM-dd")
-    val finalName = s"Database Flow $filename Export $ts"
+    val finalName = s"${utils.Config.projectName} $filename Export $ts"
 
     val file = ConfigFileService.getTempFile(finalName, format)
     val fos = new FileOutputStream(file)

@@ -6,6 +6,7 @@ import java.util.UUID
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
+import utils.JdbcUtils
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
   override protected val tableName = "audit_records"
@@ -13,7 +14,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   override protected val searchColumns = Seq("id", "status", "sql", "error")
 
   case class GetPage(whereClause: Option[String], limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
-    override val sql = getSql(whereClause = whereClause, orderBy = Some("occurred desc"), limit = Some(limit), offset = Some(offset))
+    override val sql = getSql(whereClause = whereClause, orderBy = Some(""""occurred" desc"""), limit = Some(limit), offset = Some(offset))
     override def reduce(rows: Iterator[Row]): List[AuditRecord] = rows.map(fromRow).toList
   }
   val insert = Insert
@@ -61,7 +62,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     connection = row.asOpt[UUID]("connection"),
     status = AuditStatus.withName(row.as[String]("status")),
 
-    sql = row.asOpt[String]("sql"),
+    sql = row.asOpt[Any]("sql").map(JdbcUtils.extractString),
     error = row.asOpt[String]("error"),
     rowsAffected = row.asOpt[Int]("rows_affected"),
 

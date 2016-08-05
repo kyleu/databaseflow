@@ -1,6 +1,8 @@
-GET         /sandbox                    controllers.admin.SandboxController.list
-GET         /sandbox/:key               controllers.admin.SandboxController.sandbox(key)
-GET         /metrics                    controllers.admin.SandboxController.dumpMetrics
+GET         /                           controllers.admin.AdminController.index
+
+GET         /import                     controllers.admin.AdminController.importForm
+POST        /import                     controllers.admin.AdminController.systemImport
+GET         /export                     controllers.admin.AdminController.systemExport
 
 GET         /users/new                  controllers.admin.UserCreateController.newUser()
 POST        /users/new                  controllers.admin.UserCreateController.saveNewUser()
@@ -14,9 +16,6 @@ GET         /users/:id/remove           controllers.admin.UserEditController.rem
 GET         /settings                   controllers.admin.SettingsController.settings
 POST        /settings                   controllers.admin.SettingsController.saveSettings
 
-GET         /export                     controllers.admin.SystemExportController.systemExport
-GET         /import                     controllers.admin.SystemExportController.systemImport
-
 GET         /results                    controllers.admin.ResultCacheController.results
 GET         /results/remove/:id         controllers.admin.ResultCacheController.removeResult(id: java.util.UUID)
 GET         /results/orphan/:id         controllers.admin.ResultCacheController.removeOrphan(id)
@@ -24,3 +23,7 @@ GET         /results/orphan/:id         controllers.admin.ResultCacheController.
 GET         /activity                   controllers.admin.ActivityController.activity(limit: Int ?= 100, offset: Int ?= 0)
 GET         /activity/remove/all        controllers.admin.ActivityController.removeAllAudits()
 GET         /activity/remove/:id        controllers.admin.ActivityController.removeAudit(id: java.util.UUID)
+
+GET         /sandbox                    controllers.admin.SandboxController.list
+GET         /sandbox/:key               controllers.admin.SandboxController.sandbox(key)
+GET         /metrics                    controllers.admin.SandboxController.dumpMetrics

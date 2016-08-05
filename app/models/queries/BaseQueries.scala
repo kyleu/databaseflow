@@ -1,11 +1,7 @@
 package models.queries
 
 import models.database.{FlatSingleRowQuery, Query, Row, Statement}
-import utils.Config
-
-object BaseQueries {
-  def trim(s: String) = s.replaceAll("""[\s]+""", " ").trim
-}
+import utils.{Config, JdbcUtils}
 
 trait BaseQueries[T] {
   protected def tableName: String = "_invalid_"
@@ -20,7 +16,7 @@ trait BaseQueries[T] {
     s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"""
   }
 
-  protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = BaseQueries.trim(s"""
+  protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = JdbcUtils.trim(s"""
     update \"$tableName\" set ${updateColumns.map(x => s""""$x" = ?""").mkString(", ")}${additionalUpdates.fold("")(x => s", $x")} where $idWhereClause
   """)
 
@@ -31,7 +27,7 @@ trait BaseQueries[T] {
     limit: Option[Int] = None,
     offset: Option[Int] = None
   ) = {
-    BaseQueries.trim(s"""
+    JdbcUtils.trim(s"""
       select ${columns.map("\"" + _ + "\"").mkString(", ")} from "$tableName"
       ${whereClause.map(x => s" where $x").getOrElse("")}
       ${groupBy.map(x => s" group by $x").getOrElse("")}
