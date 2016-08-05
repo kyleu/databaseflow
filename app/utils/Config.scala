@@ -1,7 +1,8 @@
 package utils
 
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSettings
-import play.api.{Environment, Mode}
+import play.api.{ Environment, Mode }
+import utils.metrics.MetricsConfig
 
 object Config {
   val projectId = "databaseflow"
@@ -22,6 +23,15 @@ class Config @javax.inject.Inject() (val cnf: play.api.Configuration, env: Envir
   val graphitePort = cnf.getInt("metrics.graphite.port").getOrElse(2003)
   val servletEnabled = cnf.getBoolean("metrics.servlet.enabled").getOrElse(true)
   val servletPort = cnf.getInt("metrics.servlet.port").getOrElse(9001)
+
+  val metrics: MetricsConfig = MetricsConfig(
+    jmxEnabled,
+    graphiteEnabled,
+    graphiteServer,
+    graphitePort,
+    servletEnabled,
+    servletPort
+  )
 
   // Authentication
   val cookieAuthSettings = {
