@@ -16,6 +16,7 @@ import scala.scalajs.js
 object QueryResultService {
   def handleNewQueryResults(resultId: UUID, index: Int, result: QueryResult, durationMs: Int): Unit = {
     val occurred = new scalajs.js.Date(result.occurred.toDouble)
+    TransactionService.incrementCount()
     if (result.isStatement) {
       val content = QueryResultsTemplate.forStatementResults(result, occurred.toISOString, durationMs, resultId)
       ProgressManager.completeProgress(result.queryId, resultId, index, content)

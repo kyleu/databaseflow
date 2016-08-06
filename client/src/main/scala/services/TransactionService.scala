@@ -9,6 +9,7 @@ import scalatags.Text.all._
 
 object TransactionService {
   private[this] var inTransaction = false
+  private[this] var numStatements = 0
 
   private[this] lazy val transactionPanel = $("#tx-panel")
   private[this] lazy val statusMessage = $("#tx-status-msg", transactionPanel)
@@ -23,6 +24,11 @@ object TransactionService {
     transactionPanel.show()
   }
 
+  def incrementCount() = if (inTransaction) {
+    numStatements += 1
+    $("#tx-statement-count", transactionPanel).text(numStatements.toString)
+  }
+
   def commitTransaction() = if (inTransaction) {
     NetworkMessage.sendMessage(CommitTransaction)
   } else {
@@ -35,43 +41,43 @@ object TransactionService {
     throw new IllegalStateException("Rollback attempted while not in a transaction.")
   }
 
-  def handleTransactionStatus(state: TransactionState, statementCount: Int, occurred: Long) = state match {
-    case TransactionState.Started => onStarted(statementCount, occurred)
+  def handleTransactionStatus(state: TransactionState, occurred: Long) = state match {
+    case TransactionState.Started => onStarted(occurred)
     case TransactionState.NotStarted => onNotStarted()
-    case TransactionState.Running => onRunning(statementCount)
-    case TransactionState.RolledBack => onRollback(statementCount)
-    case TransactionState.Committed => onCommit(statementCount)
+    case TransactionState.RolledBack => onRollback()
+    case TransactionState.Committed => onCommit()
   }
 
-  private[this] def onStarted(statementCount: Int, occurred: Long) = {
+  private[this] def onStarted(occurred: Long) = {
     inTransaction = true
     val msg = div(
       "Transaction started ",
       TemplateUtils.toTimeago(TemplateUtils.toIsoString(occurred)),
       ". Completed ",
-      span(NumberUtils.withCommas(statementCount)),
+      span(id := "tx-statement-count")("0"),
       " statements."
     )
     statusMessage.html(msg.toString)
     TemplateUtils.relativeTime()
   }
+  private[this] def resetCounters() = {
+    inTransaction = false
+    numStatements = 0
+  }
 
   private[this] def onNotStarted() = {
-    inTransaction = false
+    resetCounters()
   }
 
-  private[this] def onRunning(statementCount: Int) = {
-    utils.Logging.info("Running: " + statementCount)
+  private[this] def onRollback() = {
+    complete("Transaction Rolled Back", s"Rolled back ${NumberUtils.withCommas(numStatements)} statements.")
+    resetCounters()
   }
 
-  private[this] def onRollback(statementCount: Int) = complete(
-    "Transaction Rolled Back", s"Rolled back ${NumberUtils.withCommas(statementCount)} statements."
-  )
-
-  private[this] def onCommit(statementCount: Int) = complete(
-    "Transaction Committed Successfully",
-    s"Persisted results of ${NumberUtils.withCommas(statementCount)} statements."
-  )
+  private[this] def onCommit() = {
+    complete("Transaction Committed Successfully", s"Persisted results of ${NumberUtils.withCommas(numStatements)} statements.")
+    resetCounters()
+  }
 
   private[this] def complete(r: String, s: String) = {
     beginTransactionLink.show()

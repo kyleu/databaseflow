@@ -20,7 +20,7 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case arr: AuditRecordResponse => HistoryManager.handleAuditHistoryResponse(arr.history)
     case arr: AuditRecordRemoved => HistoryManager.handleAuditHistoryRemoved(arr.id)
 
-    case ts: TransactionStatus => TransactionService.handleTransactionStatus(ts.state, ts.statementCount, ts.occurred)
+    case ts: TransactionStatus => TransactionService.handleTransactionStatus(ts.state, ts.occurred)
 
     case qcr: QueryCheckResponse => QueryErrorService.handleQueryCheckResponse(qcr)
     case qcr: QueryCancelledResponse => NotificationService.info("Query Cancelled", "Active query has been cancelled.")
