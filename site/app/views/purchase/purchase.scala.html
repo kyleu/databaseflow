@@ -1,5 +1,5 @@
 @()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple(title = messages("purchase.license.title"), section = "license", scripts = Seq("https://checkout.stripe.com/checkout.js")) {
+@layout.simple(title = messages("purchase.license.title"), section = "versions", scripts = Seq("https://checkout.stripe.com/checkout.js")) {
   <script>
       var handler = StripeCheckout.configure({
         key: 'pk_test_pBenf3XvhA3foLSFPo9FQrff',

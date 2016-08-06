@@ -9,7 +9,7 @@ th.email = Email
 index.splash = We're working hard on a new idea. Coming soon!
 index.features.link = Features
 index.download.link = Download
-index.license.link = Licensing
+index.versions.link = Versions
 index.admin.link = Admin
 
 # Downloads

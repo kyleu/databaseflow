@@ -37,6 +37,16 @@ class SiteController @javax.inject.Inject() (implicit
     Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
   }
 
+  def features() = act("features") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.features(isAdmin)))
+  }
+
+  def versions() = act("versions") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.versions(isAdmin)))
+  }
+
   def robots() = act("robots-txt") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow:"))
   }

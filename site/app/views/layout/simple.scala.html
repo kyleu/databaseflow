@@ -5,19 +5,19 @@
     <nav id="topnav" class="theme">
       @if(section != "splash") {<ul class="right hide-on-small-only">
         @if(section == "features") {
-          <li class="active"><a href="">@messages("index.features.link")</a></li>
+          <li class="active"><a href="@routes.SiteController.features()">@messages("index.features.link")</a></li>
         } else {
-          <li><a href="">@messages("index.features.link")</a></li>
+          <li><a href="@routes.SiteController.features()">@messages("index.features.link")</a></li>
         }
         @if(section == "download") {
-          <li class="active"><a href="">@messages("index.download.link")</a></li>
+          <li class="active"><a href="@routes.DownloadController.index()">@messages("index.download.link")</a></li>
         } else {
-          <li><a href="">@messages("index.download.link")</a></li>
+          <li><a href="@routes.DownloadController.index()">@messages("index.download.link")</a></li>
         }
-        @if(section == "license") {
-          <li class="active"><a href="">@messages("index.license.link")</a></li>
+        @if(section == "versions") {
+          <li class="active"><a href="@routes.SiteController.versions()">@messages("index.versions.link")</a></li>
         } else {
-          <li><a href="">@messages("index.license.link")</a></li>
+          <li><a href="@routes.SiteController.versions()">@messages("index.versions.link")</a></li>
         }
         @if(isAdmin) {
           @if(section == "admin") {

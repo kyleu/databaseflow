@@ -1,5 +1,7 @@
 GET            /                                        controllers.SiteController.splash
 GET            /site                                    controllers.SiteController.index
+GET            /features                                controllers.SiteController.features
+GET            /versions                                controllers.SiteController.versions
 GET            /robots.txt                              controllers.SiteController.robots
 GET            /version                                 controllers.UpdateController.version
 
@@ -12,6 +14,7 @@ POST           /feedback                                controllers.FeedbackCont
 POST           /newsletter                              controllers.NewsletterController.signup()
 
 # Downloads
+GET            /download                                controllers.DownloadController.index()
 GET            /download/:os/:variant                   controllers.DownloadController.download(os, variant)
 
 # Purchasing

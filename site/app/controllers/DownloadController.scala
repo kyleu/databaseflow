@@ -22,6 +22,11 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
     }
   }
 
+  def index() = act(s"download-index") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.downloads(isAdmin)))
+  }
+
   def download(os: String, variant: String) = act(s"download-$os-$variant") { implicit request =>
     val filename = os match {
       case "osx" => variant match {
