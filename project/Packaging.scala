@@ -48,13 +48,9 @@ object Packaging {
     dockerExposedVolumes := Seq("/opt/databaseflow"),
     version in Docker := version.value,
 
-    mainClass in Compile := Some("DatabaseFlow"),
-
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",
       "-J-Xms256m",
-      "-Dhttp.port=4260",
-      "-Dhttps.port=4263",
       "-Dproject=databaseflow"
     )
   )
