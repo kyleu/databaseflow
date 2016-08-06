@@ -1,6 +1,6 @@
 package models.template
 
-import utils.{KeyboardShortcut, NumberUtils}
+import utils.{KeyboardShortcut, Messages, NumberUtils}
 
 import scalatags.Text.all._
 
@@ -12,7 +12,7 @@ object HelpTemplate {
       div(cls := "row")(
         div(cls := "col s12")(
           div(cls := "z-depth-1 help-panel")(
-            h5("Tips and Tricks"),
+            h5(Messages("help.tips.and.tricks")),
             div(id := "tip-detail")("Loading..."),
             div(
               div(cls := "left")(a(cls := "previous-tip-link theme-text", href := "")("Previous")),
@@ -25,7 +25,7 @@ object HelpTemplate {
       div(cls := "row")(
         div(cls := "col s12 m6")(
           div(cls := "z-depth-1 help-panel")(
-            h5("Global Shortcuts"),
+            h5(Messages("help.global.shortcuts")),
             table(cls := "bordered highlight")(
               tbody(
                 globalShortcuts.map(s => patternToRow(s))
@@ -35,7 +35,7 @@ object HelpTemplate {
         ),
         div(cls := "col s12 m6")(
           div(cls := "z-depth-1 help-panel")(
-            h5("Editor Shortcuts"),
+            h5(Messages("help.editor.shortcuts")),
             table(cls := "bordered highlight")(
               tbody(
                 nonGlobalShortcuts.map(s => patternToRow(s))
@@ -61,7 +61,7 @@ object HelpTemplate {
         )
       )
     )
-    StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.help -> span("Database Flow Help")))
+    StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.help -> span(Messages("help.title"))))
   }
 
   private[this] def patternToRow(s: KeyboardShortcut) = tr(td(s.pattern), td(s.desc))

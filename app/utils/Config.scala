@@ -1,7 +1,7 @@
 package utils
 
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSettings
-import play.api.{ Environment, Mode }
+import play.api.{Environment, Mode}
 import utils.metrics.MetricsConfig
 
 object Config {

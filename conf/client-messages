@@ -1,0 +1,20 @@
+# General
+general.loading = Loading...
+general.refresh = Refresh
+general.close = Close
+
+# Table Headers
+th.occurred = Occurred
+th.sql = SQL
+th.status = Status
+
+# History
+history.title = Query History
+history.remove.all = Remove All History
+history.no.records = It looks like you haven't run any queries for this database. Get started!
+
+# Help
+help.title = Database Flow Help
+help.global.shortcuts = Global Shortcuts
+help.editor.shortcuts = Editor Shortcuts
+help.tips.and.tricks = Tips and Tricks

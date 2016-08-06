@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.i18n.Messages
 import play.api.mvc.Action
 import services.connection.ConnectionSettingsService
 import utils.ApplicationContext
@@ -27,5 +28,24 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
 
   def robots() = withSession("robots") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow: /"))
+  }
+
+  private[this] val msgs = {
+    val url = getClass.getClassLoader.getResource("client-messages")
+    Map(
+      "en" -> Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
+    )
+  }
+
+  private[this] val responses = msgs.map { ms =>
+    val vals = ms._2.map { m =>
+      s""""${m._1}": "${m._2}""""
+    }.mkString(",\n  ")
+    ms._1 -> s"""window.messages = {\n  $vals\n}"""
+  }
+
+  def strings() = withoutSession("strings") { implicit request =>
+    val lang = request.acceptLanguages.find(l => msgs.keySet.contains(l.code)).map(_.code).getOrElse("en")
+    Future.successful(Ok(responses(lang)).as("application/javascript"))
   }
 }

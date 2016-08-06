@@ -1,6 +1,7 @@
 GET         /                                        controllers.HomeController.home
 GET         /ping                                    controllers.HomeController.ping(timestamp: Long)
 GET         /robots.txt                              controllers.HomeController.robots
+GET         /strings.js                              controllers.HomeController.strings()
 
 # Connection Management
 GET         /c/new                                   controllers.ConnectionSettingsController.addNew()

@@ -3,7 +3,7 @@ package services.supervisor
 import java.util.UUID
 
 import akka.actor.SupervisorStrategy.Stop
-import akka.actor.{ ActorRef, OneForOneStrategy, SupervisorStrategy }
+import akka.actor.{ActorRef, OneForOneStrategy, SupervisorStrategy}
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
@@ -13,8 +13,8 @@ import services.database.core.MasterDatabase
 import services.licensing.LicenseService
 import services.result.CachedResultActor
 import services.settings.SettingsService
-import utils.metrics.{ InstrumentedActor, MetricsServletActor }
-import utils.{ ApplicationContext, DateUtils, Logging }
+import utils.metrics.{InstrumentedActor, MetricsServletActor}
+import utils.{ApplicationContext, DateUtils, Logging}
 
 object ActorSupervisor {
   def startIfNeeded(ws: WSClient) = if (!MasterDatabase.isOpen) {
