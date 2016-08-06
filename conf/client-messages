@@ -1,6 +1,7 @@
 # General
 general.loading = Loading...
 general.refresh = Refresh
+general.cancel = Cancel
 general.close = Close
 general.previous = Previous
 general.next = Next

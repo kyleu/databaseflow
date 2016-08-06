@@ -1,5 +1,5 @@
 @(form: Form[controllers.UserLicenseController.LicenseForm])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple(title = Messages("personal.license.new")) {
+@layout.simple(title = messages("personal.license.new")) {
   <form method="post" action="@controllers.routes.UserLicenseController.licenseRequest()">
     <input type="hidden" name="edition" value="@licensing.LicenseEdition.Personal" />
     <div class="row">

@@ -19,6 +19,7 @@ object Messages {
   }
 
   def apply(s: String, args: Any*) = {
+    //utils.Logging.info(s)
     val msg = jsMessages(s)
     if (args.isEmpty) {
       msg
