@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.query.SavedQuery
-import models.template.{ Icons, StaticPanelTemplate }
+import models.template.{Icons, StaticPanelTemplate}
 import utils.Messages
 
 import scalatags.Text.TypedTag
@@ -32,7 +32,7 @@ object QueryEditorTemplate {
     a(cls := "delete-query-link right theme-text", href := "#")(Messages("th.delete"))
   )
 
-  val savedQueryViewLinks = Seq(a(cls := "save-as-query-link right theme-text first-right-link", href := "#")(Messages("th.save.new"))))
+  val savedQueryViewLinks = Seq(a(cls := "save-as-query-link right theme-text first-right-link", href := "#")(Messages("th.save.new")))
 
   def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: UUID) = {
     val canEdit = userId == sq.owner
