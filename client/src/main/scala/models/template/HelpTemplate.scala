@@ -13,10 +13,10 @@ object HelpTemplate {
         div(cls := "col s12")(
           div(cls := "z-depth-1 help-panel")(
             h5(Messages("help.tips.and.tricks")),
-            div(id := "tip-detail")("Loading..."),
+            div(id := "tip-detail")(Messages("general.loading")),
             div(
-              div(cls := "left")(a(cls := "previous-tip-link theme-text", href := "")("Previous")),
-              div(cls := "right")(a(cls := "next-tip-link theme-text", href := "")("Next")),
+              div(cls := "left")(a(cls := "previous-tip-link theme-text", href := "")(Messages("general.previous"))),
+              div(cls := "right")(a(cls := "next-tip-link theme-text", href := "")(Messages("general.next"))),
               div(style := "clear: both;")
             )
           )

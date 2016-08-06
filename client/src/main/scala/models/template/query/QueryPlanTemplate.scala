@@ -3,7 +3,7 @@ package models.template.query
 import models.PlanResultResponse
 import models.plan.PlanNode
 import models.template.{Icons, StaticPanelTemplate}
-import utils.{NumberUtils, TemplateUtils}
+import utils.{Messages, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
 
@@ -28,9 +28,9 @@ object QueryPlanTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.queryPlan -> span("Query Plan")),
+      iconAndTitle = Some(Icons.queryPlan -> span(Messages("query.plan"))),
       actions = Seq(
-        a(cls := "right plan-view-toggle theme-text", href := "#")("View Raw Plan"),
+        a(cls := "right plan-view-toggle theme-text", href := "#")(Messages("query.raw.plan")),
         div(style := "clear: both;")()
       ),
       showClose = false

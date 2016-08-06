@@ -4,34 +4,35 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.query.SavedQuery
-import models.template.{Icons, StaticPanelTemplate}
+import models.template.{ Icons, StaticPanelTemplate }
+import utils.Messages
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 object QueryEditorTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
-    Some(a(cls := "run-query-link theme-text", href := "#")("Run")),
-    Some(a(cls := "run-query-all-link theme-text initially-hidden", href := "#")("Run All")),
-    Some(a(cls := "run-query-selection-link theme-text initially-hidden", href := "#")("Run Selection")),
-    Some(a(cls := "export-link theme-text", href := "#")("Export")),
-    if (engine.cap.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")("Explain")) } else { None },
-    if (engine.cap.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")("Analyze")) } else { None }
+    Some(a(cls := "run-query-link theme-text", href := "#")(Messages("query.run"))),
+    Some(a(cls := "run-query-all-link theme-text initially-hidden", href := "#")(Messages("query.run.all"))),
+    Some(a(cls := "run-query-selection-link theme-text initially-hidden", href := "#")(Messages("query.run.selection"))),
+    Some(a(cls := "export-link theme-text", href := "#")(Messages("query.export"))),
+    if (engine.cap.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")(Messages("query.explain"))) } else { None },
+    if (engine.cap.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")(Messages("query.analyze"))) } else { None }
   ).flatten
 
   def forAdHocQuery(engine: DatabaseEngine, queryId: UUID, queryName: String, sql: String) = {
-    val links = linksFor(engine) :+ a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save")
+    val links = linksFor(engine) :+ a(cls := "save-query-link right theme-text first-right-link", href := "#")(Messages("th.save"))
     queryPanel(queryId, queryName, sql, Icons.adHocQuery, links)
   }
 
   val savedQueryEditLinks = Seq(
-    a(cls := "save-query-link right theme-text first-right-link", href := "#")("Save"),
-    a(cls := "settings-query-link right theme-text", href := "#")("Settings"),
-    a(cls := "save-as-query-link right theme-text", href := "#")("Save As New"),
-    a(cls := "delete-query-link right theme-text", href := "#")("Delete")
+    a(cls := "save-query-link right theme-text first-right-link", href := "#")(Messages("th.save")),
+    a(cls := "settings-query-link right theme-text", href := "#")(Messages("th.settings")),
+    a(cls := "save-as-query-link right theme-text", href := "#")(Messages("th.save.new")),
+    a(cls := "delete-query-link right theme-text", href := "#")(Messages("th.delete"))
   )
 
-  val savedQueryViewLinks = Seq(a(cls := "save-as-query-link right theme-text first-right-link", href := "#")("Save As New"))
+  val savedQueryViewLinks = Seq(a(cls := "save-as-query-link right theme-text first-right-link", href := "#")(Messages("th.save.new"))))
 
   def forSavedQuery(engine: DatabaseEngine, sq: SavedQuery, userId: UUID) = {
     val canEdit = userId == sq.owner
@@ -50,7 +51,7 @@ object QueryEditorTemplate {
         content = div(
           div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql)
         ),
-        iconAndTitle = Some(icon -> span(queryName, span(cls := "unsaved-status", title := "This query has unsaved changes.")("*"))),
+        iconAndTitle = Some(icon -> span(queryName, span(cls := "unsaved-status", title := Messages("query.unsaved.changes"))("*"))),
         actions = links
       ),
       div(id := s"workspace-$queryId")

@@ -6,7 +6,7 @@ import models.query.QueryResult
 import models.schema.FilterOp
 import models.template.{Icons, StaticPanelTemplate}
 import models.template.results.{DataFilterTemplate, DataTableTemplate}
-import utils.{NumberUtils, TemplateUtils}
+import utils.{Messages, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
 
@@ -22,7 +22,8 @@ object QueryResultsTemplate {
           div(cls := "active-filter z-depth-1")(
             div(cls := "filter-cancel-link")(i(cls := "theme-text fa " + Icons.close)),
             i(cls := "fa " + Icons.filter),
-            "Active Filter: ",
+            Messages("query.active.filter"),
+            ": ",
             strong(column),
             s" $op ",
             strong(v)
@@ -32,11 +33,11 @@ object QueryResultsTemplate {
 
       div(cls := "row-status-display")(
         if (hasFilter) {
-          a(href := "#", cls := "results-filter-link right theme-text")("Filter")
+          a(href := "#", cls := "results-filter-link right theme-text")(Messages("th.filter"))
         } else {
           span()
         },
-        a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
+        a(href := "#", cls := "results-sql-link right theme-text")(Messages("th.sql")),
         p(
           s"${NumberUtils.withCommas(qr.rowsAffected)} ",
           span(cls := "total-row-count"),
@@ -63,7 +64,7 @@ object QueryResultsTemplate {
         a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
           s"Load ${qr.data.size} More Rows"
         ),
-        em(cls := "no-rows-remaining initially-hidden")("No more rows available")
+        em(cls := "no-rows-remaining initially-hidden")(Messages("query.no.more.rows"))
       )
     )
 

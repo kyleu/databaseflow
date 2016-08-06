@@ -1,6 +1,7 @@
 package models.template.view
 
 import models.schema.Column
+import utils.Messages
 
 import scalatags.Text.all._
 
@@ -11,8 +12,8 @@ object ViewColumnDetailTemplate {
 
   private[this] def tableFor(columns: Seq[Column]) = table(cls := "bordered highlight responsive-table")(
     thead(tr(
-      th("Name"),
-      th("Type")
+      th(Messages("th.name")),
+      th(Messages("th.type"))
     )),
     tbody(columns.map { col =>
       val nn = col.notNull.toString

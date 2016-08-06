@@ -1,6 +1,7 @@
 package models.template.tbl
 
 import models.schema.Column
+import utils.Messages
 
 import scalatags.Text.all._
 
@@ -12,11 +13,11 @@ object TableColumnDetailTemplate {
   private[this] def tableFor(columns: Seq[Column]) = table(cls := "bordered highlight responsive-table")(
     thead(
       tr(
-        th("Name"),
-        th(title := "Primary Key")("PK"),
-        th(title := "Not Null")("NN"),
-        th("Type"),
-        th("Default")
+        th(Messages("th.name")),
+        th(title := Messages("th.primary.key"))("PK"),
+        th(title := Messages("th.not.null"))("NN"),
+        th(Messages("th.type")),
+        th(Messages("th.default"))
       )
     ),
     tbody(

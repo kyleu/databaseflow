@@ -1,6 +1,7 @@
 package models.template.tbl
 
 import models.schema.Index
+import utils.Messages
 
 import scalatags.Text.all._
 
@@ -12,10 +13,10 @@ object TableIndexDetailTemplate {
   private[this] def tableFor(indexes: Seq[Index]) = table(cls := "bordered highlight responsive-table")(
     thead(
       tr(
-        th("Name"),
-        th("Unique"),
-        th("Type"),
-        th("Columns")
+        th(Messages("th.name")),
+        th(Messages("th.unique")),
+        th(Messages("th.type")),
+        th(Messages("th.columns"))
       )
     ),
     tbody(

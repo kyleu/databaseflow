@@ -2,7 +2,7 @@ package models.template.query
 
 import models.template.{Icons, StaticPanelTemplate}
 import models.{PlanErrorResponse, QueryErrorResponse}
-import utils.TemplateUtils
+import utils.{Messages, TemplateUtils}
 
 import scalatags.Text.all._
 
@@ -20,7 +20,7 @@ object QueryErrorTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.error -> span("Query Error")),
+      iconAndTitle = Some(Icons.error -> span(Messages("query.error"))),
       showClose = false
     )
   }
@@ -34,7 +34,7 @@ object QueryErrorTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.error -> span("Plan Error")),
+      iconAndTitle = Some(Icons.error -> span(Messages("query.plan.error"))),
       showClose = false
     )
   }

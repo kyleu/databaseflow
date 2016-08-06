@@ -1,5 +1,7 @@
 package models.template
 
+import utils.Messages
+
 import scalatags.Text.all._
 
 object FeedbackTemplate {
@@ -8,15 +10,12 @@ object FeedbackTemplate {
       div(cls := "row")(
         form(cls := "col s12")(
           div(cls := "row")(
-            div(cls := "col s12")(p(
-              "Thanks for your feedback. This will send your message directly to the creators of Database Flow. " +
-                "If you'd like to be notified when we reply, please include an email address."
-            )),
+            div(cls := "col s12")(p(Messages("feedback.notice"))),
             div(cls := "input-field col s12")(
-              input(id := "feedback-email-input", cls := "validate", `type` := "email", value := email, placeholder := "Email Address")()
+              input(id := "feedback-email-input", cls := "validate", `type` := "email", value := email, placeholder := Messages("feedback.email"))()
             ),
             div(cls := "input-field col s12")(
-              textarea(id := "feedback-content-input", cls := "materialize-textarea", placeholder := "Enter your feedback")()
+              textarea(id := "feedback-content-input", cls := "materialize-textarea", placeholder := Messages("feedback.prompt"))()
             )
           )
         )
@@ -27,7 +26,7 @@ object FeedbackTemplate {
       content = content,
       iconAndTitle = Some(Icons.feedback -> span("Feedback")),
       actions = Seq(
-        a(href := "", cls := "theme-text right submit-feedback")("Submit Feedback"),
+        a(href := "", cls := "theme-text right submit-feedback")(Messages("feedback.submit")),
         div(style := "clear: both;")
       )
     )

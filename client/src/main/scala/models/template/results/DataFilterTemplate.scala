@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import models.schema.FilterOp
+import utils.Messages
 
 import scalatags.Text.all._
 
@@ -57,8 +58,8 @@ object DataFilterTemplate {
       ),
       div(cls := "row")(
         div(cls := "col s12")(
-          button(cls := "btn theme right waves-effect waves-light results-filter-go")("Filter"),
-          button(cls := "btn-flat right results-filter-cancel")("Cancel")
+          button(cls := "btn theme right waves-effect waves-light results-filter-go")(Messages("th.filter")),
+          button(cls := "btn-flat right results-filter-cancel")(Messages("th.cancel"))
         )
       )
     )

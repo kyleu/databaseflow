@@ -4,14 +4,16 @@ import java.util.UUID
 
 import models.query.SavedQuery
 import models.schema.{Procedure, Table, View}
-import utils.NumberUtils
+import utils.{Messages, NumberUtils}
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 object ModelListTemplate {
+  private[this] def messagesHeaders(keys: String*) = keys.map(s => Messages("th." + s))
+
   def forSavedQueries(queryId: UUID, savedQueries: Seq[SavedQuery], usernameMap: Map[UUID, String], selfId: UUID) = {
-    val cols = Seq("Name", "Owner", "Read", "Edit", "Connection")
+    val cols = messagesHeaders("name", "owner", "read", "edit", "connection")
     val rows = savedQueries.map(sq => tr(
       td(a(cls := "list-link theme-text", data("name") := sq.id.toString, href := s"#saved-query-${sq.id}")(sq.name)),
       td(usernameMap.get(sq.owner) match {
@@ -33,7 +35,7 @@ object ModelListTemplate {
   }
 
   def forTables(queryId: UUID, tables: Seq[Table]) = {
-    val cols = Seq("Name", "Rows", "Columns", "Primary Key", "Indexes", "Foreign Keys", "Description")
+    val cols = messagesHeaders("name", "rows", "columns", "primary.key", "indexes", "foreign.keys", "description")
     val rows = tables.map(t => tr(
       td(a(cls := "list-link theme-text", data("name") := t.name, href := s"#table-${t.name}")(t.name)),
       td(t.rowCountEstimate.map(NumberUtils.withCommas).getOrElse(""): String),
@@ -47,7 +49,7 @@ object ModelListTemplate {
   }
 
   def forViews(queryId: UUID, views: Seq[View]) = {
-    val cols = Seq("Name", "Columns", "Description")
+    val cols = messagesHeaders("name", "columns", "description")
     val rows = views.map(v => tr(
       td(a(cls := "list-link theme-text", data("name") := v.name, href := s"#view-${v.name}")(v.name)),
       td(v.columns.map(_.name).mkString(", ")),
@@ -57,7 +59,7 @@ object ModelListTemplate {
   }
 
   def forProcedures(queryId: UUID, procedures: Seq[Procedure]) = {
-    val cols = Seq("Name", "Parameters", "Returns Result")
+    val cols = messagesHeaders("name", "parameters", "returns.result")
     val rows = procedures.map(p => tr(
       td(a(cls := "list-link theme-text", data("name") := p.name, href := s"#procedure-${p.name}")(p.name)),
       td(p.params.map(param => s"${param.name} (${param.paramType} ${param.columnType})").mkString(", ")),

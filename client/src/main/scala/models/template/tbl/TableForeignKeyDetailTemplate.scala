@@ -1,6 +1,7 @@
 package models.template.tbl
 
 import models.schema.ForeignKey
+import utils.Messages
 
 import scalatags.Text.all._
 
@@ -11,10 +12,10 @@ object TableForeignKeyDetailTemplate {
 
   private[this] def tableFor(foreignKeys: Seq[ForeignKey]) = table(
     thead(tr(
-      td("Name"),
-      td("Source Columns"),
-      td("Target Table"),
-      td("Target Columns")
+      td(Messages("th.name")),
+      td(Messages("th.source.columns")),
+      td(Messages("th.target.table")),
+      td(Messages("th.target.columns"))
     )),
     tbody(
       foreignKeys.map { key =>

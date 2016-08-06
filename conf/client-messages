@@ -2,16 +2,73 @@
 general.loading = Loading...
 general.refresh = Refresh
 general.close = Close
+general.previous = Previous
+general.next = Next
+general.coming.soon = Coming Soon
 
 # Table Headers
+th.cancel = Cancel
+th.columns = Columns
+th.connection = Connection
+th.cost = Cost
+th.default = Default
+th.definition = Definition
+th.delete = Delete
+th.description = Description
+th.edit = Edit
+th.filter = Filter
+th.foreign.keys = Foreign Keys
+th.indexes = Indexes
+th.name = Name
+th.not.null = Not Null
 th.occurred = Occurred
+th.output = Output
+th.owner = Owner
+th.parameters = Parameters
+th.primary.key = Primary Key
+th.properties = Properties
+th.read = Read
+th.returns.result = Returns Result
+th.rows = Rows
+th.save = Save
+th.save.new = Save as New
+th.settings = Settings
+th.source.columns = Source Columns
 th.sql = SQL
 th.status = Status
+th.target.columns = Target Columns
+th.target.table = Target Table
+th.type = Type
+th.unique = Unique
 
 # History
 history.title = Query History
 history.remove.all = Remove All History
 history.no.records = It looks like you haven't run any queries for this database. Get started!
+
+# Query
+query.explain = Explain
+query.analyze = Analyze
+query.export = Export
+query.run = Run
+query.run.all = Run All
+query.run.active = Run Active
+query.run.selected = Run Selected
+query.active.filter = Active Filter
+query.view.first = View First 100 Rows
+query.no.more.rows = No more rows available
+query.plan = Query Plan
+query.raw.plan = View Raw Plan
+query.plan.estimated.rows = Est Rows
+query.error = Query Error
+query.plan.error = Plan Error
+query.unsaved.changes = This query has unsaved changes.
+
+# Feedback
+feedback.notice = Thanks for your feedback. This will send your message directly to the creators of Database Flow. If you'd like to be notified when we reply, please include an email address.
+feedback.email = Email Address
+feedback.prompt = Enter your feedback
+feedback.submit = Submit Feedback
 
 # Help
 help.title = Database Flow Help

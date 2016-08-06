@@ -1,7 +1,7 @@
 package models.template.query
 
 import models.plan.PlanNode
-import utils.NumberUtils
+import utils.{Messages, NumberUtils}
 
 import scalatags.Text.all._
 
@@ -19,8 +19,8 @@ object QueryPlanNodeDetailTemplate {
             table(cls := "bordered highlight") {
               tbody(
                 tr(
-                  th(style := "width: 25%")("Est Rows"), th(style := "width: 25%")("Actual Rows"),
-                  th(style := "width: 25%")("Duration"), th(style := "width: 25%")("Cost")
+                  th(style := "width: 25%")(Messages("query.plan.estimated.rows")), th(style := "width: 25%")("Actual Rows"),
+                  th(style := "width: 25%")("Duration"), th(style := "width: 25%")(Messages("th.cost"))
                 ),
                 tr(
                   td(NumberUtils.withCommas(node.costs.estimatedRows)),
@@ -42,7 +42,7 @@ object QueryPlanNodeDetailTemplate {
             div(cls := "z-depth-1")(
               table(cls := "bordered highlight")(
                 tbody(
-                  tr(th(colspan := 2)("Properties")),
+                  tr(th(colspan := 2)(Messages("th.properties"))),
                   node.properties.map { p =>
                     tr(td(style := "white-space: nowrap;")(p._1), td(p._2))
                   }.toSeq
@@ -59,7 +59,7 @@ object QueryPlanNodeDetailTemplate {
             div(cls := "z-depth-1")(
               table(cls := "bordered highlight") {
                 tbody(
-                  tr(th(colspan := 2)("Output")),
+                  tr(th(colspan := 2)(Messages("th.output"))),
                   o.map(x => tr(td(x)))
                 )
               }
