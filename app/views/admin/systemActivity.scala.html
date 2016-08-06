@@ -6,9 +6,7 @@
     limit: Int,
     offset: Int,
     userService: services.user.UserSearchService
-)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.admin(
+)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.admin(
   user,
   "activity",
   messages("activity.admin.title"),

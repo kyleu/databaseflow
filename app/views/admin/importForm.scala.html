@@ -6,8 +6,10 @@
     <div class="row">
       <div class="col s12">
         <div class="z-depth-1" style="padding: 20px;">
-          Download an export of @utils.Config.projectName's settings, connections, and saved queries.
-          <div style="margin-top: 10px"><a href="@controllers.admin.routes.AdminController.systemExport()" class="btn theme waves-effect waves-light">Export</a></div>
+          @messages("admin.export.instructions")
+          <div style="margin-top: 10px">
+            <a href="@controllers.admin.routes.AdminController.systemExport()" class="btn theme waves-effect waves-light">@messages("th.export")</a>
+          </div>
         </div>
       </div>
     </div>
@@ -16,11 +18,13 @@
       <div class="col s12">
         <form action="@controllers.admin.routes.AdminController.systemImport()" method="post" enctype="multipart/form-data">
           <div class="z-depth-1" style="padding: 20px;">
-            Upload a previously-download system export (json format).
+            @messages("admin.import.instructions")
             <div style="margin-top: 10px">
               <input type="file" name="f">
             </div>
-            <div style="margin-top: 10px"><button class="btn theme waves-effect waves-light" type="submit">Import</button></div>
+            <div style="margin-top: 10px">
+              <button class="btn theme waves-effect waves-light" type="submit">@messages("th.import")</button>
+            </div>
           </div>
         </form>
       </div>

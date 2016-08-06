@@ -14,10 +14,12 @@ th.columns = Cols
 th.connection = Connection
 th.created = Created
 th.duration = Dur
+th.edition = Edition
 th.elapsed = Elapsed
 th.email = Email
-th.edition = Edition
+th.export = Export
 th.first = 1st
+th.import = Import
 th.issued = Issued
 th.last.accessed = Last Accessed
 th.name = Name
@@ -155,7 +157,10 @@ admin.activity.description = Show system activity for all users in the system.
 admin.import.link = Import
 admin.import.title = System Import/Export
 admin.import.description = Import and export your settings, connections and saved queries.
+admin.import.instructions = Upload a previously-download system export (json format).
+admin.export.instructions = Download an export of Database Flow's settings, connections, and saved queries.
 
+admin.users.new = New User
 admin.users.confirm = Are you certain you want to delete this user ({0})?
 
 # Static
