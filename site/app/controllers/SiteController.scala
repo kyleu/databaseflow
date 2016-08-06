@@ -33,7 +33,8 @@ class SiteController @javax.inject.Inject() (implicit
   }
 
   def index() = act("index") { implicit request =>
-    Future.successful(Ok(views.html.index()).withHeaders(SiteController.cors: _*))
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
   }
 
   def robots() = act("robots-txt") { implicit request =>

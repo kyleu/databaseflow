@@ -1,10 +1,10 @@
 @(username: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple("Database Flow Admin", isAdmin = true) {
+@layout.simple(utils.Config.projectName + " Admin", isAdmin = true) {
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">Database Flow Administration</span>
+          <span class="card-title">@utils.Config.projectName Administration</span>
           <p>Welcome back, @username</p>
 
           <ul>

@@ -13,7 +13,7 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class EmailService @javax.inject.Inject() (mailerClient: MailerClient) extends Logging {
   def sendAdminMessage(subject: String, htmlBody: String) = {
-    sendMessage("Database Flow Admin", "kyle@databaseflow.com", subject, htmlBody)
+    sendMessage(utils.Config.projectName + " Admin", "kyle@databaseflow.com", subject, htmlBody)
   }
 
   def sendMessage(name: String, address: String, subject: String, htmlBody: String) = {

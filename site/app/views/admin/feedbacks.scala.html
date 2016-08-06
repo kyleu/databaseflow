@@ -1,10 +1,10 @@
 @(feedbacks: Seq[services.feedback.FeedbackService.Feedback])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple("Database Flow Feedback", isAdmin = true) {
+@layout.simple(utils.Config.projectName + " Feedback", isAdmin = true) {
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">Database Flow Feedback</span>
+          <span class="card-title">@utils.Config.projectName Feedback</span>
           @if(feedbacks.isEmpty) {
             <p>No available feedback.</p>
           } else {

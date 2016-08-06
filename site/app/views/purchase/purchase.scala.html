@@ -2,9 +2,9 @@
 @layout.simple(title = messages("purchase.license.title"), scripts = Seq("https://checkout.stripe.com/checkout.js")) {
   <script>
       var handler = StripeCheckout.configure({
-        key: "pk_test_pBenf3XvhA3foLSFPo9FQrff",
+        key: 'pk_test_pBenf3XvhA3foLSFPo9FQrff',
         locale: "auto",
-        name: "Database Flow",
+        name: '@utils.Config.projectName',
         description: 'Team Edition License',
         image: "@routes.Assets.versioned("images/payment-logo.png").url",
         amount: 50000,
@@ -33,7 +33,7 @@
             <span class="card-title">@messages("purchase.license.title")</span>
             <div class="row">
               <div class="col s12">
-                <p>Database Flow Team Edition costs $500.</p>
+                <p>@utils.Config.projectName Team Edition costs $500.</p>
                 <p>You can pay through Stripe.</p>
               </div>
               <div class="col s12">

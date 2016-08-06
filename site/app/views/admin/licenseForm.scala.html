@@ -1,5 +1,5 @@
 @()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple("Database Flow Licenses", isAdmin = true) {
+@layout.simple(utils.Config.projectName + " Licenses", isAdmin = true) {
   <div class="row">
     <div class="col s12">
       <div class="card">

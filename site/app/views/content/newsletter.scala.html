@@ -1,8 +1,8 @@
-@()<div class="row">
+@()(implicit messages: Messages)<div class="row">
   <div class="col s12">
     <div class="card">
       <div class="card-content">
-        <span class="card-title">Newsletter</span>
+        <span class="card-title">@messages("newsletter.title")</span>
         <div class="row" style="margin-top: 16px;">
           <div class="col s12">
             <div class="z-depth-1">
@@ -14,8 +14,8 @@
                         <div class="row">
                           <div class="input-field col s12 m6 offset-m3">
                             <input id="email" name="email" type="email" class="validate">
-                            <label for="email">Email</label>
-                            <button class="btn theme" type="submit">Subscribe</button>
+                            <label for="email">@messages("th.email")</label>
+                            <button class="btn theme" type="submit">@messages("newsletter.subscribe")</button>
                           </div>
                         </div>
                       </form>

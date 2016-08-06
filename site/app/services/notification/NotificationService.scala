@@ -22,7 +22,7 @@ class NotificationService @javax.inject.Inject() (emailService: EmailService, sl
     emailService.sendAdminMessage(s"$edition License issued to [$email]", adminMessageBody)
     slackService.alert(s"$edition License created for [$email].", "#licenses")
     val messageBody = personalLicenseMessage(id, name, email, edition, issued, version, content).toString
-    emailService.sendMessage(name = name, address = email, subject = s"Your Database Flow $edition License", htmlBody = messageBody)
+    emailService.sendMessage(name = name, address = email, subject = s"Your ${utils.Config.projectName} $edition License", htmlBody = messageBody)
   }
 
   def onFeedback(id: UUID, from: String, content: String, occurred: LocalDateTime) = {

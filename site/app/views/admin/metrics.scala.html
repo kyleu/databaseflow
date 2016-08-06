@@ -1,10 +1,10 @@
 @(json: String)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple("Database Flow Metrics", isAdmin = true) {
+@layout.simple(utils.Config.projectName + " Metrics", isAdmin = true) {
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">Database Flow Metrics</span>
+          <span class="card-title">@utils.Config.projectName Metrics</span>
           <pre class="z-depth-1" style="padding: 15px;">@json</pre>
         </div>
       </div>

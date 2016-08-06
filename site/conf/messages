@@ -1,8 +1,22 @@
 # General
 general.save = Save
+general.about = About
 
-# Static
-static.copyright = © 2016 Database Flow
+# Table Headers
+th.email = Email
+
+# Index
+index.splash = We're working hard on a new idea. Coming soon!
+
+# Newsletter
+newsletter.title = Newsletter
+newsletter.subscribe = Subscribe
+
+# Feedback
+feedback.title = Feedback
+feedback.action = Leave Feedback
+feedback.email = Email Address
+feedback.submit = Send Feedback
 
 # Licensing
 license.success = Your Database Flow License
@@ -11,3 +25,6 @@ license.form.name = Name
 license.form.email = Email
 license.form.prompt = Fill out this form, and you'll get your license immediately.
 license.form.personal = New Personal License
+
+# Static
+static.copyright = © 2016 Database Flow
