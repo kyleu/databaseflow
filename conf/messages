@@ -138,10 +138,24 @@ modal.save.this.database = This Database Only
 # Admin
 admin.title = Administration
 admin.index.title = Database Flow Administration
-admin.settings.title = Settings
-admin.results.title = Cached Results
-admin.import.title = System Import/Export
+admin.index.prompt = Use the menu above or the links below to get started!
+
+admin.settings.link = Settings
+admin.settings.title = System Settings
+admin.settings.description = Edit system settings and preferences.
+admin.users.link = Users
 admin.users.title = User Management
+admin.users.description = Manage the users of the system.
+admin.results.link = Results
+admin.results.title = Cached Query Results
+admin.results.description = View cached query results that have been saved.
+admin.activity.link = Activity
+admin.activity.title = User Activity
+admin.activity.description = Show system activity for all users in the system.
+admin.import.link = Import
+admin.import.title = System Import/Export
+admin.import.description = Import and export your settings, connections and saved queries.
+
 admin.users.confirm = Are you certain you want to delete this user ({0})?
 
 # Static

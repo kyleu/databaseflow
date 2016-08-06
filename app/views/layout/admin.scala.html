@@ -16,29 +16,29 @@
 
       <ul class="left hide-on-small-only">
         @if(activeSection == "settings") {
-          <li class="active"><a href="@controllers.admin.routes.SettingsController.settings()">Settings</a></li>
+          <li class="active"><a href="@controllers.admin.routes.SettingsController.settings()">@messages("admin.settings.link")</a></li>
         } else {
-          <li><a href="@controllers.admin.routes.SettingsController.settings()">Settings</a></li>
+          <li><a href="@controllers.admin.routes.SettingsController.settings()">@messages("admin.settings.link")</a></li>
         }
         @if(activeSection == "users") {
-          <li class="active"><a href="@controllers.admin.routes.UserEditController.users()">Users</a></li>
+          <li class="active"><a href="@controllers.admin.routes.UserEditController.users()">@messages("admin.users.link")</a></li>
         } else {
-          <li><a href="@controllers.admin.routes.UserEditController.users()">Users</a></li>
+          <li><a href="@controllers.admin.routes.UserEditController.users()">@messages("admin.users.link")</a></li>
         }
         @if(activeSection == "results") {
-          <li class="active"><a href="@controllers.admin.routes.ResultCacheController.results()">Results</a></li>
+          <li class="active"><a href="@controllers.admin.routes.ResultCacheController.results()">@messages("admin.results.link")</a></li>
         } else {
-          <li><a href="@controllers.admin.routes.ResultCacheController.results()">Results</a></li>
+          <li><a href="@controllers.admin.routes.ResultCacheController.results()">@messages("admin.results.link")</a></li>
         }
         @if(activeSection == "activity") {
-          <li class="active"><a href="@controllers.admin.routes.ActivityController.activity()">Activity</a></li>
+          <li class="active"><a href="@controllers.admin.routes.ActivityController.activity()">@messages("admin.activity.link")</a></li>
         } else {
-          <li><a href="@controllers.admin.routes.ActivityController.activity()">Activity</a></li>
+          <li><a href="@controllers.admin.routes.ActivityController.activity()">@messages("admin.activity.link")</a></li>
         }
         @if(activeSection == "import") {
-          <li class="active"><a href="@controllers.admin.routes.AdminController.importForm()">Import</a></li>
+          <li class="active"><a href="@controllers.admin.routes.AdminController.importForm()">@messages("admin.import.link")</a></li>
         } else {
-          <li><a href="@controllers.admin.routes.AdminController.importForm()">Import</a></li>
+          <li><a href="@controllers.admin.routes.AdminController.importForm()">@messages("admin.import.link")</a></li>
         }
       </ul>
 
@@ -71,7 +71,7 @@
   <footer class="page-footer theme lighten-2">
     <div class="footer-copyright">
       @messages("static.copyright")
-      <a class="grey-text text-lighten-4 right" href="@utils.Config.projectUrl">About</a>
+      <a class="grey-text text-lighten-4 right" href="@utils.Config.projectUrl">@messages("general.about")</a>
     </div>
   </footer>
 }
