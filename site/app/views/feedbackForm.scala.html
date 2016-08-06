@@ -1,4 +1,4 @@
-@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple(utils.Config.projectName) {
+@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple(utils.Config.projectName, "feedback") {
   <div class="row">
     <div class="col s12">
       <form action="@controllers.routes.FeedbackController.postFeedback(false)" method="post">

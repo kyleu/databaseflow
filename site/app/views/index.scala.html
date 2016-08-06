@@ -1,4 +1,6 @@
-@(isAdmin: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple(utils.Config.projectName) {
+@(isAdmin: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.simple(title = utils.Config.projectName, section = "index", isAdmin = isAdmin) {
   <div class="row">
     <div class="col s12">
       <div class="card">
@@ -13,7 +15,7 @@
   @views.html.content.demo()
   @views.html.content.downloads()
   @views.html.content.license()
-  @views.html.content.otherActions(isAdmin)
+  @views.html.content.otherActions()
   @views.html.content.features()
   @views.html.content.comparison()
   @views.html.content.competition()

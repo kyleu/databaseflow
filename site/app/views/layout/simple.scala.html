@@ -1,17 +1,33 @@
-@(title: String, isAdmin: Boolean = false, scripts: Seq[String] = Nil)(content: Html)(
+@(title: String, section: String, isAdmin: Boolean = false, scripts: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(title, scripts = scripts) {
   <header>
     <nav id="topnav" class="theme">
-      @if(isAdmin) {
-        <ul class="left hide-on-small-only">
-          <li><a href="@controllers.admin.routes.LicenseController.list()">Licenses</a></li>
-          <li><a href="@controllers.admin.routes.FeedbackController.list()">Feedback</a></li>
-          <li><a href="@controllers.admin.routes.MetricsController.view()">Metrics</a></li>
-          <li><a href="@controllers.admin.routes.LogController.list()">Logs</a></li>
-        </ul>
-      }
-      <a href="@routes.SiteController.splash()" class="brand-logo center">@utils.Config.projectName</a>
+      @if(section != "splash") {<ul class="right hide-on-small-only">
+        @if(section == "features") {
+          <li class="active"><a href="">@messages("index.features.link")</a></li>
+        } else {
+          <li><a href="">@messages("index.features.link")</a></li>
+        }
+        @if(section == "download") {
+          <li class="active"><a href="">@messages("index.download.link")</a></li>
+        } else {
+          <li><a href="">@messages("index.download.link")</a></li>
+        }
+        @if(section == "license") {
+          <li class="active"><a href="">@messages("index.license.link")</a></li>
+        } else {
+          <li><a href="">@messages("index.license.link")</a></li>
+        }
+        @if(isAdmin) {
+          @if(section == "admin") {
+            <li class="active"><a href="@controllers.admin.routes.AdminController.index()">@messages("index.admin.link")</a></li>
+          } else {
+            <li><a href="@controllers.admin.routes.AdminController.index()">@messages("index.admin.link")</a></li>
+          }
+        }
+      </ul>}
+      <a href="@routes.SiteController.splash()" class="brand-logo"><i style="margin-left: 10px;" class="fa fa-database"></i> @utils.Config.projectName</a>
     </nav>
   </header>
 

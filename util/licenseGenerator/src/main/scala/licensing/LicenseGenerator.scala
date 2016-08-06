@@ -12,6 +12,9 @@ object LicenseGenerator {
 
   def listLicenses() = {
     val dir = new java.io.File(licenseDir)
+    if (!dir.isDirectory) {
+      throw new IllegalStateException(s"Missing license directory [$licenseDir].")
+    }
     dir.listFiles.filter(_.getName.endsWith(".license")).map(_.getName.stripSuffix(".license")).map(UUID.fromString)
   }
 
