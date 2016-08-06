@@ -7,6 +7,22 @@ th.email = Email
 
 # Index
 index.splash = We're working hard on a new idea. Coming soon!
+index.features.link = Features
+index.download.link = Download
+index.license.link = Licensing
+index.admin.link = Admin
+
+# Downloads
+downloads.title = Downloads
+platform.osx = macOS
+platform.windows = Windows
+platform.linux = Linux
+platform.docker = Docker
+
+# Licensing
+license.title = Get a License
+license.personal = Get Free Personal Edition License
+license.team = Buy Team Edition Now
 
 # Newsletter
 newsletter.title = Newsletter

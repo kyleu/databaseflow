@@ -13,6 +13,10 @@ object FeedbackService {
 
   def list() = {
     val dir = new java.io.File(feedbackDir)
+    if (!dir.isDirectory) {
+      throw new IllegalStateException(s"Missing feedback directory [$feedbackDir].")
+    }
+
     dir.listFiles.filter(_.getName.endsWith(".feedback")).map(x => UUID.fromString(x.getName.stripSuffix(".feedback")))
   }
 

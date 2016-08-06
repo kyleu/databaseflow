@@ -31,7 +31,7 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
   }
 
   private[this] val msgs = {
-    val url = getClass.getClassLoader.getResource("client-messages")
+    val url = getClass.getClassLoader.getResource("client-messages.properties")
     Map(
       "en" -> Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
     )
