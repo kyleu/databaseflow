@@ -5,7 +5,7 @@ import java.util.UUID
 import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.query.SavedQuery
-import utils.DateUtils
+import utils.{DateUtils, JdbcUtils}
 
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val tableName = "saved_queries"
@@ -57,8 +57,8 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
       id = row.as[UUID]("id"),
 
       name = row.as[String]("name"),
-      description = row.asOpt[String]("description"),
-      sql = row.as[String]("sql"),
+      description = row.asOpt[Any]("description").map(JdbcUtils.extractString),
+      sql = JdbcUtils.extractString(row.as[Any]("sql")),
 
       owner = row.as[UUID]("owner"),
       connection = row.asOpt[UUID]("connection"),

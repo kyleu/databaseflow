@@ -5,7 +5,7 @@ import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.queries.BaseQueries
 import models.database.{Row, Statement}
-import utils.DateUtils
+import utils.{DateUtils, JdbcUtils}
 
 object PasswordInfoQueries extends BaseQueries[PasswordInfo] {
   override protected val tableName = "password_info"
@@ -29,7 +29,7 @@ object PasswordInfoQueries extends BaseQueries[PasswordInfo] {
   override protected def fromRow(row: Row) = PasswordInfo(
     hasher = row.as[String]("hasher"),
     password = row.as[String]("password"),
-    salt = row.asOpt[String]("salt")
+    salt = row.asOpt[Any]("salt").map(JdbcUtils.extractString)
   )
 
   override protected def toDataSeq(p: PasswordInfo) = Seq(p.hasher, p.password, p.salt, DateUtils.now)

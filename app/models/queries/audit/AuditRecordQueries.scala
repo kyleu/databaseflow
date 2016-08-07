@@ -63,7 +63,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     status = AuditStatus.withName(row.as[String]("status")),
 
     sql = row.asOpt[Any]("sql").map(JdbcUtils.extractString),
-    error = row.asOpt[String]("error"),
+    error = row.asOpt[Any]("error").map(JdbcUtils.extractString),
     rowsAffected = row.asOpt[Int]("rows_affected"),
 
     elapsed = row.as[Int]("elapsed"),

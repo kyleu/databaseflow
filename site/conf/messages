@@ -4,6 +4,7 @@ general.about = About
 
 # Table Headers
 th.email = Email
+th.name = Name
 
 # Index
 index.splash = We're working hard on a new idea. Coming soon!
@@ -41,6 +42,10 @@ license.form.name = Name
 license.form.email = Email
 license.form.prompt = Fill out this form, and you'll get your license immediately.
 license.form.personal = New Personal License
+
+# Purchasing
+purchase.description = Fill out this form, and you'll get your license immediately.
+purchase.title = Purchase License
 
 # Static
 static.copyright = © 2016 Database Flow

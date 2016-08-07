@@ -54,14 +54,14 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     owner = row.as[UUID]("owner"),
     read = row.as[String]("read"),
     edit = row.as[String]("edit"),
-    description = row.as[String]("description"),
+    description = JdbcUtils.extractString(row.as[Any]("description")),
     engine = DatabaseEngine.withName(row.as[String]("engine")),
-    host = row.asOpt[String]("host"),
-    dbName = row.asOpt[String]("db_name"),
-    extra = row.asOpt[String]("extra"),
+    host = row.asOpt[Any]("host").map(JdbcUtils.extractString),
+    dbName = row.asOpt[Any]("db_name").map(JdbcUtils.extractString),
+    extra = row.asOpt[Any]("extra").map(JdbcUtils.extractString),
     urlOverride = row.asOpt[Any]("url_override").map(JdbcUtils.extractString),
     username = row.as[String]("username"),
-    password = PasswordEncryptUtils.decrypt(row.as[String]("password"))
+    password = PasswordEncryptUtils.decrypt(JdbcUtils.extractString(row.as[Any]("password")))
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = Seq[Any](
