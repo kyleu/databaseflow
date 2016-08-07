@@ -47,6 +47,11 @@ class SiteController @javax.inject.Inject() (implicit
     Future.successful(Ok(views.html.versions(isAdmin)))
   }
 
+  def screenshots() = act("sreenshots") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.screenshots(isAdmin)))
+  }
+
   def robots() = act("robots-txt") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow:"))
   }

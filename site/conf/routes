@@ -2,6 +2,7 @@ GET            /                                        controllers.SiteControll
 GET            /site                                    controllers.SiteController.index
 GET            /features                                controllers.SiteController.features
 GET            /versions                                controllers.SiteController.versions
+GET            /screenshots                             controllers.SiteController.screenshots
 GET            /robots.txt                              controllers.SiteController.robots
 GET            /version                                 controllers.UpdateController.version
 
