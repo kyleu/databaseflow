@@ -1,5 +1,8 @@
-@(s: String)@simple("Translation Services") {
-  Hi there!
-
-  <pre>@s</pre>
+@()@simple("Translation Services") {
+  <ul>
+    <li><a href="@routes.TranslationController.client()">Client</a></li>
+    <li><a href="@routes.TranslationController.server()">Server</a></li>
+    <li><a href="@routes.TranslationController.site()">Site</a></li>
+    <li><a href="@routes.TranslationController.test()">Test</a></li>
+  </ul>
 }
