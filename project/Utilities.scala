@@ -1,5 +1,6 @@
 import Dependencies.{ Akka, Metrics, Play }
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
+import com.typesafe.sbt.web.SbtWeb
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import sbt.Keys._
 import sbt._
@@ -45,6 +46,16 @@ object Utilities {
     .settings(scalariformSettings: _*)
     .dependsOn(licenseModels)
     .aggregate(licenseModels)
+
+  lazy val translation = (project in file("util/translation")).settings(
+    name := "translation",
+    ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  )
+    .enablePlugins(SbtWeb, play.sbt.PlayScala)
+    .settings(libraryDependencies ++= Seq(Dependencies.Utils.enumeratum, Play.playWs))
+    .settings(Shared.commonSettings: _*)
+    .settings(graphSettings: _*)
+    .settings(scalariformSettings: _*)
 
   lazy val benchmarking = (project in file("util/benchmarking")).settings(Shared.commonSettings: _*)
     .settings(

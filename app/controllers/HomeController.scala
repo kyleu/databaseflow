@@ -1,5 +1,7 @@
 package controllers
 
+import java.net.URL
+
 import play.api.i18n.Messages
 import play.api.mvc.Action
 import services.connection.ConnectionSettingsService
@@ -30,11 +32,12 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
     Future.successful(Ok("User-agent: *\nDisallow: /"))
   }
 
+  private[this] def msgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
+
   private[this] val msgs = {
-    val url = getClass.getClassLoader.getResource("client-messages.properties")
-    Map(
-      "en" -> Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
-    )
+    val enMsgs: Map[String, String] = msgs(getClass.getClassLoader.getResource("client/messages"))
+    val esMsgs: Map[String, String] = msgs(getClass.getClassLoader.getResource("client/messages.es"))
+    Map("en" -> enMsgs)
   }
 
   private[this] val responses = msgs.map { ms =>

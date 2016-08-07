@@ -20,4 +20,6 @@ lazy val licenseModels = Utilities.licenseModels
 
 lazy val licenseGenerator = Utilities.licenseGenerator
 
+lazy val translation = Utilities.translation
+
 lazy val benchmarking = Utilities.benchmarking
