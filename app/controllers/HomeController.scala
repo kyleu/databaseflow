@@ -34,7 +34,7 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
 
   private[this] def parseMsgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
 
-  private[this] lazy val msgs = Seq("en", "ar", "de", "es", "fr", "hi", "pt", "zh").map { l =>
+  private[this] lazy val msgs = Seq("en", "ar", "de", "es", "fr", "hi", "ja", "pt", "zh").map { l =>
     l -> parseMsgs(getClass.getClassLoader.getResource(s"client/messages.$l"))
   }.toMap
 
