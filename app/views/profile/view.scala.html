@@ -20,7 +20,11 @@
               <div class="input-field col s12">
                 <select id="input-language" name="language">
                   @models.user.Language.values.map { l =>
-                    <option value="@l.code">@l</option>
+                    @if(user.preferences.language == l) {
+                      <option selected="selected" value="@l.code">@l</option>
+                    } else {
+                      <option value="@l.code">@l</option>
+                    }
                   }
                 </select>
                 <label for="input-language" class="theme-text">@messages("profile.form.language")</label>

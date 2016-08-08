@@ -29,6 +29,7 @@ class ProfileController @javax.inject.Inject() (
       form => Future.successful(BadRequest(views.html.profile.view(request.identity, debug = false))),
       profileData => {
         val newPrefs = request.identity.preferences.copy(
+          language = profileData.language,
           theme = profileData.theme
         )
         val newUser = request.identity.copy(username = profileData.username, preferences = newPrefs)
