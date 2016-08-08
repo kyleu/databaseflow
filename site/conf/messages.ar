@@ -29,4 +29,4 @@ license.form.prompt = ملء هذا النموذج وسوف تحصل على ال
 license.form.personal = شخصية جديدة رخصة
 purchase.description = ملء هذا النموذج وسوف تحصل على الترخيص الخاص بك على الفور.
 purchase.title = شراء ترخيص
-static.copyright = © 2016 قاعدة بيانات التدفق
+static.copyright = © 2016 {0}

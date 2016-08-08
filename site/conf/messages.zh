@@ -29,4 +29,4 @@ license.form.prompt = 填写这种形式，并且您将得到您的许可证。
 license.form.personal = 新的个人许可证
 purchase.description = 填写这种形式，并且您将得到您的许可证。
 purchase.title = 购买许可证
-static.copyright = ©2016年数据库的流
+static.copyright = ©2016{0}

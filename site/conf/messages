@@ -48,4 +48,4 @@ purchase.description = Fill out this form, and you'll get your license immediate
 purchase.title = Purchase License
 
 # Static
-static.copyright = © 2016 Database Flow
+static.copyright = © 2016 {0}

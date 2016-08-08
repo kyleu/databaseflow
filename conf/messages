@@ -34,7 +34,7 @@ th.type = Type
 th.username = Username
 
 # Index Page
-index.welcome = Welcome to Database Flow! Here''s a few words about the app. Maybe a slogan or something.
+index.welcome = Welcome to {0}! Here''s a few words about the app. Maybe a slogan or something.
 index.no.connections = Add your first connection by clicking the link below.
 index.new.connection = New Connection
 
@@ -139,7 +139,7 @@ modal.save.this.database = This Database Only
 
 # Admin
 admin.title = Administration
-admin.index.title = Database Flow Administration
+admin.index.title = {0} Administration
 admin.index.prompt = Use the menu above or the links below to get started!
 
 admin.settings.link = Settings
@@ -158,10 +158,10 @@ admin.import.link = Import
 admin.import.title = System Import/Export
 admin.import.description = Import and export your settings, connections and saved queries.
 admin.import.instructions = Upload a previously-download system export (json format).
-admin.export.instructions = Download an export of Database Flow's settings, connections, and saved queries.
+admin.export.instructions = Download an export of {0}'s settings, connections, and saved queries.
 
 admin.users.new = New User
 admin.users.confirm = Are you certain you want to delete this user ({0})?
 
 # Static
-static.copyright = © 2016 Database Flow
+static.copyright = © 2016 {0}

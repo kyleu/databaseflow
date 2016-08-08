@@ -6,7 +6,7 @@
       <div class="card">
         <div class="card-content">
           <span class="card-title">@utils.Config.projectName</span>
-          <p>@messages("index.welcome")</p>
+          <p>@messages("index.welcome", utils.Config.projectName)</p>
 
           @if(connections.isEmpty) {
             <h5>@messages("index.no.connections")</h5>

@@ -29,4 +29,4 @@ license.form.prompt = Füllen Sie dieses Formular aus, und Sie erhalten Ihre Liz
 license.form.personal = Neue Persönliche Lizenz
 purchase.description = Füllen Sie dieses Formular aus, und Sie erhalten Ihre Lizenz umgehend.
 purchase.title = Lizenz Erwerben
-static.copyright = © 2016 Datenbank Fließen
+static.copyright = © 2016 {0}

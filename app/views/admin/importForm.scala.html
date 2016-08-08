@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col s12">
         <div class="z-depth-1" style="padding: 20px;">
-          @messages("admin.export.instructions")
+          @messages("admin.export.instructions", utils.Config.projectName)
           <div style="margin-top: 10px">
             <a href="@controllers.admin.routes.AdminController.systemExport()" class="btn theme waves-effect waves-light">@messages("th.export")</a>
           </div>

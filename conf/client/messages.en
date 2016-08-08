@@ -1,4 +1,3 @@
-# General
 general.ok = OK
 general.loading = Loading...
 general.refresh = Refresh
@@ -7,8 +6,6 @@ general.close = Close
 general.previous = Previous
 general.next = Next
 general.coming.soon = Coming Soon
-
-# Table Headers
 th.cancel = Cancel
 th.columns = Columns
 th.connection = Connection
@@ -42,13 +39,9 @@ th.target.columns = Target Columns
 th.target.table = Target Table
 th.type = Type
 th.unique = Unique
-
-# History
 history.title = Query History
 history.remove.all = Remove All History
 history.no.records = It looks like you haven't run any queries for this database. Get started!
-
-# Query
 query.explain = Explain
 query.analyze = Analyze
 query.export = Export
@@ -65,15 +58,11 @@ query.plan.estimated.rows = Est Rows
 query.error = Query Error
 query.plan.error = Plan Error
 query.unsaved.changes = This query has unsaved changes.
-
-# Feedback
-feedback.notice = Thanks for your feedback. This will send your message directly to the creators of Database Flow. If you'd like to be notified when we reply, please include an email address.
+feedback.notice = Thanks for your feedback. This will send your message directly to the creators of {0}. If you'd like to be notified when we reply, please include an email address.
 feedback.email = Email Address
 feedback.prompt = Enter your feedback
 feedback.submit = Submit Feedback
-
-# Help
-help.title = Database Flow Help
+help.title = {0} Help
 help.global.shortcuts = Global Shortcuts
 help.editor.shortcuts = Editor Shortcuts
 help.tips.and.tricks = Tips and Tricks

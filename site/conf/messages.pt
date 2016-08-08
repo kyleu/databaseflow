@@ -29,4 +29,4 @@ license.form.prompt = Preencha este formulário e você vai obter a sua licença
 license.form.personal = Nova Licença Pessoal
 purchase.description = Preencha este formulário e você vai obter a sua licença de imediato.
 purchase.title = Compra De Licença De
-static.copyright = © 2016 Base De Dados De Fluxo De
+static.copyright = © 2016 {0}

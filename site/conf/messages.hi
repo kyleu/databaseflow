@@ -29,4 +29,4 @@ license.form.prompt = इस फॉर्म को भरें, और आप 
 license.form.personal = नई व्यक्तिगत लाइसेंस
 purchase.description = इस फॉर्म को भरें, और आप अपने लाइसेंस पाने के लिए तुरंत.
 purchase.title = खरीद लाइसेंस
-static.copyright = © 2016 डेटाबेस प्रवाह
+static.copyright = © 2016 {0}

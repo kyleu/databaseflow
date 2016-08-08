@@ -32,13 +32,11 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
     Future.successful(Ok("User-agent: *\nDisallow: /"))
   }
 
-  private[this] def msgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
+  private[this] def parseMsgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
 
-  private[this] val msgs = {
-    val enMsgs: Map[String, String] = msgs(getClass.getClassLoader.getResource("client/messages"))
-    val esMsgs: Map[String, String] = msgs(getClass.getClassLoader.getResource("client/messages.es"))
-    Map("en" -> enMsgs)
-  }
+  private[this] lazy val msgs = Seq("en", "ar", "de", "es", "fr", "hi", "pt", "zh").map { l =>
+    l -> parseMsgs(getClass.getClassLoader.getResource(s"client/messages.$l"))
+  }.toMap
 
   private[this] val responses = msgs.map { ms =>
     val vals = ms._2.map { m =>

@@ -10,7 +10,7 @@ object FeedbackTemplate {
       div(cls := "row")(
         form(cls := "col s12")(
           div(cls := "row")(
-            div(cls := "col s12")(p(Messages("feedback.notice"))),
+            div(cls := "col s12")(p(Messages("feedback.notice", utils.Config.projectName))),
             div(cls := "input-field col s12")(
               input(id := "feedback-email-input", cls := "validate", `type` := "email", value := email, placeholder := Messages("feedback.email"))()
             ),
