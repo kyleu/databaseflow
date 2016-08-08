@@ -16,6 +16,16 @@
                 <label for="input-username" class="theme-text">@messages("profile.form.username")</label>
               </div>
             </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <select id="input-language" name="language">
+                  @models.user.Language.values.map { l =>
+                    <option value="@l.code">@l</option>
+                  }
+                </select>
+                <label for="input-language" class="theme-text">@messages("profile.form.language")</label>
+              </div>
+            </div>
             <input id="input-theme" type="hidden" class="" name="theme" value="@user.preferences.theme" />
             <label for="input-theme" class="theme-text">@messages("profile.form.theme")</label>
             <div id="theme-choices">
@@ -56,6 +66,8 @@
         activeSwatch = newSwatch;
       });
       $('#swatch-' + activeSwatch).addClass('active');
+
+      $('select').material_select();
     });
   </script>
 }

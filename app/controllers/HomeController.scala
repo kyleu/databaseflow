@@ -2,6 +2,7 @@ package controllers
 
 import java.net.URL
 
+import models.user.Language
 import play.api.i18n.Messages
 import play.api.mvc.Action
 import services.connection.ConnectionSettingsService
@@ -34,7 +35,7 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
 
   private[this] def parseMsgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
 
-  private[this] lazy val msgs = Seq("en", "ar", "de", "es", "fr", "hi", "ja", "pt", "zh").map { l =>
+  private[this] lazy val msgs = Language.values.map(x => x.code).map { l =>
     l -> parseMsgs(getClass.getClassLoader.getResource(s"client/messages.$l"))
   }.toMap
 

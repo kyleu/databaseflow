@@ -74,6 +74,7 @@ profile.change.password.old = Old Password
 profile.change.password.new = New Password
 profile.change.password.confirm = Confirm New Password
 profile.form.username = Username
+profile.form.language = Language
 profile.form.theme = Theme
 
 # Activity
