@@ -4,7 +4,7 @@
 )@layout.simple(Some(user), "Edit " + title, debug = false) {
   @components.formErrors(errors)
   <div class="row">
-    <form id="connection-form" class="col s12" method="post" action="@routes.ConnectionSettingsController.save(conn.id)">
+    <form id="connection-form" class="col s12" method="post" action="@controllers.routes.ConnectionSettingsController.save(conn.id)">
       <div class="card">
         <div class="card-content">
           <span class="card-title">@title</span>
@@ -109,7 +109,7 @@
         <div class="card-action">
           <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
           <a id="test-connection-button" class="right btn-flat theme-text" style="margin-right: 12px;" href="">Test</a>
-          <a class="theme-text" href="@routes.HomeController.home()">@messages("general.cancel")</a>
+          <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.cancel")</a>
           @if((!isNew) && conn.id != services.database.core.MasterDatabase.connectionId) {
             <a class="btn-flat theme-text" onclick="onDelete();return false;">@messages("general.delete")</a>
           }
@@ -123,7 +123,7 @@
     function onDelete() {
       var confirmed = confirm('Are you certain you\'d like to delete this connection?');
       if(confirmed) {
-        window.location = '@routes.ConnectionSettingsController.delete(conn.id) ';
+        window.location = '@controllers.routes.ConnectionSettingsController.delete(conn.id) ';
       }
       return false;
     }
@@ -184,7 +184,7 @@
           data[serialized[s]['name']] = serialized[s]['value']
         }
 
-        $.post('@routes.ConnectionTestController.test(conn.id)', data, function(ret) {
+        $.post('@controllers.routes.ConnectionTestController.test(conn.id)', data, function(ret) {
           if(ret.indexOf('ok:') === 0) {
             Materialize.toast(ret.substring(3), 4000);
           } else if(ret.indexOf('error:') === 0) {

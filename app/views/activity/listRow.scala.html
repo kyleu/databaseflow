@@ -9,7 +9,7 @@
     <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(a.owner)">@us.getUsername(a.owner)</a>
   }
   <td title="@a.connection">@a.connection.map { c =>
-    <a class="theme-text" href="@routes.QueryController.main(c)">@services.connection.ConnectionSettingsService.getById(c).map(_.name)</a>
+    <a class="theme-text" href="@controllers.routes.QueryController.main(c)">@services.connection.ConnectionSettingsService.getById(c).map(_.name)</a>
   }.getOrElse("N/A")</td>
   <td>@if(a.error.isDefined) {
     <a class="theme-text audit-error-toggle" href="" data-id="@a.id">@a.status</a>

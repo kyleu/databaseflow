@@ -5,8 +5,8 @@
   </li> }
   <li><a class="theme-text" href="@controllers.auth.routes.AuthenticationController.signInForm()">@messages("authentication.sign.in")</a></li>
   } else {
-  <li><a class="theme-text" href="@routes.UserActivityController.activity()">@messages("activity.title")</a></li>
-  <li><a class="theme-text" href="@routes.ProfileController.view()">@messages("profile.title")</a></li>
+  <li><a class="theme-text" href="@controllers.routes.UserActivityController.activity()">@messages("activity.title")</a></li>
+  <li><a class="theme-text" href="@controllers.routes.ProfileController.view()">@messages("profile.title")</a></li>
   <li><a class="theme-text" href="@controllers.auth.routes.AuthenticationController.signOut()">@messages("authentication.sign.out")</a></li>
   }
   <li><a class="theme-text" href="@utils.Config.projectUrl">@messages("general.about")</a></li>

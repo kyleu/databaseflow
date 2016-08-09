@@ -7,7 +7,7 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.audit.AuditType
 import models.user.UserForms
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.audit.AuditRecordService
 import services.user.UserSearchService
@@ -37,10 +37,10 @@ class AuthenticationController @javax.inject.Inject() (
                 ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
                 ctx.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
                   AuditRecordService.create(AuditType.SignIn, user.id, None)
-                  ctx.silhouette.env.authenticatorService.embed(v, result)
+                  ctx.silhouette.env.authenticatorService.embed(v, result.withLang(Lang(user.preferences.language.code)))
                 }
               }
-            case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
+            case None => Future.failed(new IdentityNotFoundException(messagesApi("error.missing.user", loginInfo.providerID)))
           }
         }.recover {
           case e: ProviderException =>
@@ -51,10 +51,10 @@ class AuthenticationController @javax.inject.Inject() (
   }
 
   def signOut = withSession("signout") { implicit request =>
-    val result = Redirect(controllers.routes.HomeController.home())
+    implicit val result = Redirect(controllers.routes.HomeController.home())
 
     AuditRecordService.create(AuditType.SignOut, request.identity.id, None)
     ctx.silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
-    ctx.silhouette.env.authenticatorService.discard(request.authenticator, result)
+    ctx.silhouette.env.authenticatorService.discard(request.authenticator, result.clearingLang)
   }
 }

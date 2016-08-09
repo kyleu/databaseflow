@@ -2,22 +2,28 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(title, scripts = scripts) {
   <header>
+    <ul id="language" class="dropdown-content">
+      @utils.Language.values.map { l =>
+        <li><a href="@controllers.routes.SiteController.language(l.code)">@l.toString</a></li>
+      }
+    </ul>
+
     <nav id="topnav" class="theme">
       @if(section != "splash") {<ul class="right hide-on-small-only">
         @if(section == "features") {
-          <li class="active"><a href="@routes.SiteController.features()">@messages("index.features.link")</a></li>
+          <li class="active"><a href="@controllers.routes.SiteController.features()">@messages("index.features.link")</a></li>
         } else {
-          <li><a href="@routes.SiteController.features()">@messages("index.features.link")</a></li>
+          <li><a href="@controllers.routes.SiteController.features()">@messages("index.features.link")</a></li>
         }
         @if(section == "download") {
-          <li class="active"><a href="@routes.DownloadController.index()">@messages("index.download.link")</a></li>
+          <li class="active"><a href="@controllers.routes.DownloadController.index()">@messages("index.download.link")</a></li>
         } else {
-          <li><a href="@routes.DownloadController.index()">@messages("index.download.link")</a></li>
+          <li><a href="@controllers.routes.DownloadController.index()">@messages("index.download.link")</a></li>
         }
         @if(section == "versions") {
-          <li class="active"><a href="@routes.SiteController.versions()">@messages("index.versions.link")</a></li>
+          <li class="active"><a href="@controllers.routes.SiteController.versions()">@messages("index.versions.link")</a></li>
         } else {
-          <li><a href="@routes.SiteController.versions()">@messages("index.versions.link")</a></li>
+          <li><a href="@controllers.routes.SiteController.versions()">@messages("index.versions.link")</a></li>
         }
         @if(isAdmin) {
           @if(section == "admin") {
@@ -26,8 +32,11 @@
             <li><a href="@controllers.admin.routes.AdminController.index()">@messages("index.admin.link")</a></li>
           }
         }
+        <li><a class="dropdown-button" href="#" data-activates="language">
+          @utils.Language.values.find(_.code == messages.lang.code).getOrElse(utils.Language.English)
+        </a></li>
       </ul>}
-      <a href="@routes.SiteController.splash()" class="brand-logo left"><i style="margin-left: 10px;" class="fa fa-database"></i> @utils.Config.projectName</a>
+      <a href="@controllers.routes.SiteController.splash()" class="brand-logo left"><i style="margin-left: 10px;" class="fa fa-database"></i> @utils.Config.projectName</a>
     </nav>
   </header>
 

@@ -29,7 +29,7 @@
             @rows.map { r =>
               <tr>
                 <td title="@r.connectionId">
-                  <a class="theme-text" href="@routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
+                  <a class="theme-text" href="@controllers.routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
                 </td>
                 <td>
                   <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(r.owner)">@userService.getUsername(r.owner)</a>

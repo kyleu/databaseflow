@@ -36,7 +36,8 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
   private[this] def parseMsgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
 
   private[this] lazy val msgs = Language.values.map(x => x.code).map { l =>
-    l -> parseMsgs(getClass.getClassLoader.getResource(s"client/messages.$l"))
+    val filename = if (l == "en") { "client/messages" } else { s"client/messages.$l" }
+    l -> parseMsgs(getClass.getClassLoader.getResource(filename))
   }.toMap
 
   private[this] val responses = msgs.map { ms =>
@@ -47,7 +48,10 @@ class HomeController @javax.inject.Inject() (override val ctx: ApplicationContex
   }
 
   def strings() = withoutSession("strings") { implicit request =>
-    val lang = request.acceptLanguages.find(l => msgs.keySet.contains(l.code)).map(_.code).getOrElse("en")
+    val lang = request.identity match {
+      case Some(u) => u.preferences.language.code
+      case None => request.acceptLanguages.find(l => msgs.keySet.contains(l.code)).map(_.code).getOrElse("en")
+    }
     Future.successful(Ok(responses(lang)).as("application/javascript"))
   }
 }

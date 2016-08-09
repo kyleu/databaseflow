@@ -7,7 +7,7 @@ import models.query.SqlParser
 import org.scalajs.dom
 import org.scalajs.jquery.JQuery
 import ui.EditorCreationHelper
-import utils.NetworkMessage
+import utils.{Messages, NetworkMessage}
 
 import scala.scalajs.js
 
@@ -33,10 +33,10 @@ object SqlManager {
     val sql = sqlEditor.getValue().toString.stripSuffix(";")
     val split = SqlParser.split(sql)
     if (split.length > 1) {
-      runQueryLink.text("Run Active")
+      runQueryLink.text(Messages("query.run.active"))
       runQueryAllLink.css("display", "inline")
     } else {
-      runQueryLink.text("Run")
+      runQueryLink.text(Messages("query.run"))
       runQueryAllLink.css("display", "none")
     }
   }

@@ -23,7 +23,7 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
         if (authorized) {
           block(request)
         } else {
-          Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> "You must have admin rights to access that page."))
+          Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("error.admin.required")))
         }
       }
     }
@@ -46,11 +46,11 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
       } else {
         request.identity match {
           case Some(u) => metrics.timer(action).timeFuture {
-            val auth = request.authenticator.getOrElse(throw new IllegalStateException("Somehow not logged in..."))
+            val auth = request.authenticator.getOrElse(throw new IllegalStateException(messagesApi("error.not.logged.in")))
             block(SecuredRequest(u, auth, request))
           }
           case None => Future.successful(Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing(
-            "error" -> s"You must sign in or register before accessing ${utils.Config.projectName}."
+            "error" -> messagesApi("error.must.sign.in", utils.Config.projectName)
           ))
         }
       }

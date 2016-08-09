@@ -18,20 +18,20 @@ object ModelListTemplate {
       td(a(cls := "list-link theme-text", data("name") := sq.id.toString, href := s"#saved-query-${sq.id}")(sq.name)),
       td(usernameMap.get(sq.owner) match {
         case Some(username) => span(username)
-        case None => em("Unknown")
+        case None => em(Messages("th.unknown"))
       }),
       td(sq.read),
       td(sq.edit),
       td(sq.connection match {
         case Some(o) => if (selfId == o) {
-          span("This Connection")
+          span(Messages("list.this.connection"))
         } else {
-          em("Unknown Connection")
+          em(Messages("list.unknown.connection"))
         }
-        case None => em("All Connections")
+        case None => em(Messages("list.all.connections"))
       })
     ))
-    forModels(queryId, "Saved Queries", tableFor(cols, rows))
+    forModels(queryId, Messages("list.saved.queries"), tableFor(cols, rows))
   }
 
   def forTables(queryId: UUID, tables: Seq[Table]) = {
@@ -45,7 +45,7 @@ object ModelListTemplate {
       td(title := t.foreignKeys.map(_.name).mkString(", "))(t.foreignKeys.size.toString),
       td(t.description.map(d => span(d)).getOrElse(em("None")))
     ))
-    forModels(queryId, "Tables", tableFor(cols, rows))
+    forModels(queryId, Messages("list.tables"), tableFor(cols, rows))
   }
 
   def forViews(queryId: UUID, views: Seq[View]) = {
@@ -55,7 +55,7 @@ object ModelListTemplate {
       td(v.columns.map(_.name).mkString(", ")),
       td(v.description.map(d => span(d)).getOrElse(em("None")))
     ))
-    forModels(queryId, "Views", tableFor(cols, rows))
+    forModels(queryId, Messages("list.views"), tableFor(cols, rows))
   }
 
   def forProcedures(queryId: UUID, procedures: Seq[Procedure]) = {
@@ -65,7 +65,7 @@ object ModelListTemplate {
       td(p.params.map(param => s"${param.name} (${param.paramType} ${param.columnType})").mkString(", ")),
       td(p.returnsResult.getOrElse(false).toString())
     ))
-    forModels(queryId, "Procedures", tableFor(cols, rows))
+    forModels(queryId, Messages("list.procedures"), tableFor(cols, rows))
   }
 
   private[this] def tableFor(cols: Seq[String], rows: Seq[TypedTag[String]]) = {
@@ -76,7 +76,7 @@ object ModelListTemplate {
   }
 
   private[this] def forModels(queryId: UUID, name: String, t: TypedTag[String]) = {
-    val searchBox = input(cls := "model-filter", placeholder := s"Filter $name", `type` := "text")
+    val searchBox = input(cls := "model-filter", placeholder := Messages("list.filter", name), `type` := "text")
     val ret = div(
       StaticPanelTemplate.cardRow(div(searchBox, t), Some(Icons.list -> span(name))),
       div(id := s"workspace-$queryId")

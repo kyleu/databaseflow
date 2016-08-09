@@ -5,6 +5,7 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.user.UserForms
+import play.api.i18n.Lang
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.user.UserService
 import utils.ApplicationContext
@@ -34,7 +35,7 @@ class ProfileController @javax.inject.Inject() (
         )
         val newUser = request.identity.copy(username = profileData.username, preferences = newPrefs)
         userService.save(newUser, update = true)
-        Future.successful(Redirect(controllers.routes.HomeController.home()))
+        Future.successful(Redirect(controllers.routes.HomeController.home()).withLang(Lang(profileData.language.code)))
       }
     )
   }

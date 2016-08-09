@@ -5,7 +5,7 @@ import java.util.UUID
 import models.template.{HelpTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{NetworkMessage, NumberUtils, TemplateUtils, TipsAndTricks}
+import utils._
 
 import scala.util.Random
 import scalatags.Text.all._
@@ -39,15 +39,15 @@ object HelpManager {
         throw new IllegalStateException(s"Encountered [${tipContent.length}] tip contents.")
       }
 
-      tipContent.text(TipsAndTricks.values(tipIdx).content)
+      tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
 
       TemplateUtils.clickHandler($(".previous-tip-link", queryPanel), jq => {
         if (tipIdx == 0) { tipIdx = TipsAndTricks.values.length - 1 } else { tipIdx = tipIdx - 1 }
-        tipContent.text(TipsAndTricks.values(tipIdx).content)
+        tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
       })
       TemplateUtils.clickHandler($(".next-tip-link", queryPanel), jq => {
         if (tipIdx == TipsAndTricks.values.length - 1) { tipIdx = 0 } else { tipIdx = tipIdx + 1 }
-        tipContent.text(TipsAndTricks.values(tipIdx).content)
+        tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
       })
 
       updateCounts()
@@ -58,14 +58,10 @@ object HelpManager {
 
   private[this] def updateCounts() = {
     val queryPanel = $(s"#panel-$helpId")
-
-    val latency = NetworkMessage.latencyMs.getOrElse(0)
-    $(".help-latency-label", queryPanel).text(NumberUtils.withCommas(latency))
-
-    val sentCount = utils.NetworkMessage.sentMessageCount
-    $(".help-sent-label", queryPanel).text(NumberUtils.withCommas(sentCount))
-
-    val receivedCount = utils.NetworkMessage.receivedMessageCount
-    $(".help-received-label", queryPanel).text(NumberUtils.withCommas(receivedCount))
+    val latency = NumberUtils.withCommas(NetworkMessage.latencyMs.getOrElse(0))
+    val sentCount = NumberUtils.withCommas(utils.NetworkMessage.sentMessageCount)
+    val receivedCount = NumberUtils.withCommas(utils.NetworkMessage.receivedMessageCount)
+    val msg = Messages("help.connection.status", latency, sentCount, receivedCount)
+    $(".connection-status", queryPanel).text(msg)
   }
 }

@@ -47,16 +47,8 @@ object HelpTemplate {
       div(cls := "row")(
         div(cls := "col s12")(
           div(cls := "z-depth-1 help-panel")(
-            h5("Connection"),
-            div(
-              "Connected, with a latency of [",
-              span(cls := "help-latency-label")(NumberUtils.withCommas(0)),
-              "ms]. We've sent ",
-              span(cls := "help-sent-label")(NumberUtils.withCommas(0)),
-              " and received ",
-              span(cls := "help-received-label")(NumberUtils.withCommas(0)),
-              " messages."
-            )
+            h5(Messages("th.connection")),
+            div(cls := "connection-status")()
           )
         )
       )
@@ -64,5 +56,5 @@ object HelpTemplate {
     StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.help -> span(Messages("help.title", utils.Config.projectName))))
   }
 
-  private[this] def patternToRow(s: KeyboardShortcut) = tr(td(s.pattern), td(s.desc))
+  private[this] def patternToRow(s: KeyboardShortcut) = tr(td(s.pattern), td(Messages("help.hotkey." + s.key)))
 }

@@ -37,12 +37,13 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><pre class="license-content-pre">@content</pre></td>
+                    <td><textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="license-content-textarea">@content</textarea></td>
                   </tr>
                 </tbody>
               </table>
 
-              <a class="theme-text" href="@controllers.routes.UserLicenseController.licenseDownload(license.id)">Download License File</a>
+              <a class="theme-text" href="@controllers.routes.UserLicenseController.licenseDownload(license.id)">@messages("license.download")</a>
+              <a class="theme-text right" href="" onclick="copy();return false;">@messages("license.copy")</a>
             </div>
           </div>
         </div>
@@ -53,4 +54,16 @@
       </div>
     </div>
   </div>
+  <script>
+    function copy() {
+      var inp = document.querySelector(".license-content-textarea");
+      try {
+        inp.select();
+        document.execCommand('copy');
+        inp.blur();
+      } catch (e) {
+        console.warn("Cannot copy: " + e)
+      }
+    }
+  </script>
 }

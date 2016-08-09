@@ -10,7 +10,7 @@ import org.scalajs.jquery.{jQuery => $}
 import ui.{TabManager, UserManager}
 import ui.metadata.MetadataManager
 import ui.modal.{QueryExportFormManager, QuerySaveFormManager}
-import utils.TemplateUtils
+import utils.{Messages, TemplateUtils}
 
 import scala.util.Random
 
@@ -19,9 +19,9 @@ object AdHocQueryManager {
 
   def addNewQuery(queryId: UUID = UUID.randomUUID) = {
     val queryName = if (lastNum == 1) {
-      "Unsaved Query"
+      Messages("query.default.name", "").trim
     } else {
-      "Unsaved Query " + lastNum
+      Messages("query.default.name", lastNum)
     }
     val sql = MetadataManager.schema.map { s =>
       if (s.tables.isEmpty) {

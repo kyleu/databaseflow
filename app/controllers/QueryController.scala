@@ -52,9 +52,9 @@ class QueryController @javax.inject.Inject() (
   def export(connectionId: UUID) = withSession("export") { implicit request =>
     val form = FormUtils.getForm(request)
 
-    val sql = form.getOrElse("sql", throw new IllegalArgumentException("Missing [sql] parameter."))
-    val format = form.getOrElse("format", throw new IllegalArgumentException("Missing [format] parameter."))
-    val filename = form.getOrElse("filename", throw new IllegalArgumentException("Missing [filename] parameter."))
+    val sql = form.getOrElse("sql", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "sql")))
+    val format = form.getOrElse("format", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "format")))
+    val filename = form.getOrElse("filename", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "filename")))
 
     val db = DatabaseRegistry.databaseFor(request.identity, connectionId) match {
       case Right(x) => x
@@ -69,7 +69,7 @@ class QueryController @javax.inject.Inject() (
     val query = format match {
       case "csv" => CsvExportQuery(sql, format, fos)
       case "xlsx" => XlsxExportQuery(filename, sql, format, fos)
-      case _ => throw new IllegalArgumentException(s"Unknown format [$format].")
+      case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format))
     }
     try {
       db.query(query)
@@ -82,7 +82,7 @@ class QueryController @javax.inject.Inject() (
       case NonFatal(ex) =>
         file.delete
         log.warn(s"Unable to export query for sql [$sql].", ex)
-        Future.successful(InternalServerError(s"Unable to export query: [${ex.getClass.getSimpleName}: ${ex.getMessage}]"))
+        Future.successful(InternalServerError(messagesApi("error.exception.encountered", ex.getClass.getSimpleName, ex.getMessage)))
     }
   }
 }

@@ -20,16 +20,16 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
 
   def save() = withoutSession("license-save") { implicit request =>
     val form = FormUtils.getForm(request)
-    val content = form.getOrElse("content", throw new IllegalStateException("Missing license content.")).trim
+    val content = form.getOrElse("content", throw new IllegalStateException(messagesApi("license.missing"))).trim
 
     LicenseService.parseLicense(content) match {
       case Success(l) =>
         SettingsService.set(SettingKey.LicenseContent, content)
         LicenseService.readLicense()
-        Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("success" -> "License updated successfully."))
+        Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("success" -> messagesApi("license.success")))
       case Failure(x) =>
         val msg = x match {
-          case _ if content.isEmpty => "Please paste your license in the form below."
+          case _ if content.isEmpty => messagesApi("license.paste")
           case ex => ex.getClass.getSimpleName + ": " + ex.getMessage
         }
         Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing("error" -> msg))
