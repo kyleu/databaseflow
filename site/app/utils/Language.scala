@@ -1,4 +1,4 @@
-package models.user
+package utils
 
 import enumeratum.{Enum, EnumEntry}
 

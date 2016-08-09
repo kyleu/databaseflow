@@ -4,6 +4,7 @@ GET            /features                                controllers.SiteControll
 GET            /versions                                controllers.SiteController.versions
 GET            /screenshots                             controllers.SiteController.screenshots
 GET            /robots.txt                              controllers.SiteController.robots
+GET            /lang/:id                                controllers.SiteController.language(id)
 GET            /version                                 controllers.UpdateController.version
 
 # Feedback

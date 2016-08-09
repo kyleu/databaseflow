@@ -2,7 +2,7 @@ package controllers
 
 import akka.actor.ActorSystem
 import com.codahale.metrics.SharedMetricRegistries
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{Action, Controller}
 import utils.metrics.{MetricsConfig, MetricsServletActor}
@@ -50,6 +50,11 @@ class SiteController @javax.inject.Inject() (implicit
   def screenshots() = act("sreenshots") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.screenshots(isAdmin)))
+  }
+
+  def language(lang: String) = act("language") { implicit request =>
+    val l = Lang(lang)
+    Future.successful(Redirect(controllers.routes.SiteController.index()).withLang(l))
   }
 
   def robots() = act("robots-txt") { implicit request =>

@@ -6,7 +6,7 @@
         locale: "auto",
         name: '@utils.Config.projectName',
         description: 'Team Edition License',
-        image: "@routes.Assets.versioned("images/payment-logo.png").url",
+        image: "@controllers.routes.Assets.versioned("images/payment-logo.png").url",
         amount: 50000,
         token: function(token) {
           $("#stripe-token-input").val(token.id);
