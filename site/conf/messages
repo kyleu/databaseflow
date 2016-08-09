@@ -36,6 +36,8 @@ feedback.email = Email Address
 feedback.submit = Send Feedback
 
 # Licensing
+license.download = Download License File
+license.copy = Copy License to Clipboard
 license.success = Your Database Flow License
 license.continue = Continue
 license.form.name = Name

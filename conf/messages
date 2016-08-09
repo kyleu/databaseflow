@@ -40,6 +40,9 @@ index.new.connection = New Connection
 
 # License
 license.new.form = License Details
+license.paste = Please paste your license in the form below.
+license.missing = Missing license content.
+license.success = License updated successfully.
 
 # Registration
 registration.title = Register
@@ -114,6 +117,7 @@ query.sidenav.loading = Loading...
 query.sidenav.new = New Query
 query.sidenav.history = Query History
 query.sidenav.refresh = Refresh Schema
+query.sidenav.saved.queries = Saved Queries
 query.sidenav.tables = Tables
 query.sidenav.views = Views
 query.sidenav.procedures = Stored Procedures
@@ -163,6 +167,16 @@ admin.export.instructions = Download an export of {0}'s settings, connections, a
 
 admin.users.new = New User
 admin.users.confirm = Are you certain you want to delete this user ({0})?
+
+# Server Errors
+error.admin.required = You must have admin rights to access that page.
+error.not.logged.in = Somehow not logged in.
+error.must.sign.in = You must sign in or register before accessing {0}.
+error.missing.parameter = Missing [{0}] parameter.
+error.unknown.format = Unknown format [{0}].
+error.exception.encountered = Unable to export query: [{0}: {1}].
+error.missing.user = Couldn't find user {0}.
+error.cannot.sign.up = Unable to sign up at this time. Contact your administrator.
 
 # Static
 static.copyright = © 2016 {0}

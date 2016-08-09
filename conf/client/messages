@@ -1,3 +1,4 @@
+# General
 general.ok = OK
 general.loading = Loading...
 general.refresh = Refresh
@@ -6,6 +7,8 @@ general.close = Close
 general.previous = Previous
 general.next = Next
 general.coming.soon = Coming Soon
+
+# Table Headers
 th.cancel = Cancel
 th.columns = Columns
 th.connection = Connection
@@ -39,9 +42,14 @@ th.target.columns = Target Columns
 th.target.table = Target Table
 th.type = Type
 th.unique = Unique
+th.unknown = Unknown
+
+# History
 history.title = Query History
 history.remove.all = Remove All History
 history.no.records = It looks like you haven't run any queries for this database. Get started!
+
+# Query
 query.explain = Explain
 query.analyze = Analyze
 query.export = Export
@@ -58,11 +66,46 @@ query.plan.estimated.rows = Est Rows
 query.error = Query Error
 query.plan.error = Plan Error
 query.unsaved.changes = This query has unsaved changes.
+query.default.name = Unsaved Query {0}
+
+# Feedback
+feedback.title = Feedback
 feedback.notice = Thanks for your feedback. This will send your message directly to the creators of {0}. If you'd like to be notified when we reply, please include an email address.
 feedback.email = Email Address
 feedback.prompt = Enter your feedback
 feedback.submit = Submit Feedback
+
+# Model Lists
+list.saved.queries = Saved Queries
+list.tables = Tables
+list.views = Views
+list.procedures = Procedures
+list.this.connection = This Connection
+list.unknown.connection = Unknown Connection
+list.all.connections = All Connections
+list.filter = Filter {0}
+
+# Help
 help.title = {0} Help
 help.global.shortcuts = Global Shortcuts
 help.editor.shortcuts = Editor Shortcuts
 help.tips.and.tricks = Tips and Tricks
+help.connection.status = Connected, with a latency of [{0}ms]. We've sent {1} and received {2} messages.
+
+help.hotkey.save.query = Save Query
+help.hotkey.run.active.query = Run Active Query
+help.hotkey.run.all.queries = Run All Queries
+help.hotkey.leave.editor = Leave Editor
+help.hotkey.help = Help
+help.hotkey.search = Search
+help.hotkey.refresh.schema = Refresh Schema
+help.hotkey.new.query = New Query
+help.hotkey.close.tab = Close Tab
+help.hotkey.next.tab = Select Next Tab
+help.hotkey.previous.tab = Select Previous Tab
+
+help.tip.theme = You can change the color scheme of {0} from your profile once signed in.
+help.tip.hotkey.search = Press [/] or click in the search box to start filtering database objects.
+help.tip.hotkey.new = Press [+] when outside of a sql editor to start a new query.
+help.tip.hotkey.switch = Press [ or ] when outside of a sql editor to switch between tabs.
+help.tip.new.tab = Almost all the links in {0} can be opened in new browser tabs for easy side-by-side comparisons.

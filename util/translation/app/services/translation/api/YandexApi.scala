@@ -10,7 +10,6 @@ class YandexApi @javax.inject.Inject() (ws: WSClient) extends ApiProvider("Yande
   def url(lang: String) = s"https://translate.yandex.net/api/v1.5/tr.json/translate?key=$apiKey&lang=en-$lang"
 
   private[this] def body(text: String) = {
-    println(text)
     Map("text" -> Seq(text))
   }
 

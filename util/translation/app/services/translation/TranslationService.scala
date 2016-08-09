@@ -34,14 +34,7 @@ class TranslationService @javax.inject.Inject() (yandex: YandexApi, bing: BingAp
   }
 
   def translateAll(api: String, root: java.io.File) = {
-    val mainFile = {
-      val ret = new java.io.File(root, "messages")
-      if (ret.exists()) {
-        ret
-      } else {
-        new java.io.File(root, "messages.en")
-      }
-    }
+    val mainFile = new java.io.File(root, "messages")
     val mainTranslations = parse(mainFile)
 
     val files = getLanguages(root).map { lang =>

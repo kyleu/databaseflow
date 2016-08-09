@@ -7,7 +7,7 @@ object Messages {
   @js.native
   trait MessageObject extends js.Object {
     @JSBracketAccess
-    def apply(key: String): String = js.native
+    def apply(key: String): Any = js.native
   }
 
   lazy val jsMessages = {
@@ -20,11 +20,15 @@ object Messages {
 
   def apply(s: String, args: Any*) = {
     //utils.Logging.info(s)
-    val msg = jsMessages(s)
-    if (args.isEmpty) {
-      msg
-    } else {
-      throw new IllegalStateException("Can't handle arguments.")
+    val msg = Option(jsMessages(s)) match {
+      case Some(x) => x.toString match {
+        case "undefined" => s
+        case y => y
+      }
+      case None => s
+    }
+    args.zipWithIndex.foldLeft(msg) { (x, y) =>
+      x.replaceAllLiterally(s"{${y._2}}", y._1.toString)
     }
   }
 }
