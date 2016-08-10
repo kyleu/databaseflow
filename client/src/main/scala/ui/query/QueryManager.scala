@@ -62,10 +62,11 @@ object QueryManager {
 
     SqlManager.closeQuery(queryId)
     $(s"#panel-$queryId").remove()
-    TabManager.removeTab(queryId)
 
     val originalIndex = activeQueries.indexOf(queryId)
     activeQueries = activeQueries.filterNot(_ == queryId)
+
+    TabManager.removeTab(queryId)
 
     val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
     TabManager.selectTab(newId)

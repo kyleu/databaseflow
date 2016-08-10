@@ -2,7 +2,7 @@ package ui.query
 
 import java.util.UUID
 
-import models.{QueryDeleteRequest, QuerySaveRequest}
+import models.{CloseQuery, QueryDeleteRequest, QuerySaveRequest}
 import models.query.SavedQuery
 import models.template.Icons
 import models.template.query.QueryEditorTemplate
@@ -47,9 +47,11 @@ object SavedQueryManager {
     val userId = UserManager.userId.getOrElse(throw new IllegalStateException("Missing user details."))
     QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, userId).toString)
 
-    def close() = {
+    def close() = if (QueryManager.activeQueries.contains(savedQuery.id)) {
       QueryManager.closeQuery(savedQuery.id)
       openSavedQueries = openSavedQueries - savedQuery.id
+      utils.Logging.info("Saved query close called...")
+      NetworkMessage.sendMessage(CloseQuery(savedQuery.id))
     }
 
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)

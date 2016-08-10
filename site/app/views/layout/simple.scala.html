@@ -4,7 +4,7 @@
   <header>
     <ul id="language" class="dropdown-content">
       @utils.Language.values.map { l =>
-        <li><a href="@controllers.routes.SiteController.language(l.code)">@l.toString</a></li>
+        <li><a class="theme-text" href="@controllers.routes.SiteController.language(l.code)">@l.toString</a></li>
       }
     </ul>
 
@@ -34,6 +34,7 @@
         }
         <li><a class="dropdown-button" href="#" data-activates="language">
           @utils.Language.values.find(_.code == messages.lang.code).getOrElse(utils.Language.English)
+          <i class="fa fa-angle-down" style="height: auto;"></i>
         </a></li>
       </ul>}
       <a href="@controllers.routes.SiteController.splash()" class="brand-logo left"><i style="margin-left: 10px;" class="fa fa-database"></i> @utils.Config.projectName</a>

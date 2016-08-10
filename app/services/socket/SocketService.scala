@@ -22,8 +22,7 @@ case class SocketService(
     id: UUID, supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String
 ) extends InstrumentedActor with StartHelper with RequestMessageHelper with TransactionHelper with DataHelper with DetailHelper {
 
-  protected[this] var dbOpt = attemptConnect()
-  protected[this] val db = dbOpt.getOrElse(throw new IllegalStateException("Cannot connect to database."))
+  protected[this] val db = attemptConnect()
 
   protected[this] var schema: Option[Schema] = None
   protected[this] var savedQueries: Option[Seq[SavedQuery]] = None
@@ -35,6 +34,7 @@ case class SocketService(
   override def preStart() = onStart()
 
   override def postStop() = {
+    activeTransaction.foreach(_.rollback())
     if (MasterDatabase.isOpen) {
       AuditRecordService.create(AuditType.Disconnect, user.id, Some(connectionId))
     }

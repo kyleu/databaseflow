@@ -13,13 +13,13 @@ import scala.util.{Failure, Success, Try}
 
 trait StartHelper extends Logging { this: SocketService =>
   protected[this] def attemptConnect() = DatabaseRegistry.databaseFor(user, connectionId) match {
-    case Right(d) => Some(d)
+    case Right(d) => d
     case Left(x) =>
       log.warn("Error attempting to connect to database.", x)
       out ! ServerError("Database Connect Failed", x.getMessage)
       out ! PoisonPill
       self ! PoisonPill
-      None
+      throw x
   }
 
   protected[this] def onStart() = ActorSupervisor.connectErrorCheck(user.id) match {

@@ -3,7 +3,7 @@ package models.queries.result
 import java.sql.Timestamp
 import java.util.UUID
 
-import models.database.{Row, Statement}
+import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
 import models.result.CachedResult
 import services.schema.JdbcHelper
@@ -37,6 +37,12 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
   case class Complete(id: UUID, rowCount: Int, duration: Int) extends Statement {
     override val sql = updateSql(Seq("rows", "status", "duration"))
     override val values = Seq[Any](rowCount, "complete", duration, id)
+  }
+
+  case class GetMatchingResultIds(userId: UUID, queryId: UUID) extends Query[Seq[UUID]] {
+    override def sql = s"""select "id" from "$tableName" where "owner" = ? and "query_id" = ?"""
+    override def values = Seq(userId, queryId)
+    override def reduce(rows: Iterator[Row]) = rows.map(row => row.as[UUID]("id")).toList
   }
 
   override protected def fromRow(row: Row) = {

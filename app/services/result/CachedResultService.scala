@@ -6,10 +6,12 @@ import models.ddl.DdlQueries
 import models.queries.result.CachedResultQueries
 import models.result.CachedResult
 import org.joda.time.LocalDateTime
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.MetadataTables
 import utils.Logging
 
+import scala.concurrent.Future
 import scala.util.control.NonFatal
 
 object CachedResultService extends Logging {
@@ -23,6 +25,15 @@ object CachedResultService extends Logging {
     log.info(s"Caching result [$result].")
     MasterDatabase.executeUpdate(CachedResultQueries.insert(result))
     result
+  }
+
+  def removeCacheResults(userId: UUID, queryId: UUID) = {
+    val f = Future {
+      MasterDatabase.query(CachedResultQueries.GetMatchingResultIds(userId, queryId)).foreach(remove)
+    }
+    f.onFailure {
+      case x => log.error("Cannot remove cache results.", x)
+    }
   }
 
   def setFirstMessageDuration(resultId: UUID, firstMessageDuration: Int) = {

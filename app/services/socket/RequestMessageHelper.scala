@@ -6,6 +6,7 @@ import models._
 import services.audit.AuditRecordService
 import services.data.SampleDatabaseService
 import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService, QuerySaveService}
+import services.result.CachedResultService
 import utils.Config
 import utils.metrics.InstrumentedActor
 
@@ -30,6 +31,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
     case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId) }
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
+    case cq: CloseQuery => timeReceive(cq) { CachedResultService.removeCacheResults(user.id, cq.queryId) }
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { QuerySaveService.handleQuerySaveRequest(user.id, qsr.query, out) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QuerySaveService.handleQueryDeleteRequest(user.id, qdr.id, out) }

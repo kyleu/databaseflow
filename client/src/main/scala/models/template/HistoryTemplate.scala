@@ -34,7 +34,9 @@ object HistoryTemplate {
                 td(history.status.toString),
                 td(pre(cls := "sql-pre")(history.sql)),
                 td(TemplateUtils.toTimeago(TemplateUtils.toIsoString(history.occurred))),
-                td(a(data("audit") := history.id.toString, href := "#", cls := "audit-remove theme-text", title := Messages("general.close"))(i(cls := "fa " + Icons.close)))
+                td(a(data("audit") := history.id.toString, href := "#", cls := "audit-remove theme-text", title := Messages("general.close"))(
+                  i(cls := "fa " + Icons.close)
+                ))
               )
             })
           )

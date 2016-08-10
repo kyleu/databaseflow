@@ -2,6 +2,7 @@ package ui.query
 
 import java.util.UUID
 
+import models.CloseQuery
 import models.engine.EngineQueries
 import models.query.{RowDataOptions, SavedQuery}
 import models.template.Icons
@@ -10,7 +11,7 @@ import org.scalajs.jquery.{jQuery => $}
 import ui.{TabManager, UserManager}
 import ui.metadata.MetadataManager
 import ui.modal.{QueryExportFormManager, QuerySaveFormManager}
-import utils.{Messages, TemplateUtils}
+import utils.{Messages, NetworkMessage, TemplateUtils}
 
 import scala.util.Random
 
@@ -40,8 +41,9 @@ object AdHocQueryManager {
     val html = QueryEditorTemplate.forAdHocQuery(engine, queryId, queryName, sql)
     QueryManager.workspace.append(html.render)
 
-    def close() = {
+    def close() = if (QueryManager.activeQueries.contains(queryId)) {
       QueryManager.closeQuery(queryId)
+      NetworkMessage.sendMessage(CloseQuery(queryId))
     }
 
     TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery, close)
