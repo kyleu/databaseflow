@@ -22,7 +22,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
     }
   }
 
-  def index() = act(s"download-index") { implicit request =>
+  def index() = act("download-index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.downloads(isAdmin)))
   }

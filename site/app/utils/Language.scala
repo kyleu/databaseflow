@@ -13,6 +13,7 @@ object Language extends Enum[Language] {
   case object Dutch extends Language("nl")
   case object French extends Language("fr")
   case object German extends Language("de")
+  case object Hebrew extends Language("iw")
   case object Hindi extends Language("hi")
   case object Italian extends Language("it")
   case object Japanese extends Language("ja")

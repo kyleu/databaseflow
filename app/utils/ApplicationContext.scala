@@ -26,7 +26,7 @@ object ApplicationContext {
 @javax.inject.Singleton
 class ApplicationContext @javax.inject.Inject() (
     val messagesApi: MessagesApi,
-    val config: Config,
+    val config: Configuration,
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
     val actorSystem: ActorSystem,

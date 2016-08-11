@@ -1,9 +1,5 @@
 GET         /                           controllers.admin.AdminController.index
 
-GET         /import                     controllers.admin.AdminController.importForm
-POST        /import                     controllers.admin.AdminController.systemImport
-GET         /export                     controllers.admin.AdminController.systemExport
-
 GET         /users/new                  controllers.admin.UserCreateController.newUser()
 POST        /users/new                  controllers.admin.UserCreateController.saveNewUser()
 

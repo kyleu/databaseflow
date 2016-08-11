@@ -6,17 +6,17 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util._
 import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
+import com.mohiva.play.silhouette.crypto.{JcaCookieSigner, JcaCookieSignerSettings, JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, CookieAuthenticatorService}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, PlayCacheLayer, SecureRandomIDGenerator}
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
-import com.mohiva.play.silhouette.crypto.{JcaCookieSigner, JcaCookieSignerSettings, JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import net.codingwell.scalaguice.ScalaModule
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import services.user.{PasswordInfoService, UserSearchService}
-import utils.Config
+import utils.Configuration
 
 object AuthModule {
   val encKey = "dead60d84c1a41648ae258b57e8b5727"
@@ -60,7 +60,7 @@ class AuthModule extends AbstractModule with ScalaModule {
 
   @Provides
   def provideAuthenticatorService(
-    cookieSigner: CookieSigner, crypter: Crypter, fpg: FingerprintGenerator, idg: IDGenerator, config: Config, clock: Clock
+    cookieSigner: CookieSigner, crypter: Crypter, fpg: FingerprintGenerator, idg: IDGenerator, config: Configuration, clock: Clock
   ): AuthenticatorService[CookieAuthenticator] = {
     val authenticatorEncoder = new CrypterAuthenticatorEncoder(crypter)
     new CookieAuthenticatorService(config.cookieAuthSettings, None, cookieSigner, authenticatorEncoder, fpg, idg, clock)

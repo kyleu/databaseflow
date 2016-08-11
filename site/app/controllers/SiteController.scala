@@ -54,7 +54,13 @@ class SiteController @javax.inject.Inject() (implicit
 
   def language(lang: String) = act("language") { implicit request =>
     val l = Lang(lang)
-    Future.successful(Redirect(controllers.routes.SiteController.index()).withLang(l))
+    val result = Redirect(controllers.routes.SiteController.index()).withLang(l)
+    Future.successful(if (lang == "en") {
+      result
+    } else {
+      result.flashing("lang" -> lang)
+    })
+
   }
 
   def robots() = act("robots-txt") { implicit request =>

@@ -4,16 +4,8 @@ import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSetting
 import play.api.{Environment, Mode}
 import utils.metrics.MetricsConfig
 
-object Config {
-  val projectId = "databaseflow"
-  val projectName = "Database Flow"
-  val projectUrl = "https://databaseflow.com"
-  val version = "0.1"
-  val pageSize = 100
-}
-
 @javax.inject.Singleton
-class Config @javax.inject.Inject() (val cnf: play.api.Configuration, env: Environment) {
+class Configuration @javax.inject.Inject() (val cnf: play.api.Configuration, env: Environment) {
   val debug = env.mode == Mode.Dev
 
   // Metrics

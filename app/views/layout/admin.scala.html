@@ -35,11 +35,6 @@
         } else {
           <li><a href="@controllers.admin.routes.ActivityController.activity()">@messages("admin.activity.link")</a></li>
         }
-        @if(activeSection == "import") {
-          <li class="active"><a href="@controllers.admin.routes.AdminController.importForm()">@messages("admin.import.link")</a></li>
-        } else {
-          <li><a href="@controllers.admin.routes.AdminController.importForm()">@messages("admin.import.link")</a></li>
-        }
       </ul>
 
       <ul class="right hide-on-small-only">

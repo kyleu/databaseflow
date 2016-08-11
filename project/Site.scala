@@ -45,14 +45,12 @@ object Site {
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")
   )
 
-  lazy val site = Project(
-    id = "site",
-    base = file("site")
-  )
-    .enablePlugins(SbtWeb, play.sbt.PlayScala)
-    .settings(siteSettings: _*)
-    .dependsOn(Utilities.metrics)
-    .aggregate(Utilities.metrics)
-    .dependsOn(Utilities.licenseGenerator)
-    .aggregate(Utilities.licenseGenerator)
+  private[this] def withProjects(p: Project, includes: Seq[Project]) = includes.foldLeft(p) { (proj, inc) =>
+    proj.aggregate(inc).dependsOn(inc)
+  }
+
+  lazy val site = {
+    val ret = Project(id = "site", base = file("site")).enablePlugins(SbtWeb, play.sbt.PlayScala).settings(siteSettings: _*)
+    withProjects(ret, Seq(Utilities.metrics, Utilities.licenseGenerator))
+  }
 }

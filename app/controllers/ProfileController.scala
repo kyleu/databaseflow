@@ -35,7 +35,8 @@ class ProfileController @javax.inject.Inject() (
         )
         val newUser = request.identity.copy(username = profileData.username, preferences = newPrefs)
         userService.save(newUser, update = true)
-        Future.successful(Redirect(controllers.routes.HomeController.home()).withLang(Lang(profileData.language.code)))
+        val l = profileData.language.code
+        Future.successful(Redirect(controllers.routes.HomeController.home()).withLang(Lang(l)).flashing("lang" -> l))
       }
     )
   }

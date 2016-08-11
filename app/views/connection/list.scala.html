@@ -10,7 +10,11 @@
     <div class="collapsible-body">
       <div style="padding : 25px ;">
         <div>@c.description</div>
-        <em style="display : block ;">@c.url</em>
+        <em style="display : block ;">@if(c.urlOverride.isDefined) {
+          @c.url
+        } else {
+          @c.host@c.port.map(":" + _).getOrElse("")/@c.dbName
+        }</em>
         <a href="@controllers.routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">@messages("query.title")</a>
         @defining(services.connection.ConnectionSettingsService.canEdit(user, c)) { canEdit =>
           @if(canEdit._1) {
