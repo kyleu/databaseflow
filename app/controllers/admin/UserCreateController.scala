@@ -37,9 +37,9 @@ class UserCreateController @javax.inject.Inject() (
     val username = form("username").trim
 
     if (username.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> "Username was empty."))
+      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> messagesApi("error.empty", "Username")))
     } else if (loginInfo.providerKey.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> "Email Address was empty."))
+      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> messagesApi("error.empty", "Email Address")))
     } else {
       val user = User(
         id = id,

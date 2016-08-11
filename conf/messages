@@ -86,7 +86,9 @@ activity.profile.title = User Activity
 activity.admin.title = System Activity
 activity.no.results = No activity recorded in database.
 activity.load.more = Load {0} More
+activity.remove.confirm = Removed activity [{0}]
 activity.remove.all = Remove All Activity
+activity.remove.all.confirm = Removed all system activity.
 activity.confirm.remove.user = Are you sure you wish to remove all your activity?
 activity.confirm.remove.all = Are you sure you wish to all activity from the system?
 
@@ -129,6 +131,10 @@ query.permissions.registered.users = Registered Users
 query.permissions.administrators = Administrators
 query.permissions.only.myself = Only Myself
 
+# Query Results
+result.remove.confirm = Removed result [{0}].
+result.remove.orphan = Remove orphan table [{0}].
+
 # Modals
 modal.confirm.prompt = Are you sure?
 modal.export.action = Export
@@ -150,6 +156,7 @@ admin.index.prompt = Use the menu above or the links below to get started!
 admin.settings.link = Settings
 admin.settings.title = System Settings
 admin.settings.description = Edit system settings and preferences.
+admin.settings.invalid = Attempt to save invalid setting [{0}].
 admin.users.link = Users
 admin.users.title = User Management
 admin.users.description = Manage the users of the system.
@@ -172,6 +179,10 @@ error.unknown.format = Unknown format [{0}].
 error.exception.encountered = Unable to export query: [{0}: {1}].
 error.missing.user = Couldn't find user {0}.
 error.cannot.sign.up = Unable to sign up at this time. Contact your administrator.
+error.empty = {0} is required.
+error.invalid.user = Invalid user [{0}].
+error.remove.self = You cannot remove your own admin role.
+error.
 
 # Static
 static.copyright = © 2016 {0}

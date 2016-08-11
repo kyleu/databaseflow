@@ -5,9 +5,9 @@
   } else {
     @a.auditType.title
   }</td>
-  @userService.map { us =>
+  @userService.map { us => <td>
     <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(a.owner)">@us.getUsername(a.owner)</a>
-  }
+  </td>}
   <td title="@a.connection">@a.connection.map { c =>
     <a class="theme-text" href="@controllers.routes.QueryController.main(c)">@services.connection.ConnectionSettingsService.getById(c).map(_.name)</a>
   }.getOrElse("N/A")</td>
