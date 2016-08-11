@@ -47,7 +47,7 @@ th.unknown = Unknown
 # History
 history.title = Query History
 history.remove.all = Remove All History
-history.no.records = It looks like you haven't run any queries for this database. Get started!
+history.no.records = It looks like you haven''t run any queries for this database. Get started!
 
 # Query
 query.explain = Explain
@@ -70,7 +70,7 @@ query.default.name = Unsaved Query {0}
 
 # Feedback
 feedback.title = Feedback
-feedback.notice = Thanks for your feedback. This will send your message directly to the creators of {0}. If you'd like to be notified when we reply, please include an email address.
+feedback.notice = Thanks for your feedback. This will send your message directly to the creators of {0}. If you''d like to be notified when we reply, please include an email address.
 feedback.email = Email Address
 feedback.prompt = Enter your feedback
 feedback.submit = Submit Feedback
@@ -90,7 +90,7 @@ help.title = {0} Help
 help.global.shortcuts = Global Shortcuts
 help.editor.shortcuts = Editor Shortcuts
 help.tips.and.tricks = Tips and Tricks
-help.connection.status = Connected, with a latency of [{0}ms]. We've sent {1} and received {2} messages.
+help.connection.status = Connected, with a latency of [{0}ms]. We''ve sent {1} and received {2} messages.
 
 help.hotkey.save.query = Save Query
 help.hotkey.run.active.query = Run Active Query

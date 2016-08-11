@@ -19,9 +19,10 @@ class TranslationController @javax.inject.Inject() (translationService: Translat
   def site = translate("./site/conf")
   def test = translate("./tmp/messagetest")
 
-  private[this] def translate(s: String) = Action.async {
+  private[this] def translate(s: String) = Action.async { request =>
+    val force = request.queryString.get("force").flatMap(_.headOption).contains("true")
     val root = new java.io.File(s)
-    val keys = translationService.translateAll(apiProvider, root)
+    val keys = translationService.translateAll(apiProvider, root, force)
     keys._2.map(v => Ok(views.html.display(v)))
   }
 }

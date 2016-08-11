@@ -159,11 +159,6 @@ admin.results.description = View cached query results that have been saved.
 admin.activity.link = Activity
 admin.activity.title = User Activity
 admin.activity.description = Show system activity for all users in the system.
-admin.import.link = Import
-admin.import.title = System Import/Export
-admin.import.description = Import and export your settings, connections and saved queries.
-admin.import.instructions = Upload a previously-download system export (json format).
-admin.export.instructions = Download an export of {0}'s settings, connections, and saved queries.
 
 admin.users.new = New User
 admin.users.confirm = Are you certain you want to delete this user ({0})?

@@ -7,11 +7,13 @@ th.email = Email
 th.name = Name
 
 # Index
-index.splash = We're working hard on a new idea. Coming soon!
+index.splash = We''re working hard on a new idea. Coming soon!
 index.features.link = Features
 index.download.link = Download
 index.versions.link = Versions
 index.admin.link = Admin
+index.welcome1 = {0} is the best way to query and report on your own data.
+index.welcome2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 # Downloads
 downloads.title = Downloads
@@ -25,6 +27,21 @@ license.title = Get a License
 license.personal = Get Free Personal Edition License
 license.team = Buy Team Edition Now
 
+# Features
+features.a = Saved queries
+features.b = Editor autocomplete
+features.c = Tabbed interface
+features.d = Details of tables, views, and procedures
+features.e = Link to related tables
+features.f = Permissions for databases and queries
+features.g = Material design
+features.h = Responsive design with mobile support
+features.i = Supports H2, MySQL, Oracle, PostgreSQL, and SQL Server
+features.j = Locally installed application
+features.k = No ads, trackers or third-party sites
+features.l = View columns, indexes, key
+
+
 # Newsletter
 newsletter.title = Newsletter
 newsletter.subscribe = Subscribe
@@ -35,18 +52,20 @@ feedback.action = Leave Feedback
 feedback.email = Email Address
 feedback.submit = Send Feedback
 
+# Features
+features.title =
+
 # Licensing
 license.download = Download License File
 license.copy = Copy License to Clipboard
-license.success = Your Database Flow License
+license.success = Your {0} License
 license.continue = Continue
 license.form.name = Name
 license.form.email = Email
-license.form.prompt = Fill out this form, and you'll get your license immediately.
+license.form.prompt = Fill out this form, and you''ll get your license immediately.
 license.form.personal = New Personal License
 
 # Purchasing
-purchase.description = Fill out this form, and you'll get your license immediately.
 purchase.title = Purchase License
 
 # Static

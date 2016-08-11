@@ -1,8 +1,14 @@
-@()@simple("Translation Services") {
+@()
+@li(call: Call, title: String) = {
+  <li>
+    <a href="@call">@title</a> (<a href="@call?force=true">Force</a>)
+  </li>
+}
+@simple("Translation Services") {
   <ul>
-    <li><a href="@controllers.routes.TranslationController.client()">Client</a></li>
-    <li><a href="@controllers.routes.TranslationController.server()">Server</a></li>
-    <li><a href="@controllers.routes.TranslationController.site()">Site</a></li>
-    <li><a href="@controllers.routes.TranslationController.test()">Test</a></li>
+    @li(controllers.routes.TranslationController.client(), "Client")
+    @li(controllers.routes.TranslationController.server(), "Server")
+    @li(controllers.routes.TranslationController.site(), "Site")
+    @li(controllers.routes.TranslationController.test(), "Test")
   </ul>
 }
