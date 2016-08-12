@@ -18,7 +18,7 @@ import scala.concurrent.Future
 class ConnectionSettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
     val conn = ConnectionSettings(UUID.randomUUID, "", request.identity.id)
-    Future.successful(Ok(views.html.connection.form(request.identity, conn, "New Connection", isNew = true)))
+    Future.successful(Ok(views.html.connection.form(request.identity, conn, messagesApi("connection.new.title"), isNew = true)))
   }
 
   def editForm(id: UUID) = withSession("edit-form-" + id) { implicit request =>
@@ -29,7 +29,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       }
       Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
     } else {
-      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> "You do not have permission to add a database connection."))
+      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
     }
   }
 
@@ -43,7 +43,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       }
       val result = ConnectionForm.form.bindFromRequest.fold(
         formWithErrors => {
-          val title = formWithErrors.value.map(_.name).getOrElse("New Connection")
+          val title = formWithErrors.value.map(_.name).getOrElse(messagesApi("connection.new.title"))
           BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
         },
         cf => {
@@ -78,8 +78,18 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       )
       Future.successful(result)
     } else {
-      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> "You do not have permission to add a database connection."))
+      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
     }
+  }
+
+  def copyConnection(connectionId: UUID) = withSession("copy") { implicit request =>
+    val conn = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalStateException(s"Invalid connection [$connectionId]."))
+    val updated = conn.copy(
+      id = UUID.randomUUID,
+      name = "Copy of " + conn.name,
+      password = ""
+    )
+    Future.successful(Ok(views.html.connection.form(request.identity, updated, updated.name, isNew = true)))
   }
 
   def delete(connectionId: UUID) = withSession("delete") { implicit request =>

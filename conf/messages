@@ -48,15 +48,14 @@ license.success = License updated successfully.
 registration.title = Register
 registration.call.to.action = Register for {0}
 registration.register = Sign Up
-
 registration.email.taken = That email address is already in use
 registration.form.username = Name
 registration.form.email = Email Address
 registration.form.password = Password
 registration.form.password.confirm = Confirm Password
-
 registration.passwords.do.not.match = Passwords do not match
 registration.already.member = Already a member?
+registration.disabled = You cannot sign up at this time. Contact your administrator.
 
 # Authentication
 authentication.call.to.action = Sign in to {0}
@@ -88,7 +87,9 @@ activity.no.results = No activity recorded in database.
 activity.load.more = Load {0} More
 activity.remove.confirm = Removed activity [{0}]
 activity.remove.all = Remove All Activity
+activity.remove.ok = Removed activity [{0}].
 activity.remove.all.confirm = Removed all system activity.
+activity.remove.all.user.confirm = Removed all user activity.
 activity.confirm.remove.user = Are you sure you wish to remove all your activity?
 activity.confirm.remove.all = Are you sure you wish to all activity from the system?
 
@@ -106,6 +107,8 @@ connection.port = Port
 connection.db.name = Database Name
 connection.jdbc.url = Jdbc URL
 connection.description = Description
+connection.new.title = New Connection
+connection.permission.denied = You do not have permission to add a database connection.
 
 # Query
 query.title = Query
@@ -148,6 +151,10 @@ modal.save.available.from = Available From
 modal.save.all.databases = All Databases
 modal.save.this.database = This Database Only
 
+# User
+user.password.changed = Password changed.
+user.password.check.fail = Old password does not match ({0}).
+
 # Admin
 admin.title = Administration
 admin.index.title = {0} Administration
@@ -182,7 +189,6 @@ error.cannot.sign.up = Unable to sign up at this time. Contact your administrato
 error.empty = {0} is required.
 error.invalid.user = Invalid user [{0}].
 error.remove.self = You cannot remove your own admin role.
-error.
 
 # Static
 static.copyright = © 2016 {0}

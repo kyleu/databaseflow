@@ -31,7 +31,7 @@ class RegistrationController @javax.inject.Inject() (
     if (SettingsService.allowRegistration) {
       Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm)))
     } else {
-      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> "You cannot sign up at this time. Contact your administrator."))
+      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("registration.disabled")))
     }
   }
 

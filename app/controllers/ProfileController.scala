@@ -57,14 +57,14 @@ class ProfileController @javax.inject.Inject() (
         } else {
           val email = request.identity.profile.providerKey
           credentialsProvider.authenticate(Credentials(email, changePass.oldPassword)).flatMap { loginInfo =>
-            val okResponse = Redirect(controllers.routes.ProfileController.view()).flashing("success" -> "Password changed.")
+            val okResponse = Redirect(controllers.routes.ProfileController.view()).flashing("success" -> messagesApi("user.password.changed"))
             for {
               _ <- authInfoRepository.update(loginInfo, hasher.hash(changePass.newPassword))
               authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
               result <- ctx.silhouette.env.authenticatorService.renew(authenticator, okResponse)
             } yield result
           }.recover {
-            case e: ProviderException => errorResponse(s"Old password does not match (${e.getMessage}).")
+            case e: ProviderException => errorResponse(messagesApi("user.password.check.fail", e.getMessage))
           }
         }
       }

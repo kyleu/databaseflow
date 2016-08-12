@@ -14,7 +14,7 @@ object QueryErrorTemplate {
       if (qe.error.index.isEmpty) {
         ""
       } else {
-        s"Error encountered at index [${qe.error.index.getOrElse(0)}]."
+        Messages("query.index.error", qe.error.index.getOrElse(0))
       }
     )
 

@@ -5,6 +5,7 @@ import java.util.UUID
 import models.query.QueryResult
 import models.schema.ColumnType._
 import models.template.Icons
+import utils.Messages
 
 import scalatags.Text.all._
 
@@ -63,7 +64,7 @@ object DataTableTemplate {
         a(
           cls := "query-rel-link",
           href := s"#table-$relTable::${col.relationColumn.getOrElse("")}=${v.getOrElse("")}",
-          title := s"Open [$relTable] table filtered where [${col.relationColumn.getOrElse("")}=${v.getOrElse("0")}]",
+          title := Messages("query.open.relation", relTable, s"${col.relationColumn.getOrElse("")}=${v.getOrElse("0")}"),
           data("rel-table") := relTable,
           data("rel-col") := col.relationColumn.getOrElse(""),
           data("rel-val") := v.getOrElse("")
@@ -88,7 +89,7 @@ object DataTableTemplate {
   }
 
   def forResults(res: QueryResult, resultId: UUID) = if (res.columns.isEmpty || res.data.isEmpty) {
-    em("No rows returned")
+    em(Messages("query.no.rows.returned"))
   } else {
     val containsRowNum = res.columns.headOption.exists(_.name == "#")
     div(cls := "query-result-table")(

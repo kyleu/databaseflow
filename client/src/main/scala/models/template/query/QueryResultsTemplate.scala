@@ -32,6 +32,7 @@ object QueryResultsTemplate {
       }),
 
       div(cls := "row-status-display")(
+        a(href := "#", cls := "results-export-link right theme-text")(Messages("query.export")),
         if (hasFilter) {
           a(href := "#", cls := "results-filter-link right theme-text")(Messages("th.filter"))
         } else {
@@ -62,7 +63,7 @@ object QueryResultsTemplate {
       DataTableTemplate.forResults(qr, resultId),
       div(cls := "additional-results")(
         a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
-          s"Load ${qr.data.size} More Rows"
+          Messages("query.load.more", utils.NumberUtils.withCommas(qr.data.size))
         ),
         em(cls := "no-rows-remaining initially-hidden")(Messages("query.no.more.rows"))
       )
@@ -77,7 +78,7 @@ object QueryResultsTemplate {
   def forStatementResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
     val rowLabel = if (qr.rowsAffected == 1) { "row" } else { "rows" }
     val content = div(id := s"$resultId")(
-      a(href := "#", cls := "results-sql-link right theme-text")("SQL"),
+      a(href := "#", cls := "results-sql-link right theme-text")(Messages("th.sql")),
       p(s"${qr.rowsAffected} $rowLabel affected ", TemplateUtils.toTimeago(dateIsoString), s" in [${durationMs}ms]."),
       div(cls := "z-depth-1 statement-result-sql")(
         pre(cls := "pre-wrap")(qr.sql)

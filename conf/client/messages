@@ -58,7 +58,9 @@ query.run.all = Run All
 query.run.active = Run Active
 query.run.selection = Run Selection
 query.active.filter = Active Filter
+query.no.rows.returned = No rows returned
 query.view.first = View First 100 Rows
+query.load.more = Load {0} More Rows
 query.no.more.rows = No more rows available
 query.plan = Query Plan
 query.raw.plan = View Raw Plan
@@ -67,6 +69,8 @@ query.error = Query Error
 query.plan.error = Plan Error
 query.unsaved.changes = This query has unsaved changes.
 query.default.name = Unsaved Query {0}
+query.open.relation = Open [{0}] table filtered where [{1}].
+query.index.error = Error encountered at index [{0}].
 
 # Feedback
 feedback.title = Feedback

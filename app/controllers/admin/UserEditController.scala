@@ -53,7 +53,7 @@ class UserEditController @javax.inject.Inject() (
     } else if (newEmail.isEmpty) {
       Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Email Address")))
     } else if (isSelf && (role != Role.Admin) && user.role == Role.Admin) {
-        Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.remove.self")))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.remove.self")))
     } else {
       userService.update(id, newUsername, newEmail, newPassword, role, user.profile.providerKey)
       Future.successful(Redirect(controllers.admin.routes.UserEditController.view(id)))
