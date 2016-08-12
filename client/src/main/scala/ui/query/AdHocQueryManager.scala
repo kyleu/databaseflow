@@ -8,9 +8,9 @@ import models.query.{RowDataOptions, SavedQuery}
 import models.template.Icons
 import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{jQuery => $}
-import ui.{TabManager, UserManager}
 import ui.metadata.MetadataManager
-import ui.modal.{QueryExportFormManager, QuerySaveFormManager}
+import ui.modal.QuerySaveFormManager
+import ui.{TabManager, UserManager}
 import utils.{Messages, NetworkMessage, TemplateUtils}
 
 import scala.util.Random
@@ -53,10 +53,6 @@ object AdHocQueryManager {
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       val owner = UserManager.userId.getOrElse(throw new IllegalStateException())
       QuerySaveFormManager.show(SavedQuery(queryId, queryName, sql = SqlManager.getSql(queryId), owner = owner))
-    })
-
-    TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-      QueryExportFormManager.show(queryId, SqlManager.getSql(queryId), "Export")
     })
 
     val runQueryLink = $(".run-query-link", queryPanel)

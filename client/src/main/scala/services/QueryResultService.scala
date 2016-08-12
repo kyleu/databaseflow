@@ -8,6 +8,7 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.ProgressManager
+import ui.modal.QueryExportFormManager
 import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.{Logging, TemplateUtils}
 
@@ -43,6 +44,10 @@ object QueryResultService {
       })
 
       result.source.foreach(src => onComplete(result, src, panel, resultId))
+
+      TemplateUtils.clickHandler($(".results-export-link", panel), (jq) => {
+        QueryExportFormManager.show(result.queryId, resultId, "Export")
+      })
 
       val sqlEl = $(".query-result-sql", panel)
       var sqlShown = false

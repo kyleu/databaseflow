@@ -8,7 +8,7 @@ import models.template.Icons
 import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import ui.modal.{ConfirmManager, QueryExportFormManager, QuerySaveFormManager}
+import ui.modal.{ConfirmManager, QuerySaveFormManager}
 import ui.{TabManager, UserManager}
 import utils.{NetworkMessage, TemplateUtils}
 
@@ -56,9 +56,6 @@ object SavedQueryManager {
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
-    TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-      QueryExportFormManager.show(savedQuery.id, SqlManager.getSql(savedQuery.id), savedQuery.name)
-    })
     TemplateUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
       sql = SqlManager.getSql(savedQuery.id)
     )))

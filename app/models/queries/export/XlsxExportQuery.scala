@@ -2,7 +2,7 @@ package models.queries.export
 
 import java.io.OutputStream
 import java.sql.{Date, Time, Timestamp}
-import java.util.GregorianCalendar
+import java.util.{GregorianCalendar, UUID}
 
 import models.database.{Query, Row}
 import org.apache.poi.ss.usermodel.Cell
@@ -10,7 +10,9 @@ import org.apache.poi.ss.util.WorkbookUtil
 import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import utils.NullUtils
 
-case class XlsxExportQuery(title: String, override val sql: String, format: String, out: OutputStream) extends Query[Unit] {
+case class XlsxExportQuery(title: String, resultId: UUID, format: String, out: OutputStream) extends Query[Unit] {
+  override def sql: String = s"""select * from "result_$resultId""""
+
   override def reduce(rows: Iterator[Row]) = {
     val wb = new SXSSFWorkbook(100)
 

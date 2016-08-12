@@ -3,15 +3,13 @@ package ui.query
 import java.util.UUID
 
 import models.GetTableDetail
-import models.engine.EngineQueries
 import models.query.RowDataOptions
 import models.schema.Table
 import models.template._
 import models.template.tbl.TableDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import ui.modal.QueryExportFormManager
-import ui.{UserManager, _}
+import ui._
 import utils.{NetworkMessage, TemplateUtils}
 
 object TableManager extends TableDetailHelper {
@@ -58,11 +56,6 @@ object TableManager extends TableDetailHelper {
             }
           )
           RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
-        })
-
-        TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-          implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
-          QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name), name)
         })
 
         openTables = openTables + (name -> queryId)

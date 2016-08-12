@@ -10,7 +10,6 @@ import models.template.view.ViewDetailTemplate
 import models.{GetViewDetail, SubmitQuery}
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.metadata.MetadataManager
-import ui.modal.QueryExportFormManager
 import ui.{ProgressManager, UserManager, _}
 import utils.{NetworkMessage, TemplateUtils}
 
@@ -50,11 +49,6 @@ object ViewManager extends ViewDetailHelper {
 
       TemplateUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
         RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
-      })
-
-      TemplateUtils.clickHandler($(".export-link", queryPanel), (jq) => {
-        implicit val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("Schema not initialized"))
-        QueryExportFormManager.show(queryId, EngineQueries.selectFrom(name), name)
       })
 
       def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, (jq) => {

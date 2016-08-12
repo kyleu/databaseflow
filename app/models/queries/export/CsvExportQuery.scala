@@ -1,11 +1,14 @@
 package models.queries.export
 
 import java.io.OutputStream
+import java.util.UUID
 
 import com.github.tototoshi.csv.CSVWriter
 import models.database.{Query, Row}
 
-case class CsvExportQuery(override val sql: String, format: String, out: OutputStream) extends Query[Unit] {
+case class CsvExportQuery(resultId: UUID, format: String, out: OutputStream) extends Query[Unit] {
+  override def sql: String = s"""select * from "result_$resultId""""
+
   override def reduce(rows: Iterator[Row]) = {
     val writer = CSVWriter.open(out)
     if (rows.hasNext) {

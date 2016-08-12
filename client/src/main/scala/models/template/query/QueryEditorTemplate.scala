@@ -15,7 +15,6 @@ object QueryEditorTemplate {
     Some(a(cls := "run-query-link theme-text", href := "#")(Messages("query.run"))),
     Some(a(cls := "run-query-all-link theme-text initially-hidden", href := "#")(Messages("query.run.all"))),
     Some(a(cls := "run-query-selection-link theme-text initially-hidden", href := "#")(Messages("query.run.selection"))),
-    Some(a(cls := "export-link theme-text", href := "#")(Messages("query.export"))),
     if (engine.cap.explain.isDefined) { Some(a(cls := "explain-query-link theme-text", href := "#")(Messages("query.explain"))) } else { None },
     if (engine.cap.analyze.isDefined) { Some(a(cls := "analyze-query-link theme-text", href := "#")(Messages("query.analyze"))) } else { None }
   ).flatten

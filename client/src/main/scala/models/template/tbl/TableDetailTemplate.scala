@@ -31,12 +31,10 @@ object TableDetailTemplate {
         )
       )
     )
-    val actions = Seq(
-      a(cls := "view-data-link theme-text", href := "#")(Messages("query.view.first")),
-      a(cls := "right export-link theme-text first-right-link", href := "#")(Messages("query.export"))
-    )
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.table -> span(tableName)), actions = actions),
+      StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.table -> span(tableName)), actions = Seq(
+        a(cls := "view-data-link theme-text", href := "#")(Messages("query.view.first"))
+      )),
       div(id := s"workspace-$queryId")
     )
   }
