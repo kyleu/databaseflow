@@ -43,11 +43,12 @@ object QueryResultService {
         TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
       })
 
-      result.source.foreach(src => onComplete(result, src, panel, resultId))
-
-      TemplateUtils.clickHandler($(".results-export-link", panel), (jq) => {
-        QueryExportFormManager.show(result.queryId, resultId, "Export")
-      })
+      result.source.foreach { src =>
+        onComplete(result, src, panel, resultId)
+        TemplateUtils.clickHandler($(".results-export-link", panel), (jq) => {
+          QueryExportFormManager.show(result.queryId, src, "Export")
+        })
+      }
 
       val sqlEl = $(".query-result-sql", panel)
       var sqlShown = false
