@@ -1,7 +1,12 @@
 @()(implicit messages: Messages)
 @panel(key: String, name: String) = {
   <div class="col s6 m4 l3">
-    @name
+    <div class="logo z-depth-1">
+      <a class="theme-text" href="">
+        <img src="@routes.Assets.versioned(s"images/db/$key.png")" width="64" height="64" />
+        <div>@name</div>
+      </a>
+    </div>
   </div>
 }
 <div class="row">

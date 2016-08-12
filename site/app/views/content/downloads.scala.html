@@ -1,67 +1,37 @@
-@()(implicit messages: Messages)<div class="row">
+@()(implicit messages: Messages)
+@section(key: String, downloads: Seq[(String, String)]) = {
+  <div class="col s12 m6 l3">
+    <div class="download-section z-depth-1">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align: center;" colspan="@downloads.size">
+              <div><img src="@routes.Assets.versioned(s"images/os/$key.png")" width="64" height="64" /></div>
+              @messages(s"platform.$key")
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            @downloads.map { dl =>
+              <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download(key, dl._1)">@dl._2</a></td>
+            }
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+<div class="row">
   <div class="col s12">
     <div class="card">
       <div class="card-content">
         <span class="card-title">@messages("downloads.title")</span>
         <div class="row padded-top">
-          <div class="col s12 m6 l3">
-            <div class="download-section z-depth-1">
-              <table>
-                <thead>
-                  <tr><th style="text-align: center;" colspan="2">@messages("platform.osx")</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="text-align: center;" colspan="2"><a class="theme-text" href="@controllers.routes.DownloadController.download("osx", "service")">.zip</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="col s12 m6 l3">
-            <div class="download-section z-depth-1">
-              <table>
-                <thead>
-                  <tr><th style="text-align: center;" colspan="2">@messages("platform.windows")</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download("windows", "service")">.zip</a></td>
-                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download("windows", "gui")">.msi</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="col s12 m6 l3">
-            <div class="download-section z-depth-1">
-              <table>
-                <thead>
-                  <tr><th style="text-align: center;" colspan="2">@messages("platform.linux")</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download("linux", "service")">.tgz</a></td>
-                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download("linux", "deb")">.deb</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="col s12 m6 l3">
-            <div class="download-section z-depth-1">
-              <table>
-                <thead>
-                  <tr><th style="text-align: center;" colspan="2">@messages("platform.docker")</th></tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download("docker", "service")">.gz</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          @section("osx", Seq("service" -> ".zip"))
+          @section("windows", Seq("service" -> ".zip", "gui" -> ".msi"))
+          @section("linux", Seq("service" -> ".zip", "deb" -> ".deb"))
+          @section("docker", Seq("service" -> ".gz"))
         </div>
       </div>
     </div>
