@@ -64,10 +64,11 @@ license.continue = Continue
 license.form.name = Name
 license.form.email = Email
 license.form.prompt = Fill out this form, and you''ll get your license immediately.
+license.form.non.commercial = Free Non-Commercial License
 license.form.personal = New Personal License
 
 # Purchasing
-purchase.title = Purchase License
+purchase.title = Purchase {0} Edition License
 
 # Static
 static.copyright = © 2016 {0}

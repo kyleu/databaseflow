@@ -22,7 +22,7 @@ GET            /download/:os/:variant                   controllers.DownloadCont
 
 # Purchasing
 GET            /pricing/personal                        controllers.PurchaseController.pricingPersonal()
-POST           /purchase/personal                       controllers.PurchaseController.purchaseTeamEdition()
+POST           /purchase/personal                       controllers.PurchaseController.purchasePersonalEdition()
 GET            /pricing/team                            controllers.PurchaseController.pricingTeam()
 POST           /purchase/team                           controllers.PurchaseController.purchaseTeamEdition()
 

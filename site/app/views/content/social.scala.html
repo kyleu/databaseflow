@@ -24,17 +24,17 @@
   </div>
 </div>
 <script>
-    $(function() {
-      $('.social-panel').each(function(){
-        var t = $(this);
-        var img = $('img', t);
-        var src1 = img.attr('src'); // initial src
-        var newSrc = src1.substring(0, src1.lastIndexOf('.'));
-        t.hover(function(){
-          img.attr('src', newSrc + '-active.' + /[^.]+$/.exec(src1));
-        }, function(){
-          img.attr('src', newSrc + '.' + /[^.]+$/.exec(src1));
-        });
+  $(function() {
+    $('.social-panel').each(function(){
+      var t = $(this);
+      var img = $('img', t);
+      var src1 = img.attr('src'); // initial src
+      var newSrc = src1.substring(0, src1.lastIndexOf('.'));
+      t.hover(function(){
+        img.attr('src', newSrc + '-active.' + /[^.]+$/.exec(src1));
+      }, function(){
+        img.attr('src', newSrc + '.' + /[^.]+$/.exec(src1));
       });
     });
+  });
 </script>
