@@ -1,4 +1,4 @@
-import Dependencies.{ Akka, Metrics, Play }
+import Dependencies._
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import com.typesafe.sbt.web.SbtWeb
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
@@ -8,63 +8,51 @@ import io.gatling.sbt.GatlingPlugin
 import pl.project13.scala.sbt.JmhPlugin
 
 object Utilities {
-  lazy val metrics = (project in file("util/metrics")).settings(
-    name := "metrics",
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  private[this] val metricsLibs = Seq(
+    Play.playLib, Akka.actor,
+    Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite
   )
-    .settings(libraryDependencies ++= Seq(
-      Play.playLib, Akka.actor,
-      Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite
-    ))
+
+  lazy val metrics = (project in file("util/metrics"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
+    .settings(libraryDependencies ++= metricsLibs)
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
 
-  lazy val iconCreator = (project in file("util/iconCreator")).settings(
-    name := "icon-creator",
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  )
+  lazy val iconCreator = (project in file("util/iconCreator"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
 
-  lazy val licenseModels = (project in file("util/licenseModels")).settings(
-    name := "license-models",
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  )
+  lazy val licenseModels = (project in file("util/licenseModels"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(libraryDependencies ++= Seq(Dependencies.Utils.crypto, Dependencies.Utils.enumeratum))
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
 
-  lazy val licenseGenerator = (project in file("util/licenseGenerator")).settings(
-    name := "license-generator",
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  )
+  lazy val licenseGenerator = (project in file("util/licenseGenerator"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
     .dependsOn(licenseModels)
     .aggregate(licenseModels)
 
-  lazy val translation = (project in file("util/translation")).settings(
-    name := "translation",
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  )
+  lazy val translation = (project in file("util/translation"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .settings(libraryDependencies ++= Seq(Dependencies.Utils.enumeratum, Play.playWs))
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
 
-  lazy val benchmarking = (project in file("util/benchmarking")).settings(Shared.commonSettings: _*)
-    .settings(
-      name := "benchmarking",
-      libraryDependencies ++= Seq(
-        Dependencies.Testing.gatlingCore,
-        Dependencies.Testing.gatlingCharts
-      )
-    )
+  lazy val benchmarking = (project in file("util/benchmarking"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
+    .settings(libraryDependencies ++= Seq(Dependencies.Testing.gatlingCore, Dependencies.Testing.gatlingCharts))
+    .settings(Shared.commonSettings: _*)
     .enablePlugins(GatlingPlugin)
     .enablePlugins(JmhPlugin)
     .dependsOn(Shared.sharedJvm)

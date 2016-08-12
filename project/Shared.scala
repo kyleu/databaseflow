@@ -40,6 +40,10 @@ object Shared {
     val scala = "2.11.8"
   }
 
+  def withProjects(p: Project, includes: Seq[Project]) = includes.foldLeft(p) { (proj, inc) =>
+    proj.aggregate(inc).dependsOn(inc)
+  }
+
   lazy val sharedJs = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % Serialization.version,

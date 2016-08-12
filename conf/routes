@@ -8,6 +8,7 @@ GET         /c/new                                   controllers.ConnectionSetti
 POST        /c/:id                                   controllers.ConnectionSettingsController.save(id: java.util.UUID)
 GET         /c/:id                                   controllers.ConnectionSettingsController.editForm(id: java.util.UUID)
 GET         /c/:id/delete                            controllers.ConnectionSettingsController.delete(id: java.util.UUID)
+GET         /c/:id/cp                                controllers.ConnectionSettingsController.copyConnection(id: java.util.UUID)
 POST        /c/:id/test                              controllers.ConnectionTestController.test(id: java.util.UUID)
 
 # Query Interface

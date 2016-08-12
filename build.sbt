@@ -12,6 +12,14 @@ lazy val server = Server.server
 
 lazy val site = Site.site
 
+lazy val git = Parsers.git
+
+lazy val rescuetime = Parsers.rescuetime
+
+lazy val slack = Parsers.slack
+
+lazy val trello = Parsers.trello
+
 lazy val metrics = Utilities.metrics
 
 lazy val iconCreator = Utilities.iconCreator
