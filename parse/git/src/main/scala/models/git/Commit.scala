@@ -11,7 +11,7 @@ object Commit {
     committerName = rc.getCommitterIdent.getName,
     committerEmail = rc.getCommitterIdent.getEmailAddress,
     message = rc.getFullMessage.trim,
-    occurred = new LocalDateTime(rc.getCommitTime * 1000)
+    occurred = new LocalDateTime(rc.getCommitTime * 1000L)
   )
 }
 
