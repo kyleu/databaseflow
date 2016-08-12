@@ -47,7 +47,7 @@ class SiteController @javax.inject.Inject() (implicit
     Future.successful(Ok(views.html.versions(isAdmin)))
   }
 
-  def screenshots() = act("sreenshots") { implicit request =>
+  def screenshots() = act("screenshots") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.screenshots(isAdmin)))
   }
@@ -61,6 +61,11 @@ class SiteController @javax.inject.Inject() (implicit
       result.flashing("lang" -> lang)
     })
 
+  }
+
+  def database(key: String) = act(s"db.$key") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.database(key, isAdmin)))
   }
 
   def robots() = act("robots-txt") { implicit request =>
