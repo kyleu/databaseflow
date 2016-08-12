@@ -4,6 +4,6 @@ object Entrypoint {
   def main(args: Array[String]) = {
     val repo = Repo(new java.io.File("./.git"))
     println(repo.getBranch)
-    println(repo.getCommits(None))
+    repo.getCommits().foreach(println)
   }
 }

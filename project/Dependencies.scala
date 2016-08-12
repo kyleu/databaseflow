@@ -96,6 +96,7 @@ object Dependencies {
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
+    val joda = "joda-time" % "joda-time" % "2.9.4"
     val git = "org.eclipse.jgit" % "org.eclipse.jgit" % "4.4.1.201607150455-r"
   }
 

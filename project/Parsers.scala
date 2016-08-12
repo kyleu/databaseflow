@@ -7,7 +7,7 @@ import sbt._
 object Parsers {
   lazy val git = (project in file("parse/git"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
-    .settings(libraryDependencies ++= Seq(Utils.enumeratum, Utils.git))
+    .settings(libraryDependencies ++= Seq(Utils.joda, Utils.enumeratum, Utils.git))
     .settings(Shared.commonSettings: _*)
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)

@@ -1,5 +1,7 @@
 package models.git
 
+import scala.collection.JavaConverters._
+
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 
@@ -13,7 +15,7 @@ case class Repo(dir: java.io.File) {
 
   val git = new Git(repository)
 
-  def getCommits(author: Option[String]) = {
-    git.log().call().iterator.next.getFullMessage
+  def getCommits() = {
+    git.log().call().iterator.asScala.map(Commit.fromJava)
   }
 }
