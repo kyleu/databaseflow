@@ -51,6 +51,7 @@ object LicenseService extends Logging {
   def getLicense = license
   def getLicenseContent = licenseContent
   def hasLicense = license.isDefined
+  def isNonCommercial = license.exists(_.edition == LicenseEdition.NonCommercial)
   def isPersonalEdition = license.exists(_.edition == LicenseEdition.Personal)
   def isTeamEdition = license.exists(_.edition == LicenseEdition.Team)
 }

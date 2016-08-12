@@ -19,8 +19,7 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
   def withAdminSession(action: String)(block: (SecuredRequest[AuthEnv, AnyContent]) => Future[Result]) = {
     ctx.silhouette.SecuredAction.async { implicit request =>
       metrics.timer(action).timeFuture {
-        val authorized = LicenseService.isPersonalEdition || request.identity.isAdmin
-        if (authorized) {
+        if (request.identity.isAdmin) {
           block(request)
         } else {
           Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("error.admin.required")))

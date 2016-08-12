@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = לינוקס
 platform.docker = דוקר
 license.title = רישיון
-license.personal = קבל אישי חינם מהדורת רישיון
 license.team = צוות Edition עכשיו
 features.a = שאילתות שמורות
 features.b = עורך השלמה אוטומטית

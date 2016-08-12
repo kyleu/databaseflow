@@ -28,9 +28,9 @@ object ActorSupervisor {
   case class SocketRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
 
   protected val sockets = collection.mutable.HashMap.empty[UUID, SocketRecord]
-  def connectErrorCheck(userId: UUID) = if (LicenseService.isPersonalEdition && sockets.exists(_._2.userId != userId)) {
+  def connectErrorCheck(userId: UUID) = if ((!LicenseService.isTeamEdition) && sockets.exists(_._2.userId != userId)) {
     val name = sockets.find(_._2.userId != userId).map(_._2.name).getOrElse("a user")
-    Some(s"Personal Edition allows only one user to connect at a time, and [$name] is already connected.")
+    Some(name)
   } else {
     None
   }

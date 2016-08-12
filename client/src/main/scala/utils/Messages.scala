@@ -19,7 +19,6 @@ object Messages {
   }
 
   def apply(s: String, args: Any*) = {
-    //utils.Logging.info(s)
     val msg = Option(jsMessages(s)) match {
       case Some(x) => x.toString match {
         case "undefined" => s

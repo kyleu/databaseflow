@@ -15,7 +15,6 @@ platform.windows = หน้าต่าง
 platform.linux = ระบบลินุกซ์
 platform.docker = Docker
 license.title = เอาใบอนุญาต
-license.personal = ให้อิสระส่วนตัวฉบับใบอนุญาต
 license.team = ซื้อทีมพิมพ์ตอนนี้
 features.a = ช่วยบค้นข้อมูล
 features.b = เครื่องมือแก้ไข autocomplete

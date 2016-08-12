@@ -21,8 +21,10 @@ GET            /download                                controllers.DownloadCont
 GET            /download/:os/:variant                   controllers.DownloadController.download(os, variant)
 
 # Purchasing
-GET            /pricing                                 controllers.PurchaseController.pricing()
-POST           /purchase                                controllers.PurchaseController.purchaseTeamEdition()
+GET            /pricing/personal                        controllers.PurchaseController.pricingPersonal()
+POST           /purchase/personal                       controllers.PurchaseController.purchaseTeamEdition()
+GET            /pricing/team                            controllers.PurchaseController.pricingTeam()
+POST           /purchase/team                           controllers.PurchaseController.purchaseTeamEdition()
 
 # License Request
 GET            /license/request                         controllers.UserLicenseController.requestForm()

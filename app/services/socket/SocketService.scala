@@ -13,13 +13,15 @@ import services.database.core.MasterDatabase
 import utils.metrics.InstrumentedActor
 
 object SocketService {
-  def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String) = {
-    Props(SocketService(id.getOrElse(UUID.randomUUID), supervisor, connectionId, user, out, sourceAddress))
+  type i18n = (String, Seq[Any]) => String
+
+  def props(id: Option[UUID], supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String, messages: i18n) = {
+    Props(SocketService(id.getOrElse(UUID.randomUUID), supervisor, connectionId, user, out, sourceAddress, messages))
   }
 }
 
 case class SocketService(
-    id: UUID, supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String
+    id: UUID, supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String, messages: SocketService.i18n
 ) extends InstrumentedActor with StartHelper with RequestMessageHelper with TransactionHelper with DataHelper with DetailHelper {
 
   protected[this] val db = attemptConnect()

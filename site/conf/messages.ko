@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = 라이센스
-license.personal = 을 무료로 개인 Edition 라이센스
 license.team = 사 팀전
 features.a = 저장 질
 features.b = 편집기를 자동 완성

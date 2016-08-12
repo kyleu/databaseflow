@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = Eine Lizenz erhalten
-license.personal = Holen Sie Sich Den Kostenlosen Personal Edition Lizenz
 license.team = Kaufen Team Edition Jetzt
 features.a = Gespeicherte Abfragen
 features.b = Editor mit autocomplete

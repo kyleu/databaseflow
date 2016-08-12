@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = 获得许可证
-license.personal = 获得免费的个人版许可证
 license.team = 买队版现在
 features.a = 保存的查询
 features.b = 编辑自动完成的

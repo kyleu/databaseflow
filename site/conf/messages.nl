@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = De Docker
 license.title = Een Licentie
-license.personal = Ontvang Gratis Personal Edition-Licentie
 license.team = Kopen Team Edition Nu
 features.a = Opgeslagen zoekopdrachten
 features.b = Editor automatisch aanvullen

@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = Obtenir une Licence
-license.personal = Obtenez Gratuitement Personal Edition Licence
 license.team = Acheter Team Edition Maintenant
 features.a = Les requêtes enregistrées,
 features.b = L''éditeur de saisie semi-automatique

@@ -15,7 +15,6 @@ platform.windows = ويندوز
 platform.linux = لينكس
 platform.docker = عامل الميناء
 license.title = الحصول على ترخيص
-license.personal = الحصول على الشخصية الحرة الطبعة الترخيص
 license.team = شراء فريق Edition الآن
 features.a = الاستعلامات المحفوظة
 features.b = محرر "الإكمال التلقائي"

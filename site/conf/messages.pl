@@ -15,7 +15,6 @@ platform.windows = Okna
 platform.linux = Linux
 platform.docker = Docker
 license.title = Uzyskać licencję
-license.personal = Uzyskać Bezpłatną Indywidualną Licencję Na Wydanie
 license.team = Sprzedam Team Edition Teraz
 features.a = Zapisane wyszukiwania
 features.b = Edytor autouzupełniania

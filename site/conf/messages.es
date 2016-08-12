@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Ventana acoplable
 license.title = Obtener una Licencia
-license.personal = Obtener Gratis La Edición Personal De Licencia
 license.team = Comprar Equipo De Edición Ahora
 features.a = Consultas guardadas
 features.b = Editor de autocompletar

@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Mobile
 license.title = Ottenere una Licenza
-license.personal = Ottenere Gratuitamente La Licenza Personal Edition
 license.team = Comprare Team Edition Ora
 features.a = Query salvate
 features.b = Editor di completamento automatico

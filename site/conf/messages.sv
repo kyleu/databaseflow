@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = Få en Licens
-license.personal = Få En Gratis Personlig Edition-Licens
 license.team = Köp Team Edition Nu
 features.a = Sparade frågor
 features.b = Redaktör för komplettera automatiskt

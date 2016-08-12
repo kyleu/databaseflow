@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = लिनक्स
 platform.docker = डोकर
 license.title = एक लाइसेंस प्राप्त
-license.personal = नि: शुल्क प्राप्त व्यक्तिगत संस्करण लाइसेंस
 license.team = खरीदें टीम संस्करण अब
 features.a = प्रश्नों को बचाया
 features.b = संपादक स्वत: पूर्ण

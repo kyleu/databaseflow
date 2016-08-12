@@ -15,16 +15,16 @@ trait StartHelper extends Logging { this: SocketService =>
   protected[this] def attemptConnect() = DatabaseRegistry.databaseFor(user, connectionId) match {
     case Right(d) => d
     case Left(x) =>
-      log.warn("Error attempting to connect to database.", x)
-      out ! ServerError("Database Connect Failed", x.getMessage)
+      log.warn(messages("socket.connect.error", Nil), x)
+      out ! ServerError(messages("socket.connect.failed", Nil), x.getMessage)
       out ! PoisonPill
       self ! PoisonPill
       throw x
   }
 
   protected[this] def onStart() = ActorSupervisor.connectErrorCheck(user.id) match {
-    case Some(err) =>
-      out ! ServerError("Connection Error", err)
+    case Some(name) =>
+      out ! ServerError(messages("socket.connect.failed", Nil), messages("socket.too.many.users", Seq(name)))
     case None =>
       log.info(s"Starting connection for user [${user.id}: ${user.username}].")
 

@@ -33,7 +33,7 @@ trait DataHelper extends Logging { this: SocketService =>
       case Some(view) => handleShowDataResponse(queryId, "view", view.name, Nil, options, resultId, cacheDb = false)
       case None =>
         log.warn(s"Attempted to show data for invalid view [$name].")
-        out ! ServerError("Invalid Table", s"[$name] is not a valid view.")
+        out ! ServerError("Invalid View", s"[$name] is not a valid view.")
     }
   }
 

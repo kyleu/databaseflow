@@ -15,7 +15,6 @@ platform.windows = Prozor
 platform.linux = Linux
 platform.docker = Lučki radnik
 license.title = Dobili dozvolu
-license.personal = Da Biste Dobili Besplatnu Osobne Licence Izdanje
 license.team = Kupiti Team Edition Sada
 features.a = Spremljene upita
 features.b = Urednik nudi značajka samodovršetka

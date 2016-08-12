@@ -138,6 +138,13 @@ query.permissions.only.myself = Only Myself
 result.remove.confirm = Removed result [{0}].
 result.remove.orphan = Remove orphan table [{0}].
 
+# Socket Service
+socket.connect.error = Error attempting to connect to database.
+socket.connect.failed = Connection Failed
+socket.too.many.users = Personal Edition allows only one user to connect at a time, and [{0}] is already connected.
+socket.duplicate.transaction = Already in a transaction.
+socket.no.transaction = Not currently in a transaction.
+
 # Modals
 modal.confirm.prompt = Are you sure?
 modal.export.action = Export

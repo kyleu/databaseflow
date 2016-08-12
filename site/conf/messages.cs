@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = Získat Licenci
-license.personal = Získejte Zdarma Osobní Vydání Licence
 license.team = Koupit Team Edition Nyní
 features.a = Uložené dotazy
 features.b = Automatické dokončování Editor

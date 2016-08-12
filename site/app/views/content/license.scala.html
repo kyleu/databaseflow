@@ -4,25 +4,36 @@
       <div class="card-content">
         <span class="card-title">@messages("license.title")</span>
         <div class="row padded-top">
-          <div class="col s12 m6">
+          <div class="col s12 m4">
             <div class="z-depth-1">
               <table>
                 <tbody>
                   <tr>
                     <td style="text-align: center;">
-                      <a class="theme-text" href="@controllers.routes.UserLicenseController.requestForm()">@messages("license.personal")</a>
+                      <a class="theme-text" href="@controllers.routes.UserLicenseController.requestForm()">@messages("license.non.commercial")</a>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div class="col s12 m6">
+          <div class="col s12 m4">
             <div class="z-depth-1">
               <table>
                 <tbody>
                   <tr>
-                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.PurchaseController.pricing()">@messages("license.team")</a></td>
+                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.PurchaseController.pricingPersonal()">@messages("license.personal")</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col s12 m4">
+            <div class="z-depth-1">
+              <table>
+                <tbody>
+                  <tr>
+                    <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.PurchaseController.pricingTeam()">@messages("license.team")</a></td>
                   </tr>
                 </tbody>
               </table>

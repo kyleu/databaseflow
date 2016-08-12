@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Janela de encaixe
 license.title = Licença
-license.personal = Get Free Personal Edition Licença
 license.team = Comprar Team Edition Agora
 features.a = Consultas salvas
 features.b = Editor de conclusão automática

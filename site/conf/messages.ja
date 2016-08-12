@@ -15,7 +15,6 @@ platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
 license.title = ライセンスを取得
-license.personal = 無料個人向け製品版のライセンス
 license.team = 購入チーム版の現在
 features.a = 保存問合せ
 features.b = オートコンプリートエディタ

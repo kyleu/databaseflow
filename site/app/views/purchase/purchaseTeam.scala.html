@@ -1,0 +1,61 @@
+@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@layout.simple(title = messages("purchase.title"), section = "versions", scripts = Seq("https://checkout.stripe.com/checkout.js")) {
+  <script>
+      var handler = StripeCheckout.configure({
+        key: 'pk_test_pBenf3XvhA3foLSFPo9FQrff',
+        locale: "auto",
+        name: '@utils.Config.projectName',
+        description: 'Team Edition License',
+        image: "@controllers.routes.Assets.versioned("images/payment-logo.png").url",
+        amount: 50000,
+        token: function(token) {
+          $("#stripe-token-input").val(token.id);
+          $("#stripe-token-type-input").val(token.type);
+          $("form").submit();
+        }
+      });
+
+      $(function() {
+        $("#purchase-button").click(function(e) {
+          e.preventDefault();
+          handler.open({});
+        });
+      });
+  </script>
+
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <form action="@controllers.routes.PurchaseController.purchaseTeamEdition()" method="post">
+          <input id="stripe-token-input" type="hidden" name="stripeToken" value="" />
+          <input id="stripe-token-type-input" type="hidden" name="stripeTokenType" value="" />
+          <div class="card-content">
+            <span class="card-title">@messages("purchase.title")</span>
+            <div class="row">
+              <div class="col s12">
+                <p>@utils.Config.projectName Team Edition costs $500.</p>
+                <p>You can pay through Stripe.</p>
+              </div>
+              <div class="col s12">
+                <p>@messages("license.form.prompt")</p>
+              </div>
+              <div class="input-field col s12">
+                <input id="input-name" type="text" class="form-control validate" name="name" value="" />
+                <label for="input-name">@messages("th.name")</label>
+              </div>
+              <div class="input-field col s12">
+                <input id="input-email" type="email" class="form-control validate" name="email" value="" />
+                <label for="input-email">@messages("th.email")</label>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <button id="purchase-button" class="right btn theme waves-effect waves-light">@messages("purchase.title")</button>
+            <div style="clear: both;"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
+

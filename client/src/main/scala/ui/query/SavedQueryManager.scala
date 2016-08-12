@@ -50,7 +50,6 @@ object SavedQueryManager {
     def close() = if (QueryManager.activeQueries.contains(savedQuery.id)) {
       QueryManager.closeQuery(savedQuery.id)
       openSavedQueries = openSavedQueries - savedQuery.id
-      utils.Logging.info("Saved query close called...")
       NetworkMessage.sendMessage(CloseQuery(savedQuery.id))
     }
 

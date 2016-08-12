@@ -15,7 +15,6 @@ platform.windows = Cửa sổ
 platform.linux = Linux
 platform.docker = Docker mới đúng
 license.title = Lấy bằng Lái xe
-license.personal = Tự Do Cá Nhân Bản Giấy Tờ
 license.team = Mua Đội Bản Bây Giờ
 features.a = Cứu queries
 features.b = Biên tập autocomplete

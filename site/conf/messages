@@ -24,8 +24,9 @@ platform.docker = Docker
 
 # Licensing
 license.title = Get a License
-license.personal = Get Free Personal Edition License
-license.team = Buy Team Edition Now
+license.non.commercial = Get Free Non-Commercial License
+license.personal = Buy Personal Edition
+license.team = Buy Team Edition
 
 # Features
 features.a = Saved queries

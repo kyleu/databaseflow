@@ -10,7 +10,7 @@ trait TransactionHelper { this: SocketService =>
   private[this] def sendState(state: TransactionState) = out ! TransactionStatus(state = state, occurred = System.currentTimeMillis)
 
   def handleBeginTransaction() = activeTransaction match {
-    case Some(tx) => throw new IllegalStateException("Already in a transaction.")
+    case Some(tx) => throw new IllegalStateException(messages("socket.duplicate.transaction", Nil))
     case None =>
       val connection = db.source.getConnection
       connection.setAutoCommit(false)
@@ -25,7 +25,7 @@ trait TransactionHelper { this: SocketService =>
       tx.close()
       activeTransaction = None
       sendState(TransactionState.RolledBack)
-    case None => throw new IllegalStateException("Not currently in a transaction.")
+    case None => throw new IllegalStateException(messages("socket.no.transaction", Nil))
   }
 
   def handleCommitTransaction() = activeTransaction match {
@@ -34,6 +34,6 @@ trait TransactionHelper { this: SocketService =>
       tx.close()
       activeTransaction = None
       sendState(TransactionState.Committed)
-    case None => throw new IllegalStateException("Not currently in a transaction.")
+    case None => throw new IllegalStateException(messages("socket.no.transaction", Nil))
   }
 }
