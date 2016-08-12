@@ -1,6 +1,6 @@
 @()(implicit messages: Messages)
 @panel(key: String, name: String, url: String) = {
-  <div class="col s12 m4">
+  <div class="col s12 m4 social-panel">
     <a class="theme-text" href="@url" target="_blank">
       <div class="logo z-depth-1">
         <img src="@routes.Assets.versioned(s"images/social/$key.png")" width="64" height="64" />
@@ -23,3 +23,18 @@
     </div>
   </div>
 </div>
+<script>
+    $(function() {
+      $('.social-panel').each(function(){
+        var t = $(this);
+        var img = $('img', t);
+        var src1 = img.attr('src'); // initial src
+        var newSrc = src1.substring(0, src1.lastIndexOf('.'));
+        t.hover(function(){
+          img.attr('src', newSrc + '-active.' + /[^.]+$/.exec(src1));
+        }, function(){
+          img.attr('src', newSrc + '.' + /[^.]+$/.exec(src1));
+        });
+      });
+    });
+</script>
