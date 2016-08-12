@@ -8,12 +8,7 @@ import scalatags.Text.all._
 
 object SidenavTemplate {
   private[this] def tagFor(tagId: String, key: String, link: String, name: String, icon: String) = li(a(
-    id := tagId,
-    cls := "sidenav-link waves-effect waves-light",
-    data("key") := key,
-    href := link,
-    title := name,
-    data("name") := name
+    id := tagId, cls := "sidenav-link waves-effect waves-light", data("key") := key, href := link, title := name, data("name") := name
   )(em(cls := s"fa $icon theme-text"), span(name)))
 
   private[this] def savedQuery(sq: SavedQuery) = tagFor("saved-query-link-" + sq.id, sq.id.toString, "#saved-query-" + sq.id, sq.name, Icons.savedQuery)

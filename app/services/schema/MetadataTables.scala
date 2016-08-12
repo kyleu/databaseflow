@@ -39,10 +39,10 @@ object MetadataTables {
         """
         override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("table_name")
-          val engine = row.as[String]("engine")
-          val rowEstimate = JdbcHelper.longVal(row.as[Any]("table_rows"))
-          val averageRowLength = JdbcHelper.intVal(row.as[Any]("avg_row_length"))
-          val dataLength = JdbcHelper.longVal(row.as[Any]("data_length"))
+          val engine = row.asOpt[String]("engine").getOrElse("unknown")
+          val rowEstimate = row.asOpt[Any]("table_rows").map(JdbcHelper.longVal).getOrElse(0L)
+          val averageRowLength = row.asOpt[Any]("avg_row_length").map(JdbcHelper.intVal).getOrElse(0)
+          val dataLength = row.asOpt[Any]("data_length").map(JdbcHelper.longVal).getOrElse(0L)
           val createTime = row.asOpt[Timestamp]("create_time").map(_.getTime)
 
           (tableName, Some(engine), rowEstimate, Some(averageRowLength), Some(dataLength), createTime)

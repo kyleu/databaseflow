@@ -7,6 +7,11 @@
     <form id="connection-form" class="col s12" method="post" action="@controllers.routes.ConnectionSettingsController.save(conn.id)">
       <div class="card">
         <div class="card-content">
+          @if(!isNew) {
+            @defining(controllers.routes.ConnectionSettingsController.copyConnection(conn.id)) { route =>
+              <a id="copy-connection-button" class="right theme-text" style="margin-right: 12px;" href="@route">Copy Connection</a>
+            }
+          }
           <span class="card-title">@title</span>
 
           <!-- Name, engine -->
