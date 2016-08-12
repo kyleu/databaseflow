@@ -1,9 +1,14 @@
 @()(implicit messages: Messages)
 @panel(key: String, name: String) = {
-  <div class="col s6 m4 l3 db-panel">
+  <div id="@key" class="col s6 m4 l3 db-panel">
     <a class="theme-text" href="@routes.SiteController.database(key)">
       <div class="logo z-depth-1">
-        <img src="@routes.Assets.versioned(s"images/db/$key.png")" width="64" height="64" />
+        <div class="on initially-hidden">
+          <img src="@routes.Assets.versioned(s"images/db/$key-active.png")" width="64" height="64" />
+        </div>
+        <div class="off">
+          <img src="@routes.Assets.versioned(s"images/db/$key.png")" width="64" height="64" />
+        </div>
         <div>@name</div>
       </div>
     </a>
@@ -30,16 +35,26 @@
 </div>
 <script>
   $(function() {
-    $('.db-panel').each(function(){
-      var t = $(this);
-      var img = $('img', t);
-      var src1 = img.attr('src'); // initial src
-      var newSrc = src1.substring(0, src1.lastIndexOf('.'));
+    function socialWire(key) {
+      var t = $('#' + key);
+      var off = $('.off', t);
+      var on = $('.on', t);
       t.hover(function(){
-        img.attr('src', newSrc + '-active.' + /[^.]+$/.exec(src1));
+        off.hide();
+        on.show();
       }, function(){
-        img.attr('src', newSrc + '.' + /[^.]+$/.exec(src1));
+        on.hide();
+        off.show();
       });
-    });
+    }
+
+    socialWire('mysql');
+    socialWire('postgres');
+    socialWire('oracle');
+    socialWire('sqlserver');
+    socialWire('h2');
+    socialWire('db2');
+    socialWire('informix');
+    socialWire('sqlite');
   });
 </script>
