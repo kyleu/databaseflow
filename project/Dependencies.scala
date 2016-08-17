@@ -79,7 +79,7 @@ object Dependencies {
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
     val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.9.v20160517"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.11.v20160721"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }
@@ -91,20 +91,18 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.9"
-    val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
+    val enumeratumVersion = "1.4.10"
+
     val commonsIo = "commons-io" % "commons-io" % "2.5"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.0.1"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
-    val jodaTime = "joda-time" % "joda-time" % "2.9.4"
-    val jodaConvert = "org.joda" % "joda-convert" % "1.8.1"
-    val git = "org.eclipse.jgit" % "org.eclipse.jgit" % "4.4.1.201607150455-r"
+    val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
   }
 
   object Testing {
     val uTestVersion = "0.4.3"
     val utest = "com.lihaoyi" %% "utest" % uTestVersion % "test"
-    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     val gatlingCore = "io.gatling" % "gatling-test-framework" % "2.1.7" % "test"
     val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.1.7" % "test"
   }

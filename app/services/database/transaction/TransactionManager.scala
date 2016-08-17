@@ -25,7 +25,7 @@ class TransactionManager extends TransactionProvider {
 
   override def begin(transaction: Transaction) {
     if (!transactionExists) {
-      localTransactionStorage.set(Some(new TransactionState(mutable.Stack(transaction))))
+      localTransactionStorage.set(Some(TransactionState(mutable.Stack(transaction))))
     } else {
       currentTransactionState.transactions.push(transaction)
     }
