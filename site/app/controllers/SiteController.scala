@@ -52,6 +52,11 @@ class SiteController @javax.inject.Inject() (implicit
     Future.successful(Ok(views.html.screenshots(isAdmin)))
   }
 
+  def gamePlan() = act("game.plan") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.gamePlan(isAdmin)))
+  }
+
   def language(lang: String) = act("language") { implicit request =>
     val l = Lang(lang)
     val result = Redirect(controllers.routes.SiteController.index()).withLang(l)

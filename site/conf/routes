@@ -3,9 +3,11 @@ GET            /site                                    controllers.SiteControll
 GET            /features                                controllers.SiteController.features
 GET            /versions                                controllers.SiteController.versions
 GET            /screenshots                             controllers.SiteController.screenshots
-GET            /robots.txt                              controllers.SiteController.robots
+GET            /plan                                    controllers.SiteController.gamePlan
 GET            /lang/:id                                controllers.SiteController.language(id)
 GET            /db/:key                                 controllers.SiteController.database(key)
+GET            /robots.txt                              controllers.SiteController.robots
+
 GET            /version                                 controllers.UpdateController.version
 
 # Feedback
