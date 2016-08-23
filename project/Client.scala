@@ -22,4 +22,8 @@ object Client {
     .settings(clientSettings: _*)
     .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
     .dependsOn(Shared.sharedJs)
+
+  lazy val charting = (project in file("charting"))
+    .settings(clientSettings: _*)
+    .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
 }

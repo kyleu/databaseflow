@@ -3,7 +3,7 @@ GET            /site                                    controllers.SiteControll
 GET            /features                                controllers.SiteController.features
 GET            /versions                                controllers.SiteController.versions
 GET            /screenshots                             controllers.SiteController.screenshots
-GET            /plan                                    controllers.SiteController.gamePlan
+GET            /plan                                    controllers.SiteController.plan
 GET            /lang/:id                                controllers.SiteController.language(id)
 GET            /db/:key                                 controllers.SiteController.database(key)
 GET            /robots.txt                              controllers.SiteController.robots

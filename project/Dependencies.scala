@@ -65,12 +65,12 @@ object Dependencies {
   }
 
   object WebJars {
-    val requireJs = "org.webjars" % "requirejs" % "2.2.0"
+    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.3"
     val jquery = "org.webjars" % "jquery" % "2.2.4"
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
-    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.3"
-    val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
     val moment = "org.webjars" % "momentjs" % "2.14.1"
+    val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
+    val requireJs = "org.webjars" % "requirejs" % "2.2.0"
   }
 
   object Metrics {

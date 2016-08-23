@@ -52,9 +52,9 @@ class SiteController @javax.inject.Inject() (implicit
     Future.successful(Ok(views.html.screenshots(isAdmin)))
   }
 
-  def gamePlan() = act("game.plan") { implicit request =>
+  def plan() = act("plan") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.gamePlan(isAdmin)))
+    Future.successful(Ok(views.html.plan(isAdmin)))
   }
 
   def language(lang: String) = act("language") { implicit request =>

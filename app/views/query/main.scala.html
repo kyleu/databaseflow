@@ -50,19 +50,17 @@
     @views.html.modal.planNodeModal()
   </main>
 
+  <script src="@controllers.routes.Assets.versioned("lib/ace/min/ace-concat.min.js")" type="text/javascript" charset="utf-8" defer="defer"></script>
+  <script src="@controllers.routes.HomeController.strings()" type="text/javascript" defer="defer"></script>
   @if(debug) {
-    <script src="@controllers.routes.Assets.versioned("lib/ace/ace.js")" type="text/javascript" charset="utf-8"></script>
-    <script src="@controllers.routes.Assets.versioned("lib/ace/ext-language_tools.js")" type="text/javascript" charset="utf-8"></script>
-    <script src="@controllers.routes.Assets.versioned("lib/ace/mode-sql.js")" type="text/javascript" charset="utf-8"></script>
-    <script src="@controllers.routes.HomeController.strings()" type="text/javascript"></script>
-    <script src="@controllers.routes.Assets.versioned("client-fastopt.js")" type="text/javascript"></script>
+    <script src="@controllers.routes.Assets.versioned("client-fastopt.js")" type="text/javascript" defer="defer"></script>
   } else {
-    <script src="@controllers.routes.Assets.versioned("lib/ace/min/ace-concat.min.js")" type="text/javascript" charset="utf-8"></script>
-    <script src="@controllers.routes.HomeController.strings()" type="text/javascript"></script>
-    <script src="@controllers.routes.Assets.versioned("client-opt.js")" type="text/javascript"></script>
+    <script src="@controllers.routes.Assets.versioned("client-opt.js")" type="text/javascript" defer="defer"></script>
   }
 
   <script>
-    window.dbf = new DatabaseFlow();
+    $(function() {
+      window.dbf = new DatabaseFlow();
+    });
   </script>
 }

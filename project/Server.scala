@@ -30,7 +30,7 @@ object Server {
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Play.playFilters, Play.playWs,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
-      WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome, WebJars.mousetrap, WebJars.moment,
+      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize, WebJars.moment, WebJars.mousetrap, WebJars.requireJs,
       Export.csv, Export.xlsx, Utils.crypto, Utils.scalaGuice, Utils.commonsIo,
       Akka.testkit, Play.playTest, Testing.scalaTest
     )
@@ -44,7 +44,7 @@ object Server {
     resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= dependencies,
 
-    scalaJSProjects := Seq(Client.client),
+    scalaJSProjects := Seq(Client.client, Client.charting),
     routesGenerator := InjectedRoutesGenerator,
     externalizeResources := false,
 

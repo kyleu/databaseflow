@@ -2,6 +2,8 @@ lazy val sharedJs = Shared.sharedJs
 
 lazy val client = Client.client
 
+lazy val charting = Client.charting
+
 lazy val codegen = CodeGen.codegen
 
 lazy val sharedJvm = Shared.sharedJvm
