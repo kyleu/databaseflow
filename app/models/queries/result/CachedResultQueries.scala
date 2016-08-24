@@ -45,22 +45,20 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
     override def reduce(rows: Iterator[Row]) = rows.map(row => row.as[UUID]("id")).toList
   }
 
-  override protected def fromRow(row: Row) = {
-    CachedResult(
-      resultId = row.as[UUID]("id"),
-      queryId = row.as[UUID]("query_id"),
-      connectionId = row.as[UUID]("connection_id"),
-      owner = row.as[UUID]("owner"),
-      status = row.as[String]("status"),
-      sql = JdbcHelper.stringVal(row.as[Any]("sql")),
-      columns = row.as[Int]("columns"),
-      rows = row.as[Int]("rows"),
-      firstMessage = row.as[Int]("first_message"),
-      duration = row.as[Int]("duration"),
-      lastAccessed = JdbcUtils.toLocalDateTime(row, "last_accessed"),
-      created = JdbcUtils.toLocalDateTime(row, "created")
-    )
-  }
+  override protected def fromRow(row: Row) = CachedResult(
+    resultId = row.as[UUID]("id"),
+    queryId = row.as[UUID]("query_id"),
+    connectionId = row.as[UUID]("connection_id"),
+    owner = row.as[UUID]("owner"),
+    status = row.as[String]("status"),
+    sql = JdbcHelper.stringVal(row.as[Any]("sql")),
+    columns = row.as[Int]("columns"),
+    rows = row.as[Int]("rows"),
+    firstMessage = row.as[Int]("first_message"),
+    duration = row.as[Int]("duration"),
+    lastAccessed = JdbcUtils.toLocalDateTime(row, "last_accessed"),
+    created = JdbcUtils.toLocalDateTime(row, "created")
+  )
 
   override protected def toDataSeq(q: CachedResult) = Seq[Any](
     q.resultId, q.queryId, q.connectionId, q.owner, q.status,
