@@ -1,0 +1,22 @@
+@(user: Option[models.user.User], results: Seq[models.result.SharedResult], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@views.html.layout.simple(user = user, title = messages("shared.title"), debug = debug) {
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">@messages("shared.title", utils.Config.projectName)</span>
+          @if(results.isEmpty) {
+            <div><em>No results available.</em></div>
+          } else {
+            <div class="collection">
+              @results.map { r =>
+                <a href="@r.id" class="theme-text collection-item">@r.title</a>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

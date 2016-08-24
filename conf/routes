@@ -16,6 +16,9 @@ GET         /q/:conn                                 controllers.QueryController
 GET         /q/:conn/websocket                       controllers.QueryController.connect(conn: java.util.UUID)
 POST        /q/:conn/export                          controllers.QueryController.export(conn: java.util.UUID)
 
+# Result Views
+GET         /shared                                  controllers.SharedResultController.index()
+
 # Admin
 ->          /admin                                   admin.Routes
 

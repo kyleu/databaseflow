@@ -138,6 +138,9 @@ query.permissions.only.myself = Only Myself
 result.remove.confirm = Removed result [{0}].
 result.remove.orphan = Remove orphan table [{0}].
 
+# Shared Results
+shared.title = Shared Results
+
 # Socket Service
 socket.connect.error = Error attempting to connect to database.
 socket.connect.failed = Connection Failed

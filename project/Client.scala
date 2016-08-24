@@ -1,3 +1,4 @@
+import Dependencies.{ Serialization, Utils }
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
@@ -23,7 +24,19 @@ object Client {
     .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
     .dependsOn(Shared.sharedJs)
 
+  private[this] val chartingSettings = Shared.commonSettings ++ Seq(
+    persistLauncher := false,
+    libraryDependencies ++= Seq(
+      "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
+      "com.lihaoyi" %%% "scalatags" % "0.6.0",
+      "com.lihaoyi" %%% "upickle" % Serialization.version,
+      "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion
+    ),
+    scalaJSStage in Global := FastOptStage,
+    scapegoatIgnoredFiles := Seq(".*/JsonUtils.scala", ".*/JsonSerializers.scala")
+  )
+
   lazy val charting = (project in file("charting"))
-    .settings(clientSettings: _*)
+    .settings(chartingSettings: _*)
     .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
 }

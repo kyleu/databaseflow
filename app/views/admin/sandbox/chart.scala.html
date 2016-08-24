@@ -1,5 +1,6 @@
 @(debug: Boolean)
-<script src="@routes.Assets.versioned("lib/plotly/plotly-basic.min.js").url"></script>
+<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js").url" defer="defer"></script>
+<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js").url" defer="defer"></script>
 @if(debug) {
 <script src="@controllers.routes.Assets.versioned("charting-fastopt.js")" type="text/javascript" defer="defer"></script>
 } else {
@@ -7,33 +8,13 @@
 }
 
 <script>
-  function cleanChart(el) {
-    $(".modebar-btn", el).each(function() {
-      var jq = $(this);
-      if(jq.data('title') === 'Save and edit plot in cloud') {
-        jq.remove();
-      }
-      if(jq.data('title') === 'Produced with Plotly') {
-        jq.remove();
-      }
-    });
-  }
-
   $(function() {
-    var el = document.getElementById('chart');
-    Plotly.plot(el, [{
-      x: [1, 2, 3, 4, 5],
-      y: [1, 2, 4, 8, 16]
-    }], {
-      margin: { t: 0 }
-    });
-    cleanChart(el);
+    var svc = new Charting();
   });
 </script>
 
 <style>
   #chart {
-    background-color: lightgray;
     height: 768px;
   }
 </style>

@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], title: String, debug: Boolean, scripts: Seq[String] = Nil)(content: Html)(
+@(user: Option[models.user.User], title: String, debug: Boolean, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(user, title, debug = false, scripts = scripts) {
   <header>
@@ -17,7 +17,7 @@
   </header>
 
   <main>
-    <div class="static-container container">
+    <div class="@mainDivClass">
       @flash.get("error").map { err => <div class="flash-error z-depth-1">@err</div> }
       @flash.get("success").map { success => <div class="flash-success z-depth-1">@success</div> }
       @flash.get("lang").map { lang =>
