@@ -1,4 +1,4 @@
-package services.data
+package services.database
 
 import models.database.Queryable
 import models.ddl._
@@ -11,7 +11,9 @@ object MasterDdl extends Logging {
 
     CreateConnectionsTable,
     CreateSavedQueriesTable,
+
     CreateQueryResultsTable,
+    CreateSharedResultTable,
 
     CreateSettingsTable,
     CreateAuditRecordTable

@@ -11,7 +11,7 @@
           } else {
             <div class="collection">
               @results.map { r =>
-                <a href="@r.id" class="theme-text collection-item">@r.title</a>
+                <a href="@routes.SharedResultController.view(r.id)" class="theme-text collection-item">@r.title</a>
               }
             </div>
           }

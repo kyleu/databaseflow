@@ -12,7 +12,7 @@ import models.user.Role
 import utils.{DateUtils, JdbcUtils}
 
 object SharedResultQueries extends BaseQueries[SharedResult] {
-  override protected val tableName = "query_results"
+  override protected val tableName = "shared_results"
   override protected val columns = Seq(
     "id", "title", "owner", "viewable_by", "connection_id",
     "source_type", "source_name", "source_sort_column", "source_sort_asc",

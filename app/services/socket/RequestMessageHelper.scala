@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models._
 import services.audit.AuditRecordService
-import services.data.SampleDatabaseService
+import services.database.SampleDatabaseService
 import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService, QuerySaveService}
 import services.result.CachedResultService
 import utils.Config

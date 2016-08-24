@@ -18,6 +18,7 @@ POST        /q/:conn/export                          controllers.QueryController
 
 # Result Views
 GET         /shared                                  controllers.SharedResultController.index()
+GET         /shared/:id                              controllers.SharedResultController.view(id: java.util.UUID)
 
 # Admin
 ->          /admin                                   admin.Routes

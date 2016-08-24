@@ -8,7 +8,7 @@ import models._
 import models.user.User
 import org.joda.time.LocalDateTime
 import play.api.libs.ws.WSClient
-import services.data.MasterDdl
+import services.database.MasterDdl
 import services.database.core.MasterDatabase
 import services.licensing.LicenseService
 import services.result.CachedResultActor

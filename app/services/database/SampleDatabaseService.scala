@@ -1,4 +1,4 @@
-package services.data
+package services.database
 
 import java.util.UUID
 
@@ -8,7 +8,6 @@ import models.engine.DatabaseEngine._
 import models.engine._
 import models.query.SqlParser
 import models.{BatchQueryStatus, TableResultResponse}
-import services.database.{DatabaseConnection, DatabaseWorkerPool}
 import services.schema.SchemaService
 import utils.{DateUtils, ExceptionUtils, Logging}
 
