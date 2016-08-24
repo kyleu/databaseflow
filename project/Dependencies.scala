@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.4"
+    private[this] val version = "2.5.5"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.8"
+    private[this] val version = "2.4.9"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -60,7 +60,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.4.1"
+    val version = "0.4.2"
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
@@ -70,6 +70,7 @@ object Dependencies {
     val materialize = "org.webjars" % "materializecss" % "0.97.5"
     val moment = "org.webjars" % "momentjs" % "2.14.1"
     val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
+    val plotly = "org.webjars.bower" % "plotly.js" % "1.16.2"
     val requireJs = "org.webjars" % "requirejs" % "2.2.0"
   }
 
@@ -91,7 +92,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.10"
+    val enumeratumVersion = "1.4.11"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"

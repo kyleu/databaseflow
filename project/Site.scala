@@ -2,9 +2,7 @@ import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.digest.Import._
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
-import com.typesafe.sbt.jshint.Import.JshintKeys
 import com.typesafe.sbt.less.Import._
-import com.typesafe.sbt.rjs.Import._
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
@@ -35,11 +33,10 @@ object Site {
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
-    pipelineStages := Seq(scalaJSProd, rjs, digest, gzip),
+    pipelineStages := Seq(scalaJSProd, digest, gzip),
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
-    JshintKeys.config := Some(new java.io.File("conf/.jshintrc")),
 
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")
