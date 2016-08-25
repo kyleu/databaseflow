@@ -1,6 +1,5 @@
 package utils
 
-import org.joda.time.LocalDateTime
 import upickle.Js
 
 object JsonUtils {

@@ -1,6 +1,6 @@
 @(debug: Boolean)
-<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js").url" defer="defer"></script>
-<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js").url" defer="defer"></script>
+<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js")" defer="defer"></script>
+<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js")" defer="defer"></script>
 @if(debug) {
 <script src="@controllers.routes.Assets.versioned("charting-fastopt.js")" type="text/javascript" defer="defer"></script>
 } else {

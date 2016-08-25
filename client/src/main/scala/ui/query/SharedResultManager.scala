@@ -6,6 +6,7 @@ import models.query.SharedResult
 import models.template.Icons
 import models.template.results.SharedResultTemplate
 import org.scalajs.jquery.{jQuery => $}
+import services.ChartService
 import ui.TabManager
 import ui.metadata.MetadataManager
 
@@ -38,6 +39,8 @@ object SharedResultManager {
     }
 
     TabManager.addTab(sr.id, "shared-result-" + sr.id, sr.title, Icons.sharedResult, close)
+
+    ChartService.init()
 
     QueryManager.activeQueries = QueryManager.activeQueries :+ sr.id
   }

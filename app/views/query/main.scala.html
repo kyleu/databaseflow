@@ -59,8 +59,19 @@
   }
 
   <script>
+    @defining(if(debug) {
+      controllers.routes.Assets.versioned("charting-fastopt.js")
+    } else {
+      controllers.routes.Assets.versioned("charting-opt.js")
+    }) { charting =>
     $(function() {
+      window.scriptRoutes = {
+        'charting': '@charting',
+        'plotly': '@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js")',
+        'plotly3d': '@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js")'
+      };
       window.dbf = new DatabaseFlow();
     });
+    }
   </script>
 }
