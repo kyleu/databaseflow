@@ -16,29 +16,18 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getById(id: UUID) = GetById(Seq(id))
 
-  def getVisible(userId: UUID) = {
-    val ownerClause = """("owner" = ? or "owner" is null)"""
-    val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
-    val values = Seq(userId)
+  def getVisible(userId: UUID) = GetAll(
+    whereClause = Some(s"""((("owner" = ? or "owner" is null) and "read" = 'private') or "read" != 'private')"""),
+    orderBy = "\"name\"",
+    values = Seq(userId)
+  )
 
-    GetAll(
-      whereClause = Some(permClause),
-      orderBy = "\"name\"",
-      values = values
-    )
-  }
+  def getForUser(userId: UUID, connectionId: UUID) = GetAll(
+    whereClause = Some(s"""(("owner" = ? and "read" = 'private') or "read" != 'private') and ("connection" = ? or "connection" is null)"""),
+    orderBy = "\"name\"",
+    values = Seq(userId, connectionId)
+  )
 
-  def getForUser(userId: UUID, connectionId: UUID) = {
-    val ownerClause = """"owner" = ?"""
-    val permClause = s"""(($ownerClause and "read" = 'private') or "read" != 'private')"""
-    val values = Seq(userId, connectionId)
-
-    GetAll(
-      whereClause = Some(permClause + """ and ("connection" = ? or "connection" is null)"""),
-      orderBy = "\"name\"",
-      values = values
-    )
-  }
   val search = Search
   val removeById = RemoveById
 

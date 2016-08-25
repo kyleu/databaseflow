@@ -7,7 +7,7 @@ import models.database.Statement
 import models.engine.DatabaseEngine._
 import models.engine._
 import models.query.SqlParser
-import models.{BatchQueryStatus, TableResultResponse}
+import models.{BatchQueryStatus, TableResponse}
 import services.schema.SchemaService
 import utils.{DateUtils, ExceptionUtils, Logging}
 
@@ -44,7 +44,7 @@ object SampleDatabaseService extends Logging {
     }
 
     SchemaService.getSchema(connection, forceRefresh = true) match {
-      case Success(s) => statusActor ! TableResultResponse(s.tables)
+      case Success(s) => statusActor ! TableResponse(s.tables)
       case Failure(x) => throw x
     }
 

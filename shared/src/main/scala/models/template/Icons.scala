@@ -59,6 +59,7 @@ object Icons {
 
   val adHocQuery = "fa-pencil-square-o"
   val savedQuery = "fa-envelope-o"
+  val sharedResult = "fa-globe"
 
   val tableClosed = "fa-folder-o"
   val table = "fa-folder-open-o"

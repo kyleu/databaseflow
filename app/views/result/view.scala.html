@@ -1,4 +1,4 @@
-@(user: Option[models.user.User], result: models.result.SharedResult, debug: Boolean)(
+@(user: Option[models.user.User], result: models.query.SharedResult, debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.simple(user = user, title = messages("shared.title"), mainDivClass = "", debug = debug) {
   <div class="row">

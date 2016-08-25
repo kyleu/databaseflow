@@ -20,12 +20,13 @@ case class Disconnected(reason: String) extends ResponseMessage
 
 case class UserSettings(userId: UUID, username: String, email: String, preferences: UserPreferences) extends ResponseMessage
 
-case class SavedQueryResultResponse(savedQueries: Seq[SavedQuery], usernames: Map[UUID, String], durationMs: Int) extends ResponseMessage
+case class SavedQueryResponse(savedQueries: Seq[SavedQuery], usernames: Map[UUID, String], durationMs: Int) extends ResponseMessage
+case class SharedResultResponse(sharedResults: Seq[SharedResult], usernames: Map[UUID, String], durationMs: Int) extends ResponseMessage
 
-case class SchemaResultResponse(schema: Schema) extends ResponseMessage
-case class TableResultResponse(tables: Seq[Table]) extends ResponseMessage
-case class ViewResultResponse(views: Seq[View]) extends ResponseMessage
-case class ProcedureResultResponse(procedures: Seq[Procedure]) extends ResponseMessage
+case class SchemaResponse(schema: Schema) extends ResponseMessage
+case class TableResponse(tables: Seq[Table]) extends ResponseMessage
+case class ViewResponse(views: Seq[View]) extends ResponseMessage
+case class ProcedureResponse(procedures: Seq[Procedure]) extends ResponseMessage
 
 case class AuditRecordResponse(history: Seq[AuditRecord]) extends ResponseMessage
 case class AuditRecordRemoved(id: Option[UUID]) extends ResponseMessage

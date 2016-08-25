@@ -10,12 +10,13 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
 
     case us: UserSettings => UserManager.onUserSettings(us)
 
-    case sqrr: SavedQueryResultResponse => ModelResultsService.handleSavedQueryResponse(sqrr)
+    case sqr: SavedQueryResponse => ModelResultsService.handleSavedQueryResponse(sqr)
+    case srr: SharedResultResponse => ModelResultsService.handleSharedResultResponse(srr)
 
-    case srr: SchemaResultResponse => ModelResultsService.handleSchemaResultResponse(srr)
-    case trr: TableResultResponse => ModelResultsService.handleTableResultResponse(trr.tables)
-    case vrr: ViewResultResponse => ModelResultsService.handleViewResultResponse(vrr.views)
-    case prr: ProcedureResultResponse => ModelResultsService.handleProcedureResultResponse(prr.procedures)
+    case sr: SchemaResponse => ModelResultsService.handleSchemaResponse(sr)
+    case tr: TableResponse => ModelResultsService.handleTableResponse(tr.tables)
+    case vr: ViewResponse => ModelResultsService.handleViewResponse(vr.views)
+    case pr: ProcedureResponse => ModelResultsService.handleProcedureResponse(pr.procedures)
 
     case arr: AuditRecordResponse => HistoryManager.handleAuditHistoryResponse(arr.history)
     case arr: AuditRecordRemoved => HistoryManager.handleAuditHistoryRemoved(arr.id)

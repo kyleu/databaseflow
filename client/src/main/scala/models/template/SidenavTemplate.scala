@@ -1,6 +1,6 @@
 package models.template
 
-import models.query.SavedQuery
+import models.query.{SavedQuery, SharedResult}
 import models.schema.{Procedure, Table, View}
 import utils.TemplateUtils
 
@@ -10,6 +10,11 @@ object SidenavTemplate {
   private[this] def tagFor(tagId: String, key: String, link: String, name: String, icon: String) = li(a(
     id := tagId, cls := "sidenav-link waves-effect waves-light", data("key") := key, href := link, title := name, data("name") := name
   )(em(cls := s"fa $icon theme-text"), span(name)))
+
+  private[this] def sharedResult(sr: SharedResult) = tagFor(
+    "shared-result-link-" + sr.id, sr.id.toString, "#shared-result-" + sr.id, sr.title, Icons.sharedResult
+  )
+  def sharedResults(srs: Seq[SharedResult]) = srs.map(sharedResult)
 
   private[this] def savedQuery(sq: SavedQuery) = tagFor("saved-query-link-" + sq.id, sq.id.toString, "#saved-query-" + sq.id, sq.name, Icons.savedQuery)
   def savedQueries(sqs: Seq[SavedQuery]) = sqs.map(savedQuery)

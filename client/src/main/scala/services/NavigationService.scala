@@ -29,6 +29,7 @@ object NavigationService {
     case x if x.startsWith("list-") => "list" -> Some(x.substring(5))
     case x if x.startsWith("adhoc-") || x.isEmpty || x == "new" => "new" -> None
     case x if x.startsWith("saved-query-") => "saved-query" -> Some(x.substring(12))
+    case x if x.startsWith("shared-result-") => "shared-result" -> Some(x.substring(14))
     case x if x.startsWith("table-") => "table" -> Some(x.substring(6))
     case x if x.startsWith("view-") => "view" -> Some(x.substring(5))
     case x if x.startsWith("procedure-") => "procedure" -> Some(x.substring(10))

@@ -40,6 +40,7 @@ th.sql = SQL
 th.status = Status
 th.target.columns = Target Columns
 th.target.table = Target Table
+th.title = Title
 th.type = Type
 th.unique = Unique
 th.unknown = Unknown
@@ -81,6 +82,7 @@ feedback.submit = Submit Feedback
 
 # Model Lists
 list.saved.queries = Saved Queries
+list.shared.results = Shared Results
 list.tables = Tables
 list.views = Views
 list.procedures = Procedures

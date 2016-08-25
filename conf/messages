@@ -123,6 +123,7 @@ query.sidenav.new = New Query
 query.sidenav.history = Query History
 query.sidenav.refresh = Refresh Schema
 query.sidenav.saved.queries = Saved Queries
+query.sidenav.shared.results = Shared Results
 query.sidenav.tables = Tables
 query.sidenav.views = Views
 query.sidenav.procedures = Stored Procedures

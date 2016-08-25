@@ -12,7 +12,7 @@ trait DetailHelper { this: SocketService =>
       MetadataTables.withTableDetails(db, conn, conn.getMetaData, Seq(t))
     }
     def onSuccess(tables: Seq[Table]) = {
-      out ! TableResultResponse(tables)
+      out ! TableResponse(tables)
     }
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "TableDetail", x)
@@ -25,7 +25,7 @@ trait DetailHelper { this: SocketService =>
       MetadataViews.withViewDetails(db, conn, conn.getMetaData, Seq(v))
     }
     def onSuccess(views: Seq[View]) = {
-      out ! ViewResultResponse(views)
+      out ! ViewResponse(views)
     }
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "ViewDetail", x)
@@ -38,7 +38,7 @@ trait DetailHelper { this: SocketService =>
       MetadataProcedures.withProcedureDetails(conn.getMetaData, Option(conn.getCatalog), Option(conn.getSchema), Seq(p))
     }
     def onSuccess(procedures: Seq[Procedure]) = {
-      out ! ProcedureResultResponse(procedures)
+      out ! ProcedureResponse(procedures)
     }
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "ProcedureDetail", x)

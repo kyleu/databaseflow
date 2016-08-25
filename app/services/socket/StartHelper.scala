@@ -4,7 +4,7 @@ import akka.actor.PoisonPill
 import models._
 import models.schema.Schema
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
-import services.query.SavedQueryService
+import services.query.{SavedQueryService, SharedResultService}
 import services.schema.SchemaService
 import services.supervisor.ActorSupervisor
 import utils.{ExceptionUtils, Logging}
@@ -32,6 +32,7 @@ trait StartHelper extends Logging { this: SocketService =>
       out ! UserSettings(user.id, user.username, user.profile.providerKey, user.preferences)
 
       SavedQueryService.getForUser(user, connectionId, out)
+      SharedResultService.getForUser(user, connectionId, out)
       refreshSchema(false)
   }
 
@@ -39,11 +40,11 @@ trait StartHelper extends Logging { this: SocketService =>
     def onSchemaSuccess(t: Try[Schema]): Unit = t match {
       case Success(sch) =>
         schema = Some(sch)
-        out ! SchemaResultResponse(sch)
+        out ! SchemaResponse(sch)
         if (sch.detailsLoadedAt.isEmpty) {
           def onRefreshSuccess(s: Schema) = {
             schema = Some(s)
-            out ! SchemaResultResponse(s)
+            out ! SchemaResponse(s)
           }
           def onRefreshFailure(x: Throwable) = ExceptionUtils.actorErrorFunction(out, "SchemaDetailError", x)
           SchemaService.refreshSchema(db, onRefreshSuccess, onRefreshFailure)

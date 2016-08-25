@@ -4,12 +4,12 @@ import java.util.UUID
 
 import models.RefreshSchema
 import models.engine.DatabaseEngine
-import models.query.SavedQuery
+import models.query.{SavedQuery, SharedResult}
 import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.modal.ConfirmManager
-import ui.query.{ProcedureManager, SavedQueryManager, TableManager, ViewManager}
+import ui.query._
 import utils.{NetworkMessage, TemplateUtils}
 
 object MetadataManager {
@@ -42,6 +42,27 @@ object MetadataManager {
       (x.id.toString, el, $("span", el))
     })
     ModelListManager.updatePanel("saved-query")
+  }
+
+  def updateSharedResults(updates: Seq[SharedResult]) = {
+    val updatedIds = updates.map(_.id)
+    val srs = (SharedResultManager.sharedResults.values.toSeq.filterNot(sr => updatedIds.contains(sr.id)) ++ updates).sortBy(_.title)
+
+    SharedResultManager.sharedResults = srs.map(r => r.id -> r).toMap
+
+    if (srs.nonEmpty) {
+      $("#shared-result-list-toggle").css("display", "block")
+      val sharedResultList = $("#shared-result-list")
+      sharedResultList.html(SidenavTemplate.sharedResults(srs).mkString("\n"))
+      TemplateUtils.clickHandler($(".sidenav-link", sharedResultList), (jq) => {
+        val id = UUID.fromString(jq.data("key").toString)
+        SharedResultManager.sharedResultDetail(id)
+      })
+    } else {
+      $("#shared-result-list-toggle").css("display", "none")
+    }
+
+    ModelListManager.updatePanel("shared-result")
   }
 
   def refreshSchema() = {

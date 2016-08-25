@@ -20,6 +20,7 @@ object ModelListManager {
     val name = jq.data("name").toString
     key match {
       case "saved-query" => SavedQueryManager.savedQueryDetail(UUID.fromString(name))
+      case "shared-result" => SharedResultManager.sharedResultDetail(UUID.fromString(name))
       case "table" => TableManager.tableDetail(name, RowDataOptions.empty)
       case "view" => ViewManager.viewDetail(name)
       case "procedure" => ProcedureManager.procedureDetail(name)
@@ -84,6 +85,12 @@ object ModelListManager {
       queryId,
       SavedQueryManager.savedQueries.values.toSeq.sortBy(_.name),
       SavedQueryManager.usernameMap,
+      NavigationService.connectionId
+    )
+    case "shared-result" => ModelListTemplate.forSharedResults(
+      queryId,
+      SharedResultManager.sharedResults.values.toSeq.sortBy(_.title),
+      SharedResultManager.usernameMap,
       NavigationService.connectionId
     )
     case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))

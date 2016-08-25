@@ -62,6 +62,7 @@ object InitService {
       case ("new", None) => AdHocQueryManager.addNewQuery()
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
       case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))
+      case ("shared-result", Some(id)) => SharedResultManager.sharedResultDetail(UUID.fromString(id))
       case ("table", Some(id)) => id.indexOf("::") match {
         case -1 => TableManager.tableDetail(id, RowDataOptions.empty)
         case x =>

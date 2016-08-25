@@ -2,7 +2,7 @@ package models.template
 
 import java.util.UUID
 
-import models.query.SavedQuery
+import models.query.{SavedQuery, SharedResult}
 import models.schema.{Procedure, Table, View}
 import utils.{Messages, NumberUtils}
 
@@ -32,6 +32,18 @@ object ModelListTemplate {
       })
     ))
     forModels(queryId, Messages("list.saved.queries"), tableFor(cols, rows))
+  }
+
+  def forSharedResults(queryId: UUID, sharedResults: Seq[SharedResult], usernameMap: Map[UUID, String], selfId: UUID) = {
+    val cols = messagesHeaders("title", "owner")
+    val rows = sharedResults.map(sr => tr(
+      td(a(cls := "list-link theme-text", data("name") := sr.id.toString, href := s"#shared-result-${sr.id}")(sr.title)),
+      td(usernameMap.get(sr.owner) match {
+        case Some(username) => span(username)
+        case None => em(Messages("th.unknown"))
+      })
+    ))
+    forModels(queryId, Messages("list.shared.results"), tableFor(cols, rows))
   }
 
   def forTables(queryId: UUID, tables: Seq[Table]) = {

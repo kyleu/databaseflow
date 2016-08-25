@@ -3,7 +3,7 @@ package services.query
 import java.util.UUID
 
 import akka.actor.ActorRef
-import models.SavedQueryResultResponse
+import models.SavedQueryResponse
 import models.queries.query.SavedQueryQueries
 import models.query.SavedQuery
 import models.user.{Role, User}
@@ -30,7 +30,7 @@ object SavedQueryService {
       val usernameMap = viewable.map(_.owner).flatMap(uuid => UserService.instance.flatMap { inst =>
         UserService.instance.flatMap(inst => inst.usernameLookup(uuid).map(uuid -> _))
       }).toMap
-      out ! SavedQueryResultResponse(viewable, usernameMap, elapsedMs)
+      out ! SavedQueryResponse(viewable, usernameMap, elapsedMs)
     }
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
@@ -60,7 +60,7 @@ object SavedQueryService {
       case Some(existing) => if (existing.owner == userId) {
         MasterDatabase.executeUpdate(SavedQueryQueries.removeById(id))
       } else {
-        throw new IllegalStateException(s"Attempted by [$userId] to remove saved query [$id], which is owned by [${existing.owner}].")
+        throw new IllegalStateException(s"Attempt by [$userId] to remove saved query [$id], which is owned by [${existing.owner}].")
       }
       case None => throw new IllegalStateException(s"Unknown saved query [$id].")
     }
