@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.SubmitQuery
 import org.scalajs.jquery.{JQuery, jQuery => $}
+import services.ChartService
 import ui.{ProgressManager, TabManager}
 import utils.{NetworkMessage, TemplateUtils}
 
@@ -67,6 +68,7 @@ object QueryManager {
     activeQueries = activeQueries.filterNot(_ == queryId)
 
     TabManager.removeTab(queryId)
+    ChartService.closeCharts(queryId)
 
     val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
     TabManager.selectTab(newId)

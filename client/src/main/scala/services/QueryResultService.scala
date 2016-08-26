@@ -39,12 +39,9 @@ object QueryResultService {
       })
       TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
         if (jq.prop("checked").toString == "true") {
-          ChartService.startChart(resultId, src)
-          $(".results-data-panel", panel).hide()
-          $(".results-chart-panel", panel).show()
+          ChartService.showChart(resultId, result.queryId, src, panel)
         } else {
-          $(".results-chart-panel", panel).hide()
-          $(".results-data-panel", panel).show()
+          ChartService.showData(resultId, panel)
         }
       })
     }
