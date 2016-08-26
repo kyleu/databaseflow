@@ -5,6 +5,7 @@ import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{jQuery => $}
 
 import scala.scalajs.js
+import scala.scalajs.js.{Array, Object}
 
 object ChartingService {
   private[this] var plotly: Option[js.Dynamic] = None
@@ -25,8 +26,27 @@ object ChartingService {
     utils.Logging.info(el)
   }
 
+  def render(el: String, columns: Array[Object], data: Array[Array[String]], chart: Object) = {
+    utils.Logging.info(el)
+    utils.Logging.logJs(columns)
+    utils.Logging.logJs(data)
+    utils.Logging.logJs(chart)
+
+    val chartData: Seq[js.Dynamic] = Seq(
+      js.Dynamic.literal(
+        "x" -> js.Array(1, 2, 3, 4, 5, 6),
+        "y" -> js.Array(1, 2, 4, 8, 16, 32)
+      )
+    )
+    val baseOptions = js.Dynamic.literal(
+      "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
+    )
+
+    ChartingService.addChart(el, chartData, baseOptions)
+  }
+
   def addChart(id: String, data: Seq[js.Dynamic], options: js.Dynamic) = {
-    val el = dom.document.getElementById("chart")
+    val el = dom.document.getElementById(id)
     plotly.map(_.plot(el, js.Array(data: _*), options))
     $(".modebar-btn", el).each { (x: Int, y: dom.Element) =>
       val jq = $(y)

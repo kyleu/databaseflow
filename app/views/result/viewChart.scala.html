@@ -6,14 +6,53 @@
     debug: Boolean
 )(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.simple(user = user, title = messages(result.title), mainDivClass = "", debug = debug) {
+  <script>
+    var columns = [
+      @Html(columns.map { col =>
+        s"""{
+          "name": "${col.name}",
+          "type": "${col.t}"
+        }"""
+      }.mkString(",\n"))
+    ];
+
+    var data = [
+      @Html(data.map { row =>
+        "[" + row.map { cell =>
+          cell.map("\"" + _.trim + "\"").getOrElse("null")
+        }.mkString(", ") + "]"
+      }.mkString(",\n"))
+    ];
+
+    var chart = @Html(result.chart.getOrElse(throw new IllegalStateException()));
+  </script>
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
           <span class="card-title">@result.title</span>
           <div><em>Created on [@result.created] by user [@result.owner]</em></div>
+
+          <div id="chart-container">
+            <div id="chart-panel"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js")" defer="defer"></script>
+  <script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js")" defer="defer"></script>
+  @if(debug) {
+    <script src="@controllers.routes.Assets.versioned("charting-fastopt.js")" type="text/javascript" defer="defer"></script>
+  } else {
+    <script src="@controllers.routes.Assets.versioned("charting-opt.js")" type="text/javascript" defer="defer"></script>
+  }
+  <script>
+    $(function() {
+      var charting = new Charting();
+      charting.init();
+      charting.render('chart-panel', columns, data, chart);
+    });
+  </script>
 }

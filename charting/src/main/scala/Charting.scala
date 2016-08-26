@@ -1,17 +1,19 @@
 import services.charting.{ChartingService, ChartingTests}
 
+import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
 
 @JSExport
 object Charting {
   @JSExport
-  def init() = {
-    ChartingService.init()
-  }
+  def init() = ChartingService.init()
 
   @JSExport
-  def start(el: String) = {
-    ChartingService.start(el)
+  def start(el: String) = ChartingService.start(el)
+
+  @JSExport
+  def render(el: String, columns: js.Array[js.Object], data: js.Array[js.Array[String]], chart: js.Object) = {
+    ChartingService.render(el, columns, data, chart)
   }
 
   @JSExport
