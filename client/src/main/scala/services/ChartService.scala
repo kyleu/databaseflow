@@ -1,62 +1,36 @@
 package services
 
-import org.scalajs.jquery.{jQuery => $}
+import java.util.UUID
+
+import models.ChartDataRequest
+import models.query.QueryResult
+import utils.{NetworkMessage, ScriptLoader}
 
 import scala.scalajs.js
 
 object ChartService {
-  private[this] var chartingScriptLoaded = false
-  private[this] var plotlyScriptLoaded = false
-  private[this] var plotly3dScriptLoaded = false
+  private[this] val cache = collection.mutable.HashMap.empty[UUID, (QueryResult.Source, Option[Seq[Seq[Option[String]]]])]
+  private[this] var charting: Option[js.Dynamic] = None
 
-  private[this] val scriptRoutes = js.Dynamic.global.scriptRoutes
+  def startChart(id: UUID, source: QueryResult.Source): Unit = {
+    cache(id) = source -> None
+    NetworkMessage.sendMessage(ChartDataRequest(id, source))
 
-  private[this] def loadScript(url: String, callback: () => Unit) = {
-    utils.Logging.info(s"Loading charting script from [$url].")
-    $.getScript(url, () => {
-      utils.Logging.info(s"Successfully loaded charting script from [$url].")
-      callback()
-    })
-  }
-
-  def loadChartingScript(onSuccess: () => Unit) = if (chartingScriptLoaded) {
-    onSuccess()
-  } else {
-    loadScript(scriptRoutes.charting.toString, () => {
-      chartingScriptLoaded = true
-      onSuccess()
-    })
-  }
-
-  def loadPlotlyScript(onSuccess: () => Unit) = if (plotlyScriptLoaded) {
-    onSuccess()
-  } else {
-    loadScript(scriptRoutes.plotly.toString, () => {
-      plotlyScriptLoaded = true
-      onSuccess()
-    })
-  }
-
-  def loadPlotly3dScript(onSuccess: () => Unit) = if (plotly3dScriptLoaded) {
-    onSuccess()
-  } else {
-    loadScript(scriptRoutes.plotly3d.toString, () => {
-      plotly3dScriptLoaded = true
-      onSuccess()
-    })
-  }
-
-  def init() = {
-    $.ajaxSetup(js.Dynamic.literal(
-      "cache" -> true
-    ))
-
-    val success = () => {
-      utils.Logging.info("Callback!")
+    charting match {
+      case Some(c) => // TODO
+      case None =>
+        val chartingLoadSuccess = () => {
+          utils.Logging.info("Charting script loaded.")
+          charting = Some(js.Dynamic.global.Charting)
+          js.timers.setTimeout(1000)(loadPlotly())
+          startChart(id, source)
+        }
+        ScriptLoader.loadScript("charting", chartingLoadSuccess)
     }
+  }
 
-    loadChartingScript(success)
-    loadPlotlyScript(success)
-    loadPlotly3dScript(success)
+  private[this] def loadPlotly() = {
+    ScriptLoader.loadScript("plotly", () => utils.Logging.info("Plotly script loaded."))
+    ScriptLoader.loadScript("plotly3d", () => utils.Logging.info("Plotly3D script loaded."))
   }
 }

@@ -6,7 +6,7 @@ import models._
 import services.audit.AuditRecordService
 import services.database.SampleDatabaseService
 import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService, QuerySaveService}
-import services.result.CachedResultService
+import services.result.{CachedResultService, ChartDataService}
 import utils.Config
 import utils.metrics.InstrumentedActor
 
@@ -33,6 +33,8 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
     case cq: CloseQuery => timeReceive(cq) { CachedResultService.removeCacheResults(user.id, cq.queryId) }
 
+    case cdr: ChartDataRequest => timeReceive(cdr) { ChartDataService.handleChartDataRequest(cdr.id, user, connectionId, cdr.source, out, activeTransaction) }
+
     case qsr: QuerySaveRequest => timeReceive(qsr) { QuerySaveService.handleQuerySaveRequest(user.id, qsr.query, out) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QuerySaveService.handleQueryDeleteRequest(user.id, qdr.id, out) }
 
@@ -43,7 +45,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
 
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
-    case x => throw new IllegalArgumentException(s"Unhandled message [${x.getClass.getSimpleName}].")
+    case x => throw new IllegalArgumentException(s"Unhandled request message [${x.getClass.getSimpleName}].")
   }
 
   private[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String, resultId: UUID) = action match {

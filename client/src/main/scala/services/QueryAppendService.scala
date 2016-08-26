@@ -5,6 +5,7 @@ import java.util.UUID
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
+import models.template.results.DataTableTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.TableManager
 import utils.{Logging, TemplateUtils}
@@ -15,7 +16,11 @@ object QueryAppendService {
     val panel = $(s"#$resultId", workspace)
     val resultEl = $(".query-result-table tbody", panel)
 
-    val content = QueryResultsTemplate.forAppend(qr, resultId)
+    val content = {
+      val containsRowNum = qr.columns.headOption.exists(_.name == "#")
+      val rows = DataTableTemplate.tableRows(qr, resultId, containsRowNum)
+      rows.map(_.render).mkString("\n")
+    }
     resultEl.append(content)
 
     val newRows = $(s".result-$resultId", panel)

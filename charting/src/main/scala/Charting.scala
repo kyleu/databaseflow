@@ -9,7 +9,7 @@ class Charting {
   //ChartingTests.testLineChart()
   //ChartingTests.testBubbleChart()
   //ChartingTests.testScatterChart()
-  ChartingTests.test3DScatterChart()
+  //ChartingTests.test3DScatterChart()
   //ChartingTests.testBarChart()
   //ChartingTests.testPieChart()
 }

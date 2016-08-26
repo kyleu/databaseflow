@@ -18,6 +18,7 @@ object ChartingService {
   def init() = {
     plotly = Some(js.Dynamic.global.Plotly)
     dom.window.onresize = (ev: UIEvent) => activeCharts.foreach(x => plotly.map(_.Plots.resize(x._2)))
+    utils.Logging.info("Charting initialized.")
   }
 
   def addChart(id: String, data: Seq[js.Dynamic], options: js.Dynamic) = {
