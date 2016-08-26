@@ -12,10 +12,8 @@ import utils.JdbcUtils
 object SharedResultQueries extends BaseQueries[SharedResult] {
   override protected val tableName = "shared_results"
   override protected val columns = Seq(
-    "id", "title", "description", "owner", "viewable_by", "connection_id",
-    "source_type", "source_name", "source_sort_column", "source_sort_asc",
-    "filter_column", "filter_op", "filter_value", "chart",
-    "last_accessed", "created"
+    "id", "title", "description", "owner", "viewable_by", "connection_id", "source_type", "source_name", "source_sort_column", "source_sort_asc",
+    "filter_column", "filter_op", "filter_value", "chart", "last_accessed", "created"
   )
   override protected val searchColumns = Seq("id", "title", "owner", "source_name", "filter_column", "filter_value")
 

@@ -65,7 +65,7 @@ class QueryController @javax.inject.Inject() (
     val db = if (source.t == "cache") {
       ResultCacheDatabase.conn
     } else {
-      DatabaseRegistry.databaseFor(request.identity, connectionId) match {
+      DatabaseRegistry.databaseForUser(request.identity, connectionId) match {
         case Right(x) => x
         case Left(x) => throw x
       }

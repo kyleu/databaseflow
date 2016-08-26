@@ -19,7 +19,23 @@ object DatabaseRegistry extends Logging {
     Left(new IllegalAccessError("Not authorized to view this connection. " + c._2))
   }
 
-  def databaseFor(user: User, connectionId: UUID) = databases.get(connectionId) match {
+  def databaseFor(connectionId: UUID) = databases.get(connectionId) match {
+    case Some(c) => Right(c._1)
+    case None =>
+      val c = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
+      try {
+        val ret = connect(c, 8) match {
+          case Right(db) => db._1
+          case Left(x) => throw x
+        }
+        databases(connectionId) = ret -> c
+        Right(ret)
+      } catch {
+        case NonFatal(x) => Left(x)
+      }
+  }
+
+  def databaseForUser(user: User, connectionId: UUID) = databases.get(connectionId) match {
     case Some(c) => resultFor(ConnectionSettingsService.canRead(user, c._2), c._1)
     case None =>
       val c = ConnectionSettingsService.getById(connectionId).getOrElse(throw new IllegalArgumentException(s"Unknown connection [$connectionId]."))
@@ -55,7 +71,7 @@ object DatabaseRegistry extends Logging {
     }
   }
 
-  def db(user: User, connectionId: UUID) = databaseFor(user, connectionId) match {
+  def db(user: User, connectionId: UUID) = databaseForUser(user, connectionId) match {
     case Right(x) => x
     case Left(x) => throw x
   }

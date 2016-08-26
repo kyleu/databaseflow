@@ -4,15 +4,21 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models.SharedResultResponse
+import models.engine.EngineQueries
+import models.queries.DynamicQuery
 import models.queries.result.SharedResultQueries
 import models.query.SharedResult
 import models.user.{Role, User}
-import services.database.DatabaseWorkerPool
-import services.database.core.MasterDatabase
+import services.database.{DatabaseRegistry, DatabaseWorkerPool}
+import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.user.UserService
 import utils.ExceptionUtils
 
 object SharedResultService {
+  def getById(id: UUID) = MasterDatabase.conn.query(SharedResultQueries.getById(id))
+
+  def getAll = MasterDatabase.conn.query(SharedResultQueries.getAll())
+
   def canView(user: User, sr: SharedResult) = Role.matchPermissions(user, sr.owner, "shared result", "read", sr.viewableBy)
 
   def getVisible(userId: UUID) = {
@@ -33,6 +39,24 @@ object SharedResultService {
     }
     def onSharedResultsFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SharedResultLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSharedResultsSuccess, onSharedResultsFailure)
+  }
+
+  def getData(user: Option[User], sr: SharedResult) = {
+    val db = if (sr.source.t == "cache") {
+      ResultCacheDatabase.conn
+    } else {
+      user match {
+        case Some(u) => DatabaseRegistry.db(u, sr.connectionId)
+        case None if sr.viewableBy == "visitor" => DatabaseRegistry.databaseFor(sr.connectionId) match {
+          case Right(c) => c
+          case Left(x) => throw x
+        }
+        case None => throw new IllegalStateException("You are not allowed to access this shared result.")
+      }
+    }
+
+    val sql = EngineQueries.selectFrom(sr.source.name, sr.source.asRowDataOptions)(db.engine)
+    db.query(DynamicQuery(sql))
   }
 
   def save(sr: SharedResult, userId: UUID) = MasterDatabase.query(SharedResultQueries.getById(sr.id)) match {

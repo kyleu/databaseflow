@@ -16,7 +16,7 @@ object ChartDataService extends Logging {
     val db = if (source.t == "cache") {
       ResultCacheDatabase.conn
     } else {
-      DatabaseRegistry.databaseFor(user, connectionId) match {
+      DatabaseRegistry.databaseForUser(user, connectionId) match {
         case Right(x) => x
         case Left(x) => throw x
       }
