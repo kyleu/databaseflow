@@ -7,7 +7,7 @@ object ChartingTests {
     "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
   )
 
-  def testLineChart() = {
+  def testLineChart(el: String) = {
     val data: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),
@@ -15,10 +15,10 @@ object ChartingTests {
       )
     )
 
-    ChartingService.addChart("chart", data, baseOptions)
+    ChartingService.addChart(el, data, baseOptions)
   }
 
-  def testBubbleChart() = {
+  def testBubbleChart(el: String) = {
     val data: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),
@@ -30,10 +30,10 @@ object ChartingTests {
       )
     )
 
-    ChartingService.addChart("chart", data, baseOptions)
+    ChartingService.addChart(el, data, baseOptions)
   }
 
-  def testScatterChart() = {
+  def testScatterChart(el: String) = {
     val data: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),
@@ -44,10 +44,10 @@ object ChartingTests {
       )
     )
 
-    ChartingService.addChart("chart", data, baseOptions)
+    ChartingService.addChart(el, data, baseOptions)
   }
 
-  def test3DScatterChart() = {
+  def test3DScatterChart(el: String) = {
     val data: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),
@@ -58,10 +58,10 @@ object ChartingTests {
       )
     )
 
-    ChartingService.addChart("chart", data, baseOptions)
+    ChartingService.addChart(el, data, baseOptions)
   }
 
-  def testBarChart() = {
+  def testBarChart(el: String) = {
     val data: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array("One", "Two", "Three", "Four", "Five", "Six"),
@@ -70,10 +70,10 @@ object ChartingTests {
       )
     )
 
-    ChartingService.addChart("chart", data, baseOptions)
+    ChartingService.addChart(el, data, baseOptions)
   }
 
-  def testPieChart() = {
+  def testPieChart(el: String) = {
     val data: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "values" -> js.Array(1, 2, 3, 4, 5, 6),
@@ -82,6 +82,6 @@ object ChartingTests {
       )
     )
 
-    ChartingService.addChart("chart", data, baseOptions)
+    ChartingService.addChart(el, data, baseOptions)
   }
 }

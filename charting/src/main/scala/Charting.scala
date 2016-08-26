@@ -10,12 +10,12 @@ object Charting {
   }
 
   @JSExport
-  def test(key: String) = key match {
-    case "line" => ChartingTests.testLineChart()
-    case "bar" => ChartingTests.testBarChart()
-    case "pie" => ChartingTests.testPieChart()
-    case "scatter" => ChartingTests.testScatterChart()
-    case "bubble" => ChartingTests.testBubbleChart()
-    case "3d" => ChartingTests.test3DScatterChart()
+  def test(el: String, key: String) = key match {
+    case "line" => ChartingTests.testLineChart(el)
+    case "bar" => ChartingTests.testBarChart(el)
+    case "pie" => ChartingTests.testPieChart(el)
+    case "scatter" => ChartingTests.testScatterChart(el)
+    case "bubble" => ChartingTests.testBubbleChart(el)
+    case "3d" => ChartingTests.test3DScatterChart(el)
   }
 }

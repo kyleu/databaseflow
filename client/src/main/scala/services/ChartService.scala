@@ -29,12 +29,13 @@ object ChartService {
 
     charting match {
       case Some(c) =>
+        utils.Logging.logJs(c)
 
       case None =>
         val chartingLoadSuccess = () => {
           utils.Logging.info("Charting script loaded.")
-          charting = Some(js.Dynamic.global.Charting)
-          js.timers.setTimeout(1000)(loadPlotly())
+          charting = Some(js.Dynamic.global.Charting())
+          loadPlotly()
           startChart(resultId, queryId, source)
         }
         ScriptLoader.loadScript("charting", chartingLoadSuccess)
@@ -51,7 +52,9 @@ object ChartService {
   }
 
   private[this] def loadPlotly() = {
-    ScriptLoader.loadScript("plotly", () => utils.Logging.info("Plotly script loaded."))
-    ScriptLoader.loadScript("plotly3d", () => utils.Logging.info("Plotly3D script loaded."))
+    ScriptLoader.loadScript("plotly", () => {
+      charting.foreach(_.init())
+    })
+    ScriptLoader.loadScript("plotly3d", () => {})
   }
 }
