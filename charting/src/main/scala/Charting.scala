@@ -12,9 +12,10 @@ object Charting {
   def start(el: String) = ChartingService.start(el)
 
   @JSExport
-  def render(el: String, columns: js.Array[js.Object], data: js.Array[js.Array[String]], chart: js.Object) = {
-    ChartingService.render(el, columns, data, chart)
-  }
+  def renderOptions(el: String, columns: js.Array[js.Object], chart: js.Object) = ChartingService.renderOptions(el, columns, chart)
+
+  @JSExport
+  def render(el: String, columns: js.Array[js.Object], data: js.Array[js.Array[String]], chart: js.Object) = ChartingService.render(el, columns, data, chart)
 
   @JSExport
   def test(el: String, key: String) = key match {
@@ -23,6 +24,7 @@ object Charting {
     case "pie" => ChartingTests.testPieChart(el)
     case "scatter" => ChartingTests.testScatterChart(el)
     case "bubble" => ChartingTests.testBubbleChart(el)
-    case "3d" => ChartingTests.test3DScatterChart(el)
+    case "scatter3d" => ChartingTests.test3DScatterChart(el)
+    case _ => throw new IllegalStateException(s"Invalid chart type [$key].")
   }
 }

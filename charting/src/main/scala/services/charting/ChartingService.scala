@@ -1,11 +1,11 @@
 package services.charting
 
+import models.template.ChartOptionsTemplate
 import org.scalajs.dom
 import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{jQuery => $}
 
 import scala.scalajs.js
-import scala.scalajs.js.{Array, Object}
 
 object ChartingService {
   private[this] var plotly: Option[js.Dynamic] = None
@@ -26,12 +26,11 @@ object ChartingService {
     utils.Logging.info(el)
   }
 
-  def render(el: String, columns: Array[Object], data: Array[Array[String]], chart: Object) = {
-    utils.Logging.info(el)
-    utils.Logging.logJs(columns)
-    utils.Logging.logJs(data)
-    utils.Logging.logJs(chart)
+  def renderOptions(el: String, columns: js.Array[js.Object], chart: js.Object) = {
+    $("#" + el).html(ChartOptionsTemplate.forChart(columns, chart).toString)
+  }
 
+  def render(el: String, columns: js.Array[js.Object], data: js.Array[js.Array[String]], chart: js.Object) = {
     val chartData: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),

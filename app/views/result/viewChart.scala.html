@@ -33,6 +33,7 @@
           <span class="card-title">@result.title</span>
           <div><em>Created on [@result.created] by user [@result.owner]</em></div>
 
+          <div id="chart-options"></div>
           <div id="chart-container">
             <div id="chart-panel"></div>
           </div>
@@ -44,14 +45,15 @@
   <script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js")" defer="defer"></script>
   <script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js")" defer="defer"></script>
   @if(debug) {
-    <script src="@controllers.routes.Assets.versioned("charting-fastopt.js")" type="text/javascript" defer="defer"></script>
+    <script src="@controllers.routes.Assets.versioned("charting-fastopt.js")" type="text/javascript"></script>
   } else {
-    <script src="@controllers.routes.Assets.versioned("charting-opt.js")" type="text/javascript" defer="defer"></script>
+    <script src="@controllers.routes.Assets.versioned("charting-opt.js")" type="text/javascript"></script>
   }
   <script>
     $(function() {
       var charting = new Charting();
       charting.init();
+      charting.renderOptions('chart-options', columns, chart);
       charting.render('chart-panel', columns, data, chart);
     });
   </script>
