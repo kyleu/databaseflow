@@ -31,5 +31,5 @@ object ColumnType extends Enum[ColumnType] {
 
   case object UnknownType extends ColumnType("unknown")
 
-  override def values = findValues
+  override val values = findValues
 }

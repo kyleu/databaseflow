@@ -15,7 +15,7 @@ object CachedResultQuery {
 case class CachedResultQuery(index: Int, result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
   val startMs = DateUtils.nowMillis
 
-  override def sql: String = result.sql
+  override val sql = result.sql
 
   override def reduce(rows: Iterator[Row]) = {
     if (rows.hasNext) {

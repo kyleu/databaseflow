@@ -40,10 +40,10 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   val removeById = RemoveById
 
   case class Update(cs: ConnectionSettings) extends Statement {
-    override def sql = updateSql(Seq(
+    override val sql = updateSql(Seq(
       "name", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
     ))
-    override def values = Seq(
+    override val values = Seq(
       cs.name, cs.owner, cs.read, cs.edit, cs.description, cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.id
     )
   }

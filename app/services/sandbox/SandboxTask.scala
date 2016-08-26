@@ -30,7 +30,7 @@ object SandboxTask extends Enum[SandboxTask] {
     }
   }
 
-  override def values = findValues
+  override val values = findValues
 }
 
 sealed abstract class SandboxTask(val id: String, val name: String, val description: String) extends EnumEntry with Logging {

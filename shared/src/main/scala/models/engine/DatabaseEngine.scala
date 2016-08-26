@@ -52,7 +52,7 @@ object DatabaseEngine extends Enum[DatabaseEngine] {
     }
   }
 
-  override def values = findValues
+  override val values = findValues
 }
 
 sealed abstract class DatabaseEngine(

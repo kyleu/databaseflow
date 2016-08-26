@@ -24,5 +24,5 @@ object Language extends Enum[Language] {
   case object Thai extends Language("th")
   case object Vietnamese extends Language("vi")
 
-  override def values = findValues
+  override val values = findValues
 }

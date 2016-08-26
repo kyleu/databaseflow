@@ -13,7 +13,7 @@ object Role extends Enum[Role] {
   def apply(role: String): Role = Role.withName(role)
   def unapply(role: Role): Option[String] = Some(role.toString)
 
-  override def values = findValues
+  override val values = findValues
 
   object Admin extends Role("admin") {
     override def qualifies(target: Role) = true

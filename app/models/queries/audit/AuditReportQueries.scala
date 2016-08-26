@@ -10,16 +10,16 @@ object AuditReportQueries {
 
   case class GetForUser(userId: UUID, limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
     override val sql = s"""select * from "$tableName" where "owner" = ? order by "occurred" desc limit $limit offset $offset"""
-    override def values = Seq(userId)
+    override val values = Seq(userId)
     override def reduce(rows: Iterator[Row]) = rows.map(AuditRecordQueries.fromRow).toList
   }
 
   case class GetMatchingQueries(connectionId: UUID, userId: UUID, limit: Int, offset: Int) extends Query[Seq[AuditRecord]] {
     private[this] val typeWhere = s""""audit_type" in ('${AuditType.Query}', '${AuditType.Execute}')"""
-    override def sql = {
+    override val sql = {
       s"""select * from "$tableName" where "connection" = ? and "owner" = ? and $typeWhere order by "occurred" desc limit $limit offset $offset"""
     }
-    override def values = Seq(connectionId, userId)
+    override val values = Seq(connectionId, userId)
     override def reduce(rows: Iterator[Row]) = rows.map(AuditRecordQueries.fromRow).toList
   }
 }

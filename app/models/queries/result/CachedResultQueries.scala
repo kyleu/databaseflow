@@ -40,8 +40,8 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
   }
 
   case class GetMatchingResultIds(userId: UUID, queryId: UUID) extends Query[Seq[UUID]] {
-    override def sql = s"""select "id" from "$tableName" where "owner" = ? and "query_id" = ?"""
-    override def values = Seq(userId, queryId)
+    override val sql = s"""select "id" from "$tableName" where "owner" = ? and "query_id" = ?"""
+    override val values = Seq(userId, queryId)
     override def reduce(rows: Iterator[Row]) = rows.map(row => row.as[UUID]("id")).toList
   }
 

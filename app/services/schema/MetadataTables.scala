@@ -23,7 +23,7 @@ object MetadataTables {
   private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
-        override def sql = "show create table " + db.engine.cap.leftQuote + table.name + db.engine.cap.rightQuote
+        override val sql = "show create table " + db.engine.cap.leftQuote + table.name + db.engine.cap.rightQuote
         override def reduce(rows: Iterator[Row]) = rows.map(_.as[String]("Create Table")).toList.headOption.getOrElse {
           throw new IllegalStateException("Missing column [Create Table].")
         }
@@ -33,7 +33,7 @@ object MetadataTables {
 
     val rowStats = db.engine match {
       case MySQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
-        override def sql = s"""
+        override val sql = s"""
           select table_name, engine, table_rows, avg_row_length, data_length, create_time
           from information_schema.tables where table_name = '${table.name}'
         """
@@ -50,7 +50,7 @@ object MetadataTables {
       })
       case PostgreSQL => db(conn, new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
         val t = s"""${table.schema.fold("")(_ + ".")}"${table.name}""""
-        override def sql = s"select relname as name, reltuples as rows from pg_class where oid = '$t'::regclass"
+        override val sql = s"select relname as name, reltuples as rows from pg_class where oid = '$t'::regclass"
         override def reduce(rows: Iterator[Row]) = rows.map { row =>
           val tableName = row.as[String]("name")
           val rowEstimate = JdbcHelper.longVal(row.as[Any]("rows"))

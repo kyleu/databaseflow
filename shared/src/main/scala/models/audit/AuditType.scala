@@ -16,7 +16,7 @@ object AuditType extends Enum[AuditType] {
   case object Query extends AuditType("Query", Icons.adHocQuery)
   case object Execute extends AuditType("Execute", Icons.statementResults)
 
-  override def values = findValues
+  override val values = findValues
 }
 
 sealed abstract class AuditType(val title: String, val icon: String) extends EnumEntry

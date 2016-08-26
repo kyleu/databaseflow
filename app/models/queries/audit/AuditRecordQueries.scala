@@ -22,36 +22,36 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   def removeById(id: UUID) = RemoveById(Seq(id))
 
   case class Complete(id: UUID, newType: AuditType, rowsAffected: Int, elapsed: Int) extends Statement {
-    override def sql = s"""update "$tableName" set "audit_type" = ?, "status" = ?, "rows_affected" = ?, "elapsed" = ? where "id" = ?"""
-    override def values = Seq(newType.toString, AuditStatus.OK.toString, rowsAffected, elapsed, id)
+    override val sql = s"""update "$tableName" set "audit_type" = ?, "status" = ?, "rows_affected" = ?, "elapsed" = ? where "id" = ?"""
+    override val values = Seq[Any](newType.toString, AuditStatus.OK.toString, rowsAffected, elapsed, id)
   }
   case class Error(id: UUID, message: String, elapsed: Int) extends Statement {
-    override def sql = s"""update "$tableName" set "status" = ?, "error" = ?, "elapsed" = ? where "id" = ?"""
-    override def values = Seq(AuditStatus.Error.toString, message, elapsed, id)
+    override val sql = s"""update "$tableName" set "status" = ?, "error" = ?, "elapsed" = ? where "id" = ?"""
+    override val values = Seq[Any](AuditStatus.Error.toString, message, elapsed, id)
   }
 
   case class RemoveForUser(userId: UUID, connectionId: Option[UUID]) extends Statement {
-    override def sql = connectionId match {
+    override val sql = connectionId match {
       case Some(c) => s"""delete from "$tableName" where "owner" = ? and "connection" = ?"""
       case None => s"""delete from "$tableName" where "owner" = ?"""
     }
-    override def values = connectionId match {
+    override val values = connectionId match {
       case Some(c) => Seq(userId, c)
       case None => Seq(userId)
     }
   }
   case class RemoveForAnonymous(connectionId: Option[UUID]) extends Statement {
-    override def sql = connectionId match {
+    override val sql = connectionId match {
       case Some(c) => s"""delete from "$tableName" where "owner" = is null and "connection" = ?"""
       case None => s"""delete from "$tableName" where "owner" is null"""
     }
-    override def values = connectionId match {
+    override val values = connectionId match {
       case Some(c) => Seq(c)
       case None => Seq.empty
     }
   }
   case object RemoveAll extends Statement {
-    override def sql = s"truncate $tableName"
+    override val sql = s"truncate $tableName"
   }
 
   override def fromRow(row: Row) = AuditRecord(

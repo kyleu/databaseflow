@@ -19,5 +19,5 @@ object FilterOp extends Enum[FilterOp] {
   case object IsNull extends FilterOp("nl", "is null", "Is Null", "is null")
   case object IsNotNull extends FilterOp("nnl", "is not null", "Is Not Null", "is not null")
 
-  override def values = findValues
+  override val values = findValues
 }

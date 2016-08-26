@@ -63,7 +63,7 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case object CountAdmins extends SingleRowQuery[Int]() {
-    override def sql = "select count(*) as c from \"users\" where \"role\" = 'admin'"
+    override val sql = "select count(*) as c from \"users\" where \"role\" = 'admin'"
     override def map(row: Row) = row.as[Long]("c").toInt
   }
 
@@ -83,7 +83,7 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class UpdateFields(id: UUID, username: String, email: String, role: Role) extends Statement {
-    override def sql: String = s"update $tableName set username = ?, email = ?, role = ? where id = ?"
-    override def values = Seq(username, email, role.toString, id)
+    override val sql = s"update $tableName set username = ?, email = ?, role = ? where id = ?"
+    override val values = Seq(username, email, role.toString, id)
   }
 }
