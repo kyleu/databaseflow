@@ -16,10 +16,10 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
   def view(id: UUID) = withoutSession("result.view") { implicit request =>
     SharedResultService.getById(id) match {
       case Some(sr) =>
-        val data = SharedResultService.getData(request.identity, sr)
+        val results = SharedResultService.getData(request.identity, sr)
         sr.chart match {
-          case Some(chart) => Future.successful(Ok(views.html.result.viewChart(request.identity, sr, ctx.config.debug)))
-          case None => Future.successful(Ok(views.html.result.viewData(request.identity, sr, ctx.config.debug)))
+          case Some(chart) => Future.successful(Ok(views.html.result.viewChart(request.identity, sr, results.cols, results.data, ctx.config.debug)))
+          case None => Future.successful(Ok(views.html.result.viewData(request.identity, sr, results.cols, results.data, ctx.config.debug)))
         }
       case None => Future.successful(BadRequest("We couldn't find the results you requested."))
     }
