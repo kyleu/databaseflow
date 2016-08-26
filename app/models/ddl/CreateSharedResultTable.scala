@@ -5,6 +5,7 @@ case object CreateSharedResultTable extends CreateTableStatement("shared_results
     create table "$tableName" (
       "id" uuid primary key,
       "title" $varchar(512) not null,
+      "description" $varchar(4096),
       "owner" uuid not null,
       "viewable_by" $varchar(128) not null,
       "connection_id" uuid not null,

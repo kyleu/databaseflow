@@ -5,6 +5,7 @@ import java.util.UUID
 case class SharedResult(
   id: UUID,
   title: String,
+  description: Option[String],
   owner: UUID,
   viewableBy: String,
   connectionId: UUID,

@@ -134,6 +134,7 @@ query.permissions.everyone = Everyone
 query.permissions.registered.users = Registered Users
 query.permissions.administrators = Administrators
 query.permissions.only.myself = Only Myself
+query.share = Share
 
 # Query Results
 result.remove.confirm = Removed result [{0}].
@@ -161,6 +162,8 @@ modal.save.description = Description
 modal.save.available.from = Available From
 modal.save.all.databases = All Databases
 modal.save.this.database = This Database Only
+modal.share.results.title = Title
+modal.share.results.description = Description
 
 # User
 user.password.changed = Password changed.

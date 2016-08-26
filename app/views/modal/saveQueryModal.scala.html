@@ -1,4 +1,4 @@
-@()(implicit messages: Messages)<div id="save-query-modal" class="modal">
+@()(implicit messages: Messages)<div id="save-query-modal" class="modal modal-fixed-footer">
   <div class="modal-content">
     <div class="row">
       <form class="col s12">
@@ -13,8 +13,12 @@
           </div>
         </div>
         <div class="row">
-          @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "query-read")
-          @views.html.components.permissionsPanel(messages("connection.permissions.editable.by"), "query-edit")
+          <div class="input-field col s12 m6">
+            @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "read", "query-read")
+          </div>
+          <div class="input-field col s12 m6">
+            @views.html.components.permissionsPanel(messages("connection.permissions.editable.by"), "edit", "query-edit")
+          </div>
           <div class="input-field col s12">
             <div class="card-panel option-panel">
               <h6><i class="fa @models.template.Icons.database"></i> @messages("modal.save.available.from")</h6>

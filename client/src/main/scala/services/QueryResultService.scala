@@ -8,7 +8,7 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.ProgressManager
-import ui.modal.QueryExportFormManager
+import ui.modal.{QueryExportFormManager, ShareResultsFormManager}
 import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.{Logging, TemplateUtils}
 
@@ -36,6 +36,9 @@ object QueryResultService {
       onComplete(result, src, panel, resultId)
       TemplateUtils.clickHandler($(".results-export-link", panel), (jq) => {
         QueryExportFormManager.show(result.queryId, src, "Export")
+      })
+      TemplateUtils.clickHandler($(".results-share-link", panel), (jq) => {
+        ShareResultsFormManager.show(resultId, "TODO")
       })
       TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
         if (jq.prop("checked").toString == "true") {

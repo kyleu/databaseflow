@@ -54,6 +54,7 @@ history.no.records = It looks like you haven''t run any queries for this databas
 query.explain = Explain
 query.analyze = Analyze
 query.export = Export
+query.share = Share
 query.chart = Chart
 query.data = Data
 query.run = Run

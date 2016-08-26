@@ -7,11 +7,12 @@ import models.queries.BaseQueries
 import models.query.{QueryResult, SharedResult}
 import models.schema.FilterOp
 import services.schema.JdbcHelper
+import utils.JdbcUtils
 
 object SharedResultQueries extends BaseQueries[SharedResult] {
   override protected val tableName = "shared_results"
   override protected val columns = Seq(
-    "id", "title", "owner", "viewable_by", "connection_id",
+    "id", "title", "description", "owner", "viewable_by", "connection_id",
     "source_type", "source_name", "source_sort_column", "source_sort_asc",
     "filter_column", "filter_op", "filter_value", "chart",
     "last_accessed", "created"
@@ -68,6 +69,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   override protected def fromRow(row: Row) = SharedResult(
     id = row.as[UUID]("id"),
     title = row.as[String]("title"),
+    description = row.asOpt[Any]("description").map(s => JdbcUtils.extractString(s)),
     owner = row.as[UUID]("owner"),
     viewableBy = row.as[String]("viewable_by"),
     connectionId = row.as[UUID]("connection_id"),
@@ -80,13 +82,13 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       filterOp = row.asOpt[String]("filter_op").map(FilterOp.withName),
       filterValue = row.asOpt[String]("filter_value")
     ),
-    chart = row.asOpt[Any]("chart").map(c => JdbcHelper.stringVal(c)),
+    chart = row.asOpt[Any]("chart").map(s => JdbcHelper.stringVal(s)),
     lastAccessed = row.as[java.sql.Timestamp]("last_accessed").getTime,
     created = row.as[java.sql.Timestamp]("created").getTime
   )
 
   override protected def toDataSeq(sr: SharedResult) = Seq[Any](
-    sr.id, sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
+    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
     sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
     new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)
   )
