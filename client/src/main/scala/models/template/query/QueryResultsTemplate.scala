@@ -17,6 +17,7 @@ object QueryResultsTemplate {
       QueryFilterTemplate.activeFilterPanel(qr),
 
       div(
+        a(href := "#", cls := "results-share-link results-nav-link right theme-text")(Messages("query.share")),
         a(href := "#", cls := "results-export-link results-nav-link right theme-text")(Messages("query.export")),
         if (hasFilter) {
           a(href := "#", cls := "results-filter-link results-nav-link right theme-text")(Messages("th.filter"))

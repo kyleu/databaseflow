@@ -21,6 +21,10 @@ object ChartingService {
     utils.Logging.info("Charting initialized.")
   }
 
+  def start(el: String) = {
+    utils.Logging.info(el)
+  }
+
   def addChart(id: String, data: Seq[js.Dynamic], options: js.Dynamic) = {
     val el = dom.document.getElementById("chart")
     plotly.map(_.plot(el, js.Array(data: _*), options))

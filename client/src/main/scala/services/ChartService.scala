@@ -30,6 +30,7 @@ object ChartService {
     charting match {
       case Some(c) =>
         utils.Logging.logJs(c)
+        c.start(resultId.toString)
 
       case None =>
         val chartingLoadSuccess = () => {

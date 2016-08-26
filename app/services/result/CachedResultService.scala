@@ -8,6 +8,7 @@ import models.result.CachedResult
 import org.joda.time.LocalDateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
+import services.query.SharedResultService
 import services.schema.MetadataTables
 import utils.Logging
 
@@ -46,7 +47,9 @@ object CachedResultService extends Logging {
 
   def getAll = MasterDatabase.query(CachedResultQueries.getAll(orderBy = "\"created\" desc"))
 
-  def remove(resultId: UUID): Unit = {
+  def remove(resultId: UUID): Unit = if (SharedResultService.containsResultId(resultId)) {
+    log.warn("Cannot remove shared results.")
+  } else {
     MasterDatabase.executeUpdate(CachedResultQueries.removeById(resultId))
     try {
       ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable("result_" + resultId.toString.replaceAllLiterally("-", ""))(ResultCacheDatabase.conn.engine))
@@ -67,6 +70,7 @@ object CachedResultService extends Logging {
   }
 
   def cleanup(before: LocalDateTime) = {
+    val sharedIds = SharedResultService.getSharedCachedResultIds
     val rows = CachedResultService.getAll
     val tables = CachedResultService.getTables
     val tableNames = rows.map(_.tableName).toSet
@@ -76,7 +80,7 @@ object CachedResultService extends Logging {
     }
 
     val removed = rows.flatMap { row =>
-      if (row.created.isBefore(before)) {
+      if (row.created.isBefore(before) && (!sharedIds.contains(row.resultId))) {
         remove(row.resultId)
         Some(row.resultId)
       } else {

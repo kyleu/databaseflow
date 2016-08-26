@@ -10,6 +10,11 @@ object Charting {
   }
 
   @JSExport
+  def start(el: String) = {
+    ChartingService.start(el)
+  }
+
+  @JSExport
   def test(el: String, key: String) = key match {
     case "line" => ChartingTests.testLineChart(el)
     case "bar" => ChartingTests.testBarChart(el)

@@ -1,0 +1,41 @@
+@()(implicit messages: Messages)<div id="save-query-modal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <form class="col s12">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="input-query-name" type="text" class="validate" placeholder="">
+            <label for="input-query-name">@messages("modal.save.query.name")</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="input-query-description" type="text" class="validate" placeholder="">
+            <label for="input-query-description">@messages("modal.save.description")</label>
+          </div>
+        </div>
+        <div class="row">
+          @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "query-read")
+          @views.html.components.permissionsPanel(messages("connection.permissions.editable.by"), "query-edit")
+          <div class="input-field col s12">
+            <div class="card-panel option-panel">
+              <h6><i class="fa @models.template.Icons.database"></i> @messages("modal.save.available.from")</h6>
+              <p>
+                <input id="input-query-connection-true" name="connection" type="radio" value="true" checked="checked" />
+                <label for="input-query-connection-true">@messages("modal.save.all.databases")</label>
+              </p>
+              <p>
+                <input id="input-query-connection-false" name="connection" type="radio" value="false" />
+                <label for="input-query-connection-false">@messages("modal.save.this.database")</label>
+              </p>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a id="input-query-save-link" href="#" class="modal-action right btn theme waves-effect waves-light">@messages("general.save")</a>
+    <a id="input-query-cancel-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>
+    <div style="clear: both;"></div>
+  </div>
+</div>

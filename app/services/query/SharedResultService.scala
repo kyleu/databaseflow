@@ -35,33 +35,39 @@ object SharedResultService {
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSharedResultsSuccess, onSharedResultsFailure)
   }
 
-  def save(sr: SharedResult, userId: UUID) = {
-    MasterDatabase.query(SharedResultQueries.getById(sr.id)) match {
-      case Some(existing) =>
-        if (existing.owner == userId) {
-          val updated = sr.copy(
-            lastAccessed = System.currentTimeMillis
-          )
-          MasterDatabase.executeUpdate(SharedResultQueries.UpdateSharedResult(updated))
-          updated
-        } else {
-          throw new IllegalStateException("Not Authorized.")
-        }
-      case None =>
-        val inserted = sr.copy(owner = userId, lastAccessed = System.currentTimeMillis, created = System.currentTimeMillis)
-        MasterDatabase.executeUpdate(SharedResultQueries.insert(inserted))
-        inserted
-    }
+  def save(sr: SharedResult, userId: UUID) = MasterDatabase.query(SharedResultQueries.getById(sr.id)) match {
+    case Some(existing) =>
+      if (existing.owner == userId) {
+        val updated = sr.copy(
+          lastAccessed = System.currentTimeMillis
+        )
+        MasterDatabase.executeUpdate(SharedResultQueries.UpdateSharedResult(updated))
+        updated
+      } else {
+        throw new IllegalStateException("Not Authorized.")
+      }
+    case None =>
+      val inserted = sr.copy(owner = userId, lastAccessed = System.currentTimeMillis, created = System.currentTimeMillis)
+      MasterDatabase.executeUpdate(SharedResultQueries.insert(inserted))
+      inserted
   }
 
-  def delete(id: UUID, userId: UUID) = {
-    MasterDatabase.query(SharedResultQueries.getById(id)) match {
-      case Some(existing) => if (existing.owner == userId) {
-        MasterDatabase.executeUpdate(SharedResultQueries.removeById(id))
-      } else {
-        throw new IllegalStateException(s"Attempt by [$userId] to remove shared result [$id], which is owned by [${existing.owner}].")
-      }
-      case None => throw new IllegalStateException(s"Unknown shared result [$id].")
+  def delete(id: UUID, userId: UUID) = MasterDatabase.query(SharedResultQueries.getById(id)) match {
+    case Some(existing) => if (existing.owner == userId) {
+      MasterDatabase.executeUpdate(SharedResultQueries.removeById(id))
+    } else {
+      throw new IllegalStateException(s"Attempt by [$userId] to remove shared result [$id], which is owned by [${existing.owner}].")
     }
+    case None => throw new IllegalStateException(s"Unknown shared result [$id].")
   }
+
+  private[this] def padUuid(s: String) = {
+    s.substring(0, 8) + "-" + s.substring(8, 12) + "-" + s.substring(12, 16) + "-" + s.substring(16, 20) + "-" + s.substring(20, 32)
+  }
+
+  def getSharedCachedResultIds = MasterDatabase.query(SharedResultQueries.GetCachedTableNames).map { name =>
+    UUID.fromString(padUuid(name.stripPrefix("result_")))
+  }
+
+  def containsResultId(resultId: UUID) = MasterDatabase.query(SharedResultQueries.ContainsCachedTableName(resultId.toString.replaceAllLiterally("-", "")))
 }

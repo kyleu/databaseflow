@@ -1,0 +1,23 @@
+@(title: String, key: String)(implicit messages: Messages)
+<div class="input-field col s12 m6">
+  <div class="card-panel option-panel">
+    <h6><i class="fa @models.template.Icons.user"></i> @title</h6>
+    <p>
+      <input id="input-@key-visitor" name="read" type="radio" value="visitor" />
+      <label for="input-@key-visitor">@messages("query.permissions.everyone")</label>
+    </p>
+    <p>
+      <input id="input-@key-user" name="read" type="radio" value="user" />
+      <label for="input-@key-user">@messages("query.permissions.registered.users")</label>
+    </p>
+    <p>
+      <input id="input-@key-admin" name="read" type="radio" value="admin" />
+      <label for="input-@key-admin">@messages("query.permissions.administrators")</label>
+    </p>
+    <p>
+      <input id="input-@key-private" name="read" type="radio" value="private" />
+      <label for="input-@key-private">@messages("query.permissions.only.myself")</label>
+    </p>
+    <div class="clear"></div>
+  </div>
+</div>

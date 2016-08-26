@@ -9,6 +9,7 @@ case class SharedResult(
   viewableBy: String,
   connectionId: UUID,
   source: QueryResult.Source,
+  chart: Option[String],
   lastAccessed: Long = System.currentTimeMillis,
   created: Long = System.currentTimeMillis
 )
