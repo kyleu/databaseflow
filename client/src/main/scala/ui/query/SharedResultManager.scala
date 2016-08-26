@@ -40,8 +40,6 @@ object SharedResultManager {
 
     TabManager.addTab(sr.id, "shared-result-" + sr.id, sr.title, Icons.sharedResult, close)
 
-    ChartService.init()
-
     QueryManager.activeQueries = QueryManager.activeQueries :+ sr.id
   }
 }

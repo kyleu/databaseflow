@@ -45,7 +45,6 @@ object FilterManager {
     }
 
     TemplateUtils.clickHandler($(".results-filter-go", panel), (jq) => {
-      $(".row-status-display", panel).show()
       $(".filter-container", panel).hide()
 
       val column = $(":selected", colSelect).`val`().toString

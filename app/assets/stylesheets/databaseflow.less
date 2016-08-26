@@ -50,10 +50,23 @@ main {
   font-family: 'roboto-mono';
 }
 
+.clear {
+  clear: both;
+}
+
 // Index Page
 .connection-list {
   margin-top: 36px;
   margin-bottom: 24px;
+}
+
+// Forms
+.switch label input[type=checkbox]:checked + .lever:after {
+  background-color: #f1f1f1;
+}
+
+.switch label input[type=checkbox]:checked + .lever {
+  background-color: #818181;
 }
 
 // Includes

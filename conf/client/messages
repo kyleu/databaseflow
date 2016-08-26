@@ -54,6 +54,8 @@ history.no.records = It looks like you haven''t run any queries for this databas
 query.explain = Explain
 query.analyze = Analyze
 query.export = Export
+query.chart = Chart
+query.data = Data
 query.run = Run
 query.run.all = Run All
 query.run.active = Run Active
@@ -72,6 +74,7 @@ query.unsaved.changes = This query has unsaved changes.
 query.default.name = Unsaved Query {0}
 query.open.relation = Open [{0}] table filtered where [{1}].
 query.index.error = Error encountered at index [{0}].
+query.chart.loading = Loading chart options...
 
 # Feedback
 feedback.title = Feedback
