@@ -17,13 +17,13 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   def getById(id: UUID) = GetById(Seq(id))
 
   def getVisible(userId: UUID) = GetAll(
-    whereClause = Some(s"""((("owner" = ? or "owner" is null) and "read" = 'private') or "read" != 'private')"""),
+    whereClause = Some("""((("owner" = ? or "owner" is null) and "read" = 'private') or "read" != 'private')"""),
     orderBy = "\"name\"",
     values = Seq(userId)
   )
 
   def getForUser(userId: UUID, connectionId: UUID) = GetAll(
-    whereClause = Some(s"""(("owner" = ? and "read" = 'private') or "read" != 'private') and ("connection" = ? or "connection" is null)"""),
+    whereClause = Some("""(("owner" = ? and "read" = 'private') or "read" != 'private') and ("connection" = ? or "connection" is null)"""),
     orderBy = "\"name\"",
     values = Seq(userId, connectionId)
   )

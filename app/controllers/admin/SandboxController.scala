@@ -3,7 +3,6 @@ package controllers.admin
 import akka.util.Timeout
 import controllers.BaseController
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.ws.WSClient
 import services.sandbox.SandboxTask
 import utils.ApplicationContext
 
@@ -11,7 +10,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 
 @javax.inject.Singleton
-class SandboxController @javax.inject.Inject() (override val ctx: ApplicationContext, ws: WSClient) extends BaseController {
+class SandboxController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   implicit val timeout = Timeout(10.seconds)
 
   def list = withAdminSession("sandbox.list") { implicit request =>

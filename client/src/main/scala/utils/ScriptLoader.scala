@@ -9,8 +9,7 @@ object ScriptLoader {
 
   private[this] val scripts = Seq(
     "charting" -> scriptRoutes.charting.toString,
-    "plotly" -> scriptRoutes.plotly.toString,
-    "plotly3d" -> scriptRoutes.plotly3d.toString
+    "plotly" -> scriptRoutes.plotly.toString
   )
   private[this] var loadedScripts = Seq.empty[String]
 

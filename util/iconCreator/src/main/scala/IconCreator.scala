@@ -1,4 +1,4 @@
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{Files, Path, Paths}
 import scala.sys.process._
 
 object IconCreator extends App {

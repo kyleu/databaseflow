@@ -34,7 +34,7 @@ object ModelListTemplate {
     forModels(queryId, Messages("list.saved.queries"), tableFor(cols, rows))
   }
 
-  def forSharedResults(queryId: UUID, sharedResults: Seq[SharedResult], usernameMap: Map[UUID, String], selfId: UUID) = {
+  def forSharedResults(queryId: UUID, sharedResults: Seq[SharedResult], usernameMap: Map[UUID, String]) = {
     val cols = messagesHeaders("title", "owner")
     val rows = sharedResults.map(sr => tr(
       td(a(cls := "list-link theme-text", data("name") := sr.id.toString, href := s"#shared-result-${sr.id}")(sr.title)),

@@ -72,7 +72,12 @@ object QueryResultsTemplate {
           em(cls := "no-rows-remaining initially-hidden")(Messages("query.no.more.rows"))
         )
       ),
-      div(cls := "results-chart-panel initially-hidden")(div(cls := "loading")(Messages("query.chart.loading")))
+
+      div(cls := "results-chart-panel initially-hidden")(
+        div(cls := "loading")(Messages("query.chart.loading")),
+        div(cls := "chart-options-panel z-depth-1 initially-hidden"),
+        div(id := s"chart-container-$resultId", cls := "chart-container initially-hidden")
+      )
     )
 
     StaticPanelTemplate.cardRow(

@@ -29,15 +29,13 @@ object ModelListManager {
   })
 
   def showList(key: String) = openLists.get(key) match {
-    case Some(queryId) =>
-      TabManager.selectTab(queryId)
+    case Some(queryId) => TabManager.selectTab(queryId)
     case None =>
       val queryId = UUID.randomUUID
       val schema = MetadataManager.schema.getOrElse(throw new IllegalStateException("Schema not available."))
       val (name, template) = getTemplate(key, queryId, schema)
 
       val panelHtml = div(id := s"panel-$queryId", cls := "workspace-panel")(template)
-
       WorkspaceManager.append(panelHtml.toString)
 
       def close() = {
@@ -49,15 +47,12 @@ object ModelListManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")
-
       if (queryPanel.length != 1) {
         throw new IllegalStateException(s"Found [${queryPanel.length}] query panels for model list.")
       }
 
       wire(queryPanel, key)
-
       val filterManager = ModelFilterManager(queryPanel)
-
       TemplateUtils.keyUpHandler($(".model-filter", queryPanel), (jq, key) => {
         if (key == 27) {
           jq.value("")
@@ -90,8 +85,7 @@ object ModelListManager {
     case "shared-result" => ModelListTemplate.forSharedResults(
       queryId,
       SharedResultManager.sharedResults.values.toSeq.sortBy(_.title),
-      SharedResultManager.usernameMap,
-      NavigationService.connectionId
+      SharedResultManager.usernameMap
     )
     case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))
     case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))

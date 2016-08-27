@@ -30,7 +30,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       "filter_column", "filter_op", "filter_value", "chart", "last_accessed", "created"
     ))
     override val values = Seq[Any](
-      sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
+      sr.title, sr.owner, sr.viewableBy, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
       sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
       new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created), sr.id
     )
@@ -42,13 +42,13 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   }
 
   def getVisible(userId: UUID) = GetAll(
-    whereClause = Some(s"""(("owner" = ? and "viewable_by" = 'private') or "viewable_by" != 'private')"""),
+    whereClause = Some("""(("owner" = ? and "viewable_by" = 'private') or "viewable_by" != 'private')"""),
     orderBy = "\"title\"",
     values = Seq(userId)
   )
 
   def getForUser(userId: UUID, connectionId: UUID) = GetAll(
-    whereClause = Some(s"""(("owner" = ? and "viewable_by" = 'private') or "viewable_by" != 'private') and ("connection_id" = ? or "connection_id" is null)"""),
+    whereClause = Some("""(("owner" = ? and "viewable_by" = 'private') or "viewable_by" != 'private') and ("connection_id" = ? or "connection_id" is null)"""),
     orderBy = "\"title\"",
     values = Seq(userId, connectionId)
   )
@@ -86,7 +86,8 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   )
 
   override protected def toDataSeq(sr: SharedResult) = Seq[Any](
-    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
+    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy, sr.connectionId,
+    sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
     sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
     new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)
   )

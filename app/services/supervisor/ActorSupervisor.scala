@@ -69,12 +69,12 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
 
   private[this] def handleSendSocketTrace(ct: SendSocketTrace) = ActorSupervisor.sockets.find(_._1 == ct.id) match {
     case Some(c) => c._2.actorRef forward ct
-    case None => sender() ! ServerError(s"Unknown Socket", ct.id.toString)
+    case None => sender() ! ServerError("Unknown Socket", ct.id.toString)
   }
 
   private[this] def handleSendClientTrace(ct: SendClientTrace) = ActorSupervisor.sockets.find(_._1 == ct.id) match {
     case Some(c) => c._2.actorRef forward ct
-    case None => sender() ! ServerError(s"Unknown Client Socket", ct.id.toString)
+    case None => sender() ! ServerError("Unknown Client Socket", ct.id.toString)
   }
 
   protected[this] def handleSocketStarted(user: User, socketId: UUID, socket: ActorRef) {

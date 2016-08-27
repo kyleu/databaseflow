@@ -32,7 +32,9 @@ class PurchaseController @javax.inject.Inject() (implicit override val messagesA
   def purchasePersonalEdition() = act("purchase.personal") { implicit request =>
     PurchaseController.stripePurchaseForm.bindFromRequest.fold(
       formWithErrors => {
-        Future.successful(Redirect(controllers.routes.PurchaseController.pricingPersonal()).flashing("error" -> PlayFormUtils.errorsToString(formWithErrors.errors)))
+        Future.successful(Redirect(controllers.routes.PurchaseController.pricingPersonal()).flashing(
+          "error" -> PlayFormUtils.errorsToString(formWithErrors.errors)
+        ))
       },
       f => {
         val license = License(name = f.name, email = f.email, edition = LicenseEdition.Personal)
@@ -50,7 +52,9 @@ class PurchaseController @javax.inject.Inject() (implicit override val messagesA
   def purchaseTeamEdition() = act("purchase.team.edition") { implicit request =>
     PurchaseController.stripePurchaseForm.bindFromRequest.fold(
       formWithErrors => {
-        Future.successful(Redirect(controllers.routes.PurchaseController.pricingTeam()).flashing("error" -> PlayFormUtils.errorsToString(formWithErrors.errors)))
+        Future.successful(Redirect(controllers.routes.PurchaseController.pricingTeam()).flashing(
+          "error" -> PlayFormUtils.errorsToString(formWithErrors.errors)
+        ))
       },
       f => {
         val license = License(name = f.name, email = f.email, edition = LicenseEdition.Team)

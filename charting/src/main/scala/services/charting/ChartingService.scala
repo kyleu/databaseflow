@@ -1,6 +1,5 @@
 package services.charting
 
-import models.template.ChartOptionsTemplate
 import org.scalajs.dom
 import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{jQuery => $}
@@ -22,15 +21,7 @@ object ChartingService {
     utils.Logging.info("Charting initialized.")
   }
 
-  def start(el: String) = {
-    utils.Logging.info(el)
-  }
-
-  def renderOptions(el: String, columns: js.Array[js.Object], chart: js.Object) = {
-    $("#" + el).html(ChartOptionsTemplate.forChart(columns, chart).toString)
-  }
-
-  def render(el: String, columns: js.Array[js.Object], data: js.Array[js.Array[String]], chart: js.Object) = {
+  def render(el: String, columns: js.Array[(String, String)], data: js.Array[js.Array[String]], chart: js.Dynamic) = {
     val chartData: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),

@@ -1,6 +1,5 @@
 @(debug: Boolean)
-<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-basic.js")" defer="defer"></script>
-<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly-gl3d.js")" defer="defer"></script>
+<script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly.js")" defer="defer"></script>
 @if(debug) {
 <script src="@controllers.routes.Assets.versioned("charting-fastopt.js")" type="text/javascript" defer="defer"></script>
 } else {
@@ -11,7 +10,7 @@
   $(function() {
     var charting = new Charting();
     charting.init();
-    charting.test('chart', 'line');
+    charting.test('chart', 'box');
   });
 </script>
 

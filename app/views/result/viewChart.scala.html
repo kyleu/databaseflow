@@ -11,7 +11,7 @@
       @Html(columns.map { col =>
         s"""{
           "name": "${col.name}",
-          "type": "${col.t}"
+          "t": "${col.t}"
         }"""
       }.mkString(",\n"))
     ];
@@ -30,10 +30,13 @@
     <div class="col s12">
       <div class="card">
         <div class="card-content">
+          <div class="right">
+            <a id="chart-settings-link" class="theme-text" href=""><i class="fa @models.template.Icons.settings"></i></a>
+          </div>
           <span class="card-title">@result.title</span>
           <div><em>Created on [@result.created] by user [@result.owner]</em></div>
 
-          <div id="chart-options"></div>
+          <div id="chart-options" class="initially-hidden z-depth-1"></div>
           <div id="chart-container">
             <div id="chart-panel"></div>
           </div>
@@ -51,9 +54,13 @@
   }
   <script>
     $(function() {
+      $('#chart-settings-link').on('click', function(){
+        $('#chart-options').toggle();
+        return false;
+      });
       var charting = new Charting();
       charting.init();
-      charting.renderOptions('chart-options', columns, chart);
+      charting.renderOptions($('#chart-options'), columns, chart);
       charting.render('chart-panel', columns, data, chart);
     });
   </script>

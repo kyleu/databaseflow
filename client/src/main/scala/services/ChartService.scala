@@ -29,8 +29,14 @@ object ChartService {
 
     charting match {
       case Some(c) =>
-        utils.Logging.logJs(c)
-        c.start(resultId.toString)
+        val el = $(s"#$resultId .results-chart-panel")
+        $(".loading", el).remove()
+
+        val optionsPanel = $(s".chart-options-panel", el)
+        c.renderOptions(optionsPanel, js.Array(), js.Dynamic.literal())
+        optionsPanel.show()
+
+        $(s".chart-container").show()
 
       case None =>
         val chartingLoadSuccess = () => {
@@ -52,10 +58,7 @@ object ChartService {
     $(".results-data-panel", panel).show()
   }
 
-  private[this] def loadPlotly() = {
-    ScriptLoader.loadScript("plotly", () => {
-      charting.foreach(_.init())
-    })
-    ScriptLoader.loadScript("plotly3d", () => {})
-  }
+  private[this] def loadPlotly() = ScriptLoader.loadScript("plotly", () => {
+    charting.foreach(_.init())
+  })
 }
