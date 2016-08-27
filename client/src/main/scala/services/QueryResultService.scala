@@ -42,7 +42,7 @@ object QueryResultService {
       })
       TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
         if (jq.prop("checked").toString == "true") {
-          ChartService.showChart(resultId, result.queryId, src, panel)
+          ChartService.showChart(resultId, result.queryId, result.columns, src, panel)
         } else {
           ChartService.showData(resultId, panel)
         }

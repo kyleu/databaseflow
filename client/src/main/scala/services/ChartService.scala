@@ -13,17 +13,17 @@ object ChartService {
   private[this] val cache = collection.mutable.HashMap.empty[UUID, (UUID, QueryResult.Source, Option[Seq[Seq[Option[String]]]])]
   private[this] var charting: Option[js.Dynamic] = None
 
-  def showChart(resultId: UUID, queryId: UUID, source: QueryResult.Source, panel: JQuery) = {
+  def showChart(resultId: UUID, queryId: UUID, columns: Seq[QueryResult.Col], source: QueryResult.Source, panel: JQuery) = {
     $(".results-data-panel", panel).hide()
     $(".results-chart-panel", panel).show()
 
     cache.get(resultId) match {
       case Some(_) => // No op
-      case None => startChart(resultId, queryId, source)
+      case None => startChart(resultId, queryId, columns, source)
     }
   }
 
-  private[this] def startChart(resultId: UUID, queryId: UUID, source: QueryResult.Source): Unit = {
+  private[this] def startChart(resultId: UUID, queryId: UUID, columns: Seq[QueryResult.Col], source: QueryResult.Source): Unit = {
     cache(resultId) = (queryId, source, None)
     NetworkMessage.sendMessage(ChartDataRequest(resultId, source))
 
@@ -36,8 +36,15 @@ object ChartService {
           "t" -> "line"
         )
 
-        c.addChart(resultId.toString, chart, js.Array(), js.Array())
+        val cols = js.Array(columns.map { col =>
+          js.Dynamic.literal("t" -> col.t.key, "name" -> col.name)
+        }: _*)
 
+        utils.Logging.logJs(cols)
+
+        c.addChart(resultId.toString, chart, cols, js.Array())
+
+        $(s".chart-options-panel", el).show()
         $(s".chart-container").show()
 
       case None =>
@@ -45,7 +52,7 @@ object ChartService {
           utils.Logging.info("Charting script loaded.")
           charting = Some(js.Dynamic.global.Charting())
           loadPlotly()
-          startChart(resultId, queryId, source)
+          startChart(resultId, queryId, columns, source)
         }
         ScriptLoader.loadScript("charting", chartingLoadSuccess)
     }
