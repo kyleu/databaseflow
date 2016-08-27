@@ -1,8 +1,10 @@
 package models.charting.options
 
-case class BoxPlotOptions(
-  override val columns: Seq[String] = Seq("values", "x"),
-  statistics: Boolean = false,
-  horizontal: Boolean = false,
-  legend: Boolean = false
-) extends ChartOptions
+case object BoxPlotOptions extends ChartOptions {
+  override val selects = Seq("values" -> "Values", "x" -> "X")
+  override val flags = Seq(
+    ("statistics", "Statistics", false),
+    ("horizontal", "Horizontal", false),
+    ("legend", "Legend", false)
+  )
+}

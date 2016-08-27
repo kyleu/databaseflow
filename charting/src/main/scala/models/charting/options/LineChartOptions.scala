@@ -1,8 +1,10 @@
 package models.charting.options
 
-case class LineChartOptions(
-  override val columns: Seq[String] = Seq("x", "y", "hover"),
-  smoothed: Boolean = false,
-  showPoints: Boolean = false,
-  legend: Boolean = false
-) extends ChartOptions
+case object LineChartOptions extends ChartOptions {
+  override val selects = Seq("x" -> "X", "y" -> "Y", "hover" -> "Text")
+  override val flags = Seq(
+    ("smoothed", "Smoothed", false),
+    ("showPoints", "Points", false),
+    ("legend", "Legend", false)
+  )
+}

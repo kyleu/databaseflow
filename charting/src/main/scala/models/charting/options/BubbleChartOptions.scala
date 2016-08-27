@@ -1,6 +1,6 @@
 package models.charting.options
 
-case class BubbleChartOptions(
-  override val columns: Seq[String] = Seq("x", "y", "color", "hover", "size"),
-  legend: Boolean = false
-) extends ChartOptions
+case object BubbleChartOptions extends ChartOptions {
+  override val selects = Seq("x" -> "X", "y" -> "Y", "color" -> "Color", "hover" -> "Text", "size" -> "Size")
+  override val flags = Seq(("legend", "Legend", false))
+}

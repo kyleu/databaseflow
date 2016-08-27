@@ -1,6 +1,6 @@
 package models.charting.options
 
-case class ScatterPlot3DOptions(
-  override val columns: Seq[String] = Seq("x", "y", "z", "color", "hover"),
-  legend: Boolean = false
-) extends ChartOptions
+case object ScatterPlot3DOptions extends ChartOptions {
+  override val selects = Seq("x" -> "X", "y" -> "Y", "z" -> "Z", "color" -> "Color", "hover" -> "Text")
+  override val flags = Seq(("legend", "Legend", false))
+}

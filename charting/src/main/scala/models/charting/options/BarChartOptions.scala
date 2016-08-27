@@ -1,8 +1,10 @@
 package models.charting.options
 
-case class BarChartOptions(
-  override val columns: Seq[String] = Seq("x", "y", "color", "hover"),
-  horizontal: Boolean = false,
-  stacked: Boolean = false,
-  legend: Boolean = false
-) extends ChartOptions
+case object BarChartOptions extends ChartOptions {
+  override val selects = Seq("x" -> "X", "y" -> "Y", "color" -> "Color", "hover" -> "Text")
+  override val flags = Seq(
+    ("horizontal", "Horizontal", false),
+    ("stacked", "Stacked", false),
+    ("legend", "Legend", false)
+  )
+}

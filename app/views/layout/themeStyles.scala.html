@@ -39,6 +39,11 @@
     color: #999 !important;
   }
 
+  [type="checkbox"]:checked + label:before {
+    border-right: 2px solid @theme.color;
+    border-bottom: 2px solid @theme.color;
+  }
+
   .tree li .node:hover+ul li::after,
   .tree li .node:hover+ul li::before,
   .tree li .node:hover+ul::before,

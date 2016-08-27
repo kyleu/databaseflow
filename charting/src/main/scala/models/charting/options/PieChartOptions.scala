@@ -1,9 +1,11 @@
 package models.charting.options
 
-case class PieChartOptions(
-  override val columns: Seq[String] = Seq("values", "labels"),
-  showLabel: Boolean = false,
-  showValue: Boolean = false,
-  showPercentage: Boolean = false,
-  sorted: Boolean = true
-) extends ChartOptions
+case object PieChartOptions extends ChartOptions {
+  override val selects = Seq("values" -> "Values", "labels" -> "Text")
+  override val flags = Seq(
+    ("showLabel", "Label", false),
+    ("showValue", "Value", false),
+    ("showPercentage", "Percentage", true),
+    ("sorted", "Sorted", true)
+  )
+}

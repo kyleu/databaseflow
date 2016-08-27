@@ -1,7 +1,6 @@
 package models.charting.options
 
-case class HistogramOptions(
-  override val columns: Seq[String] = Seq("a"),
-  horizontal: Boolean = false,
-  legend: Boolean = false
-) extends ChartOptions
+case object HistogramOptions extends ChartOptions {
+  override val selects = Seq("y" -> "Y")
+  override val flags = Seq(("horizontal", "Horizontal", false), ("legend", "Legend", false))
+}
