@@ -1,5 +1,7 @@
-import org.scalajs.jquery.JQuery
-import services.charting.{ChartOptionsService, ChartingService, ChartingTests}
+import java.util.UUID
+
+import models.charting.ChartSettings
+import services.charting.{ChartingService, ChartingTests}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
@@ -10,13 +12,11 @@ object Charting {
   def init() = ChartingService.init()
 
   @JSExport
-  def renderOptions(elId: String, el: JQuery, columns: js.Array[js.Dynamic], chart: js.Dynamic) = {
-    ChartOptionsService.renderOptions(elId, el, toColumns(columns), chart)
-  }
-
-  @JSExport
-  def render(el: String, columns: js.Array[js.Dynamic], data: js.Array[js.Array[String]], chart: js.Dynamic) = {
-    ChartingService.render(el, toColumns(columns), data, chart)
+  def addChart(id: String, chart: js.Dynamic, columns: js.Array[js.Dynamic], data: js.Array[js.Array[String]]) = {
+    val uuid = UUID.fromString(id)
+    val settings = ChartSettings.fromJs(chart)
+    val colSeq = toColumns(columns)
+    ChartingService.addChart(uuid, settings, colSeq, data)
   }
 
   @JSExport
@@ -35,5 +35,5 @@ object Charting {
 
   private[this] def toColumns(columns: js.Array[js.Dynamic]) = columns.map { col =>
     col.name.toString -> col.t.toString
-  }
+  }.toSeq
 }

@@ -1,53 +1,48 @@
 package services.charting
 
+import java.util.UUID
+
+import models.charting.ChartSettings
 import org.scalajs.dom
 import org.scalajs.dom.UIEvent
-import org.scalajs.jquery.{jQuery => $}
+import org.scalajs.jquery.{JQuery, jQuery => $}
 
 import scala.scalajs.js
+import scala.scalajs.js.Array
 
 object ChartingService {
-  private[this] var plotly: Option[js.Dynamic] = None
-  private[this] val strippedTitles = Seq(
-    "Save and edit plot in cloud", "Produced with Plotly",
-    "Toggle show closest data on hover", "Show closest data on hover", "Compare data on hover",
-    "Box Select", "Lasso Select", "Reset axes", "Reset camera to last save"
-  )
-  private[this] var activeCharts = Seq.empty[(String, dom.Element)]
+  case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]])
+
+  private[this] var activeCharts = Map.empty[UUID, ChartValues]
 
   def init() = {
-    plotly = Some(js.Dynamic.global.Plotly)
-    dom.window.onresize = (ev: UIEvent) => activeCharts.foreach(x => plotly.map(_.Plots.resize(x._2)))
+    ChartRenderService.init()
+    dom.window.onresize = (ev: UIEvent) => activeCharts.mapValues(x => ChartRenderService.resizeHandler(x.chartPanel.get(0)))
     utils.Logging.info("Charting initialized.")
   }
 
-  def render(el: String, columns: js.Array[(String, String)], data: js.Array[js.Array[String]], chart: js.Dynamic) = {
-    val chartData: Seq[js.Dynamic] = Seq(
-      js.Dynamic.literal(
-        "x" -> js.Array(1, 2, 3, 4, 5, 6),
-        "y" -> js.Array(1, 2, 4, 8, 16, 32)
-      )
-    )
-    val baseOptions = js.Dynamic.literal(
-      "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
-    )
-
-    ChartingService.addChart(el, chartData, baseOptions)
-  }
-
-  def addChart(id: String, data: Seq[js.Dynamic], options: js.Dynamic) = {
-    val el = dom.document.getElementById(id)
-    plotly.map(_.plot(el, js.Array(data: _*), options))
-    $(".modebar-btn", el).each { (x: Int, y: dom.Element) =>
-      val jq = $(y)
-      if (strippedTitles.contains(jq.data("title").toString)) {
-        jq.remove()
-      }
+  def addChart(id: UUID, settings: ChartSettings, columns: Seq[(String, String)], data: Array[Array[String]]) = {
+    val el = $(s"#chart-$id")
+    if (el.length != 1) {
+      throw new IllegalStateException(s"Missing element for chart [$id].")
     }
-    activeCharts = activeCharts :+ (id -> el)
+    val optionsPanel = $(".chart-options-panel", el)
+    if (optionsPanel.length != 1) {
+      throw new IllegalStateException(s"Missing options panel for chart [$id].")
+    }
+
+    val chartPanel = $(".chart-panel", el)
+    if (chartPanel.length != 1) {
+      throw new IllegalStateException(s"Missing chart panel for chart [$id].")
+    }
+
+    val v = ChartValues(optionsPanel, chartPanel, settings, columns, data)
+    activeCharts = activeCharts + (id -> v)
+    ChartOptionsService.renderOptions(id, optionsPanel, columns, settings)
+    ChartRenderService.render(v)
   }
 
-  def removeChart(id: String) = {
-    activeCharts = activeCharts.filterNot(_._1 == id)
+  def removeChart(id: UUID) = {
+    activeCharts = activeCharts - id
   }
 }

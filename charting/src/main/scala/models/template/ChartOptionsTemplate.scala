@@ -1,8 +1,9 @@
 package models.template
 
-import models.charting.ChartType
+import java.util.UUID
 
-import scala.scalajs.js
+import models.charting.{ChartSettings, ChartType}
+
 import scalatags.Text.all._
 
 object ChartOptionsTemplate {
@@ -17,9 +18,9 @@ object ChartOptionsTemplate {
     )
   })
 
-  def flags(elId: String, t: ChartType) = {
+  def flags(chartId: UUID, t: ChartType) = {
     div(cls := "row")(t.options.flags.map { flag =>
-      val flagInput = input(`type` := "checkbox", data("key") := flag._1, id := s"$elId-${flag._1}", cls := s"chart-flag chart-flag-${flag._1}")
+      val flagInput = input(`type` := "checkbox", data("key") := flag._1, id := s"chart-option-$chartId-${flag._1}", cls := s"chart-flag chart-flag-${flag._1}")
       val checkedInput = if (flag._3) {
         flagInput(checked)
       } else {
@@ -27,12 +28,12 @@ object ChartOptionsTemplate {
       }
       div(cls := "input-field col s12 m4")(
         checkedInput,
-        label(`for` := s"$elId-${flag._1}")(flag._2)
+        label(`for` := s"chart-option-$chartId-${flag._1}")(flag._2)
       )
     })
   }
 
-  def options(elId: String, columns: Seq[(String, String)], chart: js.Dynamic) = div(
+  def options(columns: Seq[(String, String)], chart: ChartSettings) = div(
     div(cls := "chart-type-select-container")(
       select(cls := "chart-type-select")(
         ChartType.values.map(t => option(value := t.id)(t.title))

@@ -7,24 +7,26 @@ object ChartingTests {
     "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
   )
 
-  def testLineChart(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def getEl(id: String) = org.scalajs.dom.document.getElementById(s"#chart-panel-$id")
+
+  def testLineChart(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
     "y" -> js.Array(1, 2, 4, 8, 16, 32)
   )), baseOptions)
 
-  def testBarChart(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testBarChart(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array("One", "Two", "Three", "Four", "Five", "Six"),
     "y" -> js.Array(1, 2, 4, 8, 16, 32),
     "type" -> "bar"
   )), baseOptions)
 
-  def testPieChart(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testPieChart(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "values" -> js.Array(1, 2, 3, 4, 5, 6),
     "labels" -> js.Array("One", "Two", "Three", "Four", "Five", "Six"),
     "type" -> "pie"
   )), baseOptions)
 
-  def testScatterPlot(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testScatterPlot(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
     "y" -> js.Array(1, 2, 4, 8, 16, 32),
     "mode" -> "markers",
@@ -32,7 +34,7 @@ object ChartingTests {
     "text" -> js.Array("One", "Two", "Three", "Four", "Five", "Six")
   )), baseOptions)
 
-  def testBubbleChart(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testBubbleChart(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
     "y" -> js.Array(1, 2, 4, 8, 16, 32),
     "mode" -> "markers",
@@ -42,18 +44,18 @@ object ChartingTests {
     )
   )), baseOptions)
 
-  def testHistogram(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testHistogram(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
     "type" -> "histogram",
     "name" -> js.Array("One", "Two", "Three", "Four", "Five", "Six")
   )), baseOptions)
 
-  def testBoxPlot(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testBoxPlot(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "y" -> js.Array(1, 2, 3, 4, 5, 6),
     "type" -> "box"
   )), baseOptions)
 
-  def testScatterPlot3D(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testScatterPlot3D(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
     "y" -> js.Array(1, 2, 4, 8, 16, 32),
     "z" -> js.Array(1, 2, 4, 8, 16, 32),
@@ -61,7 +63,7 @@ object ChartingTests {
     "type" -> "scatter3d"
   )), baseOptions)
 
-  def testBubbleChart3D(el: String) = ChartingService.addChart(el, Seq(js.Dynamic.literal(
+  def testBubbleChart3D(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
     "y" -> js.Array(1, 2, 4, 8, 16, 32),
     "z" -> js.Array(1, 2, 4, 8, 16, 32),
