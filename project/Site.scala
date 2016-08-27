@@ -17,7 +17,7 @@ object Site {
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit, Commerce.stripe,
       Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
-      WebJars.requireJs, WebJars.jquery, WebJars.materialize, WebJars.fontAwesome
+      WebJars.jquery, WebJars.materialize, WebJars.fontAwesome
     )
   }
 

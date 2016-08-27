@@ -71,7 +71,6 @@ object Dependencies {
     val moment = "org.webjars" % "momentjs" % "2.14.1"
     val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
     val plotly = "org.webjars.bower" % "plotly.js" % "1.16.2"
-    val requireJs = "org.webjars" % "requirejs" % "2.2.0"
   }
 
   object Metrics {

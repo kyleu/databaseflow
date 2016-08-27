@@ -28,7 +28,7 @@ object Server {
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Play.playFilters, Play.playWs,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
-      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize, WebJars.moment, WebJars.mousetrap, WebJars.plotly, WebJars.requireJs,
+      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize, WebJars.moment, WebJars.mousetrap, WebJars.plotly,
       Export.csv, Export.xlsx, Utils.crypto, Utils.scalaGuice, Utils.commonsIo,
       Akka.testkit, Play.playTest, Testing.scalaTest
     )
