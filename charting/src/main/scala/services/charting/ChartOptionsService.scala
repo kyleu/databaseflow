@@ -21,9 +21,7 @@ object ChartOptionsService {
     el.html(ChartOptionsTemplate.options(columns, chart).toString)
     materialSelect(".chart-type-select", el)
     TemplateUtils.changeHandler($(".chart-type-select", el), (jq) => {
-      val key = jq.value().toString
-      utils.Logging.info(key)
-      selectChartType(el, columns, ChartType.withName(key))
+      selectChartType(el, columns, ChartType.withName(jq.value().toString))
     })
     selectChartType(el, columns, ChartType.Line)
   }
