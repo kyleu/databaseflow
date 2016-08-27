@@ -3,10 +3,12 @@ package models.charting
 import scala.scalajs.js.Dynamic
 
 case class ChartSettings(
-  t: ChartType = ChartType.Line,
-  selects: Seq[(String, String)] = Nil,
-  flags: Seq[(String, Boolean)] = Nil
-)
+    t: ChartType = ChartType.Line,
+    selects: Map[String, String] = Map.empty,
+    flags: Map[String, Boolean] = Map.empty
+) {
+  def merge(s: ChartSettings) = this.copy(selects = selects ++ s.selects, flags = flags ++ s.flags)
+}
 
 object ChartSettings {
   def fromJs(options: Dynamic) = {

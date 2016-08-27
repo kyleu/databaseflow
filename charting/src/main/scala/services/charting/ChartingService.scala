@@ -10,6 +10,8 @@ import org.scalajs.jquery.{JQuery, jQuery => $}
 import scala.scalajs.js
 
 object ChartingService {
+  private[this] var activeCharts = Map.empty[UUID, ChartValues]
+
   case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) {
     lazy val chartData: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
@@ -21,8 +23,6 @@ object ChartingService {
       "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
     )
   }
-
-  private[this] var activeCharts = Map.empty[UUID, ChartValues]
 
   def init() = {
     ChartRenderService.init()
@@ -48,18 +48,21 @@ object ChartingService {
 
     val v = ChartValues(optionsPanel, chartPanel, settings, columns, data)
     activeCharts = activeCharts + (id -> v)
-    ChartOptionsService.renderOptions(id, optionsPanel, columns, settings)
+    ChartSettingsService.renderOptions(id, optionsPanel, columns)
     ChartRenderService.render(v)
   }
 
+  def getSettings(id: UUID) = activeCharts.getOrElse(id, throw new IllegalStateException(s"Invalid chart [$id].")).settings
   def updateSettings(id: UUID, settings: ChartSettings) = activeCharts.get(id) match {
-    case Some(v) => activeCharts = activeCharts + (id -> v.copy(settings = settings))
-    case None => throw new IllegalStateException(s"Cannot upda settings for unknown chart [$id].")
+    case Some(v) =>
+      activeCharts = activeCharts + (id -> v.copy(settings = settings))
+      utils.Logging.info(s"Settings updated: [$settings].")
+    case None => throw new IllegalStateException(s"Cannot update settings for unknown chart [$id].")
   }
 
   def updateData(id: UUID, data: js.Array[js.Array[String]]) = activeCharts.get(id) match {
     case Some(v) => activeCharts = activeCharts + (id -> v.copy(data = data))
-    case None => throw new IllegalStateException(s"Cannot set data for unknown chart [$id].")
+    case None => throw new IllegalStateException(s"Cannot update data for unknown chart [$id].")
   }
 
   def removeChart(id: UUID) = {
