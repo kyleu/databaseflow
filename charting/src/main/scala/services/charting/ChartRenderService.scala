@@ -18,17 +18,7 @@ object ChartRenderService {
   def resizeHandler(el: Element) = plotly.map(_.Plots.resize(el))
 
   def render(v: ChartingService.ChartValues) = {
-    val chartData: Seq[js.Dynamic] = Seq(
-      js.Dynamic.literal(
-        "x" -> js.Array(1, 2, 3, 4, 5, 6),
-        "y" -> js.Array(1, 2, 4, 8, 16, 32)
-      )
-    )
-    val baseOptions = js.Dynamic.literal(
-      "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
-    )
-
-    renderChart(v.chartPanel.get(0), chartData, baseOptions)
+    renderChart(v.chartPanel.get(0), v.chartData, v.baseOptions)
   }
 
   def renderChart(el: Element, data: Seq[js.Dynamic], options: js.Dynamic) = {

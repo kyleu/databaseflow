@@ -18,9 +18,15 @@ object ChartOptionsService {
     TemplateUtils.changeHandler($(".chart-select", el), (jq) => {
       val k = jq.data("key").toString
       val v = jq.value().toString
-      utils.Logging.info(k + ": " + v)
+      utils.Logging.info(s"Select [$k]: $v")
     })
+
     $(".chart-flags-container", el).html(ChartOptionsTemplate.flags(id, t).toString())
+    TemplateUtils.changeHandler($(".chart-flag", el), (jq) => {
+      val k = jq.data("key").toString
+      val v = jq.prop("checked").toString.toBoolean
+      utils.Logging.info(s"Flag [$k]: $v")
+    })
   }
 
   def renderOptions(id: UUID, panel: JQuery, columns: Seq[(String, String)], chart: ChartSettings) = {

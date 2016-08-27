@@ -8,10 +8,20 @@ import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{JQuery, jQuery => $}
 
 import scala.scalajs.js
-import scala.scalajs.js.Array
+import scala.scalajs.js.{Array, Dynamic}
 
 object ChartingService {
-  case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]])
+  case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) {
+    lazy val chartData: Seq[Dynamic] = Seq(
+      js.Dynamic.literal(
+        "x" -> js.Array(1, 2, 3, 4, 5, 6),
+        "y" -> js.Array(1, 2, 4, 8, 16, 32)
+      )
+    )
+    lazy val baseOptions = js.Dynamic.literal(
+      "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
+    )
+  }
 
   private[this] var activeCharts = Map.empty[UUID, ChartValues]
 

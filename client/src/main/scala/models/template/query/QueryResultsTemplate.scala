@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import models.template.StaticPanelTemplate
-import models.template.results.{DataFilterTemplate, DataTableTemplate}
+import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
 import utils.{Messages, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
@@ -73,11 +73,7 @@ object QueryResultsTemplate {
         )
       ),
 
-      div(cls := "results-chart-panel initially-hidden")(
-        div(cls := "loading")(Messages("query.chart.loading")),
-        div(cls := "chart-options-panel z-depth-1 initially-hidden"),
-        div(id := s"chart-container-$resultId", cls := "chart-container initially-hidden")
-      )
+      ChartResultTemplate.forChartResults(resultId)
     )
 
     StaticPanelTemplate.cardRow(

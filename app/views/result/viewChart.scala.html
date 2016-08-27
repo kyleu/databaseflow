@@ -62,7 +62,10 @@
       });
       var charting = new Charting();
       charting.init();
-      charting.addChart('@result.id', columns, data, chart);
+
+      var settings = @result.chart.getOrElse("{}");
+
+      charting.addChart('@result.id', settings, columns, data, chart);
     });
   </script>
 }

@@ -33,7 +33,5 @@ object Charting {
     case _ => throw new IllegalStateException(s"Invalid chart type [$key].")
   }
 
-  private[this] def toColumns(columns: js.Array[js.Dynamic]) = columns.map { col =>
-    col.name.toString -> col.t.toString
-  }.toSeq
+  private[this] def toColumns(columns: js.Array[js.Dynamic]) = columns.map(col => col.name.toString -> col.t.toString).toSeq
 }
