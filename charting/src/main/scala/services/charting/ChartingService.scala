@@ -8,11 +8,10 @@ import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{JQuery, jQuery => $}
 
 import scala.scalajs.js
-import scala.scalajs.js.{Array, Dynamic}
 
 object ChartingService {
   case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) {
-    lazy val chartData: Seq[Dynamic] = Seq(
+    lazy val chartData: Seq[js.Dynamic] = Seq(
       js.Dynamic.literal(
         "x" -> js.Array(1, 2, 3, 4, 5, 6),
         "y" -> js.Array(1, 2, 4, 8, 16, 32)
@@ -27,11 +26,14 @@ object ChartingService {
 
   def init() = {
     ChartRenderService.init()
-    dom.window.onresize = (ev: UIEvent) => activeCharts.mapValues(x => ChartRenderService.resizeHandler(x.chartPanel.get(0)))
+    dom.window.onresize = (ev: UIEvent) => {
+      utils.Logging.info(s"Resize: ${activeCharts.keys.toList}")
+      activeCharts.foreach(x => ChartRenderService.resizeHandler(x._2.chartPanel.get(0)))
+    }
     utils.Logging.info("Charting initialized.")
   }
 
-  def addChart(id: UUID, settings: ChartSettings, columns: Seq[(String, String)], data: Array[Array[String]]) = {
+  def addChart(id: UUID, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) = {
     val el = $(s"#chart-$id")
     if (el.length != 1) {
       throw new IllegalStateException(s"Missing element for chart [$id].")
@@ -50,6 +52,16 @@ object ChartingService {
     activeCharts = activeCharts + (id -> v)
     ChartOptionsService.renderOptions(id, optionsPanel, columns, settings)
     ChartRenderService.render(v)
+  }
+
+  def updateSettings(id: UUID, settings: ChartSettings) = activeCharts.get(id) match {
+    case Some(v) => activeCharts = activeCharts + (id -> v.copy(settings = settings))
+    case None => throw new IllegalStateException(s"Cannot update settings for unknown chart [$id].")
+  }
+
+  def updateData(id: UUID, data: js.Array[js.Array[String]]) = activeCharts.get(id) match {
+    case Some(v) => activeCharts = activeCharts + (id -> v.copy(data = data))
+    case None => throw new IllegalStateException(s"Cannot update data for unknown chart [$id].")
   }
 
   def removeChart(id: UUID) = {

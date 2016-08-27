@@ -1,13 +1,14 @@
 package services.charting
 
 import scala.scalajs.js
+import org.scalajs.jquery.{jQuery => $}
 
 object ChartingTests {
   private[this] val baseOptions = js.Dynamic.literal(
     "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
   )
 
-  def getEl(id: String) = org.scalajs.dom.document.getElementById(s"#chart-panel-$id")
+  def getEl(id: String) = $(s"#chart-$id .chart-panel").get(0)
 
   def testLineChart(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),

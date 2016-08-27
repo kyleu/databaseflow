@@ -40,8 +40,6 @@ object ChartService {
           js.Dynamic.literal("t" -> col.t.key, "name" -> col.name)
         }: _*)
 
-        utils.Logging.logJs(cols)
-
         c.addChart(resultId.toString, chart, cols, js.Array())
 
         $(s".chart-options-panel", el).show()

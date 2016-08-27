@@ -20,6 +20,9 @@ object Charting {
   }
 
   @JSExport
+  def updateData(id: String, data: js.Array[js.Array[String]]) = ChartingService.updateData(UUID.fromString(id), data)
+
+  @JSExport
   def test(el: String, key: String) = key match {
     case "line" => ChartingTests.testLineChart(el)
     case "bar" => ChartingTests.testBarChart(el)
