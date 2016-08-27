@@ -33,7 +33,7 @@ object ChartService {
         $(".loading", el).remove()
 
         val optionsPanel = $(s".chart-options-panel", el)
-        c.renderOptions(optionsPanel, js.Array(), js.Dynamic.literal())
+        c.renderOptions(resultId.toString, optionsPanel, js.Array(), js.Dynamic.literal())
         optionsPanel.show()
 
         $(s".chart-container").show()

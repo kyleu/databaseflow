@@ -10,8 +10,8 @@ object Charting {
   def init() = ChartingService.init()
 
   @JSExport
-  def renderOptions(el: JQuery, columns: js.Array[js.Dynamic], chart: js.Dynamic) = {
-    ChartOptionsService.renderOptions(el, toColumns(columns), chart)
+  def renderOptions(elId: String, el: JQuery, columns: js.Array[js.Dynamic], chart: js.Dynamic) = {
+    ChartOptionsService.renderOptions(elId, el, toColumns(columns), chart)
   }
 
   @JSExport

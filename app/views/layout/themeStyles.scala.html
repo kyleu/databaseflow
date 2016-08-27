@@ -35,8 +35,15 @@
   .theme-text {
     color: @theme.color !important;
   }
+  .theme-text.active {
+    color: #ffffff !important;
+  }
   a.theme-text:hover {
     color: #999 !important;
+  }
+
+  .collection .collection-item.active {
+    background-color: @theme.color;
   }
 
   [type="checkbox"]:checked + label:before {
