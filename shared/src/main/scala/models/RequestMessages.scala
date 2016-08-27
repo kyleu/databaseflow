@@ -28,7 +28,7 @@ case class GetRowData(key: String, queryId: UUID, name: String, options: RowData
 case class CancelQuery(queryId: UUID, resultId: UUID) extends RequestMessage
 case class CloseQuery(queryId: UUID) extends RequestMessage
 
-case class ChartDataRequest(id: UUID, source: QueryResult.Source) extends RequestMessage
+case class ChartDataRequest(chartId: UUID, source: QueryResult.Source) extends RequestMessage
 
 case class QuerySaveRequest(query: SavedQuery) extends RequestMessage
 case class QueryDeleteRequest(id: UUID) extends RequestMessage

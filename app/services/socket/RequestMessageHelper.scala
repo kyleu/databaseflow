@@ -33,7 +33,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
     case cq: CloseQuery => timeReceive(cq) { CachedResultService.removeCacheResults(user.id, cq.queryId) }
 
-    case cdr: ChartDataRequest => timeReceive(cdr) { ChartDataService.handleChartDataRequest(cdr.id, user, connectionId, cdr.source, out, activeTransaction) }
+    case cdr: ChartDataRequest => timeReceive(cdr) { ChartDataService.handleChartDataRequest(cdr, user, connectionId, out, activeTransaction) }
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { QuerySaveService.handleQuerySaveRequest(user.id, qsr.query, out) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QuerySaveService.handleQueryDeleteRequest(user.id, qdr.id, out) }

@@ -8,7 +8,7 @@ object ChartingTests {
     "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
   )
 
-  def getEl(id: String) = $(s"#chart-$id .chart-panel").get(0)
+  def getEl(id: String) = $(s"#$id .chart-panel").get(0)
 
   def testLineChart(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),

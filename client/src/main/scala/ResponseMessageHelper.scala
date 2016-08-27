@@ -35,6 +35,8 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case qrrc: QueryResultRowCount => RowCountService.handleResultRowCount(qrrc)
     case qer: QueryErrorResponse => QueryErrorService.handleQueryErrorResponse(qer)
 
+    case cdr: ChartDataResponse => ChartService.handleChartDataResponse(cdr)
+
     case prr: PlanResultResponse => QueryPlanService.handlePlanResultResponse(prr)
     case per: PlanErrorResponse => QueryPlanService.handlePlanErrorResponse(per)
 

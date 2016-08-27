@@ -10,7 +10,7 @@ import utils.{Messages, NumberUtils, TemplateUtils}
 import scalatags.Text.all._
 
 object QueryResultsTemplate {
-  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID) = {
+  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, chartId: UUID) = {
     val hasFilter = !(qr.isStatement || qr.data.isEmpty || qr.source.isEmpty)
 
     val content = div(id := s"$resultId")(
@@ -73,7 +73,7 @@ object QueryResultsTemplate {
         )
       ),
 
-      ChartResultTemplate.forChartResults(resultId)
+      ChartResultTemplate.forChartResults(chartId)
     )
 
     StaticPanelTemplate.cardRow(

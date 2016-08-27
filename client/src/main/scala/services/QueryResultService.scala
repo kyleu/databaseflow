@@ -19,7 +19,9 @@ object QueryResultService {
     val occurred = new scalajs.js.Date(result.occurred.toDouble)
     TransactionService.incrementCount()
 
-    val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId)
+    val chartId = UUID.randomUUID
+
+    val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId, chartId)
     ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
@@ -42,7 +44,7 @@ object QueryResultService {
       })
       TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
         if (jq.prop("checked").toString == "true") {
-          ChartService.showChart(resultId, result.queryId, result.columns, src, panel)
+          ChartService.showChart(chartId, result.columns, src, panel)
         } else {
           ChartService.showData(resultId, panel)
         }

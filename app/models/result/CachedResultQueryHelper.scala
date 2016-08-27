@@ -52,15 +52,13 @@ object CachedResultQueryHelper extends Logging {
     QueryResultResponse(resultId, idx, getResultFor(queryId, sql, columns, mappedData), elapsedMs)
   }
 
-  private[this] def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]]) = {
-    QueryResult(
-      queryId = queryId,
-      sql = sql,
-      columns = columns,
-      data = data,
-      rowsAffected = data.size
-    )
-  }
+  private[this] def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]]) = QueryResult(
+    queryId = queryId,
+    sql = sql,
+    columns = columns,
+    data = data,
+    rowsAffected = data.size
+  )
 
   def sendResult(
     result: CachedResult,

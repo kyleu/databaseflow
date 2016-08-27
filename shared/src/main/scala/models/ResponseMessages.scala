@@ -7,7 +7,6 @@ import models.plan.{PlanError, PlanResult}
 import models.query._
 import models.schema.{Procedure, Schema, Table, View}
 import models.user.UserPreferences
-import upickle.Js
 
 sealed trait ResponseMessage
 
@@ -40,7 +39,7 @@ case class QueryResultResponse(id: UUID, index: Int, result: QueryResult, durati
 case class QueryErrorResponse(id: UUID, index: Int, error: QueryError, durationMs: Int) extends ResponseMessage
 case class QueryCancelledResponse(queryId: UUID, resultId: UUID) extends ResponseMessage
 
-case class ChartDataResponse(id: UUID, index: Int, result: QueryResult, durationMs: Int) extends ResponseMessage
+case class ChartDataResponse(chartId: UUID, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]], durationMs: Int) extends ResponseMessage
 
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage

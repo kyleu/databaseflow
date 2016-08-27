@@ -27,14 +27,12 @@ object ChartingService {
   def init() = {
     ChartRenderService.init()
     dom.window.onresize = (ev: UIEvent) => {
-      utils.Logging.info(s"Resize: ${activeCharts.keys.toList}")
       activeCharts.foreach(x => ChartRenderService.resizeHandler(x._2.chartPanel.get(0)))
     }
-    utils.Logging.info("Charting initialized.")
   }
 
   def addChart(id: UUID, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) = {
-    val el = $(s"#chart-$id")
+    val el = $(s"#$id")
     if (el.length != 1) {
       throw new IllegalStateException(s"Missing element for chart [$id].")
     }
@@ -56,12 +54,12 @@ object ChartingService {
 
   def updateSettings(id: UUID, settings: ChartSettings) = activeCharts.get(id) match {
     case Some(v) => activeCharts = activeCharts + (id -> v.copy(settings = settings))
-    case None => throw new IllegalStateException(s"Cannot update settings for unknown chart [$id].")
+    case None => throw new IllegalStateException(s"Cannot upda settings for unknown chart [$id].")
   }
 
   def updateData(id: UUID, data: js.Array[js.Array[String]]) = activeCharts.get(id) match {
     case Some(v) => activeCharts = activeCharts + (id -> v.copy(data = data))
-    case None => throw new IllegalStateException(s"Cannot update data for unknown chart [$id].")
+    case None => throw new IllegalStateException(s"Cannot set data for unknown chart [$id].")
   }
 
   def removeChart(id: UUID) = {
