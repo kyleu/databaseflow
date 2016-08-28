@@ -1,6 +1,7 @@
 package models.template
 
 object Icons {
+  val bars = "fa-bars"
   val spin = "fa-spin"
   val settings = "fa-gear"
   val systemImport = "fa-clone"
