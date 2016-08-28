@@ -32,9 +32,7 @@ object SharedResultService {
     def onSharedResultsSuccess(sharedResults: Seq[SharedResult]) {
       val viewable = sharedResults.filter(sr => canView(user, sr)._1)
       val elapsedMs = (System.currentTimeMillis - startMs).toInt
-      val usernameMap = viewable.map(_.owner).flatMap(uuid => UserService.instance.flatMap { inst =>
-        UserService.instance.flatMap(inst => inst.usernameLookup(uuid).map(uuid -> _))
-      }).toMap
+      val usernameMap = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookupMulti(viewable.map(_.owner).toSet)
       out ! SharedResultResponse(viewable, usernameMap, elapsedMs)
     }
     def onSharedResultsFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SharedResultLoadException", t) }
@@ -78,6 +76,7 @@ object SharedResultService {
     }
     out.foreach(_ ! SharedResultSaveResponse(result))
   }
+
   def delete(id: UUID, userId: UUID) = MasterDatabase.query(SharedResultQueries.getById(id)) match {
     case Some(existing) => if (existing.owner == userId) {
       MasterDatabase.executeUpdate(SharedResultQueries.removeById(id))

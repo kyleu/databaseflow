@@ -27,9 +27,7 @@ object SavedQueryService {
     def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) {
       val viewable = savedQueries.filter(sq => canRead(user, sq)._1)
       val elapsedMs = (System.currentTimeMillis - startMs).toInt
-      val usernameMap = viewable.map(_.owner).flatMap(uuid => UserService.instance.flatMap { inst =>
-        UserService.instance.flatMap(inst => inst.usernameLookup(uuid).map(uuid -> _))
-      }).toMap
+      val usernameMap = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookupMulti(viewable.map(_.owner).toSet)
       out ! SavedQueryResponse(viewable, usernameMap, elapsedMs)
     }
     def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }

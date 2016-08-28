@@ -35,6 +35,11 @@ object UserQueries extends BaseQueries[User] {
     override def reduce(rows: Iterator[Row]) = rows.toSeq.headOption.map(_.as[String]("username"))
   }
 
+  case class GetUsernames(ids: Set[UUID]) extends Query[Map[UUID, String]] {
+    override val sql = s"""select "id", "username" from "$tableName" where "id" in (${ids.map(id => s"'$id'").mkString(", ")})"""
+    override def reduce(rows: Iterator[Row]) = rows.map(r => r.as[UUID]("id") -> r.as[String]("username")).toMap
+  }
+
   case class UpdateUser(u: User) extends Statement {
     override val sql = updateSql(Seq("username", "prefs", "email", "role"))
     override val values = Seq(u.username, write(u.preferences), u.profile.providerKey, u.role.toString, u.id)

@@ -53,7 +53,8 @@ object ChartingService {
     ChartRenderService.render(v)
   }
 
-  def getSettings(id: UUID) = activeCharts.getOrElse(id, throw new IllegalStateException(s"Invalid chart [$id].")).settings
+  def getSettingsOpt(id: UUID) = activeCharts.get(id).map(_.settings)
+  def getSettings(id: UUID) = getSettingsOpt(id).getOrElse(throw new IllegalStateException(s"Invalid chart [$id]."))
   def updateSettings(id: UUID, settings: ChartSettings) = activeCharts.get(id) match {
     case Some(v) =>
       val newV = v.copy(settings = settings)

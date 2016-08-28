@@ -142,6 +142,9 @@ result.remove.orphan = Remove orphan table [{0}].
 
 # Shared Results
 shared.results.title = Shared Results
+shared.results.personal.title = My Shared Results
+shared.results.public.title = Public Shared Results
+shared.results.public.none = No public shared results available.
 
 # Socket Service
 socket.connect.error = Error attempting to connect to database.

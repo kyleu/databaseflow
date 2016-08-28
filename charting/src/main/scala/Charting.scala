@@ -20,6 +20,9 @@ object Charting {
   }
 
   @JSExport
+  def getSettingsString(id: String) = ChartingService.getSettingsOpt(UUID.fromString(id)).map(_.asJsStr).getOrElse("")
+
+  @JSExport
   def updateData(id: String, data: js.Array[js.Array[String]]) = ChartingService.updateData(UUID.fromString(id), data)
 
   @JSExport

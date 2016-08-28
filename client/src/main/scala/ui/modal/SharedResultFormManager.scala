@@ -3,6 +3,7 @@ package ui.modal
 import models.SharedResultSaveRequest
 import models.query.SharedResult
 import org.scalajs.jquery.{jQuery => $}
+import services.NotificationService
 import ui.query.SharedResultManager
 import utils.{Logging, NetworkMessage, TemplateUtils}
 
@@ -54,10 +55,10 @@ object SharedResultFormManager {
   }
 
   def handleSharedResult(sr: SharedResult, error: Option[String]) = error match {
-    case Some(err) => Logging.error("Cannot save shared result: " + err)
+    case Some(err) => NotificationService.info("Cannot save shared result", err)
     case None =>
       SharedResultManager.updateSharedResults(Seq(sr), Map.empty)
       modal.closeModal()
-    // TODO Show a link.
+      NotificationService.info("Shared Result Saved", "Head to the Shared Results listing to see your new thing!")
   }
 }

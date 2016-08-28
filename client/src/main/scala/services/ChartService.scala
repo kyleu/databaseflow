@@ -2,8 +2,8 @@ package services
 
 import java.util.UUID
 
-import models.{ChartDataRequest, ChartDataResponse}
 import models.query.QueryResult
+import models.{ChartDataRequest, ChartDataResponse}
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import utils.{NetworkMessage, ScriptLoader}
 
@@ -70,6 +70,10 @@ object ChartService {
     $(".results-chart-panel", panel).hide()
     $(".results-data-panel", panel).show()
   }
+
+  def getSettings(id: UUID) = charting.map { c =>
+    c.getSettingsString(id.toString).toString
+  }.getOrElse("")
 
   private[this] def loadPlotly() = ScriptLoader.loadScript("plotly", () => {
     charting.foreach(_.init())

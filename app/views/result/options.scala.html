@@ -2,7 +2,15 @@
 <div class="row">
   <div class="col s12">
     <div class="z-depth-1 shared-result-options">
-      <div>This is your shared result.</div>
+      <div>
+        This is your shared result.
+        It is currently viewable by X.
+        You may
+          <a class="theme-text" href="@routes.SharedResultController.remove(result.id)">remove</a>
+        it or change the
+          <a class="theme-text" href="">permissions</a>
+        .
+      </div>
     </div>
   </div>
 </div>

@@ -1,19 +1,41 @@
-@(user: Option[models.user.User], results: Seq[models.query.SharedResult], debug: Boolean)(
+@(
+    user: Option[models.user.User],
+    myResults: Seq[models.query.SharedResult],
+    publicResults: Seq[models.query.SharedResult],
+    usernameMap: Map[java.util.UUID, String],
+    debug: Boolean
+)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@views.html.layout.simple(user = user, title = messages("shared.title"), debug = debug) {
+)@views.html.layout.simple(user = user, title = messages("shared.results.title"), debug = debug) {
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">@messages("shared.results.title", utils.Config.projectName)</span>
-          @if(results.isEmpty) {
-            <div><em>No results available.</em></div>
-          } else {
-            <div class="collection">
-              @results.map { r =>
-                <a href="@routes.SharedResultController.view(r.id)" class="theme-text collection-item">@r.title</a>
+          @if(myResults.nonEmpty) {
+            <span class="card-title">@messages("shared.results.personal.title")</span>
+            <ul class="collection">
+              @myResults.map { r =>
+                <li class="collection-item">
+                <div class="right"><a class="theme-text" href="@routes.SharedResultController.remove(r.id)"><i class="fa @models.template.Icons.close"></i></a></div>
+                <a href="@routes.SharedResultController.view(r.id)" class="theme-text">@r.title</a>
+                  @r.description.map { d => <div><em>@d</em></div> }
+                </li>
               }
-            </div>
+            </ul>
+          }
+          @if(publicResults.isEmpty) {
+            <div><em>@messages("shared.results.public.none")</em></div>
+          } else {
+            <span class="card-title">@messages("shared.results.public.title")</span>
+            <ul class="collection">
+              @publicResults.map { r =>
+                <li class="collection-item">
+                  <div class="right"><em>created a while ago by @usernameMap.getOrElse(r.owner, "guest")</em></div>
+                  <a href="@routes.SharedResultController.view(r.id)" class="theme-text">@r.title</a>
+                  @r.description.map { d => <div><em>@d</em></div> }
+                </li>
+              }
+            </ul>
           }
         </div>
       </div>

@@ -39,6 +39,8 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
 
   def usernameLookup(id: UUID) = MasterDatabase.query(UserQueries.GetUsername(id))
 
+  def usernameLookupMulti(ids: Set[UUID]) = MasterDatabase.query(UserQueries.GetUsernames(ids))
+
   def remove(userId: UUID) = {
     val startTime = System.nanoTime
     MasterDatabase.transaction { conn =>

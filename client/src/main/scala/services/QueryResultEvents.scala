@@ -15,10 +15,15 @@ object QueryResultEvents {
       QueryExportFormManager.show(result.queryId, src, "Export")
     })
     TemplateUtils.clickHandler($(".results-share-link", panel), (jq) => {
+      val chart = ChartService.getSettings(resultId).trim match {
+        case x if x.isEmpty => None
+        case x => Some(x)
+      }
       SharedResultFormManager.show(SharedResult(
         owner = UserManager.userId.getOrElse(throw new IllegalStateException()),
         connectionId = NavigationService.connectionId,
-        source = result.source.getOrElse(throw new IllegalStateException())
+        source = result.source.getOrElse(throw new IllegalStateException()),
+        chart = chart
       ))
     })
     TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
