@@ -36,7 +36,8 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class GetUsernames(ids: Set[UUID]) extends Query[Map[UUID, String]] {
-    override val sql = s"""select "id", "username" from "$tableName" where "id" in (${ids.map(id => s"'$id'").mkString(", ")})"""
+    private[this] val idClause = ids.map(id => s"'$id'").mkString(", ")
+    override val sql = s"""select "id", "username" from "$tableName" where "id" in ($idClause)"""
     override def reduce(rows: Iterator[Row]) = rows.map(r => r.as[UUID]("id") -> r.as[String]("username")).toMap
   }
 

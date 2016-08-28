@@ -39,7 +39,7 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
 
   def usernameLookup(id: UUID) = MasterDatabase.query(UserQueries.GetUsername(id))
 
-  def usernameLookupMulti(ids: Set[UUID]) = MasterDatabase.query(UserQueries.GetUsernames(ids))
+  def usernameLookupMulti(ids: Set[UUID]) = if (ids.isEmpty) { Map.empty[UUID, String] } else { MasterDatabase.query(UserQueries.GetUsernames(ids)) }
 
   def remove(userId: UUID) = {
     val startTime = System.nanoTime
