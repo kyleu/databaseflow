@@ -63,7 +63,7 @@
       var charting = new Charting();
       charting.init();
 
-      var settings = @result.chart.getOrElse("{}");
+      var settings = @Html(result.chart.getOrElse("{}"));
 
       charting.addChart('@result.id', settings, columns, data, chart);
     });

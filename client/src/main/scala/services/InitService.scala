@@ -35,6 +35,7 @@ object InitService {
     ConfirmManager.init()
     ReconnectManager.init()
     QuerySaveFormManager.init()
+    ShareResultsFormManager.init()
     QueryExportFormManager.init()
     PlanNodeDetailManager.init()
     Logging.debug("Database Flow has started.")

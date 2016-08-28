@@ -1,7 +1,6 @@
 package ui.modal
 
-import java.util.UUID
-
+import models.query.SharedResult
 import org.scalajs.jquery.{jQuery => $}
 import utils.TemplateUtils
 
@@ -9,8 +8,9 @@ import scala.scalajs.js
 
 object ShareResultsFormManager {
   private[this] val modal = js.Dynamic.global.$("#share-results-modal")
+  private[this] var activeSharedResult: Option[SharedResult] = None
 
-  private[this] val inputName = $("#input-share-results-name", modal)
+  private[this] val inputTitle = $("#input-share-results-title", modal)
   private[this] val inputDescription = $("#input-share-results-description", modal)
 
   def init() = {
@@ -18,21 +18,36 @@ object ShareResultsFormManager {
     TemplateUtils.clickHandler($("#input-share-results-share-link", modal), (jq) => share())
   }
 
-  def show(resultId: UUID, name: String) = {
-    inputName.value(name)
-    inputDescription.value("")
+  def show(sharedResult: SharedResult) = {
+    activeSharedResult = Some(sharedResult)
+    inputTitle.value(sharedResult.title)
+    inputDescription.value(sharedResult.description.getOrElse(""))
+    sharedResult.viewableBy match {
+      case "visitor" => $("#input-share-results-visitor", modal).prop("checked", true)
+      case "user" => $("#input-share-results-user", modal).prop("checked", true)
+      case "admin" => $("#input-share-results-admin", modal).prop("checked", true)
+      case "private" => $("#input-share-results-private", modal).prop("checked", true)
+      case x => throw new IllegalStateException(x)
+    }
 
     modal.openModal()
-    inputName.focus()
+    inputTitle.focus()
   }
 
   private[this] def share() = {
-    val name = inputName.value().toString.trim()
-    val desc = inputDescription.value().toString.trim() match {
-      case d if d.isEmpty => None
-      case d => Some(d)
+    val title = inputTitle.value().toString.trim()
+    if (title.isEmpty) {
+      $(".share-name-error", modal).show()
+    } else {
+      $(".share-name-error", modal).hide()
+      val desc = inputDescription.value().toString.trim() match {
+        case d if d.isEmpty => None
+        case d => Some(d)
+      }
+      val share = $("input[name=share]:checked", modal).value().toString
+
+      val result = activeSharedResult.getOrElse(throw new IllegalStateException()).copy(title = title, description = desc, viewableBy = share)
+      utils.Logging.info(s"Share: $result")
     }
-    val share = $("input[name=share]:checked", modal).value().toString
-    utils.Logging.info(s"Share: $name ($desc): $share")
   }
 }

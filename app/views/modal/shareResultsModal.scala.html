@@ -1,14 +1,17 @@
 @()(implicit messages: Messages)<div id="share-results-modal" class="modal modal-fixed-footer">
   <div class="modal-content">
+    <h4>Share Query Result</h4>
     <div class="row">
       <form class="col s12">
         <div class="row">
           <div class="input-field col s12">
-            <input id="input-share-results-title" type="text" class="validate" placeholder="">
+            <input id="input-share-results-title" type="text" minlength="1" class="validate" placeholder="">
             <label for="input-share-results-title">@messages("modal.share.results.title")</label>
+            <div class="share-name-error initially-hidden">Please enter a name for this result.</div>
           </div>
+
           <div class="input-field col s12">
-            <input id="input-share-results-description" type="text" class="validate" placeholder="">
+            <input id="input-share-results-description" type="text" placeholder="">
             <label for="input-share-results-description">@messages("modal.share.results.description")</label>
           </div>
         </div>

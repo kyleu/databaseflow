@@ -3,11 +3,11 @@ package services
 import java.util.UUID
 
 import models.query.QueryResult.Source
-import models.query.{QueryResult, RowDataOptions}
+import models.query.{QueryResult, RowDataOptions, SharedResult}
 import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui.ProgressManager
+import ui.{ProgressManager, UserManager}
 import ui.modal.{QueryExportFormManager, ShareResultsFormManager}
 import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.{Logging, TemplateUtils}
@@ -40,7 +40,11 @@ object QueryResultService {
         QueryExportFormManager.show(result.queryId, src, "Export")
       })
       TemplateUtils.clickHandler($(".results-share-link", panel), (jq) => {
-        ShareResultsFormManager.show(resultId, "TODO")
+        ShareResultsFormManager.show(SharedResult(
+          owner = UserManager.userId.getOrElse(throw new IllegalStateException()),
+          connectionId = NavigationService.connectionId,
+          source = result.source.getOrElse(throw new IllegalStateException())
+        ))
       })
       TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
         if (jq.prop("checked").toString == "true") {
