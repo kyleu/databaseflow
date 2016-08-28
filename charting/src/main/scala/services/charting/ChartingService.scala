@@ -19,13 +19,21 @@ object ChartingService {
 
   def init() = {
     ChartRenderService.init()
-    dom.window.onresize = (ev: UIEvent) => {
-      activeCharts.foreach(x => ChartRenderService.resizeHandler(x._2.chartPanel.get(0)))
+    dom.window.onresize = (ev: UIEvent) => activeCharts.foreach { x =>
+      val height = org.scalajs.dom.window.innerHeight.toInt
+      $(".chart-container").css("height", (height - 100) + "px")
+      $(".chart-panel").css("height", (height - 102) + "px")
+      ChartRenderService.resizeHandler(x._2.chartPanel.get(0))
     }
   }
 
   def addChart(id: UUID, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) = {
     val el = $(s"#$id")
+
+    val height = org.scalajs.dom.window.innerHeight.toInt
+    $(".chart-container", el).css("height", (height - 100) + "px").show()
+    $(".chart-panel", el).css("height", (height - 102) + "px")
+
     if (el.length != 1) {
       throw new IllegalStateException(s"Missing element for chart [$id].")
     }
@@ -59,6 +67,7 @@ object ChartingService {
       val newV = v.copy(data = data)
       activeCharts = activeCharts + (id -> newV)
       ChartRenderService.render(newV)
+      utils.Logging.info(s"Rendering [${data.length}] rows.")
     case None => throw new IllegalStateException(s"Cannot update data for unknown chart [$id].")
   }
 

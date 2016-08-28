@@ -37,6 +37,8 @@ object ChartSettingsService {
 
     $(".chart-flags-container", el).html(ChartOptionsTemplate.flags(id, chart).toString())
     TemplateUtils.changeHandler($(".chart-flag", el), (jq) => onFlagChange(id, jq.data("key").toString, jq.prop("checked").toString.toBoolean))
+
+    ChartingService.updateSettings(id, chart)
   }
 
   def renderOptions(id: UUID, panel: JQuery, columns: Seq[(String, String)]) = {

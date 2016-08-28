@@ -49,7 +49,6 @@ object ChartService {
         c.addChart(chartId.toString, chart, cols, js.Array())
 
         $(s".chart-options-panel", el).show()
-        $(s".chart-container").show()
 
       case None =>
         val chartingLoadSuccess = () => {
