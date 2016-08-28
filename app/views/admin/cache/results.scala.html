@@ -48,9 +48,9 @@
                 <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
                 <td>
                   @defining(s"table-result_${r.resultId.toString.replaceAllLiterally("-", "")}") { hash =>
-                    <a title="View Results" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.connectionId)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
+                    <a title="View Results" class="theme-text" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.connectionId)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
                   }
-                  <a title="Remove Results" href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
+                  <a title="Remove Results" class="theme-text" href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
                 </td>
               </tr>
               <tr>

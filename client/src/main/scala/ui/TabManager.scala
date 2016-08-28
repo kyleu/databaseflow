@@ -58,14 +58,8 @@ object TabManager {
     tabCloseOp.foreach { _() }
     $(s"#tab-$queryId").remove()
     $(".tabs .indicator").remove()
-    if (openTabs.length < 2) {
-      tabContainer.hide()
-    } else {
-      tabContainer.show()
-    }
-    if (openTabs.nonEmpty) {
-      dynamicTabBar.tabs()
-    }
+    if (openTabs.length < 2) { tabContainer.hide() } else { tabContainer.show() }
+    if (openTabs.nonEmpty) { dynamicTabBar.tabs() }
   }
 
   def selectNextTab() = activeTab match {

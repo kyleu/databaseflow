@@ -64,6 +64,7 @@ ul#main-menu {
   height: calc(~'100% - 48px');
   padding-bottom: 20px;
   overflow: hidden;
+  width: 240px;
 
   li {
     line-height: 44px;
@@ -71,11 +72,11 @@ ul#main-menu {
 
     .menu-icon {
       display: block;
-      float: left;
       font-size: 1.5rem;
       width: 26px;
-      margin-top: -10px;
+      margin-top: -2px;
       margin-left: 5px;
+      margin-right: 5px;
     }
 
     .fa-angle-right {
@@ -88,6 +89,7 @@ ul#main-menu {
     }
 
     a, em {
+      font-weight: normal;
       margin: 0;
       font-size: 13px;
       line-height: 44px;
@@ -130,11 +132,18 @@ ul#main-menu {
 
   ul.submenu a {
     .fa {
-      margin-right: 6px;
+      margin-right: 12px;
     }
     padding-left: 20px;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .collapsible-header {
+    .fa {
+      margin-right: 8px;
+      margin-left: 4px;
+    }
   }
 
   // Only show scrollbar on hover

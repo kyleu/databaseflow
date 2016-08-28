@@ -3,12 +3,11 @@ package services
 import java.util.UUID
 
 import models.query.QueryResult.Source
-import models.query.{QueryResult, RowDataOptions, SharedResult}
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui.{ProgressManager, UserManager}
-import ui.modal.{QueryExportFormManager, SharedResultFormManager}
+import ui.ProgressManager
 import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.{Logging, TemplateUtils}
 
@@ -36,23 +35,7 @@ object QueryResultService {
 
     result.source.foreach { src =>
       onComplete(result, src, panel, resultId)
-      TemplateUtils.clickHandler($(".results-export-link", panel), (jq) => {
-        QueryExportFormManager.show(result.queryId, src, "Export")
-      })
-      TemplateUtils.clickHandler($(".results-share-link", panel), (jq) => {
-        SharedResultFormManager.show(SharedResult(
-          owner = UserManager.userId.getOrElse(throw new IllegalStateException()),
-          connectionId = NavigationService.connectionId,
-          source = result.source.getOrElse(throw new IllegalStateException())
-        ))
-      })
-      TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
-        if (jq.prop("checked").toString == "true") {
-          ChartService.showChart(chartId, result.columns, src, panel)
-        } else {
-          ChartService.showData(resultId, panel)
-        }
-      })
+      QueryResultEvents.wire(panel, result, resultId, chartId)
     }
 
     val sqlEl = $(".query-result-sql", panel)

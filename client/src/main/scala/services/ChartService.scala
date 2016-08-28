@@ -48,7 +48,7 @@ object ChartService {
 
         c.addChart(chartId.toString, chart, cols, js.Array())
 
-        $(s".chart-options-panel", el).show()
+        $(".chart-options-panel", el).show()
 
       case None =>
         val chartingLoadSuccess = () => {
@@ -66,7 +66,7 @@ object ChartService {
     cache.remove(resultId._1)
   }
 
-  def showData(resultId: UUID, panel: JQuery) = {
+  def showData(panel: JQuery) = {
     $(".results-chart-panel", panel).hide()
     $(".results-data-panel", panel).show()
   }
