@@ -57,10 +57,6 @@ object QueryManager {
   }
 
   def closeQuery(queryId: UUID): Unit = {
-    if (activeQueries.size == 1) {
-      AdHocQueryManager.addNewQuery()
-    }
-
     SqlManager.closeQuery(queryId)
     $(s"#panel-$queryId").remove()
 
@@ -70,7 +66,9 @@ object QueryManager {
     TabManager.removeTab(queryId)
     ChartService.closeCharts(queryId)
 
-    val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
-    TabManager.selectTab(newId)
+    if (activeQueries.nonEmpty) {
+      val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
+      TabManager.selectTab(newId)
+    }
   }
 }
