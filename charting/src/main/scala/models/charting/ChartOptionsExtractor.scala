@@ -5,7 +5,8 @@ import scala.scalajs.js
 object ChartOptionsExtractor {
   def getJsOptions(settings: ChartSettings) = settings.t match {
     case ChartType.Line => js.Dynamic.literal(
-      "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
+      "xaxis" -> js.Dynamic.literal("title" -> (settings.selects.getOrElse("x", ""): String)),
+      "yaxis" -> js.Dynamic.literal("title" -> (settings.selects.getOrElse("y", ""): String))
     )
     case x => throw new IllegalArgumentException(x.id)
   }

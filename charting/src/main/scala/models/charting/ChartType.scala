@@ -14,7 +14,7 @@ sealed abstract class ChartType(
 }
 
 object ChartType extends Enum[ChartType] {
-  case object Line extends ChartType("line", "Line Chart", selects = Seq("x" -> "X", "y" -> "Y", "hover" -> "Text"), flags = Seq(
+  case object Line extends ChartType("line", "Line Chart", selects = Seq("x" -> "X", "y" -> "Y", "text" -> "Text"), flags = Seq(
     ("smoothed", "Smoothed", false),
     ("showPoints", "Points", false),
     ("legend", "Legend", false)

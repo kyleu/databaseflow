@@ -9,7 +9,6 @@ object ChartDataExtractor {
         val col = settings.selects.getOrElse(key, "")
         val idx = columns.indexWhere(_._1 == col)
         val ret = if (idx == -1) { js.Array() } else { data.map(_(idx)) }
-        utils.Logging.info(key + "(" + idx + "): " + ret + ", " + columns)
         ret
       case None => js.Array()
     }
@@ -20,7 +19,12 @@ object ChartDataExtractor {
       js.Dynamic.literal(
         "x" -> getColumn("x", settings, columns, data),
         "y" -> getColumn("y", settings, columns, data),
-        "hover" -> getColumn("hover", settings, columns, data)
+        "text" -> getColumn("text", settings, columns, data),
+        if (settings.flags.getOrElse("smoothed", false)) {
+          "line" -> js.Dynamic.literal("shape" -> "spline")
+        } else {
+          "line" -> js.Dynamic.literal("shape" -> "linear")
+        }
       )
     )
     case x => throw new IllegalArgumentException(x.id)

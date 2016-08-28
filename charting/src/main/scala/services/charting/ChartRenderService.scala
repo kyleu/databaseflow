@@ -17,10 +17,7 @@ object ChartRenderService {
   def init() = plotly = Some(js.Dynamic.global.Plotly)
   def resizeHandler(el: Element) = plotly.map(_.Plots.resize(el))
 
-  def render(v: ChartingService.ChartValues) = {
-    utils.Logging.info(s"Rendering chart [$v].")
-    renderChart(v.chartPanel.get(0), v.chartData, v.baseOptions)
-  }
+  def render(v: ChartingService.ChartValues) = renderChart(v.chartPanel.get(0), v.chartData, v.baseOptions)
 
   def renderChart(el: Element, data: Seq[js.Dynamic], options: js.Dynamic) = {
     plotly.map(_.newPlot(el, js.Array(data: _*), options))

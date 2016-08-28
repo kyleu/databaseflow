@@ -31,7 +31,6 @@ object ChartSettingsService {
   }
 
   private[this] def selectChartType(id: UUID, el: JQuery, columns: Seq[(String, String)], chart: ChartSettings) = {
-    utils.Logging.info(s"Applying [$chart].")
     $(".chart-columns-container", el).html(ChartOptionsTemplate.selects(chart, columns.map(c => c._1 -> c._1)).toString())
     materialSelect(".chart-select", el)
     TemplateUtils.changeHandler($(".chart-select", el), (jq) => onSelectChange(id, jq.data("key").toString, jq.value().toString))
