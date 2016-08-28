@@ -2,11 +2,10 @@ package services.config
 
 import java.io.PrintWriter
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.ConfigFactory
 import utils.Logging
 
 import scala.io.Source
-import scala.util.Random
 
 object ConfigFileService extends Logging {
   private[this] var initialized = false
@@ -57,15 +56,5 @@ object ConfigFileService extends Logging {
       writer.close()
     }
     ConfigFactory.parseFile(cfg)
-  }
-
-  @scala.annotation.tailrec
-  def getTempFile(name: String, extension: String): java.io.File = {
-    val ret = new java.io.File("./tmp", s"$name.$extension")
-    if (!ret.exists()) {
-      ret
-    } else {
-      getTempFile(name + Random.alphanumeric.take(1), extension)
-    }
   }
 }
