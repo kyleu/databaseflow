@@ -18,6 +18,7 @@ object ChartRenderService {
   def resizeHandler(el: Element) = plotly.map(_.Plots.resize(el))
 
   def render(v: ChartingService.ChartValues) = {
+    utils.Logging.info(s"Rendering chart [$v].")
     renderChart(v.chartPanel.get(0), v.chartData, v.baseOptions)
   }
 

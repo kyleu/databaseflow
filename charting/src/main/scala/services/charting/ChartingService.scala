@@ -2,7 +2,7 @@ package services.charting
 
 import java.util.UUID
 
-import models.charting.ChartSettings
+import models.charting.{ChartDataExtractor, ChartOptionsExtractor, ChartSettings}
 import org.scalajs.dom
 import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{JQuery, jQuery => $}
@@ -13,15 +13,8 @@ object ChartingService {
   private[this] var activeCharts = Map.empty[UUID, ChartValues]
 
   case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) {
-    lazy val chartData: Seq[js.Dynamic] = Seq(
-      js.Dynamic.literal(
-        "x" -> js.Array(1, 2, 3, 4, 5, 6),
-        "y" -> js.Array(1, 2, 4, 8, 16, 32)
-      )
-    )
-    lazy val baseOptions = js.Dynamic.literal(
-      "margin" -> js.Dynamic.literal("l" -> 0, "r" -> 0, "t" -> 0, "b" -> 0)
-    )
+    lazy val chartData = ChartDataExtractor.getJsData(settings, columns, data)
+    lazy val baseOptions = ChartOptionsExtractor.getJsOptions(settings)
   }
 
   def init() = {
@@ -55,13 +48,17 @@ object ChartingService {
   def getSettings(id: UUID) = activeCharts.getOrElse(id, throw new IllegalStateException(s"Invalid chart [$id].")).settings
   def updateSettings(id: UUID, settings: ChartSettings) = activeCharts.get(id) match {
     case Some(v) =>
-      activeCharts = activeCharts + (id -> v.copy(settings = settings))
-      utils.Logging.info(s"Settings updated: [$settings].")
+      val newV = v.copy(settings = settings)
+      activeCharts = activeCharts + (id -> newV)
+      ChartRenderService.render(newV)
     case None => throw new IllegalStateException(s"Cannot update settings for unknown chart [$id].")
   }
 
   def updateData(id: UUID, data: js.Array[js.Array[String]]) = activeCharts.get(id) match {
-    case Some(v) => activeCharts = activeCharts + (id -> v.copy(data = data))
+    case Some(v) =>
+      val newV = v.copy(data = data)
+      activeCharts = activeCharts + (id -> newV)
+      ChartRenderService.render(newV)
     case None => throw new IllegalStateException(s"Cannot update data for unknown chart [$id].")
   }
 
