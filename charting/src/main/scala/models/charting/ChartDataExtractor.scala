@@ -20,11 +20,16 @@ object ChartDataExtractor {
         "x" -> getColumn("x", settings, columns, data),
         "y" -> getColumn("y", settings, columns, data),
         "text" -> getColumn("text", settings, columns, data),
-        if (settings.flags.getOrElse("smoothed", false)) {
-          "line" -> js.Dynamic.literal("shape" -> "spline")
+        "line" -> (if (settings.flags.getOrElse("smoothed", false)) {
+          js.Dynamic.literal("shape" -> "spline")
         } else {
-          "line" -> js.Dynamic.literal("shape" -> "linear")
-        }
+          js.Dynamic.literal("shape" -> "linear")
+        }),
+        "mode" -> (if (settings.flags.getOrElse("showPoints", false)) {
+          "lines+markers"
+        } else {
+          "lines"
+        })
       )
     )
     case x => throw new IllegalArgumentException(x.id)

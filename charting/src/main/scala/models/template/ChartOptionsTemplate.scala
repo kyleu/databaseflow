@@ -7,7 +7,7 @@ import models.charting.{ChartSettings, ChartType}
 import scalatags.Text.all._
 
 object ChartOptionsTemplate {
-  def selects(chart: ChartSettings, columns: Seq[(String, String)]) = div(chart.t.selects.map { sel =>
+  def selects(chart: ChartSettings, columns: Seq[(String, String)]) = div(chart.t.options.selects.map { sel =>
     val options = chart.selects.get(sel._1) match {
       case Some(v) => option() +: columns.map { col =>
         if (v == col._1) {
@@ -27,7 +27,7 @@ object ChartOptionsTemplate {
   })
 
   def flags(chartId: UUID, chart: ChartSettings) = {
-    div(cls := "row")(chart.t.flags.map { flag =>
+    div(cls := "row")(chart.t.options.flags.map { flag =>
       val flagInput = input(`type` := "checkbox", data("key") := flag._1, id := s"chart-option-$chartId-${flag._1}", cls := s"chart-flag chart-flag-${flag._1}")
       val checkedInput = if (chart.flags.getOrElse(flag._1, flag._3)) {
         flagInput(checked)
