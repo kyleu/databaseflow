@@ -1,13 +1,15 @@
 package ui.modal
 
+import models.SharedResultSaveRequest
 import models.query.SharedResult
 import org.scalajs.jquery.{jQuery => $}
-import utils.TemplateUtils
+import ui.query.SharedResultManager
+import utils.{Logging, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
-object ShareResultsFormManager {
-  private[this] val modal = js.Dynamic.global.$("#share-results-modal")
+object SharedResultFormManager {
+  val modal = js.Dynamic.global.$("#share-results-modal")
   private[this] var activeSharedResult: Option[SharedResult] = None
 
   private[this] val inputTitle = $("#input-share-results-title", modal)
@@ -47,7 +49,15 @@ object ShareResultsFormManager {
       val share = $("input[name=share]:checked", modal).value().toString
 
       val result = activeSharedResult.getOrElse(throw new IllegalStateException()).copy(title = title, description = desc, viewableBy = share)
-      utils.Logging.info(s"Share: $result")
+      NetworkMessage.sendMessage(SharedResultSaveRequest(result))
     }
+  }
+
+  def handleSharedResult(sr: SharedResult, error: Option[String]) = error match {
+    case Some(err) => Logging.error("Cannot save shared result: " + err)
+    case None =>
+      SharedResultManager.updateSharedResults(Seq(sr), Map.empty)
+      modal.closeModal()
+    // TODO Show a link.
   }
 }

@@ -2,12 +2,12 @@ package services
 
 import java.util.UUID
 
-import models.query.SavedQuery
+import models.query.{SavedQuery, SharedResult}
 import models.schema.{Procedure, Table, View}
 import models.{BatchQueryStatus, SavedQueryResponse, SchemaResponse, SharedResultResponse}
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata._
-import ui.modal.QuerySaveFormManager
+import ui.modal.{SavedQueryFormManager, SharedResultFormManager}
 import ui.query._
 
 object ModelResultsService {
@@ -72,11 +72,16 @@ object ModelResultsService {
 
   def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Save Error", err)
-    case None => QuerySaveFormManager.handleQuerySaveResponse(sq, error)
+    case None => SavedQueryFormManager.handleSavedQuery(sq, error)
   }
 
   def handleQueryDeleteResponse(id: UUID, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Delete Error", err)
     case None => SavedQueryManager.deleteQuery(id)
+  }
+
+  def handleSharedResultSaveResponse(sr: SharedResult, error: Option[String]) = error match {
+    case Some(err) => NotificationService.info("Shared Result Save Error", err)
+    case None => SharedResultFormManager.handleSharedResult(sr, error)
   }
 }

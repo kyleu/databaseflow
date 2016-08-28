@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import models.query.{QueryResult, RowDataOptions, SavedQuery}
+import models.query.{QueryResult, RowDataOptions, SavedQuery, SharedResult}
 
 sealed trait RequestMessage
 
@@ -32,6 +32,8 @@ case class ChartDataRequest(chartId: UUID, source: QueryResult.Source) extends R
 
 case class QuerySaveRequest(query: SavedQuery) extends RequestMessage
 case class QueryDeleteRequest(id: UUID) extends RequestMessage
+
+case class SharedResultSaveRequest(result: SharedResult) extends RequestMessage
 
 case class GetQueryHistory(limit: Int = 100, offset: Int = 0) extends RequestMessage
 case class InsertAuditHistory(id: UUID) extends RequestMessage

@@ -8,7 +8,7 @@ import models.template.Icons
 import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import ui.modal.{ConfirmManager, QuerySaveFormManager}
+import ui.modal.{ConfirmManager, SavedQueryFormManager}
 import ui.{TabManager, UserManager}
 import utils.{NetworkMessage, TemplateUtils}
 
@@ -21,6 +21,7 @@ object SavedQueryManager {
     openSavedQueries = openSavedQueries - id
     savedQueries = savedQueries - id
     QueryManager.closeQuery(id)
+    SavedQueryFormManager.modal.closeModal()
     $("#saved-query-link-" + id).remove()
   }
 
@@ -56,10 +57,10 @@ object SavedQueryManager {
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
-    TemplateUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
+    TemplateUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => SavedQueryFormManager.show(savedQuery.copy(
       sql = SqlManager.getSql(savedQuery.id)
     )))
-    TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => QuerySaveFormManager.show(savedQuery.copy(
+    TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => SavedQueryFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = SqlManager.getSql(savedQuery.id)

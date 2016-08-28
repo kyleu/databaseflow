@@ -5,7 +5,7 @@ import java.util.UUID
 import models._
 import services.audit.AuditRecordService
 import services.database.SampleDatabaseService
-import services.query.{PlanExecutionService, QueryCheckService, QueryExecutionService, QuerySaveService}
+import services.query._
 import services.result.{CachedResultService, ChartDataService}
 import utils.Config
 import utils.metrics.InstrumentedActor
@@ -37,6 +37,8 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
 
     case qsr: QuerySaveRequest => timeReceive(qsr) { QuerySaveService.handleQuerySaveRequest(user.id, qsr.query, out) }
     case qdr: QueryDeleteRequest => timeReceive(qdr) { QuerySaveService.handleQueryDeleteRequest(user.id, qdr.id, out) }
+
+    case srsr: SharedResultSaveRequest => timeReceive(srsr) { SharedResultService.save(user.id, srsr.result, Some(out)) }
 
     case gqh: GetQueryHistory => timeReceive(gqh) { AuditRecordService.handleGetQueryHistory(db.connectionId, user.id, gqh, out) }
     case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.handleRemoveAuditHistory(user.id, Some(connectionId), rqh, out) }

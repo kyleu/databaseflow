@@ -48,3 +48,5 @@ case class BatchQueryStatus(id: UUID, completedQueries: Int, remainingQueries: I
 
 case class QuerySaveResponse(savedQuery: SavedQuery, error: Option[String] = None) extends ResponseMessage
 case class QueryDeleteResponse(id: UUID, error: Option[String] = None) extends ResponseMessage
+
+case class SharedResultSaveResponse(result: SharedResult, error: Option[String] = None) extends ResponseMessage

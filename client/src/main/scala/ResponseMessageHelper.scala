@@ -45,6 +45,8 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case qsr: QuerySaveResponse => ModelResultsService.handleQuerySaveResponse(qsr.savedQuery, qsr.error)
     case qdr: QueryDeleteResponse => ModelResultsService.handleQueryDeleteResponse(qdr.id, qdr.error)
 
+    case srsr: SharedResultSaveResponse => ModelResultsService.handleSharedResultSaveResponse(srsr.result, srsr.error)
+
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")
   }

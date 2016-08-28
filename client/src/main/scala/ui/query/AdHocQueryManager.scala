@@ -9,7 +9,7 @@ import models.template.Icons
 import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import ui.modal.QuerySaveFormManager
+import ui.modal.SavedQueryFormManager
 import ui.{TabManager, UserManager}
 import utils.{Messages, NetworkMessage, TemplateUtils}
 
@@ -52,7 +52,7 @@ object AdHocQueryManager {
 
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
       val owner = UserManager.userId.getOrElse(throw new IllegalStateException())
-      QuerySaveFormManager.show(SavedQuery(queryId, queryName, sql = SqlManager.getSql(queryId), owner = owner))
+      SavedQueryFormManager.show(SavedQuery(queryId, queryName, sql = SqlManager.getSql(queryId), owner = owner))
     })
 
     val runQueryLink = $(".run-query-link", queryPanel)

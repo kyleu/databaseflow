@@ -9,10 +9,10 @@ import utils.{Logging, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
-object QuerySaveFormManager {
-  private[this] var activeQuery: Option[SavedQuery] = None
-  private[this] val modal = js.Dynamic.global.$("#save-query-modal")
+object SavedQueryFormManager {
+  val modal = js.Dynamic.global.$("#save-query-modal")
 
+  private[this] var activeQuery: Option[SavedQuery] = None
   private[this] val inputName = $("#input-query-name", modal)
   private[this] val inputDescription = $("#input-query-description", modal)
   private[this] val inputConnectionTrue = $("#input-query-connection-true", modal)
@@ -47,12 +47,11 @@ object QuerySaveFormManager {
     }
 
     activeQuery = Some(savedQuery)
-
     modal.openModal()
     inputName.focus()
   }
 
-  def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = {
+  def handleSavedQuery(sq: SavedQuery, error: Option[String]) = {
     if (activeQuery.exists(_.id == sq.id)) {
       error match {
         case Some(err) => Logging.error("Cannot save query: " + err)

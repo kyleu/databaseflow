@@ -8,7 +8,7 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.{ProgressManager, UserManager}
-import ui.modal.{QueryExportFormManager, ShareResultsFormManager}
+import ui.modal.{QueryExportFormManager, SharedResultFormManager}
 import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.{Logging, TemplateUtils}
 
@@ -40,7 +40,7 @@ object QueryResultService {
         QueryExportFormManager.show(result.queryId, src, "Export")
       })
       TemplateUtils.clickHandler($(".results-share-link", panel), (jq) => {
-        ShareResultsFormManager.show(SharedResult(
+        SharedResultFormManager.show(SharedResult(
           owner = UserManager.userId.getOrElse(throw new IllegalStateException()),
           connectionId = NavigationService.connectionId,
           source = result.source.getOrElse(throw new IllegalStateException())

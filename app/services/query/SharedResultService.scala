@@ -3,14 +3,14 @@ package services.query
 import java.util.UUID
 
 import akka.actor.ActorRef
-import models.SharedResultResponse
 import models.engine.EngineQueries
 import models.queries.DynamicQuery
 import models.queries.result.SharedResultQueries
 import models.query.SharedResult
 import models.user.{Role, User}
-import services.database.{DatabaseRegistry, DatabaseWorkerPool}
+import models.{SharedResultResponse, SharedResultSaveResponse}
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
+import services.database.{DatabaseRegistry, DatabaseWorkerPool}
 import services.user.UserService
 import utils.ExceptionUtils
 
@@ -59,23 +59,25 @@ object SharedResultService {
     db.query(DynamicQuery(sql))
   }
 
-  def save(sr: SharedResult, userId: UUID) = MasterDatabase.query(SharedResultQueries.getById(sr.id)) match {
-    case Some(existing) =>
-      if (existing.owner == userId) {
-        val updated = sr.copy(
-          lastAccessed = System.currentTimeMillis
-        )
-        MasterDatabase.executeUpdate(SharedResultQueries.UpdateSharedResult(updated))
-        updated
-      } else {
-        throw new IllegalStateException("Not Authorized.")
-      }
-    case None =>
-      val inserted = sr.copy(owner = userId, lastAccessed = System.currentTimeMillis, created = System.currentTimeMillis)
-      MasterDatabase.executeUpdate(SharedResultQueries.insert(inserted))
-      inserted
+  def save(userId: UUID, sr: SharedResult, out: Option[ActorRef] = None) = {
+    val result = MasterDatabase.query(SharedResultQueries.getById(sr.id)) match {
+      case Some(existing) =>
+        if (existing.owner == userId) {
+          val updated = sr.copy(
+            lastAccessed = System.currentTimeMillis
+          )
+          MasterDatabase.executeUpdate(SharedResultQueries.UpdateSharedResult(updated))
+          updated
+        } else {
+          throw new IllegalStateException("Not Authorized.")
+        }
+      case None =>
+        val inserted = sr.copy(owner = userId, lastAccessed = System.currentTimeMillis, created = System.currentTimeMillis)
+        MasterDatabase.executeUpdate(SharedResultQueries.insert(inserted))
+        inserted
+    }
+    out.foreach(_ ! SharedResultSaveResponse(result))
   }
-
   def delete(id: UUID, userId: UUID) = MasterDatabase.query(SharedResultQueries.getById(id)) match {
     case Some(existing) => if (existing.owner == userId) {
       MasterDatabase.executeUpdate(SharedResultQueries.removeById(id))
