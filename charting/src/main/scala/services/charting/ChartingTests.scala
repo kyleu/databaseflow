@@ -47,8 +47,8 @@ object ChartingTests {
 
   def testHistogram(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(
     "x" -> js.Array(1, 2, 3, 4, 5, 6),
-    "type" -> "histogram",
-    "name" -> js.Array("One", "Two", "Three", "Four", "Five", "Six")
+    "text" -> js.Array("One", "Two", "Three", "Four", "Five", "Six"),
+    "type" -> "histogram"
   )), baseOptions)
 
   def testBoxPlot(el: String) = ChartRenderService.renderChart(getEl(el), Seq(js.Dynamic.literal(

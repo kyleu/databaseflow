@@ -2,7 +2,7 @@ package services.charting
 
 import java.util.UUID
 
-import models.charting.{ChartDataExtractor, ChartOptionsExtractor, ChartSettings}
+import models.charting.ChartSettings
 import org.scalajs.dom
 import org.scalajs.dom.UIEvent
 import org.scalajs.jquery.{JQuery, jQuery => $}
@@ -13,8 +13,8 @@ object ChartingService {
   private[this] var activeCharts = Map.empty[UUID, ChartValues]
 
   case class ChartValues(optionsPanel: JQuery, chartPanel: JQuery, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) {
-    lazy val chartData = ChartDataExtractor.getJsData(settings, columns, data)
-    lazy val baseOptions = ChartOptionsExtractor.getJsOptions(settings)
+    lazy val chartData = settings.t.options.getJsData(settings, columns, data)
+    lazy val baseOptions = settings.t.options.getJsOptions(settings)
   }
 
   def init() = {
