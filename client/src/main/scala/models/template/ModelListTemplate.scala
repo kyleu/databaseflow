@@ -20,8 +20,8 @@ object ModelListTemplate {
         case Some(username) => span(username)
         case None => em(Messages("th.unknown"))
       }),
-      td(sq.read),
-      td(sq.edit),
+      td(sq.read.toString),
+      td(sq.edit.toString),
       td(sq.connection match {
         case Some(o) => if (selfId == o) {
           span(Messages("list.this.connection"))

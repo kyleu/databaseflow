@@ -2,6 +2,7 @@ package ui.modal
 
 import models.SharedResultSaveRequest
 import models.query.SharedResult
+import models.user.Permission
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.query.SharedResultManager
@@ -27,11 +28,10 @@ object SharedResultFormManager {
     inputTitle.value(sharedResult.title)
     inputDescription.value(sharedResult.description.getOrElse(""))
     sharedResult.viewableBy match {
-      case "visitor" => $("#input-share-results-visitor", modal).prop("checked", true)
-      case "user" => $("#input-share-results-user", modal).prop("checked", true)
-      case "admin" => $("#input-share-results-admin", modal).prop("checked", true)
-      case "private" => $("#input-share-results-private", modal).prop("checked", true)
-      case x => throw new IllegalStateException(x)
+      case Permission.Visitor => $("#input-share-results-visitor", modal).prop("checked", true)
+      case Permission.User => $("#input-share-results-user", modal).prop("checked", true)
+      case Permission.Administrator => $("#input-share-results-admin", modal).prop("checked", true)
+      case Permission.Private => $("#input-share-results-private", modal).prop("checked", true)
     }
 
     modal.openModal()
@@ -48,7 +48,7 @@ object SharedResultFormManager {
         case d if d.isEmpty => None
         case d => Some(d)
       }
-      val share = $("input[name=share]:checked", modal).value().toString
+      val share = Permission.withName($("input[name=share]:checked", modal).value().toString)
 
       val result = activeSharedResult.getOrElse(throw new IllegalStateException()).copy(title = title, description = desc, viewableBy = share)
       NetworkMessage.sendMessage(SharedResultSaveRequest(result))

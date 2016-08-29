@@ -6,6 +6,7 @@ import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
 import models.query.{QueryResult, SharedResult}
 import models.schema.FilterOp
+import models.user.Permission
 import services.schema.JdbcHelper
 import utils.JdbcUtils
 
@@ -30,7 +31,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       "filter_column", "filter_op", "filter_value", "chart", "last_accessed", "created"
     ))
     override val values = Seq[Any](
-      sr.title, sr.owner, sr.viewableBy, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
+      sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
       sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
       new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created), sr.id
     )
@@ -69,7 +70,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
     title = row.as[String]("title"),
     description = row.asOpt[Any]("description").map(s => JdbcUtils.extractString(s)),
     owner = row.as[UUID]("owner"),
-    viewableBy = row.as[String]("viewable_by"),
+    viewableBy = Permission.withName(row.as[String]("viewable_by")),
     connectionId = row.as[UUID]("connection_id"),
     source = QueryResult.Source(
       t = row.as[String]("source_type"),
@@ -86,7 +87,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   )
 
   override protected def toDataSeq(sr: SharedResult) = Seq[Any](
-    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy, sr.connectionId,
+    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId,
     sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
     sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
     new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)

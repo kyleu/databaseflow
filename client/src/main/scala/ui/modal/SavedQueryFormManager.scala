@@ -2,6 +2,7 @@ package ui.modal
 
 import models.QuerySaveRequest
 import models.query.SavedQuery
+import models.user.Permission
 import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
 import ui.query.{QueryManager, SavedQueryManager}
@@ -28,18 +29,16 @@ object SavedQueryFormManager {
     inputDescription.value(savedQuery.description.getOrElse(""))
 
     savedQuery.read match {
-      case "visitor" => $("#input-query-read-visitor", modal).prop("checked", true)
-      case "user" => $("#input-query-read-user", modal).prop("checked", true)
-      case "admin" => $("#input-query-read-admin", modal).prop("checked", true)
-      case "private" => $("#input-query-read-private", modal).prop("checked", true)
-      case x => throw new IllegalStateException(x)
+      case Permission.Visitor => $("#input-query-read-visitor", modal).prop("checked", true)
+      case Permission.User => $("#input-query-read-user", modal).prop("checked", true)
+      case Permission.Administrator => $("#input-query-read-admin", modal).prop("checked", true)
+      case Permission.Private => $("#input-query-read-private", modal).prop("checked", true)
     }
     savedQuery.edit match {
-      case "visitor" => $("#input-query-edit-visitor", modal).prop("checked", true)
-      case "user" => $("#input-query-edit-user", modal).prop("checked", true)
-      case "admin" => $("#input-query-edit-admin", modal).prop("checked", true)
-      case "private" => $("#input-query-edit-private", modal).prop("checked", true)
-      case x => throw new IllegalStateException(x)
+      case Permission.Visitor => $("#input-query-edit-visitor", modal).prop("checked", true)
+      case Permission.User => $("#input-query-edit-user", modal).prop("checked", true)
+      case Permission.Administrator => $("#input-query-edit-admin", modal).prop("checked", true)
+      case Permission.Private => $("#input-query-edit-private", modal).prop("checked", true)
     }
     savedQuery.connection match {
       case Some(conn) => inputConnectionTrue.prop("checked", true)
@@ -83,8 +82,8 @@ object SavedQueryFormManager {
     } else {
       Some(NavigationService.connectionId)
     }
-    val read = $("input[name=read]:checked", modal).value().toString
-    val edit = $("input[name=edit]:checked", modal).value().toString
+    val read = Permission.withName($("input[name=read]:checked", modal).value().toString)
+    val edit = Permission.withName($("input[name=edit]:checked", modal).value().toString)
     val updated = activeQuery.getOrElse(throw new IllegalStateException()).copy(
       name = inputName.value().toString,
       description = desc,

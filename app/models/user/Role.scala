@@ -25,24 +25,24 @@ object Role extends Enum[Role] {
     override def qualifies(target: Role) = target == Role.Visitor
   }
 
-  def matchPermissions(user: User, owner: UUID, model: String, perm: String, value: String) = {
+  def matchPermissions(user: User, owner: UUID, model: String, perm: String, value: Permission) = {
     if (user.id == owner) {
       true -> s"You are the owner of this $model."
     } else {
       value match {
-        case "admin" => if (user.role == Role.Admin) {
+        case Permission.Administrator => if (user.role == Role.Admin) {
           true -> s"Administrators may $perm this $model."
         } else {
           false -> s"Only administrators are allowed to $perm this $model."
         }
-        case "user" => if (user.role == Role.Admin || user.role == Role.User) {
+        case Permission.User => if (user.role == Role.Admin || user.role == Role.User) {
           true -> s"All normal users may $perm this $model."
         } else {
           false -> s"Visitors are not allowed to $perm this $model."
         }
-        case "visitor" => true -> s"All users, including visitors, may $perm this $model."
-        case "private" => false -> s"Only the owner of this $model may $perm it."
-        case x => false -> x
+        case Permission.Visitor => true -> s"All users, including visitors, may $perm this $model."
+        case Permission.Private => false -> s"Only the owner of this $model may $perm it."
+        case x => false -> x.toString
       }
     }
   }

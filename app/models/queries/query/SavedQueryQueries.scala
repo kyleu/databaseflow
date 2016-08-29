@@ -5,6 +5,7 @@ import java.util.UUID
 import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.query.SavedQuery
+import models.user.Permission
 import utils.{DateUtils, JdbcUtils}
 
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
@@ -51,8 +52,8 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
 
       owner = row.as[UUID]("owner"),
       connection = row.asOpt[UUID]("connection"),
-      read = row.as[String]("read"),
-      edit = row.as[String]("edit"),
+      read = Permission.withName(row.as[String]("read")),
+      edit = Permission.withName(row.as[String]("edit")),
 
       lastRan = row.asOpt[java.sql.Timestamp]("last_ran").map(_.getTime),
       created = row.as[java.sql.Timestamp]("created").getTime,
@@ -61,6 +62,6 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   }
 
   override protected def toDataSeq(q: SavedQuery) = Seq[Any](
-    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.read, q.edit, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
+    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.read.toString, q.edit.toString, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
   )
 }

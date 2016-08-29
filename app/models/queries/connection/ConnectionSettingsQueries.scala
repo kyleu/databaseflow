@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.database.{Row, Statement}
 import models.engine.DatabaseEngine
 import models.queries.BaseQueries
-import models.user.{Role, User}
+import models.user.{Permission, Role, User}
 import utils.{JdbcUtils, PasswordEncryptUtils}
 
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
@@ -52,8 +52,8 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     id = row.as[UUID]("id"),
     name = row.as[String]("name"),
     owner = row.as[UUID]("owner"),
-    read = row.as[String]("read"),
-    edit = row.as[String]("edit"),
+    read = Permission.withName(row.as[String]("read")),
+    edit = Permission.withName(row.as[String]("edit")),
     description = JdbcUtils.extractString(row.as[Any]("description")),
     engine = DatabaseEngine.withName(row.as[String]("engine")),
     host = row.asOpt[Any]("host").map(JdbcUtils.extractString),
@@ -65,7 +65,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = Seq[Any](
-    q.id, q.name, q.owner, q.read, q.edit, q.description, q.engine.toString,
+    q.id, q.name, q.owner, q.read.toString, q.edit.toString, q.description, q.engine.toString,
     q.host, q.dbName, q.extra, q.urlOverride, q.username, PasswordEncryptUtils.encrypt(q.password)
   )
 }

@@ -7,7 +7,7 @@ import models.engine.EngineQueries
 import models.queries.DynamicQuery
 import models.queries.result.SharedResultQueries
 import models.query.SharedResult
-import models.user.{Role, User}
+import models.user.{Permission, Role, User}
 import models.{SharedResultResponse, SharedResultSaveResponse}
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
@@ -45,7 +45,7 @@ object SharedResultService {
     } else {
       user match {
         case Some(u) => DatabaseRegistry.db(u, sr.connectionId)
-        case None if sr.viewableBy == "visitor" => DatabaseRegistry.databaseFor(sr.connectionId) match {
+        case None if sr.viewableBy == Permission.Visitor => DatabaseRegistry.databaseFor(sr.connectionId) match {
           case Right(c) => c
           case Left(x) => throw x
         }

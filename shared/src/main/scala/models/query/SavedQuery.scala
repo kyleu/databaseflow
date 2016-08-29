@@ -2,6 +2,8 @@ package models.query
 
 import java.util.UUID
 
+import models.user.Permission
+
 case class SavedQuery(
   id: UUID = UUID.randomUUID,
   name: String = "Untitled Query",
@@ -10,8 +12,8 @@ case class SavedQuery(
 
   owner: UUID,
   connection: Option[UUID] = None,
-  read: String = "visitor",
-  edit: String = "private",
+  read: Permission = Permission.Visitor,
+  edit: Permission = Permission.Private,
 
   lastRan: Option[Long] = None,
 

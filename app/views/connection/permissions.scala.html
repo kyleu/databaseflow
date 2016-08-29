@@ -1,9 +1,9 @@
-@(key: String, v: String, icon: String, title: String)(implicit messages: Messages)
+@(key: String, v: models.user.Permission, icon: String, title: String)(implicit messages: Messages)
 <div class="input-field col s12 m6">
   <div class="card-panel option-panel">
     <h6><i class="fa @{icon}"></i> @title</h6>
     <p>
-      @if(v == "visitor") {
+      @if(v == models.user.Permission.Visitor) {
         <input id="form-@key-visitor" name="@key" type="radio" value="visitor" checked="checked" />
       } else {
         <input id="form-@key-visitor" name="@key" type="radio" value="visitor" />
@@ -11,7 +11,7 @@
       <label for="form-@key-visitor">@messages("query.permissions.everyone")</label>
     </p>
     <p>
-      @if(v == "user") {
+      @if(v == models.user.Permission.User) {
         <input id="form-@key-user" name="@key" type="radio" value="user" checked="checked" />
       } else {
         <input id="form-@key-user" name="@key" type="radio" value="user" />
@@ -19,7 +19,7 @@
       <label for="form-@key-user">@messages("query.permissions.registered.users")</label>
     </p>
     <p>
-      @if(v == "admin") {
+      @if(v == models.user.Permission.Administrator) {
         <input id="form-@key-admin" name="@key" type="radio" value="admin" checked="checked" />
       } else {
         <input id="form-@key-admin" name="@key" type="radio" value="admin" />
@@ -27,7 +27,7 @@
       <label for="form-@key-admin">@messages("query.permissions.administrators")</label>
     </p>
     <p>
-      @if(v == "private") {
+      @if(v == models.user.Permission.Private) {
         <input id="form-@key-private" name="@key" type="radio" value="private" checked="checked" />
       } else {
         <input id="form-@key-private" name="@key" type="radio" value="private" />

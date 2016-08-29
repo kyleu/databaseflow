@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.engine.DatabaseEngine.PostgreSQL
+import models.user.Permission
 
 object ConnectionSettings {
   val defaultEngine = PostgreSQL
@@ -13,8 +14,8 @@ case class ConnectionSettings(
     id: UUID,
     name: String,
     owner: UUID,
-    read: String = "visitor",
-    edit: String = "private",
+    read: Permission = Permission.Visitor,
+    edit: Permission = Permission.Private,
     description: String = "",
     engine: DatabaseEngine = ConnectionSettings.defaultEngine,
     host: Option[String] = None,

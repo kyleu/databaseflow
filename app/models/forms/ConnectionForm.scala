@@ -1,5 +1,6 @@
 package models.forms
 
+import models.user.Permission
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -17,8 +18,8 @@ object ConnectionForm {
       "databaseUsername" -> text,
       "databasePassword" -> text,
       "description" -> text,
-      "read" -> nonEmptyText,
-      "edit" -> nonEmptyText
+      "read" -> nonEmptyText.transform(s => Permission.withName(s), (p: Permission) => p.toString),
+      "edit" -> nonEmptyText.transform(s => Permission.withName(s), (p: Permission) => p.toString)
     )(ConnectionForm.apply)(ConnectionForm.unapply)
   )
 }
@@ -35,8 +36,8 @@ case class ConnectionForm(
     username: String,
     password: String,
     description: String,
-    read: String,
-    edit: String
+    read: Permission,
+    edit: Permission
 ) {
   def isUrl = toggle == "url"
 }

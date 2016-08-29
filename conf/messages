@@ -93,6 +93,18 @@ activity.remove.all.user.confirm = Removed all user activity.
 activity.confirm.remove.user = Are you sure you wish to remove all your activity?
 activity.confirm.remove.all = Are you sure you wish to all activity from the system?
 
+# Permissions
+permissions.everyone = Everyone
+permissions.registered.users = Registered Users
+permissions.administrators = Administrators
+permissions.only.myself = Only Myself
+
+permissions.visitor.text = everyone
+permissions.user.text = all registered users
+permissions.administrators.text = administrators
+permissions.only.myself.text = only you
+
+
 # Connection Form
 connection.permissions.available.to = Available To
 connection.permissions.editable.by = Editable By
@@ -130,10 +142,6 @@ query.sidenav.procedures = Stored Procedures
 query.sidenav.help = Help
 query.sidenav.feedback = Feedback
 query.sidenav.about = About {0}
-query.permissions.everyone = Everyone
-query.permissions.registered.users = Registered Users
-query.permissions.administrators = Administrators
-query.permissions.only.myself = Only Myself
 query.share = Share
 
 # Query Results
