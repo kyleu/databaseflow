@@ -39,7 +39,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
 
   case class UpdateSavedQuery(sq: SavedQuery) extends Statement {
     override val sql = updateSql(Seq("name", "description", "sql", "owner", "connection", "read", "edit", "updated"))
-    override val values = Seq[Any](sq.name, sq.description, sq.sql, sq.owner, sq.connection, sq.read, sq.edit, DateUtils.now, sq.id)
+    override val values = Seq[Any](sq.name, sq.description, sq.sql, sq.owner, sq.connection, sq.read.toString, sq.edit.toString, DateUtils.now, sq.id)
   }
 
   override protected def fromRow(row: Row) = {

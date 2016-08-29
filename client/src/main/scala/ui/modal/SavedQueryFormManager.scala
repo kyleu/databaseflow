@@ -29,13 +29,13 @@ object SavedQueryFormManager {
     inputDescription.value(savedQuery.description.getOrElse(""))
 
     savedQuery.read match {
-      case Permission.Visitor => $("#input-query-read-visitor", modal).prop("checked", true)
+      case Permission.Visitor => throw new IllegalStateException("Saved queries cannot be public.")
       case Permission.User => $("#input-query-read-user", modal).prop("checked", true)
       case Permission.Administrator => $("#input-query-read-admin", modal).prop("checked", true)
       case Permission.Private => $("#input-query-read-private", modal).prop("checked", true)
     }
     savedQuery.edit match {
-      case Permission.Visitor => $("#input-query-edit-visitor", modal).prop("checked", true)
+      case Permission.Visitor => throw new IllegalStateException("Saved queries cannot be public.")
       case Permission.User => $("#input-query-edit-user", modal).prop("checked", true)
       case Permission.Administrator => $("#input-query-edit-admin", modal).prop("checked", true)
       case Permission.Private => $("#input-query-edit-private", modal).prop("checked", true)

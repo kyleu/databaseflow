@@ -39,7 +39,9 @@ object ChartService {
         $(".loading", el).remove()
 
         val chart = js.Dynamic.literal(
-          "t" -> "line"
+          "t" -> "line",
+          "selects" -> js.Object(),
+          "flags" -> js.Object()
         )
 
         val cols = js.Array(columns.map { col =>

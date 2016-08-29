@@ -12,7 +12,7 @@ case class SavedQuery(
 
   owner: UUID,
   connection: Option[UUID] = None,
-  read: Permission = Permission.Visitor,
+  read: Permission = Permission.User,
   edit: Permission = Permission.Private,
 
   lastRan: Option[Long] = None,

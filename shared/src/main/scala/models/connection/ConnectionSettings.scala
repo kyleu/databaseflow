@@ -14,7 +14,7 @@ case class ConnectionSettings(
     id: UUID,
     name: String,
     owner: UUID,
-    read: Permission = Permission.Visitor,
+    read: Permission = Permission.User,
     edit: Permission = Permission.Private,
     description: String = "",
     engine: DatabaseEngine = ConnectionSettings.defaultEngine,

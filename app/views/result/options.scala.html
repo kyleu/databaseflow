@@ -1,16 +1,14 @@
-@(result: models.query.SharedResult)
+@(result: models.query.SharedResult)(implicit messages: Messages)
 <div class="row">
   <div class="col s12">
     <div class="z-depth-1 shared-result-options">
       <div>
         This is your shared result.
-        It is currently viewable by X.
-        You may
-          <a class="theme-text" href="@routes.SharedResultController.remove(result.id)">remove</a>
-        it or change the
-          <a class="theme-text" href="">permissions</a>
-        .
+        It is currently viewable by @messages("permissions." + result.viewableBy.id + ".text").
+        You may <a class="theme-text" href="@routes.SharedResultController.remove(result.id)">remove</a>
+        it or <a class="theme-text modal-trigger" href="#">edit</a> it.
       </div>
     </div>
   </div>
 </div>
+@views.html.modal.sharedResultModal()
