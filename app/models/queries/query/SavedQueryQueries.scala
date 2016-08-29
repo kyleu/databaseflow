@@ -62,6 +62,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   }
 
   override protected def toDataSeq(q: SavedQuery) = Seq[Any](
-    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.read.toString, q.edit.toString, q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
+    q.id, q.name, q.description, q.sql, q.owner, q.connection, q.read.toString, q.edit.toString,
+    q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
   )
 }
