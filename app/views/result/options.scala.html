@@ -6,9 +6,36 @@
         This is your shared result.
         It is currently viewable by @messages("permissions." + result.viewableBy.id + ".text").
         You may <a class="theme-text" href="@routes.SharedResultController.remove(result.id)">remove</a>
-        it or <a class="theme-text modal-trigger" href="#">edit</a> it.
+        it or <a class="theme-text modal-trigger" href="">edit</a> it.
       </div>
     </div>
   </div>
 </div>
-@views.html.modal.sharedResultModal()
+@defining(result.viewableBy match {
+  case models.user.Permission.Visitor => """$("#input-shared-result-visitor").prop("checked", true)"""
+  case models.user.Permission.User => """$("#input-shared-result-user").prop("checked", true)"""
+  case models.user.Permission.Administrator => """$("#input-shared-result-admin").prop("checked", true)"""
+  case models.user.Permission.Private => """$("#input-shared-result-private").prop("checked", true)"""
+}) { check =>
+<script>
+  function open() {
+    $('#shared-result-modal').openModal();
+  }
+
+  function close() {
+    $('#shared-result-modal').closeModal();
+  }
+
+  $(function() {
+    $('.modal-trigger').on('click', function() {
+      $("#input-shared-result-title").val("@result.title");
+      $("#input-shared-result-description").val("@result.description.getOrElse("")");
+      @Html(check)
+      open();
+      return false;
+    });
+    $('#input-share-results-cancel-link').on('click', close);
+  });
+</script>
+}
+@views.html.modal.sharedResultModal(messages("general.save"))

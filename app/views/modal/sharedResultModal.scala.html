@@ -1,31 +1,30 @@
-@()(implicit messages: Messages)<div id="share-results-modal" class="modal modal-fixed-footer">
+@(title: String)(implicit messages: Messages)<div id="shared-result-modal" class="modal modal-fixed-footer">
   <div class="modal-content">
-    <h4>Share Query Result</h4>
     <div class="row">
       <form class="col s12">
         <div class="row">
           <div class="input-field col s12">
-            <input id="input-share-results-title" type="text" minlength="1" class="validate" placeholder="">
-            <label for="input-share-results-title">@messages("modal.share.results.title")</label>
+            <input id="input-shared-result-title" type="text" minlength="1" class="validate" placeholder="">
+            <label for="input-shared-result-title">@messages("modal.share.results.title")</label>
             <div class="share-name-error initially-hidden">Please enter a name for this result.</div>
           </div>
 
           <div class="input-field col s12">
-            <input id="input-share-results-description" type="text" placeholder="">
-            <label for="input-share-results-description">@messages("modal.share.results.description")</label>
+            <input id="input-shared-result-description" type="text" placeholder="">
+            <label for="input-shared-result-description">@messages("modal.share.results.description")</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "share", "share-results", showPublic = true)
+            @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "share", "shared-result", showPublic = true)
           </div>
         </div>
       </form>
     </div>
   </div>
   <div class="modal-footer">
-    <a id="input-share-results-share-link" href="#" class="modal-action right btn theme waves-effect waves-light">@messages("query.share")</a>
-    <a id="input-share-results-cancel-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>
+    <a id="input-shared-result-share-link" href="#" class="modal-action right btn theme waves-effect waves-light">@title</a>
+    <a id="input-shared-result-cancel-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>
     <div style="clear: both;"></div>
   </div>
 </div>
