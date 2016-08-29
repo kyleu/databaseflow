@@ -23,7 +23,7 @@ object TableUpdates {
       $("#table-list-toggle").css("display", "block")
       val tableList = $("#table-list")
       tableList.html(SidenavTemplate.tables(ts).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", tableList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", tableList), jq => {
         val name = jq.data("key").toString
         TableManager.tableDetail(name, RowDataOptions.empty)
       })

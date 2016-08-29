@@ -11,11 +11,11 @@ import utils.TemplateUtils
 object QueryResultEvents {
   def wire(panel: JQuery, result: QueryResult, resultId: UUID, chartId: UUID) = {
     val src = result.source.getOrElse(throw new IllegalStateException())
-    TemplateUtils.clickHandler($(".results-export-link", panel), (jq) => {
+    TemplateUtils.clickHandler($(".results-export-link", panel), jq => {
       QueryExportFormManager.show(result.queryId, src, "Export")
     })
-    TemplateUtils.clickHandler($(".results-share-link", panel), (jq) => {
-      val chart = ChartService.getSettings(resultId).trim match {
+    TemplateUtils.clickHandler($(".results-share-link", panel), jq => {
+      val chart = ChartService.getSettings(chartId).trim match {
         case x if x.isEmpty => None
         case x => Some(x)
       }
@@ -26,7 +26,7 @@ object QueryResultEvents {
         chart = chart
       ))
     })
-    TemplateUtils.changeHandler($(".results-chart-toggle", panel), (jq) => {
+    TemplateUtils.changeHandler($(".results-chart-toggle", panel), jq => {
       if (jq.prop("checked").toString == "true") {
         ChartService.showChart(chartId, result.columns, src, panel)
       } else {

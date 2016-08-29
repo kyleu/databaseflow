@@ -1,6 +1,7 @@
 @(
     user: Option[models.user.User],
     result: models.query.SharedResult,
+    ownerName: String,
     columns: Seq[models.query.QueryResult.Col],
     data: Seq[Seq[Option[String]]],
     debug: Boolean
@@ -11,8 +12,7 @@
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">@result.title</span>
-          <div><em>Created on [@result.created] by user [@result.owner]</em></div>
+          @views.html.result.title(result, ownerName)
           <div class="query-result-table">
             <table class="bordered highlight responsive-table">
               <thead>

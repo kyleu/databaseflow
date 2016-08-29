@@ -33,10 +33,10 @@ object ChartSettingsService {
   private[this] def selectChartType(id: UUID, el: JQuery, columns: Seq[(String, String)], chart: ChartSettings) = {
     $(".chart-columns-container", el).html(ChartOptionsTemplate.selects(chart, columns.map(c => c._1 -> c._1)).toString())
     materialSelect(".chart-select", el)
-    TemplateUtils.changeHandler($(".chart-select", el), (jq) => onSelectChange(id, jq.data("key").toString, jq.value().toString))
+    TemplateUtils.changeHandler($(".chart-select", el), jq => onSelectChange(id, jq.data("key").toString, jq.value().toString))
 
     $(".chart-flags-container", el).html(ChartOptionsTemplate.flags(id, chart).toString())
-    TemplateUtils.changeHandler($(".chart-flag", el), (jq) => onFlagChange(id, jq.data("key").toString, jq.prop("checked").toString.toBoolean))
+    TemplateUtils.changeHandler($(".chart-flag", el), jq => onFlagChange(id, jq.data("key").toString, jq.prop("checked").toString.toBoolean))
 
     ChartingService.updateSettings(id, chart)
   }
@@ -45,7 +45,7 @@ object ChartSettingsService {
     val chart = ChartingService.getSettings(id)
     panel.html(ChartOptionsTemplate.options(columns, chart).toString)
     materialSelect(".chart-type-select", panel)
-    TemplateUtils.changeHandler($(".chart-type-select", panel), (jq) => {
+    TemplateUtils.changeHandler($(".chart-type-select", panel), jq => {
       val currentSettings = ChartingService.getSettings(id)
       val newSettings = ChartType.withName(jq.value().toString).defaultSettings.merge(currentSettings)
       selectChartType(id, panel, columns, newSettings)

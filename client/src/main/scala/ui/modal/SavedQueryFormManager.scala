@@ -19,8 +19,8 @@ object SavedQueryFormManager {
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
   def init() = {
-    TemplateUtils.clickHandler($("#input-query-cancel-link", modal), (jq) => modal.closeModal())
-    TemplateUtils.clickHandler($("#input-query-save-link", modal), (jq) => save())
+    TemplateUtils.clickHandler($("#input-query-cancel-link", modal), jq => modal.closeModal())
+    TemplateUtils.clickHandler($("#input-query-save-link", modal), jq => save())
   }
 
   def show(savedQuery: SavedQuery) = {

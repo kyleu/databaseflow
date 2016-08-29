@@ -12,7 +12,7 @@ import ui.metadata.{MetadataManager, ModelListManager}
 import ui.modal._
 import ui.query._
 import ui.search.SearchManager
-import utils.{TemplateUtils, Logging, NetworkMessage}
+import utils.{Logging, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -23,8 +23,8 @@ object InitService {
     wireSideNav()
     installTimers()
 
-    TemplateUtils.clickHandler($("#commit-button"), (jq) => TransactionService.commitTransaction())
-    TemplateUtils.clickHandler($("#rollback-button"), (jq) => TransactionService.rollbackTransaction())
+    TemplateUtils.clickHandler($("#commit-button"), jq => TransactionService.commitTransaction())
+    TemplateUtils.clickHandler($("#rollback-button"), jq => TransactionService.rollbackTransaction())
 
     js.Dynamic.global.$("select").material_select()
 
@@ -43,14 +43,13 @@ object InitService {
   }
 
   private[this] def wireSideNav() = {
-    TemplateUtils.clickHandler($("#begin-tx-link"), (jq) => TransactionService.beginTransaction())
-    TemplateUtils.clickHandler($("#new-query-link"), (jq) => AdHocQueryManager.addNewQuery())
-    TemplateUtils.clickHandler($(".show-list-link"), (jq) => ModelListManager.showList(jq.data("key").toString))
-    TemplateUtils.clickHandler($("#sidenav-help-link"), (jq) => HelpManager.show())
-    TemplateUtils.clickHandler($("#sidenav-feedback-link"), (jq) => FeedbackManager.show())
-    TemplateUtils.clickHandler($("#sidenav-refresh-link"), (jq) => MetadataManager.refreshSchema())
-    TemplateUtils.clickHandler($("#sidenav-history-link"), (jq) => HistoryManager.show())
-    js.Dynamic.global.$(".button-collapse").sideNav(js.Dynamic.literal("closeOnClick" -> true))
+    TemplateUtils.clickHandler($("#begin-tx-link"), jq => TransactionService.beginTransaction())
+    TemplateUtils.clickHandler($("#new-query-link"), jq => AdHocQueryManager.addNewQuery())
+    TemplateUtils.clickHandler($(".show-list-link"), jq => ModelListManager.showList(jq.data("key").toString))
+    TemplateUtils.clickHandler($("#sidenav-help-link"), jq => HelpManager.show())
+    TemplateUtils.clickHandler($("#sidenav-feedback-link"), jq => FeedbackManager.show())
+    TemplateUtils.clickHandler($("#sidenav-refresh-link"), jq => MetadataManager.refreshSchema())
+    TemplateUtils.clickHandler($("#sidenav-history-link"), jq => HistoryManager.show())
   }
 
   def performInitialAction() = {

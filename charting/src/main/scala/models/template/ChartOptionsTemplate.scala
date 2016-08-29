@@ -44,7 +44,13 @@ object ChartOptionsTemplate {
   def options(columns: Seq[(String, String)], chart: ChartSettings) = div(
     div(cls := "chart-type-select-container")(
       select(cls := "chart-type-select")(
-        ChartType.values.map(t => option(value := t.id)(t.title))
+        ChartType.values.map { t =>
+          if (chart.t == t) {
+            option(value := t.id, selected)(t.title)
+          } else {
+            option(value := t.id)(t.title)
+          }
+        }
       )
     ),
     div(

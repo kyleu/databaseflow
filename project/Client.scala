@@ -29,8 +29,7 @@ object Client {
     libraryDependencies ++= Seq(
       "be.doeraene" %%% "scalajs-jquery" % "0.9.0",
       "com.lihaoyi" %%% "scalatags" % "0.6.0",
-      "com.lihaoyi" %%% "upickle" % Serialization.version,
-      "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion
+      "com.beachape" %%% "enumeratum" % Utils.enumeratumVersion
     ),
     scalaJSStage in Global := FastOptStage,
     scapegoatIgnoredFiles := Seq(".*/JsonUtils.scala", ".*/JsonSerializers.scala")

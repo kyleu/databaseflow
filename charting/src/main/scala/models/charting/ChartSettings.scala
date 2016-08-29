@@ -1,7 +1,6 @@
 package models.charting
 
 import scala.scalajs.js
-import scala.scalajs.js.JSON
 
 case class ChartSettings(
     t: ChartType = ChartType.Line,
@@ -9,12 +8,15 @@ case class ChartSettings(
     flags: Map[String, Boolean] = Map.empty
 ) {
   def merge(s: ChartSettings) = this.copy(selects = selects ++ s.selects, flags = flags ++ s.flags)
-  lazy val asJs = js.Object(Seq(
-    "t" -> t.id,
-    "selects" -> js.Object(selects.toSeq),
-    "flags" -> js.Object(flags.toSeq)
-  ))
-  lazy val asJsStr = JSON.stringify(asJs)
+
+  lazy val asJson = s"""{
+  |  "t": "",
+  |  "selects": {
+  |    ${selects.map(s => s""""${s._1}": "${s._2}"""").mkString("\n    ")}
+  |  },
+  |  "flags": {
+  |    ${flags.map(s => s""""${s._1}": ${s._2}""").mkString("\n    ")}
+  |  }""".stripMargin
 }
 
 object ChartSettings {

@@ -18,7 +18,7 @@ object QueryExportFormManager {
   private[this] val inputFilename = $("#input-export-filename", modal)
 
   def init() = {
-    TemplateUtils.clickHandler($("#export-cancel-link", modal), (jq) => modal.closeModal())
+    TemplateUtils.clickHandler($("#export-cancel-link", modal), jq => modal.closeModal())
   }
 
   def show(queryId: UUID, source: QueryResult.Source, filename: String) = {

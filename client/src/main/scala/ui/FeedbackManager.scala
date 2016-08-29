@@ -34,7 +34,7 @@ object FeedbackManager {
 
       val queryPanel = $(s"#panel-$feedbackId")
 
-      TemplateUtils.clickHandler($(".submit-feedback", queryPanel), (jq) => {
+      TemplateUtils.clickHandler($(".submit-feedback", queryPanel), jq => {
         val email = $("#feedback-email-input", queryPanel).value().toString
         val content = $("#feedback-content-input", queryPanel).value().toString
         submitFeedback(email, content)

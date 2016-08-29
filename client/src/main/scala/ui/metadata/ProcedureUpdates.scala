@@ -22,7 +22,7 @@ object ProcedureUpdates {
       $("#procedure-list-toggle").css("display", "block")
       val procedureList = $("#procedure-list")
       procedureList.html(SidenavTemplate.procedures(ps).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", procedureList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", procedureList), jq => {
         val name = jq.data("key").toString
         ProcedureManager.procedureDetail(name)
       })

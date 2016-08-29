@@ -57,21 +57,21 @@ object SavedQueryManager {
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
-    TemplateUtils.clickHandler($(".settings-query-link", queryPanel), (jq) => SavedQueryFormManager.show(savedQuery.copy(
+    TemplateUtils.clickHandler($(".settings-query-link", queryPanel), jq => SavedQueryFormManager.show(savedQuery.copy(
       sql = SqlManager.getSql(savedQuery.id)
     )))
-    TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), (jq) => SavedQueryFormManager.show(savedQuery.copy(
+    TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), jq => SavedQueryFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = SqlManager.getSql(savedQuery.id)
     )))
-    TemplateUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val newSavedQuery = savedQuery.copy(
         sql = SqlManager.getSql(savedQuery.id)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })
-    TemplateUtils.clickHandler($(".delete-query-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".delete-query-link", queryPanel), jq => {
       def callback(b: Boolean): Unit = {
         if (b) {
           NetworkMessage.sendMessage(QueryDeleteRequest(savedQuery.id))

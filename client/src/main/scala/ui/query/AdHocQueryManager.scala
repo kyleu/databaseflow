@@ -50,7 +50,7 @@ object AdHocQueryManager {
 
     val queryPanel = $(s"#panel-$queryId")
 
-    TemplateUtils.clickHandler($(".save-query-link", queryPanel), (jq) => {
+    TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val owner = UserManager.userId.getOrElse(throw new IllegalStateException())
       SavedQueryFormManager.show(SavedQuery(queryId, queryName, sql = SqlManager.getSql(queryId), owner = owner))
     })

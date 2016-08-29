@@ -1,6 +1,7 @@
 @(
     user: Option[models.user.User],
     result: models.query.SharedResult,
+    ownerName: String,
     columns: Seq[models.query.QueryResult.Col],
     data: Seq[Seq[Option[String]]],
     debug: Boolean
@@ -35,9 +36,7 @@
           <div class="right">
             <a id="chart-settings-link" class="theme-text" href=""><i class="fa @models.template.Icons.settings"></i></a>
           </div>
-          <span class="card-title">@result.title</span>
-          <div><em>Created on [@result.created] by user [@result.owner]</em></div>
-
+          @views.html.result.title(result, ownerName)
           <div id="@result.id">
             <div id="chart-options" class="chart-options-panel z-depth-1"></div>
             <div id="chart-container">

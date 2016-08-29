@@ -10,6 +10,7 @@ object SearchManager {
   private[this] lazy val searchInput = $("input#search", searchContainer)
   private[this] lazy val searchIcon = $(".fa", searchContainer)
 
+  lazy val sharedResultsToggle = $("#shared-result-list-toggle")
   lazy val savedQueriesToggle = $("#saved-query-list-toggle")
   lazy val tablesToggle = $("#table-list-toggle")
   lazy val viewsToggle = $("#view-list-toggle")
@@ -22,7 +23,7 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
-    TemplateUtils.clickHandler(searchIcon, (jq) => {
+    TemplateUtils.clickHandler(searchIcon, jq => {
       searchInput.value("")
       clearSearch()
       searchInput.trigger("focus")
@@ -77,6 +78,7 @@ object SearchManager {
 
   private[this] def clearSearch() = {
     $(".sidenav-link").removeClass("search-ignored")
+    //clearSearchEntries(SharedResultManager.sharedResults, sharedResultsToggle)
     clearSearchEntries(MetadataManager.savedQueries, savedQueriesToggle)
     clearSearchEntries(TableUpdates.tables, tablesToggle)
     clearSearchEntries(ViewUpdates.views, viewsToggle)

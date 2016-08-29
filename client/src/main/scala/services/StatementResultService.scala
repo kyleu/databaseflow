@@ -19,7 +19,7 @@ object StatementResultService {
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
     val sqlEl = $(".statement-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), (jq) => {
+    TemplateUtils.clickHandler($(".results-sql-link", panel), jq => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })

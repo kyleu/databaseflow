@@ -16,7 +16,7 @@ import scalatags.Text.all._
 object ModelListManager {
   var openLists = Map.empty[String, UUID]
 
-  private[this] def wire(queryPanel: JQuery, key: String) = TemplateUtils.clickHandler($(".list-link", queryPanel), (jq) => {
+  private[this] def wire(queryPanel: JQuery, key: String) = TemplateUtils.clickHandler($(".list-link", queryPanel), jq => {
     val name = jq.data("name").toString
     key match {
       case "saved-query" => SavedQueryManager.savedQueryDetail(UUID.fromString(name))

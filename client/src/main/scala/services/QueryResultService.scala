@@ -26,7 +26,7 @@ object QueryResultService {
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
     val resultEl = $(".query-result-table", panel)
 
-    TemplateUtils.clickHandler($(".query-rel-link", resultEl), (jq) => {
+    TemplateUtils.clickHandler($(".query-rel-link", resultEl), jq => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString
@@ -40,7 +40,7 @@ object QueryResultService {
 
     val sqlEl = $(".query-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), (jq) => {
+    TemplateUtils.clickHandler($(".results-sql-link", panel), jq => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })
@@ -67,7 +67,7 @@ object QueryResultService {
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
-    TemplateUtils.clickHandler($(".filter-cancel-link", panel), (jq) => {
+    TemplateUtils.clickHandler($(".filter-cancel-link", panel), jq => {
       val newOptions = options.copy(filterCol = None, filterOp = None, filterVal = None)
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })

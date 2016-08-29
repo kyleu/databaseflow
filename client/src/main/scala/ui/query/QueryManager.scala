@@ -16,7 +16,7 @@ object QueryManager {
   def addQuery(queryId: UUID, title: String, queryPanel: JQuery, onChange: (String) => Unit): Unit = {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
-    def wire(q: JQuery, action: String, sql: () => String) = TemplateUtils.clickHandler(q, (jq) => {
+    def wire(q: JQuery, action: String, sql: () => String) = TemplateUtils.clickHandler(q, jq => {
       val resultId = UUID.randomUUID
       ProgressManager.startProgress(queryId, resultId, title)
       NetworkMessage.sendMessage(SubmitQuery(queryId, sql(), Some(action), resultId))

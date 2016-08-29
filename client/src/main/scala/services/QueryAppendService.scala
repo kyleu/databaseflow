@@ -4,7 +4,6 @@ import java.util.UUID
 
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
-import models.template.query.QueryResultsTemplate
 import models.template.results.DataTableTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.TableManager
@@ -25,7 +24,7 @@ object QueryAppendService {
 
     val newRows = $(s".result-$resultId", panel)
 
-    TemplateUtils.clickHandler($(".query-rel-link", newRows), (jq) => {
+    TemplateUtils.clickHandler($(".query-rel-link", newRows), jq => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val v = jq.data("rel-val").toString

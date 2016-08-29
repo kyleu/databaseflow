@@ -22,7 +22,7 @@ object ViewUpdates {
       $("#view-list-toggle").css("display", "block")
       val viewList = $("#view-list")
       viewList.html(SidenavTemplate.views(vs).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", viewList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", viewList), jq => {
         val name = jq.data("key").toString
         ViewManager.viewDetail(name)
       })

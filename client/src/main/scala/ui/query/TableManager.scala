@@ -46,7 +46,7 @@ object TableManager extends TableDetailHelper {
 
         QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-        TemplateUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
+        TemplateUtils.clickHandler($(".view-data-link", queryPanel), jq => {
           val newOptions = options.copy(
             offset = None,
             limit = Some(UserManager.rowsReturned),

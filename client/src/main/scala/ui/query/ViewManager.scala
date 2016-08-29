@@ -47,11 +47,11 @@ object ViewManager extends ViewDetailHelper {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      TemplateUtils.clickHandler($(".view-data-link", queryPanel), (jq) => {
+      TemplateUtils.clickHandler($(".view-data-link", queryPanel), jq => {
         RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
       })
 
-      def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, (jq) => {
+      def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, jq => {
         val resultId = UUID.randomUUID
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, title)

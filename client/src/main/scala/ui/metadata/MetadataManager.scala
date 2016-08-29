@@ -29,7 +29,7 @@ object MetadataManager {
       $("#saved-query-list-toggle").css("display", "block")
       val savedQueryList = $("#saved-query-list")
       savedQueryList.html(SidenavTemplate.savedQueries(sqs).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", savedQueryList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", savedQueryList), jq => {
         val id = UUID.fromString(jq.data("key").toString)
         SavedQueryManager.savedQueryDetail(id)
       })
@@ -54,7 +54,7 @@ object MetadataManager {
       $("#shared-result-list-toggle").css("display", "block")
       val sharedResultList = $("#shared-result-list")
       sharedResultList.html(SidenavTemplate.sharedResults(srs).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", sharedResultList), (jq) => {
+      TemplateUtils.clickHandler($(".sidenav-link", sharedResultList), jq => {
         val id = UUID.fromString(jq.data("key").toString)
         SharedResultManager.sharedResultDetail(id)
       })
