@@ -7,27 +7,6 @@
     debug: Boolean
 )(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @views.html.layout.simple(user = user, title = messages(result.title), mainDivClass = "", debug = debug) {
-  <script>
-    var columns = [
-      @Html(columns.map { col =>
-        s"""{
-          "name": "${col.name}",
-          "t": "${col.t}"
-        }"""
-      }.mkString(",\n"))
-    ];
-
-    var data = [
-      @Html(data.map { row =>
-        "[" + row.map { cell =>
-          cell.map("\"" + _.trim + "\"").getOrElse("null")
-        }.mkString(", ") + "]"
-      }.mkString(",\n"))
-    ];
-
-    var chart = @Html(result.chart.getOrElse(throw new IllegalStateException()));
-  </script>
-
   @if(user.exists(_.id == result.owner)) { @views.html.result.options(result) }
   <div class="row">
     <div class="col s12">
@@ -56,6 +35,25 @@
     <script src="@controllers.routes.Assets.versioned("charting-opt.js")" type="text/javascript"></script>
   }
   <script>
+    var columns = [
+      @Html(columns.map { col =>
+        s"""  {
+          "name": "${col.name}",
+          "t": "${col.t}"
+        }"""
+      }.mkString(",\n        "))
+    ];
+
+    var data = [
+      @Html(data.map { row =>
+        "[" + row.map { cell =>
+          cell.map("\"" + _.trim + "\"").getOrElse("null")
+        }.mkString(", ") + "]"
+      }.mkString(",\n      "))
+    ];
+
+    var settings = @Html(result.chart.getOrElse(throw new IllegalStateException()));
+
     $(function() {
       $('#chart-settings-link').on('click', function(){
         $('#chart-options').toggle();
@@ -64,9 +62,7 @@
       var charting = new Charting();
       charting.init();
 
-      var settings = @Html(result.chart.getOrElse("{}"));
-
-      charting.addChart('@result.id', settings, columns, data, chart);
+      charting.addChart('@result.id', settings, columns, data);
     });
   </script>
 }

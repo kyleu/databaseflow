@@ -12,11 +12,11 @@ object Charting {
   def init() = ChartingService.init()
 
   @JSExport
-  def addChart(id: String, chart: js.Dynamic, columns: js.Array[js.Dynamic], data: js.Array[js.Array[String]]) = {
+  def addChart(id: String, settings: js.Dynamic, columns: js.Array[js.Dynamic], data: js.Array[js.Array[String]]) = {
     val uuid = UUID.fromString(id)
-    val settings = ChartSettings.fromJs(chart)
+    val cs = ChartSettings.fromJs(settings)
     val colSeq = toColumns(columns)
-    ChartingService.addChart(uuid, settings, colSeq, data)
+    ChartingService.addChart(uuid, cs, colSeq, data)
   }
 
   @JSExport

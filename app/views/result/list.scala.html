@@ -30,7 +30,7 @@
             <ul class="collection">
               @publicResults.map { r =>
                 <li class="collection-item">
-                  <div class="right"><em>created a while ago by @usernameMap.getOrElse(r.owner, "guest")</em></div>
+                  <div class="right"><em>created by @usernameMap.getOrElse(r.owner, "guest")</em></div>
                   <a href="@routes.SharedResultController.view(r.id)" class="theme-text">@r.title</a>
                   @r.description.map { d => <div><em>@d</em></div> }
                 </li>
