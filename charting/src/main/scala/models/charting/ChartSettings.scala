@@ -17,7 +17,7 @@ case class ChartSettings(
       "flags": {
         ${flags.map(s => s""""${s._1}": ${s._2}""").mkString(",\n        ")}
       }
-    }""".stripMargin
+    }"""
 }
 
 object ChartSettings {
