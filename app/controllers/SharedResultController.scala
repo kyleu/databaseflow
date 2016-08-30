@@ -2,9 +2,11 @@ package controllers
 
 import java.util.UUID
 
+import models.user.Permission
 import services.query.SharedResultService
 import services.user.UserService
 import utils.ApplicationContext
+import utils.web.FormUtils
 
 import scala.concurrent.Future
 
@@ -27,6 +29,28 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
           case None =>
             Future.successful(Ok(views.html.result.viewData(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug)))
         }
+      case None => Future.successful(BadRequest("We couldn't find the results you requested."))
+    }
+  }
+
+  def save() = withSession("result.save") { implicit request =>
+    val form = FormUtils.getForm(request)
+    val id = UUID.fromString(form("id"))
+    SharedResultService.getById(id) match {
+      case Some(sr) =>
+        val title = form("title")
+        val description = form("description").trim match {
+          case x if x.isEmpty => None
+          case x => Some(x)
+        }
+        val chart = form("chart").trim match {
+          case x if x.isEmpty => None
+          case x => Some(x)
+        }
+        val share = Permission.withName(form("share"))
+        val newSr = sr.copy(title = title, description = description, chart = chart, viewableBy = share)
+        SharedResultService.save(request.identity.id, newSr, None)
+        Future.successful(Redirect(routes.SharedResultController.view(id)).flashing("success" -> "Shared result saved."))
       case None => Future.successful(BadRequest("We couldn't find the results you requested."))
     }
   }

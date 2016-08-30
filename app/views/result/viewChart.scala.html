@@ -58,10 +58,10 @@
         $('#chart-options').toggle();
         return false;
       });
-      var charting = new Charting();
-      charting.init();
+      window.charting = new Charting();
+      window.charting.init();
 
-      charting.addChart('@result.id', settings, columns, data);
+      window.charting.addChart('@result.id', settings, columns, data);
     });
   </script>
 }

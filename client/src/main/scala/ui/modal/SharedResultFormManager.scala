@@ -23,7 +23,6 @@ object SharedResultFormManager {
   }
 
   def show(sharedResult: SharedResult) = {
-    utils.Logging.info("CS: " + sharedResult)
     activeSharedResult = Some(sharedResult)
     inputTitle.value(sharedResult.title)
     inputDescription.value(sharedResult.description.getOrElse(""))

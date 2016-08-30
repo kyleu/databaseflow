@@ -26,16 +26,33 @@
     $('#shared-result-modal').closeModal();
   }
 
+  function getSettings() {
+    if(typeof window.charting === 'undefined') {
+      return '';
+    } else {
+      return window.charting.getSettingsString("@result.id");
+    }
+  }
+
+  function share() {
+    var chart = getSettings();
+    $("#input-shared-result-chart").val(chart);
+    $('form', $('#shared-result-modal')).submit();
+  }
+
   $(function() {
     $('.modal-trigger').on('click', function() {
+      $("#input-shared-result-id").val('@result.id');
       $("#input-shared-result-title").val("@result.title");
       $("#input-shared-result-description").val("@result.description.getOrElse("")");
       @Html(check)
       open();
       return false;
     });
-    $('#input-share-results-cancel-link').on('click', close);
+
+    $('#input-shared-result-cancel-link').on('click', close);
+    $('#input-shared-result-share-link').on('click', share);
   });
 </script>
 }
-@views.html.modal.sharedResultModal(messages("general.save"))
+@views.html.modal.sharedResultModal(messages("general.save"), Some(routes.SharedResultController.save().url))

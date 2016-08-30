@@ -9,15 +9,11 @@ case class ChartSettings(
 ) {
   def merge(s: ChartSettings) = this.copy(selects = selects ++ s.selects, flags = flags ++ s.flags)
 
-  lazy val asJson = s"""{
-      "t": "${t.id}",
-      "selects": {
-        ${selects.map(s => s""""${s._1}": "${s._2}"""").mkString(",\n        ")}
-      },
-      "flags": {
-        ${flags.map(s => s""""${s._1}": ${s._2}""").mkString(",\n        ")}
-      }
-    }"""
+  lazy val asJson = {
+    val selectsJson = selects.map(s => s""""${s._1}": "${s._2}"""").mkString(", ")
+    val flagsJson = flags.map(s => s""""${s._1}": ${s._2}""").mkString(", ")
+    s"""{"t": "${t.id}", "selects": { $selectsJson }, "flags": { $flagsJson } }"""
+  }
 }
 
 object ChartSettings {

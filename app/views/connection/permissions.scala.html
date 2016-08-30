@@ -8,7 +8,7 @@
       } else {
         <input id="form-@key-visitor" name="@key" type="radio" value="visitor" />
       }
-      <label for="form-@key-visitor">@messages("query.permissions.everyone")</label>
+      <label for="form-@key-visitor">@messages("permissions.everyone")</label>
     </p>
     <p>
       @if(v == models.user.Permission.User) {
@@ -16,7 +16,7 @@
       } else {
         <input id="form-@key-user" name="@key" type="radio" value="user" />
       }
-      <label for="form-@key-user">@messages("query.permissions.registered.users")</label>
+      <label for="form-@key-user">@messages("permissions.registered.users")</label>
     </p>
     <p>
       @if(v == models.user.Permission.Administrator) {
@@ -24,7 +24,7 @@
       } else {
         <input id="form-@key-admin" name="@key" type="radio" value="admin" />
       }
-      <label for="form-@key-admin">@messages("query.permissions.administrators")</label>
+      <label for="form-@key-admin">@messages("permissions.administrators")</label>
     </p>
     <p>
       @if(v == models.user.Permission.Private) {
@@ -32,7 +32,7 @@
       } else {
         <input id="form-@key-private" name="@key" type="radio" value="private" />
       }
-      <label for="form-@key-private">@messages("query.permissions.only.myself")</label>
+      <label for="form-@key-private">@messages("permissions.only.myself")</label>
     </p>
     <div class="clear" style="padding-bottom: 20px;"></div>
   </div>

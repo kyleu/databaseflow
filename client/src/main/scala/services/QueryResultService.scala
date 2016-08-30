@@ -35,7 +35,7 @@ object QueryResultService {
 
     result.source.foreach { src =>
       onComplete(result, src, panel, resultId)
-      QueryResultEvents.wire(panel, result, resultId, chartId)
+      QueryResultEvents.wire(panel, result, chartId)
     }
 
     val sqlEl = $(".query-result-sql", panel)

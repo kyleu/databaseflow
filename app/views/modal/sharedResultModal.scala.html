@@ -1,27 +1,31 @@
-@(title: String)(implicit messages: Messages)<div id="shared-result-modal" class="modal modal-fixed-footer">
-  <div class="modal-content">
-    <div class="row">
-      <form class="col s12">
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="input-shared-result-title" type="text" minlength="1" class="validate" placeholder="">
-            <label for="input-shared-result-title">@messages("modal.share.results.title")</label>
-            <div class="share-name-error initially-hidden">Please enter a name for this result.</div>
-          </div>
+@(title: String, action: Option[String] = None)(implicit messages: Messages)<div id="shared-result-modal" class="modal modal-fixed-footer">
+  <form method="post" action="@action.getOrElse("")" @if(action.isEmpty) { onsubmit="return false;"}>
+    <input id="input-shared-result-id" name="id" type="hidden" value="">
+    <input id="input-shared-result-chart" name="chart" type="hidden" value="">
+    <div class="modal-content">
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="input-shared-result-title" name="title" type="text" minlength="1" class="validate" placeholder="">
+              <label for="input-shared-result-title">@messages("modal.share.results.title")</label>
+              <div class="share-name-error initially-hidden">Please enter a name for this result.</div>
+            </div>
 
-          <div class="input-field col s12">
-            <input id="input-shared-result-description" type="text" placeholder="">
-            <label for="input-shared-result-description">@messages("modal.share.results.description")</label>
+            <div class="input-field col s12">
+              <input id="input-shared-result-description" name="description" type="text" placeholder="">
+              <label for="input-shared-result-description">@messages("modal.share.results.description")</label>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "share", "shared-result", showPublic = true)
+          <div class="row">
+            <div class="input-field col s12">
+              @views.html.components.permissionsPanel(messages("connection.permissions.available.to"), "share", "shared-result", showPublic = true)
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </form>
   <div class="modal-footer">
     <a id="input-shared-result-share-link" href="#" class="modal-action right btn theme waves-effect waves-light">@title</a>
     <a id="input-shared-result-cancel-link" href="#" class="modal-action right btn-flat theme-text">@messages("general.cancel")</a>

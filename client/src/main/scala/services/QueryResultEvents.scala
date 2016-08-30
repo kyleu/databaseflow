@@ -9,7 +9,7 @@ import ui.modal.{QueryExportFormManager, SharedResultFormManager}
 import utils.TemplateUtils
 
 object QueryResultEvents {
-  def wire(panel: JQuery, result: QueryResult, resultId: UUID, chartId: UUID) = {
+  def wire(panel: JQuery, result: QueryResult, chartId: UUID) = {
     val src = result.source.getOrElse(throw new IllegalStateException())
     TemplateUtils.clickHandler($(".results-export-link", panel), jq => {
       QueryExportFormManager.show(result.queryId, src, "Export")

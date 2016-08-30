@@ -62,7 +62,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   case class ContainsCachedTableName(name: String) extends Query[Boolean] {
     override val sql = s"""select count(*) as c from "$tableName" where "source_name" = ?"""
     override def values = Seq(name)
-    override def reduce(rows: Iterator[Row]) = rows.next().as[Boolean]("c")
+    override def reduce(rows: Iterator[Row]) = rows.next().as[Long]("c") != 0L
   }
 
   override protected def fromRow(row: Row) = SharedResult(
@@ -76,7 +76,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       t = row.as[String]("source_type"),
       name = row.as[String]("source_name"),
       sortedColumn = row.asOpt[String]("source_sort_column"),
-      sortedAscending = row.asOpt[Boolean]("source_sort_asc"),
+      sortedAscending = row.asOpt[Long]("source_sort_asc").map(_ != 0L),
       filterColumn = row.asOpt[String]("filter_column"),
       filterOp = row.asOpt[String]("filter_op").map(FilterOp.withName),
       filterValue = row.asOpt[String]("filter_value")

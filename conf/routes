@@ -18,6 +18,7 @@ POST        /q/:conn/export                          controllers.QueryController
 
 # Result Views
 GET         /shared                                  controllers.SharedResultController.index()
+POST        /shared                                  controllers.SharedResultController.save()
 GET         /shared/:id                              controllers.SharedResultController.view(id: java.util.UUID)
 GET         /shared/:id/remove                       controllers.SharedResultController.remove(id: java.util.UUID)
 
