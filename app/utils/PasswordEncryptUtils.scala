@@ -22,13 +22,21 @@ object PasswordEncryptUtils {
   }
 
   def encrypt(value: String) = {
-    val encrypted = encryptCipher.doFinal(value.getBytes("UTF-8"))
-    Base64.encodeBase64String(encrypted)
+    if (value.isEmpty) {
+      ""
+    } else {
+      val encrypted = encryptCipher.doFinal(value.getBytes("UTF-8"))
+      Base64.encodeBase64String(encrypted)
+    }
   }
 
   def decrypt(encryptedValue: String) = {
-    val decoded = Base64.decodeBase64(encryptedValue)
-    new String(decryptCipher.doFinal(decoded))
+    if (encryptedValue.isEmpty) {
+      ""
+    } else {
+      val decoded = Base64.decodeBase64(encryptedValue)
+      new String(decryptCipher.doFinal(decoded))
+    }
   }
 
   private[this] def keyToSpec(key: String): SecretKeySpec = {

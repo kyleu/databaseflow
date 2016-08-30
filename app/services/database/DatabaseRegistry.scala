@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.database.PoolSettings
 import models.user.User
 import services.connection.ConnectionSettingsService
-import utils.Logging
+import utils.{Logging, PasswordEncryptUtils}
 
 import scala.util.control.NonFatal
 
@@ -58,7 +58,7 @@ object DatabaseRegistry extends Logging {
       engine = c.engine,
       url = c.url,
       username = c.username,
-      password = c.password,
+      password = PasswordEncryptUtils.decrypt(c.password),
       maxSize = maxConnections
     )
     try {

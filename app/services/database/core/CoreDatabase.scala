@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.user.User
 import services.config.{ConfigFileService, DatabaseConfig}
 import services.database.{DatabaseConnection, DatabaseRegistry}
-import utils.Logging
+import utils.{Logging, PasswordEncryptUtils}
 
 import scala.util.control.NonFatal
 
@@ -47,7 +47,7 @@ abstract class CoreDatabase extends Logging {
       description = description,
       urlOverride = Some(finalUrl),
       username = config.username,
-      password = config.password,
+      password = PasswordEncryptUtils.encrypt(config.password),
       engine = config.engine
     ))
 
