@@ -50,6 +50,7 @@ object InitService {
     TemplateUtils.clickHandler($("#sidenav-feedback-link"), jq => FeedbackManager.show())
     TemplateUtils.clickHandler($("#sidenav-refresh-link"), jq => MetadataManager.refreshSchema())
     TemplateUtils.clickHandler($("#sidenav-history-link"), jq => HistoryManager.show())
+    js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
   def performInitialAction() = {

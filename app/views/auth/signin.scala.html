@@ -12,7 +12,7 @@
 
             <div class="row">
               <div class="input-field col s12">
-                <input id="input-email" type="text" class="form-control validate" name="email" value="@form("email").value" />
+                <input id="input-email" type="email" class="form-control validate" name="email" value="@form("email").value" />
                 <label for="input-email">@messages("authentication.form.email")</label>
               </div>
               @form.error("email").map { e =>
