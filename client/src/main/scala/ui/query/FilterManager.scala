@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.QueryResult.Source
 import models.schema.FilterOp
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
-import utils.TemplateUtils
+import utils.{Config, TemplateUtils}
 
 object FilterManager {
   def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, resultId: UUID) = {
@@ -59,7 +59,7 @@ object FilterManager {
         filterColumn = Some(column),
         filterOp = Some(FilterOp.withName(op)),
         filterValue = Some(v)
-      ).asRowDataOptions
+      ).asRowDataOptions(Some(Config.pageSize))
 
       RowDataManager.showRowData(key, queryId, name, options, resultId)
     })

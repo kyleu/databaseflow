@@ -59,7 +59,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val finalName = s"${utils.Config.projectId}-export-$ts.$format"
 
     val os = new ByteArrayOutputStream()
-    val sql = EngineQueries.selectFrom(source.name, source.asRowDataOptions)(db.engine)
+    val sql = EngineQueries.selectFrom(source.name, source.asRowDataOptions(None))(db.engine)
     val (mimeType, query) = format match {
       case "csv" => "text/csv" -> CsvExportQuery(sql, os)
       case "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> XlsxExportQuery(finalName, sql, format, os)

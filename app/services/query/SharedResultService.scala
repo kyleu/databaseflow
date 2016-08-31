@@ -53,7 +53,7 @@ object SharedResultService {
       }
     }
 
-    val sql = EngineQueries.selectFrom(sr.source.name, sr.source.asRowDataOptions)(db.engine)
+    val sql = EngineQueries.selectFrom(sr.source.name, sr.source.asRowDataOptions(None))(db.engine)
     db.query(DynamicQuery(sql))
   }
 

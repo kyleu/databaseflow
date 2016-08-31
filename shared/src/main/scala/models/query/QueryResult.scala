@@ -3,6 +3,7 @@ package models.query
 import java.util.UUID
 
 import models.schema.{ColumnType, FilterOp}
+import utils.Config
 
 object QueryResult {
   case class Col(
@@ -25,7 +26,7 @@ object QueryResult {
       filterValue: Option[String] = None,
       dataOffset: Int = 0
   ) {
-    lazy val asRowDataOptions = RowDataOptions(sortedColumn, sortedAscending, filterColumn, filterOp, filterValue, Some(100), Some(dataOffset))
+    def asRowDataOptions(limit: Option[Int]) = RowDataOptions(sortedColumn, sortedAscending, filterColumn, filterOp, filterValue, limit, Some(dataOffset))
   }
 }
 

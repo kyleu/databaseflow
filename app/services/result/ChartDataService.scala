@@ -29,7 +29,7 @@ object ChartDataService extends Logging {
       }
     }
 
-    val sql = EngineQueries.selectFrom(cdr.source.name, cdr.source.asRowDataOptions)(db.engine)
+    val sql = EngineQueries.selectFrom(cdr.source.name, cdr.source.asRowDataOptions(None))(db.engine)
     val q = new DynamicQuery(sql)
 
     val startMs = System.currentTimeMillis

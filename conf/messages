@@ -99,10 +99,10 @@ permissions.registered.users = Registered Users
 permissions.administrators = Administrators
 permissions.only.myself = Only Myself
 
-permissions.visitor.text = everyone
-permissions.user.text = all registered users
-permissions.administrators.text = administrators
-permissions.only.myself.text = only you
+permissions.visitor.text = by everyone
+permissions.user.text = by all registered users
+permissions.administrators.text = by administrators
+permissions.private.text = only by you
 
 
 # Connection Form

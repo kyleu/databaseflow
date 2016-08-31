@@ -52,6 +52,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
             owner = conn.owner,
             read = cf.read,
             edit = cf.edit,
+            description = cf.description,
             engine = DatabaseEngine.withName(cf.engine),
             host = if (cf.isUrl) { None } else { cf.host },
             port = if (cf.isUrl) { None } else { cf.port },

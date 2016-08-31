@@ -9,12 +9,12 @@ object EngineQueries {
     val whereClauseAdditions = options.limit match {
       case Some(l) if engine == Oracle => options.offset match {
         case Some(o) => Some(s" rownum <= ${l + o} and rownum > $o")
-        case None => Some(s" rownum <= $l")
+        case None => None
       }
       case Some(l) => None
       case None => options.offset match {
-        case Some(o) => Some(s" rownum > $o")
-        case None => None
+        case Some(o) if o > 0 => Some(s" rownum > $o")
+        case _ => None
       }
     }
     val preColumnsClause = options.offset match {

@@ -9,7 +9,7 @@ import models.template.query.QueryResultsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.ProgressManager
 import ui.query.{FilterManager, RowDataManager, TableManager}
-import utils.{Logging, TemplateUtils}
+import utils.{Config, Logging, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -59,7 +59,7 @@ object QueryResultService {
 
     FilterManager.init(src.t, result.queryId, src.name, panel, src, resultId)
 
-    val options = src.asRowDataOptions
+    val options = src.asRowDataOptions(Some(Config.pageSize))
     TemplateUtils.clickHandler($(".sorted-title", panel), (j) => {
       val col = j.data("col").toString
       val asc = j.data("dir").toString == "asc"
