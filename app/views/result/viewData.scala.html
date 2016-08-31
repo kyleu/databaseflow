@@ -12,6 +12,9 @@
     <div class="col s12">
       <div class="card">
         <div class="card-content">
+          <div class="right">
+            @views.html.result.export(result)
+          </div>
           @views.html.result.title(result, ownerName)
           <div class="query-result-table">
             <table class="bordered highlight responsive-table">

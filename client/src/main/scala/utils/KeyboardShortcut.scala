@@ -43,6 +43,10 @@ object KeyboardShortcut extends Enum[KeyboardShortcut] {
     AdHocQueryManager.addNewQuery()
   })
 
+  case object FocusEditor extends KeyboardShortcut("enter", "focus.editor", { _ =>
+    EditorManager.focusActive()
+  })
+
   case object CloseTab extends KeyboardShortcut("del", "close.tab", { _ =>
     TabManager.getActiveTab.foreach { id =>
       QueryManager.closeQuery(id)

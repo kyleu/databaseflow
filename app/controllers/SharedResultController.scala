@@ -21,13 +21,20 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
   def view(id: UUID) = withoutSession("result.view") { implicit request =>
     SharedResultService.getById(id) match {
       case Some(sr) =>
-        val results = SharedResultService.getData(request.identity, sr)
-        val ownerName = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookup(sr.owner)
-        sr.chart match {
-          case Some(chart) =>
-            Future.successful(Ok(views.html.result.viewChart(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug)))
-          case None =>
-            Future.successful(Ok(views.html.result.viewData(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug)))
+        val perm = SharedResultService.canView(request.identity, sr)
+        if (perm._1) {
+          val results = SharedResultService.getData(request.identity, sr)
+          val ownerName = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookup(sr.owner)
+          sr.chart match {
+            case Some(chart) => Future.successful(
+              Ok(views.html.result.viewChart(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug))
+            )
+            case None => Future.successful(
+              Ok(views.html.result.viewData(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug))
+            )
+          }
+        } else {
+          Future.successful(BadRequest(s"You do not have permission to view the results you requested. ${perm._2}"))
         }
       case None => Future.successful(BadRequest("We couldn't find the results you requested."))
     }

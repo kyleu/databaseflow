@@ -13,8 +13,8 @@ import services.user.UserService
 import utils.ExceptionUtils
 
 object SavedQueryService {
-  def canRead(user: User, sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "read", sq.read)
-  def canEdit(user: User, sq: SavedQuery) = Role.matchPermissions(user, sq.owner, "query", "edit", sq.edit)
+  def canRead(user: User, sq: SavedQuery) = Role.matchPermissions(Some(user), sq.owner, "query", "read", sq.read)
+  def canEdit(user: User, sq: SavedQuery) = Role.matchPermissions(Some(user), sq.owner, "query", "edit", sq.edit)
 
   def getVisible(userId: UUID) = {
     val sqq = SavedQueryQueries.getVisible(userId)

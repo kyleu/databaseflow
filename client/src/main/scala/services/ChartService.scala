@@ -35,6 +35,7 @@ object ChartService {
 
     charting match {
       case Some(c) =>
+        NetworkMessage.sendMessage(ChartDataRequest(chartId, source))
         val el = $(s"#$chartId")
         $(".loading", el).remove()
 
@@ -56,7 +57,6 @@ object ChartService {
         val chartingLoadSuccess = () => {
           utils.Logging.info("Charting script loaded.")
           charting = Some(js.Dynamic.global.Charting())
-          NetworkMessage.sendMessage(ChartDataRequest(chartId, source))
           loadPlotly()
           startChart(chartId, columns, source)
         }

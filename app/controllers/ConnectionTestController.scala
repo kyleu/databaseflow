@@ -7,7 +7,7 @@ import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
 import services.connection.ConnectionSettingsService
 import services.database.DatabaseRegistry
-import utils.ApplicationContext
+import utils.{ApplicationContext, PasswordEncryptUtils}
 
 import scala.concurrent.Future
 
@@ -36,10 +36,10 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
           val connOpt = ConnectionSettingsService.getById(connectionId)
           almostUpdated.copy(password = connOpt match {
             case Some(c) => c.password
-            case None => ""
+            case None => PasswordEncryptUtils.encrypt("")
           })
         } else {
-          almostUpdated.copy(password = cf.password)
+          almostUpdated.copy(password = PasswordEncryptUtils.encrypt(cf.password))
         }
         val result = DatabaseRegistry.connect(updated, 1)
         result match {

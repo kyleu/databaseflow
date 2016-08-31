@@ -13,7 +13,10 @@
       <div class="card">
         <div class="card-content">
           <div class="right">
-            <a id="chart-settings-link" class="theme-text" href=""><i class="fa @models.template.Icons.settings"></i></a>
+            @views.html.result.export(result)
+            <a id="chart-settings-link" class="result-options-link theme-text" title="Chart Settings" href="">
+              <i class="fa @models.template.Icons.settings"></i>
+            </a>
           </div>
           @views.html.result.title(result, ownerName)
           <div id="@result.id">

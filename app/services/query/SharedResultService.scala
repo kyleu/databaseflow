@@ -19,7 +19,7 @@ object SharedResultService {
 
   def getAll = MasterDatabase.conn.query(SharedResultQueries.getAll())
 
-  def canView(user: User, sr: SharedResult) = Role.matchPermissions(user, sr.owner, "shared result", "read", sr.viewableBy)
+  def canView(user: Option[User], sr: SharedResult) = Role.matchPermissions(user, sr.owner, "shared result", "read", sr.viewableBy)
 
   def getVisible(userId: UUID) = {
     val sqq = SharedResultQueries.getVisible(userId)
@@ -30,7 +30,7 @@ object SharedResultService {
     val startMs = System.currentTimeMillis
     val sqq = SharedResultQueries.getForUser(user.id, connectionId)
     def onSharedResultsSuccess(sharedResults: Seq[SharedResult]) {
-      val viewable = sharedResults.filter(sr => canView(user, sr)._1)
+      val viewable = sharedResults.filter(sr => canView(Some(user), sr)._1)
       val elapsedMs = (System.currentTimeMillis - startMs).toInt
       val usernameMap = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookupMulti(viewable.map(_.owner).toSet)
       out ! SharedResultResponse(viewable, usernameMap, elapsedMs)

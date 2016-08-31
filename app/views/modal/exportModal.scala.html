@@ -1,8 +1,7 @@
 @(connectionId: java.util.UUID)(implicit messages: Messages)<div id="export-modal" class="modal modal-fixed-footer">
-  <form action="@controllers.routes.QueryController.export(connectionId)" method="post">
+  <form action="@controllers.routes.ExportController.exportQuery(connectionId)" method="post">
     <input id="input-export-query-id" name="queryId" type="hidden" value="" />
     <input id="input-export-source" name="source" type="hidden" value="" />
-    <input id="input-export-filename" name="filename" type="hidden" value="" />
     <div class="modal-content">
       <h4>Export Query Result</h4>
       <div class="row">

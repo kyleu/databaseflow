@@ -13,7 +13,6 @@ object ChartSettingsService {
   private[this] def materialSelect(selector: String, el: JQuery) = js.Dynamic.global.$(selector, el).material_select()
 
   private[this] def onSelectChange(id: UUID, key: String, value: String) = {
-    utils.Logging.info(s"Select [$key]: $value")
     val settings = ChartingService.getSettings(id)
     val updated = if (value.trim.isEmpty) {
       settings.copy(selects = settings.selects.filterNot(_._1 == key))
@@ -24,7 +23,6 @@ object ChartSettingsService {
   }
 
   private[this] def onFlagChange(id: UUID, key: String, value: Boolean) = {
-    utils.Logging.info(s"Flag [$key]: $value")
     val settings = ChartingService.getSettings(id)
     val updated = settings.copy(flags = settings.flags + (key -> value))
     ChartingService.updateSettings(id, updated)

@@ -12,11 +12,11 @@ object ConnectionSettingsService {
   def getAll = MasterDatabase.query(ConnectionSettingsQueries.getAll()) ++ MasterDatabase.settings.toSeq
   def getVisible(user: User) = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user)) ++ MasterDatabase.settings.toSeq
 
-  def canRead(user: User, cs: ConnectionSettings) = Role.matchPermissions(user, cs.owner, "connection", "read", cs.read)
+  def canRead(user: User, cs: ConnectionSettings) = Role.matchPermissions(Some(user), cs.owner, "connection", "read", cs.read)
   def canEdit(user: User, cs: ConnectionSettings) = if (cs.id == MasterDatabase.connectionId) {
     false -> "Cannot edit master database."
   } else {
-    Role.matchPermissions(user, cs.owner, "connection", "edit", cs.edit)
+    Role.matchPermissions(Some(user), cs.owner, "connection", "edit", cs.edit)
   }
 
   def getById(id: UUID) = if (id == MasterDatabase.connectionId) {

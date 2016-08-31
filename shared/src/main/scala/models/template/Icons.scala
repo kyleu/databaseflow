@@ -27,6 +27,9 @@ object Icons {
   val close = "fa-close"
 
   val loading = "fa-spinner"
+  val download = "fa-download"
+  val excel = "fa-file-excel-o"
+  val csv = "fa-file-text-o"
 
   val dropdownToggle = "fa-angle-down"
 

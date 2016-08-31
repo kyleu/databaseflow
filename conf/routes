@@ -14,13 +14,14 @@ POST        /c/:id/test                              controllers.ConnectionTestC
 # Query Interface
 GET         /q/:conn                                 controllers.QueryController.main(conn: java.util.UUID)
 GET         /q/:conn/websocket                       controllers.QueryController.connect(conn: java.util.UUID)
-POST        /q/:conn/export                          controllers.QueryController.export(conn: java.util.UUID)
+POST        /q/:conn/export                          controllers.ExportController.exportQuery(conn: java.util.UUID)
 
 # Result Views
 GET         /shared                                  controllers.SharedResultController.index()
 POST        /shared                                  controllers.SharedResultController.save()
 GET         /shared/:id                              controllers.SharedResultController.view(id: java.util.UUID)
 GET         /shared/:id/remove                       controllers.SharedResultController.remove(id: java.util.UUID)
+GET         /shared/:id/export/:fmt                  controllers.ExportController.exportShared(id: java.util.UUID, fmt)
 
 # Admin
 ->          /admin                                   admin.Routes

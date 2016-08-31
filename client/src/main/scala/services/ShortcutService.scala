@@ -12,7 +12,8 @@ object ShortcutService {
 
   def init() = {
     KeyboardShortcut.values.filter(_.isGlobal).foreach { shortcut =>
-      mt.bind(shortcut.pattern, () => {
+      mt.bind(shortcut.pattern, (e: js.Dynamic) => {
+        e.preventDefault()
         shortcut.call(None)
       })
     }

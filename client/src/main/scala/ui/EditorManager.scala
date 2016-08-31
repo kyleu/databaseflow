@@ -37,6 +37,10 @@ object EditorManager {
     runAllLink.click()
   }
 
+  def focusActive() = TabManager.getActiveTab.foreach { id =>
+    SqlManager.getEditor(id).foreach(x => $(x).focus())
+  }
+
   def highlightErrors(queryId: UUID, results: Seq[QueryCheckResult]) = SqlManager.getEditor(queryId).foreach { editor =>
     val doc = editor.getSession().getDocument()
     val fullSql = editor.getValue().toString

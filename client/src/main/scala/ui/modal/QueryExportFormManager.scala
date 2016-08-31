@@ -15,7 +15,6 @@ object QueryExportFormManager {
 
   private[this] val inputQueryId = $("#input-export-query-id", modal)
   private[this] val inputSource = $("#input-export-source", modal)
-  private[this] val inputFilename = $("#input-export-filename", modal)
 
   def init() = {
     TemplateUtils.clickHandler($("#export-cancel-link", modal), jq => modal.closeModal())
@@ -24,7 +23,6 @@ object QueryExportFormManager {
   def show(queryId: UUID, source: QueryResult.Source, filename: String) = {
     inputQueryId.value(queryId.toString)
     inputSource.value(write(source))
-    inputFilename.value(filename)
     modal.openModal()
   }
 }
