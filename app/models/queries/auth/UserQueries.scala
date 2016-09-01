@@ -89,7 +89,7 @@ object UserQueries extends BaseQueries[User] {
   }
 
   case class UpdateFields(id: UUID, username: String, email: String, role: Role) extends Statement {
-    override val sql = s"update $tableName set username = ?, email = ?, role = ? where id = ?"
+    override val sql = s"""update "$tableName" set "username" = ?, "email" = ?, "role" = ? where "id" = ?"""
     override val values = Seq(username, email, role.toString, id)
   }
 }

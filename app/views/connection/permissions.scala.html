@@ -3,14 +3,6 @@
   <div class="card-panel option-panel">
     <h6><i class="fa @{icon}"></i> @title</h6>
     <p>
-      @if(v == models.user.Permission.Visitor) {
-        <input id="form-@key-visitor" name="@key" type="radio" value="visitor" checked="checked" />
-      } else {
-        <input id="form-@key-visitor" name="@key" type="radio" value="visitor" />
-      }
-      <label for="form-@key-visitor">@messages("permissions.everyone")</label>
-    </p>
-    <p>
       @if(v == models.user.Permission.User) {
         <input id="form-@key-user" name="@key" type="radio" value="user" checked="checked" />
       } else {

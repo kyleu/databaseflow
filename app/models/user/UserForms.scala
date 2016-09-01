@@ -21,7 +21,7 @@ object UserForms {
   val profileForm = Form(mapping(
     "username" -> nonEmptyText,
     "language" -> nonEmptyText.transform(
-      (s) => Language.values.find(_.code == s).getOrElse(throw new IllegalStateException()),
+      s => Language.values.find(_.code == s).getOrElse(throw new IllegalStateException()),
       (l: Language) => l.toString
     ),
     "theme" -> nonEmptyText.transform(

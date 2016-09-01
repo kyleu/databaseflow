@@ -1,7 +1,5 @@
 @()(implicit messages: Messages)
-@li(x: Char) = {
-  <li class="collection-item">@messages(s"features.$x")</li>
-}
+@li(x: Char) = {<li class="collection-item">@messages(s"features.$x")</li>}
 <div class="row">
   <div class="col s12">
     <div class="card">
@@ -10,7 +8,7 @@
         <div class="row padded-top">
           <div class="col s12">
             <ul class="collection">
-              @{('a' to 'l').map(li)}
+              @{('a' to 'n').map(li)}
             </ul>
           </div>
         </div>

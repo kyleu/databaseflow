@@ -43,20 +43,14 @@
               <input type="radio" name="role" id="user-radio" value="user" />
             }
             <label for="user-radio">Normal User</label>
-
-            @if(user.role == models.user.Role.Visitor) {
-              <input type="radio" name="role" id="visitor-radio" value="visitor" checked="checked" />
-            } else {
-              <input type="radio" name="role" id="visitor-radio" value="visitor" />
-            }
-            <label for="visitor-radio">Visitor</label>
           </p>
         </div>
       </div>
     </div>
     <div class="card-action">
-      <a class="theme-text right" onclick="$('form').submit();return false;">Save</a>
-      <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(user.id)">Cancel</a>
+      <button class="right btn theme waves-effect waves-light" type="submit">Save</button>
+      <a class="right btn-flat theme-text" href="@controllers.admin.routes.UserEditController.view(user.id)">Cancel</a>
+      <div class="clear"></div>
     </div>
   </form>
 }

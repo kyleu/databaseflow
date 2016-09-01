@@ -14,10 +14,10 @@
   </div>
 }
 
-@roleRadio(name: String, r: models.user.Role, selected: models.user.Role) = {
+@roleRadio(name: String, r: models.user.Role, selected: models.user.Role, title: String) = {
   <div>
     <input type="radio" id="role-@name-@r" name="@name" value="@r" @if(selected == r) { checked="checked" }></input>
-    <label for="role-@name-@r">@r</label>
+    <label for="role-@name-@r">@title</label>
   </div>
 }
 
@@ -48,9 +48,8 @@
           <div class="row">
             <div class="col s12">
             @defining(models.user.Role.withName(services.settings.SettingsService(DefaultNewUserRole))) { newUserRole =>
-              @roleRadio(DefaultNewUserRole.id, models.user.Role.Visitor, newUserRole)
-              @roleRadio(DefaultNewUserRole.id, models.user.Role.User, newUserRole)
-              @roleRadio(DefaultNewUserRole.id, models.user.Role.Admin, newUserRole)
+              @roleRadio(DefaultNewUserRole.id, models.user.Role.User, newUserRole, messages("permissions.registered.users"))
+              @roleRadio(DefaultNewUserRole.id, models.user.Role.Admin, newUserRole, messages("permissions.administrators"))
             }
             </div>
           </div>
@@ -60,9 +59,8 @@
           <div class="row">
             <div class="col s12">
             @defining(models.user.Role.withName(services.settings.SettingsService(AddConnectionRole))) { addConnectionRole =>
-              @roleRadio(AddConnectionRole.id, models.user.Role.Visitor, addConnectionRole)
-              @roleRadio(AddConnectionRole.id, models.user.Role.User, addConnectionRole)
-              @roleRadio(AddConnectionRole.id, models.user.Role.Admin, addConnectionRole)
+              @roleRadio(AddConnectionRole.id, models.user.Role.User, addConnectionRole, messages("permissions.registered.users"))
+              @roleRadio(AddConnectionRole.id, models.user.Role.Admin, addConnectionRole, messages("permissions.administrators"))
             }
             </div>
           </div>

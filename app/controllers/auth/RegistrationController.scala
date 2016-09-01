@@ -42,7 +42,7 @@ class RegistrationController @javax.inject.Inject() (
     UserForms.registrationForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.auth.register(request.identity, form))),
       data => {
-        val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
+        val loginInfo = LoginInfo(CredentialsProvider.ID, data.email.toLowerCase)
         userSearchService.retrieve(loginInfo).flatMap {
           case _ if data.password != data.passwordConfirm => Future.successful(
             Redirect(controllers.auth.routes.RegistrationController.register()).flashing("error" -> Messages("registration.passwords.do.not.match"))

@@ -76,5 +76,6 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
       val authInfo = hasher.hash(p)
       MasterDatabase.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
     }
+    UserCache.removeUser(id)
   }
 }

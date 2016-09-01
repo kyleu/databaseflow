@@ -44,7 +44,6 @@ class UserEditController @javax.inject.Inject() (
     val role = form.get("role") match {
       case Some("admin") => Role.Admin
       case Some("user") => Role.User
-      case Some("visitor") => Role.Visitor
       case x => throw new IllegalStateException(s"Missing role: [$x].")
     }
 

@@ -29,7 +29,8 @@ class AuthenticationController @javax.inject.Inject() (
     UserForms.signInForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.auth.signin(request.identity, form))),
       credentials => {
-        credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
+        val creds = credentials.copy(identifier = credentials.identifier.toLowerCase)
+        credentialsProvider.authenticate(creds).flatMap { loginInfo =>
           val result = Redirect(controllers.routes.HomeController.home())
           userSearchService.retrieve(loginInfo).flatMap {
             case Some(user) =>

@@ -19,10 +19,7 @@ object Role extends Enum[Role] {
     override def qualifies(target: Role) = true
   }
   object User extends Role("user") {
-    override def qualifies(target: Role) = target == Role.User || target == Role.Visitor
-  }
-  object Visitor extends Role("visitor") {
-    override def qualifies(target: Role) = target == Role.Visitor
+    override def qualifies(target: Role) = target == Role.User
   }
 
   def matchPermissions(user: Option[User], owner: UUID, model: String, perm: String, value: Permission) = {

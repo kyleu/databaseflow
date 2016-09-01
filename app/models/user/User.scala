@@ -15,7 +15,7 @@ case class User(
     username: String,
     preferences: UserPreferences,
     profile: LoginInfo,
-    role: Role = Role.Visitor,
+    role: Role = Role.User,
     created: LocalDateTime = DateUtils.now
 ) extends Identity {
   def isAdmin = role == Role.Admin

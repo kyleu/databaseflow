@@ -7,7 +7,6 @@ import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.debian.DebianPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin
-import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
 import com.typesafe.sbt.packager.linux.LinuxPlugin
 import com.typesafe.sbt.packager.rpm.RpmPlugin
 import com.typesafe.sbt.packager.universal.UniversalPlugin
@@ -62,7 +61,7 @@ object Server {
       id = Shared.projectId,
       base = file(".")
     ).enablePlugins(SbtWeb, play.sbt.PlayScala).enablePlugins(
-      UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin, JavaAppPackaging
+      UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JavaAppPackaging
     ).settings(serverSettings: _*).aggregate(projectToRef(Client.client)).settings(Packaging.settings: _*)
 
     Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.licenseModels))

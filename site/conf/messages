@@ -40,7 +40,9 @@ features.h = Responsive design with mobile support
 features.i = Supports H2, MySQL, Oracle, PostgreSQL, and SQL Server
 features.j = Locally installed application
 features.k = No ads, trackers or third-party sites
-features.l = View columns, indexes, key
+features.l = Visualize query execution plans
+features.m = Gorgeous charting and plotting
+features.n = Shared results with permissions
 
 
 # Newsletter

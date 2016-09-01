@@ -32,7 +32,7 @@ class UserCreateController @javax.inject.Inject() (
     val loginInfo = LoginInfo(CredentialsProvider.ID, form("email").trim)
     val role = form.get("role") match {
       case Some(r) => Role.withName(r)
-      case None => Role.Visitor
+      case None => Role.User
     }
     val username = form("username").trim
 

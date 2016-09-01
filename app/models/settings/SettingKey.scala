@@ -26,7 +26,7 @@ object SettingKey extends Enum[SettingKey] {
     id = "add-connection-role",
     title = "Add Connection Role",
     description = "Determines the role required to create new connections.",
-    default = "visitor"
+    default = "user"
   )
 
   case object AllowAuditRemoval extends SettingKey(

@@ -2,7 +2,6 @@ import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.debian.DebianPlugin.autoImport.Debian
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{ dockerExposedPorts => _, dockerExposedVolumes => _, _ }
 import com.typesafe.sbt.packager.windows.WindowsPlugin.autoImport.Windows
-import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport._
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{Docker, dockerExposedPorts, dockerExposedVolumes}
 import sbt.Keys._
 import sbt._
@@ -27,7 +26,7 @@ object Packaging {
 
     // Linux Settings
     packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",
-    topLevelDirectory in Debian := Some("databaseflow"),
+    topLevelDirectory in Debian := Some(Shared.projectId + "-" + Shared.Versions.app),
     debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
     rpmVendor := "Database Flow",
     linuxPackageMappings := linuxPackageMappings.value.filter(_.fileData.config != "false"),

@@ -25,11 +25,11 @@ object ConfigFileService extends Logging {
     } else {
       val dir = System.getProperty("user.home")
       val cleanDir = if (dir == "/usr/sbin") {
-        "/opt/databaseflow" // Docker bullshit
+        new java.io.File("/opt/databaseflow") // Docker bullshit
       } else {
-        dir
+        new java.io.File(dir)
       }
-      new java.io.File(cleanDir) -> ".databaseflow"
+      cleanDir -> ".databaseflow"
     }
 
     if (homeDir.exists) {

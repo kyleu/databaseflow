@@ -21,11 +21,9 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   def getAll(orderBy: String = "\"name\"") = GetAll(orderBy = orderBy)
   def getVisible(owner: User, orderBy: String = "\"name\"") = {
     val readPerms = if (owner.role == Role.Admin) {
-      "\"read\" in ('visitor', 'user', 'admin')"
-    } else if (owner.role == Role.User) {
-      "\"read\" in ('visitor', 'user')"
+      "\"read\" in ('user', 'admin')"
     } else {
-      "\"read\" = 'visitor'"
+      "\"read\" = 'user'"
     }
     val ownerPerms = " or \"owner\" = ?"
     val values = Seq(owner.id)
