@@ -27,7 +27,17 @@ object ConfigFileService extends Logging {
       val cleanDir = if (dir == "/usr/sbin") {
         new java.io.File("/opt/databaseflow") // Docker bullshit
       } else {
-        new java.io.File(dir)
+        val d = new java.io.File(dir)
+        if(d.isDirectory && d.canWrite) {
+          d
+        } else {
+          val share = new java.io.File("/usr/share/" + utils.Config.projectId)
+          if(share.isDirectory && share.canWrite) {
+            share
+          } else {
+            throw new IllegalStateException("Cannot find directory to write config file.")
+          }
+        }
       }
       cleanDir -> ".databaseflow"
     }
