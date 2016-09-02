@@ -1,4 +1,6 @@
 GET         /                           controllers.admin.AdminController.index
+GET         /status                     controllers.admin.AdminController.status
+GET         /metrics                    controllers.admin.MetricsController.showMetrics
 
 GET         /users/new                  controllers.admin.UserCreateController.newUser()
 POST        /users/new                  controllers.admin.UserCreateController.saveNewUser()

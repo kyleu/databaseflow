@@ -44,7 +44,7 @@ class UserCreateController @javax.inject.Inject() (
       val user = User(
         id = id,
         username = username,
-        preferences = UserPreferences(),
+        preferences = UserPreferences.empty,
         profile = loginInfo,
         role = role
       )

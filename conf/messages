@@ -182,19 +182,29 @@ user.password.check.fail = Old password does not match ({0}).
 
 # Admin
 admin.title = Administration
+admin.back.title = Back
+
 admin.index.title = {0} Administration
 admin.index.prompt = Use the menu above or the links below to get started!
+
+admin.status.link = Status
+admin.status.title = {0} Status
+admin.status.description = View license details and system status.
+admin.status.metrics.title = System Metrics
 
 admin.settings.link = Settings
 admin.settings.title = System Settings
 admin.settings.description = Edit system settings and preferences.
 admin.settings.invalid = Attempt to save invalid setting [{0}].
+
 admin.users.link = Users
 admin.users.title = User Management
 admin.users.description = Manage the users of the system.
+
 admin.results.link = Results
 admin.results.title = Cached Query Results
 admin.results.description = View cached query results that have been saved.
+
 admin.activity.link = Activity
 admin.activity.title = User Activity
 admin.activity.description = Show system activity for all users in the system.

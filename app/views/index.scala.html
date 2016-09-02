@@ -9,7 +9,7 @@
           <p>@messages("index.welcome", utils.Config.projectName)</p>
 
           @if(connections.isEmpty) {
-            <h5>@messages("index.no.connections")</h5>
+            <div>@messages("index.no.connections")</div>
           } else {
             <div>@views.html.connection.list(user, connections)</div>
           }

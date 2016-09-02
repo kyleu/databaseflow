@@ -24,6 +24,10 @@
             <a class="theme-text" href="@controllers.admin.routes.ActivityController.activity()">@messages("admin.activity.title")</a>
             <div><em>@messages("admin.activity.description")</em></div>
           </li>
+          <li class="collection-item">
+            <a class="theme-text" href="@controllers.admin.routes.AdminController.status()">@messages("admin.status.title", utils.Config.projectName)</a>
+            <div><em>@messages("admin.status.description")</em></div>
+          </li>
         </ul>
       </div>
     </div>

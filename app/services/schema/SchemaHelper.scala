@@ -28,17 +28,19 @@ object SchemaHelper extends Logging {
       schemaTerm = metadata.getSchemaTerm,
       procedureTerm = metadata.getProcedureTerm,
       maxSqlLength = metadata.getMaxStatementLength,
-
+      timezone = 0,
       tables = Nil,
       views = Nil,
       procedures = Nil
     )
 
+    val timezone = MetadataTimezone.getTimezone(db, db.engine)
     val tables = MetadataTables.getTables(metadata, catalogName, schemaName)
     val views = MetadataViews.getViews(metadata, catalogName, schemaName)
     val procedures = MetadataProcedures.getProcedures(metadata, catalogName, schemaName)
 
     val schema = schemaModel.copy(
+      timezone = timezone,
       tables = tables,
       views = views,
       procedures = procedures

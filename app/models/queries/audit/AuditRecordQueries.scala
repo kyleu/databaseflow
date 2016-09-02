@@ -51,7 +51,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
     }
   }
   case object RemoveAll extends Statement {
-    override val sql = s"truncate $tableName"
+    override val sql = s"""truncate table "$tableName""""
   }
 
   override def fromRow(row: Row) = AuditRecord(

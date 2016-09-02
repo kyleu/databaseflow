@@ -1,0 +1,46 @@
+@(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@layout.admin(user, "status", messages("admin.status.title", utils.Config.projectName), debug = debug) {
+  <div class="card-content">
+    <div class="card-title">@messages("admin.status.title", utils.Config.projectName)</div>
+
+    <div class="row">
+      <div class="col s12">
+        <ul class="collection">
+          <li class="collection-item">
+            <a href="@controllers.admin.routes.MetricsController.showMetrics()" class="theme-text">Configuration</a>
+            @defining(services.config.ConfigFileService.configDir) { c =>
+              <div>Loaded from @c.getAbsolutePath</div>
+            }
+          </li>
+          <li class="collection-item">
+            <a href="@controllers.routes.LicenseController.form()" class="theme-text">License Details</a>
+            @defining(services.licensing.LicenseService.getLicense) { l =>
+              @if(l.isEmpty) {
+                <div>No license configured.</div>
+              } else {
+                @defining(utils.DateUtils.niceDate(utils.DateUtils.fromMillis(l.get.issued).toLocalDate)) { issued =>
+                  <div>@l.get.edition.title, issued @issued to @l.get.name (@l.get.email)</div>
+                }
+              }
+            }
+          </li>
+          <li class="collection-item">
+            @defining(services.database.core.MasterDatabase.settings.get) { c =>
+              <a href="@controllers.routes.QueryController.main(c.id)" class="theme-text">Master Database</a>
+              <div>@c.engine.name database loaded from [@c.url].</div>
+            }
+          </li>
+          <li class="collection-item">
+            @defining(services.database.core.ResultCacheDatabase.settings.get) { c =>
+              <a href="@controllers.routes.QueryController.main(c.id)" class="theme-text">Result Cache</a>
+              <div>@c.engine.name database loaded from [@c.url].</div>
+            }
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card-action">
+    <a class="theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.back.title")</a>
+  </div>
+}

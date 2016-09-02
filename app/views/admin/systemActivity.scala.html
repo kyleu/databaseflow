@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="card-action">
-    <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.back.title")</a>
+    <a class="theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.back.title")</a>
     @if(activity.size == limit) {
       <a class="right-link theme-text load-more-link" href="@controllers.admin.routes.ActivityController.activity(limit, offset + limit)">
         @messages("activity.load.more", limit)

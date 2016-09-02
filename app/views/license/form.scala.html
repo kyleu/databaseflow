@@ -31,7 +31,9 @@
                     </tbody>
                   </table>
                 }
-                <p>To obtain a license (for free!), head to <a class="theme-text" href="@utils.Config.projectUrl">databaseflow.com</a>.</p>
+                @if(license.isEmpty) {
+                  <p>To obtain a license (for free!), head to <a class="theme-text" href="@utils.Config.projectUrl">databaseflow.com</a>.</p>
+                }
               </div>
               <div class="input-field col s12">
                 <textarea

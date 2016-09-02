@@ -15,7 +15,7 @@ object CachedResultActor {
 
 class CachedResultActor() extends InstrumentedActor with Logging {
   override def preStart() = {
-    log.info("Query result cache cleanup is scheduled to run every ten minutes.")
+    log.debug("Query result cache cleanup is scheduled to run every ten minutes.")
     context.system.scheduler.schedule(10.minutes, 10.minutes, self, CachedResultActor.Cleanup(None))
   }
 

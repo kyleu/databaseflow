@@ -35,6 +35,11 @@
         } else {
           <li><a href="@controllers.admin.routes.ActivityController.activity()">@messages("admin.activity.link")</a></li>
         }
+        @if(activeSection == "status") {
+          <li class="active"><a href="@controllers.admin.routes.AdminController.status()">@messages("admin.status.link")</a></li>
+        } else {
+          <li><a href="@controllers.admin.routes.AdminController.status()">@messages("admin.status.link")</a></li>
+        }
       </ul>
 
       <ul class="right hide-on-small-only">

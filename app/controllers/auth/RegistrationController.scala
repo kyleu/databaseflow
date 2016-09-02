@@ -61,7 +61,7 @@ class RegistrationController @javax.inject.Inject() (
             val user = User(
               id = UUID.randomUUID,
               username = data.username,
-              preferences = UserPreferences(),
+              preferences = UserPreferences.empty,
               profile = loginInfo,
               role = role
             )
