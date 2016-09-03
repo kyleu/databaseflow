@@ -1,5 +1,6 @@
 package services
 
+import java.net.URLDecoder
 import java.util.UUID
 
 import models.RequestMessage
@@ -83,6 +84,7 @@ object InitService {
       }
       case ("view", Some(id)) => ViewManager.viewDetail(id)
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
+      case ("sql", Some(sql)) => AdHocQueryManager.addNewQuery(initialSql = Some(URLDecoder.decode(sql, "UTF-8")))
       case (key, id) =>
         Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
         AdHocQueryManager.addNewQuery()

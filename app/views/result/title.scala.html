@@ -1,3 +1,8 @@
 @(result: models.query.SharedResult, username: String)
 <span class="card-title"> @result.title</span>
-<div><em>Created @utils.DateUtils.niceDate(utils.DateUtils.fromMillis(result.created).toLocalDate) by @username</em></div>
+<div>
+  <em>Created @utils.DateUtils.niceDate(utils.DateUtils.fromMillis(result.created).toLocalDate) by @username</em>
+</div>
+<div class="z-depth-1 query-result-sql">
+  <pre class="pre-wrap">@result.sql</pre>
+</div>

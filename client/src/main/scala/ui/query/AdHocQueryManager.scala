@@ -18,20 +18,23 @@ import scala.util.Random
 object AdHocQueryManager {
   private[this] var lastNum = 1
 
-  def addNewQuery(queryId: UUID = UUID.randomUUID) = {
+  def addNewQuery(queryId: UUID = UUID.randomUUID, initialSql: Option[String] = None) = {
     val queryName = if (lastNum == 1) {
       Messages("query.default.name", "").trim
     } else {
       Messages("query.default.name", lastNum)
     }
-    val sql = MetadataManager.schema.map { s =>
-      if (s.tables.isEmpty) {
-        ""
-      } else {
-        val t = s.tables(Random.nextInt(s.tables.size)).name
-        EngineQueries.selectFrom(t, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
-      }
-    }.getOrElse("")
+    val sql = initialSql match {
+      case Some(s) => s
+      case None => MetadataManager.schema.map { s =>
+        if (s.tables.isEmpty) {
+          ""
+        } else {
+          val t = s.tables(Random.nextInt(s.tables.size)).name
+          EngineQueries.selectFrom(t, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
+        }
+      }.getOrElse("")
+    }
     addAdHocQuery(queryId, queryName, sql)
     lastNum += 1
   }

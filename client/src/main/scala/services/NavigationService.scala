@@ -33,6 +33,7 @@ object NavigationService {
     case x if x.startsWith("table-") => "table" -> Some(x.substring(6))
     case x if x.startsWith("view-") => "view" -> Some(x.substring(5))
     case x if x.startsWith("procedure-") => "procedure" -> Some(x.substring(10))
+    case x if x.startsWith("sql-") => "sql" -> Some(x.substring(4))
     case x =>
       Logging.warn(s"Unhandled initial action [$x].")
       "new" -> None
