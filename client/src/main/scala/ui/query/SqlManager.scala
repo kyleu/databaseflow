@@ -2,29 +2,25 @@ package ui.query
 
 import java.util.UUID
 
-import models.CheckQuery
 import models.query.SqlParser
-import org.scalajs.dom
 import org.scalajs.jquery.JQuery
 import ui.EditorCreationHelper
-import utils.{Messages, NetworkMessage}
+import utils.Messages
 
 import scala.scalajs.js
 
 object SqlManager {
   var sqlEditors = Map.empty[UUID, js.Dynamic]
-  var sqlChecks = Map.empty[UUID, String]
 
   def newEditor(queryId: UUID, onChange: (String) => Unit) = {
     val editor = EditorCreationHelper.initSqlEditor(queryId, (s: String) => {
-      val changed = !sqlChecks.get(queryId).contains(s)
-      if (changed) {
-        check(queryId)
+      if (QueryCheckManager.isChanged(queryId, s)) {
+        ParameterManager.onChange(queryId, s)
+        QueryCheckManager.check(queryId, s)
         onChange(s)
       }
     })
     sqlEditors = sqlEditors + (queryId -> editor)
-
     editor
   }
 
@@ -76,21 +72,11 @@ object SqlManager {
     case _ => // no op
   }
 
-  def check(queryId: UUID) = {
-    val sql = getSql(queryId)
-    dom.window.setTimeout(() => {
-      val currentSql = getSql(queryId)
-      if (currentSql == sql) {
-        sqlChecks = sqlChecks + (queryId -> sql)
-        NetworkMessage.sendMessage(CheckQuery(queryId, sql))
-      }
-    }, 2000)
-  }
-
   def closeQuery(queryId: UUID): Unit = {
     sqlEditors.get(queryId).foreach(_.destroy())
     sqlEditors = sqlEditors - queryId
-    sqlChecks = sqlChecks - queryId
+    QueryCheckManager.remove(queryId)
+    ParameterManager.remove(queryId)
   }
 
   def blurEditor(queryId: UUID) = sqlEditors.get(queryId) match {

@@ -6,11 +6,11 @@ import models.database.{Query, Row}
 import models.engine.DatabaseEngine.{MySQL, PostgreSQL}
 import models.schema.Table
 import services.database.DatabaseConnection
-import utils.NullUtils
+import utils.{Logging, NullUtils}
 
 import scala.util.control.NonFatal
 
-object MetadataTables {
+object MetadataTables extends Logging {
   def getTables(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
     new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
@@ -20,7 +20,7 @@ object MetadataTables {
     getTableDetails(db, conn, metadata, table)
   }
 
-  private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = {
+  private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = try {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override val sql = "show create table " + db.engine.cap.leftQuote + table.name + db.engine.cap.rightQuote
@@ -78,6 +78,10 @@ object MetadataTables {
 
       createTime = rowStats.flatMap(_._6)
     )
+  } catch {
+    case NonFatal(x) =>
+      log.warn(s"Cannot get table details for [${table.name}]", x)
+      table
   }
 
   private[this] def fromRow(row: Row) = {

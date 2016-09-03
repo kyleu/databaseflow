@@ -9,7 +9,11 @@ import scalatags.Text.all._
 object QueryErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String) = {
     val content = div(id := qe.id.toString)(
-      p("Executed ", TemplateUtils.toTimeago(dateIsoString), s" in [${qe.durationMs}ms]."),
+      a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql")),
+      p("Error encountered ", TemplateUtils.toTimeago(dateIsoString), s" in [${qe.durationMs}ms]."),
+      div(cls := "z-depth-1 query-result-sql")(
+        pre(cls := "pre-wrap")(qe.error.sql)
+      ),
       p(cls := "error-detail-message")(qe.error.message),
       if (qe.error.index.isEmpty) {
         ""
@@ -20,7 +24,6 @@ object QueryErrorTemplate {
 
     StaticPanelTemplate.cardRow(
       content = content,
-      iconAndTitle = Some(Icons.error -> span(Messages("query.error"))),
       showClose = false
     )
   }

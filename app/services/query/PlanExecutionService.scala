@@ -38,11 +38,12 @@ object PlanExecutionService extends Logging {
     }
   }
 
-  def handleExplainQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, resultId: UUID, out: ActorRef): Unit = {
+  def handleExplainQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, params: Map[String, String], resultId: UUID, out: ActorRef) = {
     engine.cap.explain match {
       case Some(explain) =>
         def work() = {
-          val explainSql = explain(sql)
+          val merged = ParameterService.merge(sql, params)
+          val explainSql = explain(merged)
           log.info(s"Performing query action [explain] with resultId [$resultId] for query [$queryId] with sql [$explainSql].")
           getResult(db, engine, queryId, sql, explainSql, resultId)
         }
@@ -54,11 +55,12 @@ object PlanExecutionService extends Logging {
     }
   }
 
-  def handleAnalyzeQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, resultId: UUID, out: ActorRef): Unit = {
+  def handleAnalyzeQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, params: Map[String, String], resultId: UUID, out: ActorRef) = {
     engine.cap.analyze match {
       case Some(analyze) =>
         def work() = {
-          val analyzeSql = analyze(sql)
+          val merged = ParameterService.merge(sql, params)
+          val analyzeSql = analyze(merged)
           log.info(s"Performing query action [analyze] with resultId [$resultId] for query [$queryId] with sql [$analyzeSql].")
           getResult(db, engine, queryId, sql, analyzeSql, resultId)
         }

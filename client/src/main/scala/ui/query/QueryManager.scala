@@ -13,26 +13,27 @@ object QueryManager {
 
   lazy val workspace = $("#workspace")
 
-  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, onChange: (String) => Unit): Unit = {
+  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, sql: String, onChange: (String) => Unit): Unit = {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
-    def wire(q: JQuery, action: String, sql: () => String) = TemplateUtils.clickHandler(q, jq => {
+    def wire(q: JQuery, action: String, sql: () => (String, Map[String, String])) = TemplateUtils.clickHandler(q, jq => {
       val resultId = UUID.randomUUID
       ProgressManager.startProgress(queryId, resultId, title)
-      NetworkMessage.sendMessage(SubmitQuery(queryId, sql(), Some(action), resultId))
+      val r = sql()
+      NetworkMessage.sendMessage(SubmitQuery(queryId, r._1, r._2, Some(action), resultId))
     })
 
     val runQueryLink = $(".run-query-link", queryPanel)
-    wire(runQueryLink, "run", () => SqlManager.getActiveSql(queryId))
+    wire(runQueryLink, "run", () => ParameterManager.getParams(SqlManager.getActiveSql(queryId), queryId))
 
-    wire($(".explain-query-link", queryPanel), "explain", () => SqlManager.getActiveSql(queryId))
-    wire($(".analyze-query-link", queryPanel), "analyze", () => SqlManager.getActiveSql(queryId))
+    wire($(".explain-query-link", queryPanel), "explain", () => ParameterManager.getParams(SqlManager.getActiveSql(queryId), queryId))
+    wire($(".analyze-query-link", queryPanel), "analyze", () => ParameterManager.getParams(SqlManager.getActiveSql(queryId), queryId))
 
     val runQueryAllLink = $(".run-query-all-link", queryPanel)
-    wire(runQueryAllLink, "run", () => SqlManager.getSql(queryId))
+    wire(runQueryAllLink, "run", () => ParameterManager.getParams(SqlManager.getSql(queryId), queryId))
 
     val runSelectionLink = $(".run-query-selection-link", queryPanel)
-    wire(runSelectionLink, "run", () => sqlEditor.getSelectedText().toString.trim)
+    wire(runSelectionLink, "run", () => ParameterManager.getParams(sqlEditor.getSelectedText().toString.trim, queryId))
 
     def showRunSelection() = {
       val txt = sqlEditor.getSelectedText().toString.trim
@@ -53,7 +54,8 @@ object QueryManager {
 
     showRunSelection()
     SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
-    SqlManager.check(queryId)
+    ParameterManager.onChange(queryId, sql)
+    QueryCheckManager.check(queryId, sql)
   }
 
   def closeQuery(queryId: UUID): Unit = {

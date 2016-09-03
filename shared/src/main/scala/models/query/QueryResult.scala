@@ -3,7 +3,6 @@ package models.query
 import java.util.UUID
 
 import models.schema.{ColumnType, FilterOp}
-import utils.Config
 
 object QueryResult {
   case class Col(

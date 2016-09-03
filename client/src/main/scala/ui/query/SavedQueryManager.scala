@@ -90,6 +90,6 @@ object SavedQueryManager {
       SqlManager.updateLinks(savedQuery.id, runQueryLink, runQueryAllLink)
     }
 
-    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, onChange)
+    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, savedQuery.sql, onChange)
   }
 }

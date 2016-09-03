@@ -22,8 +22,9 @@ import scala.concurrent.Future
 object QueryExecutionService extends Logging {
   private[this] val activeQueries = collection.mutable.HashMap.empty[UUID, PreparedStatement]
 
-  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, resultId: UUID, connectionId: UUID, owner: UUID, out: ActorRef) = {
-    val statements = SqlParser.split(sql)
+  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, params: Map[String, String], resultId: UUID, connectionId: UUID, owner: UUID, out: ActorRef) = {
+    val merged = ParameterService.merge(sql, params)
+    val statements = SqlParser.split(merged)
     val first = statements.headOption.getOrElse(throw new IllegalStateException("Missing statement"))._1
     val remaining = statements.tail.map(_._1)
     handleRunStatements(db, queryId, first -> 0, resultId, connectionId, owner, out, remaining)

@@ -74,7 +74,7 @@ query.plan.error = Plan Error
 query.unsaved.changes = This query has unsaved changes.
 query.default.name = Unsaved Query {0}
 query.open.relation = Open [{0}] table filtered where [{1}].
-query.index.error = Error encountered at index [{0}].
+query.index.error = Error encountered at index {0}.
 query.chart.loading = Loading chart options...
 
 # Feedback
@@ -110,6 +110,7 @@ help.hotkey.help = Help
 help.hotkey.search = Search
 help.hotkey.refresh.schema = Refresh Schema
 help.hotkey.new.query = New Query
+help.hotkey.focus.editor = Focus SQL Editor
 help.hotkey.close.tab = Close Tab
 help.hotkey.next.tab = Select Next Tab
 help.hotkey.previous.tab = Select Previous Tab

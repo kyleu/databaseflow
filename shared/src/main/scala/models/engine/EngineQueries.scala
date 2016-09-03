@@ -23,8 +23,8 @@ object EngineQueries {
     }
     val postQueryClauses = options.limit match {
       case Some(l) if engine == H2 || engine == MySQL || engine == PostgreSQL || engine == SQLite => options.offset match {
-        case Some(o) => s" limit $l offset $o"
-        case None => s" limit $l"
+        case Some(o) if o > 0 => s" limit $l offset $o"
+        case _ => s" limit $l"
       }
       case Some(l) if engine == Informix => s" limit $l"
       case Some(l) if engine == SQLServer => options.offset match {
@@ -33,8 +33,8 @@ object EngineQueries {
       }
       case Some(e) => throw new IllegalStateException(s"No limit support for engine [$engine].")
       case None => options.offset match {
-        case Some(o) => s" offset $o rows"
-        case None => ""
+        case Some(o) if o > 0 => s" offset $o rows"
+        case _ => ""
       }
     }
 

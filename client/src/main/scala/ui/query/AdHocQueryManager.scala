@@ -67,6 +67,6 @@ object AdHocQueryManager {
       SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
     }
 
-    QueryManager.addQuery(queryId, "Untitled Query", queryPanel, onChange)
+    QueryManager.addQuery(queryId, "Untitled Query", queryPanel, sql, onChange)
   }
 }

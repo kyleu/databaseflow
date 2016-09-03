@@ -28,7 +28,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case CommitTransaction => timeReceive(CommitTransaction) { handleCommitTransaction() }
 
     case cq: CheckQuery => timeReceive(cq) { QueryCheckService.handleCheckQuery(db, cq.queryId, cq.sql, out) }
-    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.action.getOrElse("run"), sq.resultId) }
+    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.params, sq.action.getOrElse("run"), sq.resultId) }
     case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId) }
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
     case cq: CloseQuery => timeReceive(cq) { CachedResultService.removeCacheResults(user.id, cq.queryId) }
@@ -50,10 +50,10 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case x => throw new IllegalArgumentException(s"Unhandled request message [${x.getClass.getSimpleName}].")
   }
 
-  private[this] def handleSubmitQuery(queryId: UUID, sql: String, action: String, resultId: UUID) = action match {
-    case "run" => QueryExecutionService.handleRunQuery(activeTransaction.getOrElse(db), queryId, sql, resultId, connectionId, user.id, out)
-    case "explain" => PlanExecutionService.handleExplainQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, resultId, out)
-    case "analyze" => PlanExecutionService.handleAnalyzeQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, resultId, out)
+  private[this] def handleSubmitQuery(queryId: UUID, sql: String, params: Map[String, String], action: String, resultId: UUID) = action match {
+    case "run" => QueryExecutionService.handleRunQuery(activeTransaction.getOrElse(db), queryId, sql, params, resultId, connectionId, user.id, out)
+    case "explain" => PlanExecutionService.handleExplainQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, params, resultId, out)
+    case "analyze" => PlanExecutionService.handleAnalyzeQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, params, resultId, out)
     case _ => throw new IllegalArgumentException(action)
   }
 

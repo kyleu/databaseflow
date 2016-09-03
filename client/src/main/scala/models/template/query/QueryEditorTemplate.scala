@@ -48,7 +48,8 @@ object QueryEditorTemplate {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(
         content = div(
-          div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql)
+          div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
+          div(cls := "sql-parameters initially-hidden")
         ),
         iconAndTitle = Some(icon -> span(queryName, span(cls := "unsaved-status", title := Messages("query.unsaved.changes"))("*"))),
         actions = links
