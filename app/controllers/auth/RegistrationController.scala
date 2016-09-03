@@ -66,11 +66,15 @@ class RegistrationController @javax.inject.Inject() (
               role = role
             )
             val userSaved = userService.save(user)
+            val result = request.session.get("returnUrl") match {
+              case Some(url) => Redirect(url).withSession(request.session - "returnUrl")
+              case None => Redirect(controllers.routes.HomeController.home())
+            }
             for {
               authInfo <- authInfoRepository.add(loginInfo, authInfo)
               authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
               value <- ctx.silhouette.env.authenticatorService.init(authenticator)
-              result <- ctx.silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.HomeController.home()))
+              result <- ctx.silhouette.env.authenticatorService.embed(value, result)
             } yield {
               ctx.silhouette.env.eventBus.publish(SignUpEvent(userSaved, request))
               ctx.silhouette.env.eventBus.publish(LoginEvent(userSaved, request))

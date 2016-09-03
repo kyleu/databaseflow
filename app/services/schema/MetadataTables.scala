@@ -63,19 +63,15 @@ object MetadataTables extends Logging {
 
     table.copy(
       definition = definition,
-
       storageEngine = rowStats.flatMap(_._2),
-
       rowCountEstimate = rowStats.map(_._3),
       averageRowLength = rowStats.flatMap(_._4),
       dataLength = rowStats.flatMap(_._5),
-
       columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name),
       rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
       indexes = MetadataIndexes.getIndexes(metadata, table),
-
       createTime = rowStats.flatMap(_._6)
     )
   } catch {
@@ -84,18 +80,15 @@ object MetadataTables extends Logging {
       table
   }
 
-  private[this] def fromRow(row: Row) = {
-    val definition = try {
+  private[this] def fromRow(row: Row) = Table(
+    name = row.as[String]("TABLE_NAME"),
+    catalog = row.asOpt[String]("TABLE_CAT"),
+    schema = row.asOpt[String]("TABLE_SCHEM"),
+    description = row.asOpt[String]("REMARKS"),
+    definition = try {
       row.asOpt[String]("SQL")
     } catch {
       case NonFatal(x) => None
     }
-    Table(
-      name = row.as[String]("TABLE_NAME"),
-      catalog = row.asOpt[String]("TABLE_CAT"),
-      schema = row.asOpt[String]("TABLE_SCHEM"),
-      description = row.asOpt[String]("REMARKS"),
-      definition = definition
-    )
-  }
+  )
 }

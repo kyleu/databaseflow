@@ -89,8 +89,8 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   )
 
   override protected def toDataSeq(sr: SharedResult) = Seq[Any](
-    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql,
-    sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending, sr.source.filterColumn, sr.source.filterOp.map(_.toString), sr.source.filterValue,
+    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql, sr.source.t,
+    sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending, sr.source.filterColumn, sr.source.filterOp.map(_.toString), sr.source.filterValue,
     sr.chart, new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)
   )
 }

@@ -22,7 +22,9 @@ class AuthenticationController @javax.inject.Inject() (
     credentialsProvider: CredentialsProvider
 ) extends BaseController {
   def signInForm = withoutSession("form") { implicit request =>
-    Future.successful(Ok(views.html.auth.signin(request.identity, UserForms.signInForm)))
+    val src = request.headers.get("Referer").filter(_.contains(request.host))
+    val resp = Ok(views.html.auth.signin(request.identity, UserForms.signInForm))
+    Future.successful(resp)
   }
 
   def authenticateCredentials = withoutSession("authenticate") { implicit request =>
@@ -31,7 +33,10 @@ class AuthenticationController @javax.inject.Inject() (
       credentials => {
         val creds = credentials.copy(identifier = credentials.identifier.toLowerCase)
         credentialsProvider.authenticate(creds).flatMap { loginInfo =>
-          val result = Redirect(controllers.routes.HomeController.home())
+          val result = request.session.get("returnUrl") match {
+            case Some(url) => Redirect(url).withSession(request.session - "returnUrl")
+            case None => Redirect(controllers.routes.HomeController.home())
+          }
           userSearchService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>

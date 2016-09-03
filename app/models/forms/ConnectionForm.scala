@@ -1,5 +1,7 @@
 package models.forms
 
+import models.connection.ConnectionSettings
+import models.engine.DatabaseEngine
 import models.user.Permission
 import play.api.data.Form
 import play.api.data.Forms._
@@ -40,4 +42,18 @@ case class ConnectionForm(
     edit: Permission
 ) {
   def isUrl = toggle == "url"
+
+  def copyWith(conn: ConnectionSettings) = conn.copy(
+    name = name,
+    read = read,
+    edit = edit,
+    description = description,
+    engine = DatabaseEngine.withName(engine),
+    host = if (isUrl) { None } else { host },
+    port = if (isUrl) { None } else { port },
+    dbName = if (isUrl) { None } else { dbName },
+    extra = if (isUrl) { None } else { extra },
+    urlOverride = if (isUrl) { urlOverride } else { None },
+    username = username
+  )
 }

@@ -47,20 +47,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
           BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
         },
         cf => {
-          val almostUpdated = conn.copy(
-            name = cf.name,
-            owner = conn.owner,
-            read = cf.read,
-            edit = cf.edit,
-            description = cf.description,
-            engine = DatabaseEngine.withName(cf.engine),
-            host = if (cf.isUrl) { None } else { cf.host },
-            port = if (cf.isUrl) { None } else { cf.port },
-            dbName = if (cf.isUrl) { None } else { cf.dbName },
-            extra = if (cf.isUrl) { None } else { cf.extra },
-            urlOverride = if (cf.isUrl) { cf.urlOverride } else { None },
-            username = cf.username
-          )
+          val almostUpdated = cf.copyWith(conn)
           val updated = if (cf.password.trim.isEmpty) {
             almostUpdated.copy(password = conn.password)
           } else {

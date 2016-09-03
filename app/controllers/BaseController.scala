@@ -50,7 +50,12 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
           }
           case None => Future.successful(Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing(
             "error" -> messagesApi("error.must.sign.in", utils.Config.projectName)
-          ))
+          )).map(r => if (!request.uri.contains("signin")) {
+            r.withSession(r.session + ("returnUrl" -> request.uri))
+          } else {
+            log.info(s"Skipping returnUrl for external url [${request.uri}].")
+            r
+          })
         }
       }
     }
