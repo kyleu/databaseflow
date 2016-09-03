@@ -1,9 +1,11 @@
 package models.queries
 
 import java.sql.ResultSetMetaData
+import java.util.UUID
 
 import models.database.{Query, Row}
 import models.query.QueryResult
+import org.h2.jdbc.JdbcClob
 
 object DynamicQuery {
   case class Results(
@@ -12,6 +14,8 @@ object DynamicQuery {
   )
 
   def transform(x: Any) = x match {
+    case c: JdbcClob => c.getSubString(1, c.length().toInt)
+    case a: Array[Byte] if a.length == 16 => UUID.nameUUIDFromBytes(a).toString
     case _ => x.toString
   }
 

@@ -22,6 +22,7 @@ object QueryResultEvents {
       SharedResultFormManager.show(SharedResult(
         owner = UserManager.userId.getOrElse(throw new IllegalStateException()),
         connectionId = NavigationService.connectionId,
+        sql = result.sql,
         source = result.source.getOrElse(throw new IllegalStateException()),
         chart = chart
       ))

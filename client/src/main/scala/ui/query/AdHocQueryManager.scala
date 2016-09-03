@@ -52,7 +52,8 @@ object AdHocQueryManager {
 
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val owner = UserManager.userId.getOrElse(throw new IllegalStateException())
-      SavedQueryFormManager.show(SavedQuery(queryId, queryName, sql = SqlManager.getSql(queryId), owner = owner))
+      val params = ParameterManager.getParamsOpt(queryId)
+      SavedQueryFormManager.show(SavedQuery(queryId, queryName, sql = sql, params = params, owner = owner))
     })
 
     val runQueryLink = $(".run-query-link", queryPanel)
@@ -67,6 +68,6 @@ object AdHocQueryManager {
       SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
     }
 
-    QueryManager.addQuery(queryId, "Untitled Query", queryPanel, sql, onChange)
+    QueryManager.addQuery(queryId, "Untitled Query", queryPanel, sql, Map.empty, onChange)
   }
 }

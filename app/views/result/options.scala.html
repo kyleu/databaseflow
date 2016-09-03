@@ -45,6 +45,7 @@
       $("#input-shared-result-id").val('@result.id');
       $("#input-shared-result-title").val("@result.title");
       $("#input-shared-result-description").val("@result.description.getOrElse("")");
+      $("#input-shared-result-sql").val("@result.sql.replaceAllLiterally("\"", "\\\"")");
       @Html(check)
       open();
       return false;

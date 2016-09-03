@@ -67,7 +67,8 @@ object SavedQueryManager {
     )))
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val newSavedQuery = savedQuery.copy(
-        sql = SqlManager.getSql(savedQuery.id)
+        sql = SqlManager.getSql(savedQuery.id),
+        params = ParameterManager.getParamsOpt(savedQuery.id)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })
@@ -90,6 +91,6 @@ object SavedQueryManager {
       SqlManager.updateLinks(savedQuery.id, runQueryLink, runQueryAllLink)
     }
 
-    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, savedQuery.sql, onChange)
+    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, savedQuery.sql, savedQuery.params.getOrElse(Map.empty), onChange)
   }
 }

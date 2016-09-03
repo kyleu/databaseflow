@@ -16,6 +16,7 @@ object SharedResultFormManager {
 
   private[this] val inputTitle = $("#input-shared-result-title", modal)
   private[this] val inputDescription = $("#input-shared-result-description", modal)
+  private[this] val inputSql = $("#input-shared-result-sql", modal)
 
   def init() = {
     TemplateUtils.clickHandler($("#input-shared-result-cancel-link", modal), jq => modal.closeModal())
@@ -26,6 +27,7 @@ object SharedResultFormManager {
     activeSharedResult = Some(sharedResult)
     inputTitle.value(sharedResult.title)
     inputDescription.value(sharedResult.description.getOrElse(""))
+    inputSql.value(sharedResult.sql)
     sharedResult.viewableBy match {
       case Permission.Visitor => $("#input-shared-result-visitor", modal).prop("checked", true)
       case Permission.User => $("#input-shared-result-user", modal).prop("checked", true)

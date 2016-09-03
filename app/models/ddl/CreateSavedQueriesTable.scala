@@ -8,6 +8,7 @@ case object CreateSavedQueriesTable extends CreateTableStatement("saved_queries"
       "name" $varchar(1024) not null,
       "description" $varchar(4096),
       "sql" $varchar(65536) not null,
+      "params" $varchar(4096),
 
       "owner" uuid,
       "connection" uuid,

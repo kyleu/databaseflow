@@ -9,6 +9,7 @@ case object CreateSharedResultTable extends CreateTableStatement("shared_results
       "owner" uuid not null,
       "viewable_by" $varchar(128) not null,
       "connection_id" uuid not null,
+      "sql" $varchar(65536) not null,
       "source_type" $varchar(256),
       "source_name" $varchar(256),
       "source_sort_column" $varchar(128),

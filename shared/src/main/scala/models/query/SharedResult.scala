@@ -11,6 +11,7 @@ case class SharedResult(
   owner: UUID,
   viewableBy: Permission = Permission.User,
   connectionId: UUID,
+  sql: String,
   source: QueryResult.Source,
   chart: Option[String] = None,
   lastAccessed: Long = System.currentTimeMillis,

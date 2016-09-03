@@ -13,7 +13,7 @@ object QueryManager {
 
   lazy val workspace = $("#workspace")
 
-  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, sql: String, onChange: (String) => Unit): Unit = {
+  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, sql: String, params: Map[String, String], onChange: (String) => Unit): Unit = {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
     def wire(q: JQuery, action: String, sql: () => (String, Map[String, String])) = TemplateUtils.clickHandler(q, jq => {
@@ -54,7 +54,7 @@ object QueryManager {
 
     showRunSelection()
     SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
-    ParameterManager.onChange(queryId, sql)
+    ParameterManager.onChange(queryId, sql, params)
     QueryCheckManager.check(queryId, sql)
   }
 

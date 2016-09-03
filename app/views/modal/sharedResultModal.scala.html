@@ -1,6 +1,7 @@
 @(title: String, action: Option[String] = None)(implicit messages: Messages)<div id="shared-result-modal" class="modal modal-fixed-footer">
   <form method="post" action="@action.getOrElse("")" @if(action.isEmpty) { onsubmit="return false;"}>
     <input id="input-shared-result-id" name="id" type="hidden" value="">
+    <input id="input-shared-result-sql" name="sql" type="hidden" value="">
     <input id="input-shared-result-chart" name="chart" type="hidden" value="">
     <div class="modal-content">
       <div class="row">

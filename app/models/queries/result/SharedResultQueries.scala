@@ -13,10 +13,11 @@ import utils.JdbcUtils
 object SharedResultQueries extends BaseQueries[SharedResult] {
   override protected val tableName = "shared_results"
   override protected val columns = Seq(
-    "id", "title", "description", "owner", "viewable_by", "connection_id", "source_type", "source_name", "source_sort_column", "source_sort_asc",
+    "id", "title", "description", "owner", "viewable_by", "connection_id", "sql",
+    "source_type", "source_name", "source_sort_column", "source_sort_asc",
     "filter_column", "filter_op", "filter_value", "chart", "last_accessed", "created"
   )
-  override protected val searchColumns = Seq("id", "title", "owner", "source_name", "filter_column", "filter_value")
+  override protected val searchColumns = Seq("id", "title", "owner", "sql", "source_name", "filter_column", "filter_value")
 
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
@@ -27,11 +28,11 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
 
   case class UpdateSharedResult(sr: SharedResult) extends Statement {
     override val sql = updateSql(Seq(
-      "title", "owner", "viewable_by", "connection_id", "source_type", "source_name", "source_sort_column", "source_sort_asc",
+      "title", "owner", "viewable_by", "connection_id", "sql", "source_type", "source_name", "source_sort_column", "source_sort_asc",
       "filter_column", "filter_op", "filter_value", "chart", "last_accessed", "created"
     ))
     override val values = Seq[Any](
-      sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
+      sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
       sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
       new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created), sr.id
     )
@@ -72,6 +73,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
     owner = row.as[UUID]("owner"),
     viewableBy = Permission.withName(row.as[String]("viewable_by")),
     connectionId = row.as[UUID]("connection_id"),
+    sql = row.as[String]("sql"),
     source = QueryResult.Source(
       t = row.as[String]("source_type"),
       name = row.as[String]("source_name"),
@@ -87,9 +89,8 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   )
 
   override protected def toDataSeq(sr: SharedResult) = Seq[Any](
-    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId,
-    sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
-    sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue, sr.chart,
-    new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)
+    sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql,
+    sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending, sr.source.filterColumn, sr.source.filterOp, sr.source.filterValue,
+    sr.chart, new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)
   )
 }

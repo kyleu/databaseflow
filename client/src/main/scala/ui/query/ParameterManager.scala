@@ -9,12 +9,12 @@ import utils.TemplateUtils
 object ParameterManager {
   private[this] var activeParams = Map.empty[UUID, Seq[(String, String, String)]]
 
-  def onChange(queryId: UUID, sql: String) = {
+  def onChange(queryId: UUID, sql: String, paramValues: Map[String, String]) = {
     val keys = getKeys(sql)
     val hasChanged = activeParams.get(queryId) match {
       case Some(params) => (params.size != keys.size) || (!params.zip(keys).forall(x => x._1._1 == x._2._1 && x._1._2 == x._2._2))
       case None =>
-        activeParams += queryId -> keys.map(k => (k._1, k._2, ""))
+        activeParams += queryId -> keys.map(k => (k._1, k._2, paramValues.getOrElse(k._1, "")))
         true
     }
     if (hasChanged) {
@@ -27,14 +27,15 @@ object ParameterManager {
         val orig = activeParams(queryId)
         val merged = orig.filterNot(_._1 == k) :+ ((k, t, v))
         activeParams += queryId -> merged
-        println(s"$k: $v")
       })
     }
   }
 
-  def getParams(sql: String, queryId: UUID) = {
-    sql -> activeParams.getOrElse(queryId, Nil).map(r => r._1 -> r._3).toMap
+  def getParamsOpt(queryId: UUID) = activeParams.get(queryId).map { x =>
+    x.map(r => r._1 -> r._3).toMap
   }
+
+  def getParams(sql: String, queryId: UUID) = sql -> getParamsOpt(queryId).getOrElse(Map.empty)
 
   def remove(queryId: UUID) = activeParams = activeParams - queryId
 

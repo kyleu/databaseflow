@@ -15,7 +15,7 @@ object SqlManager {
   def newEditor(queryId: UUID, onChange: (String) => Unit) = {
     val editor = EditorCreationHelper.initSqlEditor(queryId, (s: String) => {
       if (QueryCheckManager.isChanged(queryId, s)) {
-        ParameterManager.onChange(queryId, s)
+        ParameterManager.onChange(queryId, s, Map.empty)
         QueryCheckManager.check(queryId, s)
         onChange(s)
       }
