@@ -63,7 +63,8 @@ object SavedQueryManager {
     TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), jq => SavedQueryFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
-      sql = SqlManager.getSql(savedQuery.id)
+      sql = SqlManager.getSql(savedQuery.id),
+      params = ParameterManager.getParamsOpt(savedQuery.id)
     )))
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val newSavedQuery = savedQuery.copy(

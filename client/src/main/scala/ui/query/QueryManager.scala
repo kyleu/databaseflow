@@ -55,7 +55,8 @@ object QueryManager {
     showRunSelection()
     SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
     ParameterManager.onChange(queryId, sql, params)
-    QueryCheckManager.check(queryId, sql)
+    val merged = ParameterManager.merge(sql, params)
+    QueryCheckManager.check(queryId, merged)
   }
 
   def closeQuery(queryId: UUID): Unit = {

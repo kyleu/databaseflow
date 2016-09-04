@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryCheckResult
 import org.scalajs.jquery.{jQuery => $}
-import ui.query.SqlManager
+import ui.query.{ParameterManager, SqlManager}
 import utils.Logging
 
 import scala.scalajs.js
@@ -44,11 +44,13 @@ object EditorManager {
   def highlightErrors(queryId: UUID, results: Seq[QueryCheckResult]) = SqlManager.getEditor(queryId).foreach { editor =>
     val doc = editor.getSession().getDocument()
     val fullSql = editor.getValue().toString
+    val params = ParameterManager.getParams(fullSql, queryId)._2
+    val merged = ParameterManager.merge(fullSql, params)
     val errors = results.filter(_.error.isDefined)
     if (errors.isEmpty) {
       editor.getSession().clearAnnotations()
     } else {
-      val errorMarkers = errors.flatMap(r => getError(doc, fullSql, r.sql, r.error.getOrElse(throw new IllegalArgumentException), r.index))
+      val errorMarkers = errors.flatMap(r => getError(doc, merged, r.sql, r.error.getOrElse(throw new IllegalArgumentException), r.index))
       editor.getSession().setAnnotations(js.Array(errorMarkers: _*))
     }
   }
