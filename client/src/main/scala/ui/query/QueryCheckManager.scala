@@ -12,6 +12,7 @@ object QueryCheckManager {
   def isChanged(queryId: UUID, s: String) = !sqlChecks.get(queryId).contains(s)
 
   def check(queryId: UUID, sql: String) = {
+    //utils.Logging.info(s"Checking SQL [$sql].")
     dom.window.setTimeout(() => {
       val currentSql = SqlManager.getSql(queryId)
       val params = ParameterManager.getParams(currentSql, queryId)._2
@@ -20,7 +21,7 @@ object QueryCheckManager {
         sqlChecks += (queryId -> merged)
         NetworkMessage.sendMessage(CheckQuery(queryId, merged))
       }
-    }, 2000)
+    }, 1000)
   }
 
   def remove(queryId: UUID) = sqlChecks -= queryId

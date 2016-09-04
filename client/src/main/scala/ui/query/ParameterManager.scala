@@ -28,6 +28,8 @@ object ParameterManager {
         val orig = activeParams(queryId)
         val merged = orig.filterNot(_._1 == k) :+ ((k, t, v))
         activeParams += queryId -> merged
+        val mergedSql = merge(sql, merged.map(x => x._1 -> x._3).toMap)
+        QueryCheckManager.check(queryId, mergedSql)
       })
     }
   }
