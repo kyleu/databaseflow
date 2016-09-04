@@ -10,6 +10,7 @@ object ParameterManager {
   private[this] var activeParams = Map.empty[UUID, Seq[(String, String, String)]]
 
   def onChange(queryId: UUID, sql: String, paramValues: Map[String, String]) = {
+    //utils.Logging.info(s"onChange(queryId: $queryId, sql: $sql, paramValues: $paramValues)")
     val keys = getKeys(sql)
     val hasChanged = activeParams.get(queryId) match {
       case Some(params) => (params.size != keys.size) || (!params.zip(keys).forall(x => x._1._1 == x._2._1 && x._1._2 == x._2._2))
@@ -60,9 +61,8 @@ object ParameterManager {
       case ('{', idx) =>
         startIndex = idx
         x
-      case ('}', idx) => if (idx == (startIndex + 1)) {
-        x
-      } else {
+      case ('}', idx) if idx == (startIndex + 1) => x
+      case ('}', idx) =>
         val v = sql.substring(startIndex + 1, idx)
         val ret = v.indexOf(':') match {
           case -1 => v -> "string"
@@ -75,15 +75,13 @@ object ParameterManager {
         } else {
           x
         }
-      }
       case _ => x
     })
   }
 
   private[this] def render(queryId: UUID, keys: Seq[(String, String)], panel: JQuery) = {
-    if (panel.length != 1) {
-      throw new IllegalStateException(s"Encountered [${panel.length}] parameter panels.")
-    }
+    //utils.Logging.info("Render Keys: " + keys.mkString(", "))
+    if (panel.length != 1) { throw new IllegalStateException(s"Encountered [${panel.length}] parameter panels.") }
     if (keys.isEmpty) {
       activeParams += queryId -> Nil
       panel.hide()

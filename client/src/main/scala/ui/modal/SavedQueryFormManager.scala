@@ -52,15 +52,11 @@ object SavedQueryFormManager {
 
   def handleSavedQuery(sq: SavedQuery, error: Option[String]) = {
     if (activeQuery.exists(_.id == sq.id)) {
-      error match {
-        case Some(err) => Logging.error("Cannot save query: " + err)
-        case None =>
-          SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
-          if (!SavedQueryManager.openSavedQueries.contains(sq.id)) {
-            QueryManager.closeQuery(sq.id)
-          }
-          SavedQueryManager.savedQueryDetail(sq.id)
+      SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
+      if (!SavedQueryManager.openSavedQueries.contains(sq.id)) {
+        QueryManager.closeQuery(sq.id)
       }
+      SavedQueryManager.savedQueryDetail(sq.id)
       modal.closeModal()
     } else {
       SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
