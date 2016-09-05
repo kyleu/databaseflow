@@ -9,6 +9,11 @@ import utils.TemplateUtils
 object ParameterManager {
   private[this] var activeParams = Map.empty[UUID, Seq[(String, String, String)]]
 
+  private[this] def set(queryId: UUID, v: Seq[(String, String, String)]) = {
+    utils.Logging.info(s"Setting values for [$queryId]: $v")
+    activeParams += queryId -> v
+  }
+
   def setValues(queryId: UUID, paramValues: Map[String, String]) = {
     val newParams = activeParams.get(queryId) match {
       case Some(params) => params.map { v =>
@@ -16,8 +21,7 @@ object ParameterManager {
       } ++ paramValues.toSeq.filterNot(x => params.exists(_._1 == x._1)).map(x => (x._1, "string", x._2))
       case None => paramValues.toSeq.map(x => (x._1, "string", x._2))
     }
-    utils.Logging.info(s"Setting values for [$queryId]: $newParams")
-    activeParams += queryId -> newParams
+    set(queryId, newParams)
   }
 
   def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
@@ -36,7 +40,8 @@ object ParameterManager {
         val v = jq.value().toString
         val orig = activeParams(queryId)
         val merged = orig.filterNot(_._1 == k) :+ ((k, t, v))
-        activeParams += queryId -> merged
+        utils.Logging.info(s"Orig: $orig / Merged: $merged")
+        set(queryId, merged)
         val mergedSql = merge(sql, merged.map(x => x._1 -> x._3).toMap)
         QueryCheckManager.check(queryId, mergedSql)
       })
@@ -44,6 +49,7 @@ object ParameterManager {
   }
 
   def getParamsOpt(queryId: UUID) = activeParams.get(queryId).map { x =>
+    utils.Logging.info(s"Returning params [$x].")
     x.map(r => r._1 -> r._3).toMap
   }
 
@@ -94,12 +100,12 @@ object ParameterManager {
     //utils.Logging.info("Render Keys: " + keys.mkString(", "))
     if (panel.length != 1) { throw new IllegalStateException(s"Encountered [${panel.length}] parameter panels.") }
     if (keys.isEmpty) {
-      activeParams += queryId -> Nil
+      set(queryId, Nil)
       panel.hide()
     } else {
       val params = activeParams(queryId)
       val values = keys.map(k => (k._1, k._2, params.find(_._1 == k._1).map(_._3).getOrElse("")))
-      activeParams += queryId -> values
+      set(queryId, values)
       panel.html(QueryParametersTemplate.forValues(queryId, values).toString)
       panel.show()
     }

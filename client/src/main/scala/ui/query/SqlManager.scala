@@ -15,12 +15,14 @@ object SqlManager {
   def newEditor(queryId: UUID, onChange: (String) => Unit) = {
     val editor = EditorCreationHelper.initSqlEditor(queryId, (s: String) => {
       val params = ParameterManager.getParams(s, queryId)._2
+      ParameterManager.setValues(queryId, params)
       val merged = ParameterManager.merge(s, params)
-      if (QueryCheckManager.isChanged(queryId, merged)) {
-        ParameterManager.setValues(queryId, params)
-        ParameterManager.onChange(queryId, s)
-        QueryCheckManager.check(queryId, merged)
-        onChange(s)
+      if (merged.nonEmpty) {
+        if (QueryCheckManager.isChanged(queryId, merged)) {
+          ParameterManager.onChange(queryId, s)
+          QueryCheckManager.check(queryId, merged)
+          onChange(s)
+        }
       }
     })
     sqlEditors = sqlEditors + (queryId -> editor)
