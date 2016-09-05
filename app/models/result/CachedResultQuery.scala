@@ -3,6 +3,7 @@ package models.result
 import akka.actor.ActorRef
 import models.database.{Query, Row}
 import models.query.QueryResult
+import models.schema.ColumnType
 import models.schema.ColumnType.LongType
 import models.{QueryResultRowCount, ResponseMessage}
 import services.result.CachedResultService
@@ -14,7 +15,6 @@ object CachedResultQuery {
 
 case class CachedResultQuery(index: Int, result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
   val startMs = DateUtils.nowMillis
-
   override val sql = result.sql
 
   override def reduce(rows: Iterator[Row]) = {
@@ -40,12 +40,7 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
         CachedResultQueryHelper.createResultTable(result.resultId, columnsPlus)
         val columnNames = columnsPlus.map(_.name)
 
-        val transformedData = if (containsRowNum) {
-          firstRowData
-        } else {
-          Some(rowCount) +: firstRowData
-        }
-
+        val transformedData = transform(columnsPlus, if (containsRowNum) { firstRowData } else { Some(rowCount) +: firstRowData })
         CachedResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
 
         val partialRowData = collection.mutable.ArrayBuffer(transformedData)
@@ -54,11 +49,7 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
           val row = rows.next()
           rowCount += 1
           val data = CachedResultQueryHelper.dataFor(row, columnsWithIndex)
-          val transformedData = if (containsRowNum) {
-            data
-          } else {
-            Some(rowCount) +: data
-          }
+          val transformedData = transform(columnsPlus, if (containsRowNum) { data } else { Some(rowCount) +: data })
 
           CachedResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
           if (rowCount <= 100) {
@@ -88,5 +79,11 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
       val elapsed = (DateUtils.nowMillis - startMs).toInt
       CachedResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, Nil, Nil, elapsed)
     }
+  }
+
+  private[this] def transform(columns: Seq[QueryResult.Col], data: Seq[Option[Any]]) = columns.zip(data).map {
+    case x if x._1.t == ColumnType.DateType && x._2.exists(_.isInstanceOf[String]) =>
+      x._2.map(_.toString.stripSuffix(" 00:00:00"))
+    case x => x._2
   }
 }
