@@ -20,12 +20,12 @@
             </tr>
           </thead>
           <tbody>
-            @row(
-              "Price",
-              "Free",
-              "$" + services.payment.StripePaymentService.prices(licensing.LicenseEdition.Personal),
-              "$" + services.payment.StripePaymentService.prices(licensing.LicenseEdition.Team)
-            )
+            @defining(services.payment.StripePaymentService.prices(licensing.LicenseEdition.Personal)) { p =>
+              @defining(services.payment.StripePaymentService.prices(licensing.LicenseEdition.Team)) { t =>
+                @row("Price", "Free", "$" + p, "$" + t)
+              }
+            }
+            @row("Users", "Single User", "Single User", "Unlimited Users")
           </tbody>
         </table>
       </div>
