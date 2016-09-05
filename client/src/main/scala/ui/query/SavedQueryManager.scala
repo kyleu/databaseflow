@@ -25,12 +25,21 @@ object SavedQueryManager {
     $("#saved-query-link-" + id).remove()
   }
 
+  def updateSavedQueryDetail(sq: SavedQuery) = {
+    val panel = $(s"#panel-${sq.id}")
+    if (panel.length != 1) {
+      throw new IllegalStateException(s"Encountered [${panel.length}] panels for saved query [${sq.id}].")
+    }
+    $(".query-title", panel).text(sq.name)
+    SqlManager.setSql(sq.id, sq.sql)
+  }
+
   def updateSavedQueries(sqs: Seq[SavedQuery], usernames: Map[UUID, String]) = {
     usernameMap = usernameMap ++ usernames
     sqs.foreach { sq =>
       savedQueries = savedQueries + (sq.id -> sq)
       if (openSavedQueries(sq.id)) {
-        SqlManager.setSql(sq.id, sq.sql)
+        updateSavedQueryDetail(sq)
       }
     }
     MetadataManager.updateSavedQueries(savedQueries.values.toSeq.sortBy(_.name))

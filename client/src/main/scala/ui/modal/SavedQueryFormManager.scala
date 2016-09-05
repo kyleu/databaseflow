@@ -6,7 +6,7 @@ import models.user.Permission
 import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
 import ui.query.{QueryManager, SavedQueryManager}
-import utils.{Logging, NetworkMessage, TemplateUtils}
+import utils.{NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 

@@ -51,7 +51,9 @@ object QueryEditorTemplate {
           div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
           div(cls := "sql-parameters initially-hidden")
         ),
-        iconAndTitle = Some(icon -> span(queryName, span(cls := "unsaved-status", title := Messages("query.unsaved.changes"))("*"))),
+        iconAndTitle = Some(
+          icon -> span(span(cls := "query-title")(queryName), span(cls := "unsaved-status", title := Messages("query.unsaved.changes"))("*"))
+        ),
         actions = links
       ),
       div(id := s"workspace-$queryId")

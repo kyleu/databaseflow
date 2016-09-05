@@ -17,7 +17,8 @@ object SqlManager {
       val params = ParameterManager.getParams(s, queryId)._2
       val merged = ParameterManager.merge(s, params)
       if (QueryCheckManager.isChanged(queryId, merged)) {
-        ParameterManager.onChange(queryId, s, params)
+        ParameterManager.setValues(queryId, params)
+        ParameterManager.onChange(queryId, s)
         QueryCheckManager.check(queryId, merged)
         onChange(s)
       }

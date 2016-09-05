@@ -54,7 +54,8 @@ object QueryManager {
 
     showRunSelection()
     SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
-    ParameterManager.onChange(queryId, sql, params)
+    ParameterManager.setValues(queryId, params)
+    ParameterManager.onChange(queryId, sql, forceRefresh = true)
     val merged = ParameterManager.merge(sql, params)
     QueryCheckManager.check(queryId, merged)
   }

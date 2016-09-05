@@ -9,15 +9,24 @@ import utils.TemplateUtils
 object ParameterManager {
   private[this] var activeParams = Map.empty[UUID, Seq[(String, String, String)]]
 
-  def onChange(queryId: UUID, sql: String, paramValues: Map[String, String]) = {
+  def setValues(queryId: UUID, paramValues: Map[String, String]) = {
+    val newParams = activeParams.get(queryId) match {
+      case Some(params) => params.map { v =>
+        (v._1, v._2, paramValues.getOrElse(v._1, v._3))
+      } ++ paramValues.toSeq.filterNot(x => params.exists(_._1 == x._1)).map(x => (x._1, "string", x._2))
+      case None => paramValues.toSeq.map(x => (x._1, "string", x._2))
+    }
+    utils.Logging.info(s"Setting values for [$queryId]: $newParams")
+    activeParams += queryId -> newParams
+  }
+
+  def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
     //utils.Logging.info(s"onChange(queryId: $queryId, sql: $sql, paramValues: $paramValues)")
     val keys = getKeys(sql)
-    val hasChanged = activeParams.get(queryId) match {
+    val hasChanged = forceRefresh || (activeParams.get(queryId) match {
       case Some(params) => (params.size != keys.size) || (!params.zip(keys).forall(x => x._1._1 == x._2._1 && x._1._2 == x._2._2))
-      case None =>
-        activeParams += queryId -> keys.map(k => (k._1, k._2, paramValues.getOrElse(k._1, "")))
-        true
-    }
+      case None => throw new IllegalStateException(s"Cache not initialized for query [$queryId].")
+    })
     if (hasChanged) {
       val panel = $(s"#panel-$queryId .sql-parameters")
       render(queryId, keys, panel)
