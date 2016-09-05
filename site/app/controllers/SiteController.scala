@@ -83,6 +83,10 @@ class SiteController @javax.inject.Inject() (
     Future.successful(Ok(views.html.database(utils.SiteEngine.withName(key), isAdmin)))
   }
 
+  def privacy() = act("privacy") { implicit request =>
+    Future.successful(Ok(views.html.privacy()))
+  }
+
   def robots() = act("robots-txt") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow:"))
   }

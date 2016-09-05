@@ -6,6 +6,7 @@ GET            /screenshots                             controllers.SiteControll
 GET            /plan                                    controllers.SiteController.plan
 GET            /lang/:id                                controllers.SiteController.language(id)
 GET            /db/:key                                 controllers.SiteController.database(key)
+GET            /privacy                                 controllers.SiteController.privacy
 GET            /robots.txt                              controllers.SiteController.robots
 
 GET            /version                                 controllers.UpdateController.version
