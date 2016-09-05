@@ -12,7 +12,7 @@ object QueryErrorService {
     val content = QueryErrorTemplate.forQueryError(qer, occurred.toISOString)
     ProgressManager.completeProgress(qer.error.queryId, qer.id, qer.index, content)
 
-    val panel = $(s"#" + qer.id)
+    val panel = $("#" + qer.id)
     val sqlEl = $(".query-result-sql", panel)
     var sqlShown = false
     TemplateUtils.clickHandler($(".results-sql-link", panel), jq => {

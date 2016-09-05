@@ -20,7 +20,7 @@ object QueryExportFormManager {
     TemplateUtils.clickHandler($("#export-cancel-link", modal), jq => modal.closeModal())
   }
 
-  def show(queryId: UUID, source: QueryResult.Source, filename: String) = {
+  def show(queryId: UUID, source: QueryResult.Source) = {
     inputQueryId.value(queryId.toString)
     inputSource.value(write(source))
     modal.openModal()

@@ -12,7 +12,7 @@ object QueryResultEvents {
   def wire(panel: JQuery, result: QueryResult, chartId: UUID) = {
     val src = result.source.getOrElse(throw new IllegalStateException())
     TemplateUtils.clickHandler($(".results-export-link", panel), jq => {
-      QueryExportFormManager.show(result.queryId, src, "Export")
+      QueryExportFormManager.show(result.queryId, src)
     })
     TemplateUtils.clickHandler($(".results-share-link", panel), jq => {
       val chart = ChartService.getSettings(chartId).trim match {
