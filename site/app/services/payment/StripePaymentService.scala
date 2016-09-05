@@ -3,16 +3,27 @@ package services.payment
 import com.stripe.Stripe
 import com.stripe.model.Charge
 import com.stripe.net.RequestOptions.RequestOptionsBuilder
+import licensing.LicenseEdition
 import utils.Logging
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
 
 object StripePaymentService extends Logging {
-  private[this] val apiKey = "sk_test_TFOOJlY3yildKTaMUVG5fFPH"
-  private[this] val requestOptions = new RequestOptionsBuilder().setApiKey(apiKey).build()
+  private[this] val requestOptions = new RequestOptionsBuilder().build()
 
-  Stripe.apiKey = apiKey
+  var jsKey = ""
+  var prices = Map.empty[LicenseEdition, Int]
+
+  def init(sk: String, pk: String, personalPrice: Int, teamPrice: Int) = {
+    Stripe.apiKey = sk
+    jsKey = pk
+    prices = Map(
+      LicenseEdition.NonCommercial -> 0,
+      LicenseEdition.Personal -> personalPrice,
+      LicenseEdition.Team -> teamPrice
+    )
+  }
 
   case class StripeToken(token: String, tokenType: String, email: Option[String], amount: Long) {
     def validate() = {

@@ -31,7 +31,7 @@ POST           /purchase/team                           controllers.PurchaseCont
 # License Request
 GET            /license/request                         controllers.UserLicenseController.requestForm()
 POST           /license/request                         controllers.UserLicenseController.licenseRequest()
-GET            /license/:id/view                        controllers.UserLicenseController.licenseView(id: java.util.UUID)
+GET            /license/:id                             controllers.UserLicenseController.licenseView(id: java.util.UUID)
 GET            /license/:id/download                    controllers.UserLicenseController.licenseDownload(id: java.util.UUID)
 
 # Admin Section

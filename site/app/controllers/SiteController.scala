@@ -2,9 +2,11 @@ package controllers
 
 import akka.actor.ActorSystem
 import com.codahale.metrics.SharedMetricRegistries
+import play.api.Configuration
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.inject.ApplicationLifecycle
 import play.api.mvc.{Action, Controller}
+import services.payment.StripePaymentService
 import utils.metrics.{MetricsConfig, MetricsServletActor}
 
 import scala.concurrent.Future
@@ -19,14 +21,23 @@ object SiteController {
 }
 
 @javax.inject.Singleton
-class SiteController @javax.inject.Inject() (implicit
-  val messagesApi: MessagesApi,
+class SiteController @javax.inject.Inject() (
+    implicit
+    val messagesApi: MessagesApi,
     val actorSystem: ActorSystem,
-    val lifecycle: ApplicationLifecycle) extends BaseSiteController {
+    val lifecycle: ApplicationLifecycle,
+    val config: Configuration
+) extends BaseSiteController {
 
   val metricsConfig = MetricsConfig(jmxEnabled = true, graphiteEnabled = false, "127.0.0.1", 2003, servletEnabled = true, 9001)
   actorSystem.actorOf(MetricsServletActor.props(metricsConfig), "metrics-servlet")
   lifecycle.addStopHook(() => Future.successful(SharedMetricRegistries.remove("default")))
+  StripePaymentService.init(
+    sk = config.getString("payment.sk").getOrElse(""),
+    pk = config.getString("payment.pk").getOrElse(""),
+    personalPrice = config.getInt("payment.price.personal").getOrElse(0),
+    teamPrice = config.getInt("payment.price.team").getOrElse(0)
+  )
 
   def splash() = act("splash") { implicit request =>
     Future.successful(Ok(views.html.splash()).withHeaders(SiteController.cors: _*))

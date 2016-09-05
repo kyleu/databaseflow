@@ -85,7 +85,7 @@ object Dependencies {
   }
 
   object Commerce {
-    val stripeVersion = "2.7.0"
+    val stripeVersion = "2.8.0"
     val stripe = "com.stripe" % "stripe-java" % stripeVersion
   }
 

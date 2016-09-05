@@ -6,6 +6,7 @@ import play.api.data.Forms._
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
 import services.notification.NotificationService
+import services.payment.StripePaymentService
 import utils.web.PlayFormUtils
 
 import scala.concurrent.Future
@@ -26,7 +27,11 @@ object PurchaseController {
 @javax.inject.Singleton
 class PurchaseController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, notification: NotificationService) extends BaseSiteController {
   def pricingPersonal() = act("pricing.personal") { implicit request =>
-    Future.successful(Ok(views.html.purchase.purchase("Personal", routes.PurchaseController.purchasePersonalEdition(), 29)))
+    Future.successful(Ok(views.html.purchase.purchase(
+      "Personal",
+      routes.PurchaseController.purchasePersonalEdition(),
+      StripePaymentService.prices(LicenseEdition.Personal)
+    )))
   }
 
   def purchasePersonalEdition() = act("purchase.personal") { implicit request =>
@@ -46,7 +51,11 @@ class PurchaseController @javax.inject.Inject() (implicit override val messagesA
   }
 
   def pricingTeam() = act("pricing.team") { implicit request =>
-    Future.successful(Ok(views.html.purchase.purchase("Team", routes.PurchaseController.purchaseTeamEdition(), 290)))
+    Future.successful(Ok(views.html.purchase.purchase(
+      "Team",
+      routes.PurchaseController.purchaseTeamEdition(),
+      StripePaymentService.prices(LicenseEdition.Team)
+    )))
   }
 
   def purchaseTeamEdition() = act("purchase.team.edition") { implicit request =>

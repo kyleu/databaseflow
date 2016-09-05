@@ -20,7 +20,12 @@
             </tr>
           </thead>
           <tbody>
-            @row("Price", "Free", "$29", "$299")
+            @row(
+              "Price",
+              "Free",
+              "$" + services.payment.StripePaymentService.prices(licensing.LicenseEdition.Team),
+              "$" + services.payment.StripePaymentService.prices(licensing.LicenseEdition.Team)
+            )
           </tbody>
         </table>
       </div>
