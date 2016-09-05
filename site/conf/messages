@@ -1,6 +1,7 @@
 # General
 general.save = Save
 general.about = About
+general.back = Back
 
 # Table Headers
 th.email = Email

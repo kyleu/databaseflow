@@ -11,7 +11,11 @@ class NewsletterController @javax.inject.Inject() (implicit val messagesApi: Mes
   def signup() = act("newsletter.signup") { implicit request =>
     val body = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException("Invalid request"))
     val email = body.get("email").flatMap(_.headOption).getOrElse(throw new IllegalStateException("Missing [email] parameter."))
-    notificationService.onNewsletterSignup(email, new LocalDateTime())
-    Future.successful(Redirect(controllers.routes.SiteController.index()).flashing("success" -> "Thanks for signing up!"))
+    if (email.trim.isEmpty) {
+      Future.successful(Redirect(controllers.routes.SiteController.index()).flashing("error" -> "Please enter your email address."))
+    } else {
+      notificationService.onNewsletterSignup(email, new LocalDateTime())
+      Future.successful(Redirect(controllers.routes.SiteController.index()).flashing("success" -> "Thanks for signing up!"))
+    }
   }
 }

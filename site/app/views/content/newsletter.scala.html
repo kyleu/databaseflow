@@ -4,27 +4,15 @@
       <div class="card-content">
         <span class="card-title">@messages("newsletter.title")</span>
         <div class="row padded-top">
-          <div class="col s12">
-            <div class="z-depth-1">
-              <table>
-                <tbody>
-                  <tr>
-                    <td style="text-align: center;">
-                      <form action="@controllers.routes.NewsletterController.signup()" method="post">
-                        <div class="row">
-                          <div class="input-field col s12">
-                            <input id="email" name="email" type="email" class="validate">
-                            <label for="email">@messages("th.email")</label>
-                            <button class="btn theme" type="submit">@messages("newsletter.subscribe")</button>
-                          </div>
-                        </div>
-                      </form>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <form action="@controllers.routes.NewsletterController.signup()" method="post">
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="email" name="email" type="email" class="validate">
+                <label for="email">@messages("th.email")</label>
+                <button class="btn theme right" type="submit">@messages("newsletter.subscribe")</button>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

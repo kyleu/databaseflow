@@ -76,12 +76,11 @@ class SiteController @javax.inject.Inject() (
     } else {
       result.flashing("lang" -> lang)
     })
-
   }
 
   def database(key: String) = act(s"db.$key") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.database(key, isAdmin)))
+    Future.successful(Ok(views.html.database(utils.SiteEngine.withName(key), isAdmin)))
   }
 
   def robots() = act("robots-txt") { implicit request =>

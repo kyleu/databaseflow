@@ -1,15 +1,15 @@
 @()(implicit messages: Messages)
-@panel(key: String, name: String) = {
-  <div id="@key" class="col s6 m4 l3 db-panel">
-    <a class="theme-text" href="@routes.SiteController.database(key)">
+@panel(e: utils.SiteEngine) = {
+  <div id="@e.id" class="col s6 m4 l3 db-panel">
+    <a class="theme-text" href="@routes.SiteController.database(e.id)">
       <div class="logo z-depth-1">
         <div class="on initially-hidden">
-          <img src="@routes.Assets.versioned(s"images/db/$key-active.png")" width="64" height="64" />
+          <img src="@routes.Assets.versioned(s"images/db/${e.id}-active.png")" width="64" height="64" />
         </div>
         <div class="off">
-          <img src="@routes.Assets.versioned(s"images/db/$key.png")" width="64" height="64" />
+          <img src="@routes.Assets.versioned(s"images/db/${e.id}.png")" width="64" height="64" />
         </div>
-        <div>@name</div>
+        <div>@e.title</div>
       </div>
     </a>
   </div>
@@ -20,14 +20,9 @@
       <div class="card-content">
         <span class="card-title">Supported Databases</span>
         <div class="row padded-top">
-          @panel("mysql", "MySQL")
-          @panel("postgres", "PostgreSQL")
-          @panel("oracle", "Oracle")
-          @panel("sqlserver", "SQL Server")
-          @panel("h2", "H2")
-          @panel("db2", "DB2")
-          @panel("informix", "Informix")
-          @panel("sqlite", "SQLite")
+          @utils.SiteEngine.values.map { v =>
+            @panel(v)
+          }
         </div>
       </div>
     </div>
@@ -35,7 +30,7 @@
 </div>
 <script>
   $(function() {
-    function socialWire(key) {
+    function dbWire(key) {
       var t = $('#' + key);
       var off = $('.off', t);
       var on = $('.on', t);
@@ -48,13 +43,13 @@
       });
     }
 
-    socialWire('mysql');
-    socialWire('postgres');
-    socialWire('oracle');
-    socialWire('sqlserver');
-    socialWire('h2');
-    socialWire('db2');
-    socialWire('informix');
-    socialWire('sqlite');
+    dbWire('mysql');
+    dbWire('postgres');
+    dbWire('oracle');
+    dbWire('sqlserver');
+    dbWire('h2');
+    dbWire('db2');
+    dbWire('informix');
+    dbWire('sqlite');
   });
 </script>
