@@ -7,6 +7,8 @@ import models.queries.QueryTranslations
 import models.schema.Column
 import utils.NullUtils
 
+import scala.util.control.NonFatal
+
 object MetadataColumns {
   def getAllColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getColumns(catalog.orNull, schema.orNull, NullUtils.inst, NullUtils.inst)
@@ -33,7 +35,11 @@ object MetadataColumns {
       definition = row.asOpt[String]("COLUMN_DEF"),
       primaryKey = false, //row.as[Boolean]("?"),
       notNull = notNull == 0, // IS_NULLABLE?
-      autoIncrement = row.asOpt[String]("IS_AUTOINCREMENT").contains("YES"),
+      autoIncrement = try {
+        row.asOpt[String]("IS_AUTOINCREMENT").contains("YES")
+      } catch {
+        case NonFatal(x) => false
+      },
       columnType = QueryTranslations.forType(colType), // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeName = row.as[String]("TYPE_NAME"),
