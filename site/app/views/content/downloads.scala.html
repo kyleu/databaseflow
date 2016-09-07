@@ -30,7 +30,7 @@
         <div class="row padded-top">
           @section("osx", Seq("service" -> ".zip"))
           @section("windows", Seq("service" -> ".zip", "gui" -> ".msi"))
-          @section("linux", Seq("service" -> ".zip", "deb" -> ".deb"))
+          @section("linux", Seq("service" -> ".tgz", "deb" -> ".deb"))
           @section("docker", Seq("service" -> ".gz"))
         </div>
       </div>
