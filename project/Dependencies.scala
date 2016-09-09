@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.9"
+    private[this] val version = "2.4.10"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -38,13 +38,13 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.4.7"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.5.0"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.192"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0 is all different
-    val postgres = "org.postgresql" % "postgresql" % "9.4.1209"
+    val postgres = "org.postgresql" % "postgresql" % "9.4.1210"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.8.11.2"
     val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
