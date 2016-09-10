@@ -60,12 +60,12 @@ trait BaseQueries[T] {
 
   protected case class Insert(model: T) extends Statement {
     override val sql = insertSql
-    override val values = toDataSeq(model)
+    override val values: Seq[Any] = toDataSeq(model)
   }
   protected case class InsertBatch(models: Seq[T]) extends Statement {
     private[this] val valuesClause = models.map(m => s"(${columns.map(x => "?").mkString(", ")})").mkString(", ")
     override val sql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values $valuesClause"""
-    override val values = models.flatMap(toDataSeq)
+    override val values: Seq[Any] = models.flatMap(toDataSeq)
   }
 
   protected case class RemoveById(override val values: Seq[Any]) extends Statement {

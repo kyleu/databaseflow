@@ -15,7 +15,7 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
     val lic = LicenseService.getLicense
     val licContent = LicenseService.getLicenseContent
 
-    Future.successful(Ok(views.html.license.form(request.identity, ctx.config.debug, lic, licContent)))
+    Future.successful(Ok(views.html.license.form(request.identity, lic, licContent)))
   }
 
   def save() = withoutSession("license-save") { implicit request =>

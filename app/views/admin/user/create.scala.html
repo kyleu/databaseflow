@@ -1,6 +1,6 @@
-@(self: models.user.User, debug: Boolean)(
+@(self: models.user.User)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.admin(self, "users", messages("admin.users.title"), debug = debug) {
+)@layout.admin(self, "users", messages("admin.users.title")) {
   <form action="@controllers.admin.routes.UserCreateController.newUser()" method="post">
     <div class="card-content">
       <div class="card-title">

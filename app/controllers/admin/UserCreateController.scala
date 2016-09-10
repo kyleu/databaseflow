@@ -23,7 +23,7 @@ class UserCreateController @javax.inject.Inject() (
     hasher: PasswordHasher
 ) extends BaseController {
   def newUser() = withAdminSession("admin-user-new") { implicit request =>
-    Future.successful(Ok(views.html.admin.user.create(request.identity, ctx.config.debug)))
+    Future.successful(Ok(views.html.admin.user.create(request.identity)))
   }
 
   def saveNewUser() = withAdminSession("admin-user-save-new") { implicit request =>

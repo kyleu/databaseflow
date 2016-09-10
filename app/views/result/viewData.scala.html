@@ -3,10 +3,9 @@
     result: models.query.SharedResult,
     ownerName: String,
     columns: Seq[models.query.QueryResult.Col],
-    data: Seq[Seq[Option[String]]],
-    debug: Boolean
+    data: Seq[Seq[Option[String]]]
 )(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@views.html.layout.simple(user = user, title = messages(result.title), mainDivClass = "", debug = debug) {
+@views.html.layout.simple(user = user, title = messages(result.title), mainDivClass = "") {
   @if(user.exists(_.id == result.owner)) { @views.html.result.options(result) }
   <div class="row">
     <div class="col s12">

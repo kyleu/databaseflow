@@ -3,7 +3,6 @@ package controllers
 import java.net.URL
 
 import models.user.Language
-import org.joda.time.LocalDateTime
 import play.api.i18n.Messages
 import utils.ApplicationContext
 
@@ -13,7 +12,8 @@ import scala.concurrent.Future
 class MessagesController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   private[this] def parseMsgs(url: URL) = Messages.parse(Messages.UrlMessageSource(url), url.toString).fold(e => throw e, identity)
 
-  private[this] lazy val msgs = Language.values.map(x => x.code).map { l =>
+  private[this] lazy val msgs = Language.values.map { x =>
+    val l = x.code
     val filename = if (l == "en") { "client/messages" } else { s"client/messages.$l" }
     l -> parseMsgs(getClass.getClassLoader.getResource(filename))
   }.toMap

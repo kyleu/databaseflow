@@ -32,7 +32,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
     val context = requestsTimer.time()
     activeRequests.inc()
 
-    def logCompleted(request: RequestHeader, result: Result): Unit = {
+    def logCompleted(result: Result): Unit = {
       activeRequests.dec()
       context.stop()
       statusCodes.getOrElse(result.header.status, otherStatuses).mark()
@@ -40,7 +40,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
 
     nextFilter(request).transform(
       result => {
-        logCompleted(request, result)
+        logCompleted(result)
         if (request.path.startsWith("/assets")) {
           result
         } else {
@@ -51,7 +51,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
         }
       },
       exception => {
-        logCompleted(request, Results.InternalServerError)
+        logCompleted(Results.InternalServerError)
         exception
       }
     )

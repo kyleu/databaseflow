@@ -1,5 +1,5 @@
-@(user: models.user.User, debug: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.admin(user, "status", messages("admin.status.title", utils.Config.projectName), debug = debug) {
+@(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@layout.admin(user, "status", messages("admin.status.title", utils.Config.projectName)) {
   <div class="card-content">
     <div class="card-title">@messages("admin.status.title", utils.Config.projectName)</div>
 

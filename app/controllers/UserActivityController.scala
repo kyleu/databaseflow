@@ -18,7 +18,7 @@ class UserActivityController @javax.inject.Inject() (override val ctx: Applicati
     } else {
       None
     }
-    Future.successful(Ok(views.html.profile.userActivity(request.identity, ctx.config.debug, audits, None, limit, offset, removeCall)))
+    Future.successful(Ok(views.html.profile.userActivity(request.identity, audits, None, limit, offset, removeCall)))
   }
 
   def removeAudit(id: UUID) = withSession("remove-audit") { implicit request =>

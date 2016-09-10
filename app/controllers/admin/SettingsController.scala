@@ -11,7 +11,7 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class SettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def settings = withAdminSession("admin-settings") { implicit request =>
-    Future.successful(Ok(views.html.admin.settings(request.identity, ctx.config.debug, SettingsService.getAll.map(s => s.key -> s.value).toMap)))
+    Future.successful(Ok(views.html.admin.settings(request.identity)))
   }
 
   def saveSettings = withAdminSession("admin-settings-save") { implicit request =>

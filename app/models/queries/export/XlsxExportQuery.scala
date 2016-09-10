@@ -49,34 +49,33 @@ case class XlsxExportQuery(title: String, override val sql: String, format: Stri
     wb.write(out)
   }
 
-  private[this] def setCell(cell: Cell, v: Option[Any]) = v match {
-    case Some(x) => x match {
-      case s: String => cell.setCellValue(s)
+  private[this] def setCell(cell: Cell, v: Option[Any]) = v.foreach(setCellValue(cell, _))
 
-      case b: Boolean => cell.setCellValue(b)
+  private[this] def setCellValue(cell: Cell, x: Any) = x match {
+    case s: String => cell.setCellValue(s)
 
-      case bd: BigDecimal => cell.setCellValue(bd.toDouble)
-      case b: Byte => cell.setCellValue(b.toDouble)
-      case s: Short => cell.setCellValue(s.toDouble)
-      case i: Integer => cell.setCellValue(i.toDouble)
-      case l: Long => cell.setCellValue(l.toDouble)
-      case f: Float => cell.setCellValue(f.toDouble)
-      case d: Double => cell.setCellValue(d)
+    case b: Boolean => cell.setCellValue(b)
 
-      case d: Date =>
-        val cal = new GregorianCalendar()
-        cal.setTime(d)
-        cell.setCellValue(cal)
-      case t: Time => cell.setCellValue(t.toString)
-      case ts: Timestamp =>
-        val cal = new GregorianCalendar()
-        cal.setTimeInMillis(ts.getTime)
-        cell.setCellValue(cal)
+    case bd: BigDecimal => cell.setCellValue(bd.toDouble)
+    case b: Byte => cell.setCellValue(b.toDouble)
+    case s: Short => cell.setCellValue(s.toDouble)
+    case i: Integer => cell.setCellValue(i.toDouble)
+    case l: Long => cell.setCellValue(l.toDouble)
+    case f: Float => cell.setCellValue(f.toDouble)
+    case d: Double => cell.setCellValue(d)
 
-      case n if n == NullUtils.inst => // no op
-      case other => cell.setCellValue(other.toString)
+    case d: Date =>
+      val cal = new GregorianCalendar()
+      cal.setTime(d)
+      cell.setCellValue(cal)
+    case t: Time => cell.setCellValue(t.toString)
+    case ts: Timestamp =>
+      val cal = new GregorianCalendar()
+      cal.setTimeInMillis(ts.getTime)
+      cell.setCellValue(cal)
 
-    }
-    case None => // no op
+    case n if n == NullUtils.inst => // no op
+    case other => cell.setCellValue(other.toString)
+
   }
 }

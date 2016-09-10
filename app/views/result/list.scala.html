@@ -2,11 +2,10 @@
     user: Option[models.user.User],
     myResults: Seq[models.query.SharedResult],
     publicResults: Seq[models.query.SharedResult],
-    usernameMap: Map[java.util.UUID, String],
-    debug: Boolean
+    usernameMap: Map[java.util.UUID, String]
 )(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@views.html.layout.simple(user = user, title = messages("shared.results.title"), debug = debug) {
+)@views.html.layout.simple(user = user, title = messages("shared.results.title")) {
   <div class="row">
     <div class="col s12">
       <div class="card">

@@ -79,7 +79,7 @@ object Dependencies {
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
     val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.11.v20160721"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.0.M1"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
   }

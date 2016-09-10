@@ -15,7 +15,7 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
   def index() = withoutSession("result.index") { implicit request =>
     val (myResults, publicResults) = SharedResultService.getAll.partition(r => request.identity.exists(_.id == r.owner))
     val usernameMap = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookupMulti(publicResults.map(_.owner).toSet)
-    Future.successful(Ok(views.html.result.list(request.identity, myResults, publicResults, usernameMap, ctx.config.debug)))
+    Future.successful(Ok(views.html.result.list(request.identity, myResults, publicResults, usernameMap)))
   }
 
   def view(id: UUID) = withoutSession("result.view") { implicit request =>
@@ -30,7 +30,7 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
               Ok(views.html.result.viewChart(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug))
             )
             case None => Future.successful(
-              Ok(views.html.result.viewData(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug))
+              Ok(views.html.result.viewData(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data))
             )
           }
         } else {

@@ -13,7 +13,7 @@ import scala.concurrent.Future
 class ActivityController @javax.inject.Inject() (override val ctx: ApplicationContext, userSearchService: UserSearchService) extends BaseController {
   def activity(limit: Int, offset: Int) = withAdminSession("admin-activity") { implicit request =>
     val audits = AuditRecordService.getAll(limit, offset)
-    Future.successful(Ok(views.html.admin.systemActivity(request.identity, ctx.config.debug, audits, None, limit, offset, userSearchService)))
+    Future.successful(Ok(views.html.admin.systemActivity(request.identity, audits, None, limit, offset, userSearchService)))
   }
 
   def removeAudit(id: UUID) = withAdminSession("admin-remove-audit") { implicit request =>

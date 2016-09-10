@@ -1,6 +1,6 @@
-@(user: models.user.User, debug: Boolean, connections: Seq[models.connection.ConnectionSettings])(
+@(user: models.user.User, connections: Seq[models.connection.ConnectionSettings])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(Some(user), utils.Config.projectName, debug = debug) {
+)@layout.simple(Some(user), utils.Config.projectName) {
   <div class="row">
     <div class="col s12">
       <div class="card">

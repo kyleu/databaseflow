@@ -1,7 +1,7 @@
 @import models.template.Icons
 @(user: models.user.User, conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(Some(user), "Edit " + title, debug = false) {
+)@layout.simple(Some(user), "Edit " + title) {
   @components.formErrors(errors)
   <div class="row">
     <form id="connection-form" class="col s12" method="post" action="@controllers.routes.ConnectionSettingsController.save(conn.id)">

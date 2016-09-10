@@ -1,3 +1,5 @@
+addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.15")
+
 lazy val sharedJs = Shared.sharedJs
 
 lazy val client = Client.client

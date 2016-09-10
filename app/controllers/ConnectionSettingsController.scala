@@ -37,10 +37,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
     val addConnectionRole = Role.withName(SettingsService(models.settings.SettingKey.AddConnectionRole))
     if (request.identity.role.qualifies(addConnectionRole)) {
       val connOpt = ConnectionSettingsService.getById(connectionId)
-      val conn = connOpt match {
-        case Some(c) => c
-        case None => ConnectionSettings(id = connectionId, name = "", owner = request.identity.id)
-      }
+      val conn = connOpt.getOrElse(ConnectionSettings(id = connectionId, name = "", owner = request.identity.id))
       val result = ConnectionForm.form.bindFromRequest.fold(
         formWithErrors => {
           val title = formWithErrors.value.map(_.name).getOrElse(messagesApi("connection.new.title"))

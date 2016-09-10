@@ -22,12 +22,12 @@ class ProfileController @javax.inject.Inject() (
     hasher: PasswordHasher
 ) extends BaseController {
   def view = withSession("view") { implicit request =>
-    Future.successful(Ok(views.html.profile.view(request.identity, debug = false)))
+    Future.successful(Ok(views.html.profile.view(request.identity)))
   }
 
   def save = withSession("view") { implicit request =>
     UserForms.profileForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.profile.view(request.identity, debug = false))),
+      form => Future.successful(BadRequest(views.html.profile.view(request.identity))),
       profileData => {
         val newPrefs = request.identity.preferences.copy(
           language = profileData.language,
@@ -42,7 +42,7 @@ class ProfileController @javax.inject.Inject() (
   }
 
   def changePasswordForm = withSession("change-password-form") { implicit request =>
-    Future.successful(Ok(views.html.profile.changePassword(request.identity, ctx.config.debug)))
+    Future.successful(Ok(views.html.profile.changePassword(request.identity)))
   }
 
   def changePassword = withSession("change-password") { implicit request =>

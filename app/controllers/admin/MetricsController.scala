@@ -12,7 +12,7 @@ class MetricsController @javax.inject.Inject() (override val ctx: ApplicationCon
     val f = call.get()
 
     f.map { json =>
-      Ok(views.html.admin.metrics(request.identity, json.body, ctx.config.debug))
+      Ok(views.html.admin.metrics(request.identity, json.body))
     }
   }
 }

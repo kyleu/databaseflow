@@ -2,5 +2,11 @@
   <div class="text-centered">
     <h1>@path</h1>
     <div class="text-large"><em>Exception Encountered</em></div>
+    @ex.map { x => <!--
+      @x:
+      @x.getStackTrace.map { st =>
+        @st
+      }
+    --> }
   </div>
 }

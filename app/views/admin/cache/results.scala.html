@@ -1,6 +1,6 @@
-@(user: models.user.User, debug: Boolean, rows: Seq[models.result.CachedResult], tables: Set[String], userService: services.user.UserSearchService)(
+@(user: models.user.User, rows: Seq[models.result.CachedResult], tables: Set[String], userService: services.user.UserSearchService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.admin(user, "results", messages("admin.results.title"), debug = debug) {
+)@layout.admin(user, "results", messages("admin.results.title")) {
   <div class="card-content">
     <div class="right"><a class="theme-text" href="@routes.SharedResultController.index()">@messages("shared.results.title")</a></div>
     <div class="card-title">

@@ -6,8 +6,7 @@
   scripts = Seq(
     routes.Assets.versioned("lib/momentjs/min/moment.min.js").url,
     routes.Assets.versioned("lib/mousetrap/mousetrap.min.js").url
-  ),
-  debug = debug
+  )
 ) {
   @views.html.layout.themeStyles(user.preferences.theme)
   @views.html.query.navbar(Some(user), dbName, txSupported)

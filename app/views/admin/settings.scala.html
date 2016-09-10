@@ -1,7 +1,4 @@
-@(user: models.user.User, debug: Boolean, settings: Map[models.settings.SettingKey, String])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)
-
+@(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @import models.settings.SettingKey._
 
 @settingPanel(key: models.settings.SettingKey, colWidth: Int = 12)(content: Html) = {
@@ -21,7 +18,7 @@
   </div>
 }
 
-@layout.admin(user, "settings", messages("admin.settings.title"), debug = debug) {
+@layout.admin(user, "settings", messages("admin.settings.title")) {
   <form action="@controllers.admin.routes.SettingsController.saveSettings()" method="post">
     <div class="card-content">
       <div class="card-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.settings.title")</div>
