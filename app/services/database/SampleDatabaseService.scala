@@ -38,7 +38,6 @@ object SampleDatabaseService extends Logging {
         if (completedQueries < 10 || (completedQueries < 100 && completedQueries % 10 == 0) || (completedQueries % 100 == 0)) {
           statusActor ! BatchQueryStatus(queryId, completedQueries, statements.length - completedQueries, (DateUtils.nowMillis - startMs).toInt)
         }
-
       }
       statusActor ! BatchQueryStatus(queryId, completedQueries, statements.length - completedQueries, (DateUtils.nowMillis - startMs).toInt)
     }
@@ -47,7 +46,6 @@ object SampleDatabaseService extends Logging {
       case Success(s) => statusActor ! TableResponse(s.tables)
       case Failure(x) => throw x
     }
-
   }
 
   private[this] def getSampleFile(engine: DatabaseEngine) = {

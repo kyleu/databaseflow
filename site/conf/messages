@@ -13,7 +13,7 @@ index.features.link = Features
 index.download.link = Download
 index.versions.link = Versions
 index.admin.link = Admin
-index.welcome1 = {0} is the best way to query and report on your own data.
+index.welcome1 = The best way to query and report on your own data.
 index.welcome2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 # Downloads

@@ -26,8 +26,5 @@ case class ConnectionSettings(
     username: String = "",
     password: String = ""
 ) {
-  val url = urlOverride match {
-    case Some(u) => u
-    case None => engine.url(host, port, dbName, extra)
-  }
+  val url = urlOverride.getOrElse(engine.url(host, port, dbName, extra))
 }
