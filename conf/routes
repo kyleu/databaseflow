@@ -6,6 +6,7 @@ GET         /strings.js                              controllers.MessagesControl
 
 # Connection Management
 GET         /c/new                                   controllers.ConnectionSettingsController.addNew()
+GET         /c/sample                                controllers.ConnectionSettingsController.createSample()
 POST        /c/:id                                   controllers.ConnectionSettingsController.save(id: java.util.UUID)
 GET         /c/:id                                   controllers.ConnectionSettingsController.editForm(id: java.util.UUID)
 GET         /c/:id/delete                            controllers.ConnectionSettingsController.delete(id: java.util.UUID)

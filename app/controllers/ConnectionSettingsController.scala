@@ -8,6 +8,7 @@ import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
 import models.user.Role
 import services.audit.AuditRecordService
+import services.config.ConfigFileService
 import services.connection.ConnectionSettingsService
 import services.settings.SettingsService
 import utils.{ApplicationContext, PasswordEncryptUtils}
@@ -81,5 +82,19 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
     ConnectionSettingsService.delete(connectionId)
     AuditRecordService.create(AuditType.DeleteConnection, request.identity.id, None, Some(connectionId.toString))
     Future.successful(Redirect(routes.HomeController.home()))
+  }
+
+  def createSample() = withSession("create.sample") { implicit request =>
+    val connectionId = UUID.randomUUID
+    val cs = ConnectionSettings(
+      id = connectionId,
+      name = "Database Flow Sample Database",
+      owner = request.identity.id,
+      engine = DatabaseEngine.SQLite,
+      dbName = Some(new java.io.File(ConfigFileService.configDir, "sample.db.sqlite").getAbsolutePath)
+    )
+    ConnectionSettingsService.insert(cs)
+    AuditRecordService.create(AuditType.CreateConnection, request.identity.id, None, Some(connectionId.toString))
+    Future.successful(Redirect(routes.QueryController.main(connectionId)))
   }
 }

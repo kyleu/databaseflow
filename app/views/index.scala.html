@@ -9,7 +9,10 @@
           <p>@messages("index.welcome", utils.Config.projectName)</p>
 
           @if(connections.isEmpty) {
-            <div>@messages("index.no.connections")</div>
+            <div class="no-connections">
+              @messages("index.no.connections")
+              Or, <a class="theme-text" href="@routes.ConnectionSettingsController.createSample()">create a sample database</a>.
+            </div>
           } else {
             <div>@views.html.connection.list(user, connections)</div>
           }
