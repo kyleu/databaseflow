@@ -6,16 +6,15 @@ Running locally or on a shared server, Database Flow helps you discover and sear
 
 ## Installation
 
-* If you've installed the universal zip, run the file `bin/databaseflow` from the extracted package. 
-* If you've installed the Debian package, you may run `databaseflow` from any shell path. 
+* If you've installed the universal zip, run the file `bin/databaseflow` from the extracted package.
+* If you've installed the Debian package, you may run `databaseflow` from any shell path.
 * For Windows users, start the file `bin\databaseflow.bat`, or use the start menu icon.
 
 ## Configuration
 
 * If you're on Windows, config files are stored in `%APPDATA%\Database Flow`. For other, saner OSs, you configuration folder may be found in `~/.databaseflow`/
-* Database Flow configuration is stored in a file named 
 * The main configuation file is named `databaseflow.conf`.
-* This is the configration for file path, mail setup, and stoorage locations.
+* You may change the configration for file path, mail setup, and storage locations.
 
 ## License
 
