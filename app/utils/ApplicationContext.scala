@@ -12,9 +12,11 @@ import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
 import play.api.libs.ws.WSClient
 import services.config.ConfigFileService
-import services.database.DatabaseRegistry
-import services.database.core.ResultCacheDatabase
-import services.supervisor.ActorSupervisor
+import services.database.{DatabaseRegistry, MasterDdl}
+import services.database.core.{MasterDatabase, ResultCacheDatabase}
+import services.licensing.LicenseService
+import services.settings.SettingsService
+import services.supervisor.{ActorSupervisor, VersionService}
 import utils.metrics.Instrumented
 
 import scala.concurrent.Future
@@ -36,6 +38,13 @@ class ApplicationContext @javax.inject.Inject() (
   if (ApplicationContext.initialized) {
     log.info("Skipping initialization after failure.")
   } else {
+    start()
+  }
+
+  val supervisor = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
+  log.debug(s"Actor Supervisor [${supervisor.path}] started for [${utils.Config.projectId}].")
+
+  private[this] def start() = {
     log.info(s"${Config.projectName} is starting.")
     ApplicationContext.initialized = true
 
@@ -50,11 +59,16 @@ class ApplicationContext @javax.inject.Inject() (
 
     lifecycle.addStopHook(() => Future.successful(stop()))
 
-    ActorSupervisor.startIfNeeded(ws)
-  }
+    MasterDatabase.open()
+    MasterDdl.update(MasterDatabase.conn)
+    SettingsService.load()
+    LicenseService.readLicense()
+    VersionService.upgradeIfNeeded(ws)
 
-  val supervisor = actorSystem.actorOf(Props(classOf[ActorSupervisor], this), "supervisor")
-  log.debug(s"Actor Supervisor [${supervisor.path}] started for [${utils.Config.projectId}].")
+    if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
+      java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
+    }
+  }
 
   private[this] def stop() = {
     DatabaseRegistry.close()

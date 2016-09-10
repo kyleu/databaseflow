@@ -7,24 +7,12 @@ import akka.actor.{ActorRef, OneForOneStrategy, SupervisorStrategy}
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
-import play.api.libs.ws.WSClient
-import services.database.MasterDdl
-import services.database.core.MasterDatabase
 import services.licensing.LicenseService
 import services.result.CachedResultActor
-import services.settings.SettingsService
 import utils.metrics.{InstrumentedActor, MetricsServletActor}
 import utils.{ApplicationContext, DateUtils, Logging}
 
 object ActorSupervisor {
-  def startIfNeeded(ws: WSClient) = if (!MasterDatabase.isOpen) {
-    MasterDatabase.open()
-    MasterDdl.update(MasterDatabase.conn)
-    SettingsService.load()
-    LicenseService.readLicense()
-    VersionService.upgradeIfNeeded(ws)
-  }
-
   case class SocketRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
 
   protected val sockets = collection.mutable.HashMap.empty[UUID, SocketRecord]

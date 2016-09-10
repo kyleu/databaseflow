@@ -35,6 +35,8 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
     UserCache.cacheUser(user)
   }
 
+  def userCount = MasterDatabase.query(UserQueries.count)
+
   def isUsernameInUse(name: String) = MasterDatabase.query(UserQueries.IsUsernameInUse(name))
 
   def usernameLookup(id: UUID) = MasterDatabase.query(UserQueries.GetUsername(id))

@@ -35,7 +35,7 @@ GET         /license                                 controllers.LicenseControll
 POST        /license                                 controllers.LicenseController.save()
 
 # Authentication
-GET         /signup                                  controllers.auth.RegistrationController.registrationForm
+GET         /signup                                  controllers.auth.RegistrationController.registrationForm(email: Option[String] ?= None)
 POST        /signup                                  controllers.auth.RegistrationController.register
 GET         /signin                                  controllers.auth.AuthenticationController.signInForm
 POST        /signin                                  controllers.auth.AuthenticationController.authenticateCredentials

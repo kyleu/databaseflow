@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.queries.auth.UserQueries
 import models.settings.SettingKey
-import models.user.{Role, User, UserForms, UserPreferences}
+import models.user._
 import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.database.core.MasterDatabase
@@ -27,9 +27,13 @@ class RegistrationController @javax.inject.Inject() (
     authInfoRepository: AuthInfoRepository,
     hasher: PasswordHasher
 ) extends BaseController {
-  def registrationForm = withoutSession("form") { implicit request =>
+  def registrationForm(email: Option[String] = None) = withoutSession("form") { implicit request =>
     if (SettingsService.allowRegistration) {
-      Future.successful(Ok(views.html.auth.register(request.identity, UserForms.registrationForm)))
+      val form = UserForms.registrationForm.fill(RegistrationData(
+        username = email.map(e => if (e.contains('@')) { e.substring(0, e.indexOf('@')) } else { "" }).getOrElse(""),
+        email = email.getOrElse("")
+      ))
+      Future.successful(Ok(views.html.auth.register(request.identity, form)))
     } else {
       Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("registration.disabled")))
     }

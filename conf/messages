@@ -43,6 +43,7 @@ license.new.form = License Details
 license.paste = Please paste your license in the form below.
 license.missing = Missing license content.
 license.success = License updated successfully.
+license.register = Please create a local account to use with {0}.
 
 # Registration
 registration.title = Register

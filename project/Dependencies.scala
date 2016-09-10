@@ -69,7 +69,7 @@ object Dependencies {
     val jquery = "org.webjars" % "jquery" % "2.2.4"
     val materialize = "org.webjars" % "materializecss" % "0.97.7"
     val moment = "org.webjars" % "momentjs" % "2.14.1"
-    val mousetrap = "org.webjars" % "mousetrap" % "1.5.3"
+    val mousetrap = "org.webjars" % "mousetrap" % "1.6.0"
     val plotly = "org.webjars.bower" % "plotly.js" % "1.16.2"
   }
 

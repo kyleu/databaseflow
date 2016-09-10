@@ -3,6 +3,7 @@ package controllers
 import models.settings.SettingKey
 import services.licensing.LicenseService
 import services.settings.SettingsService
+import services.user.UserService
 import utils.ApplicationContext
 import utils.web.FormUtils
 
@@ -25,8 +26,14 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
     LicenseService.parseLicense(content) match {
       case Success(l) =>
         SettingsService.set(SettingKey.LicenseContent, content)
-        LicenseService.readLicense()
-        Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("success" -> messagesApi("license.success")))
+        val license = LicenseService.readLicense()
+        val ret = if (UserService.instance.exists(_.userCount == 0)) {
+          val msg = messagesApi("license.success") + " " + messagesApi("license.register", utils.Config.projectName)
+          Redirect(controllers.auth.routes.RegistrationController.registrationForm(email = license.map(_.email))).flashing("success" -> msg)
+        } else {
+          Redirect(controllers.routes.HomeController.home()).flashing("success" -> messagesApi("license.success"))
+        }
+        Future.successful(ret)
       case Failure(x) =>
         val msg = x match {
           case _ if content.isEmpty => messagesApi("license.paste")
