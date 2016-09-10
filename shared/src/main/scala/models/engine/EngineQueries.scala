@@ -44,12 +44,14 @@ object EngineQueries {
         val op = options.filterOp.getOrElse(FilterOp.Equal)
         val fVal = options.filterVal.getOrElse("?")
         val modifiedVal = op match {
-          case FilterOp.Between => fVal.split('|').map(s => "'" + s + "'").mkString(" and ")
-          case FilterOp.Like if !fVal.contains('%') => s"'%$fVal%'"
-          case _ => s"'$fVal'"
+          case FilterOp.Between => " " + fVal.split('|').map(s => "'" + s + "'").mkString(" and ")
+          case FilterOp.In => " (" + fVal.split(',').map(s => "'" + s.trim + "'").mkString(", ") + ")"
+          case FilterOp.Like if !fVal.contains('%') => s" '%$fVal%'"
+          case FilterOp.IsNull | FilterOp.IsNotNull => ""
+          case _ => s" '$fVal'"
         }
         val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
-        s" where ${engine.cap.leftQuote}$col${engine.cap.rightQuote} ${op.sqlSymbol} $modifiedVal$additions"
+        s" where ${engine.cap.leftQuote}$col${engine.cap.rightQuote} ${op.sqlSymbol}$modifiedVal$additions"
       case None => whereClauseAdditions.map(" where" + _).getOrElse("")
     }
     val orderByClause = options.orderByCol.map { orderCol =>
