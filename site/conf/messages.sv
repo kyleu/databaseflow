@@ -1,5 +1,6 @@
 general.save = Spara
 general.about = Om
+general.back = Tillbaka
 th.email = E-post
 th.name = Namn
 index.splash = Vi arbetar hårt på en ny idé. Kommer snart!
@@ -30,6 +31,8 @@ features.i = Stöder H2, MySQL, Oracle, PostgreSQL, och SQL Server
 features.j = Lokalt installerade program
 features.k = Inga annonser, spår eller webbplatser från tredje part
 features.l = Visa kolumner, index, nyckel
+features.m = Underbara kartlägga och rita
+features.n = Gemensamt resultat med behörigheter
 newsletter.title = Nyhetsbrev
 newsletter.subscribe = Prenumerera
 feedback.title = Feedback

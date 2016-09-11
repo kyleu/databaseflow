@@ -96,6 +96,7 @@ help.hotkey.help = 助
 help.hotkey.search = 検索
 help.hotkey.refresh.schema = リフレッシュスキーマ
 help.hotkey.new.query = 新しいクエリ
+help.hotkey.focus.editor = 焦点SQLエディタ
 help.hotkey.close.tab = タブを閉じる
 help.hotkey.next.tab = 次に選択タブ
 help.hotkey.previous.tab = 前のタブを選択

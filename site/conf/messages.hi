@@ -1,5 +1,6 @@
 general.save = बचाने के लिए
 general.about = के बारे में
+general.back = वापस
 th.email = ईमेल
 th.name = नाम
 index.splash = हम कड़ी मेहनत कर रहे हैं पर एक नया विचार नहीं है. जल्द ही आ रहा है!
@@ -30,6 +31,8 @@ features.i = का समर्थन करता है, H2, MySQL, ओरे
 features.j = स्थानीय स्तर पर स्थापित आवेदन
 features.k = कोई विज्ञापन नहीं, ट्रैकर्स या तीसरे पक्ष साइटों
 features.l = दृश्य कॉलम में, अनुक्रमित, कुंजी
+features.m = बहुत सुन्दर अपनाने और साजिश रचने
+features.n = साझा परिणाम के साथ permissions
 newsletter.title = समाचार पत्र
 newsletter.subscribe = सदस्यता लें
 feedback.title = प्रतिक्रिया

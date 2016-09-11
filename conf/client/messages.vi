@@ -96,6 +96,7 @@ help.hotkey.help = Giúp
 help.hotkey.search = Tìm kiếm
 help.hotkey.refresh.schema = Cập Nhật Giản Đồ
 help.hotkey.new.query = Mới Tìm Kiếm
+help.hotkey.focus.editor = Tập trung SQL Editor
 help.hotkey.close.tab = Đóng
 help.hotkey.next.tab = Chọn Sau Thẻ
 help.hotkey.previous.tab = Chọn Thẻ Trước

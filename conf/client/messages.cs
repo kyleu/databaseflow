@@ -96,6 +96,7 @@ help.hotkey.help = Pomoc
 help.hotkey.search = Hledat
 help.hotkey.refresh.schema = Aktualizovat Schéma
 help.hotkey.new.query = Nový Dotaz
+help.hotkey.focus.editor = Zaměření SQL Editor
 help.hotkey.close.tab = Zavřít Kartu
 help.hotkey.next.tab = Vyberte Další Kartu
 help.hotkey.previous.tab = Vybrat Předchozí Kartu

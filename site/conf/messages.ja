@@ -1,5 +1,6 @@
 general.save = 保存
 general.about = 報
+general.back = 裏
 th.email = メール
 th.name = 名称
 index.splash = 取り組んでおりますがハードの新しいアイデアです。 が迫ってきました！
@@ -30,6 +31,8 @@ features.i = ポH2、MySQL、Oracle、PostgreSQL、SQLサーバー
 features.j = 地元のアプリケーション
 features.k = ない広告は、ラッカーまたは第三者のサイト
 features.l = ビューの列のインデックスキー
+features.m = 華やかなポび描画
+features.n = 共有結果アクセス権
 newsletter.title = Newsletter
 newsletter.subscribe = 購読
 feedback.title = 声

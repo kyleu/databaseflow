@@ -96,6 +96,7 @@ help.hotkey.help = 도움말
 help.hotkey.search = 검색
 help.hotkey.refresh.schema = 새로 스키마
 help.hotkey.new.query = 새로운 쿼리
+help.hotkey.focus.editor = 초점 SQL 편집기
 help.hotkey.close.tab = 탭을 닫
 help.hotkey.next.tab = 다음 탭 선택
 help.hotkey.previous.tab = 탭을 선택 이전

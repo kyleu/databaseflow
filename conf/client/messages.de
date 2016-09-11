@@ -96,6 +96,7 @@ help.hotkey.help = Helfen
 help.hotkey.search = Suche
 help.hotkey.refresh.schema = Refresh Schema
 help.hotkey.new.query = Neue Abfrage
+help.hotkey.focus.editor = Schwerpunkt SQL-Editor
 help.hotkey.close.tab = Schließen Sie Die Registerkarte
 help.hotkey.next.tab = Wählen Sie In Nächsten Tab
 help.hotkey.previous.tab = Wählen Sie Die Vorherigen Registerkarte

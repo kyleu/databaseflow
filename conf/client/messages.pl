@@ -96,6 +96,7 @@ help.hotkey.help = Pomóż
 help.hotkey.search = Wyszukiwanie
 help.hotkey.refresh.schema = Zaktualizować Schemat
 help.hotkey.new.query = Nowy Wniosek
+help.hotkey.focus.editor = Edytor ostrość w SQL
 help.hotkey.close.tab = Zamknij Kartę
 help.hotkey.next.tab = Wybierz Następną Kartę
 help.hotkey.previous.tab = Przejść Do Poprzedniej Karty

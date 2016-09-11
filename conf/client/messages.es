@@ -96,6 +96,7 @@ help.hotkey.help = Ayuda
 help.hotkey.search = Búsqueda
 help.hotkey.refresh.schema = Actualización Del Esquema De
 help.hotkey.new.query = Nueva Consulta
+help.hotkey.focus.editor = El foco del Editor SQL
 help.hotkey.close.tab = Cerrar Pestaña
 help.hotkey.next.tab = Seleccione La Ficha Siguiente
 help.hotkey.previous.tab = Seleccione La Ficha Anterior

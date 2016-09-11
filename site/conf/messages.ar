@@ -1,5 +1,6 @@
 general.save = حفظ
 general.about = عن
+general.back = مرة أخرى
 th.email = البريد الإلكتروني
 th.name = اسم
 index.splash = نحن نعمل بجد على فكرة جديدة. قريبا!
@@ -30,6 +31,8 @@ features.i = يدعم H2, MySQL, Oracle, PostgreSQL, و SQL Server
 features.j = محليا تثبيت التطبيق
 features.k = لا إعلانات ، بتتبع أو مواقع الطرف الثالث
 features.l = عرض الأعمدة المؤشرات الرئيسية
+features.m = رائع رسم والتآمر
+features.n = تقاسم النتائج مع أذونات
 newsletter.title = النشرة الإخبارية
 newsletter.subscribe = الاشتراك
 feedback.title = ردود الفعل

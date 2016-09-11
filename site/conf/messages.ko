@@ -1,5 +1,6 @@
 general.save = 저장
 general.about = 대
+general.back = 시
 th.email = 이메일
 th.name = 이름
 index.splash = 우리는 최선을 다하고 있습 새로운 아이디어가 아니다. 곧!
@@ -30,6 +31,8 @@ features.i = 지원 H2,MySQL,Oracle,PostgreSQL,SQL 서버
 features.j = 로컬에 설치된 응용 프로그램
 features.k = 지 않는 광고,추적자 또는 타사 사이트
 features.l = 뷰 열고,인덱스,키
+features.m = 화려한 차트와 플로팅
+features.n = 공유 결과와 권한
 newsletter.title = 뉴스레터
 newsletter.subscribe = 구독
 feedback.title = 피드백

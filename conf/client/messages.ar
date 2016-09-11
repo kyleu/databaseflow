@@ -96,6 +96,7 @@ help.hotkey.help = مساعدة
 help.hotkey.search = البحث
 help.hotkey.refresh.schema = تحديث المخطط
 help.hotkey.new.query = استعلام جديد
+help.hotkey.focus.editor = التركيز محرر SQL
 help.hotkey.close.tab = إغلاق علامة التبويب
 help.hotkey.next.tab = حدد علامة التبويب التالية
 help.hotkey.previous.tab = اختر التبويب السابقة

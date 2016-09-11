@@ -1,5 +1,6 @@
 general.save = להציל
 general.about = על
+general.back = חזרה
 th.email = דוא " ל
 th.name = שם
 index.splash = אנחנו עובדים קשה על רעיון חדש. בקרוב!
@@ -30,6 +31,8 @@ features.i = תומך H2, MySQL, Oracle, PostgreSQL, ו-SQL Server
 features.j = היישום מותקן באופן מקומי
 features.k = אין מודעות, הגששים או לאתרי צד-שלישי
 features.l = תצוגת עמודות, אינדקסים, מפתח
+features.m = מדהים תרשימים, התוויית
+features.n = משותף תוצאות עם הרשאות
 newsletter.title = עלון
 newsletter.subscribe = מנוי
 feedback.title = משוב

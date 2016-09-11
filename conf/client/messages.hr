@@ -96,6 +96,7 @@ help.hotkey.help = Pomozite
 help.hotkey.search = Traži
 help.hotkey.refresh.schema = Ažurirati Plan
 help.hotkey.new.query = Novi Zahtjev
+help.hotkey.focus.editor = Urednik fokus u SQL
 help.hotkey.close.tab = Zatvori Karticu
 help.hotkey.next.tab = Odaberite Sljedeću Karticu
 help.hotkey.previous.tab = Prelazak Na Prethodnu Karticu

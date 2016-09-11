@@ -1,5 +1,6 @@
 general.save = Spremi
 general.about = O
+general.back = Pre
 th.email = E-mail
 th.name = Naziv
 index.splash = Radimo na novoj ideji. Uskoro!
@@ -30,6 +31,8 @@ features.i = Podržava H2, kao što su MySQL, Oracle, PostgreSQL i SQL server
 features.j = Lokalno instalirane aplikacije
 features.k = Bez reklama, lokatori ili web-mjesta treće strane
 features.l = Vrsta zvučnika, indeksi ključeva
+features.m = Prekrasna stvaranje dijagrama i grafikona
+features.n = Ukupne rezultate s dozvolama
 newsletter.title = Newsletter
 newsletter.subscribe = Pretplatite
 feedback.title = Naši

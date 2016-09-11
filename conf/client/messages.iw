@@ -96,6 +96,7 @@ help.hotkey.help = לעזור
 help.hotkey.search = חיפוש
 help.hotkey.refresh.schema = רענון סכימה
 help.hotkey.new.query = שאילתה חדשה
+help.hotkey.focus.editor = פוקוס-SQL Editor
 help.hotkey.close.tab = כרטיסייה סגור
 help.hotkey.next.tab = בחר את הלשונית הבאה
 help.hotkey.previous.tab = בחר את הלשונית הקודמת

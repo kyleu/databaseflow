@@ -1,5 +1,6 @@
 general.save = Zapisz
 general.about = O
+general.back = Temu
 th.email = E-mail
 th.name = Nazwa
 index.splash = Pracujemy nad nowym pomysłem. Niedługo!
@@ -30,6 +31,8 @@ features.i = Obsługuje H2, jak MySQL, Oracle, PostgreSQL oraz SQL serwer
 features.j = Lokalnie zainstalowanej aplikacji
 features.k = Brak reklam, programów lub innych stron internetowych
 features.l = Widok kolumn, indeksów, kluczy
+features.m = Wspaniałe tworzenia diagramów i wykresów
+features.n = Ogólne wyniki z uprawnieniami
 newsletter.title = Biuletyn
 newsletter.subscribe = Zapisz się
 feedback.title = Opinie

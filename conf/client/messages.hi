@@ -96,6 +96,7 @@ help.hotkey.help = मदद
 help.hotkey.search = खोज
 help.hotkey.refresh.schema = ताज़ा स्कीमा
 help.hotkey.new.query = नई क्वेरी
+help.hotkey.focus.editor = ध्यान SQL संपादक
 help.hotkey.close.tab = बंद टैब
 help.hotkey.next.tab = अगला टैब चुनें
 help.hotkey.previous.tab = पिछले टैब का चयन करें

@@ -96,6 +96,7 @@ help.hotkey.help = ช่วย
 help.hotkey.search = การค้นหา
 help.hotkey.refresh.schema = ปรับปรุงรูปแบบชุดสี
 help.hotkey.new.query = ใหม่ Query
+help.hotkey.focus.editor = โฟกัสงเครื่องมือแก้ไขภาษา sql
 help.hotkey.close.tab = ปิดแท็บ
 help.hotkey.next.tab = เลือกแท็บถัดไป
 help.hotkey.previous.tab = เลือกแท็บก่อนหน้า

@@ -96,6 +96,7 @@ help.hotkey.help = Hjälp
 help.hotkey.search = Sök
 help.hotkey.refresh.schema = Uppdatera Schema
 help.hotkey.new.query = Ny Fråga
+help.hotkey.focus.editor = Fokus SQL-Editor
 help.hotkey.close.tab = Stäng Flik
 help.hotkey.next.tab = Välj Nästa Flik
 help.hotkey.previous.tab = Välj Föregående Flik

@@ -1,5 +1,6 @@
 general.save = Opslaan
 general.about = Over
+general.back = Terug
 th.email = E-mail
 th.name = Naam
 index.splash = We werken hard aan een nieuw idee. Binnenkort!
@@ -30,6 +31,8 @@ features.i = Ondersteunt H2, MySQL, Oracle, PostgreSQL, SQL Server
 features.j = Lokaal geïnstalleerde toepassing
 features.k = Geen advertenties, trackers of sites van derden
 features.l = Bekijk de kolommen, indexen, sleutel
+features.m = Prachtige kaart brengen en uitzetten
+features.n = Gedeelde resultaten met machtigingen
 newsletter.title = Nieuwsbrief
 newsletter.subscribe = Inschrijven
 feedback.title = Feedback

@@ -1,5 +1,6 @@
 general.save = Uložit
 general.about = O
+general.back = Zpět
 th.email = E-mail
 th.name = Jméno
 index.splash = Usilovně pracujeme na novém nápadu. Již brzy!
@@ -30,6 +31,8 @@ features.i = Podporuje H2, MySQL, Oracle, PostgreSQL a SQL Server
 features.j = Lokálně nainstalované aplikace
 features.k = Žádné reklamy, trackery nebo weby třetích stran
 features.l = Zobrazit sloupce, indexy, klíče
+features.m = Nádherný grafů a kreslení
+features.n = Sdílené výsledky s permissions
 newsletter.title = Newsletter
 newsletter.subscribe = Přihlásit
 feedback.title = Zpětná vazba

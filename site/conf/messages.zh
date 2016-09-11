@@ -1,5 +1,6 @@
 general.save = 保存
 general.about = 关于
+general.back = 回
 th.email = 电子邮件
 th.name = 名称
 index.splash = 我们正在努力在一个新的想法。 快来！
@@ -30,6 +31,8 @@ features.i = 支持H2，MySQL,Oracle,PostgreSQL和SQL服务器
 features.j = 本地安装应用程序
 features.k = 没有广告，跟踪或第三方网站
 features.l = 图列、索引、关键
+features.m = 华丽的图表和绘制
+features.n = 共享成果与权限
 newsletter.title = 时事通讯
 newsletter.subscribe = 订阅
 feedback.title = 反馈

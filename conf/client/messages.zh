@@ -96,6 +96,7 @@ help.hotkey.help = 帮助
 help.hotkey.search = 搜索
 help.hotkey.refresh.schema = 刷新架构
 help.hotkey.new.query = 新的查询
+help.hotkey.focus.editor = 重点SQL编辑
 help.hotkey.close.tab = 靠近卡
 help.hotkey.next.tab = 选择下一个标签
 help.hotkey.previous.tab = 选择上一个标签
