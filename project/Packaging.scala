@@ -1,8 +1,10 @@
 import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.debian.DebianPlugin.autoImport.Debian
-import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{ dockerExposedPorts => _, dockerExposedVolumes => _, _ }
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{ dockerExposedPorts => _, dockerExposedVolumes => _ }
 import com.typesafe.sbt.packager.windows.WindowsPlugin.autoImport.Windows
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport.{Docker, dockerExposedPorts, dockerExposedVolumes}
+import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin.autoImport.{jdkAppIcon, jdkPackagerBasename}
+
 import sbt.Keys._
 import sbt._
 import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.{ Universal, useNativeZip }
@@ -46,6 +48,11 @@ object Packaging {
     packageName in Docker := packageName.value,
     dockerExposedVolumes := Seq("/opt/databaseflow"),
     version in Docker := version.value,
+
+    // JDK Packager
+    jdkAppIcon :=  (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file),
+    jdkPackagerBasename := "Database Flow",
+
 
     javaOptions in Universal ++= Seq(
       "-J-Xmx2g",

@@ -28,10 +28,10 @@
       <div class="card-content">
         <span class="card-title">@messages("downloads.title")</span>
         <div class="row padded-top">
-          @section("osx", Seq("service" -> ".zip"))
-          @section("windows", Seq("service" -> ".zip", "gui" -> ".msi"))
-          @section("linux", Seq("service" -> ".tgz", "deb" -> ".deb"))
-          @section("docker", Seq("service" -> ".gz"))
+          @section("osx", Seq("dmg" -> ".dmg", "zip" -> ".zip"))
+          @section("windows", Seq("msi" -> ".msi", "zip" -> ".zip"))
+          @section("linux", Seq("deb" -> ".deb", "zip" -> ".tgz"))
+          @section("docker", Seq("zip" -> ".gz"))
         </div>
       </div>
     </div>
