@@ -3,9 +3,8 @@ package controllers
 import akka.actor.ActorSystem
 import com.codahale.metrics.SharedMetricRegistries
 import play.api.Configuration
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.inject.ApplicationLifecycle
-import play.api.mvc.{Action, Controller}
 import services.payment.StripePaymentService
 import utils.metrics.{MetricsConfig, MetricsServletActor}
 
@@ -87,7 +86,11 @@ class SiteController @javax.inject.Inject() (
     Future.successful(Ok(views.html.privacy()))
   }
 
-  def robots() = act("robots-txt") { implicit request =>
+  def robots() = act("robots.txt") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow:"))
+  }
+
+  def test() = act("test") { implicit request =>
+    Future.successful(Ok(views.html.test()))
   }
 }

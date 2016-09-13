@@ -63,6 +63,7 @@ query.run.active = Run Active
 query.run.selection = Run Selection
 query.active.filter = Active Filter
 query.no.rows.returned = No rows returned
+query.insert = Add New Row
 query.view.first = View First 100 Rows
 query.load.more = Load {0} More Rows
 query.no.more.rows = No more rows available

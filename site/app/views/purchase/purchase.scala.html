@@ -1,5 +1,6 @@
 @(edition: String, action: Call, priceUsd: Int)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.simple(title = messages("purchase.title", edition), section = "versions", scripts = Seq("https://checkout.stripe.com/checkout.js")) {
+<div class="container">
   <script>
       var handler = StripeCheckout.configure({
         key: '@services.payment.StripePaymentService.jsKey',
@@ -73,5 +74,5 @@
       </div>
     </div>
   </div>
+</div>
 }
-

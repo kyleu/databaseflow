@@ -144,6 +144,7 @@ query.sidenav.help = Help
 query.sidenav.feedback = Feedback
 query.sidenav.about = About {0}
 query.share = Share
+query.insert = Insert Row
 
 # Query Results
 result.remove.confirm = Removed result [{0}].

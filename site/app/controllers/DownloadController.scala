@@ -35,7 +35,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
         case x => throw new IllegalStateException(s"Unknown variant [$variant].")
       }
       case "linux" => variant match {
-        case "zip" => "linux/databaseflow.tgz"
+        case "tgz" => "linux/databaseflow.tgz"
         case "deb" => "linux/databaseflow_1.0.0_all.deb"
         case x => throw new IllegalStateException(s"Unknown variant [$variant].")
       }

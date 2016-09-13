@@ -1,12 +1,9 @@
 @()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)@layout.simple(utils.Config.projectName, "splash") {
+<div class="container">
   <div class="row">
     <div class="col s12">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">@utils.Config.projectName</span>
-          <p>@messages("index.splash")</p>
-        </div>
-      </div>
+      <p>@messages("index.splash")</p>
     </div>
   </div>
+</div>
 }

@@ -10,6 +10,7 @@ import models.template.tbl.TableDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui._
+import ui.modal.DataInsertManager
 import utils.{NetworkMessage, TemplateUtils}
 
 object TableManager extends TableDetailHelper {
@@ -56,6 +57,10 @@ object TableManager extends TableDetailHelper {
             }
           )
           RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
+        })
+
+        TemplateUtils.clickHandler($(".insert-data-link", queryPanel), jq => {
+          DataInsertManager.show()
         })
 
         openTables = openTables + (name -> queryId)

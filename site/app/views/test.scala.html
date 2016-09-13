@@ -1,0 +1,71 @@
+@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+
+@card(img: String, title: String)(content: Html) = {
+  <div class="col s12 m6">
+    <div class="card">
+      <div class="card-image">
+        <img src="@img" style="min-height: 190px;">
+        <span class="card-title">@title</span>
+      </div>
+      <div class="card-content">@content</div>
+    </div>
+  </div>
+}
+
+@layout.simple(utils.Config.projectName, "index") {
+  <div class="theme">
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <div class="hero white-text">
+            <h4>The best way to query and report on your own data.</h4>
+            <p>@utils.Config.projectName is a collaborative SQL client and reporting app that works with your database.</p>
+            <p>You can run @utils.Config.projectName locally for your own use, or install to a shared server for the whole team.</p>
+            <div class="hero-links">
+              <a href="" class="index-button btn white theme-text">Download</a>
+              <a href="" class="index-button btn white theme-text license-link">Get a License</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="container">
+      <div class="row">
+        @card("http://lorempixel.com/1280/720/nature/8", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/7", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/6", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/5", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/4", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/3", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/2", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+        @card("http://lorempixel.com/1280/720/nature/1", "Card Title") { <p>
+          I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.
+        </p> }
+      </div>
+    </div>
+  </div>
+}

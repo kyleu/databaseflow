@@ -1,5 +1,6 @@
 @(form: Form[controllers.UserLicenseController.LicenseForm])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.simple(title = messages("personal.license.new"), section = "versions") {
+<div class="container">
   <form method="post" action="@controllers.routes.UserLicenseController.licenseRequest()">
     <input type="hidden" name="edition" value="@licensing.LicenseEdition.NonCommercial" />
     <div class="row">
@@ -31,4 +32,5 @@
       </div>
     </div>
   </form>
+</div>
 }
