@@ -72,7 +72,7 @@ object ModelResultsService {
 
   def handleQuerySaveResponse(sq: SavedQuery, error: Option[String]) = error match {
     case Some(err) => NotificationService.info("Query Save Error", err)
-    case None => SavedQueryFormManager.handleSavedQuery(sq, error)
+    case None => SavedQueryFormManager.handleSavedQuery(sq)
   }
 
   def handleQueryDeleteResponse(id: UUID, error: Option[String]) = error match {

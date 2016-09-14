@@ -54,9 +54,7 @@ object CreateResultTable {
   }
 }
 
-case class CreateResultTable(resultId: UUID, columns: Seq[QueryResult.Col])(implicit engine: DatabaseEngine) extends Statement {
-  val tableName = s"result_${resultId.toString.replaceAllLiterally("-", "")}"
-
+case class CreateResultTable(tableName: String, columns: Seq[QueryResult.Col])(implicit engine: DatabaseEngine) extends Statement {
   override val sql = {
     val quotedName = engine.cap.leftQuote + tableName + engine.cap.rightQuote
     val rowNumCol = if (columns.exists(_.name == "#")) {

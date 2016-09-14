@@ -6,24 +6,7 @@ import models.template.query.QueryParametersTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import utils.TemplateUtils
 
-object ParameterManager {
-  private[this] var activeParams = Map.empty[UUID, Seq[(String, String, String)]]
-
-  private[this] def set(queryId: UUID, v: Seq[(String, String, String)]) = {
-    utils.Logging.info(s"Setting values for [$queryId]: $v")
-    activeParams += queryId -> v
-  }
-
-  def setValues(queryId: UUID, paramValues: Map[String, String]) = {
-    val newParams = activeParams.get(queryId) match {
-      case Some(params) => params.map { v =>
-        (v._1, v._2, paramValues.getOrElse(v._1, v._3))
-      } ++ paramValues.toSeq.filterNot(x => params.exists(_._1 == x._1)).map(x => (x._1, "string", x._2))
-      case None => paramValues.toSeq.map(x => (x._1, "string", x._2))
-    }
-    set(queryId, newParams)
-  }
-
+object ParameterManager extends ParameterChangeManager {
   def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
     //utils.Logging.info(s"onChange(queryId: $queryId, sql: $sql, paramValues: $paramValues)")
     val keys = getKeys(sql)
@@ -48,15 +31,6 @@ object ParameterManager {
     }
   }
 
-  def getParamsOpt(queryId: UUID) = activeParams.get(queryId).map { x =>
-    utils.Logging.info(s"Returning params [$x].")
-    x.map(r => r._1 -> r._3).toMap
-  }
-
-  def getParams(sql: String, queryId: UUID) = sql -> getParamsOpt(queryId).getOrElse(Map.empty)
-
-  def remove(queryId: UUID) = activeParams = activeParams - queryId
-
   def merge(sql: String, params: Map[String, String]) = {
     var merged = sql
     params.foreach { param =>
@@ -70,30 +44,6 @@ object ParameterManager {
       }
     }
     merged
-  }
-
-  private[this] def getKeys(sql: String) = {
-    var startIndex = -1
-    sql.zipWithIndex.foldLeft(Seq.empty[(String, String)])((x, y) => y match {
-      case ('{', idx) =>
-        startIndex = idx
-        x
-      case ('}', idx) if idx == (startIndex + 1) => x
-      case ('}', idx) =>
-        val v = sql.substring(startIndex + 1, idx)
-        val ret = v.indexOf(':') match {
-          case -1 => v -> "string"
-          case i =>
-            val split = v.split(':')
-            split.headOption.getOrElse(throw new IllegalStateException()).trim -> split.tail.mkString(":").trim
-        }
-        if (!x.exists(_._1 == ret._1)) {
-          x :+ ret
-        } else {
-          x
-        }
-      case _ => x
-    })
   }
 
   private[this] def render(queryId: UUID, keys: Seq[(String, String)], panel: JQuery) = {

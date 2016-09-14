@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.6"
+    private[this] val version = "2.5.7"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -74,7 +74,7 @@ object Dependencies {
   }
 
   object Metrics {
-    val metrics = "nl.grons" %% "metrics-scala" % "3.5.4"
+    val metrics = "nl.grons" %% "metrics-scala" % "3.5.5"
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()

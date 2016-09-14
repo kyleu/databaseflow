@@ -14,8 +14,11 @@ import services.database.core.ResultCacheDatabase
 import utils.Logging
 
 object CachedResultQueryHelper extends Logging {
-  def createResultTable(resultId: UUID, columns: Seq[QueryResult.Col]) = {
-    ResultCacheDatabase.conn.executeUpdate(CreateResultTable(resultId, columns)(ResultCacheDatabase.conn.engine))
+  private[this] val badChars = Seq(" ", "\"", "\'", "\\", ":", "(", ")", ",", ".")
+
+  def createResultTable(tableName: String, columns: Seq[QueryResult.Col]) = {
+    val q = CreateResultTable(tableName, columns)(ResultCacheDatabase.conn.engine)
+    ResultCacheDatabase.conn.executeUpdate(q)
   }
 
   def getColumns(md: ResultSetMetaData) = {
@@ -23,7 +26,8 @@ object CachedResultQueryHelper extends Logging {
     val columns = (1 to cc).map { i =>
       val (columnType, precision, scale) = DynamicQuery.getColumnMetadata(md, i)
       val label = md.getColumnLabel(i)
-      QueryResult.Col(label, columnType, precision, scale)
+      val name = badChars.foldLeft(label)((x, y) => x.replaceAllLiterally(y, "_"))
+      QueryResult.Col(name, columnType, precision, scale)
     }
 
     val dedupedColumns = columns.foldLeft(Seq.empty[QueryResult.Col]) { (x, y) =>

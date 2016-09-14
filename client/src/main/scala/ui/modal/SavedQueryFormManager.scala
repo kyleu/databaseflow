@@ -50,7 +50,7 @@ object SavedQueryFormManager {
     inputName.focus()
   }
 
-  def handleSavedQuery(sq: SavedQuery, error: Option[String]) = {
+  def handleSavedQuery(sq: SavedQuery) = {
     if (activeQuery.exists(_.id == sq.id)) {
       SavedQueryManager.updateSavedQueries(Seq(sq), Map.empty)
       if (!SavedQueryManager.openSavedQueries.contains(sq.id)) {
