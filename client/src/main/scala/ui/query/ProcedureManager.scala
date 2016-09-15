@@ -4,7 +4,8 @@ import java.util.UUID
 
 import models.GetProcedureDetail
 import models.schema.Procedure
-import models.template.{Icons, ProcedureDetailTemplate}
+import models.template.Icons
+import models.template.proc.{ProcedureDetailTemplate, ProcedureParameterDetailTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.metadata.MetadataManager
@@ -69,5 +70,14 @@ object ProcedureManager {
     }
 
     Logging.debug(s"Procedure [${proc.name}] loaded.")
+
+    if (proc.params.nonEmpty) {
+      val section = $(".params-section", panel)
+      section.removeClass("initially-hidden")
+      $(".badge", section).html(proc.params.size.toString)
+      $(".section-content", section).html(ProcedureParameterDetailTemplate.paramsPanel(proc.params).render)
+    }
+
+    scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
   }
 }

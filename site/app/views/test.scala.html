@@ -18,12 +18,12 @@
       <div class="row">
         <div class="col s12">
           <div class="hero white-text">
-            <h4>The best way to query and visualize your database.</h4>
-            <p>@utils.Config.projectName is a self-hosted collaborative SQL client and charting application that works with your database.</p>
-            <p>You can run @utils.Config.projectName locally for your own use, or install to a shared server for the whole team.</p>
+            <h4>@messages("index.hero.title")</h4>
+            <p>@messages("index.hero.subtitle1", utils.Config.projectName)</p>
+            <p>@messages("index.hero.subtitle2", utils.Config.projectName)</p>
             <div class="hero-links">
-              <a href="" class="index-button btn white theme-text">Download</a>
-              <a href="" class="index-button btn white theme-text license-link">Get a License</a>
+              <a href="" class="index-button btn white theme-text">@messages("index.download.link")</a>
+              <a href="" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
             </div>
           </div>
         </div>
@@ -33,34 +33,36 @@
   <div>
     <div class="container">
       <div class="row features-container">
-        @card("http://lorempixel.com/1280/720/nature/8", "Card Title") { <p>
+        @card("http://lorempixel.com/1280/720/nature/8", "Manage Your Data") { <p>
+          Run SQL queries, view tables and other database objects, and share and visualize the results.
           Database Flow is self-hosted, so your data always remains private.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/7", "Card Title") { <p>
+        @card("http://lorempixel.com/1280/720/nature/7", "Advanced SQL Editor") { <p>
           Syntax highlighting and auto-completion make writing complicated queries easy.
           Use query parameters to help others use your shared SQL.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/6", "Card Title") { <p>
-          We use <a href="https://plot.ly/javascript/" class="theme-text">plotly.js</a> to bring you the best charts available on any platform.
+        @card("http://lorempixel.com/1280/720/nature/6", "Charting") { <p>
+          We use <a href="https://plot.ly/javascript/" class="theme-text">plotly.js</a> to bring you the best charts available.
           Share charts and results with ease, and save queries for later use.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/5", "Card Title") { <p>
+        @card("http://lorempixel.com/1280/720/nature/5", "Query History") { <p>
           Query history and audit logs ensure you never forget the queries you write.
           Granular permissions help you share databases and results with your team.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/4", "Card Title") { <p>
+        @card("http://lorempixel.com/1280/720/nature/4", "Responsive Interface") { <p>
           High definition retina graphics and a responsive interface help you navigate your data on any device.
           Hotkeys and shortcuts increase your productivity.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/3", "Card Title") { <p>
-          Database Flow supports the most popular databases, and provides features that help you make the most of your data.
+        @card("http://lorempixel.com/1280/720/nature/3", "Database Engine Support") { <p>
+          Database Flow supports the most popular database engines, and provides features that help you make the most of your data.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/2", "Card Title") { <p>
-          Sort and filter your results without re-running your SQL query.
-          Database Flow helps you drill down to the data you need.
+        @card("http://lorempixel.com/1280/720/nature/2", "Result Filtering") { <p>
+          Sort and filter your results without re-running your query.
+          By linking to related tables, Database Flow helps you drill down to the data you need.
         </p> }
-        @card("http://lorempixel.com/1280/720/nature/1", "Card Title") { <p>
-          Explain plan
+        @card("http://lorempixel.com/1280/720/nature/1", "Query Plan") { <p>
+          Visualize the performance of your queries with a sophisticated plan viewer.
+          Supporting explain and analyze plans, improving the performance of your queries just got easier.
         </p> }
       </div>
     </div>

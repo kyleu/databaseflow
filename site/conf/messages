@@ -11,10 +11,15 @@ th.name = Name
 index.splash = We''re working hard on a new idea. Coming soon!
 index.features.link = Features
 index.download.link = Download
+index.license.link = Get a License
 index.versions.link = Versions
 index.admin.link = Admin
 index.welcome1 = The best way to query and report on your own data.
 index.welcome2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
+
+index.hero.title = The best way to query and visualize your database.
+index.hero.subtitle1 = {0} is a self-hosted collaborative SQL client and charting application that works with your database.
+index.hero.subtitle2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 # Downloads
 downloads.title = Downloads
