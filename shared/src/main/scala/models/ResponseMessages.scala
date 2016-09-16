@@ -50,3 +50,5 @@ case class QuerySaveResponse(savedQuery: SavedQuery, error: Option[String] = Non
 case class QueryDeleteResponse(id: UUID, error: Option[String] = None) extends ResponseMessage
 
 case class SharedResultSaveResponse(result: SharedResult, error: Option[String] = None) extends ResponseMessage
+
+case class InsertRowResponse(resultId: UUID, errors: Map[String, String]) extends ResponseMessage

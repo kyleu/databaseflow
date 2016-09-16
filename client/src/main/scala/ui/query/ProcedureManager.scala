@@ -2,14 +2,14 @@ package ui.query
 
 import java.util.UUID
 
-import models.GetProcedureDetail
+import models.{CallProcedure, GetProcedureDetail}
 import models.schema.Procedure
 import models.template.Icons
-import models.template.proc.{ProcedureDetailTemplate, ProcedureParameterDetailTemplate}
+import models.template.proc.ProcedureDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.metadata.MetadataManager
-import ui.{TabManager, WorkspaceManager}
+import ui.{ProgressManager, TabManager, WorkspaceManager}
 import utils.{Logging, NetworkMessage, TemplateUtils}
 
 object ProcedureManager {
@@ -44,7 +44,7 @@ object ProcedureManager {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      TemplateUtils.clickHandler($(".call-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".call-procedure-link", queryPanel), jq => {
         MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")
@@ -56,7 +56,9 @@ object ProcedureManager {
 
   private[this] def callProcedure(queryId: UUID, procedure: Procedure) = {
     Logging.debug(s"Calling procedure [$queryId]: " + procedure)
-    // NetworkMessage.sendMessage(???)
+    val resultId = UUID.randomUUID
+    ProgressManager.startProgress(queryId, resultId, procedure.name)
+    NetworkMessage.sendMessage(CallProcedure(queryId, procedure.name, Map.empty, resultId))
   }
 
   private[this] def setProcedureDetails(uuid: UUID, proc: Procedure) = {
@@ -75,7 +77,7 @@ object ProcedureManager {
       val section = $(".params-section", panel)
       section.removeClass("initially-hidden")
       $(".badge", section).html(proc.params.size.toString)
-      $(".section-content", section).html(ProcedureParameterDetailTemplate.paramsPanel(proc.params).render)
+      $(".section-content", section).html(ProcedureDetailTemplate.paramsPanel(proc.params).render)
     }
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()

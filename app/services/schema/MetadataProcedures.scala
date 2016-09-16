@@ -5,9 +5,11 @@ import java.sql.DatabaseMetaData
 import models.database.Row
 import models.queries.QueryTranslations
 import models.schema.{Procedure, ProcedureParam}
-import utils.NullUtils
+import utils.{Logging, NullUtils}
 
-object MetadataProcedures {
+import scala.util.control.NonFatal
+
+object MetadataProcedures extends Logging {
   def getProcedures(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getProcedures(catalog.orNull, schema.orNull, NullUtils.inst)
     new Row.Iter(rs).map(procedureFromRow).toList.sortBy(_.name)
@@ -17,10 +19,14 @@ object MetadataProcedures {
     getProcedureDetails(metadata, catalog, schema, p)
   }
 
-  def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedure: Procedure) = {
+  def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedure: Procedure) = try {
     val rs2 = metadata.getProcedureColumns(catalog.orNull, schema.orNull, procedure.name, NullUtils.inst)
     val columns = new Row.Iter(rs2).map(columnFromRow).toList.sortBy(_._1).map(_._2)
     procedure.copy(params = columns)
+  } catch {
+    case NonFatal(x) =>
+      log.info("Unable to get procedure details.", x)
+      procedure
   }
 
   private[this] def procedureFromRow(row: Row) = {

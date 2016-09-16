@@ -2,6 +2,7 @@ package models.template.proc
 
 import java.util.UUID
 
+import models.schema.ProcedureParam
 import models.template.{Icons, StaticPanelTemplate}
 import utils.Messages
 
@@ -23,11 +24,30 @@ object ProcedureDetailTemplate {
       )
     )
 
-    val actions = Nil
+    val actions = Seq( //a(cls := "call-procedure-link theme-text right", href := "#")(Messages("query.call")),
+    //div(cls := "clear")
+    )
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.procedure -> span(procedureName)), actions = actions),
       div(id := s"workspace-$queryId")
     )
   }
+
+  def paramsPanel(params: Seq[ProcedureParam]) = table(cls := "bordered highlight responsive-table")(
+    thead(tr(
+      th(Messages("th.name")),
+      th(Messages("th.description")),
+      th(Messages("th.type")),
+      th(Messages("th.column"))
+    )),
+    tbody(params.map { p =>
+      tr(
+        td(p.name),
+        td(p.description.getOrElse(""): String),
+        td(p.paramType),
+        td(p.columnType.toString)
+      )
+    })
+  )
 }

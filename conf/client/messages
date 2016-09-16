@@ -61,6 +61,7 @@ query.run = Run
 query.run.all = Run All
 query.run.active = Run Active
 query.run.selection = Run Selection
+query.call = Call Procedure
 query.active.filter = Active Filter
 query.no.rows.returned = No rows returned
 query.insert = Add New Row

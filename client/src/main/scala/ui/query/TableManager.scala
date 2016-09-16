@@ -60,7 +60,8 @@ object TableManager extends TableDetailHelper {
         })
 
         TemplateUtils.clickHandler($(".insert-data-link", queryPanel), jq => {
-          DataInsertManager.show()
+          val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
+          DataInsertManager.show(queryId, name, columns)
         })
 
         openTables = openTables + (name -> queryId)

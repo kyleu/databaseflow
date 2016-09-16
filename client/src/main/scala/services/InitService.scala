@@ -36,6 +36,7 @@ object InitService {
     ConfirmManager.init()
     ReconnectManager.init()
     SavedQueryFormManager.init()
+    DataInsertManager.init()
     SharedResultFormManager.init()
     QueryExportFormManager.init()
     PlanNodeDetailManager.init()
