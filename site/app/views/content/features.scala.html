@@ -4,41 +4,44 @@
     <div class="card">
       <div class="card-image">
         <img src="@img" style="min-height: 190px;">
-        <span class="card-title">@title</span>
       </div>
-      <div class="card-content">@content</div>
+      <hr />
+      <div class="card-content">
+        <div class="theme-text">@title</div>
+        @content
+      </div>
     </div>
   </div>
 }
 <div class="row features-container">
-  @card("http://lorempixel.com/1280/720/nature/8", "Manage Your Data") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/manage.png").url, "Manage Your Data") { <p>
     Run SQL queries, view tables and other database objects, and share and visualize the results.
     Database Flow is self-hosted, so your data always remains private.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/7", "Advanced SQL Editor") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/editor.png").url, "Advanced SQL Editor") { <p>
     Syntax highlighting and auto-completion make writing complicated queries easy.
     Use query parameters to help others use your shared SQL.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/6", "Charting") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/charting.png").url, "Charting") { <p>
     We use <a href="https://plot.ly/javascript/" class="theme-text">plotly.js</a> to bring you the best charts available.
     Share charts and results with ease, and save queries for later use.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/5", "Query History") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/history.png").url, "Query History") { <p>
     Query history and audit logs ensure you never forget the queries you write.
     Granular permissions help you share databases and results with your team.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/4", "Responsive Interface") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/responsive.png").url, "Responsive Interface") { <p>
     High definition retina graphics and a responsive interface help you navigate your data on any device.
     Hotkeys and shortcuts increase your productivity.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/3", "Database Engine Support") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/databases.png").url, "Database Engine Support") { <p>
     Database Flow supports the most popular database engines, and provides features that help you make the most of your data.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/2", "Result Filtering") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/filter.png").url, "Result Filtering") { <p>
     Sort and filter your results without re-running your query.
     By linking to related tables, Database Flow helps you drill down to the data you need.
   </p> }
-  @card("http://lorempixel.com/1280/720/nature/1", "Query Plan") { <p>
+  @card(routes.Assets.versioned("/images/screenshot/plan.png").url, "Query Plan") { <p>
     Visualize the performance of your queries with a sophisticated plan viewer.
     Supporting explain and analyze plans, improving the performance of your queries just got easier.
   </p> }

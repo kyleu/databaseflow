@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.7"
+    private[this] val version = "2.5.8"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -74,7 +74,7 @@ object Dependencies {
     val materialize = "org.webjars" % "materializecss" % "0.97.7"
     val moment = "org.webjars" % "momentjs" % "2.14.1"
     val mousetrap = "org.webjars" % "mousetrap" % "1.6.0"
-    val plotly = "org.webjars.bower" % "plotly.js" % "1.16.2"
+    val plotly = "org.webjars.bower" % "plotly.js" % "1.17.2"
   }
 
   object Metrics {

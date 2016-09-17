@@ -35,6 +35,11 @@ object DatabaseRegistry extends Logging {
       }
   }
 
+  def reset(settings: ConnectionSettings) = {
+    databases.remove(settings.id)
+    databaseFor(settings.id)
+  }
+
   def databaseForUser(user: User, connectionId: UUID) = databases.get(connectionId) match {
     case Some(c) => resultFor(ConnectionSettingsService.canRead(user, c._2), c._1)
     case None =>

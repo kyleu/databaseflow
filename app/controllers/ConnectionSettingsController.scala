@@ -10,6 +10,8 @@ import models.user.Role
 import services.audit.AuditRecordService
 import services.config.ConfigFileService
 import services.connection.ConnectionSettingsService
+import services.database.DatabaseRegistry
+import services.schema.SchemaService
 import services.settings.SettingsService
 import utils.{ApplicationContext, PasswordEncryptUtils}
 
@@ -54,12 +56,20 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
           connOpt match {
             case Some(existing) =>
               ConnectionSettingsService.update(updated)
-              AuditRecordService.create(AuditType.EditConnection, request.identity.id, None, Some(updated.id.toString))
+              DatabaseRegistry.reset(updated) match {
+                case Right(c) =>
+                  SchemaService.getSchema(c, forceRefresh = true)
+                  AuditRecordService.create(AuditType.EditConnection, request.identity.id, None, Some(updated.id.toString))
+                  Redirect(routes.QueryController.main(connectionId))
+                case Left(x) =>
+                  log.warn("Unable to connect to newly saved connection.", x)
+                  Redirect(routes.QueryController.main(connectionId))
+              }
             case None =>
               ConnectionSettingsService.insert(updated)
               AuditRecordService.create(AuditType.CreateConnection, request.identity.id, None, Some(updated.id.toString))
+              Redirect(routes.QueryController.main(connectionId))
           }
-          Redirect(routes.QueryController.main(connectionId))
         }
       )
       Future.successful(result)

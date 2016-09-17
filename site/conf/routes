@@ -3,7 +3,6 @@ GET            /test                                    controllers.SiteControll
 GET            /site                                    controllers.SiteController.index
 GET            /features                                controllers.SiteController.features
 GET            /versions                                controllers.SiteController.versions
-GET            /screenshots                             controllers.SiteController.screenshots
 GET            /plan                                    controllers.SiteController.plan
 GET            /tech                                    controllers.SiteController.technology
 GET            /lang/:id                                controllers.SiteController.language(id)

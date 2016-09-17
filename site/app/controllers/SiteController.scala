@@ -57,11 +57,6 @@ class SiteController @javax.inject.Inject() (
     Future.successful(Ok(views.html.versions(isAdmin)))
   }
 
-  def screenshots() = act("screenshots") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.screenshots(isAdmin)))
-  }
-
   def plan() = act("plan") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.plan(isAdmin)))

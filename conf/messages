@@ -34,7 +34,6 @@ th.type = Type
 th.username = Username
 
 # Index Page
-index.welcome = Welcome to {0}! Here''s a few words about the app. Maybe a slogan or something.
 index.no.connections = Add your first connection by clicking the link below.
 index.new.connection = New Connection
 

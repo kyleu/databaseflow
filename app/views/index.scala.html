@@ -5,9 +5,6 @@
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">@utils.Config.projectName</span>
-          <p>@messages("index.welcome", utils.Config.projectName)</p>
-
           @if(connections.isEmpty) {
             <div class="no-connections">
               @messages("index.no.connections")
