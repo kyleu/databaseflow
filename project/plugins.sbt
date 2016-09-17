@@ -17,9 +17,6 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.12")
 
 addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.0")
 
-// App Packaging
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.2")
-
 // Benchmarking
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.11")
 
@@ -37,3 +34,10 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2") // dependenc
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.1.10") // dependencyUpdates
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0") // scalariformFormat
+
+// App Packaging
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.2")
+
+lazy val root = project.in(file(".")).dependsOn(packrPlugin)
+
+lazy val packrPlugin = file("../util/packr")
