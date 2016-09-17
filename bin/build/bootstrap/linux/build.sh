@@ -2,7 +2,7 @@
 
 rsync -av --progress --delete /media/psf/Home/Projects/Personal/databaseflow/ databaseflow/ --exclude 'target*' --exclude '/build' --exclude '.git' --exclude '.idea' --exclude '/tmp' --exclude '/cache' --exclude '/logs'
 
-mkdir -p databaseflow/build/linux
+mkdir -p databaseflow/build
 
 cd databaseflow/bin/build/
 

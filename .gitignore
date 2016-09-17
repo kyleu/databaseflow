@@ -13,9 +13,11 @@ dist
 /cache
 
 /build/*.gz
-/build/linux
-/build/osx
-/build/windows
+/build/*.zip
+/build/*.deb
+/build/*.exe
+/build/*.pkg
+/build/*.dmg
 /build/jwrapper
 
 /.idea_modules

@@ -30,6 +30,7 @@ object Packaging {
     packageDescription in Debian := "Database Flow Debian Package - A modern SQL client. https://databaseflow.com",
     topLevelDirectory in Debian := Some(Shared.projectId + "-" + Shared.Versions.app),
     debianNativeBuildOptions in Debian := Seq("-Zgzip", "-z3"),
+    debianPackageRecommends in Debian ++= Seq("openjdk-8-jre"),
     rpmVendor := "Database Flow",
     linuxPackageMappings := linuxPackageMappings.value.filter(_.fileData.config != "false"),
 

@@ -23,7 +23,7 @@ POST           /newsletter                              controllers.NewsletterCo
 
 # Downloads
 GET            /download                                controllers.DownloadController.index()
-GET            /download/:os/:variant                   controllers.DownloadController.download(os, variant)
+GET            /download/:os                            controllers.DownloadController.download(os)
 
 # Purchasing
 GET            /pricing/personal                        controllers.PurchaseController.pricingPersonal()

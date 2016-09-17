@@ -53,7 +53,6 @@ POST        /profile                                 controllers.ProfileControll
 GET         /password/change                         controllers.ProfileController.changePasswordForm
 POST        /password/change                         controllers.ProfileController.changePassword
 
-
 # Assets
 GET         /browserconfig.xml                       controllers.Assets.at(path = "/public", file = "browserconfig.xml")
 GET         /manifest.json                           controllers.Assets.at(path = "/public", file = "manifest.json")

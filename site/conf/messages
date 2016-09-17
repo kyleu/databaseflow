@@ -27,6 +27,7 @@ platform.osx = macOS
 platform.windows = Windows
 platform.linux = Linux
 platform.docker = Docker
+platform.universal = Universal (requires Java 8)
 
 # Licensing
 license.title = Get a License

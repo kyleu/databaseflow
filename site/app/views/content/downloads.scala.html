@@ -1,24 +1,16 @@
 @()(implicit messages: Messages)
-@section(key: String, downloads: Seq[(String, String)]) = {
+@section(key: String) = {
   <div class="col s12 m6 l3">
-    <div class="download-section z-depth-1">
-      <table>
-        <thead>
-          <tr>
-            <th style="text-align: center;" colspan="@downloads.size">
-              <div><img src="@routes.Assets.versioned(s"images/os/$key.png")" width="64" height="64" /></div>
-              @messages(s"platform.$key")
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            @downloads.map { dl =>
-              <td style="text-align: center;"><a class="theme-text" href="@controllers.routes.DownloadController.download(key, dl._1)">@dl._2</a></td>
-            }
-          </tr>
-        </tbody>
-      </table>
+    <div id="@key" class="download-section z-depth-1">
+      <a class="theme-text" href="@controllers.routes.DownloadController.download(key)">
+        <div class="on initially-hidden">
+          <img src="@routes.Assets.versioned(s"images/os/$key-active.png")" width="64" height="64" />
+        </div>
+        <div class="off">
+          <img src="@routes.Assets.versioned(s"images/os/$key.png")" width="64" height="64" />
+        </div>
+        @messages(s"platform.$key")
+      </a>
     </div>
   </div>
 }
@@ -28,12 +20,39 @@
       <div class="card-content">
         <span class="card-title">@messages("downloads.title")</span>
         <div class="row padded-top">
-          @section("osx", Seq("dmg" -> ".dmg", "zip" -> ".zip"))
-          @section("windows", Seq("msi" -> ".msi", "zip" -> ".zip"))
-          @section("linux", Seq("deb" -> ".deb", "tgz" -> ".tgz"))
-          @section("docker", Seq("zip" -> ".gz"))
+          @section("osx")
+          @section("windows")
+          @section("linux")
+          @section("docker")
+        </div>
+        <div class="row padded-top">
+          <div class="col s12" style="text-align: center;">
+            Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("universal")">download</a> a universal zip (Java 8 required).
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+    $(function() {
+      function dlWire(key) {
+        var t = $('#' + key);
+        var off = $('.off', t);
+        var on = $('.on', t);
+        t.hover(function(){
+          off.hide();
+          on.show();
+        }, function(){
+          on.hide();
+          off.show();
+        });
+      }
+
+      dlWire('osx');
+      dlWire('windows');
+      dlWire('linux');
+      dlWire('docker');
+      dlWire('universal');
+    });
+</script>
