@@ -6,5 +6,8 @@ object BuildJWrapper {
   def main(args: Array[String]): Unit = {
     val xml = XmlHelper.xml(rootDir).toString
     Files.write(Paths.get(rootDir + "/build/jwrapper/jwrapper.xml"), xml.getBytes)
+
+    val jWrapperBuildDir = new java.io.File(rootDir + "/build/jwrapper/JWrapperBuild")
+
   }
 }

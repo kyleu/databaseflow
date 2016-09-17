@@ -12,11 +12,11 @@ object XmlHelper {
         <MainClass>play.core.server.ProdServerStart</MainClass>
       </App>
       <SupportedLanguages>en</SupportedLanguages>
-      <!-- Windows32JRE>{ dir }/tmp/jwrapper/jre-installs/win32/jre1.8.0_101</Windows32JRE -->
+      <Windows32JRE>{ dir }/tmp/jwrapper/jre-installs/win32/jre1.8.0_101</Windows32JRE>
       <Windows64JRE>{ dir }/tmp/jwrapper/jre-installs/win64/jre1.8.0_101</Windows64JRE>
-      <!-- Linux32JRE>{ dir }/tmp/jwrapper/jre-installs/linux/jre1.8.0_101</Linux32JRE -->
-      <!-- Linux64JRE>{ dir }/tmp/jwrapper/jre-installs/linuxx64/jre1.8.0_101</Linux64JRE -->
-      <!-- Mac64JRE>{ dir }/tmp/jwrapper/jre-installs/macos64/jre1.8.0_101.jre</Mac64JRE -->
+      <Linux32JRE>{ dir }/tmp/jwrapper/jre-installs/linux/jre1.8.0_101</Linux32JRE>
+      <Linux64JRE>{ dir }/tmp/jwrapper/jre-installs/linuxx64/jre1.8.0_101</Linux64JRE>
+      <Mac64JRE>{ dir }/tmp/jwrapper/jre-installs/macos64/jre1.8.0_101.jre</Mac64JRE>
       <WindowsElevation>None</WindowsElevation>
       <WindowsElevationUiAccess>true</WindowsElevationUiAccess>
       { for (f <- libFiles) yield <File classpath='yes'>{ dir + "/target/universal/stage/lib/" + f }</File> }
