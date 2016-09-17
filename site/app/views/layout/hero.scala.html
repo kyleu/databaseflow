@@ -7,8 +7,8 @@
           <p>@messages("index.hero.subtitle1", utils.Config.projectName)</p>
           <p>@messages("index.hero.subtitle2", utils.Config.projectName)</p>
           <div class="hero-links">
-            <a href="" class="index-button btn white theme-text">@messages("index.download.link")</a>
-            <a href="" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
+            <a href="@routes.DownloadController.index()" class="index-button btn white theme-text">@messages("index.download.link")</a>
+            <a href="@routes.DownloadController.index()" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
           </div>
         </div>
       </div>

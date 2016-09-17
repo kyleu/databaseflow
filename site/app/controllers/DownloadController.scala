@@ -29,7 +29,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
 
   def download(os: String) = act(s"download-$os") { implicit request =>
     val filename = os match {
-      case "osx" => "databaseflow.dmg"
+      case "osx" => "Database Flow.dmg"
       case "linux" => "databaseflow_1.0.0_all.deb"
       case "windows" => "Database Flow.exe"
       case "docker" => "databaseflow.docker.gz"
@@ -37,6 +37,15 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
       case x => throw new IllegalStateException(s"Unknown os [$os].")
     }
     val file = new java.io.File(downloadDir, filename)
+    if (file.exists) {
+      Future.successful(Ok.sendFile(file))
+    } else {
+      Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find that download.<!-- ${file.getAbsolutePath} --></body>")))
+    }
+  }
+
+  def update(path: String) = act(s"update") { implicit request =>
+    val file = new java.io.File(downloadDir, "jwrapper/" + path)
     if (file.exists) {
       Future.successful(Ok.sendFile(file))
     } else {

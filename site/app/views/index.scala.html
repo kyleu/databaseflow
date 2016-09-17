@@ -3,13 +3,12 @@
 )@layout.simple(title = utils.Config.projectName, section = "index", isAdmin = isAdmin) {
   @views.html.layout.hero()
   <div class="container">
-    @views.html.content.demo()
     @views.html.content.downloads()
     @views.html.content.license()
     @views.html.content.databases()
     @views.html.content.comparison()
+    @views.html.content.actions()
     @views.html.content.social()
-    @views.html.content.feedback()
     @views.html.content.newsletter()
   </div>
 }

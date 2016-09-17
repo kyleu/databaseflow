@@ -1,19 +1,22 @@
 @(isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">@utils.Config.projectName Features</span>
-          <p>@messages("features.description")</p>
+  <div class="theme">
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <div class="hero white-text">
+            <h4>@messages("features.hero.title", utils.Config.projectName)</h4>
+            <p>@messages("features.hero.subtitle1", utils.Config.projectName)</p>
+            <p>@messages("features.hero.subtitle2", utils.Config.projectName)</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  @views.html.content.features()
-  @views.html.content.databases()
-</div>
+  <div class="container">
+    @views.html.content.features()
+    @views.html.content.databases()
+  </div>
 }
