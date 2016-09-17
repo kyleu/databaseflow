@@ -1,5 +1,7 @@
 package utils
 
+import java.text.SimpleDateFormat
+
 import org.joda.time._
 
 object DateUtils {
@@ -21,4 +23,13 @@ object DateUtils {
   def niceDate(d: LocalDate) = d.toString("EEEE, MMM dd, yyyy")
   def niceTime(d: LocalTime) = d.toString("HH:mm:ss")
   def niceDateTime(dt: LocalDateTime) = s"${niceDate(dt.toLocalDate)} ${niceTime(dt.toLocalTime)} UTC"
+
+  private[this] val dFmt = new SimpleDateFormat("yyyy-MM-dd")
+  def sqlDateFromString(s: String) = new java.sql.Date(dFmt.parse(s).getTime)
+
+  private[this] val tFmt = new SimpleDateFormat("hh:mm:ss")
+  def sqlTimeFromString(s: String) = new java.sql.Time(tFmt.parse(s).getTime)
+
+  private[this] val dtFmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+  def sqlDateTimeFromString(s: String) = new java.sql.Timestamp(dtFmt.parse(s).getTime)
 }

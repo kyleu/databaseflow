@@ -3,35 +3,49 @@ package models.template.tbl
 import models.schema.Column
 import utils.Messages
 
-import scala.util.control.NonFatal
 import scalatags.Text.all._
 
 object InsertRowTemplate {
-  private[this] def forColumn(col: Column) = {
-    val v = try {
-      col.columnType.fromString(col.defaultValue.getOrElse("")).toString
-    } catch {
-      case NonFatal(x) => ""
-    }
-    div(cls := "input-field col s12")(
-      div(cls := "insert-row-error", id := s"insert-row-error-${col.name}", style := ""),
-      input(
-        placeholder := (col.notNull match {
-          case true if col.defaultValue.isEmpty => col.columnType + ", required"
-          case _ => col.columnType.toString
-        }),
-        id := s"insert-row-input-${col.name}",
-        cls := s"insert-row-input",
-        `type` := "text",
-        data("col") := col.name,
-        value := v
+  private[this] def getLabel(v: String, col: Column) = Seq(
+    if (col.notNull && col.defaultValue.isEmpty) {
+      input(`type` := "checkbox", id := s"insert-row-toggle-${col.name}", checked)
+    } else {
+      input(`type` := "checkbox", id := s"insert-row-toggle-${col.name}")
+    },
+    label(`for` := s"insert-row-toggle-${col.name}")("")
+  )
+
+  private[this] def getInput(v: String, col: Column) = input(
+    placeholder := (if (col.notNull && col.defaultValue.isEmpty) {
+      col.columnType + ", required"
+    } else {
+      col.columnType.toString
+    }),
+    id := s"insert-row-input-${col.name}",
+    cls := s"insert-row-input",
+    `type` := "text",
+    data("col") := col.name,
+    value := v
+  )
+
+  private[this] def tbodyForColumns(cols: Seq[Column]) = tbody(cols.flatMap { col =>
+    Seq(
+      tr(
+        td(colspan := 2)(col.name)
       ),
-      label(`for` := s"insert-row-input-${col.name}", cls := "active")(col.name)
+      tr(
+        td(cls := "use-toggle")(getLabel(col.defaultValue.getOrElse(""), col)),
+        td(cls := "input-field")(
+          getInput("", col),
+          div(cls := "insert-row-error", id := s"insert-row-error-${col.name}")
+        )
+      )
     )
-  }
+  }: _*)
 
   def forColumns(name: String, cols: Seq[Column]) = div(
     h5(Messages("query.insert")),
-    div(cls := "insert-row-container row")(cols.map(c => forColumn(c)): _*)
+    div(cls := "insert-row-error", id := s"insert-row-error-general"),
+    div(cls := "insert-row-container row")(table(tbodyForColumns(cols)))
   )
 }

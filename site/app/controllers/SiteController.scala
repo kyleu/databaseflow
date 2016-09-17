@@ -82,8 +82,14 @@ class SiteController @javax.inject.Inject() (
     Future.successful(Ok(views.html.database(utils.SiteEngine.withName(key), isAdmin)))
   }
 
+  def technology() = act("technology") { implicit request =>
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.technology(isAdmin)))
+  }
+
   def privacy() = act("privacy") { implicit request =>
-    Future.successful(Ok(views.html.privacy()))
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.privacy(isAdmin)))
   }
 
   def robots() = act("robots.txt") { implicit request =>
@@ -91,6 +97,7 @@ class SiteController @javax.inject.Inject() (
   }
 
   def test() = act("test") { implicit request =>
-    Future.successful(Ok(views.html.test()))
+    val isAdmin = isAdminUser(request).isDefined
+    Future.successful(Ok(views.html.test(isAdmin)))
   }
 }

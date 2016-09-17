@@ -60,9 +60,15 @@ object DataInsertManager {
 
   private[this] def getParams = {
     val cols = activeColumns.getOrElse(throw new IllegalStateException("Missing active columns for insert."))
-    val params = cols.map { col =>
-      val v = $(s"#insert-row-input-${col.name}", modal).value().toString
-      col.name -> v
+    val params = cols.flatMap { col =>
+      val toggle = $(s"#insert-row-toggle-${col.name}", modal).prop("checked").toString.toBoolean
+      utils.Logging.info(col.name + ": " + toggle)
+      if (toggle) {
+        val v = $(s"#insert-row-input-${col.name}", modal).value().toString
+        Some(col.name -> v)
+      } else {
+        None
+      }
     }.toMap
     params
   }
