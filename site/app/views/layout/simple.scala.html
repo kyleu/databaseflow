@@ -64,7 +64,11 @@
     <div class="container">
       <div class="footer-copyright">
         @messages("static.copyright", utils.Config.projectName)
-        <a class="grey-text text-lighten-4 right" href="https://databaseflow.com">@messages("general.about")</a>
+        @if(section != "splash") {
+          <a class="grey-text text-lighten-4 right" href="@controllers.routes.FeedbackController.feedbackForm()">Feedback</a>
+          <a class="grey-text text-lighten-4 right" href="@controllers.routes.SiteController.technology()">Technology</a>
+          <a class="grey-text text-lighten-4 right" href="https://demo.databaseflow.com">Demo</a>
+        }
       </div>
     </div>
   </footer>
