@@ -1,24 +1,6 @@
 @()(implicit messages: Messages)<div class="row">
   <div class="col s12">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">@messages("feedback.action")</span>
-        <div class="row padded-top">
-          <div class="col s12">
-            <div class="z-depth-1">
-              <table>
-                <tbody>
-                  <tr>
-                    <td style="text-align: center;">
-                      <a class="theme-text" href="@controllers.routes.FeedbackController.feedbackForm()">@messages("feedback.action")</a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div>@messages("feedback.action")</div>
+    <a class="theme-text" href="@controllers.routes.FeedbackController.feedbackForm()">@messages("feedback.action")</a>
   </div>
 </div>

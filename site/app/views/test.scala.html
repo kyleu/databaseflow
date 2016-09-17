@@ -13,23 +13,7 @@
 }
 
 @layout.simple(utils.Config.projectName, "index", isAdmin = isAdmin) {
-  <div class="theme">
-    <div class="container">
-      <div class="row">
-        <div class="col s12">
-          <div class="hero white-text">
-            <h4>@messages("index.hero.title")</h4>
-            <p>@messages("index.hero.subtitle1", utils.Config.projectName)</p>
-            <p>@messages("index.hero.subtitle2", utils.Config.projectName)</p>
-            <div class="hero-links">
-              <a href="" class="index-button btn white theme-text">@messages("index.download.link")</a>
-              <a href="" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @views.html.layout.hero()
   <div>
     <div class="container">
       <div class="row features-container">

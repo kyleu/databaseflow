@@ -16,20 +16,16 @@
 }
 <div class="row">
   <div class="col s12">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">@messages("downloads.title")</span>
-        <div class="row padded-top">
-          @section("osx")
-          @section("windows")
-          @section("linux")
-          @section("docker")
-        </div>
-        <div class="row padded-top">
-          <div class="col s12" style="text-align: center;">
-            Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("universal")">download</a> a universal zip (Java 8 required).
-          </div>
-        </div>
+    <div>@messages("downloads.title")</div>
+    <div class="row padded-top">
+      @section("osx")
+      @section("windows")
+      @section("linux")
+      @section("docker")
+    </div>
+    <div class="row padded-top">
+      <div class="col s12" style="text-align: center;">
+        Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("universal")">download</a> a universal zip (Java 8 required).
       </div>
     </div>
   </div>
