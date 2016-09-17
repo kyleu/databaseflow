@@ -4,7 +4,7 @@ object XmlHelper {
     <jwrapper>
       <BuildOutputFolder>{ dir }/tmp/jwrapper/build</BuildOutputFolder>
       <BundleName>Database Flow</BundleName>
-      <SplashPNG>{ dir }/public/images/ui/favicon/favicon-512.png</SplashPNG>
+      <SplashPNG>{ dir }/public/images/ui/favicon/favicon-install-splash.png</SplashPNG>
       <BundleLogoPNG>{ dir }/public/images/ui/favicon/favicon-512.png</BundleLogoPNG>
       <InstallType>CurrentUser</InstallType>
       <App>
@@ -21,7 +21,10 @@ object XmlHelper {
       <WindowsElevation>None</WindowsElevation>
       <WindowsElevationUiAccess>true</WindowsElevationUiAccess>
       { for (f <- libFiles) yield <File classpath='yes'>{ dir }/target/universal/stage/lib/{ f }</File> }
-      <JvmOptions></JvmOptions>
+      <JvmOptions>
+        <JvmOption>-Xmx1024m</JvmOption>
+        <JvmOption>-Dshow.gui=true</JvmOption>
+      </JvmOptions>
     </jwrapper>
   }
 }

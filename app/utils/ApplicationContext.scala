@@ -6,6 +6,7 @@ import akka.actor.{ActorSystem, Props}
 import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
 import models.auth.AuthEnv
+import models.ui.TopFrame
 import org.joda.time.DateTimeZone
 import play.api.Environment
 import play.api.i18n.MessagesApi
@@ -66,7 +67,10 @@ class ApplicationContext @javax.inject.Inject() (
     VersionService.upgradeIfNeeded(ws)
 
     if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
-      java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
+      System.getProperty("show.gui", "false") match {
+        case "true" => new TopFrame().open()
+        case _ => java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
+      }
     }
   }
 

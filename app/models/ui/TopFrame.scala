@@ -21,11 +21,13 @@ class TopFrame() extends MainFrame {
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   }
 
-  private[this] val statusLabel = new Label("Starting...", None.orNull, Alignment.Left) {
+  private[this] val statusLabel = new Label("Open Browser", None.orNull, Alignment.Left) {
     font = CustomFonts.regularText
     foreground = Colors.black
     background = Colors.white
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
+    xAlignment = Alignment.Center
   }
 
   private[this] val statusPanel = new BorderPanel {
@@ -46,8 +48,6 @@ class TopFrame() extends MainFrame {
 
   contents = panel
 
-  menuBar = new FrameMenu()
-
   size = new Dimension(320, 140)
 
   peer.setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE)
@@ -59,12 +59,6 @@ class TopFrame() extends MainFrame {
     case x: MouseClicked => if (java.awt.Desktop.isDesktopSupported) {
       java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4260"))
     }
-  }
-
-  def onStart() = {
-    statusLabel.text = "http://localhost:4260"
-    statusLabel.cursor = java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR)
-    statusLabel.xAlignment = Alignment.Center
   }
 
   override def closeOperation() = {
