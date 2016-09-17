@@ -59,6 +59,10 @@ object Dependencies {
     val xlsx = "org.apache.poi" % "poi-ooxml" % "3.14"
   }
 
+  object Ui {
+    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2"
+  }
+
   object Serialization {
     val version = "0.4.2"
     val uPickle = "com.lihaoyi" %% "upickle" % version
