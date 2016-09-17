@@ -49,6 +49,12 @@ object Utilities {
     .settings(graphSettings: _*)
     .settings(scalariformSettings: _*)
 
+  lazy val packr = (project in file("util/packr"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
+    .settings(Shared.commonSettings: _*)
+    .settings(graphSettings: _*)
+    .settings(scalariformSettings: _*)
+
   lazy val benchmarking = (project in file("util/benchmarking"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(libraryDependencies ++= Seq(Testing.gatlingCore, Testing.gatlingCharts))
