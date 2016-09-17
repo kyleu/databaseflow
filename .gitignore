@@ -16,7 +16,7 @@ dist
 /build/linux
 /build/osx
 /build/windows
-/build/getdown
+/build/jwrapper
 
 /.idea_modules
 /.classpath

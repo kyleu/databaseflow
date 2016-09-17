@@ -1,9 +1,5 @@
 package controllers
 
-import java.net.URL
-
-import models.user.Language
-import play.api.i18n.Messages
 import play.api.mvc.Action
 import services.connection.ConnectionSettingsService
 import utils.ApplicationContext

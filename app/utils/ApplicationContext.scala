@@ -66,10 +66,7 @@ class ApplicationContext @javax.inject.Inject() (
     VersionService.upgradeIfNeeded(ws)
 
     if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
-      new Thread {
-        Thread.sleep(1000)
-        java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
-      }.run()
+      java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
     }
   }
 
