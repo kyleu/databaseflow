@@ -1,0 +1,11 @@
+@(isAdmin: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      @views.html.content.tech()
+    </div>
+  </div>
+</div>
+}

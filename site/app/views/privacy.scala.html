@@ -1,5 +1,5 @@
-@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@views.html.layout.simple(utils.Config.projectName + " Privacy Policy", "") {
+@(isAdmin: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@views.html.layout.simple(utils.Config.projectName + " Privacy Policy", "", isAdmin = isAdmin) {
 <div class="container">
   <div class="row">
     <div class="col s12">

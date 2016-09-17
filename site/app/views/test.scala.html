@@ -1,4 +1,4 @@
-@()(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@(isAdmin: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 
 @card(img: String, title: String)(content: Html) = {
   <div class="col s12 m6">
@@ -12,7 +12,7 @@
   </div>
 }
 
-@layout.simple(utils.Config.projectName, "index") {
+@layout.simple(utils.Config.projectName, "index", isAdmin = isAdmin) {
   <div class="theme">
     <div class="container">
       <div class="row">
