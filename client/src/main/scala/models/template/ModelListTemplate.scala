@@ -81,7 +81,7 @@ object ModelListTemplate {
   }
 
   private[this] def tableFor(cols: Seq[String], rows: Seq[TypedTag[String]]) = {
-    table(cls := "bordered highlight responsive-table")(
+    table(cls := "z-depth-1 bordered highlight responsive-table")(
       thead(tr(cols.map(c => th(c)))),
       tbody(rows: _*)
     )
@@ -90,7 +90,7 @@ object ModelListTemplate {
   private[this] def forModels(queryId: UUID, name: String, t: TypedTag[String]) = {
     val searchBox = input(cls := "model-filter", placeholder := Messages("list.filter", name), `type` := "text")
     val ret = div(
-      StaticPanelTemplate.cardRow(div(searchBox, t), Some(Icons.list -> span(name))),
+      StaticPanelTemplate.panelRow(div(searchBox, t), Some(Icons.list -> span(name))),
       div(id := s"workspace-$queryId")
     )
     name -> ret

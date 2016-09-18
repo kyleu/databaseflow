@@ -22,7 +22,7 @@ object FeedbackTemplate {
       )
     )
 
-    StaticPanelTemplate.cardRow(
+    StaticPanelTemplate.panelRow(
       content = content,
       iconAndTitle = Some(Icons.feedback -> span(Messages("feedback.title"))),
       actions = Seq(

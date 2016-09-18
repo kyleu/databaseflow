@@ -32,7 +32,7 @@ object TableDetailTemplate {
       )
     )
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.table -> span(tableName)), actions = Seq(
+      StaticPanelTemplate.panelRow(content, iconAndTitle = Some(Icons.table -> span(tableName)), actions = Seq(
         a(cls := "insert-data-link theme-text right", href := "#")(Messages("query.insert")),
         a(cls := "view-data-link theme-text", href := "#")(Messages("query.view.first"))
       )),

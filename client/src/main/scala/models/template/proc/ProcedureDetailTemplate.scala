@@ -29,7 +29,7 @@ object ProcedureDetailTemplate {
     )
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.cardRow(content, iconAndTitle = Some(Icons.procedure -> span(procedureName)), actions = actions),
+      StaticPanelTemplate.panelRow(content, iconAndTitle = Some(Icons.procedure -> span(procedureName)), actions = actions),
       div(id := s"workspace-$queryId")
     )
   }
