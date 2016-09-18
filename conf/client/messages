@@ -10,6 +10,7 @@ general.coming.soon = Coming Soon
 
 # Table Headers
 th.cancel = Cancel
+th.column = Type
 th.columns = Columns
 th.connection = Connection
 th.cost = Cost

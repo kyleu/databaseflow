@@ -42,7 +42,7 @@ object LicenseService extends Logging {
         }
         val issueDate = new LocalDateTime(l.issued)
         val d = if (installDate.isBefore(issueDate)) { installDate } else { issueDate }
-        d -> (Days.daysBetween(new LocalDateTime(), d).getDays > 30)
+        d -> (LicenseService.isTrial && Days.daysBetween(new LocalDateTime(), d).getDays > 30)
       }
     }
     if (ConfigFileService.isDocker) {
