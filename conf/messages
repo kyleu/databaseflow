@@ -43,6 +43,8 @@ license.paste = Please paste your license in the form below.
 license.missing = Missing license content.
 license.success = License updated successfully.
 license.register = Please create a local account to use with {0}.
+license.configure = Please configure your license for {0}.
+license.expired = Your license has expired. Head to {0} to purchase a license.
 
 # Registration
 registration.title = Register

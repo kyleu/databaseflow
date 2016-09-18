@@ -31,7 +31,7 @@ platform.universal = Universal (requires Java 8)
 
 # Licensing
 license.title = Get a License
-license.non.commercial = Get Free Non-Commercial License
+license.trial = Free 30 Day Trial
 license.personal = Buy Personal Edition
 license.team = Buy Team Edition
 
@@ -73,7 +73,8 @@ license.continue = Continue
 license.form.name = Name
 license.form.email = Email
 license.form.prompt = Fill out this form, and you''ll get your license immediately.
-license.form.non.commercial = Free Non-Commercial License
+license.form.save = Get Your {0} License
+license.form.trial = Free 30 Day Trial
 license.form.personal = New Personal License
 
 # Purchasing

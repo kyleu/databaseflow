@@ -4,6 +4,7 @@ import java.util.Base64
 
 import licensing.{DecryptUtils, License, LicenseEdition}
 import models.settings.SettingKey
+import org.joda.time.{Days, LocalDateTime}
 import services.config.ConfigFileService
 import services.settings.SettingsService
 import utils.Logging
@@ -13,6 +14,7 @@ import scala.util.{Failure, Success, Try}
 object LicenseService extends Logging {
   private[this] var licenseContent: Option[String] = None
   private[this] var license: Option[License] = None
+  private[this] var startDate: Option[(LocalDateTime, Boolean)] = None
 
   def readLicense() = {
     val content = SettingsService(SettingKey.LicenseContent)
@@ -29,6 +31,18 @@ object LicenseService extends Logging {
         case Failure(x) =>
           log.warn(s"Unable to parse license [$content].", x)
           None
+      }
+      startDate = license.map { l =>
+        val installDate = SettingsService(SettingKey.InstallDate) match {
+          case "" =>
+            val d = new LocalDateTime()
+            SettingsService.set(SettingKey.InstallDate, d.toString)
+            d
+          case x => LocalDateTime.parse(x)
+        }
+        val issueDate = new LocalDateTime(l.issued)
+        val d = if (installDate.isBefore(issueDate)) { installDate } else { issueDate }
+        d -> (Days.daysBetween(new LocalDateTime(), d).getDays > 30)
       }
     }
     if (ConfigFileService.isDocker) {
@@ -52,7 +66,8 @@ object LicenseService extends Logging {
   def getLicense = license
   def getLicenseContent = licenseContent
   def hasLicense = license.isDefined
-  def isNonCommercial = license.exists(_.edition == LicenseEdition.NonCommercial)
+  def isTrial = license.exists(_.edition == LicenseEdition.Trial)
   def isPersonalEdition = license.exists(_.edition == LicenseEdition.Personal)
   def isTeamEdition = license.exists(_.edition == LicenseEdition.Team)
+  def expired = startDate.exists(_._2)
 }

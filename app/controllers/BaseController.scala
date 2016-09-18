@@ -40,7 +40,11 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
     ctx.silhouette.UserAwareAction.async { implicit request =>
       if (!LicenseService.hasLicense) {
         Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing(
-          "success" -> s"Please configure your license for ${utils.Config.projectName}."
+          "success" -> ctx.messagesApi("license.configure", utils.Config.projectName)
+        ))
+      } else if (LicenseService.expired) {
+        Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing(
+          "success" -> ctx.messagesApi("license.expired", utils.Config.projectUrl)
         ))
       } else {
         request.identity match {

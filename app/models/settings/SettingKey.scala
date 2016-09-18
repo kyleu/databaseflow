@@ -43,5 +43,12 @@ object SettingKey extends Enum[SettingKey] {
     default = ""
   )
 
+  case object InstallDate extends SettingKey(
+    id = "install-date",
+    title = "Install Date",
+    description = "The day the software was installed. Please don't mess with this.",
+    default = ""
+  )
+
   override val values = findValues
 }

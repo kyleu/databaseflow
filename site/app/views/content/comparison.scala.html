@@ -1,7 +1,7 @@
 @()
-@row(title: String, nonCommercial: String, personal: String, team: String) = {<tr>
+@row(title: String, trial: String, personal: String, team: String) = {<tr>
   <td>@title</td>
-  <td>@nonCommercial</td>
+  <td>@trial</td>
   <td>@personal</td>
   <td>@team</td>
 </tr>}
@@ -12,7 +12,7 @@
       <thead>
         <tr>
           <th style="width: 25%;"></th>
-          <th style="width: 25%;">Non-Commercial Edition</th>
+          <th style="width: 25%;">30 Day Trial</th>
           <th style="width: 25%;">Personal Edition</th>
           <th style="width: 25%;">Team Edition</th>
         </tr>
@@ -23,7 +23,8 @@
             @row("Price", "Free", "$" + p, "$" + t)
           }
         }
-        @row("Users", "Single User", "Single User", "Unlimited Users")
+        @row("Users", "Unlimited Users", "Single User", "Unlimited Users")
+        @row("License Term", "30 Days", "Forever", "Forever")
       </tbody>
     </table>
   </div>

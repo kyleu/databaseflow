@@ -1,11 +1,9 @@
 package controllers.admin
 
-import java.util.UUID
-
 import controllers.BaseSiteController
-import licensing.LicenseEdition
 import play.api.i18n.MessagesApi
 import play.api.mvc.Action
+import play.twirl.api.Html
 import services.logging.LogService
 
 import scala.concurrent.Future
@@ -27,15 +25,7 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
 
   def sandbox() = withAdminSession("admin-sandbox") { (username, request) =>
     implicit val req = request
-    Future.successful(Ok(views.html.email.personalLicenseMessage(
-      id = UUID.randomUUID,
-      name = "License Holder",
-      email = "email@databaseflow.com",
-      edition = LicenseEdition.Personal.title,
-      issued = 0,
-      version = 1,
-      content = "[License Content]"
-    )))
+    Future.successful(Ok(Html("Ok!")))
   }
 
   def toggleLogging() = withAdminSession("toggle-logging") { (username, request) =>
