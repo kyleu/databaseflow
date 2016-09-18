@@ -89,22 +89,11 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
   }
 
   def delete(connectionId: UUID) = withSession("delete") { implicit request =>
-    ConnectionSettingsService.delete(connectionId)
-    AuditRecordService.create(AuditType.DeleteConnection, request.identity.id, None, Some(connectionId.toString))
+    ConnectionSettingsService.delete(connectionId, request.identity.id)
     Future.successful(Redirect(routes.HomeController.home()))
   }
 
   def createSample() = withSession("create.sample") { implicit request =>
-    val connectionId = UUID.randomUUID
-    val cs = ConnectionSettings(
-      id = connectionId,
-      name = "Database Flow Sample Database",
-      owner = request.identity.id,
-      engine = DatabaseEngine.SQLite,
-      dbName = Some(new java.io.File(ConfigFileService.configDir, "sample.db.sqlite").getAbsolutePath)
-    )
-    ConnectionSettingsService.insert(cs)
-    AuditRecordService.create(AuditType.CreateConnection, request.identity.id, None, Some(connectionId.toString))
-    Future.successful(Redirect(routes.QueryController.main(connectionId)))
+    Future.successful(Redirect(routes.QueryController.main(ConnectionSettingsService.createSample(request.identity.id))))
   }
 }

@@ -3,7 +3,7 @@ object XmlHelper {
     val libFiles = new java.io.File(dir + "/target/universal/stage/lib").list()
     <jwrapper>
       <BundleName>Database Flow</BundleName>
-      <SplashPNG>{ dir }/public/images/ui/favicon/favicon-install-splash.png</SplashPNG>
+      <SplashPNG>{ dir }/util/jwrapper/src/main/resources/JWrapper-Database Flow-splash.png</SplashPNG>
       <BundleLogoPNG>{ dir }/public/images/ui/favicon/favicon-512.png</BundleLogoPNG>
       <InstallType>NoInstall</InstallType>
       <App>
