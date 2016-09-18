@@ -5,121 +5,119 @@
   @components.formErrors(errors)
   <div class="row">
     <form id="connection-form" class="col s12" method="post" action="@controllers.routes.ConnectionSettingsController.save(conn.id)">
-      <div class="card">
-        <div class="card-content">
-          @if(!isNew) {
-            @defining(controllers.routes.ConnectionSettingsController.copyConnection(conn.id)) { route =>
-              <a id="copy-connection-button" class="right theme-text" style="margin-right: 12px;" href="@route">Copy Connection</a>
-            }
+      <div class="content-panel">
+        @if(!isNew) {
+          @defining(controllers.routes.ConnectionSettingsController.copyConnection(conn.id)) { route =>
+            <a id="copy-connection-button" class="right theme-text" style="margin-right: 12px;" href="@route">Copy Connection</a>
           }
-          <span class="card-title">@title</span>
+        }
+        <span class="panel-title">@title</span>
 
-          <!-- Name, engine -->
-          <div class="row" style="margin-bottom: 0;">
-            <div class="input-field col s12 m6">
-              <input id="form-name" name="name" type="text" value="@conn.name" />
-              <label for="form-name">@messages("connection.name")</label>
-            </div>
+        <!-- Name, engine -->
+        <div class="row" style="margin-bottom: 0;">
+          <div class="input-field col s12 m6">
+            <input id="form-name" name="name" type="text" value="@conn.name" />
+            <label for="form-name">@messages("connection.name")</label>
+          </div>
 
-            <div class="input-field col s12 m6">
-              <select id="form-engine" name="engine">
-                @models.engine.DatabaseEngine.values.map { e =>
-                  @if(e == conn.engine) {
-                    <option value="@e.id" selected="selected">@e.name</option>
-                  } else {
-                    <option value="@e.id">@e.name</option>
-                  }
+          <div class="input-field col s12 m6">
+            <select id="form-engine" name="engine">
+              @models.engine.DatabaseEngine.values.map { e =>
+                @if(e == conn.engine) {
+                  <option value="@e.id" selected="selected">@e.name</option>
+                } else {
+                  <option value="@e.id">@e.name</option>
                 }
-              </select>
-              <label for="form-engine">@messages("connection.engine")</label>
-            </div>
+              }
+            </select>
+            <label for="form-engine">@messages("connection.engine")</label>
+          </div>
+        </div>
+
+        <!-- Username, password -->
+        <div class="row" style="margin-bottom: 0;">
+          <div class="input-field col s12 m6">
+            <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
+            <label for="form-username">@messages("connection.username")</label>
           </div>
 
-          <!-- Username, password -->
-          <div class="row" style="margin-bottom: 0;">
-            <div class="input-field col s12 m6">
-              <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
-              <label for="form-username">@messages("connection.username")</label>
-            </div>
-
-            <div class="input-field col s12 m6">
-              <input id="form-password" name="databasePassword" type="password" value="" />
-              <label for="form-password">@messages("connection.password")</label>
-            </div>
+          <div class="input-field col s12 m6">
+            <input id="form-password" name="databasePassword" type="password" value="" />
+            <label for="form-password">@messages("connection.password")</label>
           </div>
+        </div>
 
-          <!-- Radio selection -->
-          <div class="row" style="margin-bottom: 0;">
-            <div class="col s12">
-              <div class="card-panel option-panel">
-                <!-- Connection fields -->
-                <div class="row" style="margin-bottom: 0;">
-                  <div class="input-field col s4 m2">
-                    <div class="view-url-link">
-                      <input id="form-toggle-fields" name="toggle" type="radio" value="fields" @if(conn.urlOverride.isEmpty) { checked="checked" }>
-                      <label for="form-toggle-fields">@messages("connection.fields")</label>
-                    </div>
+        <!-- Radio selection -->
+        <div class="row" style="margin-bottom: 0;">
+          <div class="col s12">
+            <div class="card-panel option-panel">
+              <!-- Connection fields -->
+              <div class="row" style="margin-bottom: 0;">
+                <div class="input-field col s4 m2">
+                  <div class="view-url-link">
+                    <input id="form-toggle-fields" name="toggle" type="radio" value="fields" @if(conn.urlOverride.isEmpty) { checked="checked" }>
+                    <label for="form-toggle-fields">@messages("connection.fields")</label>
                   </div>
-
-                  <div id="host-input" class="input-field col s8 m4">
-                    <input id="form-host" name="host" type="text" value="@conn.host" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
-                    <label for="form-host">@messages("connection.host")</label>
-                  </div>
-
-                  <div id="port-input" class="input-field col s4 m2">
-                    <input id="form-port" name="port" type="text" value="@conn.port.orElse(conn.engine.defaultPort).getOrElse("")" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
-                    <label for="form-port">@messages("connection.port")</label>
-                  </div>
-
-                  <div id="dbname-input" class="input-field col s8 m4">
-                    <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
-                    <label for="form-dbname">@messages("connection.db.name")</label>
-                  </div>
-
-                  <input id="form-extra" name="extra" type="hidden" value="@conn.extra" />
                 </div>
 
-                <!-- Jdbc url -->
-                <div class="row" style="margin-bottom: 0;">
-                  <div class="input-field col s4 m2">
-                    <div class="view-keys-link">
-                      <input id="form-toggle-url" name="toggle" type="radio" value="url" @if(conn.urlOverride.isDefined) { checked="checked" }>
-                      <label for="form-toggle-url">@messages("connection.url")</label>
-                    </div>
-                  </div>
+                <div id="host-input" class="input-field col s8 m4">
+                  <input id="form-host" name="host" type="text" value="@conn.host" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                  <label for="form-host">@messages("connection.host")</label>
+                </div>
 
-                  <div class="input-field col s8 m10">
-                    <input id="form-url-override" name="urlOverride" type="text" value="@conn.url" @if(conn.urlOverride.isEmpty) { disabled="disabled" } />
-                    <label for="form-url-override">@messages("connection.jdbc.url")</label>
+                <div id="port-input" class="input-field col s4 m2">
+                  <input id="form-port" name="port" type="text" value="@conn.port.orElse(conn.engine.defaultPort).getOrElse("")" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                  <label for="form-port">@messages("connection.port")</label>
+                </div>
+
+                <div id="dbname-input" class="input-field col s8 m4">
+                  <input id="form-dbname" name="dbName" type="text" value="@conn.dbName" @if(conn.urlOverride.isDefined) { disabled="disabled" } />
+                  <label for="form-dbname">@messages("connection.db.name")</label>
+                </div>
+
+                <input id="form-extra" name="extra" type="hidden" value="@conn.extra" />
+              </div>
+
+              <!-- Jdbc url -->
+              <div class="row" style="margin-bottom: 0;">
+                <div class="input-field col s4 m2">
+                  <div class="view-keys-link">
+                    <input id="form-toggle-url" name="toggle" type="radio" value="url" @if(conn.urlOverride.isDefined) { checked="checked" }>
+                    <label for="form-toggle-url">@messages("connection.url")</label>
                   </div>
+                </div>
+
+                <div class="input-field col s8 m10">
+                  <input id="form-url-override" name="urlOverride" type="text" value="@conn.url" @if(conn.urlOverride.isEmpty) { disabled="disabled" } />
+                  <label for="form-url-override">@messages("connection.jdbc.url")</label>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Permissions -->
-          <div class="row" style="margin-bottom: 0;">
-            @views.html.connection.permissions("read", conn.read, Icons.user, messages("connection.permissions.available.to"))
-            @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, messages("connection.permissions.editable.by"))
-          </div>
+        <!-- Permissions -->
+        <div class="row" style="margin-bottom: 0;">
+          @views.html.connection.permissions("read", conn.read, Icons.user, messages("connection.permissions.available.to"))
+          @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, messages("connection.permissions.editable.by"))
+        </div>
 
-          <!-- Description -->
-          <div class="row" style="margin-bottom: 0;">
-            <div class="input-field col s12">
-              <input id="form-description" name="description" type="text" value="@conn.description" />
-              <label for="form-description">@messages("connection.description")</label>
-            </div>
+        <!-- Description -->
+        <div class="row" style="margin-bottom: 0;">
+          <div class="input-field col s12">
+            <input id="form-description" name="description" type="text" value="@conn.description" />
+            <label for="form-description">@messages("connection.description")</label>
           </div>
         </div>
-        <div class="card-action">
-          <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
-          <a id="test-connection-button" class="right btn-flat theme-text" style="margin-right: 12px;" href="">Test</a>
-          <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.cancel")</a>
-          @if((!isNew) && conn.id != services.database.core.MasterDatabase.connectionId) {
-            <a class="btn-flat theme-text" onclick="onDelete();return false;">@messages("general.delete")</a>
-          }
-          <div style="clear: both;"></div>
-        </div>
+      </div>
+      <div class="panel-action">
+        <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
+        <a id="test-connection-button" class="right btn-flat theme-text" style="margin-right: 12px;" href="">Test</a>
+        <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.cancel")</a>
+        @if((!isNew) && conn.id != services.database.core.MasterDatabase.connectionId) {
+          <a class="btn-flat theme-text" onclick="onDelete();return false;">@messages("general.delete")</a>
+        }
+        <div style="clear: both;"></div>
       </div>
     </form>
   </div>

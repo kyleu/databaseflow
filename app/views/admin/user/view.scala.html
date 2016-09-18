@@ -1,14 +1,14 @@
 @(self: models.user.User, user: models.user.User)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(self, "users", messages("admin.users.title")) {
-  <div class="card-content">
-    <div class="card-title">
+  <div class="content-panel">
+    <div class="panel-title">
       <i class="fa @models.template.Icons.user"></i>
       @user.username
       @if(self.id == user.id) { <span>(You)</span> }
     </div>
 
-    <div class="row">
+    <div class="row z-depth-1 padded">
       <div class="col s12">
         <em>@user.profile.providerKey</em>
       </div>
@@ -25,7 +25,7 @@
       </div>
     </div>
   </div>
-  <div class="card-action">
+  <div class="panel-action">
     <a class="theme-text right" href="@controllers.admin.routes.UserEditController.edit(user.id)">Edit</a>
     <a class="theme-text" href="@controllers.admin.routes.UserEditController.users()">Back to User List</a>
   </div>

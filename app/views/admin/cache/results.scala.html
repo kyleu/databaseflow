@@ -1,14 +1,14 @@
 @(user: models.user.User, rows: Seq[models.result.CachedResult], tables: Set[String], userService: services.user.UserSearchService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(user, "results", messages("admin.results.title")) {
-  <div class="card-content">
+  <div class="content-panel">
     <div class="right"><a class="theme-text" href="@routes.SharedResultController.index()">@messages("shared.results.title")</a></div>
-    <div class="card-title">
+    <div class="panel-title">
       <i class="fa @models.template.Icons.cache"></i> @messages("admin.results.title")
     </div>
 
     <div class="row">
-      <div class="col s12">
+      <div class="col s12 z-depth-1">
         @if(rows.isEmpty) {
           <div style="padding: 10px;">No cached results in database.</div>
         } else {
@@ -70,7 +70,7 @@
         @if(orphans.nonEmpty) {
           <div class="row">
             <div class="col s12">
-              <div style="padding : 10px ;">
+              <div class="padded horizontal">
                 <h5>Orphaned Tables</h5>
                 <ul>
                 @orphans.map { o =>
@@ -87,7 +87,7 @@
       }
     }
   </div>
-  <div class="card-action">
+  <div class="panel-action">
     <a class="theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.back.title")</a>
   </div>
 }

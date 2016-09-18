@@ -9,32 +9,30 @@
   @if(user.exists(_.id == result.owner)) { @views.html.result.options(result) }
   <div class="row">
     <div class="col s12">
-      <div class="card">
-        <div class="card-content">
-          <div class="right">
-            @views.html.result.export(result)
-          </div>
-          @views.html.result.title(result, ownerName)
-          <div class="query-result-table">
-            <table class="bordered highlight responsive-table">
-              <thead>
+      <div class="content-panel">
+        <div class="right">
+          @views.html.result.export(result)
+        </div>
+        @views.html.result.title(result, ownerName)
+        <div class="query-result-table z-depth-1">
+          <table class="bordered highlight responsive-table">
+            <thead>
+              <tr>
+                @columns.map { col =>
+                  <th data-t="@col.t">@col.name</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @data.map { d =>
                 <tr>
-                  @columns.map { col =>
-                    <th data-t="@col.t">@col.name</th>
+                  @d.zipWithIndex.map { cell =>
+                    <td>@utils.web.DataOutputFormatter.cellValue(columns(cell._2), cell._1)</td>
                   }
                 </tr>
-              </thead>
-              <tbody>
-                @data.map { d =>
-                  <tr>
-                    @d.zipWithIndex.map { cell =>
-                      <td>@utils.web.DataOutputFormatter.cellValue(columns(cell._2), cell._1)</td>
-                    }
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+              }
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

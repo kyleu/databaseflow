@@ -1,11 +1,11 @@
 @(user: models.user.User, users: Seq[models.user.User])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(user, "users", messages("admin.users.title")) {
-  <div class="card-content">
-    <div class="card-title"><i class="fa @models.template.Icons.user"></i> @messages("admin.users.title")</div>
+  <div class="content-panel">
+    <div class="panel-title"><i class="fa @models.template.Icons.user"></i> @messages("admin.users.title")</div>
 
     <div class="row">
-      <table>
+      <table class="z-depth-1">
         <thead>
           <tr>
             <th>@messages("th.username")</th>
@@ -37,7 +37,7 @@
       </table>
     </div>
   </div>
-  <div class="card-action">
+  <div class="panel-action">
     <a class="right-link theme-text" href="@controllers.admin.routes.UserCreateController.newUser()">@messages("admin.users.new")</a>
     <a class="theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.back.title")</a>
   </div>

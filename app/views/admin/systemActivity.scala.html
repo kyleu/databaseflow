@@ -11,26 +11,26 @@
   messages("activity.admin.title"),
   scripts = Seq(routes.Assets.versioned("lib/momentjs/min/moment.min.js").url)
 ) {
-  <div class="card-content">
+  <div class="content-panel">
     <div class="right">
       <a class="theme-text" href="@controllers.admin.routes.ActivityController.removeAllAudits()" onclick="return confirm('@messages("activity.confirm.remove.all")');">
         @messages("activity.remove.all")
       </a>
     </div>
 
-    <div class="card-title"><i class="fa @models.template.Icons.cache"></i> @messages("activity.admin.title")</div>
+    <div class="panel-title"><i class="fa @models.template.Icons.cache"></i> @messages("activity.admin.title")</div>
 
     <div class="row">
-      <div class="col s12">
-      @if(activity.isEmpty) {
-        <div style="padding: 10px;">@messages("activity.no.results")</div>
-      } else {
-        @views.html.activity.listTable(activity, orderBy, Some(controllers.admin.routes.ActivityController.removeAudit), Some(userService))
-      }
+      <div class="col s12 z-depth-1">
+        @if(activity.isEmpty) {
+          <div style="padding: 10px;">@messages("activity.no.results")</div>
+        } else {
+          @views.html.activity.listTable(activity, orderBy, Some(controllers.admin.routes.ActivityController.removeAudit), Some(userService))
+        }
       </div>
     </div>
   </div>
-  <div class="card-action">
+  <div class="panel-action">
     <a class="theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.back.title")</a>
     @if(activity.size == limit) {
       <a class="right-link theme-text load-more-link" href="@controllers.admin.routes.ActivityController.activity(limit, offset + limit)">

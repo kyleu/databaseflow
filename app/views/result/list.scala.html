@@ -8,10 +8,10 @@
 )@views.html.layout.simple(user = user, title = messages("shared.results.title")) {
   <div class="row">
     <div class="col s12">
-      <div class="card">
-        <div class="card-content">
+      <div>
+        <div class="content-panel">
           @if(myResults.nonEmpty) {
-            <span class="card-title">@messages("shared.results.personal.title")</span>
+            <span class="panel-title">@messages("shared.results.personal.title")</span>
             <ul class="collection">
               @myResults.map { r =>
                 <li class="collection-item">
@@ -25,7 +25,7 @@
           @if(publicResults.isEmpty) {
             <div><em>@messages("shared.results.public.none")</em></div>
           } else {
-            <span class="card-title">@messages("shared.results.public.title")</span>
+            <span class="panel-title">@messages("shared.results.public.title")</span>
             <ul class="collection">
               @publicResults.map { r =>
                 <li class="collection-item">
