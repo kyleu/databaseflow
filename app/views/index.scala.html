@@ -3,27 +3,25 @@
 )@layout.simple(Some(user), utils.Config.projectName) {
   <div class="row">
     <div class="col s12">
-      <div class="card">
-        <div class="card-content">
-          @if(connections.isEmpty) {
-            <div class="no-connections">
-              @messages("index.no.connections")
-              Or, <a class="theme-text" href="@routes.ConnectionSettingsController.createSample()">create a sample database</a>.
-            </div>
-          } else {
-            <div>@views.html.connection.list(user, connections)</div>
+      <div class="panel-content">
+        @if(connections.isEmpty) {
+          <div class="no-connections">
+            @messages("index.no.connections")
+            Or, <a class="theme-text" href="@routes.ConnectionSettingsController.createSample()">create a sample database</a>.
+          </div>
+        } else {
+          <div>@views.html.connection.list(user, connections)</div>
+        }
+      </div>
+      <div class="panel-action">
+        @defining(models.user.Role.withName(services.settings.SettingsService(models.settings.SettingKey.AddConnectionRole))) { addConnectionRole =>
+          @if(user.role.qualifies(addConnectionRole)) {
+            <a class="theme-text" href="@controllers.routes.ConnectionSettingsController.addNew()">@messages("index.new.connection")</a>
           }
-        </div>
-        <div class="card-action">
-          @defining(models.user.Role.withName(services.settings.SettingsService(models.settings.SettingKey.AddConnectionRole))) { addConnectionRole =>
-            @if(user.role.qualifies(addConnectionRole)) {
-              <a class="theme-text" href="@controllers.routes.ConnectionSettingsController.addNew()">@messages("index.new.connection")</a>
-            }
-          }
-          @if(user.role == models.user.Role.Admin) {
-            <a class="right-link theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.title")</a>
-          }
-        </div>
+        }
+        @if(user.role == models.user.Role.Admin) {
+          <a class="right-link theme-text" href="@controllers.admin.routes.AdminController.index()">@messages("admin.title")</a>
+        }
       </div>
     </div>
   </div>

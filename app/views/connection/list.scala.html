@@ -1,5 +1,5 @@
 @(user: models.user.User, connections: Seq[models.connection.ConnectionSettings])(implicit messages: Messages)
-<ul class="collapsible popout connection-list" data-collapsible="expandable">
+<ul class="collapsible connection-list" data-collapsible="expandable">
 @connections.map { c =>
   <li>
     <div class="collapsible-header">
