@@ -1,48 +1,7 @@
 @(title: String, section: String, isAdmin: Boolean = false, scripts: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(title, scripts = scripts) {
-  <header>
-    <ul id="language" class="dropdown-content">
-      @utils.Language.values.map { l =>
-        <li><a class="theme-text" href="@controllers.routes.SiteController.language(l.code)">@l.toString</a></li>
-      }
-    </ul>
-
-    <nav id="topnav" class="theme">
-      <div class="container">
-        @if(section != "splash") {<ul class="right hide-on-small-only">
-          @if(section == "features") {
-            <li class="active"><a href="@controllers.routes.SiteController.features()">@messages("index.features.link")</a></li>
-          } else {
-            <li><a href="@controllers.routes.SiteController.features()">@messages("index.features.link")</a></li>
-          }
-          @if(section == "download") {
-            <li class="active"><a href="@controllers.routes.DownloadController.index()">@messages("index.download.link")</a></li>
-          } else {
-            <li><a href="@controllers.routes.DownloadController.index()">@messages("index.download.link")</a></li>
-          }
-          @if(section == "versions") {
-            <li class="active"><a href="@controllers.routes.SiteController.versions()">@messages("index.versions.link")</a></li>
-          } else {
-            <li><a href="@controllers.routes.SiteController.versions()">@messages("index.versions.link")</a></li>
-          }
-          @if(isAdmin) {
-            @if(section == "admin") {
-              <li class="active"><a href="@controllers.admin.routes.AdminController.index()">@messages("index.admin.link")</a></li>
-            } else {
-              <li><a href="@controllers.admin.routes.AdminController.index()">@messages("index.admin.link")</a></li>
-            }
-          }
-          <li><a class="dropdown-button" href="#" data-activates="language">
-            @utils.Language.values.find(_.code == messages.lang.code).getOrElse(utils.Language.English)
-            <i class="fa fa-angle-down" style="height: auto;"></i>
-          </a></li>
-        </ul>}
-        <a href="@controllers.routes.SiteController.index()" class="brand-title"><i class="fa fa-database logo-icon"></i> @utils.Config.projectName</a>
-        <div class="clear"></div>
-      </div>
-    </nav>
-  </header>
+  @views.html.layout.header(section, isAdmin)
 
   <main>
     <div>
@@ -60,16 +19,5 @@
     </div>
   </main>
 
-  <footer class="page-footer theme">
-    <div class="container">
-      <div class="footer-copyright">
-        @messages("static.copyright", utils.Config.projectName)
-        @if(section != "splash") {
-          <a class="grey-text text-lighten-4 right" href="@controllers.routes.FeedbackController.feedbackForm()">Feedback</a>
-          <a class="grey-text text-lighten-4 right" href="@controllers.routes.SiteController.technology()">Technology</a>
-          <a class="grey-text text-lighten-4 right" href="https://demo.databaseflow.com">Demo</a>
-        }
-      </div>
-    </div>
-  </footer>
+  @views.html.layout.footer(section != "splash")
 }

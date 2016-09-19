@@ -1,0 +1,18 @@
+@(showLinks: Boolean)(implicit messages: Messages)
+@link(key: String, name: String, url: String) = {
+  <a class="left" href="@url" target="_blank"><img src="@routes.Assets.versioned(s"images/social/$key-white.png")" width="16" height="16" /></a>
+}
+<footer class="page-footer theme">
+  <div class="container">
+    <div class="footer-copyright">
+      @link("gitter", "Gitter", "https://gitter.im/databaseflow/databaseflow")
+      @link("twitter", "Twitter", "https://twitter.com/database_flow")
+      @link("facebook", "Facebook", "https://www.facebook.com/databaseflow")
+      @if(showLinks) {
+        <a class="grey-text text-lighten-4 right" href="@controllers.routes.FeedbackController.feedbackForm()">Feedback</a>
+        <a class="grey-text text-lighten-4 right" href="@controllers.routes.SiteController.technology()">Technology</a>
+        <a class="grey-text text-lighten-4 right" href="https://demo.databaseflow.com">Demo</a>
+      }
+    </div>
+  </div>
+</footer>

@@ -37,23 +37,6 @@ license.trial = Free 30 Day Trial
 license.personal = Buy Personal Edition
 license.team = Buy Team Edition
 
-# Features
-features.a = Saved queries
-features.b = Editor autocomplete
-features.c = Tabbed interface
-features.d = Details of tables, views, and procedures
-features.e = Link to related tables
-features.f = Permissions for databases and queries
-features.g = Material design
-features.h = Responsive design with mobile support
-features.i = Supports H2, MySQL, Oracle, PostgreSQL, and SQL Server
-features.j = Locally installed application
-features.k = No ads, trackers or third-party sites
-features.l = Visualize query execution plans
-features.m = Gorgeous charting and plotting
-features.n = Shared results with permissions
-
-
 # Newsletter
 newsletter.title = Newsletter
 newsletter.subscribe = Subscribe
@@ -63,6 +46,10 @@ feedback.title = Feedback
 feedback.action = Leave Feedback
 feedback.email = Email Address
 feedback.submit = Send Feedback
+
+# Versions
+versions.hero.title = Choose the version that is right for you.
+versions.hero.subtitle1 = Try {0} for thirty days, or purchase a license for yourself or the whole team.
 
 # Features
 features.hero.title = {0} is a modern web-based SQL client.

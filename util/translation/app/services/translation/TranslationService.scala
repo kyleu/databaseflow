@@ -14,7 +14,7 @@ import utils.Language
 class TranslationService @javax.inject.Inject() (yandex: YandexApi, bing: BingApi) {
   def parse(f: File) = if (f.isFile) {
     Source.fromFile(f).getLines.flatMap { line =>
-      val split = line.trim.split('=')
+      val split = line.trim.replaceAllLiterally("''", "'").split('=')
       if (split.length < 2) {
         None
       } else {
