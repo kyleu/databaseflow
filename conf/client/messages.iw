@@ -1,4 +1,4 @@
-general.ok = OK
+general.ok = בסדר
 general.loading = טעינה...
 general.refresh = רענן
 general.cancel = לבטל
@@ -70,7 +70,7 @@ query.plan.error = תוכנית שגיאה
 query.unsaved.changes = שאילתה זו יש שינויים שלא נשמרו.
 query.default.name = שלא נשמרו שאילתה {0}
 query.open.relation = פתח [{0}] שולחן מסוננים שבו [{1}].
-query.index.error = שגיאה נתקל ב " מדד [{0}].
+query.index.error = שגיאה נתקל ב " מדד {0}.
 query.chart.loading = טעינת תרשים אפשרויות...
 feedback.title = משוב
 feedback.notice = תודה על המשוב שלך. זה ישלח את ההודעה שלך ישירות ליוצרים של {0}. אם אתה רוצה לקבל הודעה כאשר אנחנו מענה, בבקשה לכלול כתובת דוא " ל.

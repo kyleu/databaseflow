@@ -1,5 +1,5 @@
 general.back.title = Powrót do listy połączeń
-general.sql = SQL
+general.sql = W SQL
 general.error = Błąd
 general.about = O
 general.save = Zapisz

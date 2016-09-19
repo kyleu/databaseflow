@@ -1,4 +1,4 @@
-general.ok = OK
+general.ok = "确定"
 general.loading = 装载...
 general.refresh = 刷新
 general.cancel = 取消
@@ -70,7 +70,7 @@ query.plan.error = 计划的错误
 query.unsaved.changes = 这个查询有未保存的变化。
 query.default.name = 未保存的查询{0}
 query.open.relation = 开放的[{0}]表过滤其中[{1}].
-query.index.error = 遇到错误指数[{0}].
+query.index.error = 遇到错误指数{0}.
 query.chart.loading = 载入图表。
 feedback.title = 反馈
 feedback.notice = 谢谢你的反馈意见。 这将发送给你的消息直接的创造者{0}. 如果你想得到通知时，我们的回答中，请包括一个电子邮件地址。
