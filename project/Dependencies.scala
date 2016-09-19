@@ -38,7 +38,7 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.5.0"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.5.1"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.192"
@@ -72,7 +72,7 @@ object Dependencies {
     val fontAwesome = "org.webjars" % "font-awesome" % "4.6.3"
     val jquery = "org.webjars" % "jquery" % "2.2.4"
     val materialize = "org.webjars" % "materializecss" % "0.97.7"
-    val moment = "org.webjars" % "momentjs" % "2.14.1"
+    val moment = "org.webjars" % "momentjs" % "2.15.0"
     val mousetrap = "org.webjars" % "mousetrap" % "1.6.0"
     val plotly = "org.webjars.bower" % "plotly.js" % "1.17.2"
   }

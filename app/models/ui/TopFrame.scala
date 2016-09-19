@@ -1,10 +1,19 @@
 package models.ui
 
 import java.net.URI
-import javax.swing.BorderFactory
+import javax.swing.{BorderFactory, JOptionPane}
 
 import scala.swing._
 import scala.swing.event.MouseClicked
+
+object TopFrame {
+  var frame: Option[TopFrame] = None
+  def open() = {
+    frame.foreach(_ => throw new IllegalStateException("TopFrame already started."))
+    frame = Some(new TopFrame())
+    frame.foreach(_.open())
+  }
+}
 
 class TopFrame() extends MainFrame {
   title = "Database Flow"
@@ -61,7 +70,7 @@ class TopFrame() extends MainFrame {
     }
   }
 
-  override def closeOperation() = {
-    sys.exit(0)
-  }
+  def error(msg: String) = JOptionPane.showMessageDialog(None.orNull, msg)
+
+  override def closeOperation() = sys.exit(0)
 }

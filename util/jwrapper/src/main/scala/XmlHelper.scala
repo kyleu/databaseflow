@@ -9,7 +9,7 @@ object XmlHelper {
       <App>
         <Name>Database Flow</Name>
         <LogoPNG>{ dir }/public/images/ui/favicon/favicon-512.png</LogoPNG>
-        <MainClass>play.core.server.ProdServerStart</MainClass>
+        <MainClass>DatabaseFlow</MainClass>
       </App>
       <SupportedLanguages>en</SupportedLanguages>
       <Windows32JRE>{ dir }/tmp/jwrapper/jre-installs/win32/jre1.8.0_101</Windows32JRE>
