@@ -1,18 +1,10 @@
 @(isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
-  <div class="theme">
-    <div class="container">
-      <div class="row">
-        <div class="col s12">
-          <div class="hero white-text">
-            <h4>Database Flow relies on tremendous open source projects.</h4>
-            <p>Here's a few of them.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @views.html.layout.hero(
+    title = messages("technology.hero.title"),
+    subtitle = messages("technology.hero.subtitle1", utils.Config.projectName)
+  )
   <div class="container">
     <div class="row">
       @views.html.content.tech()

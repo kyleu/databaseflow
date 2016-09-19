@@ -38,13 +38,18 @@ class SiteController @javax.inject.Inject() (
     teamPrice = config.getInt("payment.price.team").getOrElse(0)
   )
 
-  def splash() = act("splash") { implicit request =>
-    Future.successful(Ok(views.html.splash()).withHeaders(SiteController.cors: _*))
-  }
-
   def index() = act("index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
+    val isEnabled = request.session.data.get("preview").contains("true")
+    if (isEnabled) {
+      Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
+    } else {
+      Future.successful(Ok(views.html.splash()).withHeaders(SiteController.cors: _*))
+    }
+  }
+
+  def enable() = act("enable") { implicit request =>
+    Future.successful(Redirect(routes.SiteController.index()).withSession("preview" -> "true"))
   }
 
   def features() = act("features") { implicit request =>
@@ -89,10 +94,5 @@ class SiteController @javax.inject.Inject() (
 
   def robots() = act("robots.txt") { implicit request =>
     Future.successful(Ok("User-agent: *\nDisallow:"))
-  }
-
-  def test() = act("test") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.test(isAdmin)))
   }
 }

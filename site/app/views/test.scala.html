@@ -1,6 +1,0 @@
-@(isAdmin: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-
-@layout.simple(utils.Config.projectName, "index", isAdmin = isAdmin) {
-  @views.html.layout.hero()
-  @views.html.content.features()
-}

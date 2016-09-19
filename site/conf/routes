@@ -1,6 +1,5 @@
-GET            /                                        controllers.SiteController.splash
-GET            /test                                    controllers.SiteController.test
-GET            /site                                    controllers.SiteController.index
+GET            /                                        controllers.SiteController.index
+GET            /enable                                  controllers.SiteController.enable
 GET            /features                                controllers.SiteController.features
 GET            /versions                                controllers.SiteController.versions
 GET            /plan                                    controllers.SiteController.plan

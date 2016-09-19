@@ -1,20 +1,11 @@
 @(isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(title = utils.Config.projectName, section = "download", isAdmin = isAdmin) {
-  <div class="theme">
-    <div class="container">
-      <div class="row">
-        <div class="col s12">
-          <div class="hero white-text">
-            <h4>@messages("downloads.hero.title", utils.Config.projectName)</h4>
-            <p>@messages("downloads.hero.subtitle1", utils.Config.projectName)</p>
-            <p>@messages("downloads.hero.subtitle2", utils.Config.projectName)</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  @views.html.layout.hero(
+    title = messages("downloads.hero.title", utils.Config.projectName),
+    subtitle = messages("downloads.hero.subtitle1", utils.Config.projectName),
+    showButtons = false
+  )
   <div class="container">
     @views.html.content.downloads()
     @views.html.content.license()

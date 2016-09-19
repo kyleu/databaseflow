@@ -1,23 +1,10 @@
 @(e: utils.SiteEngine, isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
-  <div class="theme">
-    <div class="container">
-      <div class="row">
-        <div class="col s12">
-          <div class="hero white-text">
-            <h4>@messages("database.hero.title", utils.Config.projectName, e.title)</h4>
-            <p>@messages("database.hero.subtitle1", utils.Config.projectName, e.title)</p>
-            <p>@messages("database.hero.subtitle2", utils.Config.projectName, e.title)</p>
-            <div class="hero-links">
-              <a href="@routes.DownloadController.index()" class="index-button btn white theme-text">@messages("index.download.link")</a>
-              <a href="@routes.DownloadController.index()" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @views.html.layout.hero(
+    title = messages("database.hero.title", utils.Config.projectName, e.title),
+    subtitle = messages(s"database.${e.title.toLowerCase}.subtitle", utils.Config.projectName, e.title)
+  )
   <div class="container">
     @views.html.content.features()
   </div>

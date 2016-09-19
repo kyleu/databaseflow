@@ -1,15 +1,16 @@
-@()(implicit messages: Messages)<div class="theme">
+@(title: String, subtitle: String, subtitle2: Option[String] = None, showButtons: Boolean = true)(implicit messages: Messages)
+<div class="theme">
   <div class="container">
     <div class="row">
       <div class="col s12">
         <div class="hero white-text">
-          <h4>@messages("index.hero.title")</h4>
-          <p>@messages("index.hero.subtitle1", utils.Config.projectName)</p>
-          <p>@messages("index.hero.subtitle2", utils.Config.projectName)</p>
-          <div class="hero-links">
+          <h4>@title</h4>
+          <p>@subtitle</p>
+          @subtitle2.map { s => <p>@s</p> }
+          @if(showButtons) { <div class="hero-links">
             <a href="@routes.DownloadController.index()" class="index-button btn white theme-text">@messages("index.download.link")</a>
-            <a href="@routes.DownloadController.index()" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
-          </div>
+            <a href="@routes.SiteController.versions()" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
+          </div> }
         </div>
       </div>
     </div>

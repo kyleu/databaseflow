@@ -23,6 +23,8 @@ index.hero.subtitle2 = You can run {0} locally for your own use, or install to a
 
 # Downloads
 downloads.title = Downloads
+downloads.hero.title = Get started with {0} right away.
+downloads.hero.subtitle1 = Downloads are available for all major platforms.
 platform.osx = macOS
 platform.windows = Windows
 platform.linux = Linux
@@ -63,7 +65,16 @@ feedback.email = Email Address
 feedback.submit = Send Feedback
 
 # Features
-features.title =
+features.hero.title = {0} is a modern web-based SQL client.
+features.hero.subtitle1 = Using streaming web technology, {0} helps you access your data from any device.
+
+# Technology
+technology.hero.title = {0} relies on tremendous open source projects.
+technology.hero.subtitle1 = Here's a few of them.
+
+# Database
+database.hero.title = {0} is the best SQL client for working with {1}
+database.postgresql.subtitle = {1} is our primary supported database, we support normal installations, Amazon RDS or Redshift, and Greenplum.
 
 # Licensing
 license.download = Download License File
