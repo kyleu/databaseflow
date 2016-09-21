@@ -4,21 +4,9 @@ import models.engine.capabilities._
 import enumeratum._
 
 object DatabaseEngine extends Enum[DatabaseEngine] {
-  case object DB2 extends DatabaseEngine("db2", "DB2", "com.ibm.db2.jcc.DB2Driver", Some(50000), DB2Capabilities) {
-    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
-      s"jdbc:db2://${host.getOrElse("localhost")}:${port.getOrElse(50000)}/${dbName.getOrElse("db")}"
-    }
-  }
-
   case object H2 extends DatabaseEngine("h2", "H2", "org.h2.Driver", None, H2Capabilities) {
     override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
       dbName.map(n => s"jdbc:h2:$n").getOrElse(cap.exampleUrl)
-    }
-  }
-
-  case object Informix extends DatabaseEngine("informix", "Informix", "com.informix.jdbc.IfxDriver", Some(1533), InformixCapabilities) {
-    override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
-      s"jdbc:informix-sqli://${host.getOrElse("localhost")}:${port.getOrElse(1533)}/${dbName.getOrElse("db")}:INFORMIXSERVER=${host.getOrElse("localhost")}"
     }
   }
 

@@ -7,9 +7,7 @@ sealed abstract class Engine(val id: String, val enabled: Boolean = true) extend
 }
 
 object Engine extends Enum[Engine] {
-  case object DB2 extends Engine(id = "db2")
   case object H2 extends Engine(id = "h2")
-  case object Informix extends Engine(id = "informix")
   case object MySQL extends Engine(id = "mysql")
   case object Oracle extends Engine(id = "oracle")
   case object PostgreSQL extends Engine(id = "postgres")

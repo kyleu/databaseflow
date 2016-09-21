@@ -18,6 +18,7 @@ dist
 /build/*.exe
 /build/*.pkg
 /build/*.dmg
+/build/*.tar
 /build/jwrapper
 
 /.idea_modules

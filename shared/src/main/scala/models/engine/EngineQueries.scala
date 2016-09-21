@@ -18,7 +18,6 @@ object EngineQueries {
       }
     }
     val preColumnsClause = options.offset match {
-      case Some(o) if engine == Informix => s" SKIP $o"
       case _ => ""
     }
     val postQueryClauses = options.limit match {
@@ -26,7 +25,6 @@ object EngineQueries {
         case Some(o) if o > 0 => s" limit $l offset $o"
         case _ => s" limit $l"
       }
-      case Some(l) if engine == Informix => s" limit $l"
       case Some(l) if engine == SQLServer => options.offset match {
         case Some(o) => s" offset $o rows fetch next $l rows only"
         case None => s" offset 0 rows fetch next $l rows only"

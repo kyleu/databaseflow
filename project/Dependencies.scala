@@ -40,9 +40,7 @@ object Dependencies {
   object Jdbc {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.5.1"
 
-    val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.192"
-    val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1211"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
