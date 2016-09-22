@@ -6,8 +6,8 @@ import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{JsObject, JsString}
 import play.api.mvc.{Action, Controller}
-import services.feedback.FeedbackService
-import services.feedback.FeedbackService.Feedback
+import services.audit.FeedbackService
+import services.audit.FeedbackService.Feedback
 import services.notification.NotificationService
 
 import scala.concurrent.Future

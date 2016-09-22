@@ -9,9 +9,9 @@
     <div class="container">
       @if(section != "splash") {<ul class="right hide-on-small-only">
         @if(section == "features") {
-          <li class="active"><a href="@controllers.routes.SiteController.features()">@messages("index.features.link")</a></li>
+          <li class="active"><a href="@controllers.routes.ContentController.features()">@messages("index.features.link")</a></li>
         } else {
-          <li><a href="@controllers.routes.SiteController.features()">@messages("index.features.link")</a></li>
+          <li><a href="@controllers.routes.ContentController.features()">@messages("index.features.link")</a></li>
         }
         @if(section == "download") {
           <li class="active"><a href="@controllers.routes.DownloadController.index()">@messages("index.download.link")</a></li>
@@ -19,9 +19,9 @@
           <li><a href="@controllers.routes.DownloadController.index()">@messages("index.download.link")</a></li>
         }
         @if(section == "versions") {
-          <li class="active"><a href="@controllers.routes.SiteController.versions()">@messages("index.versions.link")</a></li>
+          <li class="active"><a href="@controllers.routes.ContentController.versions()">@messages("index.versions.link")</a></li>
         } else {
-          <li><a href="@controllers.routes.SiteController.versions()">@messages("index.versions.link")</a></li>
+          <li><a href="@controllers.routes.ContentController.versions()">@messages("index.versions.link")</a></li>
         }
         @if(isAdmin) {
           @if(section == "admin") {

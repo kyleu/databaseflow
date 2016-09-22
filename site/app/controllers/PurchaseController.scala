@@ -4,7 +4,6 @@ import licensing.{License, LicenseEdition, LicenseGenerator}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi
-import play.api.mvc.Action
 import services.notification.NotificationService
 import services.payment.StripePaymentService
 import utils.web.PlayFormUtils
@@ -29,7 +28,7 @@ class PurchaseController @javax.inject.Inject() (implicit override val messagesA
   def pricingPersonal() = act("pricing.personal") { implicit request =>
     Future.successful(Ok(views.html.purchase.purchase(
       "Personal",
-      routes.PurchaseController.purchasePersonalEdition(),
+      controllers.routes.PurchaseController.purchasePersonalEdition(),
       StripePaymentService.prices(LicenseEdition.Personal)
     )))
   }
@@ -53,7 +52,7 @@ class PurchaseController @javax.inject.Inject() (implicit override val messagesA
   def pricingTeam() = act("pricing.team") { implicit request =>
     Future.successful(Ok(views.html.purchase.purchase(
       "Team",
-      routes.PurchaseController.purchaseTeamEdition(),
+      controllers.routes.PurchaseController.purchaseTeamEdition(),
       StripePaymentService.prices(LicenseEdition.Team)
     )))
   }

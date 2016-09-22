@@ -29,11 +29,11 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
 
   def download(os: String) = act(s"download-$os") { implicit request =>
     val filename = os match {
-      case "osx" => "Database Flow.dmg"
-      case "linux" => "databaseflow_1.0.0_all.deb"
-      case "windows" => "Database Flow.exe"
-      case "docker" => "databaseflow.docker.gz"
-      case "universal" => "databaseflow.zip"
+      case "databaseflow.dmg" => "Database Flow.dmg"
+      case "databaseflow.exe" => "Database Flow.exe"
+      case "databaseflow.deb" => "databaseflow_1.0.0_all.deb"
+      case "databaseflow.docker.gz" => "databaseflow.docker.gz"
+      case "databaseflow.zip" => "databaseflow.zip"
       case x => throw new IllegalStateException(s"Unknown os [$os].")
     }
     val file = new java.io.File(downloadDir, filename)

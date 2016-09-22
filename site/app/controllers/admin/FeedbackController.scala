@@ -4,7 +4,7 @@ import java.util.UUID
 
 import controllers.BaseSiteController
 import play.api.i18n.MessagesApi
-import services.feedback.FeedbackService
+import services.audit.FeedbackService
 
 import scala.concurrent.Future
 

@@ -1,7 +1,7 @@
 @()(implicit messages: Messages)
 @panel(e: utils.SiteEngine) = {
   <div id="@e.id" class="col s6 m4 db-panel">
-    <a class="theme-text" href="@routes.SiteController.database(e.id)">
+    <a class="theme-text" href="@routes.ContentController.database(e.id)">
       <div class="logo z-depth-1">
         <div class="on initially-hidden">
           <img src="@routes.Assets.versioned(s"images/db/${e.id}-active.png")" width="64" height="64" />

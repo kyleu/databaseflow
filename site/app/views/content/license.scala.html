@@ -1,7 +1,7 @@
 @()(implicit messages: Messages)
 
 @section(edition: licensing.LicenseEdition, cta: String, call: Call) = {
-  <div class="col s12 m4" style="margin-top: 10px;">
+  <div class="col s12 m6" style="margin-top: 10px;">
     <div class="z-depth-1 license-pitch">
       <strong>@edition.title</strong>
       <a class="cta theme-text" href="@call">@cta</a>
@@ -10,7 +10,6 @@
 }
 
 <div class="row">
-  @section(licensing.LicenseEdition.Trial, messages("license.trial"), routes.UserLicenseController.requestForm())
   @section(licensing.LicenseEdition.Personal, messages("license.personal"), routes.PurchaseController.pricingPersonal())
   @section(licensing.LicenseEdition.Team, messages("license.team"), routes.PurchaseController.pricingTeam())
 </div>

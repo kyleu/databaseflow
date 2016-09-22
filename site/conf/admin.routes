@@ -12,6 +12,8 @@ GET         /licenses/:id/download        controllers.admin.LicenseController.do
 GET         /licenses/:id/email           controllers.admin.LicenseController.email(id: java.util.UUID)
 GET         /licenses/:id/remove          controllers.admin.LicenseController.remove(id: java.util.UUID)
 
+GET         /installs                     controllers.admin.InstallController.list()
+
 GET         /feedback                     controllers.admin.FeedbackController.list()
 GET         /feedback/remove/:id          controllers.admin.FeedbackController.remove(id: java.util.UUID)
 

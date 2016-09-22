@@ -1,8 +1,8 @@
 @()(implicit messages: Messages)
-@section(key: String) = {
+@section(key: String, filename: String) = {
   <div class="col s12 m6 l3">
     <div id="@key" class="download-section z-depth-1">
-      <a class="theme-text" href="@controllers.routes.DownloadController.download(key)">
+      <a class="theme-text" href="@controllers.routes.DownloadController.download(filename)">
         <div class="on initially-hidden">
           <img src="@routes.Assets.versioned(s"images/os/$key-active.png")" width="64" height="64" />
         </div>
@@ -18,14 +18,14 @@
   <div class="col s12">
     <div>@messages("downloads.title")</div>
     <div class="row padded-top">
-      @section("osx")
-      @section("windows")
-      @section("linux")
-      @section("docker")
+      @section("osx", "databaseflow.dmg")
+      @section("windows", "databaseflow.exe")
+      @section("linux", "databaseflow.deb")
+      @section("docker", "databaseflow.docker.gz")
     </div>
     <div class="row padded-top">
       <div class="col s12" style="text-align: center;">
-        Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("universal")">download</a> a universal zip (Java 8 required).
+        Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("databaseflow.zip")">download</a> a universal zip (Java 8 required).
       </div>
     </div>
   </div>

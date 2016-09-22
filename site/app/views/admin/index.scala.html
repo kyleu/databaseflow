@@ -7,12 +7,13 @@
           <span class="card-title">@utils.Config.projectName Administration</span>
           <p>Welcome back, @username</p>
 
-          <ul>
-          <li><a class="theme-text" href="@controllers.admin.routes.LicenseController.list()">Manage Licenses</a></li>
-          <li><a class="theme-text" href="@controllers.admin.routes.FeedbackController.list()">View Feedback</a></li>
-          <li><a class="theme-text" href="@controllers.admin.routes.MetricsController.view()">Show Server Metrics</a></li>
-          <li><a class="theme-text" href="@controllers.admin.routes.LogController.list()">View Server Logs</a></li>
-          </ul>
+          <div class="collection">
+            <a class="theme-text collection-item" href="@controllers.admin.routes.InstallController.list()">Show Install Log</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.LicenseController.list()">Manage Licenses</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.FeedbackController.list()">View Feedback</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.MetricsController.view()">Show Server Metrics</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.LogController.list()">View Server Logs</a>
+          </div>
         </div>
       </div>
     </div>

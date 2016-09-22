@@ -19,7 +19,6 @@ object StripePaymentService extends Logging {
     Stripe.apiKey = sk
     jsKey = pk
     prices = Map(
-      LicenseEdition.Trial -> 0,
       LicenseEdition.Personal -> personalPrice,
       LicenseEdition.Team -> teamPrice
     )

@@ -9,7 +9,7 @@
           @subtitle2.map { s => <p>@s</p> }
           @if(showButtons) { <div class="hero-links">
             <a href="@routes.DownloadController.index()" class="index-button btn white theme-text">@messages("index.download.link")</a>
-            <a href="@routes.SiteController.versions()" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
+            <a href="@routes.ContentController.versions()" class="index-button btn white theme-text license-link">@messages("index.license.link")</a>
           </div> }
         </div>
       </div>

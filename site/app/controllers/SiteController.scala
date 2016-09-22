@@ -27,7 +27,6 @@ class SiteController @javax.inject.Inject() (
     val lifecycle: ApplicationLifecycle,
     val config: Configuration
 ) extends BaseSiteController {
-
   val metricsConfig = MetricsConfig(jmxEnabled = true, graphiteEnabled = false, "127.0.0.1", 2003, servletEnabled = true, 9001)
   actorSystem.actorOf(MetricsServletActor.props(metricsConfig), "metrics-servlet")
   lifecycle.addStopHook(() => Future.successful(SharedMetricRegistries.remove("default")))
@@ -48,25 +47,6 @@ class SiteController @javax.inject.Inject() (
     }
   }
 
-  def enable() = act("enable") { implicit request =>
-    Future.successful(Redirect(routes.SiteController.index()).withSession("preview" -> "true"))
-  }
-
-  def features() = act("features") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.features(isAdmin)))
-  }
-
-  def versions() = act("versions") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.versions(isAdmin)))
-  }
-
-  def plan() = act("plan") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.plan(isAdmin)))
-  }
-
   def language(lang: String) = act("language") { implicit request =>
     val l = Lang(lang)
     val result = Redirect(controllers.routes.SiteController.index()).withLang(l)
@@ -77,22 +57,7 @@ class SiteController @javax.inject.Inject() (
     })
   }
 
-  def database(key: String) = act(s"db.$key") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.database(utils.SiteEngine.withName(key), isAdmin)))
-  }
-
-  def technology() = act("technology") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.technology(isAdmin)))
-  }
-
-  def privacy() = act("privacy") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.privacy(isAdmin)))
-  }
-
-  def robots() = act("robots.txt") { implicit request =>
-    Future.successful(Ok("User-agent: *\nDisallow:"))
+  def enable() = act("enable") { implicit request =>
+    Future.successful(Redirect(routes.SiteController.index()).withSession("preview" -> "true"))
   }
 }

@@ -1,14 +1,18 @@
 GET            /                                        controllers.SiteController.index
 GET            /enable                                  controllers.SiteController.enable
-GET            /features                                controllers.SiteController.features
-GET            /versions                                controllers.SiteController.versions
-GET            /plan                                    controllers.SiteController.plan
-GET            /tech                                    controllers.SiteController.technology
 GET            /lang/:id                                controllers.SiteController.language(id)
-GET            /db/:key                                 controllers.SiteController.database(key)
-GET            /privacy                                 controllers.SiteController.privacy
-GET            /robots.txt                              controllers.SiteController.robots
 
+# Content
+GET            /features                                controllers.ContentController.features
+GET            /versions                                controllers.ContentController.versions
+GET            /plan                                    controllers.ContentController.plan
+GET            /tech                                    controllers.ContentController.technology
+GET            /db/:key                                 controllers.ContentController.database(key)
+GET            /privacy                                 controllers.ContentController.privacy
+GET            /robots.txt                              controllers.ContentController.robots
+
+# Updates
+GET            /install                                 controllers.UpdateController.install
 GET            /version                                 controllers.UpdateController.version
 
 # Feedback
@@ -31,8 +35,6 @@ GET            /pricing/team                            controllers.PurchaseCont
 POST           /purchase/team                           controllers.PurchaseController.purchaseTeamEdition()
 
 # License Request
-GET            /license/request                         controllers.UserLicenseController.requestForm()
-POST           /license/request                         controllers.UserLicenseController.licenseRequest()
 GET            /license/:id                             controllers.UserLicenseController.licenseView(id: java.util.UUID)
 GET            /license/:id/download                    controllers.UserLicenseController.licenseDownload(id: java.util.UUID)
 
