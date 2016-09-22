@@ -7,7 +7,6 @@ sealed abstract class LicenseEdition(val id: String, val title: String) extends 
 }
 
 object LicenseEdition extends Enum[LicenseEdition] {
-  case object Trial extends LicenseEdition("trial", "30 Day Trial")
   case object Personal extends LicenseEdition("personal", "Personal Edition")
   case object Team extends LicenseEdition("team", "Team Edition")
 

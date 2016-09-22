@@ -1,7 +1,7 @@
 @(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.admin(user, "status", messages("admin.status.title", utils.Config.projectName)) {
   <div class="content-panel">
-    <div class="panel-title">@messages("admin.status.title", utils.Config.projectName)</div>
+    <div class="panel-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.status.title", utils.Config.projectName)</div>
 
     <div class="row">
       <div class="col s12">
@@ -9,14 +9,14 @@
           <li class="collection-item">
             <a href="@controllers.admin.routes.MetricsController.showMetrics()" class="theme-text">Configuration</a>
             @defining(services.config.ConfigFileService.configDir) { c =>
-              <div>Loaded from @c.getAbsolutePath</div>
+              <div>@messages("admin.status.file.loaded", c.getAbsolutePath)</div>
             }
           </li>
           <li class="collection-item">
             <a href="@controllers.routes.LicenseController.form()" class="theme-text">License Details</a>
             @defining(services.licensing.LicenseService.getLicense) { l =>
               @if(l.isEmpty) {
-                <div>No license configured.</div>
+                <div>@messages("admin.status.no.license", services.licensing.LicenseService.daysRemaining)</div>
               } else {
                 @defining(utils.DateUtils.niceDate(utils.DateUtils.fromMillis(l.get.issued).toLocalDate)) { issued =>
                   <div>@l.get.edition.title, issued @issued to @l.get.name (@l.get.email)</div>
@@ -27,13 +27,13 @@
           <li class="collection-item">
             @defining(services.database.core.MasterDatabase.settings.get) { c =>
               <a href="@controllers.routes.QueryController.main(c.id)" class="theme-text">Master Database</a>
-              <div>@c.engine.name database loaded from [@c.url].</div>
+              <div>@messages("admin.status.db.loaded", c.engine.name, c.url)</div>
             }
           </li>
           <li class="collection-item">
             @defining(services.database.core.ResultCacheDatabase.settings.get) { c =>
               <a href="@controllers.routes.QueryController.main(c.id)" class="theme-text">Result Cache</a>
-              <div>@c.engine.name database loaded from [@c.url].</div>
+              <div>@messages("admin.status.db.loaded", c.engine.name, c.url)</div>
             }
           </li>
         </ul>

@@ -6,8 +6,9 @@ import akka.actor.{ActorSystem, Props}
 import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
 import models.auth.AuthEnv
+import models.settings.SettingKey
 import models.ui.TopFrame
-import org.joda.time.DateTimeZone
+import org.joda.time.{DateTimeZone, LocalDateTime}
 import play.api.Environment
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
@@ -63,6 +64,11 @@ class ApplicationContext @javax.inject.Inject() (
     MasterDatabase.open()
     MasterDdl.update(MasterDatabase.conn)
     SettingsService.load()
+    SettingsService.getOrSet(SettingKey.InstallDate, {
+      ws.url(utils.Config.projectUrl + "/install").get()
+      new LocalDateTime().toString
+    })
+
     LicenseService.readLicense()
     VersionService.upgradeIfNeeded(ws)
 

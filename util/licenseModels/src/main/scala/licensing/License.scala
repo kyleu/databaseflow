@@ -28,7 +28,7 @@ case class License(
     id: UUID = UUID.randomUUID,
     name: String,
     email: String,
-    edition: LicenseEdition = LicenseEdition.Trial,
+    edition: LicenseEdition = LicenseEdition.Personal,
     issued: Long = System.currentTimeMillis,
     version: Int = 1
 ) {

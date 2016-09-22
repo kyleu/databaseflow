@@ -40,11 +40,11 @@ index.new.connection = New Connection
 # License
 license.new.form = License Details
 license.paste = Please paste your license in the form below.
+license.error = Unable to parse license. Please make sure you've copied the entire text.
 license.missing = Missing license content.
 license.success = License updated successfully.
 license.register = Please create a local account to use with {0}.
 license.configure = Please configure your license for {0}.
-license.expired = Your license has expired. Head to {0} to purchase a license.
 
 # Registration
 registration.title = Register
@@ -184,7 +184,7 @@ user.password.changed = Password changed.
 user.password.check.fail = Old password does not match ({0}).
 
 # Admin
-admin.title = Administration
+admin.title = Settings
 admin.back.title = Back
 
 admin.index.title = {0} Administration
@@ -194,10 +194,13 @@ admin.status.link = Status
 admin.status.title = {0} Status
 admin.status.description = View license details and system status.
 admin.status.metrics.title = System Metrics
+admin.status.no.license = No license configured. You have {0} days remaining in your trial.
+admin.status.file.loaded = Loaded from {0}
+admin.status.db.loaded = {0} databse, loaded from {1}
 
-admin.settings.link = Settings
-admin.settings.title = System Settings
-admin.settings.description = Edit system settings and preferences.
+admin.settings.link = Preferences
+admin.settings.title = System Preferences
+admin.settings.description = Edit system preferences.
 admin.settings.invalid = Attempt to save invalid setting [{0}].
 
 admin.users.link = Users

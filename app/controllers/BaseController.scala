@@ -38,13 +38,13 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
 
   def withSession(action: String)(block: (SecuredRequest[AuthEnv, AnyContent]) => Future[Result]) = {
     ctx.silhouette.UserAwareAction.async { implicit request =>
-      if (!LicenseService.hasLicense) {
+      if (LicenseService.expired) {
+        val url = utils.Config.projectUrl
         Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing(
-          "success" -> ctx.messagesApi("license.configure", utils.Config.projectName)
-        ))
-      } else if (LicenseService.expired) {
-        Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing(
-          "success" -> ctx.messagesApi("license.expired", utils.Config.projectUrl)
+          "success" -> s"""
+            Your 14 day trial has expired.
+            Head to <a class="theme-text" href="$url/versions" target="_blank">$url</a> to purchase a license, then add your license here.
+          """
         ))
       } else {
         request.identity match {

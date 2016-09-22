@@ -37,7 +37,9 @@ class LicenseController @javax.inject.Inject() (override val ctx: ApplicationCon
       case Failure(x) =>
         val msg = x match {
           case _ if content.isEmpty => messagesApi("license.paste")
-          case ex => ex.getClass.getSimpleName + ": " + ex.getMessage
+          case ex =>
+            log.warn("Cannot parse license.", ex)
+            messagesApi("license.error")
         }
         Future.successful(Redirect(controllers.routes.LicenseController.form()).flashing("error" -> msg))
     }

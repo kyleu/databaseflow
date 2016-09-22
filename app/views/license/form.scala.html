@@ -31,7 +31,8 @@
                 </table>
               }
               @if(license.isEmpty) {
-                <p>To obtain a license (for free!), head to <a class="theme-text" href="@utils.Config.projectUrl">databaseflow.com</a>.</p>
+                <p>You have @services.licensing.LicenseService.daysRemaining days remaining in your trial. We hope you like it!</p>
+                <p>To obtain a license, head to <a class="theme-text" href="@utils.Config.projectUrl/versions" target="_blank">databaseflow.com</a>.</p>
               }
             </div>
             <div class="input-field col s12">

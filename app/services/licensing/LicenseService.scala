@@ -12,14 +12,17 @@ import utils.Logging
 import scala.util.{Failure, Success, Try}
 
 object LicenseService extends Logging {
+  val trialDuration = 14
   private[this] var licenseContent: Option[String] = None
   private[this] var license: Option[License] = None
-  private[this] var startDate: Option[(LocalDateTime, Boolean)] = None
+  private[this] var startDate: Option[LocalDateTime] = None
 
   def readLicense() = {
+    startDate = Some(LocalDateTime.parse(SettingsService(SettingKey.InstallDate)))
+
     val content = SettingsService(SettingKey.LicenseContent)
     if (content.isEmpty) {
-      log.warn(s"${utils.Config.projectName} Trial Edition started.")
+      log.warn(s"${utils.Config.projectName} Trial Edition started. You have $daysRemaining days remaining.")
       license = None
       licenseContent = None
     } else {
@@ -31,18 +34,6 @@ object LicenseService extends Logging {
         case Failure(x) =>
           log.warn(s"Unable to parse license [$content].", x)
           None
-      }
-      startDate = license.map { l =>
-        val installDate = SettingsService(SettingKey.InstallDate) match {
-          case "" =>
-            val d = new LocalDateTime()
-            SettingsService.set(SettingKey.InstallDate, d.toString)
-            d
-          case x => LocalDateTime.parse(x)
-        }
-        val issueDate = new LocalDateTime(l.issued)
-        val d = if (installDate.isBefore(issueDate)) { installDate } else { issueDate }
-        d -> (LicenseService.isTrial && Days.daysBetween(new LocalDateTime(), d).getDays > 30)
       }
     }
     if (ConfigFileService.isDocker) {
@@ -66,8 +57,8 @@ object LicenseService extends Logging {
   def getLicense = license
   def getLicenseContent = licenseContent
   def hasLicense = license.isDefined
-  def isTrial = license.exists(_.edition == LicenseEdition.Trial)
   def isPersonalEdition = license.exists(_.edition == LicenseEdition.Personal)
   def isTeamEdition = license.exists(_.edition == LicenseEdition.Team)
-  def expired = startDate.exists(_._2)
+  def daysRemaining = trialDuration - startDate.map(Days.daysBetween(_, new LocalDateTime()).getDays).getOrElse(0)
+  def expired = license.isEmpty && startDate.exists(Days.daysBetween(_, new LocalDateTime()).getDays > trialDuration)
 }
