@@ -21,7 +21,6 @@ import playscalajs.PlayScalaJS.autoImport._
 import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
-import com.slidingautonomy.sbt.filter.Import.filter
 
 object Server {
   private[this] val dependencies = {
@@ -53,8 +52,6 @@ object Server {
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
-    pipelineStages := Seq(filter),
-    includeFilter in filter := "*.coffee" || "*.less",
 
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")

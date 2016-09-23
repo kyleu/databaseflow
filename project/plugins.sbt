@@ -12,8 +12,6 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
 
-addSbtPlugin("com.slidingautonomy.sbt" % "sbt-filter" % "1.0.1")
-
 // Scala.js
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.12")
 
