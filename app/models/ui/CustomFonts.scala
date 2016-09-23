@@ -15,7 +15,8 @@ object CustomFonts {
     f
   }
 
-  val regularText = roboto.deriveFont(java.awt.Font.PLAIN, 24)
+  val regularText = roboto.deriveFont(java.awt.Font.PLAIN, 16)
+  val largeText = roboto.deriveFont(java.awt.Font.PLAIN, 24)
   val titleText = roboto.deriveFont(java.awt.Font.PLAIN, 36)
-  val icons = fontAwesome.deriveFont(java.awt.Font.PLAIN, 48)
+  val icons = fontAwesome.deriveFont(java.awt.Font.PLAIN, 36)
 }

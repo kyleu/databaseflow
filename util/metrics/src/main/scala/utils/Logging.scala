@@ -5,11 +5,15 @@ import play.api.Logger
 import utils.metrics.Instrumented
 
 object Logging extends Instrumented {
-  val traceMeter = metrics.meter("log.trace")
-  val debugMeter = metrics.meter("log.debug")
-  val infoMeter = metrics.meter("log.info")
-  val warnMeter = metrics.meter("log.warn")
-  val errorMeter = metrics.meter("log.error")
+  private[this] val traceMeter = metrics.meter("log.trace")
+  private[this] val debugMeter = metrics.meter("log.debug")
+  private[this] val infoMeter = metrics.meter("log.info")
+  private[this] val warnMeter = metrics.meter("log.warn")
+  private[this] val errorMeter = metrics.meter("log.error")
+
+  private[this] var callback: Option[(Int, String) => Unit] = None
+
+  def setCallback(f: (Int, String) => Unit) = callback = Some(f)
 
   case class CustomLogger(name: String) extends Logger(LoggerFactory.getLogger(name)) {
     override def trace(message: => String) = {
@@ -29,26 +33,32 @@ object Logging extends Instrumented {
       super.debug(message, error)
     }
     override def info(message: => String) = {
+      callback.foreach(_(1, message))
       infoMeter.mark()
       super.info(message)
     }
     override def info(message: => String, error: => Throwable) = {
+      callback.foreach(_(1, message))
       infoMeter.mark()
       super.info(message, error)
     }
     override def warn(message: => String) = {
+      callback.foreach(_(2, message))
       warnMeter.mark()
       super.warn(message)
     }
     override def warn(message: => String, error: => Throwable) = {
+      callback.foreach(_(2, message))
       warnMeter.mark()
       super.warn(message, error)
     }
     override def error(message: => String) = {
+      callback.foreach(_(3, message))
       errorMeter.mark()
       super.error(message)
     }
     override def error(message: => String, error: => Throwable) = {
+      callback.foreach(_(3, message))
       errorMeter.mark()
       super.error(message, error)
     }
@@ -64,8 +74,5 @@ object Logging extends Instrumented {
 }
 
 trait Logging {
-  protected[this] val log = {
-    val name = s"databaseflow.${this.getClass.getSimpleName.replace("$", "")}"
-    LoggerFactory.getLogger(name)
-  }
+  protected[this] val log = Logging.CustomLogger(s"databaseflow.${this.getClass.getSimpleName.replace("$", "")}")
 }

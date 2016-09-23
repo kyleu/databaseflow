@@ -7,11 +7,18 @@ import scala.util.control.NonFatal
 
 object DatabaseFlow extends Logging {
   def main(args: Array[String]): Unit = {
-    if (args.headOption.contains("gui")) {
+    run(args)
+  }
+
+  def run(args: Array[String]) = {
+    val newArgs = if (args.headOption.contains("gui")) {
       System.setProperty("show.gui", "true")
+      args.tail
+    } else {
+      args
     }
 
-    val process = new RealServerProcess(args)
+    val process = new RealServerProcess(newArgs)
 
     try {
       startServer(process)
@@ -25,7 +32,6 @@ object DatabaseFlow extends Logging {
 
   def startServer(process: RealServerProcess) = {
     val config: ServerConfig = ProdServerStart.readServerConfigSettings(process)
-    val pidFile = ProdServerStart.createPidFile(process, config.configuration)
     val application: Application = {
       val environment = Environment(config.rootDir, process.classLoader, Mode.Prod)
       val context = ApplicationLoader.createContext(environment)
@@ -36,11 +42,7 @@ object DatabaseFlow extends Logging {
 
     val serverProvider: ServerProvider = ServerProvider.fromConfiguration(process.classLoader, config.configuration)
     val server = serverProvider.createServer(config, application)
-    process.addShutdownHook {
-      server.stop()
-      pidFile.foreach(_.delete())
-      assert(!pidFile.exists(_.exists), "PID file should not exist!")
-    }
+    process.addShutdownHook(server.stop())
     server
   }
 }

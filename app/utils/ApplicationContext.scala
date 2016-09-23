@@ -53,6 +53,13 @@ class ApplicationContext @javax.inject.Inject() (
     DateTimeZone.setDefault(DateTimeZone.UTC)
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
+    if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
+      System.getProperty("show.gui", "false") match {
+        case "true" => TopFrame.open()
+        case _ => // noop
+      }
+    }
+
     SharedMetricRegistries.remove("default")
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)
 
@@ -74,7 +81,7 @@ class ApplicationContext @javax.inject.Inject() (
 
     if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
       System.getProperty("show.gui", "false") match {
-        case "true" => TopFrame.open()
+        case "true" => // noop
         case _ => java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
       }
     }
