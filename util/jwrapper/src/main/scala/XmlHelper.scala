@@ -1,5 +1,5 @@
 object XmlHelper {
-  private[this] val badJars = Seq("scalac-scapegoat-plugin")
+  private[this] val badJars = Seq("scalac-scapegoat-plugin", "webjars")
 
   def xml(dir: String) = {
     val libFiles = new java.io.File(dir + "/target/universal/stage/lib").list().filterNot(x => badJars.exists(x.contains))

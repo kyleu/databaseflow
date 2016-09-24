@@ -72,7 +72,7 @@ object Dependencies {
     val materialize = "org.webjars" % "materializecss" % "0.97.7"
     val moment = "org.webjars" % "momentjs" % "2.15.0"
     val mousetrap = "org.webjars" % "mousetrap" % "1.6.0"
-    val plotly = "org.webjars.bower" % "plotly.js" % "1.17.2"
+    // Too big: val plotly = "org.webjars.bower" % "plotly.js" % "1.17.2"
   }
 
   object Metrics {
