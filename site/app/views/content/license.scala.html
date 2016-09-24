@@ -9,7 +9,26 @@
   </div>
 }
 
+<div>@messages("license.title")</div>
 <div class="row">
-  @section(licensing.LicenseEdition.Personal, messages("license.personal"), routes.PurchaseController.pricingPersonal())
-  @section(licensing.LicenseEdition.Team, messages("license.team"), routes.PurchaseController.pricingTeam())
+  <div class="col s12 m6" style="margin-top: 10px;">
+    <div class="z-depth-1 license-pitch">
+      <strong>@licensing.LicenseEdition.Personal.title</strong>
+      <div class="separator"></div>
+      <div>Single User</div>
+      <div>All @utils.Config.projectName Features</div>
+      <div>$@services.payment.StripePaymentService.prices(licensing.LicenseEdition.Personal)</div>
+      <a class="cta btn theme" href="@routes.PurchaseController.pricingPersonal()">@messages("license.personal")</a>
+    </div>
+  </div>
+  <div class="col s12 m6" style="margin-top: 10px;">
+    <div class="z-depth-1 license-pitch">
+      <strong>@licensing.LicenseEdition.Team.title</strong>
+      <div class="separator"></div>
+      <div>Unlimited Users</div>
+      <div>All @utils.Config.projectName Features</div>
+      <div>$@services.payment.StripePaymentService.prices(licensing.LicenseEdition.Team)</div>
+      <a class="cta btn theme" href="@routes.PurchaseController.pricingTeam()">@messages("license.team")</a>
+    </div>
+  </div>
 </div>

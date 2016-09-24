@@ -22,7 +22,7 @@ index.hero.subtitle1 = {0} is a self-hosted collaborative SQL client and chartin
 index.hero.subtitle2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 # Downloads
-downloads.title = Downloads
+downloads.title = Download a free 14 day trial
 downloads.hero.title = Get started with {0} right away.
 downloads.hero.subtitle1 = Free trial, no registration required. Downloads are available for all major platforms.
 platform.osx = macOS
@@ -32,7 +32,7 @@ platform.docker = Docker
 platform.universal = Universal (requires Java 8)
 
 # Licensing
-license.title = Pricing
+license.title = Get a license
 license.personal = Buy Personal Edition
 license.team = Buy Team Edition
 

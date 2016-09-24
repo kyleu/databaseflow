@@ -9,7 +9,7 @@
             <span class="card-title">
               @messages("authentication.call.to.action", utils.Config.projectName)
             </span>
-
+            <p>@messages("authentication.notice", utils.Config.projectName)</p>
             <div class="row">
               <div class="input-field col s12">
                 <input id="input-email" type="email" class="form-control validate" name="email" value="@form("email").value" />

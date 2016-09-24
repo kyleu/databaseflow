@@ -49,6 +49,7 @@ license.configure = Please configure your license for {0}.
 # Registration
 registration.title = Register
 registration.call.to.action = Register for {0}
+registration.notice = You''re creating an account for this local installation of {0}. No information leaves your server.
 registration.register = Sign Up
 registration.email.taken = That email address is already in use
 registration.form.username = Name
@@ -61,6 +62,7 @@ registration.disabled = You cannot sign up at this time. Contact your administra
 
 # Authentication
 authentication.call.to.action = Sign in to {0}
+authentication.notice = This account is only for this installation of {0}. No information leaves your server, this is only a local account.
 authentication.sign.in = Sign In
 authentication.sign.out = Sign Out
 authentication.form.email = Email Address
