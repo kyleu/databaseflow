@@ -1,7 +1,7 @@
 package models.ui
 
 import java.net.URI
-import javax.swing.{BorderFactory, JOptionPane}
+import javax.swing.{BorderFactory, ImageIcon, JOptionPane}
 
 import utils.Logging
 
@@ -23,6 +23,7 @@ class TopFrame() extends MainFrame {
 
   title = "Database Flow"
   resizable = false
+  iconImage = toolkit.getImage(getClass.getResource("icon.png"))
 
   private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Left) {
     font = CustomFonts.titleText

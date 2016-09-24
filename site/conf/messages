@@ -24,7 +24,7 @@ index.hero.subtitle2 = You can run {0} locally for your own use, or install to a
 # Downloads
 downloads.title = Downloads
 downloads.hero.title = Get started with {0} right away.
-downloads.hero.subtitle1 = Downloads are available for all major platforms.
+downloads.hero.subtitle1 = Free trial, no registration required. Downloads are available for all major platforms.
 platform.osx = macOS
 platform.windows = Windows
 platform.linux = Linux
