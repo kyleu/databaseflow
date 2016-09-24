@@ -2,11 +2,24 @@ main.indent {
   padding-left: 240px;
 }
 
+main.margin {
+  margin-top: 50px;
+}
+
+.tab-container.indent {
+  padding-left: 240px;
+  position: fixed;
+  top: 48px;
+  z-index: 100;
+  width: 100%;
+}
+
 @media only screen and (max-width: 992px) {
-  main.indent {
+  main.indent, .tab-container.indent {
     padding-left: 0;
   }
 }
+
 
 #workspace {
   padding-top: 0.75rem;

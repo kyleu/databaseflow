@@ -6,8 +6,9 @@ import models.query.QueryResult.Source
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
+import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui.ProgressManager
+import ui.{ProgressManager, TabManager}
 import ui.query.{FilterManager, RowDataManager, TableManager}
 import utils.{Config, Logging, TemplateUtils}
 
@@ -52,6 +53,9 @@ object QueryResultService {
       $(".additional-results .append-rows-link").hide()
       $(".additional-results .no-rows-remaining").show()
     }
+
+    dom.document.getElementById(resultId.toString).scrollIntoView()
+    dom.window.scrollBy(0, if (TabManager.tabCount == 1) { -50 } else { -100 })
   }
 
   private[this] def onComplete(result: QueryResult, src: Source, panel: JQuery, resultId: UUID) = {

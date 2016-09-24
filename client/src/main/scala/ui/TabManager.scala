@@ -12,15 +12,14 @@ object TabManager {
   private[this] var initialized = false
   private[this] var openTabs = Seq.empty[(UUID, String, () => Unit)]
   private[this] var activeTab: Option[UUID] = None
-
   private[this] lazy val tabContainer = $(".tab-container")
+  private[this] lazy val mainEl = $("main")
   private[this] lazy val tabBar = $("#query-tabs", tabContainer)
   private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
 
   def initIfNeeded() = if (!initialized) {
     $("#tab-loading").remove()
     initialized = true
-
     $("ul.tabs").on("click", "a", (e: JQueryEventObject) => {
       val queryId = UUID.fromString($(e.currentTarget).data("query").toString)
       activeTab = Some(queryId)
@@ -32,23 +31,18 @@ object TabManager {
   }
 
   def getActiveTab = activeTab
+  def tabCount = openTabs.size
 
   def addTab(id: UUID, ctx: String, title: String, icon: String, onClose: () => Unit) = {
     openTabs = openTabs :+ ((id, ctx, onClose))
-    if (openTabs.length == 1) {
-      tabContainer.hide()
-    } else {
-      tabContainer.show()
-    }
+    if (openTabs.length == 1) { hide() } else { show() }
     tabBar.append(s"""<li id="tab-$id" class="tab col s3"><a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a></li>""")
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
-
     val queryPanel = $(s"#panel-$id")
     TemplateUtils.clickHandler($(s".${Icons.close}", queryPanel), jq => {
       onClose()
     })
-
     selectTab(id)
   }
 
@@ -58,7 +52,7 @@ object TabManager {
     tabCloseOp.foreach { _() }
     $(s"#tab-$queryId").remove()
     $(".tabs .indicator").remove()
-    if (openTabs.length < 2) { tabContainer.hide() } else { tabContainer.show() }
+    if (openTabs.length < 2) { hide() } else { show() }
     if (openTabs.nonEmpty) { dynamicTabBar.tabs() }
   }
 
@@ -91,5 +85,15 @@ object TabManager {
   def selectTab(queryId: UUID) = {
     dynamicTabBar.tabs("select_tab", s"panel-$queryId")
     activeTab = Some(queryId)
+  }
+
+  private[this] def hide() = {
+    mainEl.removeClass("margin")
+    tabContainer.hide()
+  }
+
+  private[this] def show() = {
+    mainEl.addClass("margin")
+    tabContainer.show()
   }
 }
