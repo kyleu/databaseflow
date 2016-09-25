@@ -1,6 +1,6 @@
 @()(implicit messages: Messages)
 @panel(e: utils.SiteEngine) = {
-  <div id="@e.id" class="col s6 m4 db-panel">
+  <div id="@e.id" class="col s6 m3 db-panel">
     <a class="theme-text" href="@routes.ContentController.database(e.id)">
       <div class="logo z-depth-1">
         <div class="on initially-hidden">
@@ -44,6 +44,8 @@
     dbWire('oracle');
     dbWire('sqlserver');
     dbWire('h2');
+    dbWire('db2');
+    dbWire('informix');
     dbWire('sqlite');
   });
 </script>

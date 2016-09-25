@@ -23,7 +23,7 @@ class TopFrame() extends MainFrame {
 
   title = "Database Flow"
   resizable = false
-  iconImage = toolkit.getImage(getClass.getResource("icon.png"))
+  //iconImage = toolkit.getImage(getClass.getResource("icon.png"))
 
   private[this] val titleLabel = new Label("Database Flow", None.orNull, Alignment.Left) {
     font = CustomFonts.titleText

@@ -14,9 +14,19 @@ sealed abstract class EngineCapabilities(
   val transactionsSupported: Boolean = true
 )
 
+case object DB2Capabilities extends EngineCapabilities(
+  functions = DB2Functions.functions, columnTypes = DB2Types.columnTypes,
+  exampleUrl = "jdbc:db2://hostname:50000/database"
+)
+
 case object H2Capabilities extends EngineCapabilities(
   functions = H2Functions.functions, columnTypes = H2Types.columnTypes,
   exampleUrl = "jdbc:h2:~/database.h2db"
+)
+
+case object InformixCapabilities extends EngineCapabilities(
+  functions = InformixFunctions.functions, columnTypes = InformixTypes.columnTypes,
+  exampleUrl = "jdbc:informix-sqli://hostname:1533/database"
 )
 
 case object MySQLCapabilities extends EngineCapabilities(
