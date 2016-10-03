@@ -16,8 +16,9 @@ object Shared {
     scalaVersion := Shared.Versions.scala,
 
     scalacOptions ++= Seq(
-      "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
-      "-Ywarn-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen"
+      "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "-target:jvm-1.8", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
+      "-Ywarn-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen",
+      "-Ybackend:GenBCode", "-Ydelambdafy:method"
     ),
     scalacOptions in Test ++= Seq("-Yrangepos"),
 

@@ -59,7 +59,7 @@ object ConfigFileService extends Logging {
   val config = {
     val cfg = new java.io.File(configDir, "databaseflow.conf")
     if (!cfg.exists()) {
-      val refCnfStream = getClass.getClassLoader.getResourceAsStream("reference.conf")
+      val refCnfStream = getClass.getClassLoader.getResourceAsStream("initial-config.conf")
       val refCnf = Source.fromInputStream(refCnfStream).getLines.toSeq.mkString("\n")
       val writer = new PrintWriter(cfg)
       writer.write(refCnf)

@@ -44,7 +44,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
     }
   }
 
-  def update(path: String) = act(s"update") { implicit request =>
+  def update(path: String) = act("update") { implicit request =>
     val file = new java.io.File(downloadDir, "jwrapper/" + path)
     if (file.exists) {
       Future.successful(Ok.sendFile(file))

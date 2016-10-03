@@ -26,6 +26,16 @@ object XmlHelper {
         <JvmOption>-Xmx1024m</JvmOption>
         <JvmOption>-Dshow.gui=true</JvmOption>
       </JvmOptions>
+      <!-- IMPORTANT place custom content BELOW this comment for compatibility with JW App -->
+      <!--
+      <SignForMac>
+        <AppleRootCertificate>{ dir }/build/jwrapper/certs/AppleIncRootCertificate.cer</AppleRootCertificate>
+        <DeveloperIdCertificate>{ dir }/build/jwrapper/certs/DeveloperIDCA.cer</DeveloperIdCertificate>
+        <DeveloperIdP12>{ dir }/build/jwrapper/certs/certificates.p12</DeveloperIdP12>
+        <DeveloperIdAlias>mac app submission: kyle unverferth</DeveloperIdAlias>
+        <DeveloperIdPassword>dbflow</DeveloperIdPassword>
+      </SignForMac>
+      -->
     </jwrapper>
   }
 }

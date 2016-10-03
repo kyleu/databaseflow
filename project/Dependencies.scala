@@ -46,7 +46,7 @@ object Dependencies {
     val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1211"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.8.11.2"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.14.2"
     val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
   }
 
@@ -56,7 +56,7 @@ object Dependencies {
 
   object Export {
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.3"
-    val xlsx = "org.apache.poi" % "poi-ooxml" % "3.14"
+    val xlsx = "org.apache.poi" % "poi-ooxml" % "3.15"
   }
 
   object Ui {
@@ -89,13 +89,13 @@ object Dependencies {
   }
 
   object Commerce {
-    val stripeVersion = "2.8.0"
+    val stripeVersion = "2.10.0"
     val stripe = "com.stripe" % "stripe-java" % stripeVersion
   }
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.14"
+    val enumeratumVersion = "1.4.15"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
