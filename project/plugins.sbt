@@ -13,9 +13,9 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
 
 // Scala.js
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.12")
+addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.1")
 
-addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.12")
 
 // Dependency Resolution
 addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M14")

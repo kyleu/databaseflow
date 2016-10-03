@@ -3,7 +3,7 @@ import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-import playscalajs.ScalaJSPlay
+import webscalajs.ScalaJSWeb
 import sbt.Keys._
 import sbt._
 
@@ -50,7 +50,7 @@ object Shared {
       "com.lihaoyi" %%% "upickle" % Serialization.version,
       "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion
     )
-  ).enablePlugins(ScalaJSPlay).settings(scalaJSStage in Global := FastOptStage).js
+  ).enablePlugins(ScalaJSWeb).settings(scalaJSStage in Global := FastOptStage).js
 
   lazy val sharedJvm = (project in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(Serialization.uPickle, Utils.enumeratum)

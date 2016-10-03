@@ -7,7 +7,7 @@ import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
 import play.sbt.routes.RoutesKeys.routesGenerator
-import playscalajs.PlayScalaJS.autoImport._
+import webscalajs.WebScalaJS.autoImport._
 import sbt.Keys._
 import sbt._
 
@@ -33,7 +33,7 @@ object Site {
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
-    pipelineStages := Seq(scalaJSProd, digest, gzip),
+    pipelineStages := Seq(scalaJSPipeline, digest, gzip),
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
