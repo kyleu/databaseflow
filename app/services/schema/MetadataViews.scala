@@ -6,9 +6,11 @@ import models.database.{Query, Row}
 import models.engine.DatabaseEngine.MySQL
 import models.schema.View
 import services.database.DatabaseConnection
-import utils.NullUtils
+import utils.{Logging, NullUtils}
 
-object MetadataViews {
+import scala.util.control.NonFatal
+
+object MetadataViews extends Logging {
   def getViews(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("VIEW"))
     new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
@@ -18,7 +20,7 @@ object MetadataViews {
     getViewDetails(db, conn, metadata, view)
   }
 
-  private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: View) = {
+  private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: View) = try {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override val sql = "show create view " + view.name
@@ -33,6 +35,10 @@ object MetadataViews {
       definition = definition,
       columns = MetadataColumns.getColumns(metadata, view.catalog, view.schema, view.name)
     )
+  } catch {
+    case NonFatal(x) =>
+      log.info("Unable to get view details.", x)
+      view
   }
 
   private[this] def fromRow(row: Row) = View(
