@@ -1,10 +1,10 @@
 package test.query
 
-import models.engine.DatabaseEngine.{ MySQL, PostgreSQL, SQLServer }
+import models.engine.DatabaseEngine.{MySQL, PostgreSQL, SQLServer}
 import models.engine.EngineQueries
 import models.query.RowDataOptions
 import models.schema.FilterOp
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class EngineQueriesTest extends FlatSpec with Matchers {
   val rdoLimit = RowDataOptions(

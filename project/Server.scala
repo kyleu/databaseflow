@@ -15,12 +15,15 @@ import com.typesafe.sbt.packager.windows.WindowsPlugin
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
-import play.sbt.routes.RoutesKeys.routesGenerator
+import play.sbt.PlayImport.PlayKeys
 import play.sbt.PlayImport.PlayKeys._
-import webscalajs.WebScalaJS.autoImport._
+import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
+import sbtassembly.AssemblyPlugin.autoImport._
+import sbtassembly.PathList
+import webscalajs.WebScalaJS.autoImport._
 
 object Server {
   private[this] val dependencies = {
@@ -52,6 +55,23 @@ object Server {
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
+
+    fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
+
+    assemblyMergeStrategy in assembly := {
+      case PathList("javax", "servlet", xs@_*) => MergeStrategy.first
+      case PathList("javax", "xml", xs@_*) => MergeStrategy.first
+      case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
+      case PathList("org", "apache", "commons", "logging", xs@_*) => MergeStrategy.first
+      case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
+      case PathList("sqlj", xs@_*) => MergeStrategy.first
+      case "messages" => MergeStrategy.concat
+      case "pom.xml" => MergeStrategy.discard
+      case "JS_DEPENDENCIES" => MergeStrategy.discard
+      case "pom.properties" => MergeStrategy.discard
+      case "application.conf" => MergeStrategy.concat
+      case x => (assemblyMergeStrategy in assembly).value(x)
+    },
 
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")

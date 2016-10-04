@@ -3,9 +3,11 @@ import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import play.sbt.PlayImport.PlayKeys
 import webscalajs.ScalaJSWeb
 import sbt.Keys._
 import sbt._
+import sbtassembly.AssemblyPlugin.autoImport._
 
 object Shared {
   val projectId = "databaseflow"
@@ -22,19 +24,35 @@ object Shared {
     ),
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
+    // Packaging
     publishMavenStyle := false,
+
+    test in assembly := {},
+    assemblyMergeStrategy in assembly := {
+      case PathList("javax", "servlet", xs@_*) => MergeStrategy.first
+      case PathList("javax", "xml", xs@_*) => MergeStrategy.first
+      case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
+      case PathList("org", "apache", "commons", "logging", xs@_*) => MergeStrategy.first
+      case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
+      case PathList("sqlj", xs@_*) => MergeStrategy.first
+      case "messages" => MergeStrategy.concat
+      case "pom.xml" => MergeStrategy.discard
+      case "JS_DEPENDENCIES" => MergeStrategy.discard
+      case "pom.properties" => MergeStrategy.discard
+      case "application.conf" => MergeStrategy.concat
+      case x => (assemblyMergeStrategy in assembly).value(x)
+    },
 
     // Prevent Scaladoc
     doc in Compile <<= target.map(_ / "none"),
-    sources in (Compile, doc) := Seq.empty,
-    publishArtifact in (Compile, packageDoc) := false,
+    sources in(Compile, doc) := Seq.empty,
+    publishArtifact in(Compile, packageDoc) := false,
 
     // Code Quality
     scapegoatVersion := Utils.scapegoatVersion,
     scapegoatDisabledInspections := Seq("MethodNames", "MethodReturningAny", "DuplicateImport"),
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   ) ++ graphSettings ++ scalariformSettings
-
 
   object Versions {
     val app = "1.0.0"

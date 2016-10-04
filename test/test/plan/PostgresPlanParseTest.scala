@@ -1,7 +1,7 @@
 package test.plan
 
 import models.engine.PostgreSQL
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class PostgresPlanParseTest extends FlatSpec with Matchers {
   "PostgreSQL Plan Parser" should "load basic PostgreSQL plan" in {
