@@ -18,14 +18,14 @@
   <div class="col s12">
     <div>@messages("downloads.title")</div>
     <div class="row padded-top">
-      @section("osx", "databaseflow.dmg")
-      @section("windows", "databaseflow.exe")
-      @section("linux", "databaseflow.tar")
+      @section("osx", "Database Flow.dmg")
+      @section("windows", "Database Flow.zip")
+      @section("linux", "databaseflow.zip")
       @section("docker", "databaseflow.docker.gz")
     </div>
     <div class="row padded-top">
       <div class="col s12" style="text-align: center;">
-        Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("databaseflow.zip")">download</a> a universal zip (Java 8 required).
+        Or, <a class="theme-text" href="@controllers.routes.DownloadController.download("Database Flow.jar")">download</a> a single jar (Java 8 required).
       </div>
     </div>
   </div>

@@ -1,7 +1,0 @@
-target\
-databaseflow\build\
-databaseflow\.git\
-databaseflow\.idea\
-databaseflow\tmp\
-databaseflow\cache\
-databaseflow\logs\

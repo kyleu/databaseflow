@@ -27,15 +27,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
     Future.successful(Ok(views.html.downloads(isAdmin)))
   }
 
-  def download(os: String) = act(s"download-$os") { implicit request =>
-    val filename = os match {
-      case "databaseflow.dmg" => "Database Flow.dmg"
-      case "databaseflow.exe" => "Database Flow.exe"
-      case "databaseflow.tar" => "Database Flow.tar"
-      case "databaseflow.docker.gz" => "databaseflow.docker.gz"
-      case "databaseflow.zip" => "databaseflow.zip"
-      case x => throw new IllegalStateException(s"Unknown os [$os].")
-    }
+  def download(filename: String) = act(s"download-$filename") { implicit request =>
     val file = new java.io.File(downloadDir, filename)
     if (file.exists) {
       Future.successful(Ok.sendFile(file))

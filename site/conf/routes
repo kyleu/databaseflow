@@ -25,7 +25,7 @@ POST           /newsletter                              controllers.NewsletterCo
 
 # Downloads
 GET            /download                                controllers.DownloadController.index()
-GET            /download/:os                            controllers.DownloadController.download(os)
+GET            /download/:filename                      controllers.DownloadController.download(filename)
 GET            /update/*path                            controllers.DownloadController.update(path)
 
 # Purchasing
