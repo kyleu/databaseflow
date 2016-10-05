@@ -46,7 +46,7 @@ object Dependencies {
     val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1211"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.14.2"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.14.2.1"
     val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
   }
 
@@ -66,15 +66,6 @@ object Dependencies {
   object Serialization {
     val version = "0.4.2"
     val uPickle = "com.lihaoyi" %% "upickle" % version
-  }
-
-  object WebJars {
-    val fontAwesome = "org.webjars" % "font-awesome" % "4.6.3"
-    val jquery = "org.webjars" % "jquery" % "2.2.4"
-    val materialize = "org.webjars" % "materializecss" % "0.97.7"
-    val moment = "org.webjars" % "momentjs" % "2.15.0"
-    val mousetrap = "org.webjars" % "mousetrap" % "1.6.0"
-    // Too big: val plotly = "org.webjars.bower" % "plotly.js" % "1.17.2"
   }
 
   object Metrics {

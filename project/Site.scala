@@ -18,8 +18,7 @@ object Site {
     import Dependencies._
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit, Commerce.stripe,
-      Play.playFilters, Play.playWs, Play.playTest, Play.playMailer,
-      WebJars.jquery, WebJars.materialize, WebJars.fontAwesome
+      Play.playFilters, Play.playWs, Play.playTest, Play.playMailer
     )
   }
 
