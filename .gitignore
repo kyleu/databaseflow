@@ -12,14 +12,7 @@ dist
 
 /cache
 
-/build/*.gz
-/build/*.zip
-/build/*.deb
-/build/*.exe
-/build/*.pkg
-/build/*.dmg
-/build/*.tar
-/build/jwrapper
+/build/*
 
 /.idea_modules
 /.classpath

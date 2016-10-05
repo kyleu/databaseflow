@@ -53,11 +53,8 @@ class ApplicationContext @javax.inject.Inject() (
     DateTimeZone.setDefault(DateTimeZone.UTC)
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
-    if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
-      System.getProperty("show.gui", "false") match {
-        case "true" => TopFrame.open()
-        case _ => // noop
-      }
+    if ((!config.debug) && java.awt.Desktop.isDesktopSupported && (System.getProperty("show.gui", "false") == "true")) {
+      TopFrame.open()
     }
 
     SharedMetricRegistries.remove("default")
@@ -79,11 +76,8 @@ class ApplicationContext @javax.inject.Inject() (
     LicenseService.readLicense()
     VersionService.upgradeIfNeeded(ws)
 
-    if ((!config.debug) && java.awt.Desktop.isDesktopSupported) {
-      System.getProperty("show.gui", "false") match {
-        case "true" => // noop
-        case _ => java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
-      }
+    if ((!config.debug) && java.awt.Desktop.isDesktopSupported && (System.getProperty("show.gui", "false") != "true")) {
+      java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
     }
   }
 
