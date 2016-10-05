@@ -5,10 +5,7 @@ import java.util.UUID
 trait ParameterChangeManager {
   protected[this] var activeParams = Map.empty[UUID, Seq[(String, String, String)]]
 
-  protected[this] def set(queryId: UUID, v: Seq[(String, String, String)]) = {
-    utils.Logging.info(s"Setting values for [$queryId]: $v")
-    activeParams += queryId -> v
-  }
+  protected[this] def set(queryId: UUID, v: Seq[(String, String, String)]) = activeParams += queryId -> v
 
   def setValues(queryId: UUID, paramValues: Map[String, String]) = {
     val newParams = activeParams.get(queryId) match {

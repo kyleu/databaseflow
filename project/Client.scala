@@ -2,7 +2,7 @@ import Dependencies.{ Serialization, Utils }
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-import webscalajs.ScalaJSWeb
+import playscalajs.ScalaJSPlay
 import sbt.Keys._
 import sbt._
 
@@ -20,7 +20,7 @@ object Client {
 
   lazy val client = (project in file("client"))
     .settings(clientSettings: _*)
-    .enablePlugins(ScalaJSPlugin, ScalaJSWeb)
+    .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
     .dependsOn(Shared.sharedJs)
 
   private[this] val chartingSettings = Shared.commonSettings ++ Seq(
@@ -36,5 +36,5 @@ object Client {
 
   lazy val charting = (project in file("charting"))
     .settings(chartingSettings: _*)
-    .enablePlugins(ScalaJSPlugin, ScalaJSWeb)
+    .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
 }

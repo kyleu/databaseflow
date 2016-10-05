@@ -30,11 +30,11 @@ object DataInsertManager {
     TemplateUtils.clickHandler(linkCancel, jq => close())
   }
 
-  def show(queryId: UUID, name: String, columns: Seq[Column]) = {
+  def show(name: String, columns: Seq[Column]) = {
     val resultId = UUID.randomUUID
     activeMessage = Some(InsertRow(name, Map.empty, resultId))
     activeColumns = Some(columns)
-    val html = InsertRowTemplate.forColumns(name, columns)
+    val html = InsertRowTemplate.forColumns(columns)
     confirmContent.html(html.render)
     modal.openModal()
   }
@@ -48,10 +48,10 @@ object DataInsertManager {
 
   def handleInsertRowResponse(resultId: UUID, errors: Map[String, String]) = {
     if (errors.isEmpty) {
-      NotificationService.info("Row Inserted", "Added one new row")
+      NotificationService.info("Row Inserted", s"Added one new row ($resultId)")
       close()
     } else {
-      $(s".insert-row-error", modal).hide()
+      $(".insert-row-error", modal).hide()
       errors.foreach { error =>
         $(s"#insert-row-error-${error._1}", modal).text(error._2).show()
       }

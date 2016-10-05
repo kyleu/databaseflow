@@ -8,7 +8,6 @@ import utils.TemplateUtils
 
 object ParameterManager extends ParameterChangeManager {
   def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
-    //utils.Logging.info(s"onChange(queryId: $queryId, sql: $sql, paramValues: $paramValues)")
     val keys = getKeys(sql)
     val hasChanged = forceRefresh || (activeParams.get(queryId) match {
       case Some(params) => (params.size != keys.size) || (!params.zip(keys).forall(x => x._1._1 == x._2._1 && x._1._2 == x._2._2))

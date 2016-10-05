@@ -6,7 +6,7 @@ import utils.Messages
 import scalatags.Text.all._
 
 object InsertRowTemplate {
-  private[this] def getLabel(v: String, col: Column) = Seq(
+  private[this] def getLabel(col: Column) = Seq(
     if (col.notNull && col.defaultValue.isEmpty) {
       input(`type` := "checkbox", id := s"insert-row-toggle-${col.name}", checked)
     } else {
@@ -22,7 +22,7 @@ object InsertRowTemplate {
       col.columnType.toString
     }),
     id := s"insert-row-input-${col.name}",
-    cls := s"insert-row-input",
+    cls := "insert-row-input",
     `type` := "text",
     data("col") := col.name,
     value := v
@@ -34,7 +34,7 @@ object InsertRowTemplate {
         td(colspan := 2)(col.name)
       ),
       tr(
-        td(cls := "use-toggle")(getLabel(col.defaultValue.getOrElse(""), col)),
+        td(cls := "use-toggle")(getLabel(col)),
         td(cls := "input-field")(
           getInput("", col),
           div(cls := "insert-row-error", id := s"insert-row-error-${col.name}")
@@ -43,9 +43,9 @@ object InsertRowTemplate {
     )
   }: _*)
 
-  def forColumns(name: String, cols: Seq[Column]) = div(
+  def forColumns(cols: Seq[Column]) = div(
     h5(Messages("query.insert")),
-    div(cls := "insert-row-error", id := s"insert-row-error-general"),
+    div(cls := "insert-row-error", id := "insert-row-error-general"),
     div(cls := "insert-row-container row")(table(tbodyForColumns(cols)))
   )
 }

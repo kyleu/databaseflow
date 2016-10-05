@@ -6,6 +6,7 @@ import models.schema.ProcedureParam
 import models.template.{Icons, StaticPanelTemplate}
 import utils.Messages
 
+import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 object ProcedureDetailTemplate {
@@ -24,9 +25,9 @@ object ProcedureDetailTemplate {
       )
     )
 
-    val actions = Seq( //a(cls := "call-procedure-link theme-text right", href := "#")(Messages("query.call")),
+    val actions = Seq.empty[TypedTag[String]]
+    //(a(cls := "call-procedure-link theme-text right", href := "#")(Messages("query.call")),
     //div(cls := "clear")
-    )
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
       StaticPanelTemplate.panelRow(content, iconAndTitle = Some(Icons.procedure -> span(procedureName)), actions = actions),

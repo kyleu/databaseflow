@@ -2,8 +2,8 @@
 
 cd ../../
 
-bin/activator/activator debian:packageBin
-mv ./target/databaseflow_1.0.0_all.deb ./build/databaseflow_1.0.0_all.deb
+# bin/activator/activator debian:packageBin
+# mv ./target/databaseflow_1.0.0_all.deb ./build/databaseflow_1.0.0_all.deb
 
 bin/activator/activator docker:publishLocal
 docker save --output=./target/databaseflow.docker databaseflow
