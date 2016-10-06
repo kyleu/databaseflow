@@ -13,7 +13,7 @@ class FeedbackController @javax.inject.Inject() (implicit override val messagesA
   def list() = withAdminSession("feedback-list") { (username, request) =>
     implicit val req = request
     val feedbacks = FeedbackService.list().map(FeedbackService.load).toSeq
-    Future.successful(Ok(views.html.admin.feedbacks(feedbacks)))
+    Future.successful(Ok(views.html.admin.audit.feedbacks(feedbacks)))
   }
 
   def remove(id: UUID) = withAdminSession("feedback-remove") { (username, request) =>

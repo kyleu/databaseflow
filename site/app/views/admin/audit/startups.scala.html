@@ -1,0 +1,36 @@
+@(seq: Seq[services.audit.StartupService.Startup])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
+@layout.simple(utils.Config.projectName + " Startups", "admin", isAdmin = true) {
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">@utils.Config.projectName Startups</span>
+          @if(seq.isEmpty) {
+            <p>No available startups.</p>
+          } else {
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>IP</th>
+                  <th>License</th>
+                  <th>Occurred</th>
+                </tr>
+              </thead>
+              <tbody>
+                @seq.map { startup =>
+                  <tr>
+                    <td>@startup.id</td>
+                    <td>@startup.ip</td>
+                    <td>@startup.license</td>
+                    <td>@startup.occurred</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

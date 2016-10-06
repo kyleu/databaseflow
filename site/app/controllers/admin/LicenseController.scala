@@ -33,12 +33,12 @@ class LicenseController @javax.inject.Inject() (implicit override val messagesAp
   def list() = withAdminSession("admin.license.list") { (username, request) =>
     implicit val req = request
     val licenses = LicenseGenerator.listLicenses().map(LicenseGenerator.loadLicense)
-    Future.successful(Ok(views.html.admin.licenses(licenses)))
+    Future.successful(Ok(views.html.admin.license.licenses(licenses)))
   }
 
   def form() = withAdminSession("admin.license.form") { (username, request) =>
     implicit val req = request
-    Future.successful(Ok(views.html.admin.licenseForm()))
+    Future.successful(Ok(views.html.admin.license.licenseForm()))
   }
 
   def save() = withAdminSession("admin.license.save") { (username, request) =>

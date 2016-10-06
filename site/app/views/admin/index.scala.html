@@ -8,7 +8,10 @@
           <p>Welcome back, @username</p>
 
           <div class="collection">
-            <a class="theme-text collection-item" href="@controllers.admin.routes.InstallController.list()">Show Install Log</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.AuditController.listRequests()">Show Request Log</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.AuditController.listDownloads()">Show Download Log</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.AuditController.listStartups()">Show Startup Log</a>
+            <a class="theme-text collection-item" href="@controllers.admin.routes.AuditController.listInstalls()">Show Install Log</a>
             <a class="theme-text collection-item" href="@controllers.admin.routes.LicenseController.list()">Manage Licenses</a>
             <a class="theme-text collection-item" href="@controllers.admin.routes.FeedbackController.list()">View Feedback</a>
             <a class="theme-text collection-item" href="@controllers.admin.routes.MetricsController.view()">Show Server Metrics</a>
