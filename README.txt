@@ -6,13 +6,13 @@ Running locally or on a shared server, Database Flow helps you discover and sear
 
 ## Installation
 
-* If you've installed the universal zip, run the file `bin/databaseflow` from the extracted package.
-* If you've installed the Debian package, you may run `databaseflow` from any shell path.
-* For Windows users, start the file `bin\databaseflow.bat`, or use the start menu icon.
+* If you've installed the universal jar, you'll need Java 8 installed. Then run "java -jar DatabaseFlow.jar".
+* For macOS users, open the .dmg file and drag the app to your Applications folder.
+* For Windows users, unzip the downloaded file and run "Database Flow.exe" in the extracted folder.
 
 ## Configuration
 
-* If you're on Windows, config files are stored in `%APPDATA%\Database Flow`. For other, saner OSs, you configuration folder may be found in `~/.databaseflow`/
+* If you're on Windows, config files are stored in `%APPDATA%\Database Flow`. For macOS and Linux, the configuration folder may be found in `~/.databaseflow`/
 * The main configuation file is named `databaseflow.conf`.
 * You may change the configration for file path, mail setup, and storage locations.
 

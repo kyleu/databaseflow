@@ -7,20 +7,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class DownloadController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  private[this] val downloadDir = {
-    val server = new java.io.File("/home/ubuntu/deploy/databaseflow-downloads")
-    if (server.exists && server.isDirectory) {
-      server
-    } else {
-      val local = new java.io.File("./build")
-      if (local.exists && local.isDirectory) {
-        log.info("Using local directory for downloads.")
-        local
-      } else {
-        throw new IllegalStateException("Cannot find download directory.")
-      }
-    }
-  }
+  private[this] val baseUrl = s"https://s3.amazonaws.com/databaseflow/1.0.0/"
 
   def index() = act("download-index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
@@ -28,20 +15,19 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
   }
 
   def download(filename: String) = act(s"download-$filename") { implicit request =>
-    val file = new java.io.File(downloadDir, filename)
-    if (file.exists) {
-      Future.successful(Ok.sendFile(file))
-    } else {
-      Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find that download.<!-- ${file.getAbsolutePath} --></body>")))
+    val isOk = filename match {
+      case "DatabaseFlow.dmg" => true
+      case "DatabaseFlow.jar" => true
+      case "DatabaseFlow.pkg" => true
+      case "DatabaseFlow.zip" => true
+      case "databaseflow.docker.gz" => true
+      case "databaseflow.server.zip" => true
+      case _ => false
     }
-  }
-
-  def update(path: String) = act("update") { implicit request =>
-    val file = new java.io.File(downloadDir, "jwrapper/" + path)
-    if (file.exists) {
-      Future.successful(Ok.sendFile(file))
+    if (isOk) {
+      Future.successful(Redirect(baseUrl + filename))
     } else {
-      Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find that download.<!-- ${file.getAbsolutePath} --></body>")))
+      Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find that download.<!-- $filename --></body>")))
     }
   }
 }

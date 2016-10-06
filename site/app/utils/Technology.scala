@@ -16,7 +16,7 @@ object Technology extends Enum[Technology] {
   case object Scalatags extends Technology("Scalatags", "https://github.com/lihaoyi/scalatags")
   case object HikariCP extends Technology("HikariCP", "https://github.com/brettwooldridge/HikariCP")
   case object Silhouette extends Technology("Silhouette", "http://silhouette.mohiva.com/")
-  case object JWrapper extends Technology("JWrapper", "http://www.jwrapper.com/")
+  case object Launch4J extends Technology("Launch4J", "http://launch4j.sourceforge.net/")
   case object Metrics extends Technology("Dropwizard Metrics", "http://metrics.dropwizard.io/")
   case object Netty extends Technology("Netty", "http://netty.io/")
   case object ScalaCrypt extends Technology("Scalacrypt", "https://github.com/Richard-W/scalacrypt")

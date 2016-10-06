@@ -58,6 +58,7 @@ object SampleDatabaseService extends Logging {
       case SQLServer => "Chinook_SqlServer.sql"
       case x => throw new IllegalStateException(s"No sample database avilable for [${x.getClass.getSimpleName}].")
     }
-    Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("sampledb/" + filename))
+    val is = this.getClass.getClassLoader.getResourceAsStream("sampledb/" + filename)
+    Source.fromInputStream(is, "utf-8")
   }
 }

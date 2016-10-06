@@ -22,8 +22,8 @@ class PlayRequestHandler @Inject() (
 ) extends DefaultHttpRequestHandler(router, errorHandler, configuration, filters) with Logging {
 
   override def routeRequest(request: RequestHeader) = {
-    if (!Option(request.path).exists(_.startsWith("/assets"))) {
-      log.info(s"Request from [${request.remoteAddress}]: ${request.toString()}")
+    if (!Option(request.path).exists(x => x.startsWith("/assets") || x == "/favicon.ico")) {
+      //log.info(s"Request from [${request.remoteAddress}]: ${request.toString()}")
       if (LogService.enabled) {
         Future { RequestService.add(RequestLogging(UUID.randomUUID, request)) }
       }

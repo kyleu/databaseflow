@@ -13,7 +13,7 @@ GET            /robots.txt                              controllers.ContentContr
 
 # Updates
 GET            /install                                 controllers.UpdateController.install
-GET            /version                                 controllers.UpdateController.version
+GET            /version                                 controllers.UpdateController.version(license: Option[java.util.UUID])
 
 # Feedback
 GET            /feedback                                controllers.FeedbackController.feedbackForm
@@ -26,7 +26,6 @@ POST           /newsletter                              controllers.NewsletterCo
 # Downloads
 GET            /download                                controllers.DownloadController.index()
 GET            /download/:filename                      controllers.DownloadController.download(filename)
-GET            /update/*path                            controllers.DownloadController.update(path)
 
 # Purchasing
 GET            /pricing/personal                        controllers.PurchaseController.pricingPersonal()

@@ -1,18 +1,21 @@
 package controllers
 
+import java.util.UUID
+
 import play.api.i18n.MessagesApi
 import play.twirl.api.Html
-import services.audit.InstallService
+import services.audit.{InstallService, StartupService}
 
 import scala.concurrent.Future
 
 object UpdateController {
-  val version = 1
+  val version = "1.0.0"
 }
 
 @javax.inject.Singleton
 class UpdateController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  def version() = act("version.request") { implicit request =>
+  def version(license: Option[UUID]) = act("version.request") { implicit request =>
+    StartupService.add(request.remoteAddress, license)
     Future.successful(Ok(UpdateController.version.toString))
   }
 
