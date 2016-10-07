@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>/Users/kyle/Projects/Personal/databaseflow/build/Database Flow.jar</jar>
-  <outfile>/Users/kyle/Projects/Personal/databaseflow/build/launch4j/Database Flow.exe</outfile>
+  <jar>/Users/kyle/Projects/Personal/databaseflow/build/DatabaseFlow.jar</jar>
+  <outfile>/Users/kyle/Projects/Personal/databaseflow/build/launch4j/DatabaseFlow.exe</outfile>
   <errTitle></errTitle>
   <cmdLine>gui</cmdLine>
   <chdir></chdir>
@@ -45,7 +45,7 @@
     <productName>Database Flow</productName>
     <companyName></companyName>
     <internalName>databaseflow</internalName>
-    <originalFilename>Database Flow.exe</originalFilename>
+    <originalFilename>DatabaseFlow.exe</originalFilename>
     <trademarks></trademarks>
     <language>ENGLISH_US</language>
   </versionInfo>
