@@ -21,7 +21,7 @@ object ConfigFileService extends Logging {
   val configDir = {
     val osName = System.getProperty("os.name").toUpperCase
     val (homeDir, programFilename) = if (osName.contains("WIN")) {
-      new java.io.File(System.getenv("APPDATA")) -> "Database Flow"
+      new java.io.File(System.getenv("APPDATA")) -> "DatabaseFlow"
     } else {
       val dir = System.getProperty("user.home")
       val cleanDir = if (dir == "/usr/sbin") {

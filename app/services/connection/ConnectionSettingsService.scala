@@ -9,7 +9,7 @@ import models.queries.connection.ConnectionSettingsQueries
 import models.user.{Role, User}
 import services.audit.AuditRecordService
 import services.config.ConfigFileService
-import services.database.DatabaseRegistry
+import services.database.{DatabaseRegistry, SampleDatabaseService}
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 
 object ConnectionSettingsService {
@@ -38,19 +38,5 @@ object ConnectionSettingsService {
   def delete(id: UUID, userId: UUID) = {
     MasterDatabase.executeUpdate(ConnectionSettingsQueries.removeById(id))
     AuditRecordService.create(AuditType.DeleteConnection, userId, None, Some(id.toString))
-  }
-
-  def createSample(ownerId: UUID) = {
-    val connectionId = UUID.randomUUID
-    val cs = ConnectionSettings(
-      id = connectionId,
-      name = "Database Flow Sample Database",
-      owner = ownerId,
-      engine = DatabaseEngine.SQLite,
-      dbName = Some(new java.io.File(ConfigFileService.configDir, "sample.db.sqlite").getAbsolutePath)
-    )
-    ConnectionSettingsService.insert(cs)
-    AuditRecordService.create(AuditType.CreateConnection, ownerId, None, Some(connectionId.toString))
-    connectionId
   }
 }

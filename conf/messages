@@ -234,4 +234,4 @@ error.invalid.user = Invalid user [{0}].
 error.remove.self = You cannot remove your own admin role.
 
 # Static
-static.copyright = © 2016 {0}
+footer.copyright = © 2016 {0}

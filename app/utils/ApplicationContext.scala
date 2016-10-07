@@ -12,10 +12,11 @@ import org.joda.time.{DateTimeZone, LocalDateTime}
 import play.api.Environment
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WSClient
 import services.config.ConfigFileService
-import services.database.{DatabaseRegistry, MasterDdl}
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
+import services.database.{DatabaseRegistry, MasterDdl}
 import services.licensing.LicenseService
 import services.settings.SettingsService
 import services.supervisor.{ActorSupervisor, VersionService}
@@ -77,7 +78,10 @@ class ApplicationContext @javax.inject.Inject() (
     VersionService.upgradeIfNeeded(ws)
 
     if ((!config.debug) && java.awt.Desktop.isDesktopSupported && (System.getProperty("show.gui", "false") != "true")) {
-      java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
+      Future {
+        Thread.sleep(2000)
+        java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
+      }
     }
   }
 

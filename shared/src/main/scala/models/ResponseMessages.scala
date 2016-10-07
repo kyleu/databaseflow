@@ -44,8 +44,6 @@ case class ChartDataResponse(chartId: UUID, columns: Seq[QueryResult.Col], data:
 case class PlanResultResponse(id: UUID, result: PlanResult, durationMs: Int) extends ResponseMessage
 case class PlanErrorResponse(id: UUID, error: PlanError, durationMs: Int) extends ResponseMessage
 
-case class BatchQueryStatus(id: UUID, completedQueries: Int, remainingQueries: Int, durationMs: Int) extends ResponseMessage
-
 case class QuerySaveResponse(savedQuery: SavedQuery, error: Option[String] = None) extends ResponseMessage
 case class QueryDeleteResponse(id: UUID, error: Option[String] = None) extends ResponseMessage
 

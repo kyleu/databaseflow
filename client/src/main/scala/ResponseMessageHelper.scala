@@ -41,8 +41,6 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case prr: PlanResultResponse => QueryPlanService.handlePlanResultResponse(prr)
     case per: PlanErrorResponse => QueryPlanService.handlePlanErrorResponse(per)
 
-    case bqs: BatchQueryStatus => ModelResultsService.handleBatchQueryStatus(bqs)
-
     case qsr: QuerySaveResponse => ModelResultsService.handleQuerySaveResponse(qsr.savedQuery, qsr.error)
     case qdr: QueryDeleteResponse => ModelResultsService.handleQueryDeleteResponse(qdr.id, qdr.error)
 

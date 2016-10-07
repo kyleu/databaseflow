@@ -8,7 +8,7 @@ import models.query.{SavedQuery, SharedResult}
 import models.schema.Schema
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui.modal.ConfirmManager
+import services.NotificationService
 import ui.query._
 import utils.{NetworkMessage, TemplateUtils}
 
@@ -84,9 +84,7 @@ object MetadataManager {
     engine = Some(DatabaseEngine.withName(sch.engine))
 
     if (sch.tables.isEmpty) {
-      val msg = "There are no tables. Would you like to load a sample database? You'll need to have permissions to create tables and indexes."
-      def ok(b: Boolean) = if (b) { SampleDatabaseManager.createSample() } else { ConfirmManager.close() }
-      ConfirmManager.show(ok, msg, "Yes", "No")
+      NotificationService.error("No Content", "There are no tables or views.")
     }
   }
 

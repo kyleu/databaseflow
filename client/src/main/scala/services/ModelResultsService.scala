@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.{SavedQuery, SharedResult}
 import models.schema.{Procedure, Table, View}
-import models.{BatchQueryStatus, SavedQueryResponse, SchemaResponse, SharedResultResponse}
+import models.{SavedQueryResponse, SchemaResponse, SharedResultResponse}
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata._
 import ui.modal.{SavedQueryFormManager, SharedResultFormManager}
@@ -17,10 +17,6 @@ object ModelResultsService {
 
   def startIfReady = if (receivedSavedQueryResponse && receivedSharedResultResponse && receivedSchemaResultResponse) {
     InitService.performInitialAction()
-  }
-
-  def handleBatchQueryStatus(bqs: BatchQueryStatus) = {
-    SampleDatabaseManager.process(bqs)
   }
 
   def handleSavedQueryResponse(sqr: SavedQueryResponse) = {

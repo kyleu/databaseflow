@@ -41,5 +41,3 @@ case class InsertRow(name: String, params: Map[String, String], resultId: UUID) 
 case class GetQueryHistory(limit: Int = 100, offset: Int = 0) extends RequestMessage
 case class InsertAuditHistory(id: UUID) extends RequestMessage
 case class RemoveAuditHistory(id: Option[UUID]) extends RequestMessage
-
-case class CreateSampleDatabase(queryId: UUID) extends RequestMessage

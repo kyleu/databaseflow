@@ -10,7 +10,7 @@ import models.user.Role
 import services.audit.AuditRecordService
 import services.config.ConfigFileService
 import services.connection.ConnectionSettingsService
-import services.database.DatabaseRegistry
+import services.database.{DatabaseRegistry, SampleDatabaseService}
 import services.schema.SchemaService
 import services.settings.SettingsService
 import utils.{ApplicationContext, PasswordEncryptUtils}
@@ -94,6 +94,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
   }
 
   def createSample() = withSession("create.sample") { implicit request =>
-    Future.successful(Redirect(routes.QueryController.main(ConnectionSettingsService.createSample(request.identity.id))))
+    val cs = SampleDatabaseService(request.identity.id)
+    Future.successful(Redirect(routes.QueryController.main(cs.id)))
   }
 }

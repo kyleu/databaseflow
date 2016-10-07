@@ -36,7 +36,7 @@ object Packaging {
     // Windows settings
     mappings in Windows := (mappings in Windows).value.filterNot(isConf),
     makeBatScript := Some(file("./src/deploy/package/windows/databaseflow.bat")),
-    topLevelDirectory in Windows := Some("Database Flow"),
+    topLevelDirectory in Windows := Some("DatabaseFlow"),
     wixProductId := "5fee44ae-0989-429b-9b1a-de8ec7dd9af5",
     wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",
     wixProductLicense := None,//Some(file("src/deploy/package/windows/license.rtf")),
@@ -51,7 +51,7 @@ object Packaging {
 
     // JDK Packager
     jdkAppIcon :=  (sourceDirectory.value ** iconGlob).getPaths.headOption.map(file),
-    jdkPackagerBasename := "Database Flow",
+    jdkPackagerBasename := "DatabaseFlow",
     jdkPackagerJVMArgs += "-Dshow.gui=true",
     name in JDKPackager := "Database Flow",
 
