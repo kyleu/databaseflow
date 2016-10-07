@@ -2,7 +2,7 @@
 @panel(e: utils.SiteEngine) = {
   <div id="@e.id" class="col s6 m3 db-panel">
     <a class="theme-text" href="@routes.ContentController.database(e.id)">
-      <div class="logo z-depth-1">
+      <div class="logo">
         <div class="on initially-hidden">
           <img src="@routes.Assets.versioned(s"images/db/${e.id}-active.png")" width="64" height="64" />
         </div>
@@ -16,7 +16,7 @@
 }
 <div class="row">
   <div class="col s12">
-    <div>Supported Databases</div>
+    <div class="section-header">Supported Databases</div>
     <div class="row padded-top">
       @utils.SiteEngine.values.map { v =>
         @panel(v)

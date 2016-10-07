@@ -10,6 +10,7 @@ th.name = Name
 # Index
 index.splash = We''re working hard on a new idea. Coming soon!
 index.features.link = Features
+index.demo.link = View Demo
 index.download.link = Download
 index.license.link = Pricing
 index.versions.link = Pricing
@@ -77,5 +78,7 @@ license.form.personal = New Personal License
 # Purchasing
 purchase.title = Purchase {0} Edition License
 
-# Static
-static.copyright = © 2016 {0}
+# Footer
+footer.newsletter = Newsletter
+footer.technology = Technology
+footer.feedback = Feedback

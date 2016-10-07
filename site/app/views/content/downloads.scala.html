@@ -1,7 +1,7 @@
 @()(implicit messages: Messages)
 @section(key: String, filename: String) = {
   <div class="col s12 m6 l3">
-    <div id="@key" class="download-section z-depth-1">
+    <div id="@key" class="download-section">
       <a class="theme-text" href="@controllers.routes.DownloadController.download(filename)">
         <div class="on initially-hidden">
           <img src="@routes.Assets.versioned(s"images/os/$key-active.png")" width="64" height="64" />
@@ -16,7 +16,7 @@
 }
 <div class="row">
   <div class="col s12">
-    <div>@messages("downloads.title")</div>
+    <div class="section-header">@messages("downloads.title")</div>
     <div class="row padded-top">
       @section("osx", "DatabaseFlow.dmg")
       @section("windows", "DatabaseFlow.zip")

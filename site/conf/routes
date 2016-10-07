@@ -21,6 +21,7 @@ OPTIONS        /feedback                                controllers.FeedbackCont
 POST           /feedback                                controllers.FeedbackController.postFeedback(ajax: Boolean ?= false)
 
 # Newsletter
+GET            /newsletter                              controllers.NewsletterController.form()
 POST           /newsletter                              controllers.NewsletterController.signup()
 
 # Downloads

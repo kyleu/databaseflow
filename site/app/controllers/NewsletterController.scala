@@ -8,6 +8,10 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class NewsletterController @javax.inject.Inject() (implicit val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
+  def form() = act("newsletter.form") { implicit request =>
+    Future.successful(Ok(views.html.newsletter(isAdmin = false)))
+  }
+
   def signup() = act("newsletter.signup") { implicit request =>
     val body = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException("Invalid request"))
     val email = body.get("email").flatMap(_.headOption).getOrElse(throw new IllegalStateException("Missing [email] parameter."))

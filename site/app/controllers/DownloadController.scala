@@ -2,6 +2,8 @@ package controllers
 
 import play.api.i18n.MessagesApi
 import play.twirl.api.Html
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.audit.DownloadService
 
 import scala.concurrent.Future
 
@@ -15,15 +17,16 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
   }
 
   def download(filename: String) = act(s"download-$filename") { implicit request =>
-    val isOk = filename match {
-      case "DatabaseFlow.dmg" => true
-      case "DatabaseFlow.jar" => true
-      case "DatabaseFlow.pkg" => true
-      case "DatabaseFlow.zip" => true
-      case "databaseflow.docker.gz" => true
-      case "databaseflow.server.zip" => true
-      case _ => false
+    val (isOk, platform) = filename match {
+      case "DatabaseFlow.dmg" => true -> "macos"
+      case "DatabaseFlow.jar" => true -> "jar"
+      case "DatabaseFlow.pkg" => true -> "appstore"
+      case "DatabaseFlow.zip" => true -> "windows"
+      case "databaseflow.docker.gz" => true -> "docker"
+      case "databaseflow.server.zip" => true -> "universal"
+      case _ => false -> "unknown"
     }
+    Future(DownloadService.add(request.remoteAddress, platform))
     if (isOk) {
       Future.successful(Redirect(baseUrl + filename))
     } else {
