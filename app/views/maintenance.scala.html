@@ -1,0 +1,13 @@
+@()(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.simple(None, utils.Config.projectName) {
+  <div class="row">
+    <div class="col s12">
+      <div class="maintenance-mode z-depth-1">
+        <h4>Demo Unavailable</h4>
+        <p>We're sorry, but the demo just wasn't on a server big enough for all this traffic.</p>
+        <p>Please visit <a class="theme-text" href="https://databaseflow.com">databaseflow.com</a> to download a trial and discover Database Flow.</p>
+      </div>
+    </div>
+  </div>
+}

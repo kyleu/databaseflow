@@ -19,21 +19,17 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
 
   def withAdminSession(action: String)(block: (SecuredRequest[AuthEnv, AnyContent]) => Future[Result]) = {
     ctx.silhouette.SecuredAction.async { implicit request =>
-      metrics.timer(action).timeFuture {
-        if (request.identity.isAdmin) {
-          block(request)
-        } else {
-          Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("error.admin.required")))
-        }
+      if (request.identity.isAdmin) {
+        metrics.timer(action).timeFuture(block(request))
+      } else {
+        Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("error.admin.required")))
       }
     }
   }
 
   def withoutSession(action: String)(block: UserAwareRequest[AuthEnv, AnyContent] => Future[Result]) = {
     ctx.silhouette.UserAwareAction.async { implicit request =>
-      metrics.timer(action).timeFuture {
-        block(request)
-      }
+      checkMaintenanceMode(action)(block(request))
     }
   }
 
@@ -49,10 +45,9 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
         ))
       } else {
         request.identity match {
-          case Some(u) => metrics.timer(action).timeFuture {
+          case Some(u) =>
             val auth = request.authenticator.getOrElse(throw new IllegalStateException(messagesApi("error.not.logged.in")))
-            block(SecuredRequest(u, auth, request))
-          }
+            checkMaintenanceMode(action)(block(SecuredRequest(u, auth, request)))
           case None =>
             val result = UserService.instance.map(_.userCount) match {
               case Some(x) if x == 0 => Redirect(controllers.auth.routes.RegistrationController.registrationForm())
@@ -68,6 +63,14 @@ abstract class BaseController() extends Controller with I18nSupport with Instrum
             })
         }
       }
+    }
+  }
+
+  private[this] def checkMaintenanceMode(action: String)(f: => Future[Result])(implicit request: Request[AnyContent]) = {
+    if (ApplicationContext.maintenanceMode) {
+      Future.successful(Ok(views.html.maintenance()))
+    } else {
+      metrics.timer(action).timeFuture(f)
     }
   }
 }

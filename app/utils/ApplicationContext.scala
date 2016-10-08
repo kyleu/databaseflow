@@ -26,6 +26,7 @@ import scala.concurrent.Future
 
 object ApplicationContext {
   var initialized = false
+  var maintenanceMode = false
 }
 
 @javax.inject.Singleton

@@ -30,6 +30,13 @@ object SandboxTask extends Enum[SandboxTask] {
     }
   }
 
+  case object MaintenanceToggle extends SandboxTask("maintenance", "Maintenance Mode", "Toggles the running state of the application.") {
+    override def run(ctx: ApplicationContext) = {
+      ApplicationContext.maintenanceMode = !ApplicationContext.maintenanceMode
+      Future.successful(Html("OK: " + ApplicationContext.maintenanceMode))
+    }
+  }
+
   override val values = findValues
 }
 
