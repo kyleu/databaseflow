@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Cache {
-    val ehCache = "net.sf.ehcache" % "ehcache-core" % "2.6.11"
+    val ehCache = "net.sf.ehcache" % "ehcache-core" % "2.6.11" exclude("org.slf4j", "slf4j-api")
   }
 
   object Logging {
@@ -43,7 +43,7 @@ object Dependencies {
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.192"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.39" // 6.0 is all different
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.40" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1211"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.14.2.1"
@@ -56,7 +56,6 @@ object Dependencies {
 
   object Export {
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.3"
-    val xlsx = "org.apache.poi" % "poi-ooxml" % "3.15"
   }
 
   object Ui {
@@ -73,7 +72,7 @@ object Dependencies {
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
-    val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2"
+    val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2" exclude("com.fasterxml.jackson.core", "jackson-databind")
     val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.11.v20160721"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()

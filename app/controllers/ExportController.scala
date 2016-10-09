@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream
 import java.util.UUID
 
 import models.engine.EngineQueries
-import models.queries.export.{CsvExportQuery, XlsxExportQuery}
+import models.queries.export.CsvExportQuery
 import models.query.QueryResult
 import models.user.User
 import services.database.DatabaseRegistry
@@ -62,7 +62,6 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val sql = EngineQueries.selectFrom(source.name, source.asRowDataOptions(None))(db.engine)
     val (mimeType, query) = format match {
       case "csv" => "text/csv" -> CsvExportQuery(sql, os)
-      case "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> XlsxExportQuery(finalName, sql, format, os)
       case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format))
     }
     try {

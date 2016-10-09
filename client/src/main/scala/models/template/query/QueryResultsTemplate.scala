@@ -3,7 +3,7 @@ package models.template.query
 import java.util.UUID
 
 import models.query.QueryResult
-import models.template.StaticPanelTemplate
+import models.template.{Icons, StaticPanelTemplate}
 import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
 import utils.{Messages, NumberUtils, TemplateUtils}
 
@@ -41,10 +41,12 @@ object QueryResultsTemplate {
       div(id := s"$resultId")(
         QueryFilterTemplate.activeFilterPanel(qr),
         div(
-          a(href := "#", cls := "results-share-link results-nav-link right theme-text")(Messages("query.share")),
-          a(href := "#", cls := "results-export-link results-nav-link right theme-text")(Messages("query.export")),
-          a(href := "#", cls := "results-filter-link results-nav-link right theme-text")(Messages("th.filter")),
-          a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql")),
+          a(href := "#", cls := "results-share-link results-nav-link right theme-text", title := Messages("query.share"))(
+            i(cls := s"fa ${Icons.sharedResult}")
+          ),
+          a(href := "#", cls := "results-export-link results-nav-link right theme-text", title := Messages("query.export"))(i(cls := s"fa ${Icons.download}")),
+          a(href := "#", cls := "results-filter-link results-nav-link right theme-text", title := Messages("th.filter"))(i(cls := s"fa ${Icons.filter}")),
+          a(href := "#", cls := "results-sql-link results-nav-link right theme-text", title := Messages("th.sql"))(i(cls := s"fa ${Icons.procedure}")),
           div(cls := "left")(
             div(cls := "switch")(
               label(
