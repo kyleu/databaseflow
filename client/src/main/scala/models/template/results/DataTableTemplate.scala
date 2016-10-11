@@ -31,7 +31,7 @@ object DataTableTemplate {
     if (containsRowNum) {
       thead(res.columns.map(c => th(data("t") := c.t.toString)(str(c.name))))
     } else {
-      thead(tr(th("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
+      thead(tr(th(cls := "row-num-col")("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
     }
   }
 
@@ -60,7 +60,7 @@ object DataTableTemplate {
       // scalastyle:on
     }
     col.relationTable match {
-      case Some(relTable) if contentEl._2 => td(
+      case Some(relTable) if contentEl._2 => td(data("v") := v.getOrElse(""))(
         a(
           cls := "query-rel-link",
           href := s"#table-$relTable::${col.relationColumn.getOrElse("")}=${v.getOrElse("")}",
@@ -71,7 +71,7 @@ object DataTableTemplate {
         )(i(cls := s"fa ${Icons.relation}")),
         span(cls := "linked-cell")(contentEl._1)
       )
-      case _ => td(contentEl._1)
+      case _ => td(data("v") := v.getOrElse(""))(contentEl._1)
     }
   }
 
@@ -83,7 +83,7 @@ object DataTableTemplate {
       ))
     } else {
       res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
-        td(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+        td(cls := "row-num-col")(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
       ))
     }
   }
