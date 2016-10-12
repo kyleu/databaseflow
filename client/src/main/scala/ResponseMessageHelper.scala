@@ -1,5 +1,6 @@
 import models._
 import services._
+import services.query._
 import ui.modal.DataInsertManager
 import ui.{HistoryManager, UserManager}
 import utils.{Logging, NetworkMessage}

@@ -78,5 +78,6 @@ object Icons {
 
   val procedure = "fa-code"
 
+  val show = "fa-sticky-note-o"
   val sliders = "fa-sliders"
 }

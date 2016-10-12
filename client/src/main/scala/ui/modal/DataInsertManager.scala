@@ -14,7 +14,7 @@ import scala.scalajs.js
 object DataInsertManager {
   private[this] val modal = js.Dynamic.global.$("#data-insert-modal")
 
-  private[this] val confirmContent = $("#data-insert-modal-content", modal)
+  private[this] val modalContent = $("#data-insert-modal-content", modal)
   private[this] val linkInsert = $("#data-insert-save-link", modal)
   private[this] val linkCancel = $("#data-insert-cancel-link", modal)
 
@@ -34,13 +34,13 @@ object DataInsertManager {
     val resultId = UUID.randomUUID
     activeMessage = Some(InsertRow(name, Map.empty, resultId))
     activeColumns = Some(columns)
-    val html = InsertRowTemplate.forColumns(columns)
-    confirmContent.html(html.render)
+    val html = InsertRowTemplate.forColumns(name, columns)
+    modalContent.html(html.render)
     modal.openModal()
   }
 
   def close() = {
-    confirmContent.text("")
+    modalContent.text("")
     activeMessage = None
     activeColumns = None
     modal.closeModal()

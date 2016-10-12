@@ -148,6 +148,7 @@ query.sidenav.feedback = Feedback
 query.sidenav.about = About {0}
 query.share = Share
 query.insert = Insert Row
+query.edit = Edit
 
 # Query Results
 result.remove.confirm = Removed result [{0}].
@@ -198,7 +199,7 @@ admin.status.description = View license details and system status.
 admin.status.metrics.title = System Metrics
 admin.status.no.license = No license configured. You have {0} days remaining in your trial.
 admin.status.file.loaded = Loaded from {0}
-admin.status.db.loaded = {0} databse, loaded from {1}
+admin.status.db.loaded = {0} database, loaded from {1}
 
 admin.settings.link = Preferences
 admin.settings.title = System Preferences

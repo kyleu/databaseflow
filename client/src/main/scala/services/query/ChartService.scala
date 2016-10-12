@@ -1,4 +1,4 @@
-package services
+package services.query
 
 import java.util.UUID
 

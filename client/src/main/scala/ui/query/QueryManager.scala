@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.SubmitQuery
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import services.ChartService
+import services.query.ChartService
 import ui.{ProgressManager, TabManager}
 import utils.{NetworkMessage, TemplateUtils}
 

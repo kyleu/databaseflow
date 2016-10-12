@@ -10,6 +10,7 @@ object QueryResult {
     t: ColumnType,
     precision: Option[Int] = None,
     scale: Option[Int] = None,
+    primaryKey: Boolean = false,
     relationTable: Option[String] = None,
     relationColumn: Option[String] = None
   )

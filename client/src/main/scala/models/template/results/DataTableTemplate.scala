@@ -3,7 +3,6 @@ package models.template.results
 import java.util.UUID
 
 import models.query.QueryResult
-import models.schema.ColumnType._
 import models.template.Icons
 import utils.Messages
 
@@ -28,62 +27,24 @@ object DataTableTemplate {
       span(cls := "unsorted-title")(name)
     }
 
+    val ths = res.columns.map(c => th(data("t") := c.t.toString)(str(c.name))) :+ th(cls := "actions-column")("")
     if (containsRowNum) {
-      thead(res.columns.map(c => th(data("t") := c.t.toString)(str(c.name))))
+      thead(tr(ths))
     } else {
-      thead(tr(th(cls := "row-num-col")("#") +: res.columns.map(c => th(data("t") := c.t.toString)(str(c.name)))))
-    }
-  }
-
-  private[this] def cellValue(col: QueryResult.Col, v: Option[String]) = {
-    val contentEl = v match {
-      case Some(x) => (col.t match {
-        case StringType if x.isEmpty => em("empty string")
-        case StringType if x.length > 200 => span(title := x.trim)(x.trim.substring(0, 200) + "...")
-        case StringType => span(x.trim)
-        case IntegerType => span(x)
-        case ShortType => span(x)
-        case TimestampType => span(x)
-        case BooleanType => span(x)
-        case BigDecimalType => span(x)
-        case LongType => span(x)
-        case ByteArrayType => if (x.length > 200) {
-          span(title := x.trim)(x.substring(0, 200) + "...")
-        } else {
-          span(x)
-        }
-        case _ => span(x)
-      }) -> true
-      case None => span(title := "Null")("∅") -> false
-      // scalastyle:off
-      case null => span("null-bug") -> false
-      // scalastyle:on
-    }
-    col.relationTable match {
-      case Some(relTable) if contentEl._2 => td(data("v") := v.getOrElse(""))(
-        a(
-          cls := "query-rel-link",
-          href := s"#table-$relTable::${col.relationColumn.getOrElse("")}=${v.getOrElse("")}",
-          title := Messages("query.open.relation", relTable, s"${col.relationColumn.getOrElse("")}=${v.getOrElse("0")}"),
-          data("rel-table") := relTable,
-          data("rel-col") := col.relationColumn.getOrElse(""),
-          data("rel-val") := v.getOrElse("")
-        )(i(cls := s"fa ${Icons.relation}")),
-        span(cls := "linked-cell")(contentEl._1)
-      )
-      case _ => td(data("v") := v.getOrElse(""))(contentEl._1)
+      thead(tr(th(cls := "row-num-col")("#") +: ths))
     }
   }
 
   def tableRows(res: QueryResult, resultId: UUID, containsRowNum: Boolean) = {
     val offset = res.source.map(_.dataOffset + 1).getOrElse(1)
+    val actions = td(a(cls := "view-row-link theme-text", href := "")(i(cls := s"fa ${Icons.show}")))
     if (containsRowNum) {
       res.data.map(r => tr(cls := s"result-$resultId")(
-        res.columns.zip(r).map(x => cellValue(x._1, x._2))
+        res.columns.zip(r).map(x => DataCellTemplate.cellValue(x._1, x._2)) :+ actions
       ))
     } else {
       res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
-        td(cls := "row-num-col")(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => cellValue(x._1, x._2))
+        td(cls := "row-num-col")(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => DataCellTemplate.cellValue(x._1, x._2)) :+ actions
       ))
     }
   }

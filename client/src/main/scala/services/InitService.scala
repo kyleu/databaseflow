@@ -8,6 +8,7 @@ import models.query.RowDataOptions
 import models.schema.FilterOp
 import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
+import services.query.TransactionService
 import ui._
 import ui.metadata.{MetadataManager, ModelListManager}
 import ui.modal._
@@ -36,6 +37,7 @@ object InitService {
     ConfirmManager.init()
     ReconnectManager.init()
     SavedQueryFormManager.init()
+    RowDetailManager.init()
     DataInsertManager.init()
     SharedResultFormManager.init()
     QueryExportFormManager.init()

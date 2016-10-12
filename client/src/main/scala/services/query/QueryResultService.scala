@@ -1,4 +1,4 @@
-package services
+package services.query
 
 import java.util.UUID
 
@@ -8,8 +8,9 @@ import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui.{ProgressManager, TabManager}
+import ui.modal.RowDetailManager
 import ui.query.{FilterManager, RowDataManager, TableManager}
+import ui.{ProgressManager, TabManager}
 import utils.{Config, Logging, TemplateUtils}
 
 import scala.scalajs.js
@@ -33,6 +34,8 @@ object QueryResultService {
       val v = jq.data("rel-val").toString
       TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
     })
+
+    TemplateUtils.clickHandler($(".view-row-link", resultEl), jq => RowDetailManager.dataClickHandler(jq, result))
 
     result.source.foreach { src =>
       onComplete(result, src, panel, resultId)

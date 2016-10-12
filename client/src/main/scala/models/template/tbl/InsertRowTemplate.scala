@@ -43,8 +43,8 @@ object InsertRowTemplate {
     )
   }: _*)
 
-  def forColumns(cols: Seq[Column]) = div(
-    h5(Messages("query.insert")),
+  def forColumns(name: String, cols: Seq[Column]) = div(
+    h5(Messages("query.insert.title", name)),
     div(cls := "insert-row-error", id := "insert-row-error-general"),
     div(cls := "insert-row-container row")(table(tbodyForColumns(cols)))
   )

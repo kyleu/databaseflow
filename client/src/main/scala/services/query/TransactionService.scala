@@ -1,9 +1,10 @@
-package services
+package services.query
 
-import models.{BeginTransaction, CommitTransaction, RollbackTransaction}
 import models.query.TransactionState
-import utils.{NetworkMessage, NumberUtils, TemplateUtils}
+import models.{BeginTransaction, CommitTransaction, RollbackTransaction}
 import org.scalajs.jquery.{jQuery => $}
+import services.NotificationService
+import utils.{NetworkMessage, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
 

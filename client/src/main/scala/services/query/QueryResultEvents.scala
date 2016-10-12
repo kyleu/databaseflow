@@ -1,9 +1,10 @@
-package services
+package services.query
 
 import java.util.UUID
 
 import models.query.{QueryResult, SharedResult}
 import org.scalajs.jquery.{JQuery, jQuery => $}
+import services.NavigationService
 import ui.UserManager
 import ui.modal.{QueryExportFormManager, SharedResultFormManager}
 import utils.TemplateUtils

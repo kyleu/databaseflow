@@ -20,7 +20,7 @@ object MetadataKeys {
     keys.map { k =>
       PrimaryKey(
         name = k._1,
-        columns = k._2.sortBy(_._3).map(_._2)
+        columns = k._2.sortBy(_._3).map(_._2.replaceAllLiterally("[", "").replaceAllLiterally("]", ""))
       )
     }.toList.headOption
   }

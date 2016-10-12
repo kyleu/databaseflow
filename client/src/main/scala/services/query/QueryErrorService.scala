@@ -1,4 +1,4 @@
-package services
+package services.query
 
 import models.template.query.QueryErrorTemplate
 import models.{QueryCheckResponse, QueryErrorResponse}

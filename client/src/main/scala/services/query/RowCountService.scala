@@ -1,4 +1,4 @@
-package services
+package services.query
 
 import models.QueryResultRowCount
 import org.scalajs.jquery.{jQuery => $}
