@@ -23,7 +23,7 @@ class TransactionManager extends TransactionProvider {
 
   override def transactionExists = ambientTransactionState.isDefined
 
-  override def begin(transaction: Transaction) {
+  override def begin(transaction: Transaction) = {
     if (!transactionExists) {
       localTransactionStorage.set(Some(TransactionState(mutable.Stack(transaction))))
     } else {

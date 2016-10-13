@@ -5,7 +5,7 @@ import utils.Messages
 
 import scalatags.Text.all._
 
-object InsertRowTemplate {
+object RowUpdateTemplate {
   private[this] def getLabel(col: Column) = Seq(
     if (col.notNull && col.defaultValue.isEmpty) {
       input(`type` := "checkbox", id := s"insert-row-toggle-${col.name}", checked)

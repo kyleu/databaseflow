@@ -4,7 +4,6 @@ import java.util.UUID
 
 import models._
 import services.audit.AuditRecordService
-import services.database.SampleDatabaseService
 import services.query._
 import services.result.{CachedResultService, ChartDataService}
 import utils.Config
@@ -41,7 +40,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case srsr: SharedResultSaveRequest => timeReceive(srsr) { SharedResultService.save(user.id, srsr.result, Some(out)) }
 
     case cp: CallProcedure => timeReceive(cp) { ProcedureService.callProcedure(connectionId, user.id, cp.queryId, cp.name, cp.params, cp.resultId) }
-    case ir: InsertRow => timeReceive(ir) { InsertRowService.insert(connectionId, user, ir.name, ir.params, ir.resultId, out) }
+    case ru: RowUpdate => timeReceive(ru) { RowUpdateService.process(connectionId, user, ru.name, ru.pk, ru.params, ru.resultId, out) }
 
     case gqh: GetQueryHistory => timeReceive(gqh) { AuditRecordService.handleGetQueryHistory(db.connectionId, user.id, gqh, out) }
     case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.handleRemoveAuditHistory(user.id, Some(connectionId), rqh, out) }

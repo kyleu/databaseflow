@@ -5,7 +5,7 @@ import java.util.UUID
 import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
 import models.query.{QueryResult, SharedResult}
-import models.schema.FilterOp
+import models.schema.{ColumnType, FilterOp}
 import models.user.Permission
 import services.schema.JdbcHelper
 import utils.JdbcUtils
@@ -81,6 +81,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       sortedAscending = row.asOpt[Long]("source_sort_asc").map(_ != 0L),
       filterColumn = row.asOpt[String]("filter_column"),
       filterOp = row.asOpt[String]("filter_op").map(FilterOp.withName),
+      filterType = row.asOpt[String]("filter_type").map(ColumnType.withName),
       filterValue = row.asOpt[String]("filter_value")
     ),
     chart = row.asOpt[Any]("chart").map(s => JdbcHelper.stringVal(s)),

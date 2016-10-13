@@ -17,7 +17,7 @@ object EditorCreationHelper {
   }
 
   @SuppressWarnings(Array("UnusedMethodParameter"))
-  private[this] def completionsFor(editor: js.Dynamic, session: js.Any, pos: js.Any, prefix: String, callback: js.Dynamic) {
+  private[this] def completionsFor(editor: js.Dynamic, session: js.Any, pos: js.Any, prefix: String, callback: js.Dynamic) = {
     val schemaMatches = MetadataManager.schema.map { sch =>
       convertToJs(sch.tables.map(_.name), "table") ++ convertToJs(sch.views.map(_.name), "view") ++ convertToJs(sch.procedures.map(_.name), "procedure")
     }.getOrElse(Nil)

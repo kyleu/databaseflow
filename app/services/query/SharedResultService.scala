@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models.engine.EngineQueries
-import models.queries.DynamicQuery
+import models.queries.dynamic.DynamicQuery
 import models.queries.result.SharedResultQueries
 import models.query.SharedResult
 import models.user.{Permission, Role, User}
@@ -29,13 +29,13 @@ object SharedResultService {
   def getForUser(user: User, connectionId: UUID, out: ActorRef) = {
     val startMs = System.currentTimeMillis
     val sqq = SharedResultQueries.getForUser(user.id, connectionId)
-    def onSharedResultsSuccess(sharedResults: Seq[SharedResult]) {
+    def onSharedResultsSuccess(sharedResults: Seq[SharedResult]) = {
       val viewable = sharedResults.filter(sr => canView(Some(user), sr)._1)
       val elapsedMs = (System.currentTimeMillis - startMs).toInt
       val usernameMap = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookupMulti(viewable.map(_.owner).toSet)
       out ! SharedResultResponse(viewable, usernameMap, elapsedMs)
     }
-    def onSharedResultsFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SharedResultLoadException", t) }
+    def onSharedResultsFailure(t: Throwable) = { ExceptionUtils.actorErrorFunction(out, "SharedResultLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSharedResultsSuccess, onSharedResultsFailure)
   }
 
@@ -53,8 +53,8 @@ object SharedResultService {
       }
     }
 
-    val sql = EngineQueries.selectFrom(sr.source.name, sr.source.asRowDataOptions(None))(db.engine)
-    db.query(DynamicQuery(sql))
+    val (sql, values: Seq[Any]) = EngineQueries.selectFrom(sr.source.name, sr.source.asRowDataOptions(None))(db.engine)
+    db.query(DynamicQuery(sql, values))
   }
 
   def save(userId: UUID, sr: SharedResult, out: Option[ActorRef] = None) = {

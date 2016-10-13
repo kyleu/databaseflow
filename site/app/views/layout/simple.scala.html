@@ -5,14 +5,14 @@
 
   <main>
     <div>
-      @flash.get("error").map { err => <div class="flash flash-error z-depth-1">@err</div> }
-      @flash.get("success").map { success => <div class="flash flash-success z-depth-1">@success</div> }
+      @flash.get("error").map { err => <div class="container"><div class="flash flash-error z-depth-1">@err</div></div> }
+      @flash.get("success").map { success => <div class="container"><div class="flash flash-success z-depth-1">@success</div></div> }
       @flash.get("lang").map { lang =>
         @if(lang != "en") {
-          <div class="flash lang-warning z-depth-1">
+          <div class="container"><div class="flash lang-warning z-depth-1">
             Please note that all languages other than English are machine-translated, and are almost certainly incorrect.
             If you'd like to help translate, please send a mail to <a href="mailto:translation@@databaseflow.com">translation@@databaseflow.com</a>.
-          </div>
+          </div></div>
         }
       }
       @content

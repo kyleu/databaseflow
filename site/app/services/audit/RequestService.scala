@@ -4,7 +4,6 @@ import java.io.{BufferedWriter, FileWriter}
 
 import cache.FileCacheService
 import play.api.libs.json.Json
-import services.notification.RequestLogging
 import services.notification.RequestLogging.RequestLog
 
 import scala.io.Source
@@ -26,7 +25,7 @@ object RequestService {
   }
 
   def add(request: RequestLog) = {
-    import RequestLogging.jsonFmt
+    import services.notification.RequestLogging.jsonFmt
     val json = Json.toJson(request)
     output.write(json.toString + '\n')
     output.flush()

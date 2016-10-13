@@ -1,6 +1,6 @@
 package models.query
 
-import models.schema.FilterOp
+import models.schema.{ColumnType, FilterOp}
 
 object RowDataOptions {
   val empty = RowDataOptions()
@@ -11,6 +11,7 @@ case class RowDataOptions(
     orderByAsc: Option[Boolean] = None,
     filterCol: Option[String] = None,
     filterOp: Option[FilterOp] = None,
+    filterType: Option[ColumnType] = None,
     filterVal: Option[String] = None,
     limit: Option[Int] = None,
     offset: Option[Int] = None
@@ -23,6 +24,7 @@ case class RowDataOptions(
     sortedAscending = orderByAsc,
     filterColumn = filterCol,
     filterOp = filterOp,
+    filterType = filterType,
     filterValue = filterVal,
     dataOffset = offset.getOrElse(0)
   )
@@ -34,6 +36,7 @@ case class RowDataOptions(
     orderByAsc.map("Asc: " + _),
     filterCol.map("Filter Col: " + _),
     filterOp.map("Op: " + _),
+    filterType.map("Type: " + _),
     filterVal.map("Val: " + _),
     limit.map("Limit: " + _),
     offset.map("Offset: " + _)

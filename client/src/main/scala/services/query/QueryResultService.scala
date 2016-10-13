@@ -27,19 +27,11 @@ object QueryResultService {
 
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
     val resultEl = $(".query-result-table", panel)
-
-    TemplateUtils.clickHandler($(".query-rel-link", resultEl), jq => {
-      val table = jq.data("rel-table").toString
-      val col = jq.data("rel-col").toString
-      val v = jq.data("rel-val").toString
-      TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
-    })
-
-    TemplateUtils.clickHandler($(".view-row-link", resultEl), jq => RowDetailManager.dataClickHandler(jq, result))
+    QueryEventHandlers.wireResults(resultEl, result)
 
     result.source.foreach { src =>
       onComplete(result, src, panel, resultId)
-      QueryResultEvents.wire(panel, result, chartId)
+      QueryEventHandlers.wireLinks(panel, result, chartId)
     }
 
     val sqlEl = $(".query-result-sql", panel)
@@ -64,7 +56,7 @@ object QueryResultService {
   private[this] def onComplete(result: QueryResult, src: Source, panel: JQuery, resultId: UUID) = {
     js.Dynamic.global.$(".filter-select", panel).material_select()
 
-    FilterManager.init(src.t, result.queryId, src.name, panel, src, resultId)
+    FilterManager.init(src.t, result.queryId, src.name, panel, src, result.columns, resultId)
 
     val options = src.asRowDataOptions(Some(Config.pageSize))
     TemplateUtils.clickHandler($(".sorted-title", panel), (j) => {

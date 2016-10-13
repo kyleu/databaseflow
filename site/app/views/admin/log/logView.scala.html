@@ -1,5 +1,6 @@
 @(name: String, logs: Seq[services.logging.ServerLog])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
 @layout.simple(utils.Config.projectName + " Logs", "admin", isAdmin = true) {
+<div class="container">
   <div class="row">
     <div class="col s12">
       <div class="card">
@@ -40,4 +41,5 @@
       </div>
     </div>
   </div>
+</div>
 }

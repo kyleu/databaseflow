@@ -9,7 +9,7 @@ import utils.NullUtils
 object ClientSideCertSslSockets {
   val configs = new ConcurrentHashMap[String, SslParams]
 
-  def configure(param: String, params: SslParams) {
+  def configure(param: String, params: SslParams) = {
     configs.put(param, params)
   }
 

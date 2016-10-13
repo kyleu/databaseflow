@@ -31,7 +31,7 @@ object AdHocQueryManager {
           ""
         } else {
           val t = s.tables(Random.nextInt(s.tables.size)).name
-          EngineQueries.selectFrom(t, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
+          EngineQueries.selectFrom(t, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))._1
         }
       }.getOrElse("")
     }

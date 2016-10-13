@@ -25,15 +25,15 @@ object CacheService {
     })
   }
 
-  private def set(key: String, value: Any, expiration: Int = 0): Unit = {
+  private def setVal(key: String, value: Any, expiration: Int = 0) = {
     val element = new Element(key, value)
     if (expiration == 0) element.setEternal(true)
     element.setTimeToLive(expiration)
     cache.put(element)
   }
 
-  def set(key: String, value: Any): Unit = {
-    set(key, value, timeout)
+  def set(key: String, value: Any) = {
+    setVal(key, value, timeout)
   }
 
   def get(key: String): Option[Any] = {

@@ -56,7 +56,7 @@ object ViewManager extends ViewDetailHelper {
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, title)
 
-        val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))
+        val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))._1
         NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, params = Map.empty, action = Some(action), resultId = resultId))
       })
 

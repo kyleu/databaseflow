@@ -14,19 +14,19 @@ class Transaction(connection: Connection) extends Queryable {
 
   override def executeUpdate(statement: Statement) = executeUpdate(connection, statement)
 
-  def rollback() {
+  def rollback() = {
     log.debug("Rolling back transaction")
     connection.rollback()
     rolledback = true
     onRollback.foreach(_())
   }
 
-  def rollback(savepoint: Savepoint) {
+  def rollback(savepoint: Savepoint) = {
     log.debug("Rolling back to savepoint")
     connection.rollback(savepoint)
   }
 
-  def release(savepoint: Savepoint) {
+  def release(savepoint: Savepoint) = {
     log.debug("Releasing savepoint")
     connection.rollback(savepoint)
   }
@@ -47,7 +47,7 @@ class Transaction(connection: Connection) extends Queryable {
     onCommit.foreach(_())
   }
 
-  def close() {
+  def close() = {
     log.debug("Closing transaction")
     connection.close()
     onClose.foreach(_())

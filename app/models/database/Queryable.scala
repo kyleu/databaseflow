@@ -11,7 +11,7 @@ import scala.annotation.tailrec
 trait Queryable extends Logging {
   @tailrec
   @SuppressWarnings(Array("AsInstanceOf"))
-  private[this] def prepare(stmt: PreparedStatement, values: Seq[Any], index: Int = 1) {
+  private[this] def prepare(stmt: PreparedStatement, values: Seq[Any], index: Int = 1): Unit = {
     if (values.nonEmpty) {
       values.headOption.getOrElse(throw new IllegalStateException()) match {
         case v if NullUtils.isNull(v) => stmt.setNull(index, Types.NULL)

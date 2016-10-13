@@ -3,7 +3,7 @@ package cache
 object FileCacheService {
   val cacheDir = {
     val prod = "/home/ubuntu/cache"
-    val local = "./tmp"
+    val local = "./cache"
 
     if (new java.io.File(prod).exists) {
       prod

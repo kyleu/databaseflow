@@ -5,7 +5,7 @@ import models.database.Transaction
 trait TransactionProvider {
   def transactionExists: Boolean
   def currentTransaction: Transaction
-  def begin(transaction: Transaction)
-  def end()
-  def rollback()
+  def begin(transaction: Transaction): Unit
+  def end(): Unit
+  def rollback(): Unit
 }

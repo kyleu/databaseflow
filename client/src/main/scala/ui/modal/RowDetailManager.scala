@@ -2,26 +2,14 @@ package ui.modal
 
 import models.query.QueryResult
 import models.template.tbl.RowDetailTemplate
-import org.scalajs.dom
-import org.scalajs.jquery.{JQuery, jQuery => $}
+import org.scalajs.jquery.{jQuery => $}
 import utils.TemplateUtils
 
 import scala.scalajs.js
 
 object RowDetailManager {
-  def dataClickHandler(jq: JQuery, result: QueryResult) = {
-    var tdData = Seq.empty[String]
-    $("td", jq.parent().parent()).map { e: dom.Element =>
-      val v = $(e).data("v").toString
-      if (v != "undefined") {
-        tdData = tdData :+ v
-      }
-    }
-    val data = result.columns.zip(tdData)
-    val pk = data.filter(_._1.primaryKey).map(_._1.name)
-    utils.Logging.info(s"Showing row [X] (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
-    show(data)
-  }
+  private[this] var activePk: Seq[String] = Nil
+  private[this] var activeData: Seq[(QueryResult.Col, String)] = Nil
 
   private[this] val modal = js.Dynamic.global.$("#row-detail-modal")
 
@@ -30,16 +18,26 @@ object RowDetailManager {
   private[this] val linkOk = $("#row-detail-ok-link", modal)
 
   def init() = {
-    TemplateUtils.clickHandler(linkEdit, jq => {
-      utils.Logging.info("Row edit request.")
-    })
+    TemplateUtils.clickHandler(linkEdit, jq => edit())
     TemplateUtils.clickHandler(linkOk, jq => close())
   }
 
-  def show(data: Seq[(QueryResult.Col, String)]) = {
+  def show(pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {
+    activePk = pk
+    activeData = data
+
     val html = RowDetailTemplate.forData(data)
     modalContent.html(html.render)
+    if (pk.isEmpty) {
+      linkEdit.hide()
+    } else {
+      linkEdit.show()
+    }
     modal.openModal()
+  }
+
+  def edit() = {
+    utils.Logging.info("Edit!")
   }
 
   def close() = {

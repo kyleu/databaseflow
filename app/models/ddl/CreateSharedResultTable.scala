@@ -16,6 +16,7 @@ case object CreateSharedResultTable extends CreateTableStatement("shared_results
       "source_sort_asc" boolean,
       "filter_column" $varchar(128),
       "filter_op" $varchar(4),
+      "filter_type" $varchar(32),
       "filter_value" $varchar(256),
       "chart" text,
       "last_accessed" timestamp not null,

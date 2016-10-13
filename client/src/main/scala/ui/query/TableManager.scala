@@ -10,7 +10,7 @@ import models.template.tbl.TableDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui._
-import ui.modal.DataInsertManager
+import ui.modal.RowUpdateManager
 import utils.{NetworkMessage, TemplateUtils}
 
 object TableManager extends TableDetailHelper {
@@ -61,7 +61,7 @@ object TableManager extends TableDetailHelper {
 
         TemplateUtils.clickHandler($(".insert-data-link", queryPanel), jq => {
           val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
-          DataInsertManager.show(name, columns)
+          RowUpdateManager.show(name, Nil, columns)
         })
 
         openTables = openTables + (name -> queryId)

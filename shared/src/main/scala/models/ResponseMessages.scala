@@ -49,4 +49,4 @@ case class QueryDeleteResponse(id: UUID, error: Option[String] = None) extends R
 
 case class SharedResultSaveResponse(result: SharedResult, error: Option[String] = None) extends ResponseMessage
 
-case class InsertRowResponse(resultId: UUID, errors: Map[String, String] = Map.empty) extends ResponseMessage
+case class RowUpdateResponse(resultId: UUID, pk: Seq[(String, String)], errors: Map[String, String] = Map.empty) extends ResponseMessage

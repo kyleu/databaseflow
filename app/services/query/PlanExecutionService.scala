@@ -6,7 +6,7 @@ import akka.actor.ActorRef
 import models.database.Queryable
 import models.engine.DatabaseEngine
 import models.engine.DatabaseEngine.Oracle
-import models.queries.DynamicQuery
+import models.queries.dynamic.DynamicQuery
 import models.{PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError}
 import services.database.DatabaseWorkerPool
 import services.plan.PlanParseService

@@ -33,18 +33,19 @@ object DataCellTemplate {
       // scalastyle:on
     }
     col.relationTable match {
-      case Some(relTable) if contentEl._2 => td(data("v") := v.getOrElse(""))(
+      case Some(relTable) if contentEl._2 => td(data("v") := v.getOrElse("∅"))(
         a(
           cls := "query-rel-link theme-text",
           href := s"#table-$relTable::${col.relationColumn.getOrElse("")}=${v.getOrElse("")}",
           title := Messages("query.open.relation", relTable, s"${col.relationColumn.getOrElse("")}=${v.getOrElse("0")}"),
           data("rel-table") := relTable,
           data("rel-col") := col.relationColumn.getOrElse(""),
+          data("rel-type") := col.t.toString,
           data("rel-val") := v.getOrElse("")
         )(i(cls := s"fa ${Icons.relation}")),
         span(cls := "linked-cell")(contentEl._1)
       )
-      case _ => td(data("v") := v.getOrElse(""))(contentEl._1)
+      case _ => td(data("v") := v.getOrElse("∅"))(contentEl._1)
     }
   }
 }

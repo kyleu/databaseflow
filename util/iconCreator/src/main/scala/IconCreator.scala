@@ -13,9 +13,7 @@ object IconCreator extends App {
   val outDir = Paths.get(".", "out")
 
   private val startMs = System.currentTimeMillis
-  println("Creating icons...")
   go()
-  println(s"Icon creation complete in [${System.currentTimeMillis - startMs}ms].")
 
   def go() = {
     wipeTarget()
@@ -46,7 +44,6 @@ object IconCreator extends App {
   }
 
   private[this] def convert(icon: String, color: String) = {
-    println(s"Converting [$icon:$color]")
     s"convert -resize 500x500 -background none ./tmp/icons/$icon-$color.svg ./tmp/icons/$icon-$color-500.png".!
     s"convert -resize 64x64 -background none ./tmp/icons/$icon-$color.svg ./tmp/icons/$icon-$color@2x.png".!
     s"convert -resize 32x32 -background none ./tmp/icons/$icon-$color.svg ./tmp/icons/$icon-$color.png".!

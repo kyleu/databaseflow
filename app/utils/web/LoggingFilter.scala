@@ -32,7 +32,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
     val context = requestsTimer.time()
     activeRequests.inc()
 
-    def logCompleted(result: Result): Unit = {
+    def logCompleted(result: Result) = {
       activeRequests.dec()
       context.stop()
       statusCodes.getOrElse(result.header.status, otherStatuses).mark()

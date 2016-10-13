@@ -46,12 +46,12 @@ trait DetailHelper { this: SocketService =>
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
-  protected[this] def handleSocketTrace() {
+  protected[this] def handleSocketTrace() = {
     val ret = SocketTraceResponse(id, user.id, user.username)
     sender() ! ret
   }
 
-  protected[this] def handleClientTrace() {
+  protected[this] def handleClientTrace() = {
     pendingDebugChannel = Some(sender())
     out ! SendTrace
   }

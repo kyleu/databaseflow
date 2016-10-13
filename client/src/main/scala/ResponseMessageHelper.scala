@@ -1,7 +1,7 @@
 import models._
 import services._
 import services.query._
-import ui.modal.DataInsertManager
+import ui.modal.RowUpdateManager
 import ui.{HistoryManager, UserManager}
 import utils.{Logging, NetworkMessage}
 
@@ -47,7 +47,7 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
 
     case srsr: SharedResultSaveResponse => ModelResultsService.handleSharedResultSaveResponse(srsr.result, srsr.error)
 
-    case irr: InsertRowResponse => DataInsertManager.handleInsertRowResponse(irr.resultId, irr.errors)
+    case rur: RowUpdateResponse => RowUpdateManager.handleInsertRowResponse(rur.resultId, rur.errors)
 
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")

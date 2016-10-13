@@ -17,7 +17,7 @@ object SqlParserTest {
 }
 
 class SqlParserTest extends FlatSpec with Matchers {
-  import SqlParserTest._
+  import test.query.SqlParserTest._
 
   "SQL Parser" should "handle an empty string" in {
     val result = SqlParser.split("")

@@ -2,13 +2,14 @@ package ui.query
 
 import java.util.UUID
 
+import models.query.QueryResult
 import models.query.QueryResult.Source
-import models.schema.FilterOp
+import models.schema.{ColumnType, FilterOp}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import utils.{Config, TemplateUtils}
 
 object FilterManager {
-  def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, resultId: UUID) = {
+  def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, columns: Seq[QueryResult.Col], resultId: UUID) = {
     val filterContainer = $(".filter-container", panel)
     var filterShown = false
     TemplateUtils.clickHandler($(".results-filter-link", panel), jq => {
@@ -49,6 +50,10 @@ object FilterManager {
 
       val column = $(":selected", colSelect).`val`().toString
       val op = $(":selected", opSelect).`val`().toString
+      val t = columns.find(_.name == column) match {
+        case Some(col) => col.t
+        case None => ColumnType.StringType
+      }
       val v = if (op == "btw") {
         doubleValA.`val`().toString + "|" + doubleValB.`val`().toString
       } else {
@@ -58,6 +63,7 @@ object FilterManager {
       val options = src.copy(
         filterColumn = Some(column),
         filterOp = Some(FilterOp.withName(op)),
+        filterType = Some(t),
         filterValue = Some(v)
       ).asRowDataOptions(Some(Config.pageSize))
 

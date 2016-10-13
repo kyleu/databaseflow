@@ -5,7 +5,7 @@ import java.util.UUID
 import akka.actor.ActorRef
 import models.database.Transaction
 import models.engine.EngineQueries
-import models.queries.DynamicQuery
+import models.queries.dynamic.DynamicQuery
 import models.user.User
 import models.{ChartDataRequest, ChartDataResponse}
 import services.database.DatabaseRegistry
@@ -29,8 +29,8 @@ object ChartDataService extends Logging {
       }
     }
 
-    val sql = EngineQueries.selectFrom(cdr.source.name, cdr.source.asRowDataOptions(None))(db.engine)
-    val q = new DynamicQuery(sql)
+    val (sql, values: Seq[Any]) = EngineQueries.selectFrom(cdr.source.name, cdr.source.asRowDataOptions(None))(db.engine)
+    val q = new DynamicQuery(sql, values)
 
     val startMs = System.currentTimeMillis
     val result = activeTransaction match {

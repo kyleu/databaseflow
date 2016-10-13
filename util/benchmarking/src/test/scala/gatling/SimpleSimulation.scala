@@ -21,8 +21,6 @@ class SimpleSimulation extends Simulation {
   val homeRequest = http("Splash Page").get("/").check(status.is(200))
   val siteRequest = http("Home Page").get("/site").check(status.is(200))
 
-  println("?")
-
   val scn = scenario("Basic Test")
     .exec(homeRequest).pause(pauseSeconds)
     .exec(siteRequest).pause(pauseSeconds)

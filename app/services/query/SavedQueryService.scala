@@ -24,13 +24,13 @@ object SavedQueryService {
   def getForUser(user: User, connectionId: UUID, out: ActorRef) = {
     val startMs = System.currentTimeMillis
     val sqq = SavedQueryQueries.getForUser(user.id, connectionId)
-    def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) {
+    def onSavedQueriesSuccess(savedQueries: Seq[SavedQuery]) = {
       val viewable = savedQueries.filter(sq => canRead(user, sq)._1)
       val elapsedMs = (System.currentTimeMillis - startMs).toInt
       val usernameMap = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookupMulti(viewable.map(_.owner).toSet)
       out ! SavedQueryResponse(viewable, usernameMap, elapsedMs)
     }
-    def onSavedQueriesFailure(t: Throwable) { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
+    def onSavedQueriesFailure(t: Throwable) = { ExceptionUtils.actorErrorFunction(out, "SavedQueryLoadException", t) }
     DatabaseWorkerPool.submitQuery(sqq, MasterDatabase.conn, onSavedQueriesSuccess, onSavedQueriesFailure)
   }
 

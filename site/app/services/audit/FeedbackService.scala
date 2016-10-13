@@ -27,12 +27,15 @@ object FeedbackService {
     val file = Paths.get(feedbackDir, filename)
     if (Files.exists(file)) {
       val lines = Files.readAllLines(file).asScala
-      val name = lines.headOption.getOrElse("")
-      val content = lines.tail.dropRight(1).mkString("\n")
       val last = lines.tail.lastOption.getOrElse("0:0").split(':')
-      val version = last.headOption.getOrElse("0").toInt
-      val occurred = new LocalDateTime(last.lastOption.getOrElse("0").toLong)
-      Feedback(id, name, content, version, occurred)
+
+      Feedback(
+        id = id,
+        from = lines.headOption.getOrElse(""),
+        content = lines.tail.dropRight(1).mkString("\n"),
+        version = last.headOption.getOrElse("0").replaceAllLiterally("v", "").toInt,
+        occurred = new LocalDateTime(last.lastOption.getOrElse("0").replaceAllLiterally("v", "").toLong)
+      )
     } else {
       throw new IllegalArgumentException(s"Feedback does not exist for [$id].")
     }
@@ -44,7 +47,7 @@ object FeedbackService {
     if ((!overwrite) && Files.exists(file)) {
       throw new IllegalArgumentException(s"Feedback already exists for [${feedback.id}] and cannot be overwritten.")
     } else {
-      val text = feedback.from + "\n" + feedback.content + "\nv1"
+      val text = feedback.from + "\n" + feedback.content + s"\n1:${System.currentTimeMillis}"
       Files.write(file, text.getBytes)
     }
   }

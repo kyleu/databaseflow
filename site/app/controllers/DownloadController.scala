@@ -24,7 +24,7 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
       case "DatabaseFlow.zip" => true -> "windows"
       case "databaseflow.docker.gz" => true -> "docker"
       case "databaseflow.server.zip" => true -> "universal"
-      case _ => false -> "unknown"
+      case x => false -> s"unknown:$x"
     }
     Future(DownloadService.add(request.remoteAddress, platform))
     if (isOk) {

@@ -2,23 +2,23 @@ package ui.modal
 
 import java.util.UUID
 
-import models.InsertRow
+import models.RowUpdate
 import models.schema.Column
-import models.template.tbl.InsertRowTemplate
+import models.template.tbl.RowUpdateTemplate
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import utils.{NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
-object DataInsertManager {
+object RowUpdateManager {
   private[this] val modal = js.Dynamic.global.$("#data-insert-modal")
 
   private[this] val modalContent = $("#data-insert-modal-content", modal)
   private[this] val linkInsert = $("#data-insert-save-link", modal)
   private[this] val linkCancel = $("#data-insert-cancel-link", modal)
 
-  private[this] var activeMessage: Option[InsertRow] = None
+  private[this] var activeMessage: Option[RowUpdate] = None
   private[this] var activeColumns: Option[Seq[Column]] = None
 
   def init() = {
@@ -30,11 +30,11 @@ object DataInsertManager {
     TemplateUtils.clickHandler(linkCancel, jq => close())
   }
 
-  def show(name: String, columns: Seq[Column]) = {
+  def show(name: String, pk: Seq[(String, String)], columns: Seq[Column]) = {
     val resultId = UUID.randomUUID
-    activeMessage = Some(InsertRow(name, Map.empty, resultId))
+    activeMessage = Some(RowUpdate(name, pk, Map.empty, resultId))
     activeColumns = Some(columns)
-    val html = InsertRowTemplate.forColumns(name, columns)
+    val html = RowUpdateTemplate.forColumns(name, columns)
     modalContent.html(html.render)
     modal.openModal()
   }

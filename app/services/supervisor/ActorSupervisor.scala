@@ -29,7 +29,7 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
 
   protected[this] val socketsCounter = metrics.counter("active-connections")
 
-  override def preStart() {
+  override def preStart() = {
     context.actorOf(MetricsServletActor.props(ctx.config.metrics), "metrics-servlet")
     context.actorOf(CachedResultActor.props(), "result-cleanup")
   }
@@ -65,13 +65,13 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
     case None => sender() ! ServerError("Unknown Client Socket", ct.id.toString)
   }
 
-  protected[this] def handleSocketStarted(user: User, socketId: UUID, socket: ActorRef) {
+  protected[this] def handleSocketStarted(user: User, socketId: UUID, socket: ActorRef) = {
     log.debug(s"Socket [$socketId] registered to [${user.username}] with path [${socket.path}].")
     ActorSupervisor.sockets(socketId) = SocketRecord(user.id, user.username, socket, DateUtils.now)
     socketsCounter.inc()
   }
 
-  protected[this] def handleSocketStopped(id: UUID) {
+  protected[this] def handleSocketStopped(id: UUID) = {
     ActorSupervisor.sockets.remove(id) match {
       case Some(sock) =>
         socketsCounter.dec()

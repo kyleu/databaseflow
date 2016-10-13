@@ -59,9 +59,9 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val finalName = s"${utils.Config.projectId}-export-$ts.$format"
 
     val os = new ByteArrayOutputStream()
-    val sql = EngineQueries.selectFrom(source.name, source.asRowDataOptions(None))(db.engine)
+    val (sql, values: Seq[Any]) = EngineQueries.selectFrom(source.name, source.asRowDataOptions(None))(db.engine)
     val (mimeType, query) = format match {
-      case "csv" => "text/csv" -> CsvExportQuery(sql, os)
+      case "csv" => "text/csv" -> CsvExportQuery(sql, values, os)
       case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format))
     }
     try {

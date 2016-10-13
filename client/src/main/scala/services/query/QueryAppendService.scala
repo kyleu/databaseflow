@@ -2,12 +2,10 @@ package services.query
 
 import java.util.UUID
 
-import models.query.{QueryResult, RowDataOptions}
-import models.schema.FilterOp
+import models.query.QueryResult
 import models.template.results.DataTableTemplate
 import org.scalajs.jquery.{jQuery => $}
-import ui.query.TableManager
-import utils.{Logging, TemplateUtils}
+import utils.Logging
 
 object QueryAppendService {
   def handleAppendQueryResult(resultId: UUID, qr: QueryResult): Unit = {
@@ -23,13 +21,7 @@ object QueryAppendService {
     resultEl.append(content)
 
     val newRows = $(s".result-$resultId", panel)
-
-    TemplateUtils.clickHandler($(".query-rel-link", newRows), jq => {
-      val table = jq.data("rel-table").toString
-      val col = jq.data("rel-col").toString
-      val v = jq.data("rel-val").toString
-      TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterVal = Some(v)))
-    })
+    QueryEventHandlers.wireResults(newRows, qr)
 
     val appendLink = $(".additional-results .append-rows-link")
     val additionalResults = $(".additional-results .no-rows-remaining")

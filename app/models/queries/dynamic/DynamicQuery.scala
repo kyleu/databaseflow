@@ -1,9 +1,10 @@
-package models.queries
+package models.queries.dynamic
 
 import java.sql.ResultSetMetaData
 import java.util.UUID
 
 import models.database.{Query, Row}
+import models.queries.QueryTranslations
 import models.query.QueryResult
 import org.h2.jdbc.JdbcClob
 
@@ -33,7 +34,7 @@ object DynamicQuery {
   }
 }
 
-case class DynamicQuery(override val sql: String) extends Query[DynamicQuery.Results] {
+case class DynamicQuery(override val sql: String, override val values: Seq[Any] = Nil) extends Query[DynamicQuery.Results] {
   override def reduce(rows: Iterator[Row]) = getResults(rows)
 
   private[this] def rowData(cc: Int, firstRow: Row) = (1 to cc).map(i => firstRow.asOpt[Any](i).map(DynamicQuery.transform))

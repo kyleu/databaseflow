@@ -5,7 +5,7 @@ import java.util.UUID
 import models.engine.DatabaseEngine._
 import models.engine._
 import models.plan.{PlanError, PlanResult}
-import models.queries.DynamicQuery
+import models.queries.dynamic.DynamicQuery
 import services.plan.h2.H2ParseService
 import services.plan.mysql.MySqlParseService
 import services.plan.oracle.OracleParseService

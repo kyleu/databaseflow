@@ -34,9 +34,9 @@ if defined var1 (
 )
 
 if "%ACTIVATOR_HOME%"=="" (
-	set "ACTIVATOR_HOME=%~dp0"
-	@REM remove trailing "\" from path
-	set ACTIVATOR_HOME=!ACTIVATOR_HOME:~0,-1!
+  set "ACTIVATOR_HOME=%~dp0"
+  @REM remove trailing "\" from path
+  set ACTIVATOR_HOME=!ACTIVATOR_HOME:~0,-1!
 )
 
 set ERROR_CODE=0
@@ -159,7 +159,7 @@ if not "%~1"=="" (
   rem This is done since batch considers "=" to be a delimiter so we need to circumvent this behavior with a small hack.
   set arg1=%~1
   if "!arg1:~0,2!"=="-D" (
-   	set "args=%args% "%~1"="%~2""
+    set "args=%args% "%~1"="%~2""
     shift
     shift
     goto argsloop

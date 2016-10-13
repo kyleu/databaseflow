@@ -23,10 +23,20 @@ object QueryResult {
       sortedAscending: Option[Boolean] = None,
       filterColumn: Option[String] = None,
       filterOp: Option[FilterOp] = None,
+      filterType: Option[ColumnType] = None,
       filterValue: Option[String] = None,
       dataOffset: Int = 0
   ) {
-    def asRowDataOptions(limit: Option[Int]) = RowDataOptions(sortedColumn, sortedAscending, filterColumn, filterOp, filterValue, limit, Some(dataOffset))
+    def asRowDataOptions(limit: Option[Int]) = RowDataOptions(
+      orderByCol = sortedColumn,
+      orderByAsc = sortedAscending,
+      filterCol = filterColumn,
+      filterOp = filterOp,
+      filterType = filterType,
+      filterVal = filterValue,
+      limit = limit,
+      offset = Some(dataOffset)
+    )
   }
 }
 

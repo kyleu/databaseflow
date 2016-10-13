@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models._
 import models.engine.EngineQueries
-import models.queries.DynamicQuery
+import models.queries.dynamic.DynamicQuery
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.{ForeignKey, PrimaryKey}
 import services.database.DatabaseWorkerPool
@@ -43,7 +43,7 @@ trait DataHelper extends Logging { this: SocketService =>
 
   private[this] def handleShowDataResponse(
     queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID, cacheDb: Boolean
-  ) {
+  ) = {
     def work() = {
       val startMs = DateUtils.nowMillis
       val optionsNewLimit = options.copy(limit = options.limit.map(_ + 1))
@@ -52,10 +52,10 @@ trait DataHelper extends Logging { this: SocketService =>
       } else {
         activeTransaction.getOrElse(db) -> db.engine
       }
-      val sql = EngineQueries.selectFrom(name, optionsNewLimit)(engine)
-      log.info(s"Showing data for [$name] using sql [$sql].")
+      val (sql, values: Seq[Any]) = EngineQueries.selectFrom(name, optionsNewLimit)(engine)
+      log.info(s"Showing data for [$name] using sql [$sql] with values [${values.mkString(", ")}].")
       JdbcUtils.sqlCatch(queryId, sql, startMs, resultId, 0) { () =>
-        val result = database.query(DynamicQuery(sql))
+        val result = database.query(DynamicQuery(sql, values))
 
         val (trimmedData, moreRowsAvailable) = options.limit match {
           case Some(limit) if result.data.size > limit => result.data.take(limit) -> true

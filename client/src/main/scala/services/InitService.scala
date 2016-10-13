@@ -5,7 +5,7 @@ import java.util.UUID
 
 import models.RequestMessage
 import models.query.RowDataOptions
-import models.schema.FilterOp
+import models.schema.{ColumnType, FilterOp}
 import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import services.query.TransactionService
@@ -38,7 +38,7 @@ object InitService {
     ReconnectManager.init()
     SavedQueryFormManager.init()
     RowDetailManager.init()
-    DataInsertManager.init()
+    RowUpdateManager.init()
     SharedResultFormManager.init()
     QueryExportFormManager.init()
     PlanNodeDetailManager.init()
@@ -74,10 +74,18 @@ object InitService {
           val name = id.substring(0, x)
           val filter = id.substring(x + 2).split('=')
           val options = if (filter.length > 1) {
+            val remaining = filter.tail.mkString("=").split(":")
+            val first = remaining.headOption.getOrElse(throw new IllegalStateException())
+            val (t, v) = if (remaining.size == 1) {
+              ColumnType.StringType -> first
+            } else {
+              ColumnType.withName(first) -> remaining.tail.mkString(":")
+            }
             RowDataOptions(
               filterCol = filter.headOption,
               filterOp = Some(FilterOp.Equal),
-              filterVal = Some(filter.tail.mkString("="))
+              filterType = Some(t),
+              filterVal = Some(v)
             )
           } else {
             Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")

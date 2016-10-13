@@ -22,32 +22,32 @@ class EngineQueriesTest extends FlatSpec with Matchers {
   )
 
   "Engine Queries" should "output SQL Server limit syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoLimit)(SQLServer)
+    val sql = EngineQueries.selectFrom("X", rdoLimit)(SQLServer)._1
     sql should be("select * from [X] offset 0 rows fetch next 1000 rows only")
   }
 
   it should "output PostgreSQL limit syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoLimit)(PostgreSQL)
+    val sql = EngineQueries.selectFrom("X", rdoLimit)(PostgreSQL)._1
     sql should be("select * from \"X\" limit 1000")
   }
 
   it should "output MySQL limit syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoLimit)(MySQL)
+    val sql = EngineQueries.selectFrom("X", rdoLimit)(MySQL)._1
     sql should be("select * from `X` limit 1000")
   }
 
   it should "output SQL Server where clause syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoCol)(SQLServer)
+    val sql = EngineQueries.selectFrom("X", rdoCol)(SQLServer)._1
     sql should be("select * from [X] where [y] = 'z'")
   }
 
   it should "output PostgreSQL where clause syntax" in {
-    val sql = EngineQueries.selectFrom("X", rdoCol)(PostgreSQL)
+    val sql = EngineQueries.selectFrom("X", rdoCol)(PostgreSQL)._1
     sql should be("select * from \"X\" where \"y\" = 'z'")
   }
 
   it should "output a proper order by clause" in {
-    val sql = EngineQueries.selectFrom("X", rdoOrder)(PostgreSQL)
+    val sql = EngineQueries.selectFrom("X", rdoOrder)(PostgreSQL)._1
     sql should be("select * from \"X\" order by \"y\" asc")
   }
 }
