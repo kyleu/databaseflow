@@ -14,6 +14,7 @@ import ui.{ProgressManager, TabManager}
 import utils.{Config, Logging, TemplateUtils}
 
 import scala.scalajs.js
+import scala.util.Random
 
 object QueryResultService {
   def handleNewQueryResults(resultId: UUID, index: Int, result: QueryResult, durationMs: Int): Unit = {
@@ -21,12 +22,13 @@ object QueryResultService {
     TransactionService.incrementCount()
 
     val chartId = UUID.randomUUID
+    val key = Random.alphanumeric.take(6).mkString
 
-    val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, resultId, chartId)
+    val content = QueryResultsTemplate.forQueryResults(result, occurred.toISOString, durationMs, key, resultId, chartId)
     ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
-    val resultEl = $(".query-result-table", panel)
+    val resultEl = $(s"." + key, panel)
     QueryEventHandlers.wireResults(resultEl, result)
 
     result.source.foreach { src =>

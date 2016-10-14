@@ -8,6 +8,7 @@ import utils.TemplateUtils
 import scala.scalajs.js
 
 object RowDetailManager {
+  private[this] var activeTable: Option[String] = None
   private[this] var activePk: Seq[String] = Nil
   private[this] var activeData: Seq[(QueryResult.Col, String)] = Nil
 
@@ -22,7 +23,8 @@ object RowDetailManager {
     TemplateUtils.clickHandler(linkOk, jq => close())
   }
 
-  def show(pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {
+  def show(table: String, pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {
+    activeTable = Some(table)
     activePk = pk
     activeData = data
 
@@ -37,7 +39,10 @@ object RowDetailManager {
   }
 
   def edit() = {
-    utils.Logging.info("Edit!")
+    val keyData = activePk.flatMap { col =>
+      activeData.find(_._1.name.compareToIgnoreCase(col) == 0).map(_._2)
+    }
+    utils.Logging.info(s"Edit: [${activeTable.getOrElse("?")}] (${activePk.mkString(", ")}) = ${keyData.mkString(", ")}")
   }
 
   def close() = {

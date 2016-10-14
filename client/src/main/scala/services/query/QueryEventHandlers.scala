@@ -54,6 +54,9 @@ object QueryEventHandlers {
   }
 
   private[this] def dataClickHandler(jq: JQuery, result: QueryResult) = {
+    val table = result.source.map(_.name).getOrElse("?")
+    val pk = result.columns.filter(_.primaryKey).map(_.name)
+
     var tdData = Seq.empty[String]
     $("td", jq.parent().parent()).map { e: dom.Element =>
       val v = $(e).data("v").toString
@@ -62,8 +65,7 @@ object QueryEventHandlers {
       }
     }
     val data = result.columns.zip(tdData)
-    val pk = data.filter(_._1.primaryKey).map(_._1.name)
-    utils.Logging.info(s"Showing row [X] (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
-    RowDetailManager.show(pk, data)
+    utils.Logging.info(s"Showing [$table] row (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
+    RowDetailManager.show(table, pk, data)
   }
 }

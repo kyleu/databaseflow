@@ -35,28 +35,28 @@ object DataTableTemplate {
     }
   }
 
-  def tableRows(res: QueryResult, resultId: UUID, containsRowNum: Boolean) = {
+  def tableRows(res: QueryResult, key: String, resultId: UUID, containsRowNum: Boolean) = {
     val offset = res.source.map(_.dataOffset + 1).getOrElse(1)
     val actions = td(a(cls := "view-row-link theme-text", href := "")(i(cls := s"fa ${Icons.show}")))
     if (containsRowNum) {
-      res.data.map(r => tr(cls := s"result-$resultId")(
+      res.data.map(r => tr(cls := s"result-$resultId $key")(
         res.columns.zip(r).map(x => DataCellTemplate.cellValue(x._1, x._2)) :+ actions
       ))
     } else {
-      res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId")(
+      res.data.zipWithIndex.map(r => tr(cls := s"result-$resultId $key")(
         td(cls := "row-num-col")(em((r._2 + offset).toString)) +: res.columns.zip(r._1).map(x => DataCellTemplate.cellValue(x._1, x._2)) :+ actions
       ))
     }
   }
 
-  def forResults(res: QueryResult, resultId: UUID) = if (res.columns.isEmpty || res.data.isEmpty) {
+  def forResults(res: QueryResult, key: String, resultId: UUID) = if (res.columns.isEmpty || res.data.isEmpty) {
     em(Messages("query.no.rows.returned"))
   } else {
     val containsRowNum = res.columns.headOption.exists(_.name == "#")
     div(cls := "query-result-table")(
       table(cls := "bordered highlight responsive-table")(
         tableHeader(res, containsRowNum),
-        tbody(tableRows(res, resultId, containsRowNum))
+        tbody(tableRows(res, key, resultId, containsRowNum))
       )
     )
   }

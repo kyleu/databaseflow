@@ -7,10 +7,11 @@ import models.template.{Icons, StaticPanelTemplate}
 import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
 import utils.{Messages, NumberUtils, TemplateUtils}
 
+import scala.util.Random
 import scalatags.Text.all._
 
 object QueryResultsTemplate {
-  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, resultId: UUID, chartId: UUID) = {
+  def forQueryResults(qr: QueryResult, dateIsoString: String, durationMs: Int, key: String, resultId: UUID, chartId: UUID) = {
     val hasFilter = !(qr.isStatement || qr.data.isEmpty || qr.source.isEmpty)
 
     val sqlPre = div(cls := "z-depth-1 query-result-sql")(
@@ -18,7 +19,7 @@ object QueryResultsTemplate {
     )
 
     val dataPanel = div(cls := "results-data-panel")(
-      DataTableTemplate.forResults(qr, resultId),
+      DataTableTemplate.forResults(qr, key, resultId),
       em(cls := "right")(
         s"${NumberUtils.withCommas(qr.rowsAffected)} ",
         span(cls := "total-row-count"),
