@@ -12,9 +12,9 @@ import utils.{DateUtils, JdbcUtils}
 object CachedResultQueries extends BaseQueries[CachedResult] {
   override protected val tableName = "query_results"
   override protected val columns = Seq(
-    "id", "query_id", "connection_id", "owner", "status", "sql", "columns", "rows", "first_message", "duration", "last_accessed", "created"
+    "id", "query_id", "connection_id", "owner", "status", "source", "sql", "columns", "rows", "first_message", "duration", "last_accessed", "created"
   )
-  override protected val searchColumns = Seq("id", "query_id", "connection_id", "status", "sql")
+  override protected val searchColumns = Seq("id", "query_id", "connection_id", "status", "source", "sql")
 
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
@@ -51,6 +51,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
     connectionId = row.as[UUID]("connection_id"),
     owner = row.as[UUID]("owner"),
     status = row.as[String]("status"),
+    source = row.asOpt[String]("sql"),
     sql = JdbcHelper.stringVal(row.as[Any]("sql")),
     columns = row.as[Int]("columns"),
     rows = row.as[Int]("rows"),
@@ -62,7 +63,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
 
   override protected def toDataSeq(q: CachedResult) = Seq[Any](
     q.resultId, q.queryId, q.connectionId, q.owner, q.status,
-    q.sql, q.columns, q.rows, q.duration, q.firstMessage,
+    q.source, q.sql, q.columns, q.rows, q.duration, q.firstMessage,
     new Timestamp(DateUtils.toMillis(q.lastAccessed)), new Timestamp(DateUtils.toMillis(q.created))
   )
 }

@@ -11,6 +11,7 @@ case class CachedResult(
     connectionId: UUID,
     owner: UUID,
     status: String = "starting",
+    source: Option[String],
     sql: String,
     columns: Int = 0,
     rows: Int = 0,

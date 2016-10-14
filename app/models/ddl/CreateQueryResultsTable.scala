@@ -8,6 +8,7 @@ case object CreateQueryResultsTable extends CreateTableStatement("query_results"
       "connection_id" uuid not null,
       "owner" uuid,
       "status" $varchar(32),
+      "source" $varchar(128),
       "sql" text,
       "columns" int not null default 0,
       "rows" int not null default 0,

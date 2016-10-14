@@ -91,6 +91,7 @@ object Dependencies {
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
+    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.1"
   }
 
   object Testing {

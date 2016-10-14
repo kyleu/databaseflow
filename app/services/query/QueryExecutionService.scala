@@ -7,6 +7,7 @@ import akka.actor.ActorRef
 import models._
 import models.audit.AuditType
 import models.database.Queryable
+import models.parse.StatementParser
 import models.queries.result.CachedResultQueries
 import models.query.{QueryResult, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
@@ -40,7 +41,7 @@ object QueryExecutionService extends Logging {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql._1, startMs, resultId, sql._2) { () =>
-        val model = CachedResult(resultId, queryId, connId, owner, sql = sql._1)
+        val model = CachedResult(resultId, queryId, connId, owner, source = StatementParser.sourceFor(sql._1), sql = sql._1)
         if (sql._2 == 0) {
           MasterDatabase.query(CachedResultQueries.findBy(queryId, owner)).foreach { existing =>
             Future(CachedResultService.remove(existing.resultId))
@@ -53,14 +54,10 @@ object QueryExecutionService extends Logging {
 
         val durationMs = (DateUtils.nowMillis - startMs).toInt
         result match {
-          case Left(rowCount) => rowCount
-          case Right(i) => QueryResultResponse(resultId, sql._2, QueryResult(
-            queryId = queryId,
-            sql = sql._1,
-            isStatement = true,
-            rowsAffected = i,
-            occurred = startMs
-          ), durationMs)
+          case Left(rm) => rm
+          case Right(rowCount) =>
+            val qr = QueryResult(queryId = queryId, sql = sql._1, isStatement = true, rowsAffected = rowCount, occurred = startMs)
+            QueryResultResponse(resultId, sql._2, qr, durationMs)
         }
       }
     }
@@ -68,11 +65,11 @@ object QueryExecutionService extends Logging {
     def onSuccess(rm: ResponseMessage) = {
       activeQueries.remove(resultId)
       rm match {
-        case m: QueryResultResponse =>
-          val newType = if (m.result.isStatement) { AuditType.Execute } else { AuditType.Query }
-          AuditRecordService.complete(auditId, newType, m.result.rowsAffected, (DateUtils.nowMillis - startMs).toInt)
-        case m: QueryResultRowCount => AuditRecordService.complete(auditId, AuditType.Query, m.count, (DateUtils.nowMillis - startMs).toInt)
-        case m: QueryErrorResponse => AuditRecordService.error(auditId, m.error.message, (DateUtils.nowMillis - startMs).toInt)
+        case qrr: QueryResultResponse =>
+          val newType = if (qrr.result.isStatement) { AuditType.Execute } else { AuditType.Query }
+          AuditRecordService.complete(auditId, newType, qrr.result.rowsAffected, (DateUtils.nowMillis - startMs).toInt)
+        case qrrc: QueryResultRowCount => AuditRecordService.complete(auditId, AuditType.Query, qrrc.count, (DateUtils.nowMillis - startMs).toInt)
+        case qer: QueryErrorResponse => AuditRecordService.error(auditId, qer.error.message, (DateUtils.nowMillis - startMs).toInt)
         case _ => throw new IllegalStateException(rm.getClass.getSimpleName)
       }
       out ! rm
