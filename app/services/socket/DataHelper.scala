@@ -5,43 +5,16 @@ import java.util.UUID
 import models._
 import models.engine.EngineQueries
 import models.queries.dynamic.DynamicQuery
+import models.queries.result.CachedResultQueries
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.{ForeignKey, PrimaryKey}
 import services.database.DatabaseWorkerPool
-import services.database.core.ResultCacheDatabase
+import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.SchemaService
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 trait DataHelper extends Logging { this: SocketService =>
-  protected[this] def handleGetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = key match {
-    case "table" => handleGetTableRowData(queryId, name, options, resultId)
-    case "view" => handleGetViewRowData(queryId, name, options, resultId)
-    case "cache" => handleGetCacheRowData(queryId, name, options, resultId)
-  }
-
-  private[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
-    SchemaService.getTable(connectionId, name) match {
-      case Some(table) => handleShowDataResponse(queryId, "table", table.name, table.primaryKey, table.foreignKeys, options, resultId, cacheDb = false)
-      case None =>
-        log.warn(s"Attempted to show data for invalid table [$name].")
-        out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
-    }
-  }
-
-  private[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
-    SchemaService.getView(connectionId, name) match {
-      case Some(view) => handleShowDataResponse(queryId, "view", view.name, None, Nil, options, resultId, cacheDb = false)
-      case None =>
-        log.warn(s"Attempted to show data for invalid view [$name].")
-        out ! ServerError("Invalid View", s"[$name] is not a valid view.")
-    }
-  }
-
-  private[this] def handleGetCacheRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
-    handleShowDataResponse(queryId, "cache", name, None, Nil, options, resultId, cacheDb = true)
-  }
-
-  private[this] def handleShowDataResponse(
+  protected[this] def handleShowDataResponse(
     queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID, cacheDb: Boolean
   ) = {
     def work() = {
@@ -68,10 +41,10 @@ trait DataHelper extends Logging { this: SocketService =>
           }
         }
         val columnsWithRelations = columnsWithPrimaryKey.map { col =>
-          keys.find(_.references.exists(_.source == col.name)) match {
+          keys.find(_.references.exists(_.source.compareToIgnoreCase(col.name) == 0)) match {
             case Some(fk) => col.copy(
               relationTable = Some(fk.targetTable),
-              relationColumn = fk.references.find(_.source == col.name).map(_.target)
+              relationColumn = fk.references.find(_.source.compareToIgnoreCase(col.name) == 0).map(_.target)
             )
             case None => col
           }

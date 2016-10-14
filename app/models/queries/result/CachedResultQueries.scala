@@ -51,7 +51,7 @@ object CachedResultQueries extends BaseQueries[CachedResult] {
     connectionId = row.as[UUID]("connection_id"),
     owner = row.as[UUID]("owner"),
     status = row.as[String]("status"),
-    source = row.asOpt[String]("sql"),
+    source = row.asOpt[String]("source"),
     sql = JdbcHelper.stringVal(row.as[Any]("sql")),
     columns = row.as[Int]("columns"),
     rows = row.as[Int]("rows"),

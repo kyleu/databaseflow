@@ -28,8 +28,9 @@ object MetadataKeys {
   def getForeignKeys(metadata: DatabaseMetaData, table: Table) = {
     val rs = metadata.getImportedKeys(table.catalog.orNull, table.schema.orNull, table.name)
 
-    val rows = new Row.Iter(rs).map(fromRow).toList.groupBy(_._1)
-    rows.map { row =>
+    val rows = new Row.Iter(rs).map(fromRow).toList
+    val grouped = rows.groupBy(_._1)
+    grouped.map { row =>
       val first = row._2.headOption.getOrElse(throw new IllegalStateException("Missing column info."))
       ForeignKey(
         name = first._1,
@@ -50,9 +51,12 @@ object MetadataKeys {
   }
 
   private[this] def fromRow(row: Row) = {
-    val name = row.as[String]("fk_name")
     val targetTable = row.as[String]("pktable_name")
     val targetColumn = row.as[String]("pkcolumn_name")
+    val name = row.as[String]("fk_name") match {
+      case x if x.isEmpty => targetTable + "." + targetColumn
+      case x => x
+    }
     val sourceColumn = row.as[String]("fkcolumn_name")
     val order = JdbcHelper.intVal(row.as[Any]("key_seq"))
     val updateRule = ruleFor(row.asOpt[Any]("update_rule").fold(DatabaseMetaData.importedKeySetNull)(JdbcHelper.intVal))
