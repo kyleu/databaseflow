@@ -83,6 +83,11 @@ object Dependencies {
     val stripe = "com.stripe" % "stripe-java" % stripeVersion
   }
 
+  object ScalaJS {
+    val scalaTagsVersion = "0.6.1"
+    val jQueryVersion = "0.9.0"
+  }
+
   object Utils {
     val scapegoatVersion = "1.2.1"
     val enumeratumVersion = "1.4.15"
