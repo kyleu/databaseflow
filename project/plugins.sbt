@@ -18,7 +18,7 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.13")
 addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.0" exclude("org.scala-js", "sbt-scalajs"))
 
 // Dependency Resolution
-addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M14")
+addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M14-3")
 
 // App Packaging
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.2")
