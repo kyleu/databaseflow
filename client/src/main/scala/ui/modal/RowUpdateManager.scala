@@ -36,6 +36,11 @@ object RowUpdateManager {
     activeColumns = Some(columns)
     val html = RowUpdateTemplate.forColumns(name, columns)
     modalContent.html(html.render)
+    TemplateUtils.keyUpHandler($(".insert-row-input", modalContent), (jq, i) => {
+      if (jq.value().toString.nonEmpty) {
+        $(s"#insert-row-toggle-${jq.data("col")}").attr("checked", "checked")
+      }
+    })
     modal.openModal()
   }
 
