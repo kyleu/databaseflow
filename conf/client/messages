@@ -68,6 +68,7 @@ query.no.rows.returned = No rows returned
 query.insert = Add New Row
 query.insert.title = New [{0}] Row
 query.update.title = Edit [{0}] Row ({1})
+query.open.query = New Query
 query.view.first = View First 100 Rows
 query.load.more = Load {0} More Rows
 query.no.more.rows = No more rows available

@@ -50,6 +50,9 @@ object ViewManager extends ViewDetailHelper {
       TemplateUtils.clickHandler($(".view-data-link", queryPanel), jq => {
         RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
       })
+      TemplateUtils.clickHandler($(".query-open-link", queryPanel), jq => {
+        AdHocQueryManager.addAdHocQuery(UUID.randomUUID, "Query Name", "select * from something")
+      })
 
       def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, jq => {
         val resultId = UUID.randomUUID

@@ -3,6 +3,7 @@ package ui.query
 import java.util.UUID
 
 import models.GetTableDetail
+import models.engine.EngineQueries
 import models.query.RowDataOptions
 import models.schema.Table
 import models.template._
@@ -57,6 +58,10 @@ object TableManager extends TableDetailHelper {
             }
           )
           RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
+        })
+        TemplateUtils.clickHandler($(".query-open-link", queryPanel), jq => {
+          val (sql, values) = EngineQueries.selectFrom(name, options)(MetadataManager.engine.getOrElse(throw new IllegalStateException()))
+          AdHocQueryManager.addAdHocQuery(UUID.randomUUID, name + " Data", sql)
         })
 
         TemplateUtils.clickHandler($(".insert-data-link", queryPanel), jq => {

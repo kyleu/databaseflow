@@ -10,6 +10,7 @@ import scalatags.Text.all._
 
 object ViewDetailTemplate {
   private[this] def linksFor(engine: DatabaseEngine) = Seq(
+    Some(a(cls := "query-open-link theme-text right", href := "#")(Messages("query.open.query"))),
     Some(a(cls := "view-data-link theme-text", href := "#")(Messages("query.view.first"))),
     if (engine.cap.explain.isDefined) { Some(a(cls := "explain-view-link theme-text", href := "#")(Messages("query.explain"))) } else { None },
     if (engine.cap.analyze.isDefined) { Some(a(cls := "analyze-view-link theme-text", href := "#")(Messages("query.analyze"))) } else { None }
