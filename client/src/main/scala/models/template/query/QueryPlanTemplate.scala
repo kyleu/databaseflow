@@ -26,7 +26,7 @@ object QueryPlanTemplate {
       pre(cls := "plan-raw pre-wrap")(pr.result.raw)
     )
 
-    StaticPanelTemplate.cardRow(
+    StaticPanelTemplate.card(
       content = content,
       iconAndTitle = Some(Icons.queryPlan -> span(Messages("query.plan"))),
       actions = Seq(

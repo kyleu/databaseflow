@@ -23,14 +23,14 @@ object RowDetailManager {
     TemplateUtils.clickHandler(linkOk, jq => close())
   }
 
-  def show(table: String, pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {
-    activeTable = Some(table)
+  def show(table: Option[String], pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {
+    activeTable = table
     activePk = pk
     activeData = data
 
     val html = RowDetailTemplate.forData(data)
     modalContent.html(html.render)
-    if (pk.isEmpty) {
+    if (table.isEmpty || pk.isEmpty) {
       linkEdit.hide()
     } else {
       linkEdit.show()

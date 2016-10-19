@@ -30,7 +30,7 @@ object ProcedureDetailTemplate {
     //div(cls := "clear")
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.panelRow(content, iconAndTitle = Some(Icons.procedure -> span(procedureName)), actions = actions),
+      StaticPanelTemplate.row(StaticPanelTemplate.panel(content, iconAndTitle = Some(Icons.procedure -> span(procedureName)), actions = actions)),
       div(id := s"workspace-$queryId")
     )
   }

@@ -7,7 +7,6 @@ import models.template.{Icons, StaticPanelTemplate}
 import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
 import utils.{Messages, NumberUtils, TemplateUtils}
 
-import scala.util.Random
 import scalatags.Text.all._
 
 object QueryResultsTemplate {
@@ -38,49 +37,42 @@ object QueryResultsTemplate {
       )
     )
 
-    val content = if (hasFilter) {
-      div(id := s"$resultId")(
-        QueryFilterTemplate.activeFilterPanel(qr),
-        div(
-          a(href := "#", cls := "results-share-link results-nav-link right theme-text", title := Messages("query.share"))(
-            i(cls := s"fa ${Icons.sharedResult}")
-          ),
-          a(href := "#", cls := "results-export-link results-nav-link right theme-text", title := Messages("query.export"))(i(cls := s"fa ${Icons.download}")),
-          a(href := "#", cls := "results-filter-link results-nav-link right theme-text", title := Messages("th.filter"))(i(cls := s"fa ${Icons.filter}")),
-          a(href := "#", cls := "results-sql-link results-nav-link right theme-text", title := Messages("th.sql"))(i(cls := s"fa ${Icons.procedure}")),
-          div(cls := "left")(
-            div(cls := "switch")(
-              label(
-                Messages("query.data"),
-                input(cls := "results-chart-toggle", `type` := "checkbox"),
-                span(cls := "lever"),
-                Messages("query.chart")
-              )
-            )
-          )
-        ),
-        div(cls := "clear"),
-        DataFilterTemplate.forResults(qr, resultId),
-        sqlPre,
-        dataPanel,
-        ChartResultTemplate.forChartResults(chartId)
-      )
-    } else {
-      div(id := s"$resultId")(
-        QueryFilterTemplate.activeFilterPanel(qr),
-        div(
-          a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql"))
-        ),
-        div(cls := "clear"),
-        sqlPre,
-        dataPanel,
-        ChartResultTemplate.forChartResults(chartId)
-      )
-    }
+    val content = div(id := s"$resultId")(
+      QueryFilterTemplate.activeFilterPanel(qr),
+      queryFilterContent(hasFilter),
+      div(cls := "clear"),
+      if (hasFilter) { DataFilterTemplate.forResults(qr, resultId) } else { div() },
+      sqlPre,
+      dataPanel,
+      ChartResultTemplate.forChartResults(chartId)
+    )
 
-    StaticPanelTemplate.cardRow(
-      content = content,
-      showClose = false
+    //StaticPanelTemplate.cardRow(content = content, showClose = false)
+    content
+  }
+
+  private[this] def queryFilterContent(hasFilter: Boolean) = if (hasFilter) {
+    div(
+      a(href := "#", cls := "results-share-link results-nav-link right theme-text", title := Messages("query.share"))(
+        i(cls := s"fa ${Icons.sharedResult}")
+      ),
+      a(href := "#", cls := "results-export-link results-nav-link right theme-text", title := Messages("query.export"))(i(cls := s"fa ${Icons.download}")),
+      a(href := "#", cls := "results-filter-link results-nav-link right theme-text", title := Messages("th.filter"))(i(cls := s"fa ${Icons.filter}")),
+      a(href := "#", cls := "results-sql-link results-nav-link right theme-text", title := Messages("th.sql"))(i(cls := s"fa ${Icons.procedure}")),
+      div(cls := "left")(
+        div(cls := "switch")(
+          label(
+            Messages("query.data"),
+            input(cls := "results-chart-toggle", `type` := "checkbox"),
+            span(cls := "lever"),
+            Messages("query.chart")
+          )
+        )
+      )
+    )
+  } else {
+    div(
+      a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql"))
     )
   }
 }

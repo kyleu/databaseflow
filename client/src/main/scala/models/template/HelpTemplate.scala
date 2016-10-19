@@ -9,22 +9,18 @@ object HelpTemplate {
     val (globalShortcuts, nonGlobalShortcuts) = KeyboardShortcut.values.partition(_.isGlobal)
 
     val content = div(
-      div(cls := "row")(
-        div(cls := "col s12")(
-          div(cls := "z-depth-1 help-panel")(
-            h5(Messages("help.tips.and.tricks")),
-            div(id := "tip-detail")(Messages("general.loading")),
-            div(
-              div(cls := "left")(a(cls := "previous-tip-link theme-text", href := "")(Messages("general.previous"))),
-              div(cls := "right")(a(cls := "next-tip-link theme-text", href := "")(Messages("general.next"))),
-              div(style := "clear: both;")
-            )
-          )
+      div(cls := "z-depth-1 help-panel")(
+        h5(Messages("help.tips.and.tricks")),
+        div(id := "tip-detail")(Messages("general.loading")),
+        div(
+          div(cls := "left")(a(cls := "previous-tip-link theme-text", href := "")(Messages("general.previous"))),
+          div(cls := "right")(a(cls := "next-tip-link theme-text", href := "")(Messages("general.next"))),
+          div(style := "clear: both;")
         )
       ),
       div(cls := "row")(
         div(cls := "col s12 m6")(
-          div(cls := "z-depth-1 help-panel")(
+          div(cls := "help-panel")(
             h5(Messages("help.global.shortcuts")),
             table(cls := "bordered highlight")(
               tbody(
@@ -34,7 +30,7 @@ object HelpTemplate {
           )
         ),
         div(cls := "col s12 m6")(
-          div(cls := "z-depth-1 help-panel")(
+          div(cls := "help-panel")(
             h5(Messages("help.editor.shortcuts")),
             table(cls := "bordered highlight")(
               tbody(
@@ -44,16 +40,12 @@ object HelpTemplate {
           )
         )
       ),
-      div(cls := "row")(
-        div(cls := "col s12")(
-          div(cls := "z-depth-1 help-panel")(
-            h5(Messages("th.connection")),
-            div(cls := "connection-status")()
-          )
-        )
+      div(cls := "z-depth-1 help-panel")(
+        h5(Messages("th.connection")),
+        div(cls := "connection-status")()
       )
     )
-    StaticPanelTemplate.panelRow(content, iconAndTitle = Some(Icons.help -> span(Messages("help.title", utils.Config.projectName))))
+    StaticPanelTemplate.row(StaticPanelTemplate.panel(content, iconAndTitle = Some(Icons.help -> span(Messages("help.title", utils.Config.projectName)))))
   }
 
   private[this] def patternToRow(s: KeyboardShortcut) = tr(td(s.pattern), td(Messages("help.hotkey." + s.key)))

@@ -1,19 +1,12 @@
 package models.template
 
-import java.util.UUID
-
 import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 object StaticPanelTemplate {
-  def panel(queryId: UUID, title: TypedTag[String], content: TypedTag[String], icon: String) = {
-    div(id := s"panel-$queryId", cls := "workspace-panel")(
-      cardRow(content, Some(icon -> title)),
-      div(id := s"workspace-$queryId")
-    )
-  }
+  def row(t: TypedTag[String]) = div(cls := "row")(div(cls := "col s12")(t))
 
-  def cardRow(
+  def card(
     content: TypedTag[String],
     iconAndTitle: Option[(String, TypedTag[String])] = None,
     actions: Seq[TypedTag[String]] = Nil,
@@ -38,18 +31,14 @@ object StaticPanelTemplate {
       Some(div(cls := "content")(content))
     ).flatten: _*)
 
-    div(cls := "row")(
-      div(cls := "col s12")(
-        div(cls := "card")(if (actions.isEmpty) {
-          Seq(cardContent)
-        } else {
-          Seq(cardContent, div(cls := "card-action")(actions))
-        })
-      )
-    )
+    div(cls := "card")(if (actions.isEmpty) {
+      Seq(cardContent)
+    } else {
+      Seq(cardContent, div(cls := "card-action")(actions))
+    })
   }
 
-  def panelRow(
+  def panel(
     content: TypedTag[String],
     iconAndTitle: Option[(String, TypedTag[String])] = None,
     actions: Seq[TypedTag[String]] = Nil,
@@ -74,14 +63,10 @@ object StaticPanelTemplate {
       Some(div(cls := "content")(content))
     ).flatten: _*)
 
-    div(cls := "row")(
-      div(cls := "col s12")(
-        div(cls := "content-panel")(if (actions.isEmpty) {
-          Seq(panelContent)
-        } else {
-          Seq(panelContent, div(cls := "panel-action")(actions))
-        })
-      )
-    )
+    div(cls := "content-panel")(if (actions.isEmpty) {
+      Seq(panelContent)
+    } else {
+      Seq(panelContent, div(cls := "panel-action")(actions))
+    })
   }
 }

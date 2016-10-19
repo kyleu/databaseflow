@@ -46,7 +46,7 @@ object QueryEditorTemplate {
 
   private[this] def queryPanel(queryId: UUID, queryName: String, sql: String, icon: String, links: Seq[TypedTag[String]]) = {
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.panelRow(
+      StaticPanelTemplate.row(StaticPanelTemplate.panel(
         content = div(
           div(id := s"sql-textarea-$queryId", cls := "sql-textarea")(sql),
           div(cls := "sql-parameters initially-hidden")
@@ -55,7 +55,7 @@ object QueryEditorTemplate {
           icon -> span(span(cls := "query-title")(queryName), span(cls := "unsaved-status", title := Messages("query.unsaved.changes"))("*"))
         ),
         actions = links
-      ),
+      )),
       div(id := s"workspace-$queryId")
     )
   }

@@ -57,8 +57,8 @@ object EngineQueries {
             val split = fVal.split(',').toSeq
             " (" + split.map(s => "?").mkString(", ") + ")" -> split.map(s => parse(t, s))
           case FilterOp.IsNull | FilterOp.IsNotNull => "" -> Nil
-          case FilterOp.Like if !fVal.contains('%') => s" ?" -> Seq(parse(t, s"%$fVal%"))
-          case _ => s" ?" -> Seq(fVal)
+          case FilterOp.Like if !fVal.contains('%') => " ?" -> Seq(parse(t, s"%$fVal%"))
+          case _ => " ?" -> Seq(fVal)
         }
         val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
         s" where ${engine.cap.leftQuote}$col${engine.cap.rightQuote} ${op.sqlSymbol}$q$additions" -> v

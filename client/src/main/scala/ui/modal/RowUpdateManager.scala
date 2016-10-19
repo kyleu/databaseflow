@@ -51,9 +51,9 @@ object RowUpdateManager {
     modal.closeModal()
   }
 
-  def handleInsertRowResponse(resultId: UUID, errors: Map[String, String]) = {
+  def handleInsertRowResponse(errors: Map[String, String]) = {
     if (errors.isEmpty) {
-      NotificationService.info("Row Inserted", s"Added one new row.")
+      NotificationService.info("Row Inserted", "Added one new row.")
       close()
     } else {
       $(".insert-row-error", modal).hide()

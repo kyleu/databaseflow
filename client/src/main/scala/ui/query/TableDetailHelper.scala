@@ -2,7 +2,8 @@ package ui.query
 
 import java.util.UUID
 
-import models.schema.Table
+import models.query.RowDataOptions
+import models.schema.{ColumnType, FilterOp, Table}
 import models.template.tbl.{TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import utils.{Logging, NumberUtils}
@@ -53,5 +54,31 @@ trait TableDetailHelper {
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
     Logging.debug(s"Table [${table.name}] loaded.")
+  }
+
+  def forString(id: String) = id.indexOf("::") match {
+    case -1 => TableManager.tableDetail(id, RowDataOptions.empty)
+    case x =>
+      val name = id.substring(0, x)
+      val filter = id.substring(x + 2).split('=')
+      val options = if (filter.length > 1) {
+        val remaining = filter.tail.mkString("=").split(":")
+        val first = remaining.headOption.getOrElse(throw new IllegalStateException())
+        val (t, v) = if (remaining.size == 1) {
+          ColumnType.StringType -> first
+        } else {
+          ColumnType.withName(first) -> remaining.tail.mkString(":")
+        }
+        RowDataOptions(
+          filterCol = filter.headOption,
+          filterOp = Some(FilterOp.Equal),
+          filterType = Some(t),
+          filterVal = Some(v)
+        )
+      } else {
+        Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
+        RowDataOptions.empty
+      }
+      TableManager.tableDetail(name, options)
   }
 }

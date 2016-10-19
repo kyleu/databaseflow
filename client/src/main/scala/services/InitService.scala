@@ -4,8 +4,6 @@ import java.net.URLDecoder
 import java.util.UUID
 
 import models.RequestMessage
-import models.query.RowDataOptions
-import models.schema.{ColumnType, FilterOp}
 import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import services.query.TransactionService
@@ -68,31 +66,7 @@ object InitService {
       case ("new", Some(id)) => AdHocQueryManager.addNewQuery(queryId = UUID.fromString(id))
       case ("saved-query", Some(id)) => SavedQueryManager.savedQueryDetail(UUID.fromString(id))
       case ("shared-result", Some(id)) => SharedResultManager.sharedResultDetail(UUID.fromString(id))
-      case ("table", Some(id)) => id.indexOf("::") match {
-        case -1 => TableManager.tableDetail(id, RowDataOptions.empty)
-        case x =>
-          val name = id.substring(0, x)
-          val filter = id.substring(x + 2).split('=')
-          val options = if (filter.length > 1) {
-            val remaining = filter.tail.mkString("=").split(":")
-            val first = remaining.headOption.getOrElse(throw new IllegalStateException())
-            val (t, v) = if (remaining.size == 1) {
-              ColumnType.StringType -> first
-            } else {
-              ColumnType.withName(first) -> remaining.tail.mkString(":")
-            }
-            RowDataOptions(
-              filterCol = filter.headOption,
-              filterOp = Some(FilterOp.Equal),
-              filterType = Some(t),
-              filterVal = Some(v)
-            )
-          } else {
-            Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
-            RowDataOptions.empty
-          }
-          TableManager.tableDetail(name, options)
-      }
+      case ("table", Some(id)) => TableManager.forString(id)
       case ("view", Some(id)) => ViewManager.viewDetail(id)
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
       case ("sql", Some(sql)) => AdHocQueryManager.addNewQuery(initialSql = Some(URLDecoder.decode(sql, "UTF-8")))

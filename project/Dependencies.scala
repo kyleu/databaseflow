@@ -63,7 +63,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.4.2"
+    val version = "0.4.3"
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 

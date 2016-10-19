@@ -22,7 +22,7 @@ object QueryErrorTemplate {
       }
     )
 
-    StaticPanelTemplate.cardRow(
+    StaticPanelTemplate.card(
       content = content,
       showClose = false
     )
@@ -35,7 +35,7 @@ object QueryErrorTemplate {
       p(cls := "")(pe.error.message)
     )
 
-    StaticPanelTemplate.cardRow(
+    StaticPanelTemplate.card(
       content = content,
       iconAndTitle = Some(Icons.error -> span(Messages("query.plan.error"))),
       showClose = false

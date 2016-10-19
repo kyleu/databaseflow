@@ -32,7 +32,7 @@ object ViewDetailTemplate {
     )
 
     div(id := s"panel-$queryId", cls := "workspace-panel")(
-      StaticPanelTemplate.panelRow(content, iconAndTitle = Some(Icons.view -> span(tableName)), actions = linksFor(engine)),
+      StaticPanelTemplate.row(StaticPanelTemplate.panel(content, iconAndTitle = Some(Icons.view -> span(tableName)), actions = linksFor(engine))),
       div(id := s"workspace-$queryId")
     )
   }

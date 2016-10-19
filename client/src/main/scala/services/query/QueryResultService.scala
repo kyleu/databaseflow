@@ -28,7 +28,7 @@ object QueryResultService {
     ProgressManager.completeProgress(result.queryId, resultId, index, content)
 
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
-    val resultEl = $(s"." + key, panel)
+    val resultEl = $("." + key, panel)
     QueryEventHandlers.wireResults(resultEl, result)
 
     result.source.foreach { src =>

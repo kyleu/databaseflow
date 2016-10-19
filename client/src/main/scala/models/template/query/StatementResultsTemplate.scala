@@ -19,7 +19,7 @@ object StatementResultsTemplate {
       )
     )
 
-    StaticPanelTemplate.cardRow(
+    StaticPanelTemplate.card(
       content = content,
       showClose = false
     )
