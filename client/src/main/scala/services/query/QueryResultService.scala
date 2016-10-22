@@ -2,14 +2,12 @@ package services.query
 
 import java.util.UUID
 
+import models.query.QueryResult
 import models.query.QueryResult.Source
-import models.query.{QueryResult, RowDataOptions}
-import models.schema.FilterOp
 import models.template.query.QueryResultsTemplate
 import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import ui.modal.RowDetailManager
-import ui.query.{FilterManager, RowDataManager, TableManager}
+import ui.query.{FilterManager, RowDataManager}
 import ui.{ProgressManager, TabManager}
 import utils.{Config, Logging, TemplateUtils}
 
@@ -52,7 +50,7 @@ object QueryResultService {
     }
 
     dom.document.getElementById(resultId.toString).scrollIntoView()
-    dom.window.scrollBy(0, if (TabManager.tabCount == 1) { -50 } else { -100 })
+    dom.window.scrollBy(0, if (TabManager.tabCount == 1) { -46 } else { -96 })
   }
 
   private[this] def onComplete(result: QueryResult, src: Source, panel: JQuery, resultId: UUID) = {

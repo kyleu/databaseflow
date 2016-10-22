@@ -1,8 +1,8 @@
 import models._
 import services._
 import services.query._
-import ui.modal.RowUpdateManager
-import ui.{HistoryManager, UserManager}
+import _root_.ui.modal.RowUpdateManager
+import _root_.ui.{HistoryManager, UserManager}
 import utils.{Logging, NetworkMessage}
 
 trait ResponseMessageHelper { this: DatabaseFlow =>

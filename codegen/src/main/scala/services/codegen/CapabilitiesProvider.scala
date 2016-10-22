@@ -24,7 +24,7 @@ object CapabilitiesProvider {
   }
 
   def getFunctions(dialect: Dialect) = {
-    import collection.JavaConverters._
+    import scala.collection.JavaConverters._
     dialect.getFunctions.asScala.toSeq.sortBy(_._1).map { f =>
       val name = f._1
       val typ = f._2 match {
