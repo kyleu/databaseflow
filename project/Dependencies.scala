@@ -84,19 +84,19 @@ object Dependencies {
   }
 
   object ScalaJS {
-    val scalaTagsVersion = "0.6.1"
+    val scalaTagsVersion = "0.6.2"
     val jQueryVersion = "0.9.0"
   }
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.16"
+    val enumeratumVersion = "1.4.17"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
-    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.1"
+    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.2"
   }
 
   object Testing {
