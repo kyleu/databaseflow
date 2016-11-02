@@ -21,7 +21,7 @@ addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.0" exclude("org.scala-js"
 addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M14-3")
 
 // App Packaging
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.2")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.4")
 
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
 
