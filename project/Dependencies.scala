@@ -44,7 +44,7 @@ object Dependencies {
     val h2 = "com.h2database" % "h2" % "1.4.193"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.40" // 6.0 is all different
-    val postgres = "org.postgresql" % "postgresql" % "9.4.1211"
+    val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.14.2.1"
     val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
@@ -85,7 +85,7 @@ object Dependencies {
 
   object ScalaJS {
     val scalaTagsVersion = "0.6.2"
-    val jQueryVersion = "0.9.0"
+    val jQueryVersion = "0.9.1"
   }
 
   object Utils {
