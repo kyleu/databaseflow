@@ -46,7 +46,7 @@ object Dependencies {
     val mysql = "mysql" % "mysql-connector-java" % "5.1.40" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.14.2.1"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.15.1"
     val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
   }
 
@@ -55,7 +55,7 @@ object Dependencies {
   }
 
   object Export {
-    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.3"
+    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.4"
   }
 
   object Ui {
@@ -63,7 +63,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.4.3"
+    val version = "0.4.4"
     val uPickle = "com.lihaoyi" %% "upickle" % version
   }
 
@@ -90,7 +90,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.17"
+    val enumeratumVersion = "1.4.18"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
@@ -100,8 +100,9 @@ object Dependencies {
   }
 
   object Testing {
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.0" % "test"
-    val gatlingCore = "io.gatling" % "gatling-test-framework" % "2.1.7" % "test"
-    val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.1.7" % "test"
+    val gatlingVersion = "2.2.3"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+    val gatlingCore = "io.gatling" % "gatling-test-framework" % gatlingVersion % "test"
+    val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % "test"
   }
 }
