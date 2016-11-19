@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.9"
+    private[this] val version = "2.5.10"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.12"
+    private[this] val version = "2.4.13"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -47,7 +47,7 @@ object Dependencies {
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.15.1"
-    val sqlServer = "dblibs/lib/sqlserver-sqljdbc42.jar"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.0.jre8"
   }
 
   object Hibernate {
@@ -90,7 +90,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.2.1"
-    val enumeratumVersion = "1.4.18"
+    val enumeratumVersion = "1.5.1"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"

@@ -6,7 +6,7 @@ object Database {
     import Dependencies._
     Seq(
       Logging.slf4jApi, Jdbc.hikariCp,
-      Jdbc.h2, Jdbc.mysql, Jdbc.postgres, Jdbc.sqlite
+      Jdbc.h2, Jdbc.mysql, Jdbc.postgres, Jdbc.sqlite, Jdbc.sqlServer
     )
   }
 

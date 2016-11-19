@@ -15,7 +15,7 @@ object Client {
     ),
     testFrameworks += new TestFramework("utest.runner.Framework"),
     scalaJSStage in Global := FastOptStage,
-    scapegoatIgnoredFiles := Seq(".*/JsonUtils.scala", ".*/JsonSerializers.scala")
+    scapegoatIgnoredFiles := Seq(".*/Messages.scala", ".*/JsonUtils.scala", ".*/JsonSerializers.scala")
   )
 
   lazy val client = (project in file("client"))
