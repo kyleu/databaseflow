@@ -6,7 +6,7 @@ object Dependencies {
   }
 
   object Logging {
-    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.21"
+    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.22"
   }
 
   object Play {
@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.14"
+    private[this] val version = "2.4.16"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -90,7 +90,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.3.0"
-    val enumeratumVersion = "1.5.2"
+    val enumeratumVersion = "1.5.3"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
