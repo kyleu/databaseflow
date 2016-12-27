@@ -1,8 +1,8 @@
 @()(implicit messages: Messages)
-@utils.Technology.values.map { t =>
-  <div class="col s12 m4">
-    <div style="margin: 10px;padding: 10px;text-align: center;" class="z-depth-1">
-      <a href="@t.url" class="theme-text collection-item">@t.title</a>
-    </div>
+<div class="col s12">
+  <div class="collection">
+    @utils.Technology.values.map { t =>
+      <a href="@t.url" class="theme-text collection-item" target="_blank">@t.title</a>
+    }
   </div>
-}
+</div>

@@ -2,7 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
   @views.html.layout.hero(
-    title = messages("technology.hero.title"),
+    title = messages("technology.hero.title", utils.Config.projectName),
     subtitle = messages("technology.hero.subtitle1", utils.Config.projectName)
   )
   <div class="container">

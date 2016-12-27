@@ -57,7 +57,7 @@ features.hero.subtitle1 = Using streaming web technology, {0} helps you access y
 
 # Technology
 technology.hero.title = {0} relies on tremendous open source projects.
-technology.hero.subtitle1 = Here's a few of them.
+technology.hero.subtitle1 = Here''s a few of them.
 
 # Database
 database.hero.title = {0} is the best SQL client for working with {1}
