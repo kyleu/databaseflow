@@ -31,8 +31,14 @@
                 </table>
               }
               @if(license.isEmpty) {
-                <p>You have @services.licensing.LicenseService.daysRemaining days remaining in your trial. We hope you like it!</p>
-                <p>To obtain a license, head to <a class="theme-text" href="@utils.Config.projectUrl/versions" target="_blank">databaseflow.com</a>.</p>
+                @defining(services.licensing.LicenseService.daysRemaining) { remaining =>
+                  @if(remaining > 0) {
+                    <p>You have @remaining days remaining in your trial.</p>
+                  } else {
+                    <p>Your trial has expired.</p>
+                  }
+                  <p>To obtain a license, head to <a class="theme-text" href="@utils.Config.projectUrl/versions" target="_blank">databaseflow.com</a>.</p>
+                }
               }
             </div>
             <div class="input-field col s12">

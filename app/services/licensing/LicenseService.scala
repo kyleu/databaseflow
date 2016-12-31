@@ -22,7 +22,12 @@ object LicenseService extends Logging {
 
     val content = SettingsService(SettingKey.LicenseContent)
     if (content.isEmpty) {
-      log.warn(s"${utils.Config.projectName} Trial Edition started. You have $daysRemaining days remaining.")
+      val remaining = daysRemaining
+      if (remaining > 0) {
+        log.warn(s"${utils.Config.projectName} Trial Edition started. You have $remaining days remaining.")
+      } else {
+        log.warn(s"${utils.Config.projectName} has expired. Head to ${utils.Config.projectUrl} to get a license.")
+      }
       license = None
       licenseContent = None
     } else {
