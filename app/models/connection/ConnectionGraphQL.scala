@@ -10,7 +10,7 @@ import sangria.macros.derive._
 import sangria.schema._
 import services.connection.ConnectionSettingsService
 import services.database.DatabaseRegistry
-import services.query.SimpleQueryService
+import services.query.{SavedQueryService, SharedResultService, SimpleQueryService}
 import services.schema.SchemaService
 
 import scala.concurrent.Future
@@ -42,6 +42,18 @@ object ConnectionGraphQL {
         fieldType = SchemaGraphQL.schemaType,
         resolve = c => Future.successful(SchemaService.getSchemaFor(c.ctx.user, c.value))
       ),
+      Field(
+        name = "sharedResult",
+        description = Some("Returns the results that have been shared for this connection."),
+        fieldType = ListType(QueryResultGraphQL.sharedResultType),
+        resolve = c => SharedResultService.getForUser(c.ctx.user, c.value.id, None)
+      ),
+      //Field(
+      //  name = "savedQuery",
+      //  description = Some("Returns the saved queries available for this connection."),
+      //  fieldType = ListType(QueryResultGraphQL.savedQueryType),
+      //  resolve = c => SavedQueryService.getForUser(c.ctx.user, c.value.id, None)
+      //),
       Field(
         name = "query",
         description = Some("Runs the provided sql query and returns the result."),

@@ -31,8 +31,8 @@ trait StartHelper extends Logging { this: SocketService =>
       supervisor ! SocketStarted(user, id, self)
       out ! UserSettings(user.id, user.username, user.profile.providerKey, user.preferences)
 
-      SavedQueryService.getForUser(user, connectionId, out)
-      SharedResultService.getForUser(user, connectionId, out)
+      SavedQueryService.getForUser(user, connectionId, Some(out))
+      SharedResultService.getForUser(user, connectionId, Some(out))
       refreshSchema(false)
   }
 

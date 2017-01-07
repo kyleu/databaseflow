@@ -55,7 +55,7 @@ object AdHocQueryManager {
 
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val owner = UserManager.userId.getOrElse(throw new IllegalStateException())
-      val params = ParameterManager.getParamsOpt(queryId)
+      val params = ParameterManager.getParamsOpt(queryId).getOrElse(Map.empty)
       val newSql = SqlManager.getSql(queryId)
       SavedQueryFormManager.show(SavedQuery(queryId, queryName, sql = newSql, params = params, owner = owner))
     })

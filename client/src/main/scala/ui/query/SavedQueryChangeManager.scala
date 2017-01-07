@@ -38,12 +38,12 @@ trait SavedQueryChangeManager {
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = SqlManager.getSql(savedQuery.id),
-      params = ParameterManager.getParamsOpt(savedQuery.id)
+      params = ParameterManager.getParamsOpt(savedQuery.id).getOrElse(Map.empty)
     )))
     TemplateUtils.clickHandler($(".save-query-link", queryPanel), jq => {
       val newSavedQuery = savedQuery.copy(
         sql = SqlManager.getSql(savedQuery.id),
-        params = ParameterManager.getParamsOpt(savedQuery.id)
+        params = ParameterManager.getParamsOpt(savedQuery.id).getOrElse(Map.empty)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })
@@ -66,6 +66,6 @@ trait SavedQueryChangeManager {
       SqlManager.updateLinks(savedQuery.id, runQueryLink, runQueryAllLink)
     }
 
-    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, savedQuery.sql, savedQuery.params.getOrElse(Map.empty), onChange)
+    QueryManager.addQuery(savedQuery.id, savedQuery.name, queryPanel, savedQuery.sql, savedQuery.params, onChange)
   }
 }

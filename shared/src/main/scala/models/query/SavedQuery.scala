@@ -9,7 +9,7 @@ case class SavedQuery(
   name: String = "Untitled Query",
   description: Option[String] = None,
   sql: String = "",
-  params: Option[Map[String, String]] = None,
+  params: Map[String, String] = Map.empty,
 
   owner: UUID,
   connection: Option[UUID] = None,
