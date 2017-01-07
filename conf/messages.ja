@@ -188,4 +188,3 @@ error.cannot.sign.up = できない話です。 ご連絡は管理者ます。
 error.empty = {0}が必要です。
 error.invalid.user = 無効なユーザー[{0}]です。
 error.remove.self = 削除する事はできません自分の管理者の役割です。
-footer.copyright = ©2016年{0}

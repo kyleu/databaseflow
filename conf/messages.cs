@@ -188,4 +188,3 @@ error.cannot.sign.up = Nelze se přihlásit v této době. Obraťte se na správ
 error.empty = {0} je požadován.
 error.invalid.user = Neplatné uživatelské [{0}].
 error.remove.self = Nelze odstranit své vlastní admin role.
-footer.copyright = © 2016 {0}

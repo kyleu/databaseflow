@@ -188,4 +188,3 @@ error.cannot.sign.up = Nicht in der Lage, zu Unterschreiben, zu diesem Zeitpunkt
 error.empty = {0} ist erforderlich.
 error.invalid.user = Ungültige Benutzer [{0}].
 error.remove.self = Sie können nicht entfernen Sie Ihre eigenen admin-Rolle.
-footer.copyright = © 2016 {0}

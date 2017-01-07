@@ -188,4 +188,3 @@ error.cannot.sign.up = No se puede iniciar sesión en este momento. Póngase en 
 error.empty = {0} es necesario.
 error.invalid.user = De usuario no válido [{0}].
 error.remove.self = Usted no puede quitar su propio rol de administrador.
-footer.copyright = © 2016 {0}

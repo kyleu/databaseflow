@@ -188,4 +188,3 @@ error.cannot.sign.up = ไม่สามารถเซ็นชื่อตอ
 error.empty = {0}ก็คือต้องการนะ
 error.invalid.user = ไม่ถูกต้องของผู้ใช้[{0}ยอง
 error.remove.self = คุณไม่สามารถทำการลบของตัวเองแอดมิเล่นบทนี้หรอก
-footer.copyright = ©2016{0}

@@ -233,6 +233,3 @@ error.cannot.sign.up = Unable to sign up at this time. Contact your administrato
 error.empty = {0} is required.
 error.invalid.user = Invalid user [{0}].
 error.remove.self = You cannot remove your own admin role.
-
-# Static
-footer.copyright = © 2016 {0}

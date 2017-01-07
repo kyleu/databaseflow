@@ -188,4 +188,3 @@ error.cannot.sign.up = אין אפשרות להירשם בשלב זה. פנה א
 error.empty = {0} נדרש.
 error.invalid.user = משתמש לא חוקי [{0}].
 error.remove.self = אתה לא יכול להסיר את עצמו תפקיד של admin.
-footer.copyright = © 2016 {0}

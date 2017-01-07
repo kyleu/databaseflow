@@ -188,4 +188,3 @@ error.cannot.sign.up = In grado di segno fino a questo momento. Contattare l''am
 error.empty = {0} è richiesto.
 error.invalid.user = Utente non valido [{0}].
 error.remove.self = Non è possibile rimuovere il proprio ruolo di amministratore.
-footer.copyright = © 2016 {0}

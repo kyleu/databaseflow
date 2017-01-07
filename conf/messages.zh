@@ -188,4 +188,3 @@ error.cannot.sign.up = 无法注册，在这个时候。 联络管理员。
 error.empty = {0}是必需的。
 error.invalid.user = 无效的用户[{0}].
 error.remove.self = 你不能删除自己的管理作用。
-footer.copyright = ©2016{0}

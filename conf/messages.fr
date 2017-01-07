@@ -188,4 +188,3 @@ error.cannot.sign.up = Incapable de signer à ce moment-là. Contactez votre adm
 error.empty = {0} est requis.
 error.invalid.user = Utilisateur non valide [{0}].
 error.remove.self = Vous ne pouvez pas supprimer votre propre rôle admin.
-footer.copyright = © 2016 {0}

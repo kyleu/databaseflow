@@ -188,4 +188,3 @@ error.cannot.sign.up = Ne možete registrirati na to vrijeme. Obratite se admini
 error.empty = {0} potrebna.
 error.invalid.user = Nevažeći korisnik [{0}].
 error.remove.self = Ne možete brisati svoje uloge admin.
-footer.copyright = © 2016 {0}

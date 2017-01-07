@@ -37,12 +37,12 @@
         <!-- Username, password -->
         <div class="row" style="margin-bottom: 0;">
           <div class="input-field col s12 m6">
-            <input id="form-username" name="databaseUsername" type="text" value="@conn.username" />
+            <input id="form-username" name="databaseUsername" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="@conn.username" />
             <label for="form-username">@messages("connection.username")</label>
           </div>
 
           <div class="input-field col s12 m6">
-            <input id="form-password" name="databasePassword" type="password" value="" />
+            <input id="form-password" name="databasePassword" type="password" autocomplete="off" value="" />
             <label for="form-password">@messages("connection.password")</label>
           </div>
         </div>

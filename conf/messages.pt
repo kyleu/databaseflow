@@ -188,4 +188,3 @@ error.cannot.sign.up = Não é possível inscrever-se neste momento. Contacte o 
 error.empty = {0} é necessária.
 error.invalid.user = Usuário inválido [{0}].
 error.remove.self = Você não pode remover a sua própria função de administrador.
-footer.copyright = © 2016 {0}

@@ -188,4 +188,3 @@ error.cannot.sign.up = Nie można zarejestrować się na to czas. Skontaktuj si�
 error.empty = {0} jest wymagane.
 error.invalid.user = Nieprawidłowy użytkownik [{0}].
 error.remove.self = Nie możesz usuwać swoje role admin.
-footer.copyright = © 2016 {0}

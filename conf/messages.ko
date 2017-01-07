@@ -188,4 +188,3 @@ error.cannot.sign.up = 인할 수 없음에 이 시간입니다. 관리자에게
 error.empty = {0}이 필요합니다.
 error.invalid.user = 잘못된 사용자[{0}]니다.
 error.remove.self = 를 제거할 수 없습니다 당신의 자신의 관리자 역할이 있습니다.
-footer.copyright = ©2016 년{0}

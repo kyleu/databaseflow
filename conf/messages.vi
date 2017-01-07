@@ -188,4 +188,3 @@ error.cannot.sign.up = Không thể để đăng ký tại thời điểm này. 
 error.empty = {0} là cần thiết.
 error.invalid.user = Không dùng [{0}].
 error.remove.self = Bạn không thể bỏ quản trị của riêng bạn.
-footer.copyright = © 2016 {0}

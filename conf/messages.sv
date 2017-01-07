@@ -188,4 +188,3 @@ error.cannot.sign.up = Det går inte att logga upp vid den här tiden. Kontakta 
 error.empty = {0} är som krävs.
 error.invalid.user = Ogiltig användare [{0}].
 error.remove.self = Du kan inte ta bort dina egna rollen admin.
-footer.copyright = © 2016 {0}

@@ -188,4 +188,3 @@ error.cannot.sign.up = Kan niet aanmelden bij deze tijd. Neem Contact op met uw 
 error.empty = {0} is vereist.
 error.invalid.user = Ongeldige gebruiker [{0}].
 error.remove.self = Kunt u het niet verwijderen van uw eigen rol van beheerder.
-footer.copyright = © 2016 {0}
