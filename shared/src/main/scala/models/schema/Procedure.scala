@@ -5,7 +5,6 @@ case class Procedure(
     description: Option[String],
     params: Seq[ProcedureParam],
     returnsResult: Option[Boolean],
-
     loadedAt: Long = System.currentTimeMillis
 ) {
   def getValues(paramMap: Map[String, String]) = params.flatMap { p =>

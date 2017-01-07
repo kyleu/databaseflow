@@ -2,8 +2,8 @@ package controllers.admin
 
 import akka.util.Timeout
 import controllers.BaseController
+import models.sandbox.SandboxTask
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.sandbox.SandboxTask
 import utils.ApplicationContext
 
 import scala.concurrent.Future
@@ -20,7 +20,7 @@ class SandboxController @javax.inject.Inject() (override val ctx: ApplicationCon
   def sandbox(key: String) = withAdminSession("sandbox." + key) { implicit request =>
     val sandbox = SandboxTask.withName(key)
     sandbox.run(ctx).map { result =>
-      Ok(views.html.admin.sandbox.view(request.identity, sandbox, result))
+      Ok(views.html.admin.sandbox.run(request.identity, sandbox, result))
     }
   }
 }

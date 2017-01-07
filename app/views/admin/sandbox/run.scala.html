@@ -1,0 +1,12 @@
+@(user: models.user.User, s: models.sandbox.SandboxTask, result: models.sandbox.SandboxTask.Result)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
+)@layout.simple(user = Some(user), title = s"${s.name} Result") {
+  <div class="row">
+    <div class="col s12">
+      <div class="content-panel">
+        <span class="panel-title">@s.name Result</span>
+        <div>@result</div>
+      </div>
+    </div>
+  </div>
+}

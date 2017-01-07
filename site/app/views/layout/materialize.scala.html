@@ -2,11 +2,12 @@
 @views.html.layout.basic(
   title,
   scripts = Seq(
-    routes.Assets.versioned("lib/jquery/jquery.min.js").url,
-    routes.Assets.versioned("lib/materialize/materialize.min.js").url
+    controllers.routes.Assets.versioned("lib/jquery/jquery.min.js").url,
+    controllers.routes.Assets.versioned("lib/materialize/materialize.min.js").url
   ) ++ scripts,
   stylesheets = Seq(
-    routes.Assets.versioned("lib/fontawesome/font-awesome.min.css").url,
-    routes.Assets.versioned("lib/materialize/materialize.min.css").url
+    controllers.routes.Assets.versioned("lib/fontawesome/font-awesome.min.css").url,
+    controllers.routes.Assets.versioned("lib/materialize/materialize.min.css").url,
+    controllers.routes.Assets.versioned("stylesheets/databaseflow.min.css").url
   ) ++ stylesheets
 )(content)

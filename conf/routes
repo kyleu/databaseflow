@@ -18,12 +18,19 @@ GET         /q/:conn                                 controllers.QueryController
 GET         /q/:conn/websocket                       controllers.QueryController.connect(conn: java.util.UUID)
 POST        /q/:conn/export                          controllers.ExportController.exportQuery(conn: java.util.UUID)
 
-# Result Views
+# Shared Result
 GET         /shared                                  controllers.SharedResultController.index()
 POST        /shared                                  controllers.SharedResultController.save()
 GET         /shared/:id                              controllers.SharedResultController.view(id: java.util.UUID)
 GET         /shared/:id/remove                       controllers.SharedResultController.remove(id: java.util.UUID)
 GET         /shared/:id/export/:fmt                  controllers.ExportController.exportShared(id: java.util.UUID, fmt)
+
+# GraphQL
+GET         /graphql                                 controllers.GraphQLController.graphql(query: Option[String] ?= None, dir: Option[String] ?= None, name: Option[String] ?= None, variables: Option[String] ?= None)
+POST        /graphql                                 controllers.GraphQLController.graphqlBody
+GET         /graphql/load                            controllers.GraphQLController.load(dir: Option[String], name)
+POST        /graphql/save                            controllers.GraphQLController.save
+GET         /schema                                  controllers.GraphQLController.renderSchema
 
 # Admin
 ->          /admin                                   admin.Routes

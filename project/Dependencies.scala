@@ -88,9 +88,14 @@ object Dependencies {
     val jQueryVersion = "0.9.1"
   }
 
+  object GraphQL {
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.0.0-RC5"
+    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "0.3.3"
+  }
+
   object Utils {
     val scapegoatVersion = "1.3.0"
-    val enumeratumVersion = "1.5.4"
+    val enumeratumVersion = "1.5.6"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
