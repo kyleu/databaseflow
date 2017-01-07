@@ -3,10 +3,12 @@ package models.connection
 import models.engine.DatabaseEngine
 import models.graphql.{CommonSchema, GraphQLContext}
 import models.graphql.CommonSchema._
+import models.schema.SchemaGraphQL
 import models.user.Permission
 import sangria.macros.derive._
 import sangria.schema._
 import services.connection.ConnectionSettingsService
+import services.schema.SchemaService
 
 import scala.concurrent.Future
 
@@ -25,7 +27,13 @@ object ConnectionGraphQL {
 
   implicit val connectionSettingsType = deriveObjectType[GraphQLContext, ConnectionSettings](
     ObjectTypeDescription("Information about the current session."),
-    ExcludeFields("password")
+    ExcludeFields("password"),
+    AddFields(Field(
+      name = "schema",
+      description = Some("Returns the database schema that defines this connection."),
+      fieldType = SchemaGraphQL.schemaType,
+      resolve = c => Future.successful(SchemaService.getSchemaFor(c.ctx.user, c.value))
+    ))
   )
 
   val queryFields = fields[GraphQLContext, Unit](

@@ -2,14 +2,17 @@ package services.schema
 
 import java.util.UUID
 
+import models.connection.ConnectionSettings
 import models.schema.Schema
-import services.database.{DatabaseConnection, DatabaseWorkerPool}
+import models.user.User
+import services.database.{DatabaseConnection, DatabaseRegistry, DatabaseWorkerPool}
 import utils.Logging
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 object SchemaService extends Logging {
   private[this] var schemaMap: Map[UUID, Schema] = Map.empty
+  private[this] var refreshCount = 0
 
   def getSchema(db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
     schemaMap.get(db.connectionId) match {
@@ -26,15 +29,21 @@ object SchemaService extends Logging {
     }
   }
 
-  var x = 0
+  def getSchemaFor(user: User, cs: ConnectionSettings) = DatabaseRegistry.databaseForUser(user, cs.id) match {
+    case Left(ex) => throw ex
+    case Right(conn) => getSchema(conn) match {
+      case Success(s) => s
+      case Failure(ex) => throw ex
+    }
+  }
 
   def refreshSchema(db: DatabaseConnection, onSuccess: (Schema) => Unit = (s) => Unit, onFailure: (Throwable) => Unit = (x) => Unit) = Try {
     schemaMap.get(db.connectionId) match {
       case Some(schema) =>
         val startMs = System.currentTimeMillis
         def work() = db.withConnection { conn =>
-          x = x + 1
-          log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}]: $x.")
+          refreshCount = refreshCount + 1
+          log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}]: $refreshCount.")
           val metadata = conn.getMetaData
           schema.copy(
             tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
