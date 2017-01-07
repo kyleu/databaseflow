@@ -4,12 +4,10 @@ import java.util.UUID
 
 import models.audit.AuditType
 import models.connection.ConnectionSettings
-import models.engine.DatabaseEngine
 import models.queries.connection.ConnectionSettingsQueries
 import models.user.{Role, User}
 import services.audit.AuditRecordService
-import services.config.ConfigFileService
-import services.database.{DatabaseRegistry, SampleDatabaseService}
+import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 
 object ConnectionSettingsService {

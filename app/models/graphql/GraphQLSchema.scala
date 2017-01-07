@@ -1,11 +1,12 @@
 package models.graphql
 
+import models.connection.ConnectionGraphQL
 import models.sandbox.SandboxGraphQL
 import models.user.UserGraphQL
 import sangria.schema._
 
 object GraphQLSchema {
-  val queryFields = UserGraphQL.queryFields ++ SandboxGraphQL.queryFields
+  val queryFields = UserGraphQL.queryFields ++ ConnectionGraphQL.queryFields ++ SandboxGraphQL.queryFields
 
   val queryType = ObjectType(
     name = "Query",
