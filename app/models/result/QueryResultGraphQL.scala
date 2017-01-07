@@ -14,6 +14,7 @@ object QueryResultGraphQL {
   implicit val resultType = deriveObjectType[GraphQLContext, QueryResult](ObjectTypeDescription("A query result with full metadata."))
   implicit val resultResponseType = deriveObjectType[GraphQLContext, QueryResultResponse](ObjectTypeDescription("A wrapper for metadata and query results."))
 
-  //implicit val savedQueryType = deriveObjectType[GraphQLContext, SavedQuery](ObjectTypeDescription("A query that has been saved for later use."))
+  implicit val queryParamType = deriveObjectType[GraphQLContext, SavedQuery.Param](ObjectTypeDescription("A name and value for a query parameter."))
+  implicit val savedQueryType = deriveObjectType[GraphQLContext, SavedQuery](ObjectTypeDescription("A query that has been saved for later use."))
   implicit val sharedResultType = deriveObjectType[GraphQLContext, SharedResult](ObjectTypeDescription("A query result that has been shared with others."))
 }

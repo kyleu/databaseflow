@@ -7,6 +7,7 @@ import models.database.Queryable
 import models.engine.DatabaseEngine
 import models.engine.DatabaseEngine.Oracle
 import models.queries.dynamic.DynamicQuery
+import models.query.SavedQuery
 import models.{PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError}
 import services.database.DatabaseWorkerPool
 import services.plan.PlanParseService
@@ -38,7 +39,7 @@ object PlanExecutionService extends Logging {
     }
   }
 
-  def handleExplainQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, params: Map[String, String], resultId: UUID, out: ActorRef) = {
+  def handleExplainQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, params: Seq[SavedQuery.Param], resultId: UUID, out: ActorRef) = {
     engine.cap.explain match {
       case Some(explain) =>
         def work() = {
@@ -55,7 +56,7 @@ object PlanExecutionService extends Logging {
     }
   }
 
-  def handleAnalyzeQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, params: Map[String, String], resultId: UUID, out: ActorRef) = {
+  def handleAnalyzeQuery(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, params: Seq[SavedQuery.Param], resultId: UUID, out: ActorRef) = {
     engine.cap.analyze match {
       case Some(analyze) =>
         def work() = {

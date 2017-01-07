@@ -9,6 +9,8 @@ import models.user.Permission
 import utils.{DateUtils, JdbcUtils}
 import upickle.default._
 
+import scala.util.control.NonFatal
+
 object SavedQueryQueries extends BaseQueries[SavedQuery] {
   override protected val tableName = "saved_queries"
   override protected val columns = Seq("id", "name", "description", "sql", "params", "owner", "connection", "read", "edit", "last_ran", "created", "updated")
@@ -51,7 +53,11 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
     name = row.as[String]("name"),
     description = row.asOpt[Any]("description").map(JdbcUtils.extractString),
     sql = JdbcUtils.extractString(row.as[Any]("sql")),
-    params = row.asOpt[Any]("params").map(JdbcUtils.extractString).map(x => read[Map[String, String]](x)).getOrElse(Map.empty),
+    params = row.asOpt[Any]("params").map(JdbcUtils.extractString).map(x => try {
+      read[Seq[SavedQuery.Param]](x)
+    } catch {
+      case NonFatal(_) => Seq.empty
+    }).getOrElse(Seq.empty),
 
     owner = row.as[UUID]("owner"),
     connection = row.asOpt[UUID]("connection"),

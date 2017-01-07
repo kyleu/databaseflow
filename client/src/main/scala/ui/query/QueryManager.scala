@@ -3,6 +3,7 @@ package ui.query
 import java.util.UUID
 
 import models.SubmitQuery
+import models.query.SavedQuery
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import services.query.ChartService
 import ui.{ProgressManager, TabManager}
@@ -13,10 +14,10 @@ object QueryManager {
 
   lazy val workspace = $("#workspace")
 
-  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, sql: String, params: Map[String, String], onChange: (String) => Unit): Unit = {
+  def addQuery(queryId: UUID, title: String, queryPanel: JQuery, sql: String, params: Seq[SavedQuery.Param], onChange: (String) => Unit): Unit = {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
-    def wire(q: JQuery, action: String, sql: () => (String, Map[String, String])) = TemplateUtils.clickHandler(q, jq => {
+    def wire(q: JQuery, action: String, sql: () => (String, Seq[SavedQuery.Param])) = TemplateUtils.clickHandler(q, jq => {
       val resultId = UUID.randomUUID
       ProgressManager.startProgress(queryId, resultId, title)
       val r = sql()

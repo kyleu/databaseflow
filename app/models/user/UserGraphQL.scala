@@ -3,7 +3,6 @@ package models.user
 import models.graphql.{CommonSchema, GraphQLContext}
 import sangria.macros.derive._
 import sangria.schema._
-import utils.DateUtils
 import models.graphql.CommonSchema._
 import models.graphql.DateTimeSchema._
 

@@ -9,8 +9,7 @@ import models.queries.dynamic.DynamicQuery
 import models.query.QueryResult
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.audit.AuditRecordService
-import services.database.DatabaseWorkerPool
-import utils.{DateUtils, JdbcUtils, Logging}
+import utils.{DateUtils, Logging}
 
 import scala.concurrent.Future
 

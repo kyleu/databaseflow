@@ -84,8 +84,7 @@ object ResultQueryHelper extends Logging {
         moreRowsAvailable = moreRowsAvailable,
         source = Some(QueryResult.Source(
           t = "cache",
-          name = result.tableName,
-          sortable = true
+          name = result.tableName
         ))
       ), elapsedMs)
       o ! msg

@@ -9,7 +9,7 @@ import models.audit.AuditType
 import models.database.Queryable
 import models.parse.StatementParser
 import models.queries.result.CachedResultQueries
-import models.query.{QueryResult, SqlParser}
+import models.query.{QueryResult, SavedQuery, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.audit.AuditRecordService
@@ -23,7 +23,7 @@ import scala.concurrent.Future
 object QueryExecutionService extends Logging {
   private[this] val activeQueries = collection.mutable.HashMap.empty[UUID, PreparedStatement]
 
-  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, params: Map[String, String], resultId: UUID, connectionId: UUID, owner: UUID, out: ActorRef) = {
+  def handleRunQuery(db: Queryable, queryId: UUID, sql: String, params: Seq[SavedQuery.Param], resultId: UUID, connectionId: UUID, owner: UUID, out: ActorRef) = {
     val merged = ParameterService.merge(sql, params)
     val statements = SqlParser.split(merged)
     val first = statements.headOption.getOrElse(throw new IllegalStateException("Missing statement"))._1

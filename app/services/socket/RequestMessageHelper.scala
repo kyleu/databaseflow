@@ -3,6 +3,7 @@ package services.socket
 import java.util.UUID
 
 import models._
+import models.query.SavedQuery
 import services.audit.AuditRecordService
 import services.query._
 import services.result.{CachedResultService, ChartDataService}
@@ -50,7 +51,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case x => throw new IllegalArgumentException(s"Unhandled request message [${x.getClass.getSimpleName}].")
   }
 
-  private[this] def handleSubmitQuery(queryId: UUID, sql: String, params: Map[String, String], action: String, resultId: UUID) = action match {
+  private[this] def handleSubmitQuery(queryId: UUID, sql: String, params: Seq[SavedQuery.Param], action: String, resultId: UUID) = action match {
     case "run" => QueryExecutionService.handleRunQuery(activeTransaction.getOrElse(db), queryId, sql, params, resultId, connectionId, user.id, out)
     case "explain" => PlanExecutionService.handleExplainQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, params, resultId, out)
     case "analyze" => PlanExecutionService.handleAnalyzeQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, params, resultId, out)

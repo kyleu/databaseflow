@@ -4,12 +4,16 @@ import java.util.UUID
 
 import models.user.Permission
 
+object SavedQuery {
+  case class Param(k: String, v: String)
+}
+
 case class SavedQuery(
   id: UUID = UUID.randomUUID,
   name: String = "Untitled Query",
   description: Option[String] = None,
   sql: String = "",
-  params: Map[String, String] = Map.empty,
+  params: Seq[SavedQuery.Param] = Seq.empty,
 
   owner: UUID,
   connection: Option[UUID] = None,

@@ -35,19 +35,10 @@ $(function(global) {
     parameters.query = newQuery;
 
     $('.save-body-input').val(newQuery);
-    updateURL();
   }
 
   function onEditVariables(newVariables) {
     parameters.variables = newVariables;
-    updateURL();
-  }
-
-  function updateURL() {
-    var newSearch = '?' + Object.keys(parameters).map(function(key) {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]);
-      }).join('&');
-    history.replaceState(null, null, newSearch);
   }
 
   function graphQLFetcher(graphQLParams) {
@@ -71,17 +62,7 @@ $(function(global) {
     });
   }
 
-  function setupZoom(percent) {
-    $('html > head').append($('<style>body {zoom: ' + percent + '%;}</style>'))
-  }
-
-  if(parameters['zoom']) {
-    setupZoom(parameters['zoom'])
-  }
-
-  if(parameters["hideVariables"]) {
-    $('html > head').append($('<style>.variable-editor {display: none !important}</style>'))
-  }
+  $('html > head').append($('<style>.variable-editor {display: none !important}</style>'))
 
   global.renderGraphiql = function(elem) {
     $('.save-body-input').val(parameters.query);

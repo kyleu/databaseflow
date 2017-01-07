@@ -60,7 +60,7 @@ object ViewManager extends ViewDetailHelper {
         ProgressManager.startProgress(queryId, resultId, title)
 
         val sql = EngineQueries.selectFrom(name, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))._1
-        NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, params = Map.empty, action = Some(action), resultId = resultId))
+        NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, params = Seq.empty, action = Some(action), resultId = resultId))
       })
 
       wire($(".explain-view-link", queryPanel), "explain")

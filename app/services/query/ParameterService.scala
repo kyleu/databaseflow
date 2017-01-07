@@ -1,17 +1,18 @@
 package services.query
 
+import models.query.SavedQuery
 import utils.Logging
 
 object ParameterService extends Logging {
-  def merge(sql: String, params: Map[String, String]) = {
+  def merge(sql: String, params: Seq[SavedQuery.Param]) = {
     var merged = sql
     params.foreach { param =>
-      if (param._2.trim.nonEmpty) {
-        var idx = Math.max(merged.indexOf("{" + param._1 + ":"), merged.indexOf("{" + param._1 + "}"))
+      if (param.v.trim.nonEmpty) {
+        var idx = Math.max(merged.indexOf("{" + param.k + ":"), merged.indexOf("{" + param.k + "}"))
         while (idx > -1) {
           val end = merged.indexOf('}', idx) + 1
-          merged = merged.replaceAllLiterally(merged.substring(idx, end), param._2)
-          idx = Math.max(merged.indexOf("{" + param._1 + ":"), merged.indexOf("{" + param._1 + "}"))
+          merged = merged.replaceAllLiterally(merged.substring(idx, end), param.v)
+          idx = Math.max(merged.indexOf("{" + param.k + ":"), merged.indexOf("{" + param.k + "}"))
         }
       }
     }

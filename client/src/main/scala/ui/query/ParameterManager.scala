@@ -2,6 +2,7 @@ package ui.query
 
 import java.util.UUID
 
+import models.query.SavedQuery
 import models.template.query.QueryParametersTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import utils.TemplateUtils
@@ -24,21 +25,21 @@ object ParameterManager extends ParameterChangeManager {
         val merged = orig.filterNot(_._1 == k) :+ ((k, t, v))
         utils.Logging.info(s"Orig: $orig / Merged: $merged")
         set(queryId, merged)
-        val mergedSql = merge(sql, merged.map(x => x._1 -> x._3).toMap)
+        val mergedSql = merge(sql, merged.map(x => SavedQuery.Param(x._1, x._3)))
         QueryCheckManager.check(queryId, mergedSql)
       })
     }
   }
 
-  def merge(sql: String, params: Map[String, String]) = {
+  def merge(sql: String, params: Seq[SavedQuery.Param]) = {
     var merged = sql
     params.foreach { param =>
-      if (param._2.trim.nonEmpty) {
-        var idx = Math.max(merged.indexOf("{" + param._1 + ":"), merged.indexOf("{" + param._1 + "}"))
+      if (param.v.trim.nonEmpty) {
+        var idx = Math.max(merged.indexOf("{" + param.k + ":"), merged.indexOf("{" + param.k + "}"))
         while (idx > -1) {
           val end = merged.indexOf('}', idx) + 1
-          merged = merged.replaceAllLiterally(merged.substring(idx, end), param._2)
-          idx = Math.max(merged.indexOf("{" + param._1 + ":"), merged.indexOf("{" + param._1 + "}"))
+          merged = merged.replaceAllLiterally(merged.substring(idx, end), param.v)
+          idx = Math.max(merged.indexOf("{" + param.k + ":"), merged.indexOf("{" + param.k + "}"))
         }
       }
     }

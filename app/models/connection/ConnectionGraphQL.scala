@@ -48,12 +48,12 @@ object ConnectionGraphQL {
         fieldType = ListType(QueryResultGraphQL.sharedResultType),
         resolve = c => SharedResultService.getForUser(c.ctx.user, c.value.id, None)
       ),
-      //Field(
-      //  name = "savedQuery",
-      //  description = Some("Returns the saved queries available for this connection."),
-      //  fieldType = ListType(QueryResultGraphQL.savedQueryType),
-      //  resolve = c => SavedQueryService.getForUser(c.ctx.user, c.value.id, None)
-      //),
+      Field(
+        name = "savedQuery",
+        description = Some("Returns the saved queries available for this connection."),
+        fieldType = ListType(QueryResultGraphQL.savedQueryType),
+        resolve = c => SavedQueryService.getForUser(c.ctx.user, c.value.id, None)
+      ),
       Field(
         name = "query",
         description = Some("Runs the provided sql query and returns the result."),
