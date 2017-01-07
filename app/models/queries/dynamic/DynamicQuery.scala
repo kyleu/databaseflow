@@ -37,7 +37,7 @@ object DynamicQuery {
 case class DynamicQuery(override val sql: String, override val values: Seq[Any] = Nil) extends Query[DynamicQuery.Results] {
   override def reduce(rows: Iterator[Row]) = getResults(rows)
 
-  private[this] def rowData(cc: Int, firstRow: Row) = (1 to cc).map(i => firstRow.asOpt[Any](i).map(DynamicQuery.transform))
+  private[this] def rowData(cc: Int, row: Row) = (1 to cc).map(i => row.asOpt[Any](i).map(DynamicQuery.transform))
 
   private[this] def getResults(rows: Iterator[Row]) = {
     if (rows.hasNext) {

@@ -19,37 +19,37 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
       val firstRow = rows.next()
       val md = firstRow.rs.getMetaData
 
-      val columns = CachedResultQueryHelper.getColumns(md)
+      val columns = ResultQueryHelper.getColumns(md)
 
       val columnsWithIndex = columns.zipWithIndex
 
       var rowCount = 1
-      val firstRowData = CachedResultQueryHelper.dataFor(firstRow, columnsWithIndex)
+      val firstRowData = ResultQueryHelper.dataFor(firstRow, columnsWithIndex)
 
       if (rows.hasNext) {
         val containsRowNum = columns.exists(_.name == "#")
         val cols = CachedResultInsert.insert(result, columns, containsRowNum)
-        CachedResultQueryHelper.createResultTable(result.tableName, cols)
+        ResultQueryHelper.createResultTable(result.tableName, cols)
         val columnNames = cols.map(_.name)
 
         val transformedData = CachedResultTransform.transform(cols, if (containsRowNum) { firstRowData } else { Some(rowCount) +: firstRowData })
-        CachedResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
+        ResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
 
         val partialRowData = collection.mutable.ArrayBuffer(transformedData)
 
         while (rowCount < CachedResultQuery.maxRows && rows.hasNext) {
           val row = rows.next()
           rowCount += 1
-          val data = CachedResultQueryHelper.dataFor(row, columnsWithIndex)
+          val data = ResultQueryHelper.dataFor(row, columnsWithIndex)
           val transformedData = CachedResultTransform.transform(cols, if (containsRowNum) { data } else { Some(rowCount) +: data })
 
-          CachedResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
+          ResultQueryHelper.insertRow(result.tableName, columnNames, transformedData)
           if (rowCount <= 100) {
             partialRowData += transformedData
           }
           if (rowCount == 101) {
             val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
-            CachedResultQueryHelper.sendResult(result, index, out, cols, partialRowData, firstMessageElapsed, moreRowsAvailable = true)
+            ResultQueryHelper.sendResult(result, index, out, cols, partialRowData, firstMessageElapsed, moreRowsAvailable = true)
             CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
           }
         }
@@ -57,7 +57,7 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
         if (rowCount <= 100) {
           val firstMessageElapsed = (DateUtils.nowMillis - startMs).toInt
           CachedResultService.setFirstMessageDuration(result.resultId, firstMessageElapsed)
-          CachedResultQueryHelper.sendResult(result, index, out, cols, partialRowData, firstMessageElapsed, moreRowsAvailable = false)
+          ResultQueryHelper.sendResult(result, index, out, cols, partialRowData, firstMessageElapsed, moreRowsAvailable = false)
         }
 
         val duration = (DateUtils.nowMillis - startMs).toInt
@@ -65,11 +65,11 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
         QueryResultRowCount(result.resultId, result.queryId, result.resultId, rowCount, rowCount == CachedResultQuery.maxRows, duration)
       } else {
         val elapsed = (DateUtils.nowMillis - startMs).toInt
-        CachedResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, columns, Seq(firstRowData), elapsed)
+        ResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, columns, Seq(firstRowData), elapsed)
       }
     } else {
       val elapsed = (DateUtils.nowMillis - startMs).toInt
-      CachedResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, Nil, Nil, elapsed)
+      ResultQueryHelper.getResultResponseFor(result.resultId, index, result.queryId, result.sql, Nil, Nil, elapsed)
     }
   }
 }

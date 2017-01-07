@@ -13,7 +13,7 @@ import models.schema.ColumnType.{ArrayType, UnknownType}
 import services.database.core.ResultCacheDatabase
 import utils.Logging
 
-object CachedResultQueryHelper extends Logging {
+object ResultQueryHelper extends Logging {
   private[this] val badChars = Seq(" ", "\"", "\'", "\\", ":", "(", ")", ",", ".")
 
   def createResultTable(tableName: String, columns: Seq[QueryResult.Col]) = {

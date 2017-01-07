@@ -1,4 +1,6 @@
-@(user: Option[models.user.User], title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(implicit session: Session, flash: Flash)@basic(
+@(user: Option[models.user.User], title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+    implicit session: Session, flash: Flash
+)@basic(
   user,
   title,
   scripts = Seq(
@@ -7,6 +9,7 @@
   ) ++ scripts,
   stylesheets = Seq(
     routes.Assets.versioned("lib/fontawesome/font-awesome.min.css").url,
-    routes.Assets.versioned("lib/materialize/materialize.min.css").url
+    routes.Assets.versioned("lib/materialize/materialize.min.css").url,
+    controllers.routes.Assets.versioned("stylesheets/databaseflow.min.css").url
   ) ++ stylesheets
 )(content)

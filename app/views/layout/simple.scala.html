@@ -1,6 +1,6 @@
-@(user: Option[models.user.User], title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil)(content: Html)(
+@(user: Option[models.user.User], title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.materialize(user, title, scripts = scripts) {
+)@layout.materialize(user, title, scripts = scripts, stylesheets = stylesheets) {
   <header>
     @views.html.layout.themeStyles(user.map(_.preferences.theme).getOrElse(models.template.Theme.BlueGrey))
 

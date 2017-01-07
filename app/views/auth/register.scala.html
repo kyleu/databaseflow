@@ -1,6 +1,6 @@
 @(user: Option[models.user.User], form: Form[models.user.RegistrationData])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(user = user, title = messages("registration.title", utils.Config.projectName)) {
+)@layout.simple(user = user, title = messages("registration.title", utils.Config.projectName), stylesheets = Seq(controllers.routes.Assets.versioned("stylesheets/databaseflow.min.css").url)) {
   <form method="post" action="@controllers.auth.routes.RegistrationController.register()">
     <div class="row">
       <div class="col s12">

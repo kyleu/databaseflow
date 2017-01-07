@@ -11,6 +11,12 @@ object SchemaGraphQL {
     values = ColumnType.values.map(t => t -> t.entryName).toList
   )
 
+  implicit val filterOpEnum = CommonSchema.deriveEnumeratumType(
+    name = "FilterOp",
+    description = "A filtering operation, usually applied to two values.",
+    values = FilterOp.values.map(t => t -> t.entryName).toList
+  )
+
   implicit val referenceType = deriveObjectType[GraphQLContext, Reference](ObjectTypeDescription("A reference to a different table or view."))
   implicit val primaryKeyType = deriveObjectType[GraphQLContext, PrimaryKey](ObjectTypeDescription("A primary key for this table or view."))
   implicit val foreignKeyType = deriveObjectType[GraphQLContext, ForeignKey](ObjectTypeDescription("A foreign key for this table or view."))
