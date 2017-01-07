@@ -13,6 +13,9 @@ import services.schema.SchemaService
 import scala.concurrent.Future
 
 object ConnectionGraphQL {
+  val idArg = Argument("id", OptionInputType(CommonSchema.uuidType), description = "Filters the results to a connection matching the provided id.")
+  val nameArg = Argument("name", OptionInputType(StringType), description = "Filters the results to a connection matching the provided name.")
+
   implicit val permissionEnum = CommonSchema.deriveEnumeratumType(
     name = "Permission",
     description = "The role of the system user.",
@@ -40,8 +43,9 @@ object ConnectionGraphQL {
     Field(
       name = "connection",
       description = Some("Returns information about the available database connections."),
+      arguments = ConnectionGraphQL.idArg :: ConnectionGraphQL.nameArg :: Nil,
       fieldType = ListType(connectionSettingsType),
-      resolve = c => Future.successful(ConnectionSettingsService.getVisible(c.ctx.user))
+      resolve = c => Future.successful(ConnectionSettingsService.getVisible(c.ctx.user, c.arg(ConnectionGraphQL.idArg), c.arg(ConnectionGraphQL.nameArg)))
     )
   )
 }

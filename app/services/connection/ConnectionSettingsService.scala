@@ -11,7 +11,16 @@ import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 
 object ConnectionSettingsService {
-  def getVisible(user: User) = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user))
+  def getVisible(user: User, id: Option[UUID] = None, name: Option[String] = None) = {
+    val c = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user))
+    id match {
+      case Some(i) => c.filter(_.id == i)
+      case None => name match {
+        case Some(n) => c.filter(_.name == n)
+        case None => c
+      }
+    }
+  }
 
   def canRead(user: User, cs: ConnectionSettings) = Role.matchPermissions(Some(user), cs.owner, "connection", "read", cs.read)
   def canEdit(user: User, cs: ConnectionSettings) = if (cs.id == MasterDatabase.connectionId) {
