@@ -15,6 +15,8 @@ object MasterDdl extends Logging {
     CreateQueryResultsTable,
     CreateSharedResultTable,
 
+    CreateGraphQLTable,
+
     CreateSettingsTable,
     CreateAuditRecordTable
   )

@@ -61,7 +61,7 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
 
   def executeQuery(query: String, variables: Option[JsObject], operation: Option[String], user: User) = {
     try {
-      val f = GraphQLService.executeQuery(ctx, query, variables, operation, user)
+      val f = GraphQLService.executeQuery(ctx, None, query, variables, operation, user)
       f.map(Ok(_)).recover {
         case error: QueryAnalysisError => BadRequest(error.resolveError)
         case error: ErrorWithResolver => InternalServerError(error.resolveError)

@@ -78,6 +78,8 @@ object Icons {
 
   val procedure = "fa-code"
 
+  val graphQL = "fa-sun-o"
+
   val show = "fa-sticky-note-o"
   val sliders = "fa-sliders"
 }
