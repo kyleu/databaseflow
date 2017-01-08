@@ -5,6 +5,7 @@ import models.graphql.{CommonGraphQL, GraphQLContext}
 import sangria.macros.derive._
 import models.graphql.CommonGraphQL._
 import sangria.schema._
+import services.query.{RowDataHelper, RowDataService}
 
 object SchemaGraphQL {
   implicit val columnTypeEnum = CommonGraphQL.deriveEnumeratumType(
@@ -29,14 +30,14 @@ object SchemaGraphQL {
   implicit val columnType = deriveObjectType[GraphQLContext, Column](ObjectTypeDescription("A database column for this table or view."))
 
   implicit val tableType = deriveObjectType[GraphQLContext, Table](
-    ObjectTypeDescription("A database table for this connection."),
-    AddFields(Field(
-      name = "data",
-      description = Some("View this table's data, passing filters as arguments."),
-      fieldType = ListType(StringType),
-      arguments = CommonGraphQL.limitArg :: CommonGraphQL.offsetArg :: Nil,
-      resolve = c => Nil
-    ))
+    ObjectTypeDescription("A database table for this connection.")
+  //AddFields(Field(
+  //  name = "data",
+  //  description = Some("View this table's data, passing filters as arguments."),
+  //  fieldType = ListType(StringType),
+  //  arguments = CommonGraphQL.limitArg :: CommonGraphQL.offsetArg :: Nil,
+  //  resolve = c => RowDataService.getData(c.arg(CommonGraphQL.limitArg), c.arg(CommonGraphQL.offsetArg))
+  //))
   )
 
   implicit val viewType = deriveObjectType[GraphQLContext, View](ObjectTypeDescription("A database view for this connection."))

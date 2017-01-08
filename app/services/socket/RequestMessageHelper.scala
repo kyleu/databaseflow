@@ -2,9 +2,11 @@ package services.socket
 
 import java.util.UUID
 
+import akka.actor.ActorRef
 import models._
-import models.query.SavedQuery
+import models.query.{RowDataOptions, SavedQuery}
 import services.audit.AuditRecordService
+import services.database.core.ResultCacheDatabase
 import services.query._
 import services.result.{CachedResultService, ChartDataService}
 import utils.Config
@@ -29,7 +31,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
 
     case cq: CheckQuery => timeReceive(cq) { QueryCheckService.handleCheckQuery(db, cq.queryId, cq.sql, out) }
     case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.params, sq.action.getOrElse("run"), sq.resultId) }
-    case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId) }
+    case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId, Some(out)) }
     case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
     case cq: CloseQuery => timeReceive(cq) { CachedResultService.removeCacheResults(user.id, cq.queryId) }
 
@@ -56,6 +58,14 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case "explain" => PlanExecutionService.handleExplainQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, params, resultId, out)
     case "analyze" => PlanExecutionService.handleAnalyzeQuery(activeTransaction.getOrElse(db), db.engine, queryId, sql, params, resultId, out)
     case _ => throw new IllegalArgumentException(action)
+  }
+
+  private[this] def handleGetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, someRef: Some[ActorRef]) = {
+    val (connArg, dbArg, engineArg) = key match {
+      case "cache" => (ResultCacheDatabase.connectionId, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine)
+      case _ => (connectionId, activeTransaction.getOrElse(db), db.engine)
+    }
+    RowDataService.handleGetRowData(connArg, dbArg, engineArg, key, queryId, name, options, resultId, Some(out))
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {

@@ -1,21 +1,16 @@
-package services.socket
-
-import java.util.UUID
+package services.query
 
 import akka.actor.ActorRef
 import models._
 import models.database.Queryable
 import models.engine.{DatabaseEngine, EngineQueries}
 import models.queries.dynamic.DynamicQuery
-import models.query.{QueryResult, RowDataOptions}
-import models.schema.{ForeignKey, PrimaryKey}
+import models.query.QueryResult
 import services.database.DatabaseWorkerPool
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
-object DataHelper extends Logging {
-  case class Params(queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID)
-
-  def handleShowDataResponse(params: Params, database: Queryable, engine: DatabaseEngine, out: Option[ActorRef]) = {
+object RowDataHelper extends Logging {
+  def showDataResponse(params: RowDataService.Params, database: Queryable, engine: DatabaseEngine, out: Option[ActorRef]) = {
     def work() = {
       val startMs = DateUtils.nowMillis
       val optionsNewLimit = params.options.copy(limit = params.options.limit.map(_ + 1))
