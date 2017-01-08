@@ -5,7 +5,7 @@ import java.util.UUID
 import models.ServerError
 import models.queries.result.CachedResultQueries
 import models.query.RowDataOptions
-import services.database.core.MasterDatabase
+import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.SchemaService
 import utils.Logging
 
@@ -18,7 +18,9 @@ trait RowDataHelper extends Logging { this: SocketService =>
 
   private[this] def handleGetTableRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getTable(connectionId, name) match {
-      case Some(table) => handleShowDataResponse(queryId, "table", table.name, table.primaryKey, table.foreignKeys, options, resultId, cacheDb = false)
+      case Some(table) =>
+        val params = DataHelper.Params(queryId, "table", table.name, table.primaryKey, table.foreignKeys, options, resultId)
+        DataHelper.handleShowDataResponse(params, activeTransaction.getOrElse(db), db.engine, Some(out))
       case None =>
         log.warn(s"Attempted to show data for invalid table [$name].")
         out ! ServerError("Invalid Table", s"[$name] is not a valid table.")
@@ -27,7 +29,9 @@ trait RowDataHelper extends Logging { this: SocketService =>
 
   private[this] def handleGetViewRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) = {
     SchemaService.getView(connectionId, name) match {
-      case Some(view) => handleShowDataResponse(queryId, "view", view.name, None, Nil, options, resultId, cacheDb = false)
+      case Some(view) =>
+        val params = DataHelper.Params(queryId, "view", view.name, None, Nil, options, resultId)
+        DataHelper.handleShowDataResponse(params, activeTransaction.getOrElse(db), db.engine, Some(out))
       case None =>
         log.warn(s"Attempted to show data for invalid view [$name].")
         out ! ServerError("Invalid View", s"[$name] is not a valid view.")
@@ -44,7 +48,8 @@ trait RowDataHelper extends Logging { this: SocketService =>
           }
           case None => None -> Nil
         }
-        handleShowDataResponse(queryId, "cache", name, pk, fks, options, resultId, cacheDb = true)
+        val params = DataHelper.Params(queryId, "cache", name, pk, fks, options, resultId)
+        DataHelper.handleShowDataResponse(params, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine, Some(out))
       case None => throw new IllegalStateException(s"Unknown cached result [$resultId].")
     }
   }

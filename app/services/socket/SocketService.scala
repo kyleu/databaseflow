@@ -22,7 +22,7 @@ object SocketService {
 
 case class SocketService(
     id: UUID, supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String, messages: SocketService.i18n
-) extends InstrumentedActor with StartHelper with RequestMessageHelper with TransactionHelper with RowDataHelper with DataHelper with DetailHelper {
+) extends InstrumentedActor with StartHelper with RequestMessageHelper with TransactionHelper with RowDataHelper with DetailHelper {
 
   protected[this] val db = attemptConnect()
 
