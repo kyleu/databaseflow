@@ -26,9 +26,9 @@ GET         /shared/:id/remove                       controllers.SharedResultCon
 GET         /shared/:id/export/:fmt                  controllers.ExportController.exportShared(id: java.util.UUID, fmt)
 
 # GraphQL
-GET         /graphql                                 controllers.graphql.GraphQLController.graphql(query: Option[String] ?= None, dir: Option[String] ?= None, name: Option[String] ?= None, variables: Option[String] ?= None)
+GET         /graphql                                 controllers.graphql.GraphQLController.graphql(id: Option[java.util.UUID] ?= None)
 POST        /graphql                                 controllers.graphql.GraphQLController.graphqlBody
-GET         /graphql/load                            controllers.graphql.GraphQLController.load(dir: Option[String], name)
+GET         /graphql/load                            controllers.graphql.GraphQLController.load(id: java.util.UUID)
 POST        /graphql/save                            controllers.graphql.GraphQLController.save
 GET         /schema                                  controllers.graphql.GraphQLController.renderSchema
 

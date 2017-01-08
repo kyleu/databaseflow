@@ -1,5 +1,6 @@
-@(user: models.user.User, queries: (Seq[String], Seq[(String, Seq[String])]))(implicit request: Request[AnyContent], session: Session, flash: Flash)
-@layout.basic(Some(user), utils.Config.projectName + " GraphQL", scripts = Seq(
+@(user: models.user.User, queries: Seq[models.graphql.GraphQLQuery], q: Option[models.graphql.GraphQLQuery])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.basic(Some(user), utils.Config.projectName + " GraphQL", scripts = Seq(
   routes.Assets.versioned("lib/graphiql/fetch.min.js").url,
   routes.Assets.versioned("lib/graphiql/react.min.js").url,
   routes.Assets.versioned("lib/graphiql/react-dom.min.js").url,
@@ -60,7 +61,7 @@
     }
   </style>
 
-  @views.html.graphql.options(queries._1, queries._2)
+  @views.html.graphql.options(queries)
   <div id="graphiql">Loading...</div>
   <script>renderGraphiql(document.getElementById('graphiql'))</script>
 }

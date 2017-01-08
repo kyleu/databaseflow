@@ -1,4 +1,4 @@
-@(parent: Seq[String], children: Seq[(String, Seq[String])])(implicit request: Request[AnyContent], session: Session, flash: Flash)
+@(queries: Seq[models.graphql.GraphQLQuery])(implicit request: Request[AnyContent], session: Session, flash: Flash)
 <style>
   #file-options {
     font-family: system, -apple-system, 'San Francisco', '.SFNSDisplay-Regular', 'Segoe UI', Segoe, 'Segoe WP', 'Helvetica Neue', helvetica, 'Lucida Grande', arial, sans-serif;
@@ -56,15 +56,15 @@
 
   <div class="query-list">
     <ul>
-      @parent.map { q =>
-        <li><a class="query-link" href="@controllers.graphql.routes.GraphQLController.load(None, q)">@q</a></li>
+      @queries.filter(_.category.isEmpty).map { q =>
+        <li><a class="query-link" href="@controllers.graphql.routes.GraphQLController.load(q.id)">@q</a></li>
       }
     </ul>
-    @children.map { files =>
-      <div class="section-header">@files._1</div>
+    @queries.filter(_.category.nonEmpty).groupBy(_.category).map { queries =>
+      <div class="section-header">@queries._1</div>
       <ul>
-        @files._2.map { q =>
-          <li><a class="query-link" href="@controllers.graphql.routes.GraphQLController.load(Some(files._1), q)">@q</a></li>
+        @queries._2.map { q =>
+          <li><a class="query-link" href="@controllers.graphql.routes.GraphQLController.load(q.id)">@q</a></li>
         }
       </ul>
     }

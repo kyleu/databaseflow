@@ -42,7 +42,7 @@ object GraphQLQueries extends BaseQueries[GraphQLQuery] {
   override protected def fromRow(row: Row) = GraphQLQuery(
     id = row.as[UUID]("id"),
     connection = row.asOpt[UUID]("connection_id"),
-    category = row.as[String]("category"),
+    category = row.asOpt[String]("category"),
     name = row.as[String]("name"),
     query = row.as[String]("query"),
     owner = row.as[UUID]("owner"),
