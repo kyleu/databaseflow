@@ -9,7 +9,6 @@ import models.user.Permission
 import sangria.macros.derive._
 import sangria.schema._
 import services.connection.ConnectionSettingsService
-import services.database.DatabaseRegistry
 import services.query.{SavedQueryService, SharedResultService, SimpleQueryService}
 import services.schema.SchemaService
 
@@ -59,10 +58,7 @@ object ConnectionGraphQL {
         description = Some("Runs the provided sql query and returns the result."),
         fieldType = QueryResultGraphQL.resultResponseType,
         arguments = sqlArg :: Nil,
-        resolve = c => DatabaseRegistry.databaseForUser(c.ctx.user, c.value.id) match {
-          case Right(conn) => SimpleQueryService.run(conn, c.arg(sqlArg), c.ctx.user.id, conn.connectionId)
-          case Left(ex) => throw ex
-        }
+        resolve = c => SimpleQueryService.runQuery(c.ctx.user, c.value, c.arg(sqlArg))
       )
     )
   )
@@ -74,6 +70,22 @@ object ConnectionGraphQL {
       fieldType = ListType(connectionSettingsType),
       arguments = ConnectionGraphQL.idArg :: nameArg :: Nil,
       resolve = c => Future.successful(ConnectionSettingsService.getVisible(c.ctx.user, c.arg(ConnectionGraphQL.idArg), c.arg(ConnectionGraphQL.nameArg)))
+    )
+  )
+
+  def queryFieldsForConnection(cs: ConnectionSettings) = fields[GraphQLContext, Unit](
+    Field(
+      name = "schema",
+      description = Some("Returns the database schema that defines this connection."),
+      fieldType = SchemaGraphQL.schemaType,
+      resolve = c => SchemaService.getSchemaFor(c.ctx.user, cs)
+    ),
+    Field(
+      name = "query",
+      description = Some("Runs the provided sql query and returns the result."),
+      fieldType = QueryResultGraphQL.resultResponseType,
+      arguments = sqlArg :: Nil,
+      resolve = c => SimpleQueryService.runQuery(c.ctx.user, cs, c.arg(sqlArg))
     )
   )
 }

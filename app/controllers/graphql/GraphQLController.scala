@@ -1,7 +1,8 @@
-package controllers
+package controllers.graphql
 
 import akka.actor.ActorSystem
-import models.graphql.GraphQLSchema
+import controllers.BaseController
+import models.graphql.GlobalGraphQLSchema
 import models.user.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -16,8 +17,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext, system: ActorSystem) extends BaseController {
-
-  private[this] lazy val renderedSchema = SchemaRenderer.renderSchema(GraphQLSchema.schema)
+  private[this] lazy val renderedSchema = SchemaRenderer.renderSchema(GlobalGraphQLSchema.schema)
 
   def renderSchema = withSession("graphql.schema") { implicit request =>
     Future.successful(Ok(renderedSchema))
@@ -33,7 +33,7 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
 
   def load(dir: Option[String], name: String) = withSession("graphql.load") { implicit request =>
     val q = GraphQLFileService.load(dir, name)
-    Future.successful(Redirect(controllers.routes.GraphQLController.graphql(query = Some(q), dir = dir, name = Some(name)).url))
+    Future.successful(Redirect(controllers.graphql.routes.GraphQLController.graphql(query = Some(q), dir = dir, name = Some(name)).url))
   }
 
   def save = withSession("graphql.save") { implicit request =>
@@ -42,7 +42,7 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
     val name = form.getOrElse("name", throw new IllegalStateException("Missing [name]."))
     val body = form.getOrElse("body", throw new IllegalStateException("Missing [body]."))
     GraphQLFileService.save(dir, name, body)
-    Future.successful(Redirect(controllers.routes.GraphQLController.graphql(query = Some(body), dir = dir, name = Some(name))))
+    Future.successful(Redirect(controllers.graphql.routes.GraphQLController.graphql(query = Some(body), dir = dir, name = Some(name))))
   }
 
   def graphqlBody = withSession("graphql.post") { implicit request =>

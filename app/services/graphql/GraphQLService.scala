@@ -1,6 +1,6 @@
 package services.graphql
 
-import models.graphql.{GraphQLContext, GraphQLSchema}
+import models.graphql.{GraphQLContext, GlobalGraphQLSchema}
 import models.user.User
 import play.api.libs.json.{JsObject, Json}
 import sangria.execution.{Executor, HandledException}
@@ -20,7 +20,7 @@ object GraphQLService {
     val ctx = GraphQLContext(app, user)
     QueryParser.parse(query) match {
       case Success(ast) => Executor.execute(
-        schema = GraphQLSchema.schema,
+        schema = GlobalGraphQLSchema.schema,
         queryAst = ast,
         userContext = ctx,
         operationName = operation,
