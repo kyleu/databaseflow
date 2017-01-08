@@ -1,13 +1,13 @@
 package models.user
 
-import models.graphql.{CommonSchema, GraphQLContext}
+import models.graphql.{CommonGraphQL, GraphQLContext}
 import sangria.macros.derive._
 import sangria.schema._
-import models.graphql.CommonSchema._
+import models.graphql.CommonGraphQL._
 import models.graphql.DateTimeSchema._
 
 object UserGraphQL {
-  implicit val roleEnum = CommonSchema.deriveEnumeratumType(
+  implicit val roleEnum = CommonGraphQL.deriveEnumeratumType(
     name = "Role",
     description = "The role of the system user.",
     values = Role.values.map(t => t -> t.entryName).toList

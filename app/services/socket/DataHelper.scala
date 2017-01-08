@@ -5,12 +5,10 @@ import java.util.UUID
 import models._
 import models.engine.EngineQueries
 import models.queries.dynamic.DynamicQuery
-import models.queries.result.CachedResultQueries
 import models.query.{QueryResult, RowDataOptions}
 import models.schema.{ForeignKey, PrimaryKey}
 import services.database.DatabaseWorkerPool
-import services.database.core.{MasterDatabase, ResultCacheDatabase}
-import services.schema.SchemaService
+import services.database.core.ResultCacheDatabase
 import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 trait DataHelper extends Logging { this: SocketService =>

@@ -1,8 +1,8 @@
 package models.connection
 
 import models.engine.DatabaseEngine
-import models.graphql.{CommonSchema, GraphQLContext}
-import models.graphql.CommonSchema._
+import models.graphql.{CommonGraphQL, GraphQLContext}
+import models.graphql.CommonGraphQL._
 import models.result.QueryResultGraphQL
 import models.schema.SchemaGraphQL
 import models.user.Permission
@@ -16,17 +16,17 @@ import services.schema.SchemaService
 import scala.concurrent.Future
 
 object ConnectionGraphQL {
-  val idArg = Argument("id", OptionInputType(CommonSchema.uuidType), description = "Filters the results to a connection matching the provided id.")
-  val nameArg = Argument("name", OptionInputType(StringType), description = "Filters the results to a connection matching the provided name.")
+  val idArg = Argument("id", OptionInputType(CommonGraphQL.uuidType), description = "Filters the results to a connection matching the provided id.")
+  val nameArg = Argument("name", OptionInputType(StringType), description = "Filters the results to models with a matching name (case-insensitive).")
   val sqlArg = Argument("sql", StringType, description = "The sql statement you wish to execute.")
 
-  implicit val permissionEnum = CommonSchema.deriveEnumeratumType(
+  implicit val permissionEnum = CommonGraphQL.deriveEnumeratumType(
     name = "Permission",
     description = "The role of the system user.",
     values = Permission.values.map(t => t -> t.entryName).toList
   )
 
-  implicit val databaseEngineEnum = CommonSchema.deriveEnumeratumType(
+  implicit val databaseEngineEnum = CommonGraphQL.deriveEnumeratumType(
     name = "DatabaseEngine",
     description = "The database engine used by this connection.",
     values = DatabaseEngine.values.map(t => t -> t.entryName).toList
@@ -40,7 +40,7 @@ object ConnectionGraphQL {
         name = "schema",
         description = Some("Returns the database schema that defines this connection."),
         fieldType = SchemaGraphQL.schemaType,
-        resolve = c => Future.successful(SchemaService.getSchemaFor(c.ctx.user, c.value))
+        resolve = c => SchemaService.getSchemaFor(c.ctx.user, c.value)
       ),
       Field(
         name = "sharedResult",
@@ -58,9 +58,9 @@ object ConnectionGraphQL {
         name = "query",
         description = Some("Runs the provided sql query and returns the result."),
         fieldType = QueryResultGraphQL.resultResponseType,
-        arguments = ConnectionGraphQL.sqlArg :: Nil,
+        arguments = sqlArg :: Nil,
         resolve = c => DatabaseRegistry.databaseForUser(c.ctx.user, c.value.id) match {
-          case Right(conn) => SimpleQueryService.run(conn, c.arg(ConnectionGraphQL.sqlArg), c.ctx.user.id, conn.connectionId)
+          case Right(conn) => SimpleQueryService.run(conn, c.arg(sqlArg), c.ctx.user.id, conn.connectionId)
           case Left(ex) => throw ex
         }
       )
@@ -72,7 +72,7 @@ object ConnectionGraphQL {
       name = "connection",
       description = Some("Returns information about the available database connections."),
       fieldType = ListType(connectionSettingsType),
-      arguments = ConnectionGraphQL.idArg :: ConnectionGraphQL.nameArg :: Nil,
+      arguments = ConnectionGraphQL.idArg :: nameArg :: Nil,
       resolve = c => Future.successful(ConnectionSettingsService.getVisible(c.ctx.user, c.arg(ConnectionGraphQL.idArg), c.arg(ConnectionGraphQL.nameArg)))
     )
   )

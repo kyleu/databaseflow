@@ -1,12 +1,12 @@
 package models.sandbox
 
-import models.graphql.{CommonSchema, GraphQLContext}
+import models.graphql.{CommonGraphQL, GraphQLContext}
 import sangria.macros.derive._
 import sangria.schema._
 import utils.ApplicationContext
 
 object SandboxGraphQL {
-  implicit val sandboxTaskEnum = CommonSchema.deriveEnumeratumType(
+  implicit val sandboxTaskEnum = CommonGraphQL.deriveEnumeratumType(
     name = "SandboxTask",
     description = "One-off tests that don't deserve a UI of their own.",
     values = SandboxTask.values.map(t => t -> t.description).toList

@@ -7,10 +7,11 @@ import sangria.validation.ValueCoercionViolation
 
 import scala.util.{Failure, Success, Try}
 
-object CommonSchema {
+object CommonGraphQL {
   val idArg = Argument("id", OptionInputType(IntType), description = "Returns model matching the provided id.")
   val keyArg = Argument("key", StringType, description = "Returns the model matching provided key.")
   val limitArg = Argument("limit", OptionInputType(IntType), description = "Caps the number of returned results.")
+  val offsetArg = Argument("offset", OptionInputType(IntType), description = "Starts the returned results after this number of rows.")
 
   case object UuidCoercionViolation extends ValueCoercionViolation("UUID value expected in format [00000000-0000-0000-0000-000000000000].")
 

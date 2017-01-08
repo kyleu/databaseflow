@@ -72,7 +72,7 @@ $(function(global) {
     var gqlChildren = [
       React.createElement(GraphiQL.Logo, {}, [
         React.createElement("div", { "className": "toggle-button" }, "☰"),
-        React.createElement("a", { "href": "/", "className": "title-link" }, "Database Flow GraphQL")
+        React.createElement("a", { "href": "/", "className": "title-link" }, "Database Flow")
       ])
     ];
 

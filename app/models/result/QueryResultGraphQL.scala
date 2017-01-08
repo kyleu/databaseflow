@@ -1,7 +1,7 @@
 package models.result
 
 import models.QueryResultResponse
-import models.graphql.CommonSchema._
+import models.graphql.CommonGraphQL._
 import models.graphql.GraphQLContext
 import models.query.{QueryResult, SavedQuery, SharedResult}
 import models.schema.SchemaGraphQL._
