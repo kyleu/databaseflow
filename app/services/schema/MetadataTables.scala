@@ -1,6 +1,7 @@
 package services.schema
 
 import java.sql.{Connection, DatabaseMetaData, Timestamp}
+import java.util.UUID
 
 import models.database.{Query, Row}
 import models.engine.DatabaseEngine.{MySQL, PostgreSQL}
@@ -11,9 +12,9 @@ import utils.{Logging, NullUtils}
 import scala.util.control.NonFatal
 
 object MetadataTables extends Logging {
-  def getTables(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+  def getTables(connectionId: UUID, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("TABLE"))
-    new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
+    new Row.Iter(rs).map(row => fromRow(connectionId, row)).toList.sortBy(_.name)
   }
 
   def withTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table]) = tables.map { table =>
@@ -80,8 +81,9 @@ object MetadataTables extends Logging {
       table
   }
 
-  private[this] def fromRow(row: Row) = Table(
+  private[this] def fromRow(connectionId: UUID, row: Row) = Table(
     name = row.as[String]("TABLE_NAME"),
+    connection = connectionId,
     catalog = row.asOpt[String]("TABLE_CAT"),
     schema = row.asOpt[String]("TABLE_SCHEM"),
     description = row.asOpt[String]("REMARKS"),

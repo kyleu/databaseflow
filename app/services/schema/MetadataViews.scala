@@ -1,6 +1,7 @@
 package services.schema
 
 import java.sql.{Connection, DatabaseMetaData}
+import java.util.UUID
 
 import models.database.{Query, Row}
 import models.engine.DatabaseEngine.MySQL
@@ -11,9 +12,9 @@ import utils.{Logging, NullUtils}
 import scala.util.control.NonFatal
 
 object MetadataViews extends Logging {
-  def getViews(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+  def getViews(connectionId: UUID, metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
     val rs = metadata.getTables(catalog.orNull, schema.orNull, NullUtils.inst, Array("VIEW"))
-    new Row.Iter(rs).map(fromRow).toList.sortBy(_.name)
+    new Row.Iter(rs).map(row => fromRow(connectionId, row)).toList.sortBy(_.name)
   }
 
   def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[View]) = views.map { view =>
@@ -41,8 +42,9 @@ object MetadataViews extends Logging {
       view
   }
 
-  private[this] def fromRow(row: Row) = View(
+  private[this] def fromRow(connectionId: UUID, row: Row) = View(
     name = row.as[String]("TABLE_NAME"),
+    connection = connectionId,
     catalog = row.asOpt[String]("TABLE_CAT"),
     schema = row.asOpt[String]("TABLE_SCHEM"),
     description = row.asOpt[String]("REMARKS"),

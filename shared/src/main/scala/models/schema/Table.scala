@@ -1,7 +1,10 @@
 package models.schema
 
+import java.util.UUID
+
 case class Table(
   name: String,
+  connection: UUID,
   catalog: Option[String],
   schema: Option[String],
   description: Option[String],

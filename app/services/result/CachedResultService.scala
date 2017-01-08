@@ -65,7 +65,7 @@ object CachedResultService extends Logging {
     } catch {
       case _: AbstractMethodError => None
     }
-    val ret = MetadataTables.getTables(metadata, Option(conn.getCatalog), schema)
+    val ret = MetadataTables.getTables(ResultCacheDatabase.connectionId, metadata, Option(conn.getCatalog), schema)
     ret.map(_.name).filter(_.startsWith("result_")).toSet
   }
 

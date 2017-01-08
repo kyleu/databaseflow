@@ -9,6 +9,9 @@ import models.engine.DatabaseEngine
 import models.queries.result.CachedResultQueries
 import models.query.RowDataOptions
 import models.schema.{ForeignKey, PrimaryKey}
+import models.user.User
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.SchemaService
 import utils.Logging
@@ -17,6 +20,19 @@ import scala.concurrent.Future
 
 object RowDataService extends Logging {
   case class Params(queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID)
+
+  def getRowData(user: User, connectionId: UUID, key: String, name: String, limit: Option[Int], offset: Option[Int]) = {
+    val options = RowDataOptions(limit = limit, offset = offset)
+    val (conn, db, engine) = DatabaseRegistry.databaseForUser(user, connectionId) match {
+      case Right(database) => (connectionId, database, database.engine)
+      case Left(x) => throw x
+    }
+    handleGetRowData(conn, db, engine, key, UUID.randomUUID, name, options, UUID.randomUUID, None).map {
+      case qrr: QueryResultResponse => qrr.result
+      case se: ServerError => throw new IllegalStateException(se.reason + ": " + se.content)
+      case x => throw new IllegalStateException(x.toString)
+    }
+  }
 
   def handleGetRowData(
     conn: UUID, db: Queryable, engine: DatabaseEngine, key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]
