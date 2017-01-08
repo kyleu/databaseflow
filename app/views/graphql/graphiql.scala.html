@@ -1,4 +1,4 @@
-@(user: models.user.User, queries: Seq[models.graphql.GraphQLQuery], q: Option[models.graphql.GraphQLQuery])(
+@(user: models.user.User, queries: Seq[models.graphql.GraphQLQuery], query: Option[models.graphql.GraphQLQuery])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.basic(Some(user), utils.Config.projectName + " GraphQL", scripts = Seq(
   routes.Assets.versioned("lib/graphiql/fetch.min.js").url,
@@ -21,12 +21,12 @@
     }
 
     .graphiql-container .topBar {
-      background: #607d8b;
+      background: @user.preferences.theme.color;
       color: #fff;
     }
 
     .graphiql-container .docExplorerShow {
-      background: #607d8b;
+      background: @user.preferences.theme.color;
       color: #fff;
       border-left: none;
     }
@@ -61,7 +61,23 @@
     }
   </style>
 
-  @views.html.graphql.options(queries)
+
+  @if(query.isDefined) {
+    @defining(query.get) { q =>
+      <script>
+        window.graphQLQuery = {
+          "id": "@q.id",
+          "connection": "@q.connection.getOrElse("")",
+          "category": "@q.category.getOrElse("")",
+          "name": "@q.name",
+          "query": "@q.query",
+          "read": "@q.read",
+          "edit": "@q.edit"
+        };
+      </script>
+    }
+  }
+  @views.html.graphql.options(queries, user.preferences.theme.color)
   <div id="graphiql">Loading...</div>
   <script>renderGraphiql(document.getElementById('graphiql'))</script>
 }

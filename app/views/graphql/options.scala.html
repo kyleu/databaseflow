@@ -1,11 +1,11 @@
-@(queries: Seq[models.graphql.GraphQLQuery])(implicit request: Request[AnyContent], session: Session, flash: Flash)
+@(queries: Seq[models.graphql.GraphQLQuery], color: String)(implicit request: Request[AnyContent], session: Session, flash: Flash)
 <style>
   #file-options {
     font-family: system, -apple-system, 'San Francisco', '.SFNSDisplay-Regular', 'Segoe UI', Segoe, 'Segoe WP', 'Helvetica Neue', helvetica, 'Lucida Grande', arial, sans-serif;
     display: none;
     float: left;
     width: 240px;
-    background-color: #607d8b;
+    background-color: @color;
     height: 100vh;
     color: #fff;
     overflow: auto;
