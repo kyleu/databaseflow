@@ -30,9 +30,9 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case qrr: QueryResultResponse => if (qrr.result.source.exists(_.dataOffset > 0)) {
       QueryAppendService.handleAppendQueryResult(qrr.id, qrr.result)
     } else if (qrr.result.isStatement) {
-      StatementResultService.handleNewStatementResults(qrr.id, qrr.index, qrr.result, qrr.durationMs)
+      StatementResultService.handleNewStatementResults(qrr.id, qrr.index, qrr.result, qrr.result.elapsedMs)
     } else {
-      QueryResultService.handleNewQueryResults(qrr.id, qrr.index, qrr.result, qrr.durationMs)
+      QueryResultService.handleNewQueryResults(qrr.id, qrr.index, qrr.result, qrr.result.elapsedMs)
     }
     case qrrc: QueryResultRowCount => RowCountService.handleResultRowCount(qrrc)
     case qer: QueryErrorResponse => QueryErrorService.handleQueryErrorResponse(qer)

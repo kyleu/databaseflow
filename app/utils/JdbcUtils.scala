@@ -20,20 +20,20 @@ object JdbcUtils extends Logging {
     f()
   } catch {
     case NonFatal(t) =>
-      val durationMs = (DateUtils.nowMillis - startMs).toInt
-      log.warn(s"Encountered query error after [${durationMs}ms] running sql [$sql].", t)
+      val elapsedMs = (DateUtils.nowMillis - startMs).toInt
+      log.warn(s"Encountered query error after [${elapsedMs}ms] running sql [$sql].", t)
       t match {
         case sqlEx: PSQLException =>
           val e = sqlEx.getServerErrorMessage
           val lineIndex = Source.fromString(sql).getLines().take(e.getLine - 1).map(_.length).sum
           val index = lineIndex + e.getPosition
-          QueryErrorResponse(resultId, index, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(index), startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, e.getSQLState, e.getMessage, Some(index), elapsedMs, startMs))
         case sqlEx: SQLSyntaxErrorException =>
-          QueryErrorResponse(resultId, index, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, elapsedMs = elapsedMs, occurred = startMs))
         case sqlEx: MySQLStatementCancelledException =>
-          QueryErrorResponse(resultId, index, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, sqlEx.getSQLState, sqlEx.getMessage, elapsedMs = elapsedMs, occurred = startMs))
         case x =>
-          QueryErrorResponse(resultId, index, QueryError(queryId, sql, x.getClass.getSimpleName, x.getMessage, occurred = startMs), durationMs)
+          QueryErrorResponse(resultId, index, QueryError(queryId, sql, x.getClass.getSimpleName, x.getMessage, elapsedMs = elapsedMs, occurred = startMs))
       }
   }
 

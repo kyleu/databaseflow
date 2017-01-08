@@ -53,15 +53,16 @@ object ResultQueryHelper extends Logging {
 
   def getResultResponseFor(resultId: UUID, idx: Int, queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[Any]]], elapsedMs: Int) = {
     val mappedData = data.map(_.map(_.map(DynamicQuery.transform)))
-    QueryResultResponse(resultId, idx, getResultFor(queryId, sql, columns, mappedData), elapsedMs)
+    QueryResultResponse(resultId, idx, getResultFor(queryId, sql, columns, mappedData, elapsedMs))
   }
 
-  private[this] def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]]) = QueryResult(
+  private[this] def getResultFor(queryId: UUID, sql: String, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]], elapsedMs: Int) = QueryResult(
     queryId = queryId,
     sql = sql,
     columns = columns,
     data = data,
-    rowsAffected = data.size
+    rowsAffected = data.size,
+    elapsedMs = elapsedMs
   )
 
   def sendResult(
@@ -85,8 +86,9 @@ object ResultQueryHelper extends Logging {
         source = Some(QueryResult.Source(
           t = "cache",
           name = result.tableName
-        ))
-      ), elapsedMs)
+        )),
+        elapsedMs = elapsedMs
+      ))
       o ! msg
     }
   }

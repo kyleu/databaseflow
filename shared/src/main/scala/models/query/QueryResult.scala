@@ -49,5 +49,6 @@ case class QueryResult(
   rowsAffected: Int = 0,
   moreRowsAvailable: Boolean = false,
   source: Option[QueryResult.Source] = None,
+  elapsedMs: Int,
   occurred: Long = System.currentTimeMillis
 )

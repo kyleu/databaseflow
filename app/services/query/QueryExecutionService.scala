@@ -52,12 +52,12 @@ object QueryExecutionService extends Logging {
 
         val result = db.executeUnknown(CachedResultQuery(sql._2, model, Some(out)), Some(resultId))
 
-        val durationMs = (DateUtils.nowMillis - startMs).toInt
+        val elapsedMs = (DateUtils.nowMillis - startMs).toInt
         result match {
           case Left(rm) => rm
           case Right(rowCount) =>
-            val qr = QueryResult(queryId = queryId, sql = sql._1, isStatement = true, rowsAffected = rowCount, occurred = startMs)
-            QueryResultResponse(resultId, sql._2, qr, durationMs)
+            val qr = QueryResult(queryId = queryId, sql = sql._1, isStatement = true, rowsAffected = rowCount, elapsedMs = elapsedMs, occurred = startMs)
+            QueryResultResponse(resultId, sql._2, qr)
         }
       }
     }

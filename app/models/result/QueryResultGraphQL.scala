@@ -4,7 +4,7 @@ import models.QueryResultResponse
 import models.graphql.CommonGraphQL._
 import models.graphql.GraphQLContext
 import models.query.{QueryResult, SavedQuery, SharedResult}
-import models.schema.SchemaGraphQL._
+import models.schema.SchemaModelGraphQL._
 import models.connection.ConnectionGraphQL.permissionEnum
 import sangria.macros.derive._
 import sangria.schema.ObjectType

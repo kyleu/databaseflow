@@ -10,7 +10,7 @@ object QueryErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String) = {
     val content = div(id := qe.id.toString)(
       a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql")),
-      p("Error encountered ", TemplateUtils.toTimeago(dateIsoString), s" in [${qe.durationMs}ms]."),
+      p("Error encountered ", TemplateUtils.toTimeago(dateIsoString), s" in [${qe.error.elapsedMs}ms]."),
       div(cls := "z-depth-1 query-result-sql")(
         pre(cls := "pre-wrap")(qe.error.sql)
       ),

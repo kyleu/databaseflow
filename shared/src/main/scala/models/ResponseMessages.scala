@@ -35,8 +35,8 @@ case class TransactionStatus(state: TransactionState, occurred: Long) extends Re
 
 case class QueryCheckResponse(queryId: UUID, results: Seq[QueryCheckResult]) extends ResponseMessage
 case class QueryResultRowCount(id: UUID, queryId: UUID, resultId: UUID, count: Int, overflow: Boolean, durationMs: Int) extends ResponseMessage
-case class QueryResultResponse(id: UUID, index: Int, result: QueryResult, durationMs: Int) extends ResponseMessage
-case class QueryErrorResponse(id: UUID, index: Int, error: QueryError, durationMs: Int) extends ResponseMessage
+case class QueryResultResponse(id: UUID, index: Int, result: QueryResult) extends ResponseMessage
+case class QueryErrorResponse(id: UUID, index: Int, error: QueryError) extends ResponseMessage
 case class QueryCancelledResponse(queryId: UUID, resultId: UUID) extends ResponseMessage
 
 case class ChartDataResponse(chartId: UUID, columns: Seq[QueryResult.Col], data: Seq[Seq[Option[String]]], durationMs: Int) extends ResponseMessage

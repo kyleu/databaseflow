@@ -1,64 +1,13 @@
 package models.schema
 
 import models.connection.ConnectionGraphQL
-import models.graphql.{CommonGraphQL, GraphQLContext}
-import sangria.macros.derive._
 import models.graphql.CommonGraphQL._
-import models.result.QueryResultGraphQL
+import models.graphql.GraphQLContext
+import sangria.macros.derive._
 import sangria.schema._
-import services.query.{RowDataHelper, RowDataService}
+import SchemaModelGraphQL._
 
 object SchemaGraphQL {
-  implicit val columnTypeEnum = CommonGraphQL.deriveEnumeratumType(
-    name = "ColumnType",
-    description = "The datatype of the column.",
-    values = ColumnType.values.map(t => t -> t.entryName).toList
-  )
-
-  implicit val filterOpEnum = CommonGraphQL.deriveEnumeratumType(
-    name = "FilterOp",
-    description = "A filtering operation, usually applied to two values.",
-    values = FilterOp.values.map(t => t -> t.entryName).toList
-  )
-
-  implicit val referenceType = deriveObjectType[GraphQLContext, Reference](ObjectTypeDescription("A reference to a different table or view."))
-  implicit val primaryKeyType = deriveObjectType[GraphQLContext, PrimaryKey](ObjectTypeDescription("A primary key for this table or view."))
-  implicit val foreignKeyType = deriveObjectType[GraphQLContext, ForeignKey](ObjectTypeDescription("A foreign key for this table or view."))
-
-  implicit val indexColumnType = deriveObjectType[GraphQLContext, IndexColumn](ObjectTypeDescription("A column for this database index."))
-  implicit val indexType = deriveObjectType[GraphQLContext, Index](ObjectTypeDescription("A database index for this table."))
-
-  implicit val columnType = deriveObjectType[GraphQLContext, Column](ObjectTypeDescription("A database column for this table or view."))
-
-  implicit val tableType = deriveObjectType[GraphQLContext, Table](
-    ObjectTypeDescription("A database table for this connection."),
-    AddFields(Field(
-      name = "data",
-      description = Some("Return this table's data, passing filters as arguments."),
-      fieldType = QueryResultGraphQL.resultType,
-      arguments = CommonGraphQL.limitArg :: CommonGraphQL.offsetArg :: Nil,
-      resolve = c => RowDataService.getRowData(
-        c.ctx.user, c.value.connection, "table", c.value.name, c.arg(CommonGraphQL.limitArg), c.arg(CommonGraphQL.offsetArg)
-      )
-    ))
-  )
-
-  implicit val viewType = deriveObjectType[GraphQLContext, View](
-    ObjectTypeDescription("A database view for this connection."),
-    AddFields(Field(
-      name = "data",
-      description = Some("Return this view's data, passing filters as arguments."),
-      fieldType = QueryResultGraphQL.resultType,
-      arguments = CommonGraphQL.limitArg :: CommonGraphQL.offsetArg :: Nil,
-      resolve = c => RowDataService.getRowData(
-        c.ctx.user, c.value.connection, "view", c.value.name, c.arg(CommonGraphQL.limitArg), c.arg(CommonGraphQL.offsetArg)
-      )
-    ))
-  )
-
-  implicit val procedureParamType = deriveObjectType[GraphQLContext, ProcedureParam](ObjectTypeDescription("The parameter for this stored procedure."))
-  implicit val procedureType = deriveObjectType[GraphQLContext, Procedure](ObjectTypeDescription("A stored procedure for this connection."))
-
   implicit val schemaType = deriveObjectType[GraphQLContext, Schema](
     ObjectTypeDescription("The database schema describing this connection."),
     ReplaceField("tables", Field(

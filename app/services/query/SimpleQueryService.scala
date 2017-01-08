@@ -28,9 +28,11 @@ object SimpleQueryService extends Logging {
 
     val result = db.query(DynamicQuery(sql, Nil))
 
-    val durationMs = (DateUtils.nowMillis - startMs).toInt
-    val qr = QueryResult(queryId = queryId, sql = sql, columns = result.cols, data = result.data, rowsAffected = result.data.length, occurred = startMs)
-    QueryResultResponse(resultId, 0, qr, durationMs)
+    val elapsedMs = (DateUtils.nowMillis - startMs).toInt
+    val qr = QueryResult(
+      queryId = queryId, sql = sql, columns = result.cols, data = result.data, rowsAffected = result.data.length, elapsedMs = elapsedMs, occurred = startMs
+    )
+    QueryResultResponse(resultId, 0, qr)
   }
 
   def runQuery(user: User, cs: ConnectionSettings, sql: String) = DatabaseRegistry.databaseForUser(user, cs.id) match {

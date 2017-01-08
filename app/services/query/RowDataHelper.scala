@@ -39,6 +39,8 @@ object RowDataHelper extends Logging {
           }
         }
 
+        val elapsedMs = (DateUtils.nowMillis - startMs).toInt
+
         val qr = QueryResult(
           queryId = params.queryId,
           sql = sql,
@@ -47,11 +49,10 @@ object RowDataHelper extends Logging {
           rowsAffected = trimmedData.length,
           moreRowsAvailable = moreRowsAvailable,
           source = Some(params.options.toSource(params.t, params.name)),
+          elapsedMs = elapsedMs,
           occurred = startMs
         )
-
-        val durationMs = (DateUtils.nowMillis - startMs).toInt
-        QueryResultResponse(params.resultId, 0, qr, durationMs)
+        QueryResultResponse(params.resultId, 0, qr)
       }
     }
     def onSuccess(rm: ResponseMessage) = out.foreach(_ ! rm)

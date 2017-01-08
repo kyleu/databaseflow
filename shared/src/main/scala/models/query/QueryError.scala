@@ -8,5 +8,6 @@ case class QueryError(
   code: String,
   message: String,
   index: Option[Int] = None,
+  elapsedMs: Int,
   occurred: Long = System.currentTimeMillis
 )
