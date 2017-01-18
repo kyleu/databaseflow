@@ -46,8 +46,8 @@ object Dependencies {
     val mysql = "mysql" % "mysql-connector-java" % "5.1.40" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.15.1"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.0.jre8"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.16.1"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.2.jre8-preview"
   }
 
   object Hibernate {

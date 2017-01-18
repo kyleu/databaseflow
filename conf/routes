@@ -26,11 +26,16 @@ GET         /shared/:id/remove                       controllers.SharedResultCon
 GET         /shared/:id/export/:fmt                  controllers.ExportController.exportShared(id: java.util.UUID, fmt)
 
 # GraphQL
-GET         /graphql                                 controllers.graphql.GraphQLController.graphql(id: Option[java.util.UUID] ?= None)
-POST        /graphql                                 controllers.graphql.GraphQLController.graphqlBody
-GET         /graphql/load                            controllers.graphql.GraphQLController.load(id: java.util.UUID)
-POST        /graphql/save                            controllers.graphql.GraphQLController.save
-GET         /schema                                  controllers.graphql.GraphQLController.renderSchema
+GET         /graphql/load                            controllers.graphql.GlobalGraphQLController.load(id: java.util.UUID)
+POST        /graphql/save                            controllers.graphql.GlobalGraphQLController.save
+
+GET         /schema                                  controllers.graphql.GlobalGraphQLController.renderSchema
+GET         /graphql                                 controllers.graphql.GlobalGraphQLController.graphql(id: Option[java.util.UUID] ?= None)
+POST        /graphql                                 controllers.graphql.GlobalGraphQLController.graphqlBody
+
+GET         /schema/:conn                            controllers.graphql.ConnectionGraphQLController.renderSchema(conn: java.util.UUID)
+GET         /graphql/:conn                           controllers.graphql.ConnectionGraphQLController.graphql(conn: java.util.UUID, id: Option[java.util.UUID] ?= None)
+POST        /graphql/:conn                           controllers.graphql.ConnectionGraphQLController.graphqlBody(conn: java.util.UUID)
 
 # Admin
 ->          /admin                                   admin.Routes

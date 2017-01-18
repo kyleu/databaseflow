@@ -1,6 +1,7 @@
 package models.graphql
 
 import models.connection.{ConnectionGraphQL, ConnectionSettings}
+import sangria.renderer.SchemaRenderer
 import sangria.schema._
 
 case class ConnectionGraphQLSchema(cs: ConnectionSettings) {
@@ -13,4 +14,6 @@ case class ConnectionGraphQLSchema(cs: ConnectionSettings) {
   )
 
   val schema = sangria.schema.Schema(query = queryType)
+
+  lazy val renderedSchema = SchemaRenderer.renderSchema(schema)
 }

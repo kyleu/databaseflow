@@ -16,7 +16,12 @@ object GraphQLQueries extends BaseQueries[GraphQLQuery] {
   val insert = Insert
   def removeById(id: UUID) = RemoveById(Seq(id))
   def getAll(orderBy: String = "\"name\"") = GetAll(orderBy = orderBy)
-  def getVisible(owner: User, orderBy: String = "\"name\"") = {
+
+  def getVisible(owner: User, connection: Option[UUID], orderBy: String = "\"name\"") = {
+    val connectionPerms = connection match {
+      case Some(c) => s""""connection_id" = '$c' and """
+      case None => "\"connection_id\" is null and "
+    }
     val readPerms = if (owner.role == Role.Admin) {
       "\"read\" in ('user', 'admin')"
     } else {
@@ -25,7 +30,7 @@ object GraphQLQueries extends BaseQueries[GraphQLQuery] {
     val ownerPerms = " or \"owner\" = ?"
     val values = Seq(owner.id)
     GetAll(
-      whereClause = Some(readPerms + ownerPerms),
+      whereClause = Some(connectionPerms + readPerms + ownerPerms),
       orderBy = orderBy,
       values = values
     )

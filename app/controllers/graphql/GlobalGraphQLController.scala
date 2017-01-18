@@ -12,31 +12,28 @@ import play.api.libs.json._
 import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.playJson._
 import sangria.parser.SyntaxError
-import sangria.renderer.SchemaRenderer
 import services.graphql.{GraphQLQueryService, GraphQLService}
 import utils.ApplicationContext
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext, system: ActorSystem) extends BaseController {
-  private[this] lazy val renderedSchema = SchemaRenderer.renderSchema(GlobalGraphQLSchema.schema)
-
+class GlobalGraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext, system: ActorSystem) extends BaseController {
   def renderSchema = withSession("graphql.schema") { implicit request =>
-    Future.successful(Ok(renderedSchema))
+    Future.successful(Ok(GlobalGraphQLSchema.renderedSchema).as("application/json"))
   }
 
-  def graphql(id: Option[UUID]) = {
+  def graphql(queryId: Option[UUID]) = {
     withSession("graphql.ui") { implicit request =>
-      val list = GraphQLQueryService.getVisible(request.identity, None, None)
-      val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
-      Future.successful(Ok(views.html.graphql.graphiql(request.identity, list, q)))
+      val list = GraphQLQueryService.getVisible(request.identity, None, None, None)
+      val q = queryId.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
+      Future.successful(Ok(views.html.graphql.graphiql(request.identity, None, list, q)))
     }
   }
 
-  def load(id: UUID) = withSession("graphql.load") { implicit request =>
-    val q = GraphQLQueryService.getById(id, Some(request.identity))
-    Future.successful(Redirect(controllers.graphql.routes.GraphQLController.graphql(id = Some(id)).url))
+  def load(queryId: UUID) = withSession("graphql.load") { implicit request =>
+    val q = GraphQLQueryService.getById(queryId, Some(request.identity))
+    Future.successful(Redirect(controllers.graphql.routes.GlobalGraphQLController.graphql(id = Some(queryId)).url))
   }
 
   def save = withSession("graphql.save") { implicit request =>
@@ -82,7 +79,7 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
 
   def executeQuery(query: String, variables: Option[JsObject], operation: Option[String], user: User) = {
     try {
-      val f = GraphQLService.executeQuery(ctx, None, query, variables, operation, user)
+      val f = GraphQLService.executeQuery(ctx, GlobalGraphQLSchema.schema, query, variables, operation, user)
       f.map(Ok(_)).recover {
         case error: QueryAnalysisError => BadRequest(error.resolveError)
         case error: ErrorWithResolver => InternalServerError(error.resolveError)

@@ -3,6 +3,7 @@ package models.graphql
 import models.connection.ConnectionGraphQL
 import models.sandbox.SandboxGraphQL
 import models.user.UserGraphQL
+import sangria.renderer.SchemaRenderer
 import sangria.schema._
 
 object GlobalGraphQLSchema {
@@ -26,4 +27,6 @@ object GlobalGraphQLSchema {
     query = queryType,
     mutation = Some(mutationType)
   )
+
+  lazy val renderedSchema = SchemaRenderer.renderSchema(schema)
 }

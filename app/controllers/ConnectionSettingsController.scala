@@ -25,9 +25,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
   def editForm(id: UUID) = withSession("edit-form-" + id) { implicit request =>
     val addConnectionRole = Role.withName(SettingsService(models.settings.SettingKey.AddConnectionRole))
     if (request.identity.role.qualifies(addConnectionRole)) {
-      val conn = ConnectionSettingsService.getById(id).getOrElse {
-        throw new IllegalArgumentException(s"Invalid connection [$id].")
-      }
+      val conn = ConnectionSettingsService.getById(id).getOrElse(throw new IllegalArgumentException(s"Invalid connection [$id]."))
       Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
     } else {
       Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))

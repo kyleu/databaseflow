@@ -42,7 +42,7 @@ $(function(global) {
   }
 
   function graphQLFetcher(graphQLParams) {
-    return fetch(window.location.origin + '/graphql', {
+    return fetch(window.location.origin + window.graphQLUrl, {
       method: 'post',
       headers: {
         'Accept': 'application/json',

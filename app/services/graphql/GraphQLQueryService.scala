@@ -11,8 +11,8 @@ import services.database.core.MasterDatabase
 import utils.Logging
 
 object GraphQLQueryService extends Logging {
-  def getVisible(user: User, id: Option[UUID] = None, name: Option[String] = None) = {
-    val c = MasterDatabase.query(GraphQLQueries.getVisible(user))
+  def getVisible(user: User, connection: Option[UUID], id: Option[UUID] = None, name: Option[String] = None) = {
+    val c = MasterDatabase.query(GraphQLQueries.getVisible(user, connection))
     id match {
       case Some(i) => c.filter(_.id == i)
       case None => name match {
