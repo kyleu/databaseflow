@@ -7,58 +7,21 @@
   routes.Assets.versioned("lib/graphiql/graphiql.min.js").url,
   routes.Assets.versioned("lib/jquery/jquery.min.js").url,
   routes.Assets.versioned("lib/graphiql/app-graphiql.js").url
-), stylesheets = Seq(routes.Assets.versioned("lib/graphiql/graphiql.css").url)) {
+), stylesheets = Seq(
+  routes.Assets.versioned("lib/graphiql/graphiql.css").url,
+  routes.Assets.versioned("stylesheets/graphiql.min.css").url
+)) {
   <style>
-    body {
-      height: 100%;
-      margin: 0;
-      width: 100%;
-      overflow: hidden;
-    }
+  .graphiql-container .topBar {
+    background: @user.preferences.theme.color;
+    color: #fff;
+  }
 
-    #graphiql {
-      height: 100vh;
-    }
-
-    .graphiql-container .topBar {
-      background: @user.preferences.theme.color;
-      color: #fff;
-    }
-
-    .graphiql-container .docExplorerShow {
-      background: @user.preferences.theme.color;
-      color: #fff;
-      border-left: none;
-    }
-
-    .graphiql-container .docExplorerShow:before {
-      border-left: 2px solid #fff;
-      border-top: 2px solid #fff;
-    }
-
-    .graphiql-container .CodeMirror-lines {
-      padding: 0;
-    }
-
-    .graphiql-container .execute-button-wrap {
-      margin: 0 12px;
-    }
-
-    .graphiql-container .execute-button {
-      box-shadow: none;
-    }
-
-    .graphiql-container .toggle-button {
-      float: left;
-      font-size: 1.3rem;
-      margin: -4px 14px 0 -4px;
-      cursor: pointer;
-    }
-
-    .graphiql-container .title-link {
-      color: #fff;
-      text-decoration: none;
-    }
+  .graphiql-container .docExplorerShow {
+    background: @user.preferences.theme.color;
+    color: #fff;
+    border-left: none;
+  }
   </style>
 
   <script>
