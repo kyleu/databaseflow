@@ -48,6 +48,7 @@ object InitService {
     TemplateUtils.clickHandler($("#begin-tx-link"), jq => TransactionService.beginTransaction())
     TemplateUtils.clickHandler($("#new-query-link"), jq => AdHocQueryManager.addNewQuery())
     TemplateUtils.clickHandler($(".show-list-link"), jq => ModelListManager.showList(jq.data("key").toString))
+    TemplateUtils.clickHandler($("#sidenav-graphql-link"), jq => GraphQLManager.show())
     TemplateUtils.clickHandler($("#sidenav-help-link"), jq => HelpManager.show())
     TemplateUtils.clickHandler($("#sidenav-feedback-link"), jq => FeedbackManager.show())
     TemplateUtils.clickHandler($("#sidenav-refresh-link"), jq => MetadataManager.refreshSchema())

@@ -143,6 +143,7 @@ query.sidenav.shared.results = Shared Results
 query.sidenav.tables = Tables
 query.sidenav.views = Views
 query.sidenav.procedures = Stored Procedures
+query.sidenav.graphql = GraphQL
 query.sidenav.help = Help
 query.sidenav.feedback = Feedback
 query.sidenav.about = About {0}
