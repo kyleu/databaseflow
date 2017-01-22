@@ -59,6 +59,7 @@ object InitService {
   def performInitialAction() = {
     TabManager.initIfNeeded()
     NavigationService.initialMessage match {
+      case ("graphql", None) => GraphQLManager.show()
       case ("help", None) => HelpManager.show()
       case ("feedback", None) => FeedbackManager.show()
       case ("history", None) => HistoryManager.show()

@@ -101,6 +101,9 @@ list.unknown.connection = Unknown Connection
 list.all.connections = All Connections
 list.filter = Filter {0}
 
+# GraphQL
+graphql.title = GraphQL
+
 # Help
 help.title = {0} Help
 help.global.shortcuts = Global Shortcuts

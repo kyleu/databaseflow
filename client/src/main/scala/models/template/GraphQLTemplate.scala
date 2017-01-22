@@ -1,19 +1,20 @@
 package models.template
 
-import models.audit.AuditRecord
-import utils.{Messages, TemplateUtils}
+import utils.Messages
 
 import scalatags.Text.all._
 
 object GraphQLTemplate {
   val panel = {
     val content = div(id := "graphql-panel")(
-      div(cls := "graphql-content")(Messages("general.loading"))
+      div(cls := "graphql-content")(
+        iframe(style := "height: 600px; width: 100%; border: none;")
+      )
     )
 
     StaticPanelTemplate.row(StaticPanelTemplate.panel(
       content = content,
-      iconAndTitle = Some(Icons.history -> span(Messages("graphql.title")))
+      iconAndTitle = Some(Icons.graphQL -> span(Messages("graphql.title")))
     ))
   }
 

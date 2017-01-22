@@ -24,6 +24,7 @@ object NavigationService {
   }
 
   def initialMessage = Option(loc.hash).getOrElse("").stripPrefix("#") match {
+    case x if x == "graphql" => x -> None
     case x if x == "help" => x -> None
     case x if x == "feedback" => x -> None
     case x if x == "history" => x -> None

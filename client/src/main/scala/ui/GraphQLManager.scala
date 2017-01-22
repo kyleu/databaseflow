@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.template.{GraphQLTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
+import services.NavigationService
 import ui.query.QueryManager
 
 import scalatags.Text.all._
@@ -29,6 +30,8 @@ object GraphQLManager {
 
       val queryPanel = $(s"#panel-$graphqlId")
 
+      val frame = $("iframe", queryPanel)
+      frame.attr("src", s"/graphql/${NavigationService.connectionId}")
       isOpen = true
     }
   }
