@@ -15,10 +15,20 @@
         } else {
           @c.host@c.port.map(":" + _).getOrElse("")/@c.dbName
         }</em>
-        <a href="@controllers.routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">@messages("query.title")</a>
+        <a href="@controllers.routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
+          <i class="fa @models.template.Icons.adHocQuery"></i>
+          @messages("query.title")
+        </a>
+        <a href="@controllers.graphql.routes.ConnectionGraphQLController.graphql(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
+          <i class="fa @models.template.Icons.graphQL"></i>
+          @messages("graphql.title")
+        </a>
         @defining(services.connection.ConnectionSettingsService.canEdit(user, c)) { canEdit =>
           @if(canEdit._1) {
-            <a title="@canEdit._2" href="@controllers.routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn theme">@messages("general.edit")</a>
+            <a title="@canEdit._2" href="@controllers.routes.ConnectionSettingsController.editForm(c.id)" class="waves-effect waves-light btn theme">
+              <i class="fa @models.template.Icons.settings"></i>
+              @messages("general.edit")
+            </a>
           } else {
             <!-- Cannot edit. @canEdit._2 -->
           }

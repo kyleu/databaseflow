@@ -161,6 +161,10 @@ shared.results.personal.title = My Shared Results
 shared.results.public.title = Public Shared Results
 shared.results.public.none = No public shared results available.
 
+# GraphQL
+graphql.title = GraphQL
+
+
 # Socket Service
 socket.connect.error = Error attempting to connect to database.
 socket.connect.failed = Connection Failed
