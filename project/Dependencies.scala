@@ -6,7 +6,7 @@ object Dependencies {
   }
 
   object Logging {
-    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.22"
+    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.24"
   }
 
   object Play {
@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.16"
+    private[this] val version = "2.4.17"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -38,16 +38,16 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.5.1"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.0"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.193"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.40" // 6.0 is all different
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.41" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.16.1"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.2.jre8-preview"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.4.jre8-preview"
   }
 
   object Hibernate {
@@ -59,7 +59,7 @@ object Dependencies {
   }
 
   object Ui {
-    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.0-M2"
+    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.0"
   }
 
   object Serialization {
@@ -68,14 +68,15 @@ object Dependencies {
   }
 
   object Metrics {
-    val metrics = "nl.grons" %% "metrics-scala" % "3.5.5"
-    val jvm = "io.dropwizard.metrics" % "metrics-jvm" % "3.1.2"
-    val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % "3.1.2" intransitive()
-    val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % "3.1.2" intransitive()
-    val json = "io.dropwizard.metrics" % "metrics-json" % "3.1.2" exclude("com.fasterxml.jackson.core", "jackson-databind")
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.14.v20161028"
-    val servlets = "io.dropwizard.metrics" % "metrics-servlets" % "3.1.2" intransitive()
-    val graphite = "io.dropwizard.metrics" % "metrics-graphite" % "3.1.2" intransitive()
+    val version = "3.2.0"
+    val metrics = "nl.grons" %% "metrics-scala" % "3.5.6"
+    val jvm = "io.dropwizard.metrics" % "metrics-jvm" % version
+    val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % version intransitive()
+    val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % version intransitive()
+    val json = "io.dropwizard.metrics" % "metrics-json" % version exclude("com.fasterxml.jackson.core", "jackson-databind")
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.16.v20170120"
+    val servlets = "io.dropwizard.metrics" % "metrics-servlets" % version intransitive()
+    val graphite = "io.dropwizard.metrics" % "metrics-graphite" % version intransitive()
   }
 
   object Commerce {
@@ -84,7 +85,7 @@ object Dependencies {
   }
 
   object ScalaJS {
-    val scalaTagsVersion = "0.6.2"
+    val scalaTagsVersion = "0.6.3"
     val jQueryVersion = "0.9.1"
   }
 
@@ -96,7 +97,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.3.0"
-    val enumeratumVersion = "1.5.6"
+    val enumeratumVersion = "1.5.8"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
