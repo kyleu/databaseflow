@@ -22,11 +22,11 @@ object RowDataService extends Logging {
   case class Params(queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID)
 
   def getRowData(user: User, connectionId: UUID, key: String, name: String, options: RowDataOptions) = {
-    val (conn, db, engine) = DatabaseRegistry.databaseForUser(user, connectionId) match {
+    val dbAccess = DatabaseRegistry.databaseForUser(user, connectionId) match {
       case Right(database) => (connectionId, database, database.engine)
       case Left(x) => throw x
     }
-    handleGetRowData(conn, db, engine, key, UUID.randomUUID, name, options, UUID.randomUUID, None).map {
+    handleGetRowData(dbAccess, key, UUID.randomUUID, name, options, UUID.randomUUID, None).map {
       case qrr: QueryResultResponse => qrr.result
       case se: ServerError => throw new IllegalStateException(se.reason + ": " + se.content)
       case x => throw new IllegalStateException(x.toString)
@@ -34,11 +34,14 @@ object RowDataService extends Logging {
   }
 
   def handleGetRowData(
-    conn: UUID, db: Queryable, engine: DatabaseEngine, key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]
-  ) = key match {
-    case "table" => handleGetTableRowData(conn, db, engine, queryId, name, options, resultId, out)
-    case "view" => handleGetViewRowData(conn, db, engine, queryId, name, options, resultId, out)
-    case "cache" => handleGetCacheRowData(queryId, name, options, resultId, out)
+    dbAccess: (UUID, Queryable, DatabaseEngine), key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]
+  ) = {
+    val (conn, db, engine) = dbAccess
+    key match {
+      case "table" => handleGetTableRowData(conn, db, engine, queryId, name, options, resultId, out)
+      case "view" => handleGetViewRowData(conn, db, engine, queryId, name, options, resultId, out)
+      case "cache" => handleGetCacheRowData(queryId, name, options, resultId, out)
+    }
   }
 
   private[this] def handleGetTableRowData(

@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-pushd ../
+pushd ../../
 sbt-nodebug dist

@@ -2,7 +2,6 @@ package controllers.graphql
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
 import controllers.BaseController
 import models.forms.GraphQLForm
 import models.graphql.{GlobalGraphQLSchema, GraphQLQuery}
@@ -18,7 +17,7 @@ import utils.ApplicationContext
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class GlobalGraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext, system: ActorSystem) extends BaseController {
+class GlobalGraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def renderSchema = withSession("graphql.schema") { implicit request =>
     Future.successful(Ok(GlobalGraphQLSchema.renderedSchema).as("application/json"))
   }

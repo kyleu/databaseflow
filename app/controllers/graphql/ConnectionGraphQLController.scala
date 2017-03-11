@@ -2,7 +2,6 @@ package controllers.graphql
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
 import controllers.BaseController
 import models.connection.ConnectionSettings
 import models.graphql.{ConnectionGraphQLSchema, GraphQLContext}
@@ -20,7 +19,7 @@ import utils.ApplicationContext
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ConnectionGraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext, system: ActorSystem) extends BaseController {
+class ConnectionGraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   private[this] val schemas = collection.mutable.HashMap.empty[UUID, (ConnectionSettings, ConnectionGraphQLSchema)]
 
   private[this] def getConnectionSchema(user: User, connectionId: UUID) = {

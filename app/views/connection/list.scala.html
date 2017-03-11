@@ -13,7 +13,11 @@
         <em style="display : block ;">@if(c.urlOverride.isDefined) {
           @c.url
         } else {
-          @c.host@c.port.map(":" + _).getOrElse("")/@c.dbName
+          @if(c.description.nonEmpty) {
+            @c.description
+          } else {
+            @c.host@c.port.map(":" + _).getOrElse("")/@c.dbName
+          }
         }</em>
         <a href="@controllers.routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
           <i class="fa @models.template.Icons.adHocQuery"></i>

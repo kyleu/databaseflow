@@ -61,11 +61,11 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
   }
 
   private[this] def handleGetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, someRef: Some[ActorRef]) = {
-    val (connArg, dbArg, engineArg) = key match {
+    val dbAccess = key match {
       case "cache" => (ResultCacheDatabase.connectionId, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine)
       case _ => (connectionId, activeTransaction.getOrElse(db), db.engine)
     }
-    RowDataService.handleGetRowData(connArg, dbArg, engineArg, key, queryId, name, options, resultId, Some(out))
+    RowDataService.handleGetRowData(dbAccess, key, queryId, name, options, resultId, Some(out))
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
