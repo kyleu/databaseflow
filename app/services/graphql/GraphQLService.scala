@@ -1,8 +1,6 @@
 package services.graphql
 
-import java.util.UUID
-
-import models.graphql.{GlobalGraphQLSchema, GraphQLContext}
+import models.graphql.GraphQLContext
 import models.user.User
 import play.api.libs.json.{JsObject, Json}
 import sangria.execution.{Executor, HandledException}

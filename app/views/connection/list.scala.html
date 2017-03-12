@@ -23,7 +23,7 @@
           <i class="fa @models.template.Icons.adHocQuery"></i>
           @messages("query.title")
         </a>
-        <a href="@controllers.graphql.routes.ConnectionGraphQLController.graphql(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
+        <a href="@controllers.routes.GraphQLController.graphql(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
           <i class="fa @models.template.Icons.graphQL"></i>
           @messages("graphql.title")
         </a>

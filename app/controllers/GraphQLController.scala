@@ -1,10 +1,10 @@
-package controllers.graphql
+package controllers
 
 import java.util.UUID
 
-import controllers.BaseController
 import models.connection.ConnectionSettings
-import models.graphql.{ConnectionGraphQLSchema, GraphQLContext}
+import models.forms.GraphQLForm
+import models.graphql.{ConnectionGraphQLSchema, GraphQLContext, GraphQLQuery}
 import models.user.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -19,7 +19,7 @@ import utils.ApplicationContext
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ConnectionGraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
+class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   private[this] val schemas = collection.mutable.HashMap.empty[UUID, (ConnectionSettings, ConnectionGraphQLSchema)]
 
   private[this] def getConnectionSchema(user: User, connectionId: UUID) = {
@@ -38,12 +38,10 @@ class ConnectionGraphQLController @javax.inject.Inject() (override val ctx: Appl
     Future.successful(Ok(getConnectionSchema(request.identity, connectionId)._2.renderedSchema).as("application/json"))
   }
 
-  def graphql(connectionId: UUID, id: Option[UUID]) = {
-    withSession("graphql.ui") { implicit request =>
-      val list = GraphQLQueryService.getVisible(request.identity, Some(connectionId), None, None)
-      val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
-      Future.successful(Ok(views.html.graphql.graphiql(request.identity, Some(connectionId), list, q)))
-    }
+  def graphql(connectionId: UUID, id: Option[UUID]) = withSession("graphql.ui") { implicit request =>
+    val list = GraphQLQueryService.getVisible(request.identity, Some(connectionId), None, None)
+    val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
+    Future.successful(Ok(views.html.graphql.graphiql(request.identity, connectionId, list, q)))
   }
 
   def graphqlBody(connectionId: UUID) = withSession("graphql.post") { implicit request =>
@@ -78,5 +76,37 @@ class ConnectionGraphQLController @javax.inject.Inject() (override val ctx: Appl
         ))
       )))
     }
+  }
+
+  def load(conn: UUID, queryId: UUID) = withSession("graphql.load") { implicit request =>
+    val q = GraphQLQueryService.getById(queryId, Some(request.identity))
+    Future.successful(Redirect(controllers.routes.GraphQLController.graphql(conn, Some(queryId)).url))
+  }
+
+  def save(conn: UUID) = withSession("graphql.save") { implicit request =>
+    val result = GraphQLForm.form.bindFromRequest.fold(
+      formWithErrors => BadRequest(formWithErrors.value.map(_.name).getOrElse(messagesApi("Unknown error"))),
+      gqlf => {
+        val gqlOpt = gqlf.id.map(id => GraphQLQueryService.getById(id, Some(request.identity)).getOrElse(throw new IllegalStateException("Not allowed.")))
+        val gql = gqlOpt.getOrElse(GraphQLQuery.empty(request.identity.id))
+        val updated = gql.copy(
+          connection = gqlf.connection,
+          category = gqlf.category,
+          name = gqlf.name,
+          query = gqlf.query,
+          read = gqlf.read,
+          edit = gqlf.edit
+        )
+        gqlOpt match {
+          case Some(existing) =>
+            GraphQLQueryService.update(updated, request.identity)
+            Ok("Updated")
+          case None =>
+            GraphQLQueryService.insert(updated)
+            Ok("Inserted")
+        }
+      }
+    )
+    Future.successful(result)
   }
 }
