@@ -65,6 +65,23 @@ object SchemaService extends Logging {
     }
   }
 
+  def getSchemaWithDetails(cs: ConnectionSettings) = {
+    val db = DatabaseRegistry.databaseFor(cs.id) match {
+      case Left(ex) => throw ex
+      case Right(x) => x
+    }
+
+    getSchema(db) match {
+      case Success(schema) if schema.detailsLoadedAt.isDefined => Future.successful(schema)
+      case Success(schema) =>
+        val promise = Promise[Schema]()
+        def onSuccess(s: Schema): Unit = promise.complete(Success(s))
+        def onFailure(t: Throwable): Unit = promise.complete(Failure(t))
+        refreshSchema(db, onSuccess, onFailure)
+        promise.future
+    }
+  }
+
   def getSchemaWithDetailsFor(user: User, cs: ConnectionSettings) = {
     getSchemaFor(user, cs) match {
       case schema if schema.detailsLoadedAt.isDefined => Future.successful(schema)
