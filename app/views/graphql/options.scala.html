@@ -46,7 +46,7 @@
   <div class="options-header">File Options</div>
 
   <div class="save-container">
-    <form action="@controllers.routes.GraphQLController.save(connectionId)" method="post">
+    <form action="@controllers.routes.GraphQLQueryController.save(connectionId)" method="post">
       <input class="save-body-input" name="body" type="hidden" />
       <input class="save-dir-input" name="dir" type="text" maxlength="64" placeholder="Directory" />
       <input class="save-name-input" name="name" type="text" maxlength="64" placeholder="Query Name" />
@@ -57,14 +57,14 @@
   <div class="query-list">
     <ul>
       @queries.filter(_.category.isEmpty).map { q =>
-        <li><a class="query-link" href="@controllers.routes.GraphQLController.load(connectionId, q.id)">@q</a></li>
+        <li><a class="query-link" href="@controllers.routes.GraphQLQueryController.load(connectionId, q.id)">@q</a></li>
       }
     </ul>
     @queries.filter(_.category.nonEmpty).groupBy(_.category).map { queries =>
       <div class="section-header">@queries._1</div>
       <ul>
         @queries._2.map { q =>
-          <li><a class="query-link" href="@controllers.routes.GraphQLController.load(connectionId, q.id)">@q</a></li>
+          <li><a class="query-link" href="@controllers.routes.GraphQLQueryController.load(connectionId, q.id)">@q</a></li>
         }
       </ul>
     }

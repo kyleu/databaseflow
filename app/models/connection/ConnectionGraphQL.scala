@@ -3,7 +3,7 @@ package models.connection
 import models.graphql.{CommonGraphQL, GraphQLContext}
 import models.graphql.CommonGraphQL._
 import models.result.QueryResultGraphQL
-import models.schema.{ExploreGraphQL, SchemaGraphQL}
+import models.schema.SchemaGraphQL
 import models.user.Permission
 import sangria.schema._
 import services.graphql.ExploreService
@@ -31,7 +31,7 @@ object ConnectionGraphQL {
     Field(
       name = "explore",
       description = Some("Database objects in an easily-explored graph for this connection."),
-      fieldType = ExploreGraphQL.exploreType,
+      fieldType = ExploreService.exploreType(cs),
       resolve = c => ExploreService.resolve(c.ctx.user, cs)
     ),
     Field(

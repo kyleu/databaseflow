@@ -3,8 +3,7 @@ package controllers
 import java.util.UUID
 
 import models.connection.ConnectionSettings
-import models.forms.GraphQLForm
-import models.graphql.{ConnectionGraphQLSchema, GraphQLContext, GraphQLQuery}
+import models.graphql.{ConnectionGraphQLSchema, GraphQLContext}
 import models.user.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -60,7 +59,7 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
     executeQuery(query, variables, operation, schema, request.identity)
   }
 
-  def executeQuery(query: String, variables: Option[JsObject], operation: Option[String], schema: Schema[GraphQLContext, Unit], user: User) = {
+  private[this] def executeQuery(query: String, variables: Option[JsObject], operation: Option[String], schema: Schema[GraphQLContext, Unit], user: User) = {
     try {
       val f = GraphQLService.executeQuery(ctx, schema, query, variables, operation, user)
       f.map(Ok(_)).recover {
@@ -76,37 +75,5 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
         ))
       )))
     }
-  }
-
-  def load(conn: UUID, queryId: UUID) = withSession("graphql.load") { implicit request =>
-    val q = GraphQLQueryService.getById(queryId, Some(request.identity))
-    Future.successful(Redirect(controllers.routes.GraphQLController.graphql(conn, Some(queryId)).url))
-  }
-
-  def save(conn: UUID) = withSession("graphql.save") { implicit request =>
-    val result = GraphQLForm.form.bindFromRequest.fold(
-      formWithErrors => BadRequest(formWithErrors.value.map(_.name).getOrElse(messagesApi("Unknown error"))),
-      gqlf => {
-        val gqlOpt = gqlf.id.map(id => GraphQLQueryService.getById(id, Some(request.identity)).getOrElse(throw new IllegalStateException("Not allowed.")))
-        val gql = gqlOpt.getOrElse(GraphQLQuery.empty(request.identity.id))
-        val updated = gql.copy(
-          connection = gqlf.connection,
-          category = gqlf.category,
-          name = gqlf.name,
-          query = gqlf.query,
-          read = gqlf.read,
-          edit = gqlf.edit
-        )
-        gqlOpt match {
-          case Some(existing) =>
-            GraphQLQueryService.update(updated, request.identity)
-            Ok("Updated")
-          case None =>
-            GraphQLQueryService.insert(updated)
-            Ok("Inserted")
-        }
-      }
-    )
-    Future.successful(result)
   }
 }
