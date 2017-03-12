@@ -78,7 +78,7 @@ object ConnectionGraphQL {
       name = "schema",
       description = Some("Returns the database schema that defines this connection."),
       fieldType = SchemaGraphQL.schemaType,
-      resolve = c => SchemaService.getSchemaFor(c.ctx.user, cs)
+      resolve = c => SchemaService.getSchemaWithDetailsFor(c.ctx.user, cs)
     ),
     Field(
       name = "query",

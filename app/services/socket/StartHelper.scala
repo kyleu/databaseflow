@@ -37,7 +37,7 @@ trait StartHelper extends Logging { this: SocketService =>
   }
 
   protected[this] def refreshSchema(forceRefresh: Boolean) = {
-    def onSchemaSuccess(t: Try[Schema]) = t match {
+    def onSchemaSuccess(t: Try[Schema]): Unit = t match {
       case Success(sch) =>
         schema = Some(sch)
         out ! SchemaResponse(sch)

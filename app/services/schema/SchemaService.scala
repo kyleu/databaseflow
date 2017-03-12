@@ -8,6 +8,7 @@ import models.user.User
 import services.database.{DatabaseConnection, DatabaseRegistry, DatabaseWorkerPool}
 import utils.Logging
 
+import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success, Try}
 
 object SchemaService extends Logging {
@@ -61,6 +62,21 @@ object SchemaService extends Logging {
 
         DatabaseWorkerPool.submitWork(work, onSuccessMapped, onFailure)
       case None => throw new IllegalStateException(s"Attempted to refresh schema [$db.connectionId], which is not loaded.")
+    }
+  }
+
+  def getSchemaWithDetailsFor(user: User, cs: ConnectionSettings) = {
+    getSchemaFor(user, cs) match {
+      case schema if schema.detailsLoadedAt.isDefined => Future.successful(schema)
+      case schema =>
+        val promise = Promise[Schema]()
+        def onSuccess(s: Schema): Unit = promise.complete(Success(s))
+        def onFailure(t: Throwable): Unit = promise.complete(Failure(t))
+        DatabaseRegistry.databaseForUser(user, cs.id) match {
+          case Left(ex) => throw ex
+          case Right(db) => refreshSchema(db, onSuccess, onFailure)
+        }
+        promise.future
     }
   }
 
