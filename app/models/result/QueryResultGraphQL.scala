@@ -6,8 +6,10 @@ import models.graphql.GraphQLContext
 import models.query.{QueryResult, SavedQuery, SharedResult}
 import models.schema.SchemaModelGraphQL._
 import models.connection.ConnectionGraphQL.permissionEnum
+import models.queries.dynamic.DynamicQuery
 import sangria.macros.derive._
-import sangria.schema.ObjectType
+import sangria.schema.{Field, ObjectType}
+import services.query.SharedResultService
 
 object QueryResultGraphQL {
   implicit val resultColType = deriveObjectType[GraphQLContext, QueryResult.Col](ObjectTypeDescription("A column for this query result."))
@@ -19,5 +21,16 @@ object QueryResultGraphQL {
 
   implicit val queryParamType = deriveObjectType[GraphQLContext, SavedQuery.Param](ObjectTypeDescription("A name and value for a query parameter."))
   implicit val savedQueryType = deriveObjectType[GraphQLContext, SavedQuery](ObjectTypeDescription("A query that has been saved for later use."))
-  implicit val sharedResultType = deriveObjectType[GraphQLContext, SharedResult](ObjectTypeDescription("A query result that has been shared with others."))
+  implicit val dynamicQueryResultType = deriveObjectType[GraphQLContext, DynamicQuery.Results](
+    ObjectTypeDescription("The cached data for this shared result.")
+  )
+  implicit val sharedResultType = deriveObjectType[GraphQLContext, SharedResult](
+    ObjectTypeDescription("A query result that has been shared with others."),
+    AddFields(Field(
+      name = "results",
+      description = Some("Returns this shared result's data."),
+      fieldType = dynamicQueryResultType,
+      resolve = c => SharedResultService.getData(Some(c.ctx.user), c.value)
+    ))
+  )
 }

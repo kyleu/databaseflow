@@ -9,6 +9,8 @@ object Technology extends Enum[Technology] {
   case object ScalaJs extends Technology("Scala.js", "https://www.scala-js.org/")
   case object PlayFramework extends Technology("Play Framework", "https://www.playframework.com/")
   case object Akka extends Technology("Akka", "http://akka.io/")
+  case object Sangria extends Technology("Sangria", "http://sangria-graphql.org/")
+  case object GraphiQL extends Technology("GraphiQL", "https://github.com/graphql/graphiql")
   case object Materialize extends Technology("Materialize CSS", "http://materializecss.com/")
   case object PlotlyJS extends Technology("plotly.js", "https://plot.ly/javascript/")
   case object Enumeratum extends Technology("Enumeratum", "https://github.com/lloydmeta/enumeratum")
