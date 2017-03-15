@@ -9,7 +9,7 @@ case class ConnectionGraphQLSchema(cs: ConnectionSettings) {
 
   val queryType = ObjectType(
     name = "Query",
-    description = "The main query interface.",
+    description = s"The main query interface for [${cs.name}].",
     fields = queryFields
   )
 

@@ -1,4 +1,3 @@
-@import models.template.Icons
 @(user: models.user.User, conn: models.connection.ConnectionSettings, title: String, isNew: Boolean, errors: Seq[FormError] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(Some(user), "Edit " + title) {
@@ -98,8 +97,8 @@
 
         <!-- Permissions -->
         <div class="row" style="margin-bottom: 0;">
-          @views.html.connection.permissions("read", conn.read, Icons.user, messages("connection.permissions.available.to"))
-          @views.html.connection.permissions("edit", conn.edit, Icons.adHocQuery, messages("connection.permissions.editable.by"))
+          @views.html.connection.permissions("read", conn.read, models.template.Icons.user, messages("connection.permissions.available.to"))
+          @views.html.connection.permissions("edit", conn.edit, models.template.Icons.adHocQuery, messages("connection.permissions.editable.by"))
         </div>
 
         <!-- Description -->

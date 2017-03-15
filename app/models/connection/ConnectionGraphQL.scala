@@ -9,6 +9,7 @@ import sangria.schema._
 import services.graphql.ExploreService
 import services.query.{SavedQueryService, SharedResultService, SimpleQueryService}
 import services.schema.SchemaService
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object ConnectionGraphQL {
   val nameArg = Argument("name", OptionInputType(StringType), description = "Filters the results to models with a matching name (case-insensitive).")
@@ -44,7 +45,16 @@ object ConnectionGraphQL {
       name = "sharedResult",
       description = Some("Returns the results that have been shared for this connection."),
       fieldType = ListType(QueryResultGraphQL.sharedResultType),
-      resolve = c => SharedResultService.getForUser(c.ctx.user, cs.id, None)
+      arguments = uuidArg :: nameArg :: Nil,
+      resolve = c => SharedResultService.getForUser(c.ctx.user, cs.id, None).map { results =>
+        c.arg(uuidArg) match {
+          case Some(id) => results.find(_.id == id).toSeq
+          case None => c.arg(nameArg) match {
+            case Some(name) => results.filter(_.title.toLowerCase.contains(name.toLowerCase))
+            case None => results
+          }
+        }
+      }
     ),
     Field(
       name = "savedQuery",

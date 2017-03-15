@@ -2,6 +2,7 @@ package controllers
 
 import java.util.UUID
 
+import models.query.RowDataOptions
 import models.user.Permission
 import services.query.SharedResultService
 import services.user.UserService
@@ -23,7 +24,7 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
       case Some(sr) =>
         val perm = SharedResultService.canView(request.identity, sr)
         if (perm._1) {
-          val results = SharedResultService.getData(request.identity, sr)
+          val results = SharedResultService.getData(request.identity, sr, RowDataOptions())
           val ownerName = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookup(sr.owner)
           sr.chart match {
             case Some(chart) => Future.successful(

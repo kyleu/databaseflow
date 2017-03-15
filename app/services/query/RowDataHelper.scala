@@ -48,7 +48,7 @@ object RowDataHelper extends Logging {
           data = trimmedData,
           rowsAffected = trimmedData.length,
           moreRowsAvailable = moreRowsAvailable,
-          source = Some(params.options.toSource(params.t, params.name)),
+          source = Some(params.options.toSource(params.t, params.name, sortable = true)),
           elapsedMs = elapsedMs,
           occurred = startMs
         )

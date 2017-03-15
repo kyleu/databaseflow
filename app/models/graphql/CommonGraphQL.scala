@@ -8,9 +8,6 @@ import sangria.validation.ValueCoercionViolation
 import scala.util.{Failure, Success, Try}
 
 object CommonGraphQL {
-  val idArg = Argument("id", OptionInputType(IntType), description = "Returns model matching the provided id.")
-  val keyArg = Argument("key", StringType, description = "Returns the model matching provided key.")
-
   case object UuidCoercionViolation extends ValueCoercionViolation("UUID value expected in format [00000000-0000-0000-0000-000000000000].")
 
   private[this] def parseUuid(s: String) = Try(UUID.fromString(s)) match {
@@ -31,6 +28,10 @@ object CommonGraphQL {
       case _ => Left(UuidCoercionViolation)
     }
   )
+
+  val idArg = Argument("id", OptionInputType(IntType), description = "Returns model matching the provided id.")
+  val uuidArg = Argument("id", OptionInputType(uuidType), description = "Returns model matching the provided id.")
+  val keyArg = Argument("key", StringType, description = "Returns the model matching provided key.")
 
   def deriveEnumeratumType[T <: enumeratum.EnumEntry](name: String, description: String, values: Seq[(T, String)]) = EnumType(
     name = name,

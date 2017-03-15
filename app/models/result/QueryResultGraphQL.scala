@@ -3,7 +3,7 @@ package models.result
 import models.QueryResultResponse
 import models.graphql.CommonGraphQL._
 import models.graphql.GraphQLContext
-import models.query.{QueryResult, SavedQuery, SharedResult}
+import models.query.{QueryResult, RowDataOptions, SavedQuery, SharedResult}
 import models.schema.SchemaModelGraphQL._
 import models.connection.ConnectionGraphQL.permissionEnum
 import models.queries.dynamic.DynamicQuery
@@ -30,7 +30,15 @@ object QueryResultGraphQL {
       name = "results",
       description = Some("Returns this shared result's data."),
       fieldType = dynamicQueryResultType,
-      resolve = c => SharedResultService.getData(Some(c.ctx.user), c.value)
+      arguments = sortColArg :: sortAscArg :: filterColArg :: filterOpArg :: filterTypeArg :: filterValueArg :: limitArg :: offsetArg :: Nil,
+      resolve = c => {
+        val rdo = RowDataOptions(
+          orderByCol = c.arg(sortColArg), orderByAsc = c.arg(sortAscArg),
+          filterCol = c.arg(filterColArg), filterOp = c.arg(filterOpArg), filterType = c.arg(filterTypeArg), filterVal = c.arg(filterValueArg),
+          limit = c.arg(limitArg), offset = c.arg(offsetArg)
+        )
+        SharedResultService.getData(Some(c.ctx.user), c.value, rdo)
+      }
     ))
   )
 }

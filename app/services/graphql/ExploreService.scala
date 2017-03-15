@@ -1,6 +1,7 @@
 package services.graphql
 
 import models.connection.ConnectionSettings
+import models.graphql.GraphQLContext
 import models.schema.Table
 import models.user.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -16,24 +17,24 @@ object ExploreService {
     val schema = Await.result(f, 60.seconds)
 
     val tableTypes = schema.tables.map { table =>
-      val tableFields = fields[Unit, Table](
-        Field("name", StringType, Some("The name of the table."), resolve = x => x.value.name)
-      )
+      val tableFields = fields[GraphQLContext, Table](table.columns.map { col =>
+        Field(col.name, StringType, col.description, resolve = (x: Context[GraphQLContext, Table]) => col.name + " (TODO)")
+      }: _*)
       ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fields = tableFields)
     }
 
-    val tableTypeFields = tableTypes.map { t =>
-      Field("name", t, Some("The name of the table."), resolve = (x: Context[Unit, Table]) => x.value)
-    }.toList
+    val exploreFields = fields[GraphQLContext, Table](tableTypes.map { t =>
+      Field(t.name, t, t.description, resolve = (x: Context[GraphQLContext, Table]) => x.value)
+    }: _*)
 
-    //val explore = ObjectType(name = "explore", description = "Explore!", fields = tableTypeFields)
+    val explore = ObjectType(name = "explore", description = "Explore!", fields = exploreFields)
 
-    ListType(StringType)
+    explore
   }
 
   def resolve(user: User, cs: ConnectionSettings) = {
     SchemaService.getSchemaWithDetailsFor(user, cs).map { schema =>
-      schema.tables.map(_.name)
+      schema.tables.head
     }
   }
 }

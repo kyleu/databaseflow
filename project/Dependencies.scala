@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.12"
+    private[this] val version = "2.5.13"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -38,7 +38,7 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.0"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.1"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.193"
@@ -90,9 +90,8 @@ object Dependencies {
   }
 
   object GraphQL {
-    val version = "1.0.0"
-    val sangria = "org.sangria-graphql" %% "sangria" % version
-    val playJson = "org.sangria-graphql" %% "sangria-play-json" % version
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.1.0"
+    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.0"
   }
 
   object Utils {
