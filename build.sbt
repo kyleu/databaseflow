@@ -24,4 +24,6 @@ lazy val licenseGenerator = Utilities.licenseGenerator
 
 lazy val translation = Utilities.translation
 
+lazy val nativeSandbox = Utilities.nativeSandbox
+
 lazy val benchmarking = Utilities.benchmarking

@@ -1,11 +1,13 @@
 import Dependencies._
-import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import com.typesafe.sbt.web.SbtWeb
-import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import sbt.Keys._
 import sbt._
 import io.gatling.sbt.GatlingPlugin
 import pl.project13.scala.sbt.JmhPlugin
+
+import scala.scalanative.sbtplugin.ScalaNativePlugin
+import scala.scalanative.sbtplugin.ScalaNativePlugin.AutoImport._
 
 object Utilities {
   private[this] val metricsLibs = Seq(
@@ -17,27 +19,19 @@ object Utilities {
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(libraryDependencies ++= metricsLibs)
     .settings(Shared.commonSettings: _*)
-    .settings(graphSettings: _*)
-    .settings(scalariformSettings: _*)
 
   lazy val iconCreator = (project in file("util/iconCreator"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
-    .settings(graphSettings: _*)
-    .settings(scalariformSettings: _*)
 
   lazy val licenseModels = (project in file("util/licenseModels"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(libraryDependencies ++= Seq(Utils.crypto, Utils.enumeratum))
     .settings(Shared.commonSettings: _*)
-    .settings(graphSettings: _*)
-    .settings(scalariformSettings: _*)
 
   lazy val licenseGenerator = (project in file("util/licenseGenerator"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
-    .settings(graphSettings: _*)
-    .settings(scalariformSettings: _*)
     .dependsOn(licenseModels)
     .aggregate(licenseModels)
 
@@ -46,8 +40,13 @@ object Utilities {
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .settings(libraryDependencies ++= Seq(Utils.enumeratum, Play.playWs))
     .settings(Shared.commonSettings: _*)
-    .settings(graphSettings: _*)
-    .settings(scalariformSettings: _*)
+
+  lazy val nativeSandbox = (project in file("util/nativeSandbox"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
+    .enablePlugins(ScalaNativePlugin)
+    //.settings(nativeMode := "debug")
+    .settings(nativeMode := "release")
+    .settings(Shared.commonSettings: _*)
 
   lazy val benchmarking = (project in file("util/benchmarking"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
