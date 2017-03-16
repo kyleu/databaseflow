@@ -65,7 +65,7 @@ object QueryEventHandlers {
       }
     }
     val data = result.columns.zip(tdData.reverse)
-    utils.Logging.info(s"Showing [$table] row (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
+    //utils.Logging.info(s"Showing [$table] row (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
     RowDetailManager.show(table, pk, data)
   }
 }

@@ -7,6 +7,7 @@ import models.template.Icons
 import models.template.query.QueryEditorTemplate
 import models.{CloseQuery, QueryDeleteRequest, QuerySaveRequest}
 import org.scalajs.jquery.{jQuery => $}
+import services.TextChangeService
 import ui.metadata.MetadataManager
 import ui.modal.{ConfirmManager, SavedQueryFormManager}
 import ui.{TabManager, UserManager}
@@ -62,7 +63,13 @@ trait SavedQueryChangeManager {
     val runQueryAllLink = $(".run-query-all-link", queryPanel)
 
     def onChange(s: String): Unit = {
-      $(".unsaved-status", queryPanel).css("display", if (s == savedQuery.sql) { "none" } else { "inline" })
+      if (s == savedQuery.sql) {
+        TextChangeService.markClean(savedQuery.id)
+        $(".unsaved-status", queryPanel).css("display", "none")
+      } else {
+        TextChangeService.markDirty(savedQuery.id)
+        $(".unsaved-status", queryPanel).css("display", "inline")
+      }
       SqlManager.updateLinks(savedQuery.id, runQueryLink, runQueryAllLink)
     }
 

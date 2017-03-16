@@ -72,7 +72,7 @@ object QueryResultsTemplate {
     )
   } else {
     div(
-      a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql"))
+      a(href := "#", cls := "results-sql-link results-nav-link right theme-text", title := Messages("th.sql"))(i(cls := s"fa ${Icons.procedure}"))
     )
   }
 }

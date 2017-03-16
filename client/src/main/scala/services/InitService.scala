@@ -32,6 +32,7 @@ object InitService {
     SearchManager.init()
 
     ShortcutService.init()
+    TextChangeService.init()
     ConfirmManager.init()
     ReconnectManager.init()
     SavedQueryFormManager.init()

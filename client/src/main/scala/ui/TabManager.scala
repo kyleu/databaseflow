@@ -12,21 +12,39 @@ object TabManager {
   private[this] var initialized = false
   private[this] var openTabs = Seq.empty[(UUID, String, () => Unit)]
   private[this] var activeTab: Option[UUID] = None
+
   private[this] lazy val tabContainer = $(".tab-container")
   private[this] lazy val mainEl = $("main")
   private[this] lazy val tabBar = $("#query-tabs", tabContainer)
   private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
+
+  private[this] val tabOffsets = collection.mutable.HashMap.empty[UUID, Double]
+
+  private[this] def transitionTo(query: UUID) = {
+    activeTab.foreach { current =>
+      if (current != query) {
+        tabOffsets(current) = org.scalajs.dom.document.body.scrollTop
+      }
+    }
+    activeTab = Some(query)
+
+    tabOffsets.get(query).foreach { offset =>
+      // TODO Account for document smaller than scrollTop
+      org.scalajs.dom.document.body.scrollTop = offset
+    }
+
+    openTabs.find(_._1 == query) match {
+      case Some(x) => org.scalajs.dom.window.history.replaceState(NullUtils.inst, x._2, "#" + x._2)
+      case None => throw new IllegalStateException(s"No open tab [$query] from choices [${openTabs.mkString(", ")}].")
+    }
+  }
 
   def initIfNeeded() = if (!initialized) {
     $("#tab-loading").remove()
     initialized = true
     $("ul.tabs").on("click", "a", (e: JQueryEventObject) => {
       val queryId = UUID.fromString($(e.currentTarget).data("query").toString)
-      activeTab = Some(queryId)
-      openTabs.find(_._1 == queryId) match {
-        case Some(x) => org.scalajs.dom.window.history.replaceState(NullUtils.inst, x._2, "#" + x._2)
-        case None => throw new IllegalStateException(s"No open tab [$queryId] from choices [${openTabs.mkString(", ")}].")
-      }
+      transitionTo(queryId)
     })
   }
 
@@ -36,7 +54,7 @@ object TabManager {
   def addTab(id: UUID, ctx: String, title: String, icon: String, onClose: () => Unit) = {
     openTabs = openTabs :+ ((id, ctx, onClose))
     if (openTabs.length == 1) { hide() } else { show() }
-    tabBar.append(s"""<li id="tab-$id" class="tab col s3"><a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a></li>""")
+    tabBar.append(s"""<li id="tab-$id" class="tab"><a data-query="$id" href="#panel-$id"><i class="fa $icon"></i> $title</a></li>""")
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
     val queryPanel = $(s"#panel-$id")
@@ -83,8 +101,8 @@ object TabManager {
   }
 
   def selectTab(queryId: UUID) = {
+    transitionTo(queryId)
     dynamicTabBar.tabs("select_tab", s"panel-$queryId")
-    activeTab = Some(queryId)
   }
 
   private[this] def hide() = {

@@ -8,6 +8,7 @@ import models.query.{RowDataOptions, SavedQuery}
 import models.template.Icons
 import models.template.query.QueryEditorTemplate
 import org.scalajs.jquery.{jQuery => $}
+import services.TextChangeService
 import ui.metadata.MetadataManager
 import ui.modal.SavedQueryFormManager
 import ui.{TabManager, UserManager}
@@ -65,8 +66,10 @@ object AdHocQueryManager {
 
     def onChange(s: String): Unit = {
       if (s == sql) {
+        TextChangeService.markClean(queryId)
         $(".unsaved-status", queryPanel).css("display", "none")
       } else {
+        TextChangeService.markDirty(queryId)
         $(".unsaved-status", queryPanel).css("display", "inline")
       }
       SqlManager.updateLinks(queryId, runQueryLink, runQueryAllLink)
