@@ -7,6 +7,7 @@ import models.user.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import sangria.schema._
 import services.schema.SchemaService
+import models.result.QueryResultGraphQL._
 
 import scala.concurrent.Await
 
@@ -24,7 +25,13 @@ object ExploreService {
     }
 
     val exploreFields = fields[GraphQLContext, Table](tableTypes.map { t =>
-      Field(t.name, t, t.description, resolve = (x: Context[GraphQLContext, Table]) => x.value)
+      Field(
+        name = t.name,
+        fieldType = ListType(t),
+        description = t.description,
+        resolve = (x: Context[GraphQLContext, Table]) => Seq(x.value),
+        arguments = resultArgs
+      )
     }: _*)
 
     val explore = ObjectType(name = "explore", description = "Explore!", fields = exploreFields)

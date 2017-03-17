@@ -1,37 +1,15 @@
 package models.schema
 
-import models.graphql.{CommonGraphQL, GraphQLContext}
+import models.graphql.GraphQLContext
 import models.graphql.CommonGraphQL._
+
+import models.result.QueryResultGraphQL._
 import models.query.RowDataOptions
-import models.result.QueryResultGraphQL
 import sangria.macros.derive._
 import sangria.schema._
 import services.query.RowDataService
 
 object SchemaModelGraphQL {
-  implicit val columnTypeEnum = CommonGraphQL.deriveEnumeratumType(
-    name = "ColumnType",
-    description = "The datatype of the column.",
-    values = ColumnType.values.map(t => t -> t.entryName).toList
-  )
-
-  implicit val filterOpEnum = CommonGraphQL.deriveEnumeratumType(
-    name = "FilterOp",
-    description = "A filtering operation, usually applied to two values.",
-    values = FilterOp.values.map(t => t -> t.entryName).toList
-  )
-
-  val sortColArg = Argument("sortCol", OptionInputType(StringType), description = "Sorts the returned results by the provided column.")
-  val sortAscArg = Argument("sortAsc", OptionInputType(BooleanType), description = "Sorts the returned results ascending or descending.")
-
-  val filterColArg = Argument("filterCol", OptionInputType(StringType), description = "Filters the returned results by the provided column.")
-  val filterOpArg = Argument("filterOp", OptionInputType(filterOpEnum), description = "Filters the returned results using the provided operation.")
-  val filterTypeArg = Argument("filterType", OptionInputType(columnTypeEnum), description = "Filters the returned results with the provided type.")
-  val filterValueArg = Argument("filterValue", OptionInputType(StringType), description = "Filters the returned results using the provided value.")
-
-  val limitArg = Argument("limit", OptionInputType(IntType), description = "Caps the number of returned results.")
-  val offsetArg = Argument("offset", OptionInputType(IntType), description = "Starts the returned results after this number of rows.")
-
   private[this] def rowDataOptionsFor(c: Context[GraphQLContext, _]) = {
     val sc = c.arg(sortColArg)
     val sa = c.arg(sortAscArg)
@@ -59,8 +37,8 @@ object SchemaModelGraphQL {
     AddFields(Field(
       name = "data",
       description = Some("Return this table's data, passing filters as arguments."),
-      fieldType = QueryResultGraphQL.resultType,
-      arguments = sortColArg :: sortAscArg :: filterColArg :: filterOpArg :: filterTypeArg :: filterValueArg :: limitArg :: offsetArg :: Nil,
+      fieldType = resultType,
+      arguments = resultArgs,
       resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, "table", c.value.name, rowDataOptionsFor(c))
     ))
   )
@@ -70,8 +48,8 @@ object SchemaModelGraphQL {
     AddFields(Field(
       name = "data",
       description = Some("Return this view's data, passing filters as arguments."),
-      fieldType = QueryResultGraphQL.resultType,
-      arguments = sortColArg :: sortAscArg :: filterColArg :: filterOpArg :: filterTypeArg :: filterValueArg :: limitArg :: offsetArg :: Nil,
+      fieldType = resultType,
+      arguments = resultArgs,
       resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, "view", c.value.name, rowDataOptionsFor(c))
     ))
   )
