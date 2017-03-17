@@ -109,7 +109,7 @@ help.title = {0} Help
 help.global.shortcuts = Global Shortcuts
 help.editor.shortcuts = Editor Shortcuts
 help.tips.and.tricks = Tips and Tricks
-help.connection.status = Connected, with a latency of [{0}ms]. We''ve sent {1} and received {2} messages.
+help.connection.status = Connected to server with a latency of [{0}ms]. We''ve sent {1} messages and received {2}.
 
 help.hotkey.save.query = Save Query
 help.hotkey.run.active.query = Run Active Query

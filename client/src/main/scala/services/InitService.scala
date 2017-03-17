@@ -12,6 +12,7 @@ import ui.metadata.{MetadataManager, ModelListManager}
 import ui.modal._
 import ui.query._
 import ui.search.SearchManager
+import ui.tabs.TabManager
 import utils.{Logging, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js

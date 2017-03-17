@@ -5,6 +5,7 @@ import java.util.UUID
 import models.query.QueryCheckResult
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.{ParameterManager, SqlManager}
+import ui.tabs.TabManager
 import utils.Logging
 
 import scala.scalajs.js

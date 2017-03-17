@@ -24,4 +24,15 @@ object TextChangeService {
   def markClean(id: UUID) = if (dirtyEditors(id)) {
     dirtyEditors -= id
   }
+
+  def shouldClose(id: UUID) = if (dirtyEditors(id)) {
+    if (dom.window.confirm("You have unsaved changes. Close this query?")) {
+      dirtyEditors -= id
+      true
+    } else {
+      false
+    }
+  } else {
+    true
+  }
 }

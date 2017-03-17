@@ -5,7 +5,7 @@ import models._
 import models.schema.Schema
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
 import services.query.{SavedQueryService, SharedResultService}
-import services.schema.SchemaService
+import services.schema.{SchemaRefreshService, SchemaService}
 import services.supervisor.ActorSupervisor
 import utils.{ExceptionUtils, Logging}
 
@@ -47,7 +47,7 @@ trait StartHelper extends Logging { this: SocketService =>
             out ! SchemaResponse(s)
           }
           def onRefreshFailure(x: Throwable) = ExceptionUtils.actorErrorFunction(out, "SchemaDetailError", x)
-          SchemaService.refreshSchema(db, onRefreshSuccess, onRefreshFailure)
+          SchemaRefreshService.refreshSchema(db, onRefreshSuccess, onRefreshFailure)
         }
 
       case Failure(x) => ExceptionUtils.actorErrorFunction(out, "SchemaLoadError", x)

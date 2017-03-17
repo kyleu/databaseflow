@@ -6,7 +6,8 @@ import enumeratum._
 import ui.metadata.MetadataManager
 import ui.query.{AdHocQueryManager, QueryManager, SqlManager}
 import ui.search.SearchManager
-import ui.{EditorManager, HelpManager, TabManager}
+import ui.tabs.{TabManager, TabSelectionManager}
+import ui.{EditorManager, HelpManager}
 
 sealed abstract class KeyboardShortcut(val pattern: String, val key: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
 
@@ -54,11 +55,11 @@ object KeyboardShortcut extends Enum[KeyboardShortcut] {
   })
 
   case object NextTab extends KeyboardShortcut("]", "next.tab", { _ =>
-    TabManager.selectNextTab()
+    TabSelectionManager.selectNextTab()
   })
 
   case object PreviousTab extends KeyboardShortcut("[", "previous.tab", { _ =>
-    TabManager.selectPreviousTab()
+    TabSelectionManager.selectPreviousTab()
   })
 
   override val values = findValues

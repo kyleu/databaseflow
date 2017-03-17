@@ -8,7 +8,8 @@ import models.template.query.QueryResultsTemplate
 import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.{FilterManager, RowDataManager}
-import ui.{ProgressManager, TabManager}
+import ui.ProgressManager
+import ui.tabs.TabManager
 import utils.{Config, Logging, TemplateUtils}
 
 import scala.scalajs.js

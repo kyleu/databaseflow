@@ -12,6 +12,7 @@ import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
 import ui._
 import ui.modal.RowUpdateManager
+import ui.tabs.TabManager
 import utils.{NetworkMessage, TemplateUtils}
 
 object TableManager extends TableDetailHelper {
@@ -37,9 +38,8 @@ object TableManager extends TableDetailHelper {
           case _ => NetworkMessage.sendMessage(GetTableDetail(name))
         }
 
-        def close() = {
+        def close() = if (QueryManager.closeQuery(queryId)) {
           openTables = openTables - name
-          QueryManager.closeQuery(queryId)
         }
 
         TabManager.addTab(queryId, "table-" + name, name, Icons.table, close)

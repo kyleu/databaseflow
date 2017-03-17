@@ -6,6 +6,7 @@ import models.template.{FeedbackTemplate, Icons}
 import org.scalajs.jquery.{JQueryAjaxSettings, JQueryXHR, jQuery => $}
 import services.NotificationService
 import ui.query.QueryManager
+import ui.tabs.TabManager
 import utils.{Logging, TemplateUtils}
 
 import scala.scalajs.js
@@ -24,9 +25,8 @@ object FeedbackManager {
 
       WorkspaceManager.append(panelHtml.toString)
 
-      def close() = {
+      def close() = if (QueryManager.closeQuery(feedbackId)) {
         isOpen = false
-        QueryManager.closeQuery(feedbackId)
       }
 
       TabManager.addTab(feedbackId, "feedback", "Feedback", Icons.feedback, close)
@@ -56,8 +56,9 @@ object FeedbackManager {
       ),
       success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
         NotificationService.info("Feedback Success", "Thanks!")
-        isOpen = false
-        QueryManager.closeQuery(feedbackId)
+        if (QueryManager.closeQuery(feedbackId)) {
+          isOpen = false
+        }
       },
       error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
         Logging.info(s"Ajax Error: jqXHR=$jqXHR, text=$textStatus, err=$errorThrow")

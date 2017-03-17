@@ -9,7 +9,8 @@ import models.template.proc.ProcedureDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.metadata.MetadataManager
-import ui.{ProgressManager, TabManager, WorkspaceManager}
+import ui.tabs.TabManager
+import ui.{ProgressManager, WorkspaceManager}
 import utils.{Logging, NetworkMessage, TemplateUtils}
 
 object ProcedureManager {
@@ -33,9 +34,8 @@ object ProcedureManager {
         case _ => NetworkMessage.sendMessage(GetProcedureDetail(name))
       }
 
-      def close() = {
+      def close() = if (QueryManager.closeQuery(queryId)) {
         openProcedures = openProcedures - name
-        QueryManager.closeQuery(queryId)
       }
 
       TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure, close)

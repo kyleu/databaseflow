@@ -4,9 +4,9 @@ import java.util.UUID
 
 import models.query.SavedQuery
 import org.scalajs.jquery.{jQuery => $}
-import ui.TabManager
 import ui.metadata.MetadataManager
 import ui.modal.SavedQueryFormManager
+import ui.tabs.TabManager
 
 object SavedQueryManager extends SavedQueryChangeManager {
   def deleteQuery(id: UUID) = {

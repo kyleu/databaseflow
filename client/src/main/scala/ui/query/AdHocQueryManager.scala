@@ -11,7 +11,8 @@ import org.scalajs.jquery.{jQuery => $}
 import services.TextChangeService
 import ui.metadata.MetadataManager
 import ui.modal.SavedQueryFormManager
-import ui.{TabManager, UserManager}
+import ui.UserManager
+import ui.tabs.TabManager
 import utils.{Messages, NetworkMessage, TemplateUtils}
 
 import scala.util.Random
@@ -46,8 +47,9 @@ object AdHocQueryManager {
     QueryManager.workspace.append(html.render)
 
     def close() = if (QueryManager.activeQueries.contains(queryId)) {
-      QueryManager.closeQuery(queryId)
-      NetworkMessage.sendMessage(CloseQuery(queryId))
+      if (QueryManager.closeQuery(queryId)) {
+        NetworkMessage.sendMessage(CloseQuery(queryId))
+      }
     }
 
     TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery, close)

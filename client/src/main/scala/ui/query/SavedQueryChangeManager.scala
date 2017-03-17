@@ -10,7 +10,8 @@ import org.scalajs.jquery.{jQuery => $}
 import services.TextChangeService
 import ui.metadata.MetadataManager
 import ui.modal.{ConfirmManager, SavedQueryFormManager}
-import ui.{TabManager, UserManager}
+import ui.UserManager
+import ui.tabs.TabManager
 import utils.{NetworkMessage, TemplateUtils}
 
 trait SavedQueryChangeManager {
@@ -24,9 +25,10 @@ trait SavedQueryChangeManager {
     QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, userId).toString)
 
     def close() = if (QueryManager.activeQueries.contains(savedQuery.id)) {
-      QueryManager.closeQuery(savedQuery.id)
-      openSavedQueries = openSavedQueries - savedQuery.id
-      NetworkMessage.sendMessage(CloseQuery(savedQuery.id))
+      if (QueryManager.closeQuery(savedQuery.id)) {
+        openSavedQueries = openSavedQueries - savedQuery.id
+        NetworkMessage.sendMessage(CloseQuery(savedQuery.id))
+      }
     }
 
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)

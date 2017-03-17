@@ -5,8 +5,10 @@ import java.util.UUID
 import models.SubmitQuery
 import models.query.SavedQuery
 import org.scalajs.jquery.{JQuery, jQuery => $}
+import services.TextChangeService
 import services.query.ChartService
-import ui.{ProgressManager, TabManager}
+import ui.ProgressManager
+import ui.tabs.TabManager
 import utils.{NetworkMessage, TemplateUtils}
 
 object QueryManager {
@@ -61,7 +63,7 @@ object QueryManager {
     QueryCheckManager.check(queryId, merged)
   }
 
-  def closeQuery(queryId: UUID): Unit = {
+  def closeQuery(queryId: UUID): Boolean = if (TextChangeService.shouldClose(queryId)) {
     SqlManager.closeQuery(queryId)
     $(s"#panel-$queryId").remove()
 
@@ -75,5 +77,8 @@ object QueryManager {
       val newId = activeQueries(if (originalIndex < 1) { 0 } else { originalIndex - 1 })
       TabManager.selectTab(newId)
     }
+    true
+  } else {
+    false
   }
 }

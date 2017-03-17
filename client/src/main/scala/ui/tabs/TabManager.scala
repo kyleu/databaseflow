@@ -1,4 +1,4 @@
-package ui
+package ui.tabs
 
 import java.util.UUID
 
@@ -10,17 +10,22 @@ import scala.scalajs.js
 
 object TabManager {
   private[this] var initialized = false
-  private[this] var openTabs = Seq.empty[(UUID, String, () => Unit)]
+  var openTabs = Seq.empty[(UUID, String, () => Unit)]
   private[this] var activeTab: Option[UUID] = None
 
   private[this] lazy val tabContainer = $(".tab-container")
   private[this] lazy val mainEl = $("main")
   private[this] lazy val tabBar = $("#query-tabs", tabContainer)
-  private[this] lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
+  lazy val dynamicTabBar = js.Dynamic.global.$("#query-tabs")
 
   private[this] val tabOffsets = collection.mutable.HashMap.empty[UUID, Double]
 
-  private[this] def transitionTo(query: UUID) = {
+  def selectTab(queryId: UUID) = {
+    transitionTo(queryId)
+    dynamicTabBar.tabs("select_tab", s"panel-$queryId")
+  }
+
+  def transitionTo(query: UUID) = {
     activeTab.foreach { current =>
       if (current != query) {
         tabOffsets(current) = org.scalajs.dom.document.body.scrollTop
@@ -72,37 +77,6 @@ object TabManager {
     $(".tabs .indicator").remove()
     if (openTabs.length < 2) { hide() } else { show() }
     if (openTabs.nonEmpty) { dynamicTabBar.tabs() }
-  }
-
-  def selectNextTab() = activeTab match {
-    case Some(active) =>
-      val idx = openTabs.indexWhere(_._1 == active)
-      if (idx == -1 || openTabs.length <= 1) {
-        openTabs.headOption.foreach(x => selectTab(x._1))
-      } else if (idx == openTabs.length - 1) {
-        selectTab(openTabs.headOption.getOrElse(throw new IllegalStateException())._1)
-      } else {
-        selectTab(openTabs(idx + 1)._1)
-      }
-    case None => openTabs.headOption.foreach(x => selectTab(x._1))
-  }
-
-  def selectPreviousTab() = activeTab match {
-    case Some(active) =>
-      val idx = openTabs.indexWhere(_._1 == active)
-      if (idx == -1 || openTabs.length <= 1) {
-        openTabs.headOption.foreach(x => selectTab(x._1))
-      } else if (idx == 0) {
-        selectTab(openTabs.last._1)
-      } else {
-        selectTab(openTabs(idx - 1)._1)
-      }
-    case None => openTabs.headOption.foreach(x => selectTab(x._1))
-  }
-
-  def selectTab(queryId: UUID) = {
-    transitionTo(queryId)
-    dynamicTabBar.tabs("select_tab", s"panel-$queryId")
   }
 
   private[this] def hide() = {

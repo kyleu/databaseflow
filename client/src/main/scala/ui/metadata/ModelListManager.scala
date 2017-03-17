@@ -8,7 +8,8 @@ import models.template.{Icons, ModelListTemplate}
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import services.NavigationService
 import ui.query._
-import ui.{TabManager, WorkspaceManager}
+import ui.WorkspaceManager
+import ui.tabs.TabManager
 import utils.TemplateUtils
 
 import scalatags.Text.all._
@@ -38,9 +39,8 @@ object ModelListManager {
       val panelHtml = div(id := s"panel-$queryId", cls := "workspace-panel")(template)
       WorkspaceManager.append(panelHtml.toString)
 
-      def close() = {
+      def close() = if (QueryManager.closeQuery(queryId)) {
         openLists = openLists - key
-        QueryManager.closeQuery(queryId)
       }
 
       TabManager.addTab(queryId, "list-" + key, name, Icons.list, close)

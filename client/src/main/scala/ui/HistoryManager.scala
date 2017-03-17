@@ -8,7 +8,8 @@ import models.template.{HistoryTemplate, Icons}
 import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
-import utils.{TemplateUtils, NetworkMessage}
+import ui.tabs.TabManager
+import utils.{NetworkMessage, TemplateUtils}
 
 import scalatags.Text.all._
 
@@ -23,9 +24,8 @@ object HistoryManager {
       val panelHtml = div(id := s"panel-$historyId", cls := "workspace-panel")(HistoryTemplate.panel)
       WorkspaceManager.append(panelHtml.toString)
 
-      def close() = {
+      def close() = if (QueryManager.closeQuery(historyId)) {
         isOpen = false
-        QueryManager.closeQuery(historyId)
       }
 
       TabManager.addTab(historyId, "history", "Query History", Icons.history, close)

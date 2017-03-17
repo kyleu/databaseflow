@@ -5,6 +5,7 @@ import java.util.UUID
 import models.template.{HelpTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
+import ui.tabs.TabManager
 import utils._
 
 import scala.util.Random
@@ -24,9 +25,8 @@ object HelpManager {
 
       WorkspaceManager.append(panelHtml.toString)
 
-      def close() = {
+      def close() = if (QueryManager.closeQuery(helpId)) {
         isOpen = false
-        QueryManager.closeQuery(helpId)
       }
 
       TabManager.addTab(helpId, "help", "Help", Icons.help, close)

@@ -10,6 +10,7 @@ import models.template.view.ViewDetailTemplate
 import models.{GetViewDetail, SubmitQuery}
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.metadata.MetadataManager
+import ui.tabs.TabManager
 import ui.{ProgressManager, UserManager, _}
 import utils.{NetworkMessage, TemplateUtils}
 
@@ -36,9 +37,8 @@ object ViewManager extends ViewDetailHelper {
         case _ => NetworkMessage.sendMessage(GetViewDetail(name))
       }
 
-      def close() = {
+      def close() = if (QueryManager.closeQuery(queryId)) {
         openViews = openViews - name
-        QueryManager.closeQuery(queryId)
       }
 
       TabManager.addTab(queryId, "view-" + name, name, Icons.view, close)
