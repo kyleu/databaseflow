@@ -44,8 +44,8 @@ object Utilities {
   lazy val nativeSandbox = (project in file("util/nativeSandbox"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .enablePlugins(ScalaNativePlugin)
-    //.settings(nativeMode := "debug")
-    .settings(nativeMode := "release")
+    .settings(nativeMode := "debug")
+    //.settings(nativeMode := "release")
     .settings(Shared.commonSettings: _*)
 
   lazy val benchmarking = (project in file("util/benchmarking"))
