@@ -1,5 +1,6 @@
 package models.graphql
 
+import models.result.QueryResultSet
 import models.schema.{Column, ColumnType}
 import sangria.schema._
 
@@ -14,70 +15,70 @@ object ColumnNotNullGraphQL {
         name = cleanName,
         fieldType = StringType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => x.value.getRequiredCell(col.name)
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => x.value.getRequiredCell(col.name)
       )
       case ColumnType.BigDecimalType | ColumnType.DoubleType => Field(
         name = cleanName,
         fieldType = BigDecimalType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => BigDecimal(x.value.getRequiredCell(col.name))
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => BigDecimal(x.value.getRequiredCell(col.name))
       )
       case ColumnType.BooleanType => Field(
         name = cleanName,
         fieldType = BooleanType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => x.value.getRequiredCell(col.name) == "true"
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => x.value.getRequiredCell(col.name) == "true"
       )
       case ColumnType.ByteType | ColumnType.ShortType | ColumnType.IntegerType => Field(
         name = cleanName,
         fieldType = IntType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => x.value.getRequiredCell(col.name).toInt
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => x.value.getRequiredCell(col.name).toInt
       )
       case ColumnType.LongType => Field(
         name = cleanName,
         fieldType = LongType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => x.value.getRequiredCell(col.name).toLong
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => x.value.getRequiredCell(col.name).toLong
       )
       case ColumnType.FloatType => Field(
         name = cleanName,
         fieldType = FloatType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => x.value.getRequiredCell(col.name).toDouble
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => x.value.getRequiredCell(col.name).toDouble
       )
       case ColumnType.ByteArrayType => Field(
         name = cleanName,
         fieldType = StringType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
       )
       case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => Field(
         name = cleanName,
         fieldType = StringType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
       )
 
       case ColumnType.RefType | ColumnType.XmlType | ColumnType.UuidType => Field(
         name = cleanName,
         fieldType = StringType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
       )
 
       case ColumnType.NullType | ColumnType.ObjectType | ColumnType.StructType | ColumnType.ArrayType => Field(
         name = cleanName,
         fieldType = StringType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
       )
 
       case ColumnType.UnknownType => Field(
         name = cleanName,
         fieldType = StringType,
         description = col.description,
-        resolve = (x: Context[GraphQLContext, Resultset]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
+        resolve = (x: Context[GraphQLContext, QueryResultSet]) => s"${x.value.getRequiredCell(col.name)} (${col.columnType})"
       )
     }
   }

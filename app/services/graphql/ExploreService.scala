@@ -1,29 +1,28 @@
 package services.graphql
 
 import models.connection.ConnectionSettings
-import models.graphql.{ColumnGraphQL, GraphQLContext, Resultset}
-import models.schema.{Table, View}
+import models.graphql.{ColumnGraphQL, GraphQLContext}
 import models.user.User
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import sangria.schema._
 import services.schema.SchemaService
 import models.result.QueryResultGraphQL._
+import models.result.QueryResultSet
 
 import scala.concurrent.Await
 
 object ExploreService {
   private[this] def getTables(schema: models.schema.Schema) = {
     val tableTypes = schema.tables.map { table =>
-      val tableFieldset = fields[GraphQLContext, Resultset](table.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
+      val tableFieldset = fields[GraphQLContext, QueryResultSet](table.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
       table -> ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fields = tableFieldset)
     }
 
-    val tableFields = fields[GraphQLContext, Table](tableTypes.map { t =>
+    val tableFields = fields[GraphQLContext, Unit](tableTypes.map { t =>
       Field(
         name = t._1.name,
         fieldType = ListType(t._2),
         description = t._1.description,
-        resolve = (x: Context[GraphQLContext, Table]) => Resultset.mock(t._1.columns, x.arg(limitArg).getOrElse(100)),
+        resolve = (x: Context[GraphQLContext, Unit]) => QueryResultSet.mock(t._1.columns, x.arg(limitArg).getOrElse(100)),
         arguments = resultArgs
       )
     }: _*)
@@ -33,16 +32,16 @@ object ExploreService {
 
   private[this] def getViews(schema: models.schema.Schema) = {
     val viewTypes = schema.views.map { view =>
-      val fieldset = fields[GraphQLContext, Resultset](view.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
-      ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
+      val fieldset = fields[GraphQLContext, QueryResultSet](view.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
+      view -> ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
     }
 
-    val viewFields = fields[GraphQLContext, View](viewTypes.map { v =>
+    val viewFields = fields[GraphQLContext, Unit](viewTypes.map { v =>
       Field(
-        name = v.name,
-        fieldType = ListType(v),
-        description = v.description,
-        resolve = (x: Context[GraphQLContext, View]) => Resultset.mock(x.value.columns, x.arg(limitArg).getOrElse(100)),
+        name = v._1.name,
+        fieldType = ListType(v._2),
+        description = v._1.description,
+        resolve = (x: Context[GraphQLContext, Unit]) => QueryResultSet.mock(v._1.columns, x.arg(limitArg).getOrElse(100)),
         arguments = resultArgs
       )
     }: _*)
@@ -58,14 +57,27 @@ object ExploreService {
     val tables = getTables(schema)
     val views = getViews(schema)
 
-    val explore = "???"
+    val exploreFields = fields[GraphQLContext, models.schema.Schema](
+      Field(
+        name = "table",
+        fieldType = tables,
+        description = Some("This database's tables."),
+        resolve = (x: Context[GraphQLContext, models.schema.Schema]) => ()
+      ),
+      Field(
+        name = "view",
+        fieldType = views,
+        description = Some("This database's views."),
+        resolve = (x: Context[GraphQLContext, models.schema.Schema]) => ()
+      )
+    )
 
-    tables
+    val explore = ObjectType(name = "explore", description = "Explore this database's objects in a simple graph.", fields = exploreFields)
+
+    explore
   }
 
   def resolve(user: User, cs: ConnectionSettings) = {
-    SchemaService.getSchemaWithDetailsFor(user, cs).map { schema =>
-      schema.tables.head
-    }
+    SchemaService.getSchemaWithDetailsFor(user, cs)
   }
 }
