@@ -3,9 +3,9 @@ package models.graphql
 import models.schema.Column
 
 object ColumnGraphQL {
-  def getColumnField[T](col: Column) = if (col.notNull) {
-    ColumnNotNullGraphQL.getColumnField[T](col)
+  def getColumnField(col: Column) = if (col.notNull) {
+    ColumnNotNullGraphQL.getColumnField(col)
   } else {
-    ColumnNullableGraphQL.getColumnField[T](col)
+    ColumnNullableGraphQL.getColumnField(col)
   }
 }

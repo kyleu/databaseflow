@@ -1,7 +1,7 @@
 package services.graphql
 
 import models.connection.ConnectionSettings
-import models.graphql.{ColumnGraphQL, GraphQLContext}
+import models.graphql.{ColumnGraphQL, GraphQLContext, Resultset}
 import models.schema.{Table, View}
 import models.user.User
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -12,30 +12,28 @@ import models.result.QueryResultGraphQL._
 import scala.concurrent.Await
 
 object ExploreService {
-  def exploreType(cs: ConnectionSettings) = {
-    import scala.concurrent.duration._
-    val f = SchemaService.getSchemaWithDetails(cs)
-    val schema = Await.result(f, 60.seconds)
-
+  private[this] def getTables(schema: models.schema.Schema) = {
     val tableTypes = schema.tables.map { table =>
-      val tableFieldset = fields[GraphQLContext, Table](table.columns.map(col => ColumnGraphQL.getColumnField[Table](col)): _*)
-      ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fields = tableFieldset)
+      val tableFieldset = fields[GraphQLContext, Resultset](table.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
+      table -> ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fields = tableFieldset)
     }
 
     val tableFields = fields[GraphQLContext, Table](tableTypes.map { t =>
       Field(
-        name = t.name,
-        fieldType = ListType(t),
-        description = t.description,
-        resolve = (x: Context[GraphQLContext, Table]) => Seq(x.value),
+        name = t._1.name,
+        fieldType = ListType(t._2),
+        description = t._1.description,
+        resolve = (x: Context[GraphQLContext, Table]) => Resultset.mock(t._1.columns, x.arg(limitArg).getOrElse(100)),
         arguments = resultArgs
       )
     }: _*)
 
-    val tables = ObjectType(name = "tables", description = "The tables contained in this schema.", fields = tableFields)
+    ObjectType(name = "tables", description = "The tables contained in this schema.", fields = tableFields)
+  }
 
+  private[this] def getViews(schema: models.schema.Schema) = {
     val viewTypes = schema.views.map { view =>
-      val fieldset = fields[GraphQLContext, View](view.columns.map(col => ColumnGraphQL.getColumnField[View](col)): _*)
+      val fieldset = fields[GraphQLContext, Resultset](view.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
       ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
     }
 
@@ -44,18 +42,25 @@ object ExploreService {
         name = v.name,
         fieldType = ListType(v),
         description = v.description,
-        resolve = (x: Context[GraphQLContext, View]) => Seq(x.value),
+        resolve = (x: Context[GraphQLContext, View]) => Resultset.mock(x.value.columns, x.arg(limitArg).getOrElse(100)),
         arguments = resultArgs
       )
     }: _*)
 
-    val views = ObjectType(name = "views", description = "The views contained in this schema.", fields = viewFields)
+    ObjectType(name = "views", description = "The views contained in this schema.", fields = viewFields)
+  }
 
-    val exploreFields = tableFields
+  def exploreType(cs: ConnectionSettings) = {
+    import scala.concurrent.duration._
+    val f = SchemaService.getSchemaWithDetails(cs)
+    val schema = Await.result(f, 60.seconds)
 
-    val explore = ObjectType(name = "explore", description = "Explore!", fields = exploreFields)
+    val tables = getTables(schema)
+    val views = getViews(schema)
 
-    explore
+    val explore = "???"
+
+    tables
   }
 
   def resolve(user: User, cs: ConnectionSettings) = {
