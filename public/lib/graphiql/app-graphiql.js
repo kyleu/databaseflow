@@ -83,7 +83,7 @@ $(function(global) {
       response: parameters.response,
       onEditQuery: onEditQuery,
       onEditVariables: onEditVariables,
-      defaultQuery: "query FirstQuery {\n  \n  }\n}"
+      defaultQuery: "query FirstQuery {\n  schema {\n    tables {\n      name\n    }\n  }\n}"
     };
 
     var gql = React.createElement(GraphiQL, gqlProps, gqlChildren);
