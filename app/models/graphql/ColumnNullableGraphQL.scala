@@ -1,6 +1,6 @@
 package models.graphql
 
-import models.result.QueryResultSet
+import models.result.QueryResultRow
 import models.schema.{Column, ColumnType}
 import sangria.schema._
 
@@ -15,70 +15,70 @@ object ColumnNullableGraphQL {
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(s"$cleanName (String)")
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
       case ColumnType.BigDecimalType | ColumnType.DoubleType => Field(
         name = cleanName,
         fieldType = OptionType(BigDecimalType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(BigDecimal(0))
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name).map(BigDecimal(_))
       )
       case ColumnType.BooleanType => Field(
         name = cleanName,
         fieldType = OptionType(BooleanType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(true)
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name).map(_ == "true")
       )
       case ColumnType.ByteType | ColumnType.ShortType | ColumnType.IntegerType => Field(
         name = cleanName,
         fieldType = OptionType(IntType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(0)
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name).map(_.toInt)
       )
       case ColumnType.LongType => Field(
         name = cleanName,
         fieldType = OptionType(LongType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(0L)
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name).map(_.toLong)
       )
       case ColumnType.FloatType => Field(
         name = cleanName,
         fieldType = OptionType(FloatType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(0.0)
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name).map(_.toDouble)
       )
       case ColumnType.ByteArrayType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(s"$cleanName (ByteArray)")
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
       case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(s"$cleanName (${col.columnType})")
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
 
       case ColumnType.RefType | ColumnType.XmlType | ColumnType.UuidType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(s"$cleanName (${col.columnType})")
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
 
       case ColumnType.NullType | ColumnType.ObjectType | ColumnType.StructType | ColumnType.ArrayType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(s"$cleanName (${col.columnType})")
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
 
       case ColumnType.UnknownType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
-        resolve = (x: Context[GraphQLContext, QueryResultSet]) => Some(s"$cleanName (${col.columnType})")
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
     }
   }

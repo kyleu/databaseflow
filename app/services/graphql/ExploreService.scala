@@ -6,14 +6,16 @@ import models.user.User
 import sangria.schema._
 import services.schema.SchemaService
 import models.result.QueryResultGraphQL._
-import models.result.QueryResultSet
+import models.result.QueryResultRow
+import models.schema.SchemaModelGraphQL
+import services.query.QueryResultRowService
 
 import scala.concurrent.Await
 
 object ExploreService {
   private[this] def getTables(schema: models.schema.Schema) = {
     val tableTypes = schema.tables.map { table =>
-      val tableFieldset = fields[GraphQLContext, QueryResultSet](table.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
+      val tableFieldset = fields[GraphQLContext, QueryResultRow](table.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
       table -> ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fields = tableFieldset)
     }
 
@@ -22,7 +24,10 @@ object ExploreService {
         name = t._1.name,
         fieldType = ListType(t._2),
         description = t._1.description,
-        resolve = (x: Context[GraphQLContext, Unit]) => QueryResultSet.mock(t._1.columns, x.arg(limitArg).getOrElse(100)),
+        //resolve = (x: Context[GraphQLContext, Unit]) => QueryResultRow.mock(t._1.columns, x.arg(limitArg).getOrElse(100)),
+        resolve = (x: Context[GraphQLContext, Unit]) => {
+          QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
+        },
         arguments = resultArgs
       )
     }: _*)
@@ -32,7 +37,7 @@ object ExploreService {
 
   private[this] def getViews(schema: models.schema.Schema) = {
     val viewTypes = schema.views.map { view =>
-      val fieldset = fields[GraphQLContext, QueryResultSet](view.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
+      val fieldset = fields[GraphQLContext, QueryResultRow](view.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
       view -> ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
     }
 
@@ -41,7 +46,9 @@ object ExploreService {
         name = v._1.name,
         fieldType = ListType(v._2),
         description = v._1.description,
-        resolve = (x: Context[GraphQLContext, Unit]) => QueryResultSet.mock(v._1.columns, x.arg(limitArg).getOrElse(100)),
+        resolve = (x: Context[GraphQLContext, Unit]) => {
+          QueryResultRowService.getViewData(x.ctx.user, schema.connectionId, v._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
+        },
         arguments = resultArgs
       )
     }: _*)

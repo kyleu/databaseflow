@@ -2,7 +2,7 @@ package models.result
 
 import models.schema.{Column, ColumnType}
 
-object QueryResultSet {
+object QueryResultRow {
   def mock(columns: Seq[Column], rows: Int) = {
     val colNames = columns.map(_.name)
     (0 until rows).map { _ =>
@@ -21,12 +21,12 @@ object QueryResultSet {
           case ColumnType.UnknownType => Some(col.name)
         }
       }
-      QueryResultSet(colNames, data)
+      QueryResultRow(colNames, data)
     }
   }
 }
 
-case class QueryResultSet(columns: Seq[String], data: Seq[Option[String]]) {
+case class QueryResultRow(columns: Seq[String], data: Seq[Option[String]]) {
   private[this] val columnIndexes = columns.zipWithIndex.toMap
   private[this] def colIndex(col: String) = columnIndexes.getOrElse(col, throw new IllegalStateException(s"Invalid column [$col]."))
 

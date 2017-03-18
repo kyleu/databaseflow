@@ -10,7 +10,7 @@ import sangria.schema._
 import services.query.RowDataService
 
 object SchemaModelGraphQL {
-  private[this] def rowDataOptionsFor(c: Context[GraphQLContext, _]) = {
+  def rowDataOptionsFor(c: Context[GraphQLContext, _]) = {
     val sc = c.arg(sortColArg)
     val sa = c.arg(sortAscArg)
     val fc = c.arg(filterColArg)
