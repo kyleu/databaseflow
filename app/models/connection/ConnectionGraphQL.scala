@@ -6,10 +6,10 @@ import models.result.QueryResultGraphQL
 import models.schema.SchemaGraphQL
 import models.user.Permission
 import sangria.schema._
-import services.graphql.ExploreService
 import services.query.{SavedQueryService, SharedResultService, SimpleQueryService}
 import services.schema.SchemaService
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.explore.ExploreService
 
 object ConnectionGraphQL {
   val nameArg = Argument("name", OptionInputType(StringType), description = "Filters the results to models with a matching name (case-insensitive).")
