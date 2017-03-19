@@ -6,10 +6,11 @@ import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.audit.AuditType
-import models.user.UserForms
+import models.user.{Role, UserForms}
 import play.api.i18n.{Lang, Messages}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.audit.AuditRecordService
+import services.settings.SettingsService
 import services.user.UserSearchService
 import utils.ApplicationContext
 
@@ -23,8 +24,7 @@ class AuthenticationController @javax.inject.Inject() (
 ) extends BaseController {
   def signInForm = withoutSession("form") { implicit request =>
     val src = request.headers.get("Referer").filter(_.contains(request.host))
-    val resp = Ok(views.html.auth.signin(request.identity, UserForms.signInForm))
-    Future.successful(resp)
+    Future.successful(Ok(views.html.auth.signin(request.identity, UserForms.signInForm)))
   }
 
   def authenticateCredentials = withoutSession("authenticate") { implicit request =>
@@ -39,11 +39,15 @@ class AuthenticationController @javax.inject.Inject() (
           }
           userSearchService.retrieve(loginInfo).flatMap {
             case Some(user) =>
-              ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
-                ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
-                ctx.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
-                  AuditRecordService.create(AuditType.SignIn, user.id, None)
-                  ctx.silhouette.env.authenticatorService.embed(v, result.withLang(Lang(user.preferences.language.code)))
+              if ((!SettingsService.allowSignIn) && (user.role != Role.Admin)) {
+                Future.failed(new IdentityNotFoundException(messagesApi("error.sign.in.disabled")))
+              } else {
+                ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
+                  ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
+                  ctx.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
+                    AuditRecordService.create(AuditType.SignIn, user.id, None)
+                    ctx.silhouette.env.authenticatorService.embed(v, result.withLang(Lang(user.preferences.language.code)))
+                  }
                 }
               }
             case None => Future.failed(new IdentityNotFoundException(messagesApi("error.missing.user", loginInfo.providerID)))

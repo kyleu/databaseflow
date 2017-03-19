@@ -5,11 +5,10 @@ import models.schema.{Column, ColumnType}
 import sangria.schema._
 
 object ColumnNotNullGraphQL {
-  def getColumnField(col: Column) = {
+  def getColumnField(col: Column, cleanName: String) = {
     if (!col.notNull) {
       throw new IllegalStateException(s"Nullable column [${col.name}] passed to non-nullable method.")
     }
-    val cleanName = col.name.replaceAllLiterally(" ", "")
     col.columnType match {
       case ColumnType.StringType => Field(
         name = cleanName,

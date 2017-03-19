@@ -41,5 +41,6 @@ object SettingsService {
   }
 
   def allowRegistration = asBool(SettingKey.AllowRegistration)
+  def allowSignIn = asBool(SettingKey.AllowSignIn)
   def allowAuditRemoval = asBool(SettingKey.AllowAuditRemoval)
 }

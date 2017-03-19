@@ -3,7 +3,7 @@
 
 @settingPanel(key: models.settings.SettingKey, colWidth: Int = 12)(content: Html) = {
   <div class="col s12 m@colWidth">
-    <div class="z-depth-1 setting-panel">
+    <div class="setting-panel">
       <strong>@key.title</strong>
       <div class="setting-input">@content</div>
       <em>@key.description</em>
@@ -24,43 +24,44 @@
       <div class="panel-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.settings.title")</div>
 
       <div class="row">
-        @settingPanel(AllowRegistration) {
-          <div class="row">
-            <div class="col s12">
-            @defining(services.settings.SettingsService.allowRegistration) { allowRegistration =>
-              <div>
-                <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(allowRegistration) { checked="checked" }></input>
-                <label for="@AllowRegistration.id-true">Yes</label>
-              </div>
-              <div>
-                <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(!allowRegistration) { checked="checked" }></input>
-                <label for="@AllowRegistration.id-false">No</label>
-              </div>
-            }
+        @settingPanel(AllowRegistration, 6) {
+          @defining(services.settings.SettingsService.allowRegistration) { allowRegistration =>
+            <div>
+              <input type="radio" id="@AllowRegistration.id-true" name="@AllowRegistration.id" value="true" @if(allowRegistration) { checked="checked" }></input>
+              <label for="@AllowRegistration.id-true">Yes</label>
             </div>
-          </div>
+            <div>
+              <input type="radio" id="@AllowRegistration.id-false" name="@AllowRegistration.id" value="false" @if(!allowRegistration) { checked="checked" }></input>
+              <label for="@AllowRegistration.id-false">No</label>
+            </div>
+          }
+        }
+
+        @settingPanel(AllowSignIn, 6) {
+          @defining(services.settings.SettingsService.allowSignIn) { allowSignIn =>
+            <div>
+              <input type="radio" id="@AllowSignIn.id-true" name="@AllowSignIn.id" value="true" @if(allowSignIn) { checked="checked" }></input>
+              <label for="@AllowSignIn.id-true">Yes</label>
+            </div>
+            <div>
+              <input type="radio" id="@AllowSignIn.id-false" name="@AllowSignIn.id" value="false" @if(!allowSignIn) { checked="checked" }></input>
+              <label for="@AllowSignIn.id-false">No</label>
+            </div>
+          }
         }
 
         @settingPanel(DefaultNewUserRole, 6) {
-          <div class="row">
-            <div class="col s12">
-            @defining(models.user.Role.withName(services.settings.SettingsService(DefaultNewUserRole))) { newUserRole =>
-              @roleRadio(DefaultNewUserRole.id, models.user.Role.User, newUserRole, messages("permissions.registered.users"))
-              @roleRadio(DefaultNewUserRole.id, models.user.Role.Admin, newUserRole, messages("permissions.administrators"))
-            }
-            </div>
-          </div>
+          @defining(models.user.Role.withName(services.settings.SettingsService(DefaultNewUserRole))) { newUserRole =>
+            @roleRadio(DefaultNewUserRole.id, models.user.Role.User, newUserRole, messages("permissions.registered.users"))
+            @roleRadio(DefaultNewUserRole.id, models.user.Role.Admin, newUserRole, messages("permissions.administrators"))
+          }
         }
 
         @settingPanel(AddConnectionRole, 6) {
-          <div class="row">
-            <div class="col s12">
-            @defining(models.user.Role.withName(services.settings.SettingsService(AddConnectionRole))) { addConnectionRole =>
-              @roleRadio(AddConnectionRole.id, models.user.Role.User, addConnectionRole, messages("permissions.registered.users"))
-              @roleRadio(AddConnectionRole.id, models.user.Role.Admin, addConnectionRole, messages("permissions.administrators"))
-            }
-            </div>
-          </div>
+          @defining(models.user.Role.withName(services.settings.SettingsService(AddConnectionRole))) { addConnectionRole =>
+            @roleRadio(AddConnectionRole.id, models.user.Role.User, addConnectionRole, messages("permissions.registered.users"))
+            @roleRadio(AddConnectionRole.id, models.user.Role.Admin, addConnectionRole, messages("permissions.administrators"))
+          }
         }
       </div>
     </div>

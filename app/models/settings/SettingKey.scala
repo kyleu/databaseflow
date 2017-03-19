@@ -15,6 +15,13 @@ object SettingKey extends Enum[SettingKey] {
     default = "true"
   )
 
+  case object AllowSignIn extends SettingKey(
+    id = "allow-sign-in",
+    title = "Allow Sign In",
+    description = "When turned off, only administrators may sign in.",
+    default = "true"
+  )
+
   case object DefaultNewUserRole extends SettingKey(
     id = "default-new-user-role",
     title = "Default New User Role",

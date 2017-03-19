@@ -54,6 +54,9 @@ class RegistrationController @javax.inject.Inject() (
           case Some(user) => Future.successful(
             Redirect(controllers.auth.routes.RegistrationController.register()).flashing("error" -> Messages("registration.email.taken"))
           )
+          case None if !SettingsService.allowSignIn => Future.successful(
+            Redirect(controllers.auth.routes.RegistrationController.register()).flashing("error" -> Messages("error.sign.in.disabled"))
+          )
           case None =>
             val authInfo = hasher.hash(data.password)
             val firstUser = MasterDatabase.query(UserQueries.count) == 0

@@ -233,6 +233,7 @@ error.must.sign.in = You must sign in or register before accessing {0}.
 error.missing.parameter = Missing [{0}] parameter.
 error.unknown.format = Unknown format [{0}].
 error.exception.encountered = Unable to export query: [{0}: {1}].
+error.sign.in.disabled = Only administrators may sign in at this time. Contact your administrator.
 error.missing.user = Couldn't find user {0}.
 error.cannot.sign.up = Unable to sign up at this time. Contact your administrator.
 error.empty = {0} is required.
