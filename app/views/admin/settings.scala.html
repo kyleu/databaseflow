@@ -63,6 +63,14 @@
             @roleRadio(AddConnectionRole.id, models.user.Role.Admin, addConnectionRole, messages("permissions.administrators"))
           }
         }
+
+        @settingPanel(MessageOfTheDay) {
+          @defining(services.settings.SettingsService(MessageOfTheDay)) { motd =>
+            <div class="input-field">
+              <textarea id="@MessageOfTheDay.id" name="@MessageOfTheDay.id" class="materialize-textarea" placeholder="Enter a message to be displayed to all users.">@motd</textarea>
+            </div>
+          }
+        }
       </div>
     </div>
     <div class="panel-action">

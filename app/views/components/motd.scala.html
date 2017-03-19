@@ -1,0 +1,7 @@
+@()@defining(services.settings.SettingsService(models.settings.SettingKey.MessageOfTheDay)) { message =>
+  @if(message.trim.nonEmpty) {
+    <div class="col s12">
+      <div class="motd z-depth-1" style="text-align: center; padding: 8px;">@message</div>
+    </div>
+  }
+}

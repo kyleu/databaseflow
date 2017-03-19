@@ -50,6 +50,13 @@ object SettingKey extends Enum[SettingKey] {
     default = ""
   )
 
+  case object MessageOfTheDay extends SettingKey(
+    id = "motd",
+    title = "Message of The Day",
+    description = "When set, displays the content on the sign in, registration, and home screens.",
+    default = ""
+  )
+
   case object InstallDate extends SettingKey(
     id = "install-date",
     title = "Install Date",

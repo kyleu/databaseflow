@@ -2,6 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.simple(Some(user), utils.Config.projectName) {
   <div class="row">
+    @views.html.components.motd()
     <div class="col s12">
       <div class="panel-content">
         @if(connections.isEmpty) {
