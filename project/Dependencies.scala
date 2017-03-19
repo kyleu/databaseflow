@@ -6,7 +6,7 @@ object Dependencies {
   }
 
   object Logging {
-    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.24"
+    val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.25"
   }
 
   object Play {
@@ -41,13 +41,13 @@ object Dependencies {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.1"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
-    val h2 = "com.h2database" % "h2" % "1.4.193"
+    val h2 = "com.h2database" % "h2" % "1.4.194"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.41" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.16.1"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.4.jre8-preview"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.5.jre8-preview"
   }
 
   object Hibernate {
@@ -96,7 +96,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.3.0"
-    val enumeratumVersion = "1.5.8"
+    val enumeratumVersion = "1.5.9"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
