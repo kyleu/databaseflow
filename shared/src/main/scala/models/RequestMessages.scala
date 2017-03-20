@@ -17,6 +17,7 @@ case object RefreshSchema extends RequestMessage
 case class GetTableDetail(name: String) extends RequestMessage
 case class GetProcedureDetail(name: String) extends RequestMessage
 case class GetViewDetail(name: String) extends RequestMessage
+case class GetColumnDetail(owner: String, name: String, t: String) extends RequestMessage
 
 case object BeginTransaction extends RequestMessage
 case object RollbackTransaction extends RequestMessage

@@ -5,7 +5,7 @@ import java.util.UUID
 import models.audit.AuditRecord
 import models.plan.{PlanError, PlanResult}
 import models.query._
-import models.schema.{Procedure, Schema, Table, View}
+import models.schema._
 import models.user.UserPreferences
 
 sealed trait ResponseMessage
@@ -50,3 +50,5 @@ case class QueryDeleteResponse(id: UUID, error: Option[String] = None) extends R
 case class SharedResultSaveResponse(result: SharedResult, error: Option[String] = None) extends ResponseMessage
 
 case class RowUpdateResponse(resultId: UUID, pk: Seq[(String, String)], errors: Map[String, String] = Map.empty) extends ResponseMessage
+
+case class ColumnDetailResponse(name: String, details: ColumnDetails) extends ResponseMessage

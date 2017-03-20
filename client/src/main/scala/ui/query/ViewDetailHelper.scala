@@ -30,7 +30,7 @@ trait ViewDetailHelper {
       $(".badge", section).html(view.columns.size.toString)
       $(".section-content", section).html(ViewColumnDetailTemplate.columnPanel(view.columns).render)
 
-      ColumnDetailManager.installHandlers($(".column-detail-link", section), "view", view.name)
+      ColumnDetailManager.installHandlers($(".column-detail-link", section), view.name)
     }
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()

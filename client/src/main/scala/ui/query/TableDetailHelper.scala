@@ -39,7 +39,7 @@ trait TableDetailHelper {
       $(".badge", section).html(table.columns.size.toString)
       $(".section-content", section).html(TableColumnDetailTemplate.columnPanel(table.columns).render)
 
-      ColumnDetailManager.installHandlers($(".column-detail-link", section), "table", table.name)
+      ColumnDetailManager.installHandlers($(".column-detail-link", section), table.name)
     }
     if (table.indexes.nonEmpty) {
       val section = $(".indexes-section", panel)

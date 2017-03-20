@@ -20,6 +20,19 @@ trait DetailHelper { this: SocketService =>
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
+  protected[this] def handleGetProcedureDetail(name: String) = SchemaService.getProcedure(connectionId, name).foreach { p =>
+    def work() = db.withConnection { conn =>
+      MetadataProcedures.withProcedureDetails(conn.getMetaData, Option(conn.getCatalog), Option(conn.getSchema), Seq(p))
+    }
+    def onSuccess(procedures: Seq[Procedure]) = {
+      out ! ProcedureResponse(procedures)
+    }
+    def onFailure(x: Throwable) = {
+      ExceptionUtils.actorErrorFunction(out, "ProcedureDetail", x)
+    }
+    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+  }
+
   protected[this] def handleGetViewDetail(name: String) = SchemaService.getView(connectionId, name).foreach { v =>
     def work() = db.withConnection { conn =>
       MetadataViews.withViewDetails(db, conn, conn.getMetaData, Seq(v))
@@ -33,17 +46,8 @@ trait DetailHelper { this: SocketService =>
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
-  protected[this] def handleGetProcedureDetail(name: String) = SchemaService.getProcedure(connectionId, name).foreach { p =>
-    def work() = db.withConnection { conn =>
-      MetadataProcedures.withProcedureDetails(conn.getMetaData, Option(conn.getCatalog), Option(conn.getSchema), Seq(p))
-    }
-    def onSuccess(procedures: Seq[Procedure]) = {
-      out ! ProcedureResponse(procedures)
-    }
-    def onFailure(x: Throwable) = {
-      ExceptionUtils.actorErrorFunction(out, "ProcedureDetail", x)
-    }
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+  protected[this] def handleGetColumnDetail(owner: String, name: String, t: String) = {
+
   }
 
   protected[this] def handleSocketTrace() = {

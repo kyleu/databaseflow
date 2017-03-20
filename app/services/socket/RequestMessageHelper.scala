@@ -22,8 +22,9 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
 
     case RefreshSchema => timeReceive(RefreshSchema) { refreshSchema(true) }
     case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name) }
-    case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
     case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name) }
+    case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name) }
+    case gcd: GetColumnDetail => timeReceive(gcd) { handleGetColumnDetail(gcd.owner, gcd.name, gcd.t) }
 
     case BeginTransaction => timeReceive(BeginTransaction) { handleBeginTransaction() }
     case RollbackTransaction => timeReceive(RollbackTransaction) { handleRollbackTransaction() }

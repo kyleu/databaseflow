@@ -12,7 +12,12 @@ object ColumnTemplate {
     data("t") := col.columnType.toString
   )(col.name)
 
-  def columnDetails(modelType: String, modelName: String, name: String, t: String) = div(
-    "Column details!"
+  def columnDetails(owner: String, name: String, t: String) = div(
+    h5(owner + " :: " + name),
+    em(t + " column"),
+    hr(),
+    div(cls := "column-detail-stats-panel")(
+      div("Loading statistics... (", a(href := "", cls := "theme-text column-detail-cancel-link")("cancel"), ")")
+    )
   )
 }
