@@ -1,7 +1,8 @@
 package services.socket
 
 import models._
-import models.schema.{Procedure, Table, View}
+import models.queries.column.ColumnDetailQueries
+import models.schema._
 import services.database.DatabaseWorkerPool
 import services.schema.{MetadataProcedures, MetadataTables, MetadataViews, SchemaService}
 import utils.ExceptionUtils
@@ -47,7 +48,20 @@ trait DetailHelper { this: SocketService =>
   }
 
   protected[this] def handleGetColumnDetail(owner: String, name: String, t: String) = {
-
+    import ColumnType._
+    val colType = withNameInsensitive(t)
+    def work() = colType match {
+      case StringType => db.query(ColumnDetailQueries.StringColumnDetail(owner, name))
+      case IntegerType | LongType => db.query(ColumnDetailQueries.NumberColumnDetail(owner, name))
+      case x => ColumnDetails(0L, 0L, error = Some(s"Unhandled type [$x]."))
+    }
+    def onSuccess(value: ColumnDetails) = {
+      out ! ColumnDetailResponse(owner, name, value)
+    }
+    def onFailure(x: Throwable) = {
+      ExceptionUtils.actorErrorFunction(out, "ColumnDetail", x)
+    }
+    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
   protected[this] def handleSocketTrace() = {

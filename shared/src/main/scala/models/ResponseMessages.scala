@@ -51,4 +51,4 @@ case class SharedResultSaveResponse(result: SharedResult, error: Option[String] 
 
 case class RowUpdateResponse(resultId: UUID, pk: Seq[(String, String)], errors: Map[String, String] = Map.empty) extends ResponseMessage
 
-case class ColumnDetailResponse(name: String, details: ColumnDetails) extends ResponseMessage
+case class ColumnDetailResponse(owner: String, name: String, details: ColumnDetails) extends ResponseMessage

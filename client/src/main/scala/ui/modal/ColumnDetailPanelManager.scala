@@ -1,6 +1,7 @@
 package ui.modal
 
 import models.GetColumnDetail
+import models.schema.ColumnDetails
 import models.template.column.ColumnTemplate
 import org.scalajs.jquery.{jQuery => $}
 import utils.{NetworkMessage, TemplateUtils}
@@ -22,12 +23,21 @@ object ColumnDetailPanelManager {
   def show(owner: String, name: String, t: String) = {
     //utils.Logging.info(s"Column details for $modelType [$modelName::$name]. ($t)")
 
-    val content = ColumnTemplate.columnDetails(owner, name, t)
+    val content = ColumnTemplate.columnDetailsPanel(owner, name, t)
     modalContent.html(content.toString)
     modal.openModal()
 
     activeRequest = Some((owner, name))
     NetworkMessage.sendMessage(GetColumnDetail(owner, name, t))
+  }
+
+  def onDetails(owner: String, name: String, details: ColumnDetails) = {
+    val detailsContent = $(".stats-panel", modalContent)
+    if (detailsContent.length != 1) {
+      throw new IllegalStateException(s"Found [${detailsContent.length}] column detail elements.")
+    }
+    val content = ColumnTemplate.columnDetails(details)
+    detailsContent.html(content.toString)
   }
 
   def close(): Unit = modal.closeModal()

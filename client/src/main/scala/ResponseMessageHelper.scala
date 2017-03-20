@@ -2,6 +2,7 @@ import models._
 import services._
 import services.query._
 import _root_.ui.modal.RowUpdateManager
+import _root_.ui.query.ColumnDetailManager
 import _root_.ui.{HistoryManager, UserManager}
 import utils.{Logging, NetworkMessage}
 
@@ -19,6 +20,8 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case tr: TableResponse => ModelResultsService.handleTableResponse(tr.tables)
     case vr: ViewResponse => ModelResultsService.handleViewResponse(vr.views)
     case pr: ProcedureResponse => ModelResultsService.handleProcedureResponse(pr.procedures)
+
+    case cdr: ColumnDetailResponse => ColumnDetailManager.onResponse(cdr.owner, cdr.name, cdr.details)
 
     case arr: AuditRecordResponse => HistoryManager.handleAuditHistoryResponse(arr.history)
     case arr: AuditRecordRemoved => HistoryManager.handleAuditHistoryRemoved(arr.id)
