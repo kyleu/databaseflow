@@ -3,9 +3,9 @@ package ui.query
 import java.util.UUID
 
 import models.schema.View
-import models.template.view.ViewColumnDetailTemplate
+import models.template.column.ViewColumnDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
-import utils.Logging
+import utils.{Logging, TemplateUtils}
 
 trait ViewDetailHelper {
   protected[this] def setViewDetails(uuid: UUID, view: View) = {
@@ -29,6 +29,8 @@ trait ViewDetailHelper {
       section.removeClass("initially-hidden")
       $(".badge", section).html(view.columns.size.toString)
       $(".section-content", section).html(ViewColumnDetailTemplate.columnPanel(view.columns).render)
+
+      ColumnDetailManager.installHandlers($(".column-detail-link", section), "view", view.name)
     }
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()

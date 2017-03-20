@@ -11,7 +11,7 @@ object SettingKey extends Enum[SettingKey] {
   case object AllowRegistration extends SettingKey(
     id = "allow-registration",
     title = "Allow Registration",
-    description = "Determines if users are allowed to sign themselves up for the system.",
+    description = "Determines if users are allowed to sign up.",
     default = "true"
   )
 
@@ -25,14 +25,14 @@ object SettingKey extends Enum[SettingKey] {
   case object DefaultNewUserRole extends SettingKey(
     id = "default-new-user-role",
     title = "Default New User Role",
-    description = "Determines the role to assign newly-registered users.",
+    description = "Determines the role to assign new users.",
     default = "user"
   )
 
   case object AddConnectionRole extends SettingKey(
     id = "add-connection-role",
     title = "Add Connection Role",
-    description = "Determines the role required to create new connections.",
+    description = "The role required to create new connections.",
     default = "user"
   )
 

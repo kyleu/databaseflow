@@ -4,7 +4,8 @@ import java.util.UUID
 
 import models.query.RowDataOptions
 import models.schema.{ColumnType, FilterOp, Table}
-import models.template.tbl.{TableColumnDetailTemplate, TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
+import models.template.column.TableColumnDetailTemplate
+import models.template.tbl.{TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import utils.{Logging, NumberUtils}
 
@@ -37,6 +38,8 @@ trait TableDetailHelper {
       section.removeClass("initially-hidden")
       $(".badge", section).html(table.columns.size.toString)
       $(".section-content", section).html(TableColumnDetailTemplate.columnPanel(table.columns).render)
+
+      ColumnDetailManager.installHandlers($(".column-detail-link", section), "table", table.name)
     }
     if (table.indexes.nonEmpty) {
       val section = $(".indexes-section", panel)

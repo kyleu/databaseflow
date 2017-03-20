@@ -1,4 +1,4 @@
-package models.template.view
+package models.template.column
 
 import models.schema.Column
 import utils.Messages
@@ -19,7 +19,7 @@ object ViewColumnDetailTemplate {
       val nn = col.notNull.toString
       val defaultVal = col.defaultValue.getOrElse("")
       tr(
-        td(col.name),
+        td(ColumnTemplate.linkFor(col)),
         td(col.columnType.toString)
       )
     })

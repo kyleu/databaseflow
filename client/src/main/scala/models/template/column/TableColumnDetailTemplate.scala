@@ -1,4 +1,4 @@
-package models.template.tbl
+package models.template.column
 
 import models.schema.Column
 import utils.Messages
@@ -26,7 +26,7 @@ object TableColumnDetailTemplate {
         val nn = col.notNull.toString
         val defaultVal = col.defaultValue.getOrElse("")
         Seq(tr(
-          td(col.name),
+          td(ColumnTemplate.linkFor(col)),
           td(pk),
           td(nn),
           td(col.columnType.toString),
