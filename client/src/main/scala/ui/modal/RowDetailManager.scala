@@ -3,6 +3,7 @@ package ui.modal
 import models.query.QueryResult
 import models.template.tbl.RowDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
+import ui.metadata.MetadataManager
 import utils.TemplateUtils
 
 import scala.scalajs.js
@@ -39,10 +40,12 @@ object RowDetailManager {
   }
 
   def edit() = {
+    val name = activeTable.getOrElse(throw new IllegalStateException("No active table"))
+    val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
     val keyData = activePk.flatMap { col =>
       activeData.find(_._1.name.compareToIgnoreCase(col) == 0).map(_._2)
     }
-    utils.Logging.info(s"Edit: [${activeTable.getOrElse("?")}] (${activePk.mkString(", ")}) = ${keyData.mkString(", ")}")
+    utils.Logging.info(s"Edit: [$name] (${activePk.mkString(", ")}) = ${keyData.mkString(", ")} :: ${columns.size} columns.")
   }
 
   def close() = {

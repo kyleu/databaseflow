@@ -42,7 +42,7 @@ object InitService {
     SharedResultFormManager.init()
     QueryExportFormManager.init()
     PlanNodeDetailManager.init()
-    ColumnDetailPanelManager.init()
+    ColumnDetailManager.init()
     Logging.debug("Database Flow has started.")
     connect()
   }

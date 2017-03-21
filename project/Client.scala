@@ -8,7 +8,6 @@ import sbt._
 
 object Client {
   private[this] val clientSettings = Shared.commonSettings ++ Seq(
-    persistLauncher := false,
     libraryDependencies ++= Seq(
       "be.doeraene" %%% "scalajs-jquery" % Dependencies.ScalaJS.jQueryVersion,
       "com.lihaoyi" %%% "scalatags" % Dependencies.ScalaJS.scalaTagsVersion
@@ -24,7 +23,6 @@ object Client {
     .dependsOn(Shared.sharedJs)
 
   private[this] val chartingSettings = Shared.commonSettings ++ Seq(
-    persistLauncher := false,
     libraryDependencies ++= Seq(
       "be.doeraene" %%% "scalajs-jquery" % Dependencies.ScalaJS.jQueryVersion,
       "com.lihaoyi" %%% "scalatags" % Dependencies.ScalaJS.scalaTagsVersion,

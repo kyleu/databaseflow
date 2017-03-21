@@ -3,12 +3,12 @@ package ui.modal
 import models.GetColumnDetail
 import models.schema.ColumnDetails
 import models.template.column.ColumnTemplate
-import org.scalajs.jquery.{jQuery => $}
+import org.scalajs.jquery.{JQuery, jQuery => $}
 import utils.{NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
-object ColumnDetailPanelManager {
+object ColumnDetailManager {
   private[this] val modal = js.Dynamic.global.$("#column-detail-modal")
 
   private[this] val modalContent = $("#column-detail-modal-content", modal)
@@ -19,6 +19,10 @@ object ColumnDetailPanelManager {
   def init() = TemplateUtils.clickHandler(modalLink, jq => {
     close()
   })
+
+  def installHandlers(selector: JQuery, owner: String) = {
+    TemplateUtils.clickHandler(selector, jq => ColumnDetailManager.show(owner, jq.data("col").toString, jq.data("t").toString))
+  }
 
   def show(owner: String, name: String, t: String) = {
     //utils.Logging.info(s"Column details for $modelType [$modelName::$name]. ($t)")

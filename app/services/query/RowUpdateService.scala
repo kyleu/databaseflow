@@ -25,11 +25,11 @@ object RowUpdateService extends Logging {
     val statement = InsertRowStatement(name, params, t.columns, db.engine)
 
     def work() = {
-      db.executeUpdate(statement)
-      RowUpdateResponse(resultId, Nil)
+      val rowsAffected = db.executeUpdate(statement)
+      RowUpdateResponse(resultId, Nil, rowsAffected)
     }
     def onSuccess(rm: ResponseMessage) = out ! rm
-    def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, Nil, Map("general" -> t.getMessage))
+    def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, Nil, 0, Map("general" -> t.getMessage))
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 
@@ -39,11 +39,11 @@ object RowUpdateService extends Logging {
     val statement = UpdateRowStatement(name, pk, params, t.columns, db.engine)
 
     def work() = {
-      db.executeUpdate(statement)
-      RowUpdateResponse(resultId, pk)
+      val rowsAffected = db.executeUpdate(statement)
+      RowUpdateResponse(resultId, pk, rowsAffected)
     }
     def onSuccess(rm: ResponseMessage) = out ! rm
-    def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, pk, Map("general" -> t.getMessage))
+    def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, pk, 0, Map("general" -> t.getMessage))
     DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
   }
 }
