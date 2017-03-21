@@ -66,7 +66,7 @@ object TableManager extends TableDetailHelper {
 
         TemplateUtils.clickHandler($(".insert-data-link", queryPanel), jq => {
           val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
-          RowUpdateManager.show(name, Nil, columns)
+          RowUpdateManager.show(insert = true, name, Nil, columns, Map.empty)
         })
 
         openTables = openTables + (name -> queryId)

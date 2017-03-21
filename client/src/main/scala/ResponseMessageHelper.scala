@@ -49,7 +49,7 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
 
     case srsr: SharedResultSaveResponse => ModelResultsService.handleSharedResultSaveResponse(srsr.result, srsr.error)
 
-    case rur: RowUpdateResponse => RowUpdateManager.handleInsertRowResponse(rur.errors)
+    case rur: RowUpdateResponse => RowUpdateManager.handleRowUpdateResponse(rur.errors)
 
     case se: ServerError => handleServerError(se.reason, se.content)
     case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")

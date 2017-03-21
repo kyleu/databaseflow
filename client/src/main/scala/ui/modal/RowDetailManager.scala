@@ -45,7 +45,9 @@ object RowDetailManager {
     val keyData = activePk.flatMap { col =>
       activeData.find(_._1.name.compareToIgnoreCase(col) == 0).map(_._2)
     }
-    utils.Logging.info(s"Edit: [$name] (${activePk.mkString(", ")}) = ${keyData.mkString(", ")} :: ${columns.size} columns.")
+    val pk = activePk.zip(keyData)
+    RowUpdateManager.show(insert = false, name, pk, columns, activeData.map(x => x._1.name -> x._2).toMap)
+    close()
   }
 
   def close() = {

@@ -12,11 +12,11 @@ import utils.{NetworkMessage, TemplateUtils}
 import scala.scalajs.js
 
 object RowUpdateManager {
-  private[this] val modal = js.Dynamic.global.$("#data-insert-modal")
+  private[this] val modal = js.Dynamic.global.$("#row-update-modal")
 
-  private[this] val modalContent = $("#data-insert-modal-content", modal)
-  private[this] val linkInsert = $("#data-insert-save-link", modal)
-  private[this] val linkCancel = $("#data-insert-cancel-link", modal)
+  private[this] val modalContent = $("#row-update-modal-content", modal)
+  private[this] val linkInsert = $("#row-update-save-link", modal)
+  private[this] val linkCancel = $("#row-update-cancel-link", modal)
 
   private[this] var activeMessage: Option[RowUpdate] = None
   private[this] var activeColumns: Option[Seq[Column]] = None
@@ -30,15 +30,15 @@ object RowUpdateManager {
     TemplateUtils.clickHandler(linkCancel, jq => close())
   }
 
-  def show(name: String, pk: Seq[(String, String)], columns: Seq[Column]) = {
+  def show(insert: Boolean, name: String, pk: Seq[(String, String)], columns: Seq[Column], data: Map[String, String]) = {
     val resultId = UUID.randomUUID
     activeMessage = Some(RowUpdate(name, pk, Map.empty, resultId))
     activeColumns = Some(columns)
-    val html = RowUpdateTemplate.forColumns(name, columns)
+    val html = RowUpdateTemplate.forColumns(insert, name, columns, data)
     modalContent.html(html.render)
-    TemplateUtils.keyUpHandler($(".insert-row-input", modalContent), (jq, i) => {
+    TemplateUtils.keyUpHandler($(".row-update-input", modalContent), (jq, i) => {
       if (jq.value().toString.nonEmpty) {
-        $(s"#insert-row-toggle-${jq.data("col")}").attr("checked", "checked")
+        $(s"#row-update-toggle-${jq.data("col")}").attr("checked", "checked")
       }
     })
     modal.openModal()
@@ -51,14 +51,14 @@ object RowUpdateManager {
     modal.closeModal()
   }
 
-  def handleInsertRowResponse(errors: Map[String, String]) = {
+  def handleRowUpdateResponse(errors: Map[String, String]) = {
     if (errors.isEmpty) {
       NotificationService.info("Row Inserted", "Added one new row.")
       close()
     } else {
-      $(".insert-row-error", modal).hide()
+      $(".row-update-error", modal).hide()
       errors.foreach { error =>
-        $(s"#insert-row-error-${error._1}", modal).text(error._2).show()
+        $(s"#row-update-error-${error._1}", modal).text(error._2).show()
       }
     }
   }
@@ -66,10 +66,10 @@ object RowUpdateManager {
   private[this] def getParams = {
     val cols = activeColumns.getOrElse(throw new IllegalStateException("Missing active columns for insert."))
     val params = cols.flatMap { col =>
-      val toggle = $(s"#insert-row-toggle-${col.name}", modal).prop("checked").toString.toBoolean
+      val toggle = $(s"#row-update-toggle-${col.name}", modal).prop("checked").toString.toBoolean
       utils.Logging.info(col.name + ": " + toggle)
       if (toggle) {
-        val v = $(s"#insert-row-input-${col.name}", modal).value().toString
+        val v = $(s"#row-update-input-${col.name}", modal).value().toString
         Some(col.name -> v)
       } else {
         None

@@ -8,11 +8,11 @@ import scalatags.Text.all._
 object RowUpdateTemplate {
   private[this] def getLabel(col: Column) = Seq(
     if (col.notNull && col.defaultValue.isEmpty) {
-      input(`type` := "checkbox", id := s"insert-row-toggle-${col.name}", checked)
+      input(`type` := "checkbox", id := s"row-update-toggle-${col.name}", checked)
     } else {
-      input(`type` := "checkbox", id := s"insert-row-toggle-${col.name}")
+      input(`type` := "checkbox", id := s"row-update-toggle-${col.name}")
     },
-    label(`for` := s"insert-row-toggle-${col.name}")("")
+    label(`for` := s"row-update-toggle-${col.name}")("")
   )
 
   private[this] def getInput(v: String, col: Column) = input(
@@ -21,14 +21,14 @@ object RowUpdateTemplate {
     } else {
       col.columnType.toString
     }),
-    id := s"insert-row-input-${col.name}",
-    cls := "insert-row-input",
+    id := s"row-update-input-${col.name}",
+    cls := "row-update-input",
     `type` := "text",
     data("col") := col.name,
     value := v
   )
 
-  private[this] def tbodyForColumns(cols: Seq[Column]) = tbody(cols.flatMap { col =>
+  private[this] def tbodyForColumns(cols: Seq[Column], data: Map[String, String]) = tbody(cols.flatMap { col =>
     Seq(
       tr(
         td(colspan := 2)(col.name)
@@ -36,16 +36,19 @@ object RowUpdateTemplate {
       tr(
         td(cls := "use-toggle")(getLabel(col)),
         td(cls := "input-field")(
-          getInput("", col),
-          div(cls := "insert-row-error", id := s"insert-row-error-${col.name}")
+          getInput(data.getOrElse(col.name, ""), col),
+          div(cls := "row-update-error", id := s"row-update-error-${col.name}")
         )
       )
     )
   }: _*)
 
-  def forColumns(name: String, cols: Seq[Column]) = div(
-    h5(Messages("query.insert.title", name)),
-    div(cls := "insert-row-error", id := "insert-row-error-general"),
-    div(cls := "insert-row-container row")(table(tbodyForColumns(cols)))
-  )
+  def forColumns(insert: Boolean, name: String, cols: Seq[Column], data: Map[String, String]) = {
+    val title = if (insert) { Messages("query.insert.title", name) } else { Messages("query.update.title", name) }
+    div(
+      h5(title),
+      div(cls := "row-update-error", id := "row-update-error-general"),
+      div(cls := "row-update-container row")(table(tbodyForColumns(cols, data)))
+    )
+  }
 }
