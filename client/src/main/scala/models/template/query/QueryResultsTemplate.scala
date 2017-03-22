@@ -3,7 +3,7 @@ package models.template.query
 import java.util.UUID
 
 import models.query.QueryResult
-import models.template.{Icons, StaticPanelTemplate}
+import models.template.Icons
 import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
 import utils.{Messages, NumberUtils, TemplateUtils}
 

@@ -1,6 +1,6 @@
 package models.charting.options
 
-import models.charting.{ChartSettings, ChartType}
+import models.charting.ChartSettings
 
 import scala.scalajs.js
 

@@ -5,7 +5,6 @@ import java.util.UUID
 import utils.Logging
 
 import scala.scalajs.js
-import scala.util.control.NonFatal
 
 object NavigationService {
   private[this] lazy val loc = org.scalajs.dom.document.location

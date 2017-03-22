@@ -4,9 +4,9 @@ import models.charting.ChartSettings
 import services.charting.{ChartingService, ChartingTests}
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 
-@JSExport
+@JSExportTopLevel(name = "Charting")
 object Charting {
   @JSExport
   def init() = ChartingService.init()

@@ -1,6 +1,6 @@
 package models.template
 
-import utils.{KeyboardShortcut, Messages, NumberUtils}
+import utils.{KeyboardShortcut, Messages}
 
 import scalatags.Text.all._
 

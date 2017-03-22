@@ -56,7 +56,7 @@ object ChartService {
       case None =>
         val chartingLoadSuccess = () => {
           utils.Logging.info("Charting script loaded.")
-          charting = Some(js.Dynamic.global.Charting())
+          charting = Some(js.Dynamic.global.Charting)
           loadPlotly()
           startChart(chartId, columns, source)
         }

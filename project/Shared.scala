@@ -19,7 +19,7 @@ object Shared {
     scalacOptions ++= Seq(
       "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "-target:jvm-1.8", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
       "-Ywarn-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen",
-      "-Ybackend:GenBCode", "-Ydelambdafy:method"
+      "-Ybackend:GenBCode", "-Ydelambdafy:method" /* , "-Ywarn-unused-import" */
     ),
     scalacOptions in Test ++= Seq("-Yrangepos"),
 

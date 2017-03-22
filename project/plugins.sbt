@@ -13,7 +13,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.1")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
 
 // Scala.js
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.14")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.15")
 
 addSbtPlugin("com.vmunier" % "sbt-play-scalajs" % "0.3.1" exclude("org.scala-js", "sbt-scalajs"))
 
@@ -47,3 +47,5 @@ addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.0") // dependencyUpdates
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0") // scalariformFormat
 
 addSbtPlugin("com.github.xuwei-k" % "sbt-class-diagram" % "0.1.7")
+
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.3.2")

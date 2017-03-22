@@ -1,12 +1,9 @@
 package models.template.query
 
-import java.util.UUID
-
 import models.query.QueryResult
 import models.schema.FilterOp
-import models.template.results.{DataFilterTemplate, DataTableTemplate}
-import models.template.{Icons, StaticPanelTemplate}
-import utils.{Messages, NumberUtils, TemplateUtils}
+import models.template.Icons
+import utils.Messages
 
 import scalatags.Text.all._
 
