@@ -1,11 +1,11 @@
 package models.engine
 
 import models.engine.DatabaseEngine._
-import models.query.{ColumnValueParser, RowDataOptions}
+import models.query.RowDataOptions
 import models.schema.{ColumnType, FilterOp}
 
 object EngineQueries {
-  private[this] def parse(t: ColumnType, s: String) = ColumnValueParser.parse(t, s.trim) match {
+  private[this] def parse(t: ColumnType, s: String) = EngineColumnParser.parse(t, s.trim) match {
     case Right(z) => z
     case Left(z) => z
   }

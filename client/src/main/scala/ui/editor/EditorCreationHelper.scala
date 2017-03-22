@@ -1,4 +1,4 @@
-package ui
+package ui.editor
 
 import java.util.UUID
 

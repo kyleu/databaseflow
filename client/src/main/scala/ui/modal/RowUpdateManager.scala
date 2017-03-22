@@ -7,7 +7,7 @@ import models.schema.Column
 import models.template.tbl.RowUpdateTemplate
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
-import utils.{NetworkMessage, TemplateUtils}
+import utils.{Messages, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -31,6 +31,8 @@ object RowUpdateManager {
   }
 
   def show(insert: Boolean, name: String, pk: Seq[(String, String)], columns: Seq[Column], data: Map[String, String]) = {
+    if (insert) { linkInsert.html(Messages("query.insert")) } else { linkInsert.html(Messages("query.update")) }
+
     val resultId = UUID.randomUUID
     activeMessage = Some(RowUpdate(name, pk, Map.empty, resultId))
     activeColumns = Some(columns)
@@ -51,9 +53,14 @@ object RowUpdateManager {
     modal.closeModal()
   }
 
-  def handleRowUpdateResponse(errors: Map[String, String]) = {
+  def handleRowUpdateResponse(pk: Seq[(String, String)], rowsAffected: Int, errors: Map[String, String]) = {
     if (errors.isEmpty) {
-      NotificationService.info("Row Inserted", "Added one new row.")
+      val (k, msg) = if (pk.isEmpty) {
+        "Row Inserted" -> "Added one new row."
+      } else {
+        "Row Updated" -> s"${utils.NumberUtils.toWords(rowsAffected, properCase = true)} row(s) affected."
+      }
+      NotificationService.info(k, msg)
       close()
     } else {
       $(".row-update-error", modal).hide()
@@ -67,7 +74,6 @@ object RowUpdateManager {
     val cols = activeColumns.getOrElse(throw new IllegalStateException("Missing active columns for insert."))
     val params = cols.flatMap { col =>
       val toggle = $(s"#row-update-toggle-${col.name}", modal).prop("checked").toString.toBoolean
-      utils.Logging.info(col.name + ": " + toggle)
       if (toggle) {
         val v = $(s"#row-update-input-${col.name}", modal).value().toString
         Some(col.name -> v)

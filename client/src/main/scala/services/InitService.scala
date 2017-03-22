@@ -8,6 +8,7 @@ import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import services.query.TransactionService
 import ui._
+import ui.editor.EditorCreationHelper
 import ui.metadata.{MetadataManager, ModelListManager}
 import ui.modal._
 import ui.query._

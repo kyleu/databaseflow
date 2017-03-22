@@ -2,7 +2,6 @@ package models.queries.dynamic
 
 import models.database.Statement
 import models.engine.DatabaseEngine
-import models.query.ColumnValueParser
 import models.schema.Column
 
 case class InsertRowStatement(name: String, params: Map[String, String], columns: Seq[Column], engine: DatabaseEngine) extends Statement {

@@ -66,6 +66,7 @@ query.call = Call Procedure
 query.active.filter = Active Filter
 query.no.rows.returned = No rows returned
 query.insert = Add New Row
+query.update = Update Row
 query.insert.title = New [{0}] Row
 query.update.title = Edit [{0}] Row ({1})
 query.open.query = New Query

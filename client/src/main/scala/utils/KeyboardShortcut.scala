@@ -7,7 +7,8 @@ import ui.metadata.MetadataManager
 import ui.query.{AdHocQueryManager, QueryManager, SqlManager}
 import ui.search.SearchManager
 import ui.tabs.{TabManager, TabSelectionManager}
-import ui.{EditorManager, HelpManager}
+import ui.HelpManager
+import ui.editor.EditorManager
 
 sealed abstract class KeyboardShortcut(val pattern: String, val key: String, val call: (Option[UUID]) => Unit, val isGlobal: Boolean = true) extends EnumEntry
 

@@ -1,4 +1,4 @@
-package models.query
+package models.engine
 
 import java.util.UUID
 
@@ -7,9 +7,9 @@ import models.schema.ColumnType._
 
 import scala.util.control.NonFatal
 
-object ColumnValueParser {
+object EngineColumnParser {
   def parse(t: ColumnType, v: String) = try {
-    Right(ColumnValueParser.fromString(t, v))
+    Right(fromString(t, v))
   } catch {
     case NonFatal(_) => Left(v)
   }

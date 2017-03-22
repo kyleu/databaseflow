@@ -3,7 +3,8 @@ package services.query
 import models.template.query.QueryErrorTemplate
 import models.{QueryCheckResponse, QueryErrorResponse}
 import org.scalajs.jquery.{jQuery => $}
-import ui.{EditorManager, ProgressManager}
+import ui.ProgressManager
+import ui.editor.EditorManager
 import utils.TemplateUtils
 
 object QueryErrorService {

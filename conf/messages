@@ -5,6 +5,7 @@ general.error = Error
 general.about = About
 general.save = Save
 general.cancel = Cancel
+general.loading = Loading...
 general.delete = Delete
 general.ok = OK
 general.edit = Edit
