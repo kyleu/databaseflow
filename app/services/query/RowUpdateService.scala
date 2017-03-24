@@ -20,11 +20,12 @@ object RowUpdateService extends Logging {
   }
 
   def insert(connectionId: UUID, user: User, name: String, params: Map[String, String], resultId: UUID, out: ActorRef) = {
-    val t = SchemaService.getTable(connectionId, name).getOrElse(throw new IllegalStateException(s"Missing definition for table [$name]."))
-    val db = DatabaseRegistry.db(user, connectionId)
-    val statement = InsertRowStatement(name, params, t.columns, db.engine)
-
-    def work() = {
+    def work() = if (params.isEmpty) {
+      RowUpdateResponse(resultId, Nil, 0, Map("general" -> "Please select at least one column to insert."))
+    } else {
+      val t = SchemaService.getTable(connectionId, name).getOrElse(throw new IllegalStateException(s"Missing definition for table [$name]."))
+      val db = DatabaseRegistry.db(user, connectionId)
+      val statement = InsertRowStatement(name, params, t.columns, db.engine)
       val rowsAffected = db.executeUpdate(statement)
       RowUpdateResponse(resultId, Nil, rowsAffected)
     }
@@ -34,11 +35,12 @@ object RowUpdateService extends Logging {
   }
 
   def update(connectionId: UUID, user: User, name: String, pk: Seq[(String, String)], params: Map[String, String], resultId: UUID, out: ActorRef) = {
-    val t = SchemaService.getTable(connectionId, name).getOrElse(throw new IllegalStateException(s"Missing definition for table [$name]."))
-    val db = DatabaseRegistry.db(user, connectionId)
-    val statement = UpdateRowStatement(name, pk, params, t.columns, db.engine)
-
-    def work() = {
+    def work() = if (params.isEmpty) {
+      RowUpdateResponse(resultId, Nil, 0, Map("general" -> "Please select at least one column to update."))
+    } else {
+      val t = SchemaService.getTable(connectionId, name).getOrElse(throw new IllegalStateException(s"Missing definition for table [$name]."))
+      val db = DatabaseRegistry.db(user, connectionId)
+      val statement = UpdateRowStatement(name, pk, params, t.columns, db.engine)
       val rowsAffected = db.executeUpdate(statement)
       RowUpdateResponse(resultId, pk, rowsAffected)
     }

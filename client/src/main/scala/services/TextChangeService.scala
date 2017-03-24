@@ -4,16 +4,19 @@ import java.util.UUID
 
 import org.scalajs.dom
 import org.scalajs.dom.BeforeUnloadEvent
+import services.query.TransactionService
 import utils.NullUtils
 
 object TextChangeService {
   private[this] val dirtyEditors = collection.mutable.HashSet.empty[UUID]
 
   def init() = dom.window.onbeforeunload = (e: BeforeUnloadEvent) => {
-    if (dirtyEditors.isEmpty) {
-      NullUtils.inst
-    } else {
+    if (TransactionService.isInTransaction) {
+      "Your active transaction will be rolled back."
+    } else if (dirtyEditors.nonEmpty) {
       "Changes you made may not be saved."
+    } else {
+      NullUtils.inst
     }
   }
 

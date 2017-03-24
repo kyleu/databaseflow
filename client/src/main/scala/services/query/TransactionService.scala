@@ -17,6 +17,8 @@ object TransactionService {
 
   private[this] lazy val beginTransactionLink = $("#begin-tx-link")
 
+  def isInTransaction = inTransaction
+
   def beginTransaction() = if (inTransaction) {
     throw new IllegalStateException("Attempted to begin nested transaction.")
   } else {
