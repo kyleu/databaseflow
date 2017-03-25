@@ -2,6 +2,7 @@ package models.query
 
 import java.util.UUID
 
+import models.schema.ColumnType.StringType
 import models.schema.{ColumnType, FilterOp}
 
 object QueryResult {
@@ -37,6 +38,11 @@ object QueryResult {
       limit = limit,
       offset = Some(dataOffset)
     )
+  }
+
+  def error(queryId: UUID, sql: String, t: Throwable) = {
+    val data = Seq(Seq(Some(t.getClass.getSimpleName)), Seq(Some(t.getMessage)))
+    QueryResult(queryId, sql, columns = Seq(Col("error", StringType)), data = data, elapsedMs = 0)
   }
 }
 

@@ -27,7 +27,7 @@ object ConnectionGraphQL {
       description = Some("Runs the provided sql query and returns the result."),
       fieldType = QueryResultGraphQL.resultResponseType,
       arguments = sqlArg :: Nil,
-      resolve = c => SimpleQueryService.runQuery(c.ctx.user, cs, c.arg(sqlArg))
+      resolve = c => SimpleQueryService.runQueryWithCatch(c.ctx.user, cs, c.arg(sqlArg))
     ),
     Field(
       name = "explore",

@@ -15,6 +15,7 @@ import services.database.DatabaseRegistry
 import utils.{DateUtils, Logging}
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 object SimpleQueryService extends Logging {
   def run(db: Queryable, sql: String, user: UUID, connectionId: UUID) = {
@@ -38,5 +39,11 @@ object SimpleQueryService extends Logging {
   def runQuery(user: User, cs: ConnectionSettings, sql: String) = DatabaseRegistry.databaseForUser(user, cs.id) match {
     case Right(conn) => SimpleQueryService.run(conn, sql, user.id, conn.connectionId)
     case Left(ex) => throw ex
+  }
+
+  def runQueryWithCatch(user: User, cs: ConnectionSettings, sql: String) = try {
+    runQuery(user, cs, sql)
+  } catch {
+    case NonFatal(x) => QueryResultResponse(UUID.randomUUID, 0, QueryResult.error(UUID.randomUUID, sql, x))
   }
 }
