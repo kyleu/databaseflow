@@ -1,4 +1,4 @@
-@(user: models.user.User, connectionId: java.util.UUID, queries: Seq[models.graphql.GraphQLQuery], query: Option[models.graphql.GraphQLQuery])(
+@(user: models.user.User, connectionId: java.util.UUID, connectionSlug: String, queries: Seq[models.graphql.GraphQLQuery], query: Option[models.graphql.GraphQLQuery])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.basic(Some(user), utils.Config.projectName + " GraphQL", scripts = Seq(
   routes.Assets.versioned("lib/graphiql/fetch.min.js").url,
@@ -44,20 +44,7 @@
     }
   }
 
-  @views.html.graphql.options(connectionId, queries, user.preferences.theme.color)
+  @views.html.graphql.options(connectionId, connectionSlug, queries, user.preferences.theme.color)
   <div id="graphiql">Loading...</div>
   <script>renderGraphiql(document.getElementById('graphiql'))</script>
 }
-
-
-
-
-
-
-
-
-
-<!--
-
-
--->

@@ -37,10 +37,27 @@ object ConnectionSettingsService {
     MasterDatabase.query(ConnectionSettingsQueries.getById(id))
   }
 
-  def insert(connSettings: ConnectionSettings) = MasterDatabase.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
+  def getBySlug(slug: String) = if (slug == MasterDatabase.slug) {
+    MasterDatabase.settings
+  } else if (slug == ResultCacheDatabase.slug) {
+    ResultCacheDatabase.settings
+  } else {
+    MasterDatabase.query(ConnectionSettingsQueries.GetBySlug(slug))
+  }
+
+  def insert(connSettings: ConnectionSettings) = {
+    MasterDatabase.query(ConnectionSettingsQueries.GetExisting(connSettings.id, connSettings.name, connSettings.slug)) match {
+      case Some(c) => throw new IllegalStateException(s"There is already a connection named [${connSettings.name}].")
+      case None => MasterDatabase.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
+    }
+  }
   def update(connSettings: ConnectionSettings) = {
-    DatabaseRegistry.flush(connSettings.id)
-    MasterDatabase.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
+    MasterDatabase.query(ConnectionSettingsQueries.GetExisting(connSettings.id, connSettings.name, connSettings.slug)) match {
+      case Some(c) => throw new IllegalStateException(s"There is already a connection named [${connSettings.name}].")
+      case None =>
+        DatabaseRegistry.flush(connSettings.id)
+        MasterDatabase.executeUpdate(ConnectionSettingsQueries.Update(connSettings))
+    }
   }
   def delete(id: UUID, userId: UUID) = {
     MasterDatabase.executeUpdate(ConnectionSettingsQueries.removeById(id))

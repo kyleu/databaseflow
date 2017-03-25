@@ -14,7 +14,7 @@ GET         /c/:id/cp                                controllers.ConnectionSetti
 POST        /c/:id/test                              controllers.ConnectionTestController.test(id: java.util.UUID)
 
 # Query Interface
-GET         /q/:conn                                 controllers.QueryController.main(conn: java.util.UUID)
+GET         /q/:conn                                 controllers.QueryController.main(conn)
 GET         /q/:conn/websocket                       controllers.QueryController.connect(conn: java.util.UUID)
 POST        /q/:conn/export                          controllers.ExportController.exportQuery(conn: java.util.UUID)
 
@@ -27,9 +27,9 @@ GET         /shared/:id/export/:fmt                  controllers.ExportControlle
 
 # GraphQL
 GET         /schema/:conn                            controllers.GraphQLController.renderSchema(conn: java.util.UUID)
-GET         /graphql/:conn                           controllers.GraphQLController.graphql(conn: java.util.UUID, id: Option[java.util.UUID] ?= None)
+GET         /graphql/:conn                           controllers.GraphQLController.graphql(conn, id: Option[java.util.UUID] ?= None)
 POST        /graphql/:conn                           controllers.GraphQLController.graphqlBody(conn: java.util.UUID)
-GET         /graphql/:conn/load                      controllers.GraphQLQueryController.load(conn: java.util.UUID, id: java.util.UUID)
+GET         /graphql/:conn/load                      controllers.GraphQLQueryController.load(conn, id: java.util.UUID)
 POST        /graphql/:conn/save                      controllers.GraphQLQueryController.save(conn: java.util.UUID)
 
 # Admin

@@ -7,7 +7,7 @@
   <i class="fa @models.template.Icons.csv"></i>
 </a>
 
-@defining(routes.QueryController.main(result.connectionId).url + "#sql-" + java.net.URLEncoder.encode(result.sql, "UTF-8")) { href =>
+@defining(routes.QueryController.main(result.connectionId.toString).url + "#sql-" + java.net.URLEncoder.encode(result.sql, "UTF-8")) { href =>
 <a class="theme-text result-options-link" title="Run this query on Database Flow" href="@href">
   <i class="fa @models.template.Icons.database"></i>
 </a>

@@ -7,7 +7,7 @@ import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
 import services.connection.ConnectionSettingsService
 import services.database.DatabaseRegistry
-import utils.{ApplicationContext, PasswordEncryptUtils}
+import utils.{ApplicationContext, PasswordEncryptUtils, SlugUtils}
 
 import scala.concurrent.Future
 
@@ -23,6 +23,7 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
         val almostUpdated = ConnectionSettings(
           id = UUID.randomUUID,
           name = cf.name,
+          slug = SlugUtils.slugFor(cf.name),
           owner = request.identity.id,
           engine = DatabaseEngine.withName(cf.engine),
           host = if (cf.isUrl) { None } else { cf.host },

@@ -5,6 +5,7 @@ import models.engine.DatabaseEngine
 import models.user.Permission
 import play.api.data.Form
 import play.api.data.Forms._
+import utils.SlugUtils
 
 object ConnectionForm {
   val form = Form(
@@ -45,6 +46,7 @@ case class ConnectionForm(
 
   def copyWith(conn: ConnectionSettings) = conn.copy(
     name = name,
+    slug = SlugUtils.slugFor(name),
     read = read,
     edit = edit,
     description = description,

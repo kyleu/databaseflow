@@ -4,16 +4,29 @@ import java.util.UUID
 
 import models.forms.GraphQLForm
 import models.graphql.GraphQLQuery
+import services.connection.ConnectionSettingsService
 import services.graphql.GraphQLQueryService
 import utils.ApplicationContext
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class GraphQLQueryController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
-  def load(conn: UUID, queryId: UUID) = withSession("graphql.load") { implicit request =>
-    val q = GraphQLQueryService.getById(queryId, Some(request.identity))
-    Future.successful(Redirect(controllers.routes.GraphQLController.graphql(conn, Some(queryId)).url))
+  def load(connection: String, queryId: UUID) = withSession("graphql.load") { implicit request =>
+    val connOpt = try {
+      val connUuid = UUID.fromString(connection)
+      ConnectionSettingsService.getById(connUuid)
+    } catch {
+      case NonFatal(_) => ConnectionSettingsService.getBySlug(connection)
+    }
+
+    Future.successful(connOpt match {
+      case Some(c) =>
+        val q = GraphQLQueryService.getById(queryId, Some(request.identity))
+        Redirect(controllers.routes.GraphQLController.graphql(c.slug, Some(queryId)).url)
+      case None => Redirect(routes.HomeController.home())
+    })
   }
 
   def save(conn: UUID) = withSession("graphql.save") { implicit request =>

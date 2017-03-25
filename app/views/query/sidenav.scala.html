@@ -26,17 +26,17 @@
     @topLevelLink("begin-tx-link", models.template.Icons.beginTx, messages("query.tx.begin"))
   }
   @topLevelLink("new-query-link", models.template.Icons.newQuery, messages("query.sidenav.new"))
-  @topLevelLink("sidenav-history-link", models.template.Icons.history, messages("query.sidenav.history"), "#history")
-  @topLevelLink("sidenav-refresh-link", models.template.Icons.refresh, messages("query.sidenav.refresh"))
   <li class="no-padding">
     <ul class="collapsible collapsible-accordion" data-collapsible="expandable">
-      @groupToggle("shared-result", messages("query.sidenav.shared.results"))
-      @groupToggle("saved-query", messages("query.sidenav.saved.queries"))
       @groupToggle("table", messages("query.sidenav.tables"))
       @groupToggle("view", messages("query.sidenav.views"))
       @groupToggle("procedure", messages("query.sidenav.procedures"))
+      @groupToggle("saved-query", messages("query.sidenav.saved.queries"))
+      @groupToggle("shared-result", messages("query.sidenav.shared.results"))
     </ul>
   </li>
+  @topLevelLink("sidenav-history-link", models.template.Icons.history, messages("query.sidenav.history"), "#history")
+  @topLevelLink("sidenav-refresh-link", models.template.Icons.refresh, messages("query.sidenav.refresh"))
   @topLevelLink("sidenav-help-link", models.template.Icons.help, messages("query.sidenav.help"), "#help")
   @topLevelLink("sidenav-feedback-link", models.template.Icons.feedback, messages("query.sidenav.feedback"), "#feedback")
   <li><a id="sidenav-about-link" class="top-nav-link waves-effect" target="_blank" href="@utils.Config.projectUrl">

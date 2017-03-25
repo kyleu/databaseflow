@@ -13,6 +13,7 @@ object ConnectionSettings {
 case class ConnectionSettings(
     id: UUID,
     name: String,
+    slug: String,
     owner: UUID,
     read: Permission = Permission.User,
     edit: Permission = Permission.Private,

@@ -16,6 +16,7 @@ import services.graphql.{GraphQLQueryService, GraphQLService}
 import utils.ApplicationContext
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
@@ -37,10 +38,21 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
     Future.successful(Ok(getConnectionSchema(request.identity, connectionId)._2.renderedSchema).as("application/json"))
   }
 
-  def graphql(connectionId: UUID, id: Option[UUID]) = withSession("graphql.ui") { implicit request =>
-    val list = GraphQLQueryService.getVisible(request.identity, Some(connectionId), None, None)
-    val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
-    Future.successful(Ok(views.html.graphql.graphiql(request.identity, connectionId, list, q)))
+  def graphql(connection: String, id: Option[UUID]) = withSession("graphql.ui") { implicit request =>
+    val connOpt = try {
+      val connUuid = UUID.fromString(connection)
+      ConnectionSettingsService.getById(connUuid)
+    } catch {
+      case NonFatal(_) => ConnectionSettingsService.getBySlug(connection)
+    }
+
+    Future.successful(connOpt match {
+      case Some(c) =>
+        val list = GraphQLQueryService.getVisible(request.identity, Some(c.id), None, None)
+        val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
+        Ok(views.html.graphql.graphiql(request.identity, c.id, c.slug, list, q))
+      case None => Redirect(routes.HomeController.home())
+    })
   }
 
   def graphqlBody(connectionId: UUID) = withSession("graphql.post") { implicit request =>

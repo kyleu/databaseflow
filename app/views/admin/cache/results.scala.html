@@ -32,7 +32,9 @@
             @rows.map { r =>
               <tr>
                 <td title="@r.connectionId">
-                  <a class="theme-text" href="@controllers.routes.QueryController.main(r.connectionId)">@services.connection.ConnectionSettingsService.getById(r.connectionId).map(_.name)</a>
+                  @services.connection.ConnectionSettingsService.getById(r.connectionId).map { cs =>
+                    <a class="theme-text" href="@controllers.routes.QueryController.main(cs.slug)">@cs.name</a>
+                  }
                 </td>
                 <td>
                   <a class="theme-text" href="@controllers.admin.routes.UserEditController.view(r.owner)">@userService.getUsername(r.owner)</a>
@@ -51,7 +53,7 @@
                 <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
                 <td>
                   @defining(s"table-result_${r.resultId.toString.replaceAllLiterally("-", "")}") { hash =>
-                    <a title="View Results" class="theme-text" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.connectionId)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
+                    <a title="View Results" class="theme-text" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.slug)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
                   }
                   <a title="Remove Results" class="theme-text" href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
                 </td>
@@ -75,7 +77,7 @@
                 <ul>
                 @orphans.map { o =>
                   <li>
-                    @o (<a href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.connectionId)#table-@o">view</a>,
+                    @o (<a href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.slug)#table-@o">view</a>,
                     <a href="@controllers.admin.routes.ResultCacheController.removeOrphan(o)">remove</a>)
                   </li>
                 }

@@ -6,13 +6,14 @@ import models.connection.ConnectionSettings
 import models.user.User
 import services.config.{ConfigFileService, DatabaseConfig}
 import services.database.{DatabaseConnection, DatabaseRegistry}
-import utils.{Logging, PasswordEncryptUtils}
+import utils.{Logging, PasswordEncryptUtils, SlugUtils}
 
 import scala.util.control.NonFatal
 
 abstract class CoreDatabase extends Logging {
   def connectionId: UUID
   def name: String
+  def slug: String
   def title: String
   def description: String
   def configKey: String
@@ -43,6 +44,7 @@ abstract class CoreDatabase extends Logging {
     settings = Some(ConnectionSettings(
       id = connectionId,
       name = title,
+      slug = slug,
       owner = User.mock.id,
       description = description,
       urlOverride = Some(finalUrl),

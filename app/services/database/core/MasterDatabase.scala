@@ -8,6 +8,7 @@ import utils.Logging
 object MasterDatabase extends CoreDatabase with Logging {
   override val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
   override val name = s"${utils.Config.projectName} Storage"
+  override val slug = s"${utils.Config.projectSlug}-storage"
   override val title = s"${utils.Config.projectName} Storage"
   override val description = s"Internal storage used by ${utils.Config.projectName}."
   override val configKey = "master"

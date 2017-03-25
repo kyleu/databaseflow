@@ -36,12 +36,16 @@ object ColumnDetailManager {
   }
 
   def onDetails(owner: String, name: String, details: ColumnDetails) = {
-    val detailsContent = $(".stats-panel", modalContent)
-    if (detailsContent.length != 1) {
-      throw new IllegalStateException(s"Found [${detailsContent.length}] column detail elements.")
+    activeRequest match {
+      case Some((o, n)) if o != owner || n != name => // No op
+      case _ =>
+        val detailsContent = $(".stats-panel", modalContent)
+        if (detailsContent.length != 1) {
+          throw new IllegalStateException(s"Found [${detailsContent.length}] column detail elements.")
+        }
+        val content = ColumnTemplate.columnDetails(details)
+        detailsContent.html(content.toString)
     }
-    val content = ColumnTemplate.columnDetails(details)
-    detailsContent.html(content.toString)
   }
 
   def close(): Unit = modal.closeModal()

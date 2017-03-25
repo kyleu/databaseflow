@@ -3,7 +3,7 @@ package models.queries.connection
 import java.util.UUID
 
 import models.connection.ConnectionSettings
-import models.database.{Row, Statement}
+import models.database.{FlatSingleRowQuery, Row, Statement}
 import models.engine.DatabaseEngine
 import models.queries.BaseQueries
 import models.user.{Permission, Role, User}
@@ -12,7 +12,7 @@ import utils.JdbcUtils
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
   override protected val columns = Seq(
-    "id", "name", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
+    "id", "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
   )
   override protected val searchColumns = columns
 
@@ -33,16 +33,30 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
       values = values
     )
   }
+
   def getById(id: UUID) = GetById(Seq(id))
+
+  case class GetBySlug(slug: String) extends FlatSingleRowQuery[ConnectionSettings] {
+    override val sql = getSql(whereClause = Some("\"slug\" = ?"))
+    override def values = Seq(slug)
+    override def flatMap(row: Row) = Some(fromRow(row))
+  }
+
+  case class GetExisting(excludedId: UUID, name: String, slug: String) extends FlatSingleRowQuery[ConnectionSettings] {
+    override val sql = getSql(whereClause = Some("\"id\" != ? and (\"name\" = ? or \"slug\" = ?)"))
+    override def values = Seq(excludedId, name, slug)
+    override def flatMap(row: Row) = Some(fromRow(row))
+  }
+
   val search = Search
   val removeById = RemoveById
 
   case class Update(cs: ConnectionSettings) extends Statement {
     override val sql = updateSql(Seq(
-      "name", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
+      "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
     ))
     override val values = Seq(
-      cs.name, cs.owner, cs.read.toString, cs.edit.toString, cs.description,
+      cs.name, cs.slug, cs.owner, cs.read.toString, cs.edit.toString, cs.description,
       cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.id
     )
   }
@@ -50,6 +64,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected def fromRow(row: Row) = ConnectionSettings(
     id = row.as[UUID]("id"),
     name = row.as[String]("name"),
+    slug = row.as[String]("slug"),
     owner = row.as[UUID]("owner"),
     read = Permission.withName(row.as[String]("read")),
     edit = Permission.withName(row.as[String]("edit")),
@@ -64,7 +79,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = Seq[Any](
-    q.id, q.name, q.owner, q.read.toString, q.edit.toString, q.description, q.engine.toString,
+    q.id, q.name, q.slug, q.owner, q.read.toString, q.edit.toString, q.description, q.engine.toString,
     q.host, q.dbName, q.extra, q.urlOverride, q.username, q.password
   )
 }

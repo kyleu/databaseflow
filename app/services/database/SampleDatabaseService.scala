@@ -9,7 +9,7 @@ import models.user.Permission
 import org.apache.commons.io.IOUtils
 import services.config.ConfigFileService
 import services.connection.ConnectionSettingsService
-import utils.Logging
+import utils.{Logging, SlugUtils}
 
 object SampleDatabaseService extends Logging {
   private[this] val databaseName = "sampledb"
@@ -18,10 +18,12 @@ object SampleDatabaseService extends Logging {
 
   def apply(owner: UUID) = {
     val sampleFile = getSampleFile
+    val name = "SQLite Music Database"
 
     val cs = ConnectionSettings(
       id = UUID.randomUUID,
-      name = "SQLite Music Database",
+      name = name,
+      slug = SlugUtils.slugFor(name),
       owner = owner,
       edit = Permission.User,
       description = "A sample SQLite database containing music information.",

@@ -8,9 +8,8 @@
       @c.name
     </div>
     <div class="collapsible-body">
-      <div style="padding : 25px ;">
-        <div>@c.description</div>
-        <em style="display : block ;">@if(c.urlOverride.isDefined) {
+      <div style="padding: 25px ;">
+        <em style="display: block ;">@if(c.urlOverride.isDefined) {
           @c.url
         } else {
           @if(c.description.nonEmpty) {
@@ -19,11 +18,11 @@
             @c.host@c.port.map(":" + _).getOrElse("")/@c.dbName
           }
         }</em>
-        <a href="@controllers.routes.QueryController.main(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
+        <a href="@controllers.routes.QueryController.main(c.slug)" class="waves-effect waves-light btn theme" style="margin: 10px 10px 10px 0;">
           <i class="fa @models.template.Icons.adHocQuery" style="font-size: 1rem;"></i>
           @messages("query.title")
         </a>
-        <a href="@controllers.routes.GraphQLController.graphql(c.id)" class="waves-effect waves-light btn theme" style="margin: 10px 0;">
+        <a href="@controllers.routes.GraphQLController.graphql(c.slug)" class="waves-effect waves-light btn theme" style="margin: 10px 10px 10px 0;">
           <i class="fa @models.template.Icons.graphQL" style="font-size: 1rem;"></i>
           @messages("graphql.title")
         </a>
