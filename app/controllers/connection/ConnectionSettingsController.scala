@@ -1,7 +1,8 @@
-package controllers
+package controllers.connection
 
 import java.util.UUID
 
+import controllers.BaseController
 import models.audit.AuditType
 import models.connection.ConnectionSettings
 import models.forms.ConnectionForm
@@ -29,7 +30,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       val conn = ConnectionSettingsService.getById(id).getOrElse(throw new IllegalArgumentException(s"Invalid connection [$id]."))
       Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
     } else {
-      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
+      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
     }
   }
 
@@ -53,15 +54,15 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
                   case Right(c) =>
                     SchemaService.getSchema(c, forceRefresh = true)
                     AuditRecordService.create(AuditType.EditConnection, request.identity.id, None, Some(updated.id.toString))
-                    Redirect(routes.QueryController.main(updated.slug))
+                    Redirect(controllers.query.routes.QueryController.main(updated.slug))
                   case Left(x) =>
                     log.warn("Unable to connect to newly saved connection.", x)
-                    Redirect(routes.QueryController.main(existing.slug))
+                    Redirect(controllers.query.routes.QueryController.main(existing.slug))
                 }
               case None =>
                 ConnectionSettingsService.insert(updated)
                 AuditRecordService.create(AuditType.CreateConnection, request.identity.id, None, Some(updated.id.toString))
-                Redirect(routes.QueryController.main(updated.slug))
+                Redirect(controllers.query.routes.QueryController.main(updated.slug))
             }
           } catch {
             case ex: IllegalStateException =>
@@ -72,7 +73,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       )
       Future.successful(result)
     } else {
-      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
+      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
     }
   }
 
@@ -88,11 +89,11 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
 
   def delete(connectionId: UUID) = withSession("delete") { implicit request =>
     ConnectionSettingsService.delete(connectionId, request.identity.id)
-    Future.successful(Redirect(routes.HomeController.home()))
+    Future.successful(Redirect(controllers.routes.HomeController.home()))
   }
 
   def createSample() = withSession("create.sample") { implicit request =>
     val cs = SampleDatabaseService(request.identity.id)
-    Future.successful(Redirect(routes.QueryController.main(cs.slug)))
+    Future.successful(Redirect(controllers.query.routes.QueryController.main(cs.slug)))
   }
 }

@@ -2,7 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.admin(user, "results", messages("admin.results.title")) {
   <div class="content-panel">
-    <div class="right"><a class="theme-text" href="@routes.SharedResultController.index()">@messages("shared.results.title")</a></div>
+    <div class="right"><a class="theme-text" href="@controllers.query.routes.SharedResultController.index()">@messages("shared.results.title")</a></div>
     <div class="panel-title">
       <i class="fa @models.template.Icons.cache"></i> @messages("admin.results.title")
     </div>
@@ -33,7 +33,7 @@
               <tr>
                 <td title="@r.connectionId">
                   @services.connection.ConnectionSettingsService.getById(r.connectionId).map { cs =>
-                    <a class="theme-text" href="@controllers.routes.QueryController.main(cs.slug)">@cs.name</a>
+                    <a class="theme-text" href="@controllers.query.routes.QueryController.main(cs.slug)">@cs.name</a>
                   }
                 </td>
                 <td>
@@ -53,7 +53,7 @@
                 <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
                 <td>
                   @defining(s"table-result_${r.resultId.toString.replaceAllLiterally("-", "")}") { hash =>
-                    <a title="View Results" class="theme-text" href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.slug)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
+                    <a title="View Results" class="theme-text" href="@controllers.query.routes.QueryController.main(services.database.core.ResultCacheDatabase.slug)#@hash"><i class="fa @models.template.Icons.adHocQuery"></i></a>
                   }
                   <a title="Remove Results" class="theme-text" href="@controllers.admin.routes.ResultCacheController.removeResult(r.resultId)"><i class="fa @models.template.Icons.close"></i></a>
                 </td>
@@ -77,7 +77,7 @@
                 <ul>
                 @orphans.map { o =>
                   <li>
-                    @o (<a href="@controllers.routes.QueryController.main(services.database.core.ResultCacheDatabase.slug)#table-@o">view</a>,
+                    @o (<a href="@controllers.query.routes.QueryController.main(services.database.core.ResultCacheDatabase.slug)#table-@o">view</a>,
                     <a href="@controllers.admin.routes.ResultCacheController.removeOrphan(o)">remove</a>)
                   </li>
                 }

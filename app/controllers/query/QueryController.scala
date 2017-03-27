@@ -1,10 +1,11 @@
-package controllers
+package controllers.query
 
 import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import com.mohiva.play.silhouette.api.HandlerResult
+import controllers.BaseController
 import models.{RequestMessage, ResponseMessage}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.streams.ActorFlow
@@ -36,7 +37,7 @@ class QueryController @javax.inject.Inject() (
     val activeDb = connOpt.map(c => (c.name, c.id, c.engine.cap.transactionsSupported))
     Future.successful(activeDb match {
       case Some((name, id, txSupported)) => Ok(views.html.query.main(request.identity, ctx.config.debug, id, name, txSupported))
-      case None => Redirect(routes.HomeController.home())
+      case None => Redirect(controllers.routes.HomeController.home())
     })
   }
 

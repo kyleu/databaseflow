@@ -1,7 +1,8 @@
-package controllers
+package controllers.connection
 
 import java.util.UUID
 
+import controllers.BaseController
 import models.connection.ConnectionSettings
 import models.engine.DatabaseEngine
 import models.forms.ConnectionForm

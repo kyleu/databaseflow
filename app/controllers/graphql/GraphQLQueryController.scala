@@ -1,7 +1,8 @@
-package controllers
+package controllers.graphql
 
 import java.util.UUID
 
+import controllers.BaseController
 import models.forms.GraphQLForm
 import models.graphql.GraphQLQuery
 import services.connection.ConnectionSettingsService
@@ -24,8 +25,8 @@ class GraphQLQueryController @javax.inject.Inject() (override val ctx: Applicati
     Future.successful(connOpt match {
       case Some(c) =>
         val q = GraphQLQueryService.getById(queryId, Some(request.identity))
-        Redirect(controllers.routes.GraphQLController.graphql(c.slug, Some(queryId)).url)
-      case None => Redirect(routes.HomeController.home())
+        Redirect(controllers.graphql.routes.GraphQLController.graphql(c.slug, Some(queryId)).url)
+      case None => Redirect(controllers.routes.HomeController.home())
     })
   }
 

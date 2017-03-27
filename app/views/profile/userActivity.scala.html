@@ -14,7 +14,7 @@
     <div class="col s12">
       <div class="content-panel">
         <div class="right">
-          <a class="theme-text" href="@controllers.routes.UserActivityController.removeAllAudits()" onclick="return confirm('@messages("activity.confirm.remove.user")');">
+          <a class="theme-text" href="@controllers.user.routes.UserActivityController.removeAllAudits()" onclick="return confirm('@messages("activity.confirm.remove.user")');">
             @messages("activity.remove.all")
           </a>
         </div>
@@ -32,7 +32,7 @@
       <div class="card-action">
         <a class="theme-text" href="@controllers.routes.HomeController.home()">@messages("general.back.title")</a>
         @if(activity.size == limit) {
-          <a class="right-link theme-text load-more-link" href="@controllers.routes.UserActivityController.activity(limit, offset + limit)">
+          <a class="right-link theme-text load-more-link" href="@controllers.user.routes.UserActivityController.activity(limit, offset + limit)">
             @messages("activity.load.more", limit)
           </a>
         }

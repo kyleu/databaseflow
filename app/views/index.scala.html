@@ -8,7 +8,7 @@
         @if(connections.isEmpty) {
           <div class="no-connections">
             @messages("index.no.connections")
-            Or, <a class="theme-text" href="@routes.ConnectionSettingsController.createSample()">create a sample database</a>.
+            Or, <a class="theme-text" href="@controllers.connection.routes.ConnectionSettingsController.createSample()">create a sample database</a>.
           </div>
         } else {
           <div>@views.html.connection.list(user, connections)</div>
@@ -17,7 +17,7 @@
       <div class="panel-action">
         @defining(models.user.Role.withName(services.settings.SettingsService(models.settings.SettingKey.AddConnectionRole))) { addConnectionRole =>
           @if(user.role.qualifies(addConnectionRole)) {
-            <a class="theme-text" href="@controllers.routes.ConnectionSettingsController.addNew()">@messages("index.new.connection")</a>
+            <a class="theme-text" href="@controllers.connection.routes.ConnectionSettingsController.addNew()">@messages("index.new.connection")</a>
           }
         }
         @if(user.role == models.user.Role.Admin) {

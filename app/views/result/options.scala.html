@@ -5,7 +5,7 @@
       <div>
         This is your shared result.
         It is currently viewable @messages("permissions." + result.viewableBy.id + ".text").
-        You may <a class="theme-text" href="@routes.SharedResultController.remove(result.id)">remove</a>
+        You may <a class="theme-text" href="@controllers.query.routes.SharedResultController.remove(result.id)">remove</a>
         it or <a class="theme-text modal-trigger" href="">edit</a> it.
       </div>
     </div>
@@ -56,4 +56,4 @@
   });
 </script>
 }
-@views.html.modal.sharedResultModal(messages("general.save"), Some(routes.SharedResultController.save().url))
+@views.html.modal.sharedResultModal(messages("general.save"), Some(controllers.query.routes.SharedResultController.save().url))

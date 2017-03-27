@@ -1,7 +1,8 @@
-package controllers
+package controllers.query
 
 import java.util.UUID
 
+import controllers.BaseController
 import models.query.RowDataOptions
 import models.user.Permission
 import services.query.SharedResultService

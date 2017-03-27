@@ -1,8 +1,9 @@
-package controllers
+package controllers.query
 
 import java.io.ByteArrayOutputStream
 import java.util.UUID
 
+import controllers.BaseController
 import models.engine.EngineQueries
 import models.queries.export.CsvExportQuery
 import models.query.QueryResult

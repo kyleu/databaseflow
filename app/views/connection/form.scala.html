@@ -3,10 +3,10 @@
 )@layout.simple(Some(user), "Edit " + title) {
   @components.formErrors(errors)
   <div class="row">
-    <form id="connection-form" class="col s12" method="post" action="@controllers.routes.ConnectionSettingsController.save(conn.id)">
+    <form id="connection-form" class="col s12" method="post" action="@controllers.connection.routes.ConnectionSettingsController.save(conn.id)">
       <div class="content-panel">
         @if(!isNew) {
-          @defining(controllers.routes.ConnectionSettingsController.copyConnection(conn.id)) { route =>
+          @defining(controllers.connection.routes.ConnectionSettingsController.copyConnection(conn.id)) { route =>
             <a id="copy-connection-button" class="right theme-text" style="margin-right: 12px;" href="@route">Copy Connection</a>
           }
         }
@@ -125,7 +125,7 @@
     function onDelete() {
       var confirmed = confirm('Are you certain you\'d like to delete this connection?');
       if(confirmed) {
-        window.location = '@controllers.routes.ConnectionSettingsController.delete(conn.id) ';
+        window.location = '@controllers.connection.routes.ConnectionSettingsController.delete(conn.id) ';
       }
       return false;
     }
@@ -186,7 +186,7 @@
           data[serialized[s]['name']] = serialized[s]['value']
         }
 
-        $.post('@controllers.routes.ConnectionTestController.test(conn.id)', data, function(ret) {
+        $.post('@controllers.connection.routes.ConnectionTestController.test(conn.id)', data, function(ret) {
           if(ret.indexOf('ok:') === 0) {
             Materialize.toast(ret.substring(3), 4000);
           } else if(ret.indexOf('error:') === 0) {

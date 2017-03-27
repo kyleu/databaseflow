@@ -1,7 +1,8 @@
-package controllers
+package controllers.user
 
 import java.util.UUID
 
+import controllers.BaseController
 import models.settings.SettingKey
 import services.audit.AuditRecordService
 import services.settings.SettingsService
@@ -14,7 +15,7 @@ class UserActivityController @javax.inject.Inject() (override val ctx: Applicati
   def activity(limit: Int, offset: Int) = withSession("activity") { implicit request =>
     val audits = AuditRecordService.getForUser(request.identity.id, limit, offset)
     val removeCall = if (SettingsService.asBool(SettingKey.AllowAuditRemoval)) {
-      Some(controllers.routes.UserActivityController.removeAudit _)
+      Some(controllers.user.routes.UserActivityController.removeAudit _)
     } else {
       None
     }
@@ -23,11 +24,13 @@ class UserActivityController @javax.inject.Inject() (override val ctx: Applicati
 
   def removeAudit(id: UUID) = withSession("remove-audit") { implicit request =>
     AuditRecordService.removeAudit(id, None)
-    Future.successful(Redirect(controllers.routes.UserActivityController.activity()).flashing("success" -> messagesApi("activity.remove.ok", id)))
+    Future.successful(Redirect(controllers.user.routes.UserActivityController.activity()).flashing("success" -> messagesApi("activity.remove.ok", id)))
   }
 
   def removeAllAudits() = withSession("remove-audit") { implicit request =>
     AuditRecordService.deleteAllForUser(request.identity.id, None)
-    Future.successful(Redirect(controllers.routes.UserActivityController.activity()).flashing("success" -> messagesApi("activity.remove.all.user.confirm")))
+    Future.successful(Redirect(controllers.user.routes.UserActivityController.activity()).flashing(
+      "success" -> messagesApi("activity.remove.all.user.confirm")
+    ))
   }
 }

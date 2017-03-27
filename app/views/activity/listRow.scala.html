@@ -10,7 +10,7 @@
   </td>}
   <td title="@a.connection">@a.connection.map { c =>
     @services.connection.ConnectionSettingsService.getById(c).map { x =>
-      <a class="theme-text" href="@controllers.routes.QueryController.main(x.slug)">@x.name</a>
+      <a class="theme-text" href="@controllers.query.routes.QueryController.main(x.slug)">@x.name</a>
     }
   }.getOrElse("N/A")</td>
   <td>@if(a.error.isDefined) {

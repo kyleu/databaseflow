@@ -3,11 +3,11 @@
   <i class="fa @models.template.Icons.procedure"></i>
 </a>
 
-<a id="export-link" class="theme-text result-options-link" title="Export as CSV" href="@routes.ExportController.exportShared(result.id, "csv")">
+<a id="export-link" class="theme-text result-options-link" title="Export as CSV" href="@controllers.query.routes.ExportController.exportShared(result.id, "csv")">
   <i class="fa @models.template.Icons.csv"></i>
 </a>
 
-@defining(routes.QueryController.main(result.connectionId.toString).url + "#sql-" + java.net.URLEncoder.encode(result.sql, "UTF-8")) { href =>
+@defining(controllers.query.routes.QueryController.main(result.connectionId.toString).url + "#sql-" + java.net.URLEncoder.encode(result.sql, "UTF-8")) { href =>
 <a class="theme-text result-options-link" title="Run this query on Database Flow" href="@href">
   <i class="fa @models.template.Icons.database"></i>
 </a>

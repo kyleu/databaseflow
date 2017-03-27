@@ -1,9 +1,10 @@
-package controllers
+package controllers.user
 
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import controllers.BaseController
 import models.user.UserForms
 import play.api.i18n.Lang
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -46,7 +47,7 @@ class ProfileController @javax.inject.Inject() (
   }
 
   def changePassword = withSession("change-password") { implicit request =>
-    def errorResponse(msg: String) = Redirect(controllers.routes.ProfileController.changePasswordForm()).flashing("error" -> msg)
+    def errorResponse(msg: String) = Redirect(controllers.user.routes.ProfileController.changePasswordForm()).flashing("error" -> msg)
     UserForms.changePasswordForm.bindFromRequest().fold(
       formWithErrors => {
         Future.successful(errorResponse(FormUtils.errorsToString(formWithErrors.errors)))
@@ -57,7 +58,7 @@ class ProfileController @javax.inject.Inject() (
         } else {
           val email = request.identity.profile.providerKey
           credentialsProvider.authenticate(Credentials(email, changePass.oldPassword)).flatMap { loginInfo =>
-            val okResponse = Redirect(controllers.routes.ProfileController.view()).flashing("success" -> messagesApi("user.password.changed"))
+            val okResponse = Redirect(controllers.user.routes.ProfileController.view()).flashing("success" -> messagesApi("user.password.changed"))
             for {
               _ <- authInfoRepository.update(loginInfo, hasher.hash(changePass.newPassword))
               authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)

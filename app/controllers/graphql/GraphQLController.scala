@@ -1,7 +1,8 @@
-package controllers
+package controllers.graphql
 
 import java.util.UUID
 
+import controllers.BaseController
 import models.connection.ConnectionSettings
 import models.graphql.{ConnectionGraphQLSchema, GraphQLContext}
 import models.user.User
@@ -51,7 +52,7 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
         val list = GraphQLQueryService.getVisible(request.identity, Some(c.id), None, None)
         val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
         Ok(views.html.graphql.graphiql(request.identity, c.id, c.slug, list, q))
-      case None => Redirect(routes.HomeController.home())
+      case None => Redirect(controllers.routes.HomeController.home())
     })
   }
 
