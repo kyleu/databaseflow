@@ -9,7 +9,8 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class DownloadController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  private[this] val baseUrl = s"https://s3.amazonaws.com/databaseflow/1.0.0/"
+  private[this] val version = "1.0.0"
+  private[this] val baseUrl = s"https://s3.amazonaws.com/databaseflow/$version/"
 
   def index() = act("download-index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
