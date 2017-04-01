@@ -64,12 +64,20 @@ object SampleDatabaseService extends Logging {
     |order by
     |  count(al.AlbumId) desc""".stripMargin
 
+  private[this] val sqlPlaylistCount = """select
+    |  p.PlaylistId, p.Name, count(pt.TrackId) trackCount
+    |from
+    |  Playlist p
+    |  join PlaylistTrack pt on p.PlaylistId = pt.PlaylistId
+    |group by
+    |  p.PlaylistId, p.Name""".stripMargin
+
   private[this] def createSavedQueries(owner: UUID, connId: UUID) = {
     def q(name: String, sql: String) = SavedQuery(name = name, sql = sql, owner = owner, connection = Some(connId))
 
     val queries = Seq(
       q("Artists by Album Count", sqlAlbumCount),
-      q("Test Query 2", "select * from Artist")
+      q("Playlist Track Count", sqlPlaylistCount)
     )
 
     queries.foreach { q =>

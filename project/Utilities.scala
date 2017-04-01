@@ -6,9 +6,6 @@ import sbt._
 import io.gatling.sbt.GatlingPlugin
 import pl.project13.scala.sbt.JmhPlugin
 
-import scala.scalanative.sbtplugin.ScalaNativePlugin
-import scala.scalanative.sbtplugin.ScalaNativePlugin.AutoImport._
-
 object Utilities {
   private[this] val metricsLibs = Seq(
     Play.playLib, Akka.actor,
@@ -39,13 +36,6 @@ object Utilities {
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .settings(libraryDependencies ++= Seq(Utils.enumeratum, Play.playWs))
-    .settings(Shared.commonSettings: _*)
-
-  lazy val nativeSandbox = (project in file("util/nativeSandbox"))
-    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
-    .enablePlugins(ScalaNativePlugin)
-    .settings(nativeMode := "debug")
-    //.settings(nativeMode := "release")
     .settings(Shared.commonSettings: _*)
 
   lazy val benchmarking = (project in file("util/benchmarking"))

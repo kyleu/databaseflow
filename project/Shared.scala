@@ -12,6 +12,11 @@ object Shared {
   val projectId = "databaseflow"
   val projectName = "Database Flow"
 
+  object Versions {
+    val app = "1.0.0"
+    val scala = "2.11.8"
+  }
+
   lazy val commonSettings = Seq(
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
@@ -53,11 +58,6 @@ object Shared {
     scapegoatIgnoredFiles := Seq(".*/JsonSerializers.scala"),
     ScalariformKeys.preferences := ScalariformKeys.preferences.value
   ) ++ graphSettings ++ scalariformSettings
-
-  object Versions {
-    val app = "1.0.0"
-    val scala = "2.11.8"
-  }
 
   def withProjects(p: Project, includes: Seq[Project]) = includes.foldLeft(p) { (proj, inc) =>
     proj.aggregate(inc).dependsOn(inc)
