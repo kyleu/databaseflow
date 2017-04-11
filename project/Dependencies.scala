@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.13"
+    private[this] val version = "2.5.14"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -47,7 +47,7 @@ object Dependencies {
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.16.1"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.5.jre8-preview"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.6.jre8-preview"
   }
 
   object Hibernate {
