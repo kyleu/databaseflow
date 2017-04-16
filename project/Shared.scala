@@ -67,13 +67,10 @@ object Shared {
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % Serialization.version,
       "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion
-    ),
-    scalaJSStage in Global := FastOptStage
-  ).jsConfigure(_.enablePlugins(ScalaJSPlay)).jvmSettings(
-    libraryDependencies ++= Seq(Serialization.uPickle, Utils.enumeratum)
-  )
+    )
+  ).jvmSettings(libraryDependencies ++= Seq(Serialization.uPickle, Utils.enumeratum))
 
-  lazy val sharedJs = shared.js
+  lazy val sharedJs = shared.js.enablePlugins(ScalaJSPlay).settings(scalaJSStage in Global := FastOptStage)
 
   lazy val sharedJvm = shared.jvm
 }
