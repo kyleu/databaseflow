@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.17"
+    private[this] val version = "2.4.18"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -41,13 +41,13 @@ object Dependencies {
     val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.1"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
-    val h2 = "com.h2database" % "h2" % "1.4.194"
+    val h2 = "com.h2database" % "h2" % "1.4.195"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.41" // 6.0 is all different
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.42" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.16.1"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.6.jre8-preview"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.7.jre8-preview"
   }
 
   object Hibernate {
@@ -74,7 +74,7 @@ object Dependencies {
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % version intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % version intransitive()
     val json = "io.dropwizard.metrics" % "metrics-json" % version exclude("com.fasterxml.jackson.core", "jackson-databind")
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.16.v20170120"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.3.18.v20170406"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % version intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % version intransitive()
   }
@@ -85,18 +85,18 @@ object Dependencies {
   }
 
   object ScalaJS {
-    val scalaTagsVersion = "0.6.3"
+    val scalaTagsVersion = "0.6.5"
     val jQueryVersion = "0.9.1"
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.1.0"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.2.0"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.0"
   }
 
   object Utils {
     val scapegoatVersion = "1.3.0"
-    val enumeratumVersion = "1.5.10"
+    val enumeratumVersion = "1.5.11"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
@@ -107,7 +107,7 @@ object Dependencies {
 
   object Testing {
     val gatlingVersion = "2.2.3"
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.3" % "test"
     val gatlingCore = "io.gatling" % "gatling-test-framework" % gatlingVersion % "test"
     val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % "test"
   }

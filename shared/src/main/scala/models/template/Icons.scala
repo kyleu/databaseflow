@@ -35,7 +35,7 @@ object Icons {
 
   val sectionClosed = "fa-angle-right"
   val sectionOpen = "fa-angle-down"
-  val sectionDetails = "fa-share-square-o"
+  val sectionDetails = "fa-list-ul"
 
   val sortable = "fa-sort"
   val sortedAsc = "fa-sort-up"
