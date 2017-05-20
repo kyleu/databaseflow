@@ -10,7 +10,7 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.14"
+    private[this] val version = "2.5.15"
     val playLib = "com.typesafe.play" %% "play" % version
     val playFilters = play.sbt.PlayImport.filters
     val playWs = play.sbt.PlayImport.ws
@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.4.18"
+    private[this] val version = "2.5.1"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -46,7 +46,7 @@ object Dependencies {
     val mysql = "mysql" % "mysql-connector-java" % "5.1.42" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.16.1"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.18.0"
     val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.7.jre8-preview"
   }
 
@@ -90,7 +90,7 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.2.0"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.2.1"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.0"
   }
 
@@ -102,7 +102,7 @@ object Dependencies {
     val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
-    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.2"
+    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"
   }
 
   object Testing {
