@@ -27,7 +27,15 @@ class SiteController @javax.inject.Inject() (
     val lifecycle: ApplicationLifecycle,
     val config: Configuration
 ) extends BaseSiteController {
-  val metricsConfig = MetricsConfig(jmxEnabled = true, graphiteEnabled = false, "127.0.0.1", 2003, servletEnabled = true, 9001)
+  val metricsConfig: MetricsConfig = MetricsConfig(
+    jmxEnabled = config.getBoolean("metrics.jmx.enabled").getOrElse(true),
+    graphiteEnabled = config.getBoolean("metrics.graphite.enabled").getOrElse(false),
+    graphiteServer = config.getString("metrics.graphite.server").getOrElse("127.0.0.1"),
+    graphitePort = config.getInt("metrics.graphite.port").getOrElse(2003),
+    servletEnabled = config.getBoolean("metrics.servlet.enabled").getOrElse(true),
+    servletPort = config.getInt("metrics.servlet.port").getOrElse(9001)
+  )
+
   actorSystem.actorOf(MetricsServletActor.props(metricsConfig), "metrics-servlet")
   lifecycle.addStopHook(() => Future.successful(SharedMetricRegistries.remove("default")))
   StripePaymentService.init(
