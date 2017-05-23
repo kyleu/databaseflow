@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class TranslationController @javax.inject.Inject() (translationService: TranslationService) extends Controller {
-  val apiProvider = "yandex"
+  val apiProvider = "google"
 
   def index = Action.async {
     Future.successful(Ok(views.html.index()))

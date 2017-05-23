@@ -3,15 +3,14 @@ package services.translation
 import java.io.{File, PrintWriter}
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.translation.api.{BingApi, YandexApi}
+import services.translation.api.{BingApi, GoogleApi, YandexApi}
 
 import scala.concurrent.Future
 import scala.io.Source
-
 import utils.Language
 
 @javax.inject.Singleton()
-class TranslationService @javax.inject.Inject() (yandex: YandexApi, bing: BingApi) {
+class TranslationService @javax.inject.Inject() (yandex: YandexApi, bing: BingApi, google: GoogleApi) {
   def parse(f: File) = if (f.isFile) {
     Source.fromFile(f).getLines.flatMap { line =>
       val split = line.trim.replaceAllLiterally("''", "'").split('=')
@@ -60,6 +59,7 @@ class TranslationService @javax.inject.Inject() (yandex: YandexApi, bing: BingAp
   private[this] def getApi(name: String) = name match {
     case "yandex" => yandex
     case "bing" => bing
+    case "google" => google
     case x => throw new IllegalArgumentException(s"Invalid api [$x].")
   }
 }
