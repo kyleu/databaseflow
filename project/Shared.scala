@@ -17,15 +17,17 @@ object Shared {
     val scala = "2.11.11"
   }
 
+  val compileOptions = Seq(
+    "target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
+    "–Xcheck-null", "-Xfatal-warnings", "-Xlint", "-Xcheckinit", "-Xfuture",
+    "-Yno-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
+  )
+
   lazy val commonSettings = Seq(
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
 
-    scalacOptions ++= Seq(
-      "-encoding", "UTF-8", "-feature", "-deprecation", "-unchecked", "-target:jvm-1.8", "–Xcheck-null", "-Xfatal-warnings", "-Xlint",
-      "-Ywarn-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen",
-      "-Ybackend:GenBCode", "-Ydelambdafy:method" /* , "-Ywarn-unused-import" */
-    ),
+    scalacOptions ++= compileOptions,
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
     // Packaging
