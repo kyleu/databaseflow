@@ -19,7 +19,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.5.1"
+    private[this] val version = "2.5.2"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -38,7 +38,7 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.1"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.2"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.195"
