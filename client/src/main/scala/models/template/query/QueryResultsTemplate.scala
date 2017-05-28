@@ -37,7 +37,7 @@ object QueryResultsTemplate {
       )
     )
 
-    val content = div(id := s"$resultId")(
+    val content = div(id := s"$resultId", cls := "result-panel")(
       QueryFilterTemplate.activeFilterPanel(qr),
       queryFilterContent(hasFilter),
       div(cls := "clear"),

@@ -71,7 +71,7 @@ object ProgressManager {
         queryWorkspace.append(content.render)
       }
     } else {
-      existingResult.html(content.render)
+      existingResult.replaceWith(content.render)
     }
 
     TemplateUtils.relativeTime()
