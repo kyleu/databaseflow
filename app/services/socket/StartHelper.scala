@@ -22,18 +22,15 @@ trait StartHelper extends Logging { this: SocketService =>
       throw x
   }
 
-  protected[this] def onStart() = ActorSupervisor.connectErrorCheck(user.id) match {
-    case Some(name) =>
-      out ! ServerError(messages("socket.connect.failed", Nil), messages("socket.too.many.users", Seq(name)))
-    case None =>
-      log.info(s"Starting connection for user [${user.id}: ${user.username}].")
+  protected[this] def onStart() = {
+    log.info(s"Starting connection for user [${user.id}: ${user.username}].")
 
-      supervisor ! SocketStarted(user, id, self)
-      out ! UserSettings(user.id, user.username, user.profile.providerKey, user.preferences)
+    supervisor ! SocketStarted(user, id, self)
+    out ! UserSettings(user.id, user.username, user.profile.providerKey, user.preferences)
 
-      SavedQueryService.getForUser(user, connectionId, Some(out))
-      SharedResultService.getForUser(user, connectionId, Some(out))
-      refreshSchema(false)
+    SavedQueryService.getForUser(user, connectionId, Some(out))
+    SharedResultService.getForUser(user, connectionId, Some(out))
+    refreshSchema(false)
   }
 
   protected[this] def refreshSchema(forceRefresh: Boolean) = {

@@ -15,12 +15,6 @@ object ActorSupervisor {
   case class SocketRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)
 
   protected val sockets = collection.mutable.HashMap.empty[UUID, SocketRecord]
-  def connectErrorCheck(userId: UUID) = if ((!LicenseService.isTeamEdition) && sockets.exists(_._2.userId != userId)) {
-    val name = sockets.find(_._2.userId != userId).map(_._2.name).getOrElse("a user")
-    Some(name)
-  } else {
-    None
-  }
 }
 
 class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor with Logging {
