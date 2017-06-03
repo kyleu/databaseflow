@@ -20,10 +20,13 @@ index.hero.title = The best way to query and visualize your database.
 index.hero.subtitle1 = {0} is a self-hosted collaborative SQL client and charting application that works with your database.
 index.hero.subtitle2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
+# Github
+github.title = Github
+
 # Downloads
-downloads.title = Download a free 14 day trial
+downloads.title = Download Now
 downloads.hero.title = Get started with {0} right away.
-downloads.hero.subtitle1 = Free trial, no registration required. Downloads are available for all major platforms.
+downloads.hero.subtitle1 = Free software, no registration required. Downloads are available for all major platforms.
 platform.osx = macOS
 platform.windows = Windows
 platform.linux = Linux
@@ -50,7 +53,7 @@ technology.hero.subtitle1 = Here''s a few of them.
 
 # Database
 database.hero.title = {0} is the best SQL client for working with {1}
-database.postgresql.subtitle = {1} is our primary supported database, we support normal installations, Amazon RDS or Redshift, and Greenplum.
+database.postgresql.subtitle = {0} is our primary supported database, we support normal installations, Amazon RDS or Redshift, and Greenplum.
 
 # Footer
 footer.newsletter = Newsletter
