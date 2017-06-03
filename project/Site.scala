@@ -28,7 +28,7 @@ object Site {
     resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= dependencies,
 
-    libraryDependencies += Dependencies.Utils.crypto,
+    libraryDependencies ++= Seq(Dependencies.Utils.crypto, Dependencies.Utils.enumeratum),
 
     routesGenerator := InjectedRoutesGenerator,
 

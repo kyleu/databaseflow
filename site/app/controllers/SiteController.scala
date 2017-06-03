@@ -5,7 +5,6 @@ import com.codahale.metrics.SharedMetricRegistries
 import play.api.Configuration
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.inject.ApplicationLifecycle
-import services.payment.StripePaymentService
 import utils.metrics.{MetricsConfig, MetricsServletActor}
 
 import scala.concurrent.Future
@@ -38,12 +37,6 @@ class SiteController @javax.inject.Inject() (
 
   actorSystem.actorOf(MetricsServletActor.props(metricsConfig), "metrics-servlet")
   lifecycle.addStopHook(() => Future.successful(SharedMetricRegistries.remove("default")))
-  StripePaymentService.init(
-    sk = config.getString("payment.sk").getOrElse(""),
-    pk = config.getString("payment.pk").getOrElse(""),
-    personalPrice = config.getInt("payment.price.personal").getOrElse(0),
-    teamPrice = config.getInt("payment.price.team").getOrElse(0)
-  )
 
   def index() = act("index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
@@ -66,6 +59,6 @@ class SiteController @javax.inject.Inject() (
   }
 
   def enable() = act("enable") { implicit request =>
-    Future.successful(Redirect(routes.SiteController.index()).withSession("preview" -> "true"))
+    Future.successful(Redirect(controllers.routes.SiteController.index()).withSession("preview" -> "true"))
   }
 }

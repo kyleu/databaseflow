@@ -20,11 +20,6 @@ class ContentController @javax.inject.Inject() (
     Future.successful(Ok(views.html.features(isAdmin)))
   }
 
-  def versions() = act("versions") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.versions(isAdmin)))
-  }
-
   def plan() = act("plan") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.plan(isAdmin)))

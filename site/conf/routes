@@ -4,7 +4,6 @@ GET            /lang/:id                                controllers.SiteControll
 
 # Content
 GET            /features                                controllers.ContentController.features
-GET            /versions                                controllers.ContentController.versions
 GET            /plan                                    controllers.ContentController.plan
 GET            /tech                                    controllers.ContentController.technology
 GET            /db/:key                                 controllers.ContentController.database(key)
@@ -27,12 +26,6 @@ POST           /newsletter                              controllers.NewsletterCo
 # Downloads
 GET            /download                                controllers.DownloadController.index()
 GET            /download/:filename                      controllers.DownloadController.download(filename)
-
-# Purchasing
-GET            /pricing/personal                        controllers.PurchaseController.pricingPersonal()
-POST           /purchase/personal                       controllers.PurchaseController.purchasePersonalEdition()
-GET            /pricing/team                            controllers.PurchaseController.pricingTeam()
-POST           /purchase/team                           controllers.PurchaseController.purchaseTeamEdition()
 
 # Admin Section
 ->             /admin                                   admin.Routes

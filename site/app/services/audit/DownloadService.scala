@@ -3,7 +3,7 @@ package services.audit
 import java.io.{BufferedWriter, FileWriter}
 import java.util.UUID
 
-import cache.FileCacheService
+import utils.FileCacheService
 import org.joda.time.LocalDateTime
 
 import scala.io.Source

@@ -2,7 +2,7 @@ package services.audit
 
 import java.io.{BufferedWriter, FileWriter}
 
-import cache.FileCacheService
+import utils.FileCacheService
 import play.api.libs.json.Json
 import services.notification.RequestLogging.RequestLog
 
