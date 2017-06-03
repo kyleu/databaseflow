@@ -1,4 +1,4 @@
-import Dependencies.{ Serialization, Utils }
+import Dependencies.Utils
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
