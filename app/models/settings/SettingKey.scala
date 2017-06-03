@@ -43,13 +43,6 @@ object SettingKey extends Enum[SettingKey] {
     default = "true"
   )
 
-  case object LicenseContent extends SettingKey(
-    id = "license-content",
-    title = "License Content",
-    description = "Contains the software license content.",
-    default = ""
-  )
-
   case object MessageOfTheDay extends SettingKey(
     id = "motd",
     title = "Message of The Day",

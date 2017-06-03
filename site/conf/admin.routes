@@ -5,13 +5,6 @@ GET         /toggle-logging               controllers.admin.AdminController.togg
 GET         /metrics                      controllers.admin.MetricsController.view()
 GET         /enable/:id                   controllers.admin.AdminController.enable(id)
 
-GET         /licenses                     controllers.admin.LicenseController.list()
-GET         /licenses/new                 controllers.admin.LicenseController.form()
-POST        /licenses/new                 controllers.admin.LicenseController.save()
-GET         /licenses/:id/download        controllers.admin.LicenseController.download(id: java.util.UUID)
-GET         /licenses/:id/email           controllers.admin.LicenseController.email(id: java.util.UUID)
-GET         /licenses/:id/remove          controllers.admin.LicenseController.remove(id: java.util.UUID)
-
 GET         /requests                     controllers.admin.AuditController.listRequests()
 GET         /downloads                    controllers.admin.AuditController.listInstalls()
 GET         /installs                     controllers.admin.AuditController.listDownloads()

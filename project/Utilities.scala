@@ -21,17 +21,6 @@ object Utilities {
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
 
-  lazy val licenseModels = (project in file("util/licenseModels"))
-    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
-    .settings(libraryDependencies ++= Seq(Utils.crypto, Utils.enumeratum))
-    .settings(Shared.commonSettings: _*)
-
-  lazy val licenseGenerator = (project in file("util/licenseGenerator"))
-    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
-    .settings(Shared.commonSettings: _*)
-    .dependsOn(licenseModels)
-    .aggregate(licenseModels)
-
   lazy val translation = (project in file("util/translation"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .enablePlugins(SbtWeb, play.sbt.PlayScala)

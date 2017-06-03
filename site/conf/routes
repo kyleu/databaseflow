@@ -34,10 +34,6 @@ POST           /purchase/personal                       controllers.PurchaseCont
 GET            /pricing/team                            controllers.PurchaseController.pricingTeam()
 POST           /purchase/team                           controllers.PurchaseController.purchaseTeamEdition()
 
-# License Request
-GET            /license/:id                             controllers.UserLicenseController.licenseView(id: java.util.UUID)
-GET            /license/:id/download                    controllers.UserLicenseController.licenseDownload(id: java.util.UUID)
-
 # Admin Section
 ->             /admin                                   admin.Routes
 

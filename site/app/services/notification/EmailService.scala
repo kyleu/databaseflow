@@ -1,12 +1,8 @@
 package services.notification
 
-import java.util.UUID
-
-import org.joda.time.LocalDateTime
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.mailer.{Email, MailerClient}
 import utils.Logging
-import views.html.email.{feedbackNotification, personalLicenseMessage, personalLicenseNotification}
 
 import scala.concurrent.Future
 

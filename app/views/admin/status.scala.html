@@ -13,18 +13,6 @@
             }
           </li>
           <li class="collection-item">
-            <a href="@controllers.routes.LicenseController.form()" class="theme-text">License Details</a>
-            @defining(services.licensing.LicenseService.getLicense) { l =>
-              @if(l.isEmpty) {
-                <div>@messages("admin.status.no.license", services.licensing.LicenseService.daysRemaining)</div>
-              } else {
-                @defining(utils.DateUtils.niceDate(utils.DateUtils.fromMillis(l.get.issued).toLocalDate)) { issued =>
-                  <div>@l.get.edition.title, issued @issued to @l.get.name (@l.get.email)</div>
-                }
-              }
-            }
-          </li>
-          <li class="collection-item">
             @defining(services.database.core.MasterDatabase.settings.get) { c =>
               <a href="@controllers.query.routes.QueryController.main(c.slug)" class="theme-text">Master Database</a>
               <div>@messages("admin.status.db.loaded", c.engine.name, c.url)</div>

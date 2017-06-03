@@ -70,6 +70,6 @@ object Server {
       UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin
     ).settings(serverSettings: _*).aggregate(projectToRef(Client.client)).settings(Packaging.settings: _*)
 
-    Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.licenseModels))
+    Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics))
   }
 }

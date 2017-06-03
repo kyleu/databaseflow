@@ -38,10 +38,6 @@ POST        /graphql/:conn/save                      controllers.graphql.GraphQL
 # Utility
 GET         /*path/                                  controllers.HomeController.untrail(path: String)
 
-# License
-GET         /license                                 controllers.LicenseController.form()
-POST        /license                                 controllers.LicenseController.save()
-
 # Authentication
 GET         /signup                                  controllers.auth.RegistrationController.registrationForm(email: Option[String] ?= None)
 POST        /signup                                  controllers.auth.RegistrationController.register

@@ -18,10 +18,6 @@ lazy val metrics = Utilities.metrics
 
 lazy val iconCreator = Utilities.iconCreator
 
-lazy val licenseModels = Utilities.licenseModels
-
-lazy val licenseGenerator = Utilities.licenseGenerator
-
 lazy val translation = Utilities.translation
 
 lazy val benchmarking = Utilities.benchmarking

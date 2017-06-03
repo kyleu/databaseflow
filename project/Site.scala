@@ -48,6 +48,6 @@ object Site {
 
   lazy val site = {
     val ret = Project(id = "site", base = file("site")).enablePlugins(SbtWeb, play.sbt.PlayScala).settings(siteSettings: _*)
-    Shared.withProjects(ret, Seq(Utilities.metrics, Utilities.licenseGenerator))
+    Shared.withProjects(ret, Seq(Utilities.metrics))
   }
 }

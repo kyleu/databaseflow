@@ -17,7 +17,6 @@ import play.api.libs.ws.WSClient
 import services.config.ConfigFileService
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.database.{DatabaseRegistry, MasterDdl}
-import services.licensing.LicenseService
 import services.settings.SettingsService
 import services.supervisor.{ActorSupervisor, VersionService}
 import utils.metrics.Instrumented
@@ -75,7 +74,6 @@ class ApplicationContext @javax.inject.Inject() (
       new LocalDateTime().toString
     })
 
-    LicenseService.readLicense()
     VersionService.upgradeIfNeeded(ws)
 
     if ((!config.debug) && java.awt.Desktop.isDesktopSupported && (System.getProperty("show.gui", "false") != "true")) {

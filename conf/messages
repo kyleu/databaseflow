@@ -38,15 +38,6 @@ th.username = Username
 index.no.connections = Add your first connection by clicking the link below.
 index.new.connection = New Connection
 
-# License
-license.new.form = License Details
-license.paste = Please paste your license in the form below.
-license.error = Unable to parse license. Please make sure you've copied the entire text.
-license.missing = Missing license content.
-license.success = License updated successfully.
-license.register = Please create a local account to use with {0}.
-license.configure = Please configure your license for {0}.
-
 # Registration
 registration.title = Register
 registration.call.to.action = Register for {0}
@@ -201,9 +192,8 @@ admin.index.prompt = Use the menu above or the links below to get started!
 
 admin.status.link = Status
 admin.status.title = {0} Status
-admin.status.description = View license details and system status.
+admin.status.description = View system status.
 admin.status.metrics.title = System Metrics
-admin.status.no.license = No license configured. You have {0} days remaining in your trial.
 admin.status.file.loaded = Loaded from {0}
 admin.status.db.loaded = {0} database, loaded from {1}
 

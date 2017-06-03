@@ -17,14 +17,6 @@ class NotificationService @javax.inject.Inject() (emailService: EmailService, sl
     slackService.alert(s"Newsletter signup from [$email]", "#newsletter")
   }
 
-  def onLicenseCreate(id: UUID, name: String, email: String, edition: String, issued: Long, version: Int, content: String) = {
-    val adminMessageBody = personalLicenseNotification(id, name, email, edition, issued, version, content).toString
-    emailService.sendAdminMessage(s"$edition License issued to [$email]", adminMessageBody)
-    slackService.alert(s"$edition License created for [$email].", "#licenses")
-    val messageBody = personalLicenseMessage(id, name, email, edition, issued, version, content).toString
-    emailService.sendMessage(name = name, address = email, subject = s"Your ${utils.Config.projectName} $edition License", htmlBody = messageBody)
-  }
-
   def onFeedback(id: UUID, from: String, content: String, occurred: LocalDateTime) = {
     emailService.sendAdminMessage(s"Feedback received from [$from]", feedbackNotification(id, from, content, occurred).toString)
   }

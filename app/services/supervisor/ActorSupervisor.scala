@@ -7,7 +7,6 @@ import akka.actor.{ActorRef, OneForOneStrategy, SupervisorStrategy}
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
-import services.licensing.LicenseService
 import services.result.CachedResultActor
 import utils.metrics.{InstrumentedActor, MetricsServletActor}
 import utils.{ApplicationContext, DateUtils, Logging}

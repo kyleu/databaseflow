@@ -12,8 +12,6 @@ index.splash = We''re working hard on a new idea. Coming soon!
 index.features.link = Features
 index.demo.link = View Demo
 index.download.link = Download
-index.license.link = Pricing
-index.versions.link = Pricing
 index.admin.link = Admin
 index.welcome1 = The best way to query and report on your own data.
 index.welcome2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
@@ -32,11 +30,6 @@ platform.linux = Linux
 platform.docker = Docker
 platform.universal = Universal (requires Java 8)
 
-# Licensing
-license.title = Get a license
-license.personal = Buy Personal Edition
-license.team = Buy Team Edition
-
 # Newsletter
 newsletter.title = Newsletter
 newsletter.subscribe = Subscribe
@@ -46,10 +39,6 @@ feedback.title = Feedback
 feedback.action = Leave Feedback
 feedback.email = Email Address
 feedback.submit = Send Feedback
-
-# Versions
-versions.hero.title = Choose the version that is right for you.
-versions.hero.subtitle1 = Try {0} free for fourteen days, then purchase a license for yourself or the whole team.
 
 # Features
 features.hero.title = {0} is a modern web-based SQL client.
@@ -62,21 +51,6 @@ technology.hero.subtitle1 = Here''s a few of them.
 # Database
 database.hero.title = {0} is the best SQL client for working with {1}
 database.postgresql.subtitle = {1} is our primary supported database, we support normal installations, Amazon RDS or Redshift, and Greenplum.
-
-# Licensing
-license.download = Download License File
-license.copy = Copy License to Clipboard
-license.success = Your {0} License
-license.continue = Continue
-license.form.name = Name
-license.form.email = Email
-license.form.prompt = Fill out this form, and you''ll get your license immediately.
-license.form.save = Get Your {0} License
-license.form.trial = Free 14 Day Trial
-license.form.personal = New Personal License
-
-# Purchasing
-purchase.title = Purchase {0} Edition License
 
 # Footer
 footer.newsletter = Newsletter
