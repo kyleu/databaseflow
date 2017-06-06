@@ -23,6 +23,6 @@ object SettingQueries extends BaseQueries[Setting] {
     override val values = Seq[Any](s.value, s.key.toString)
   }
 
-  override protected def fromRow(row: Row) = Setting(SettingKey.withName(row.as[String]("k")), row.as[String]("v"))
+  override protected def fromRow(row: Row) = Setting(SettingKey.withNameOption(row.as[String]("k")).getOrElse(SettingKey.Invalid), row.as[String]("v"))
   override protected def toDataSeq(s: Setting) = Seq[Any](s.key.toString, s.value)
 }

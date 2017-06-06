@@ -1,7 +1,6 @@
 package models.settings
 
 import enumeratum._
-import services.database.core.MasterDatabase
 
 sealed abstract class SettingKey(val id: String, val title: String, val description: String, val default: String) extends EnumEntry {
   override def toString = id
@@ -54,6 +53,13 @@ object SettingKey extends Enum[SettingKey] {
     id = "install-date",
     title = "Install Date",
     description = "The day the software was installed. Please don't mess with this.",
+    default = ""
+  )
+
+  case object Invalid extends SettingKey(
+    id = "invalid",
+    title = "Invalid Config Key",
+    description = "You shouldn't be seeing this.",
     default = ""
   )
 
