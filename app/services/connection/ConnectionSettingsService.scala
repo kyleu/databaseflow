@@ -10,6 +10,8 @@ import services.audit.AuditRecordService
 import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 
+import scala.util.control.NonFatal
+
 object ConnectionSettingsService {
   def getVisible(user: User, id: Option[UUID] = None, name: Option[String] = None) = {
     val c = MasterDatabase.query(ConnectionSettingsQueries.getVisible(user))
@@ -27,6 +29,13 @@ object ConnectionSettingsService {
     false -> "Cannot edit master database."
   } else {
     Role.matchPermissions(Some(user), cs.owner, "connection", "edit", cs.edit)
+  }
+
+  def connFor(connection: String) = try {
+    val connUuid = UUID.fromString(connection)
+    getById(connUuid)
+  } catch {
+    case _: IllegalArgumentException => getBySlug(connection)
   }
 
   def getById(id: UUID) = if (id == MasterDatabase.connectionId) {

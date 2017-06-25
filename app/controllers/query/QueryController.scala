@@ -16,7 +16,6 @@ import utils.ApplicationContext
 import utils.web.MessageFrameFormatter
 
 import scala.concurrent.Future
-import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class QueryController @javax.inject.Inject() (
@@ -28,12 +27,7 @@ class QueryController @javax.inject.Inject() (
   private[this] implicit val t = new MessageFrameFormatter(ctx.config.debug).transformer
 
   def main(connection: String) = withSession(s"connection-$connection") { implicit request =>
-    val connOpt = try {
-      val connUuid = UUID.fromString(connection)
-      ConnectionSettingsService.getById(connUuid)
-    } catch {
-      case NonFatal(x) => ConnectionSettingsService.getBySlug(connection)
-    }
+    val connOpt = ConnectionSettingsService.connFor(connection)
     val activeDb = connOpt.map(c => (c.name, c.id, c.engine.cap.transactionsSupported))
     Future.successful(activeDb match {
       case Some((name, id, txSupported)) => Ok(views.html.query.main(request.identity, ctx.config.debug, id, name, txSupported))

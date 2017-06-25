@@ -15,14 +15,7 @@ import scala.util.control.NonFatal
 @javax.inject.Singleton
 class GraphQLQueryController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def load(connection: String, queryId: UUID) = withSession("graphql.load") { implicit request =>
-    val connOpt = try {
-      val connUuid = UUID.fromString(connection)
-      ConnectionSettingsService.getById(connUuid)
-    } catch {
-      case NonFatal(_) => ConnectionSettingsService.getBySlug(connection)
-    }
-
-    Future.successful(connOpt match {
+    Future.successful(ConnectionSettingsService.connFor(connection) match {
       case Some(c) =>
         val q = GraphQLQueryService.getById(queryId, Some(request.identity))
         Redirect(controllers.graphql.routes.GraphQLController.graphql(c.slug, Some(queryId)).url)
