@@ -28,7 +28,6 @@ object EngineColumnParser {
     case TimeType => s
     case TimestampType => s
     case UuidType => UUID.fromString(s)
-    case NullType => None.orNull
     case _ => s
   }
 }

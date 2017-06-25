@@ -25,7 +25,6 @@ object ColumnType extends Enum[ColumnType] {
   case object XmlType extends ColumnType("xml")
   case object UuidType extends ColumnType("uuid")
 
-  case object NullType extends ColumnType("null")
   case object ObjectType extends ColumnType("object")
   case object StructType extends ColumnType("struct")
   case object ArrayType extends ColumnType("array")

@@ -41,7 +41,6 @@ object CreateResultTable {
       case XmlType => "text"
       case UuidType => "uuid"
 
-      case NullType => throw new IllegalArgumentException("Cannot support null column types.")
       case ObjectType => "text"
       case StructType => "text"
       case ArrayType => "text"

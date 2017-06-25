@@ -24,7 +24,7 @@ object QueryTranslations extends Logging {
     case SQLXML => XmlType
     case OTHER => UnknownType
 
-    case NULL => NullType
+    case NULL => UnknownType
     case JAVA_OBJECT => ObjectType
     case STRUCT => StructType
     case ARRAY => ArrayType

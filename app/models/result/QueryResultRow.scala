@@ -17,7 +17,7 @@ object QueryResultRow {
           case ColumnType.ByteArrayType => Some(col.name)
           case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => Some(col.name)
           case ColumnType.RefType | ColumnType.XmlType | ColumnType.UuidType => Some(col.name)
-          case ColumnType.NullType | ColumnType.ObjectType | ColumnType.StructType | ColumnType.ArrayType => Some(col.name)
+          case ColumnType.ObjectType | ColumnType.StructType | ColumnType.ArrayType => Some(col.name)
           case ColumnType.UnknownType => Some(col.name)
         }
       }

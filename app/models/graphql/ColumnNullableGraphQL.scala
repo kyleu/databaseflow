@@ -66,7 +66,7 @@ object ColumnNullableGraphQL {
         resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(col.name)
       )
 
-      case ColumnType.NullType | ColumnType.ObjectType | ColumnType.StructType | ColumnType.ArrayType => Field(
+      case ColumnType.ObjectType | ColumnType.StructType | ColumnType.ArrayType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = col.description,
