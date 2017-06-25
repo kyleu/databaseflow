@@ -26,7 +26,7 @@ GET         /shared/:id/remove                       controllers.query.SharedRes
 GET         /shared/:id/export/:fmt                  controllers.query.ExportController.exportShared(id: java.util.UUID, fmt)
 
 # GraphQL
-GET         /schema/:conn                            controllers.graphql.GraphQLController.renderSchema(conn: java.util.UUID)
+GET         /schema/:conn                            controllers.graphql.GraphQLController.renderSchema(conn)
 GET         /graphql/:conn                           controllers.graphql.GraphQLController.graphql(conn, id: Option[java.util.UUID] ?= None)
 GET         /graphql/:conn/query                     controllers.graphql.GraphQLController.graphqlQuery(conn, q)
 POST        /graphql/:conn                           controllers.graphql.GraphQLController.graphqlBody(conn: java.util.UUID)

@@ -19,8 +19,11 @@ import scala.concurrent.Future
 class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   private[this] val svc = GraphQLService(ctx)
 
-  def renderSchema(connectionId: UUID) = withSession("graphql.schema") { implicit request =>
-    Future.successful(Ok(svc.getConnectionSchema(request.identity, connectionId)._2.renderedSchema).as("application/json"))
+  def renderSchema(connection: String) = withSession("graphql.schema") { implicit request =>
+    Future.successful(ConnectionSettingsService.connFor(connection) match {
+      case Some(c) => Ok(svc.getConnectionSchema(request.identity, c.id)._2.renderedSchema).as("application/json")
+      case None => Redirect(controllers.routes.HomeController.home())
+    })
   }
 
   def graphql(connection: String, id: Option[UUID]) = withSession("graphql.ui") { implicit request =>

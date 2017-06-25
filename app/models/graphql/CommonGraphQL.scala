@@ -15,6 +15,11 @@ object CommonGraphQL {
     case Failure(_) => Left(UuidCoercionViolation)
   }
 
+  def cleanName(s: String) = {
+    val ret = s.replaceAllLiterally(" ", "_").replaceAllLiterally(".", "_")
+    if (ret.head.isDigit) { "_" + ret } else { ret }
+  }
+
   implicit val uuidType = ScalarType[UUID](
     name = "UUID",
     description = Some("A string representing a UUID, in format [00000000-0000-0000-0000-000000000000]."),
