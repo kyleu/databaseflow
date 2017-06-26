@@ -29,7 +29,7 @@ object FeedbackManager {
         isOpen = false
       }
 
-      TabManager.addTab(feedbackId, "feedback", "Feedback", Icons.feedback, close)
+      TabManager.addTab(feedbackId, "feedback", "Feedback", Icons.feedback, close _)
       QueryManager.activeQueries = QueryManager.activeQueries :+ feedbackId
 
       val queryPanel = $(s"#panel-$feedbackId")

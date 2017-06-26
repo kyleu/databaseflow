@@ -28,10 +28,10 @@ object Server {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Cache.ehCache, Akka.actor, Akka.logging, Play.playFilters, Play.playWs, GraphQL.sangria, GraphQL.playJson,
+      Cache.ehCache, Akka.actor, Akka.logging, Play.filters, Play.guice, Play.twirl, Play.ws, GraphQL.sangria, GraphQL.playJson,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
-      Export.csv, Ui.swing, Utils.crypto, Utils.scalaGuice, Utils.commonsIo, Utils.fastparse,
-      Akka.testkit, Play.playTest, Testing.scalaTest
+      Export.csv, Ui.swing, Utils.scalaGuice, Utils.commonsIo, Utils.fastparse,
+      Akka.testkit, Play.test, Testing.scalaTest
     )
   }
 
@@ -41,6 +41,7 @@ object Server {
     description := "Database Flow",
 
     resolvers += Resolver.jcenterRepo,
+    resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/",
     libraryDependencies ++= dependencies,
 
     scalaJSProjects := Seq(Client.client, Client.charting),

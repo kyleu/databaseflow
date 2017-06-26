@@ -3,12 +3,12 @@ package services.database
 import models.database.{Query, Queryable, Statement}
 import utils.Logging
 
-import scala.concurrent.forkjoin.ForkJoinPool
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 object DatabaseWorkerPool extends Logging {
   private[this] implicit val ctx: ExecutionContext = {
-    ExecutionContext.fromExecutor(new ForkJoinPool(16))
+    ExecutionContext.fromExecutor(new java.util.concurrent.ForkJoinPool(16))
   }
 
   def submitQuery[T](q: Query[T], db: Queryable, onSuccess: (T) => Unit, onFailure: (Throwable) => Unit) = {
@@ -29,8 +29,10 @@ object DatabaseWorkerPool extends Logging {
 
   private[this] def submit[T](work: () => T, onSuccess: (T) => Unit, onFailure: (Throwable) => Unit) = {
     val f = Future(work())
-    f.onSuccess { case x => onSuccess(x) }
-    f.onFailure { case x => onFailure(x) }
+    f.onComplete {
+      case Success(x) => onSuccess(x)
+      case Failure(x) => onFailure(x)
+    }
     f
   }
 }

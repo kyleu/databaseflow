@@ -1,7 +1,7 @@
 package models.sandbox
 
 import enumeratum._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import utils.{ApplicationContext, Logging}
 
 import scala.concurrent.Future
@@ -26,7 +26,7 @@ object SandboxTask extends Enum[SandboxTask] {
   case object Metrics extends SandboxTask("Metrics Dump", "Lists all of the metrics for the running server.") {
     override def call(ctx: ApplicationContext) = {
       val url = "http://localhost:4261/metrics?pretty=true"
-      val call = ctx.ws.url(url).withHeaders("Accept" -> "application/json")
+      val call = ctx.ws.url(url).withHttpHeaders("Accept" -> "application/json")
       call.get().map { json =>
         json.body
       }

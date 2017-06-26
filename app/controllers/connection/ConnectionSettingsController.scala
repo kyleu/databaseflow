@@ -21,7 +21,7 @@ import scala.concurrent.Future
 class ConnectionSettingsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def addNew() = withSession("add-new") { implicit request =>
     val conn = ConnectionSettings(UUID.randomUUID, "", "", request.identity.id)
-    Future.successful(Ok(views.html.connection.form(request.identity, conn, messagesApi("connection.new.title"), isNew = true)))
+    Future.successful(Ok(views.html.connection.form(request.identity, conn, messagesApi("connection.new.title")(request.lang), isNew = true)))
   }
 
   def editForm(id: UUID) = withSession("edit-form-" + id) { implicit request =>
@@ -30,7 +30,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       val conn = ConnectionSettingsService.getById(id).getOrElse(throw new IllegalArgumentException(s"Invalid connection [$id]."))
       Future.successful(Ok(views.html.connection.form(request.identity, conn, conn.name, isNew = false)))
     } else {
-      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
+      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")(request.lang)))
     }
   }
 
@@ -41,7 +41,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       val conn = connOpt.getOrElse(ConnectionSettings(id = connectionId, name = "", slug = "", owner = request.identity.id))
       val result = ConnectionForm.form.bindFromRequest.fold(
         formWithErrors => {
-          val title = formWithErrors.value.map(_.name).getOrElse(messagesApi("connection.new.title"))
+          val title = formWithErrors.value.map(_.name).getOrElse(messagesApi("connection.new.title")(request.lang))
           BadRequest(views.html.connection.form(request.identity, conn, title, isNew = connOpt.isEmpty, formWithErrors.errors))
         },
         cf => {
@@ -73,7 +73,7 @@ class ConnectionSettingsController @javax.inject.Inject() (override val ctx: App
       )
       Future.successful(result)
     } else {
-      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")))
+      Future.successful(Redirect(controllers.routes.HomeController.home()).flashing("error" -> messagesApi("connection.permission.denied")(request.lang)))
     }
   }
 

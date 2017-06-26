@@ -52,7 +52,7 @@ object AdHocQueryManager {
       }
     }
 
-    TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery, close)
+    TabManager.addTab(queryId, "adhoc-" + queryId, queryName, Icons.adHocQuery, close _)
 
     val queryPanel = $(s"#panel-$queryId")
 

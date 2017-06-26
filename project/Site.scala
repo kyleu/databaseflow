@@ -18,7 +18,7 @@ object Site {
     import Dependencies._
     Seq(
       Cache.ehCache, Akka.actor, Akka.logging, Akka.testkit, Commerce.stripe,
-      Play.playFilters, Play.playWs, Play.playTest, Play.playMailer
+      Play.filters, Play.ws, Play.twirl, Play.test, Play.mailer, Play.mailerGuice
     )
   }
 
@@ -28,7 +28,7 @@ object Site {
     resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= dependencies,
 
-    libraryDependencies ++= Seq(Dependencies.Utils.crypto, Dependencies.Utils.enumeratum),
+    libraryDependencies ++= Seq(Dependencies.Utils.enumeratum),
 
     routesGenerator := InjectedRoutesGenerator,
 

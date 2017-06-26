@@ -42,7 +42,7 @@ object TableManager extends TableDetailHelper {
           openTables = openTables - name
         }
 
-        TabManager.addTab(queryId, "table-" + name, name, Icons.table, close)
+        TabManager.addTab(queryId, "table-" + name, name, Icons.table, close _)
 
         val queryPanel = $(s"#panel-$queryId")
 

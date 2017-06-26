@@ -2,10 +2,8 @@ package services.database.transaction
 
 import models.database.Transaction
 
-import scala.collection.mutable
-
 class TransactionManager extends TransactionProvider {
-  case class TransactionState(transactions: mutable.Stack[Transaction])
+  case class TransactionState(var transactions: List[Transaction])
 
   private val localTransactionStorage = new ThreadLocal[Option[TransactionState]] {
     override def initialValue = None
@@ -25,16 +23,16 @@ class TransactionManager extends TransactionProvider {
 
   override def begin(transaction: Transaction) = {
     if (!transactionExists) {
-      localTransactionStorage.set(Some(TransactionState(mutable.Stack(transaction))))
+      localTransactionStorage.set(Some(TransactionState(List(transaction))))
     } else {
-      currentTransactionState.transactions.push(transaction)
+      currentTransactionState.transactions = currentTransactionState.transactions :+ transaction
     }
   }
 
   override def end() = if (!transactionExists) {
     throw new Exception("No transaction in current context")
   } else {
-    currentTransactionState.transactions.pop
+    currentTransactionState.transactions = currentTransactionState.transactions.dropRight(1)
     if (currentTransactionState.transactions.isEmpty) {
       localTransactionStorage.set(None)
     }

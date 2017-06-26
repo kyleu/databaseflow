@@ -4,7 +4,7 @@ import java.util.UUID
 
 import controllers.BaseController
 import models.user.User
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import play.api.libs.json._
 import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.playJson._

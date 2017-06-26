@@ -18,11 +18,15 @@ class ActivityController @javax.inject.Inject() (override val ctx: ApplicationCo
 
   def removeAudit(id: UUID) = withAdminSession("admin-remove-audit") { implicit request =>
     AuditRecordService.removeAudit(id, None)
-    Future.successful(Redirect(controllers.admin.routes.ActivityController.activity()).flashing("success" -> messagesApi("activity.remove.confirm", id)))
+    Future.successful(Redirect(controllers.admin.routes.ActivityController.activity()).flashing("success" -> messagesApi("activity.remove.confirm", id)(
+      request.lang
+    )))
   }
 
   def removeAllAudits() = withAdminSession("admin-remove-audit") { implicit request =>
     AuditRecordService.deleteAll()
-    Future.successful(Redirect(controllers.admin.routes.ActivityController.activity()).flashing("success" -> messagesApi("activity.remove.all.confirm")))
+    Future.successful(Redirect(controllers.admin.routes.ActivityController.activity()).flashing("success" -> messagesApi("activity.remove.all.confirm")(
+      request.lang
+    )))
   }
 }

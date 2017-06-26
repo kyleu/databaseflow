@@ -81,6 +81,6 @@ object InitService {
   }
 
   def installTimers() = {
-    dom.window.setInterval(TemplateUtils.relativeTime _, 1000)
+    dom.window.setInterval(() => TemplateUtils.relativeTime(), 1000)
   }
 }

@@ -34,6 +34,6 @@ object QueryCheckService extends Logging {
     }
     def onSuccess(rm: ResponseMessage) = out ! rm
     def onFailure(t: Throwable) = ExceptionUtils.actorErrorFunction(out, "CheckSqlError", t)
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 }

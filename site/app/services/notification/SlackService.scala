@@ -1,6 +1,6 @@
 package services.notification
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
 import upickle.Js
 import utils.Logging

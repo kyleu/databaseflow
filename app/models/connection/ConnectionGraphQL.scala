@@ -8,7 +8,7 @@ import models.user.Permission
 import sangria.schema._
 import services.query.{SavedQueryService, SharedResultService, SimpleQueryService}
 import services.schema.SchemaService
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.explore.ExploreService
 
 object ConnectionGraphQL {

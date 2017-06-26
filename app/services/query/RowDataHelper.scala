@@ -57,6 +57,6 @@ object RowDataHelper extends Logging {
     }
     def onSuccess(rm: ResponseMessage) = out.foreach(_ ! rm)
     def onFailure(t: Throwable) = out.foreach(o => ExceptionUtils.actorErrorFunction(o, "ShowDataError", t))
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 }

@@ -1,6 +1,6 @@
 package services.supervisor
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
 import utils.Logging
 

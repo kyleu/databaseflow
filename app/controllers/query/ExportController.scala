@@ -8,6 +8,7 @@ import models.engine.EngineQueries
 import models.queries.export.CsvExportQuery
 import models.query.QueryResult
 import models.user.User
+import play.api.i18n.Lang
 import services.database.DatabaseRegistry
 import services.database.core.ResultCacheDatabase
 import services.query.SharedResultService
@@ -23,11 +24,13 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
   def exportQuery(connectionId: UUID) = withSession("export") { implicit request =>
     val form = FormUtils.getForm(request)
 
-    val sourceJson = form.getOrElse("source", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "resultId")))
+    val sourceJson = form.getOrElse("source", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "resultId")(
+      request.lang(ctx.messagesApi)
+    )))
     val source = read[QueryResult.Source](sourceJson)
-    val format = form.getOrElse("format", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "format")))
+    val format = form.getOrElse("format", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "format")(request.lang(ctx.messagesApi))))
 
-    send(Some(request.identity), connectionId, source, format)
+    send(Some(request.identity), connectionId, source, format, request.lang(ctx.messagesApi))
   }
 
   def exportShared(id: UUID, format: String) = withoutSession("export.shared") { implicit request =>
@@ -35,7 +38,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
       case Some(sr) =>
         val perm = SharedResultService.canView(request.identity, sr)
         if (perm._1) {
-          send(request.identity, sr.connectionId, sr.source, format)
+          send(request.identity, sr.connectionId, sr.source, format, request.lang(ctx.messagesApi))
         } else {
           Future.successful(Unauthorized(s"You do not have permission to export the results you requested. ${perm._2}"))
         }
@@ -43,7 +46,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     }
   }
 
-  private[this] def send(user: Option[User], connectionId: UUID, source: QueryResult.Source, format: String) = {
+  private[this] def send(user: Option[User], connectionId: UUID, source: QueryResult.Source, format: String, lang: Lang) = {
     val db = if (source.t == "cache") {
       ResultCacheDatabase.conn
     } else {
@@ -63,7 +66,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val (sql, values: Seq[Any]) = EngineQueries.selectFrom(source.name, source.asRowDataOptions(None))(db.engine)
     val (mimeType, query) = format match {
       case "csv" => "text/csv" -> CsvExportQuery(sql, values, os)
-      case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format))
+      case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format)(lang))
     }
     try {
       db.query(query)
@@ -74,7 +77,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
       case NonFatal(ex) =>
         os.close()
         log.warn(s"Unable to export query for source [$source].", ex)
-        Future.successful(InternalServerError(messagesApi("error.exception.encountered", ex.getClass.getSimpleName, ex.getMessage)))
+        Future.successful(InternalServerError(messagesApi("error.exception.encountered", ex.getClass.getSimpleName, ex.getMessage)(lang)))
     }
   }
 }

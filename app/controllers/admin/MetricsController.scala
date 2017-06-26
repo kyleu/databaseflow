@@ -2,13 +2,13 @@ package controllers.admin
 
 import controllers.BaseController
 import utils.ApplicationContext
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 
 @javax.inject.Singleton
 class MetricsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
   def showMetrics = withAdminSession("admin-metrics") { implicit request =>
     val url = "http://localhost:4261/metrics?pretty=true"
-    val call = ctx.ws.url(url).withHeaders("Accept" -> "application/json")
+    val call = ctx.ws.url(url).withHttpHeaders("Accept" -> "application/json")
     val f = call.get()
 
     f.map { json =>

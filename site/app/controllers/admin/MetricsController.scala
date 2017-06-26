@@ -2,7 +2,7 @@ package controllers.admin
 
 import controllers.BaseSiteController
 import play.api.i18n.MessagesApi
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
 
 @javax.inject.Singleton

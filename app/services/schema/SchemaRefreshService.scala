@@ -31,7 +31,7 @@ object SchemaRefreshService extends Logging {
           onSuccess(schema)
         }
 
-        DatabaseWorkerPool.submitWork(work, onSuccessMapped, onFailure)
+        DatabaseWorkerPool.submitWork(work _, onSuccessMapped, onFailure)
       case None => throw new IllegalStateException(s"Attempted to refresh schema [$db.connectionId], which is not loaded.")
     }
   }

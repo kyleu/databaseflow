@@ -41,7 +41,7 @@ object ViewManager extends ViewDetailHelper {
         openViews = openViews - name
       }
 
-      TabManager.addTab(queryId, "view-" + name, name, Icons.view, close)
+      TabManager.addTab(queryId, "view-" + name, name, Icons.view, close _)
 
       val queryPanel = $(s"#panel-$queryId")
 

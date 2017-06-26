@@ -28,7 +28,7 @@ object HistoryManager {
         isOpen = false
       }
 
-      TabManager.addTab(historyId, "history", "Query History", Icons.history, close)
+      TabManager.addTab(historyId, "history", "Query History", Icons.history, close _)
       QueryManager.activeQueries = QueryManager.activeQueries :+ historyId
 
       val queryPanel = $(s"#panel-$historyId")

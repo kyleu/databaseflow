@@ -21,11 +21,15 @@ class ResultCacheController @javax.inject.Inject() (override val ctx: Applicatio
 
   def removeResult(id: UUID) = withAdminSession("admin-remove-result") { implicit request =>
     CachedResultService.remove(id)
-    Future.successful(Redirect(controllers.admin.routes.ResultCacheController.results()).flashing("success" -> messagesApi("result.remove.confirm", id)))
+    Future.successful(Redirect(controllers.admin.routes.ResultCacheController.results()).flashing("success" -> messagesApi("result.remove.confirm", id)(
+      request.lang
+    )))
   }
 
   def removeOrphan(id: String) = withAdminSession("admin-remove-orphan") { implicit request =>
     ResultCacheDatabase.conn.executeUpdate(DdlQueries.DropTable(id)(ResultCacheDatabase.conn.engine))
-    Future.successful(Redirect(controllers.admin.routes.ResultCacheController.results()).flashing("success" -> messagesApi("result.remove.orphan", id)))
+    Future.successful(Redirect(controllers.admin.routes.ResultCacheController.results()).flashing("success" -> messagesApi("result.remove.orphan", id)(
+      request.lang
+    )))
   }
 }

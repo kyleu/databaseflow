@@ -11,7 +11,7 @@ import models.parse.StatementParser
 import models.queries.result.CachedResultQueries
 import models.query.{QueryResult, SavedQuery, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.audit.AuditRecordService
 import services.database.DatabaseWorkerPool
 import services.database.core.MasterDatabase
@@ -84,7 +84,7 @@ object QueryExecutionService extends Logging {
       ExceptionUtils.actorErrorFunction(out, "StatementError", t)
     }
 
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   def handleCancelQuery(queryId: UUID, resultId: UUID, out: ActorRef) = {

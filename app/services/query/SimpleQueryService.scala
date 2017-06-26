@@ -9,7 +9,7 @@ import models.database.Queryable
 import models.queries.dynamic.DynamicQuery
 import models.query.QueryResult
 import models.user.User
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.audit.AuditRecordService
 import services.database.DatabaseRegistry
 import utils.{DateUtils, Logging}

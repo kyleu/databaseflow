@@ -31,7 +31,7 @@ object RowUpdateService extends Logging {
     }
     def onSuccess(rm: ResponseMessage) = out ! rm
     def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, Nil, 0, Map("general" -> t.getMessage))
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   def update(connectionId: UUID, user: User, name: String, pk: Seq[(String, String)], params: Map[String, String], resultId: UUID, out: ActorRef) = {
@@ -46,6 +46,6 @@ object RowUpdateService extends Logging {
     }
     def onSuccess(rm: ResponseMessage) = out ! rm
     def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, pk, 0, Map("general" -> t.getMessage))
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 }

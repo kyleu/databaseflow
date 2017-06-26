@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.{QueryResult, RowDataOptions}
 import models.result.QueryResultRow
 import models.user.User
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 
 object QueryResultRowService {
   def getTableData(user: User, connectionId: UUID, name: String, rdo: RowDataOptions) = {

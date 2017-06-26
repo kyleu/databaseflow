@@ -25,7 +25,7 @@ class GraphQLQueryController @javax.inject.Inject() (override val ctx: Applicati
 
   def save(conn: UUID) = withSession("graphql.save") { implicit request =>
     val result = GraphQLForm.form.bindFromRequest.fold(
-      formWithErrors => BadRequest(formWithErrors.value.map(_.name).getOrElse(messagesApi("Unknown error"))),
+      formWithErrors => BadRequest(formWithErrors.value.map(_.name).getOrElse(messagesApi("Unknown error")(request.lang))),
       gqlf => {
         val gqlOpt = gqlf.id.map(id => GraphQLQueryService.getById(id, Some(request.identity)).getOrElse(throw new IllegalStateException("Not allowed.")))
         val gql = gqlOpt.getOrElse(GraphQLQuery.empty(request.identity.id))

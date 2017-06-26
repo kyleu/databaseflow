@@ -43,7 +43,7 @@ object ModelListManager {
         openLists = openLists - key
       }
 
-      TabManager.addTab(queryId, "list-" + key, name, Icons.list, close)
+      TabManager.addTab(queryId, "list-" + key, name, Icons.list, close _)
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       val queryPanel = $(s"#panel-$queryId")

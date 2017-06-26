@@ -34,7 +34,7 @@ object Packaging {
 
     // Windows settings
     mappings in Windows := (mappings in Windows).value.filterNot(isConf),
-    makeBatScript := Some(file("./src/deploy/package/windows/databaseflow.bat")),
+    // TODO makeBatScript := Some(file("./src/deploy/package/windows/databaseflow.bat")),
     topLevelDirectory in Windows := Some("DatabaseFlow"),
     wixProductId := "5fee44ae-0989-429b-9b1a-de8ec7dd9af5",
     wixProductUpgradeId := "6d353c6a-6f39-48f1-afa8-2c5eb726a8b8",

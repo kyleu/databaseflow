@@ -10,16 +10,21 @@ object Dependencies {
   }
 
   object Play {
-    private[this] val version = "2.5.15"
-    val playLib = "com.typesafe.play" %% "play" % version
-    val playFilters = play.sbt.PlayImport.filters
-    val playWs = play.sbt.PlayImport.ws
-    val playTest = "com.typesafe.play" %% "play-test" % version % "test"
-    val playMailer = "com.typesafe.play" %% "play-mailer" % "5.0.0"
+    private[this] val version = "2.6.0"
+    val lib = "com.typesafe.play" %% "play" % version
+    val filters = play.sbt.PlayImport.filters
+    val ws = play.sbt.PlayImport.ws
+    val guice = play.sbt.PlayImport.guice
+    val json = "com.typesafe.play" %% "play-json" % version
+    val test = "com.typesafe.play" %% "play-test" % version % "test"
+    val twirl = "com.typesafe.play" %% "twirl-api" % "1.3.3"
+
+    val mailer = "com.typesafe.play" %% "play-mailer" % "6.0.0"
+    val mailerGuice = "com.typesafe.play" %% "play-mailer-guice" % "6.0.0"
   }
 
   object Akka {
-    private[this] val version = "2.5.2"
+    private[this] val version = "2.5.3"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -30,7 +35,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "4.0.0"
+    private[this] val version = "5.0.0-SNAPSHOT"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -38,15 +43,15 @@ object Dependencies {
   }
 
   object Jdbc {
-    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.2"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "2.6.3"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
-    val h2 = "com.h2database" % "h2" % "1.4.195"
+    val h2 = "com.h2database" % "h2" % "1.4.196"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
     val mysql = "mysql" % "mysql-connector-java" % "5.1.42" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.18.0"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.19.3"
     val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.7.jre8-preview"
   }
 
@@ -69,12 +74,12 @@ object Dependencies {
 
   object Metrics {
     val version = "3.2.2"
-    val metrics = "nl.grons" %% "metrics-scala" % "3.5.6"
+    val metrics = "nl.grons" %% "metrics-scala" % "3.5.8"
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % version
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % version intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % version intransitive()
     val json = "io.dropwizard.metrics" % "metrics-json" % version exclude("com.fasterxml.jackson.core", "jackson-databind")
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.5.v20170502"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.6.v20170531"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % version intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % version intransitive()
   }
@@ -90,16 +95,15 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.2.1"
-    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.0"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.2.2"
+    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.2"
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.0"
+    val scapegoatVersion = "1.3.1"
     val enumeratumVersion = "1.5.11"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
-    val crypto = "xyz.wiedenhoeft" %% "scalacrypt" % "0.4.0"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
     val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"

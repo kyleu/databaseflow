@@ -10,7 +10,7 @@ import models.queries.result.CachedResultQueries
 import models.query.RowDataOptions
 import models.schema.{ForeignKey, PrimaryKey}
 import models.user.User
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.SchemaService

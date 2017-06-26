@@ -18,7 +18,7 @@ trait DetailHelper { this: SocketService =>
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "TableDetail", x)
     }
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   protected[this] def handleGetProcedureDetail(name: String) = SchemaService.getProcedure(connectionId, name).foreach { p =>
@@ -31,7 +31,7 @@ trait DetailHelper { this: SocketService =>
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "ProcedureDetail", x)
     }
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   protected[this] def handleGetViewDetail(name: String) = SchemaService.getView(connectionId, name).foreach { v =>
@@ -44,7 +44,7 @@ trait DetailHelper { this: SocketService =>
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "ViewDetail", x)
     }
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   protected[this] def handleGetColumnDetail(owner: String, name: String, t: String) = {
@@ -61,7 +61,7 @@ trait DetailHelper { this: SocketService =>
     def onFailure(x: Throwable) = {
       ExceptionUtils.actorErrorFunction(out, "ColumnDetail", x)
     }
-    DatabaseWorkerPool.submitWork(work, onSuccess, onFailure)
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   protected[this] def handleSocketTrace() = {
@@ -78,7 +78,6 @@ trait DetailHelper { this: SocketService =>
     case Some(dc) =>
       val json = upickle.json.read(data)
       dc ! ClientTraceResponse(id, json)
-    case None =>
-      log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active connection.")
+    case None => log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active connection.")
   }
 }

@@ -1,13 +1,13 @@
 package controllers
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.InjectedController
 import services.translation.TranslationService
+import utils.FutureUtils.defaultContext
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class TranslationController @javax.inject.Inject() (translationService: TranslationService) extends Controller {
+class TranslationController @javax.inject.Inject() (translationService: TranslationService) extends InjectedController {
   val apiProvider = "google"
 
   def index = Action.async {
@@ -19,7 +19,7 @@ class TranslationController @javax.inject.Inject() (translationService: Translat
   def site = translate("./site/conf")
   def test = translate("./tmp/messagetest")
 
-  private[this] def translate(s: String) = Action.async { request =>
+  private[this] def translate(s: String) = Action.async(parse.anyContent) { request =>
     val force = request.queryString.get("force").flatMap(_.headOption).contains("true")
     val root = new java.io.File(s)
     val keys = translationService.translateAll(apiProvider, root, force)

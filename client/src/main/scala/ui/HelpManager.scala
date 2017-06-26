@@ -29,7 +29,7 @@ object HelpManager {
         isOpen = false
       }
 
-      TabManager.addTab(helpId, "help", "Help", Icons.help, close)
+      TabManager.addTab(helpId, "help", "Help", Icons.help, close _)
       QueryManager.activeQueries = QueryManager.activeQueries :+ helpId
 
       val queryPanel = $(s"#panel-$helpId")

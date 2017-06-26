@@ -8,7 +8,7 @@ import com.mohiva.play.silhouette.api.{LoginInfo, SignUpEvent}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.user.{Role, User, UserPreferences}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.user.UserService
 import utils.ApplicationContext
 import utils.web.FormUtils
@@ -37,9 +37,13 @@ class UserCreateController @javax.inject.Inject() (
     val username = form("username").trim
 
     if (username.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> messagesApi("error.empty", "Username")))
+      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> messagesApi("error.empty", "Username")(
+        request.lang
+      )))
     } else if (loginInfo.providerKey.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> messagesApi("error.empty", "Email Address")))
+      Future.successful(Redirect(controllers.admin.routes.UserCreateController.newUser()).flashing("error" -> messagesApi("error.empty", "Email Address")(
+        request.lang
+      )))
     } else {
       val user = User(
         id = id,
@@ -51,7 +55,7 @@ class UserCreateController @javax.inject.Inject() (
       val userSaved = userService.save(user)
       val authInfo = hasher.hash(form("password"))
       for {
-        authInfo <- authInfoRepository.add(loginInfo, authInfo)
+        _ <- authInfoRepository.add(loginInfo, authInfo)
         authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
         value <- ctx.silhouette.env.authenticatorService.init(authenticator)
       } yield {

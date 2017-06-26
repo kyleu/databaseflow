@@ -8,7 +8,7 @@ import controllers.BaseController
 import models.audit.AuditType
 import models.user.{Role, UserForms}
 import play.api.i18n.{Lang, Messages}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.audit.AuditRecordService
 import services.settings.SettingsService
 import services.user.UserSearchService
@@ -40,7 +40,7 @@ class AuthenticationController @javax.inject.Inject() (
           userSearchService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               if ((!SettingsService.allowSignIn) && (user.role != Role.Admin)) {
-                Future.failed(new IdentityNotFoundException(messagesApi("error.sign.in.disabled")))
+                Future.failed(new IdentityNotFoundException(messagesApi("error.sign.in.disabled")(request.lang)))
               } else {
                 ctx.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
                   ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
@@ -50,11 +50,13 @@ class AuthenticationController @javax.inject.Inject() (
                   }
                 }
               }
-            case None => Future.failed(new IdentityNotFoundException(messagesApi("error.missing.user", loginInfo.providerID)))
+            case None => Future.failed(new IdentityNotFoundException(messagesApi("error.missing.user", loginInfo.providerID)(request.lang)))
           }
         }.recover {
           case e: ProviderException =>
-            Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing("error" -> Messages("authentication.invalid.credentials"))
+            Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing("error" -> messagesApi("authentication.invalid.credentials")(
+              request.lang
+            ))
         }
       }
     )

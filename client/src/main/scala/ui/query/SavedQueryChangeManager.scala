@@ -31,7 +31,7 @@ trait SavedQueryChangeManager {
       }
     }
 
-    TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close)
+    TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close _)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
     TemplateUtils.clickHandler($(".settings-query-link", queryPanel), jq => SavedQueryFormManager.show(savedQuery.copy(

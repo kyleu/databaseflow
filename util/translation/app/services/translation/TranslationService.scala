@@ -2,7 +2,7 @@ package services.translation
 
 import java.io.{File, PrintWriter}
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.translation.api.{BingApi, GoogleApi, YandexApi}
 
 import scala.concurrent.Future

@@ -38,7 +38,7 @@ object ProcedureManager {
         openProcedures = openProcedures - name
       }
 
-      TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure, close)
+      TabManager.addTab(queryId, "procedure-" + name, name, Icons.procedure, close _)
 
       val queryPanel = $(s"#panel-$queryId")
 

@@ -21,18 +21,18 @@ class UserEditController @javax.inject.Inject() (
   }
 
   def view(id: UUID) = withAdminSession("admin-user-view") { implicit request =>
-    val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(messagesApi("error.invalid.user", id)))
+    val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(messagesApi("error.invalid.user", id)(request.lang)))
     Future.successful(Ok(views.html.admin.user.view(request.identity, user)))
   }
 
   def edit(id: UUID) = withAdminSession("admin-user-edit") { implicit request =>
-    val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(messagesApi("error.invalid.user", id)))
+    val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(messagesApi("error.invalid.user", id)(request.lang)))
     Future.successful(Ok(views.html.admin.user.edit(request.identity, user)))
   }
 
   def save(id: UUID) = withAdminSession("admin-user-save") { implicit request =>
     val form = FormUtils.getForm(request)
-    val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(messagesApi("error.invalid.user", id)))
+    val user = userSearchService.retrieve(id).getOrElse(throw new IllegalStateException(messagesApi("error.invalid.user", id)(request.lang)))
     val isSelf = request.identity.id == id
 
     val newUsername = form("username")
@@ -48,11 +48,13 @@ class UserEditController @javax.inject.Inject() (
     }
 
     if (newUsername.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Username")))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Username")(request.lang)))
     } else if (newEmail.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Email Address")))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Email Address")(
+        request.lang
+      )))
     } else if (isSelf && (role != Role.Admin) && user.role == Role.Admin) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.remove.self")))
+      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.remove.self")(request.lang)))
     } else {
       userService.update(id, newUsername, newEmail, newPassword, role, user.profile.providerKey)
       Future.successful(Redirect(controllers.admin.routes.UserEditController.view(id)))

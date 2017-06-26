@@ -6,12 +6,11 @@ import akka.actor.ActorRef
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.queries.audit.{AuditRecordQueries, AuditReportQueries}
 import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory, RemoveAuditHistory}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import services.database.core.MasterDatabase
 import utils.{DateUtils, Logging}
 
 import scala.concurrent.Future
-import scala.util.control.NonFatal
 
 object AuditRecordService extends Logging {
   val rowLimit = 100
@@ -78,9 +77,7 @@ object AuditRecordService extends Logging {
 
   def insert(auditRecord: AuditRecord) = Future {
     MasterDatabase.executeUpdate(AuditRecordQueries.insert(auditRecord))
-  }.onFailure {
-    case NonFatal(x) => log.warn(s"Unable to log audit [$auditRecord].", x)
-  }
+  }.failed.foreach(x => log.warn(s"Unable to log audit [$auditRecord].", x))
 
   def delete(id: UUID) = MasterDatabase.executeUpdate(AuditRecordQueries.removeById(id))
   def deleteAllForUser(userId: UUID, connectionId: Option[UUID]) = {

@@ -2,7 +2,7 @@ package services.result
 
 import akka.actor.Props
 import org.joda.time.LocalDateTime
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import utils.FutureUtils.defaultContext
 import utils.Logging
 import utils.metrics.InstrumentedActor
 

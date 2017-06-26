@@ -14,12 +14,12 @@ object Shared {
 
   object Versions {
     val app = "1.0.0"
-    val scala = "2.11.11"
+    val scala = "2.12.2"
   }
 
   val compileOptions = Seq(
     "target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-    "–Xcheck-null", "-Xfatal-warnings", "-Xlint", "-Xcheckinit", "-Xfuture",
+    "–Xcheck-null", "-Xfatal-warnings", /* "-Xlint", */ "-Xcheckinit", "-Xfuture",
     "-Yno-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
   )
 
