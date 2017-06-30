@@ -1,10 +1,6 @@
 import sbt._
 
 object Dependencies {
-  object Cache {
-    val ehCache = "net.sf.ehcache" % "ehcache-core" % "2.6.11" exclude("org.slf4j", "slf4j-api")
-  }
-
   object Logging {
     val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.25"
   }
@@ -15,6 +11,7 @@ object Dependencies {
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
+    val cache = play.sbt.PlayImport.ehcache
     val json = "com.typesafe.play" %% "play-json" % version
     val test = "com.typesafe.play" %% "play-test" % version % "test"
     val twirl = "com.typesafe.play" %% "twirl-api" % "1.3.3"
@@ -73,8 +70,8 @@ object Dependencies {
   }
 
   object Metrics {
-    val version = "3.2.2"
-    val metrics = "nl.grons" %% "metrics-scala" % "3.5.8"
+    val version = "3.2.3"
+    val metrics = "nl.grons" %% "metrics-scala" % "3.5.9"
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % version
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % version intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % version intransitive()
@@ -82,11 +79,6 @@ object Dependencies {
     val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.6.v20170531"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % version intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % version intransitive()
-  }
-
-  object Commerce {
-    val stripeVersion = "2.10.0"
-    val stripe = "com.stripe" % "stripe-java" % stripeVersion
   }
 
   object ScalaJS {
