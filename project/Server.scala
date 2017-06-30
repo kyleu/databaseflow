@@ -42,6 +42,8 @@ object Server {
 
     resolvers += Resolver.jcenterRepo,
     resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/",
+    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+
     libraryDependencies ++= dependencies,
 
     scalaJSProjects := Seq(Client.client, Client.charting),
