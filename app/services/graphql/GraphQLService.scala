@@ -28,7 +28,8 @@ object GraphQLService {
   }
 }
 
-case class GraphQLService(app: ApplicationContext) {
+@javax.inject.Singleton
+case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
   private[this] val schemas = collection.mutable.HashMap.empty[UUID, (ConnectionSettings, ConnectionGraphQLSchema)]
 
   def getConnectionSchema(user: User, connectionId: UUID) = {
