@@ -1,11 +1,11 @@
 package models.graphql
 
-import models.schema.Column
+import models.schema.ColumnType
 
 object ColumnGraphQL {
-  def getColumnField(col: Column) = if (col.notNull) {
-    ColumnNotNullGraphQL.getColumnField(col, CommonGraphQL.cleanName(col.name))
+  def getColumnField(name: String, colName: String, description: Option[String], columnType: ColumnType, notNull: Boolean) = if (notNull) {
+    ColumnNotNullGraphQL.getColumnField(colName, description, columnType, name)
   } else {
-    ColumnNullableGraphQL.getColumnField(col, CommonGraphQL.cleanName(col.name))
+    ColumnNullableGraphQL.getColumnField(colName, description, columnType, name)
   }
 }

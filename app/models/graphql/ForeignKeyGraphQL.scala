@@ -1,26 +1,11 @@
 package models.graphql
 
-import models.result.QueryResultRow
-import models.schema.ForeignKey
-import sangria.schema.{Context, Field}
-import sangria.schema._
+import models.schema.{ForeignKey, Table}
 
 object ForeignKeyGraphQL {
-  def getForeignKeyField(fk: ForeignKey) = {
-    Field(
-      name = CommonGraphQL.cleanName(fk.name),
-      fieldType = StringType,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => getStringValue(getValue(fk, x.value))
-    )
-  }
-
-  private[this] def getStringValue(x: Seq[Option[String]]) = {
-    x.map(_.getOrElse("--")).mkString(", ")
-  }
-
-  private[this] def getValue(fk: ForeignKey, row: QueryResultRow) = {
-    fk.references.map { r =>
-      row.getCell(r.source)
-    }
+  def getForeignKeyField(schema: models.schema.Schema, table: Table, fk: ForeignKey) = {
+    val firstRef = fk.references.headOption.getOrElse(throw new IllegalStateException("No references!"))
+    val col = table.columns.find(_.name.equalsIgnoreCase(firstRef.source)).getOrElse(throw new IllegalStateException(s"Missing column [${firstRef.source}]."))
+    ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(fk.name), col.name, col.description, col.columnType, col.notNull)
   }
 }

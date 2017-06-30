@@ -1,6 +1,6 @@
 package services.explore
 
-import models.graphql.{ColumnGraphQL, GraphQLContext}
+import models.graphql.{ColumnGraphQL, CommonGraphQL, GraphQLContext}
 import models.result.QueryResultGraphQL._
 import models.result.QueryResultRow
 import models.schema.SchemaModelGraphQL
@@ -12,7 +12,9 @@ object ExploreViewHelper {
     None
   } else {
     val viewTypes = schema.views.map { view =>
-      val fieldset = fields[GraphQLContext, QueryResultRow](view.columns.map(col => ColumnGraphQL.getColumnField(col)): _*)
+      val fieldset = fields[GraphQLContext, QueryResultRow](view.columns.map { col =>
+        ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull)
+      }: _*)
       view -> ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
     }
 

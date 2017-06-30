@@ -22,4 +22,8 @@ case class Schema(
   procedures: Seq[Procedure],
 
   detailsLoadedAt: Option[Long] = None
-)
+) {
+  def getTable(name: String) = tables.find(_.name.equalsIgnoreCase(name))
+  def getView(name: String) = views.find(_.name.equalsIgnoreCase(name))
+  def getProcedure(name: String) = procedures.find(_.name.equalsIgnoreCase(name))
+}

@@ -1,6 +1,6 @@
 package services.explore
 
-import models.graphql.{ColumnGraphQL, ForeignKeyGraphQL, GraphQLContext}
+import models.graphql.{ColumnGraphQL, CommonGraphQL, ForeignKeyGraphQL, GraphQLContext}
 import models.result.QueryResultGraphQL._
 import models.result.QueryResultRow
 import models.schema.SchemaModelGraphQL
@@ -12,8 +12,10 @@ object ExploreTableHelper {
     None
   } else {
     val tableTypes = schema.tables.map { table =>
-      val columnFields = table.columns.map(col => ColumnGraphQL.getColumnField(col))
-      val fkFields = table.foreignKeys.map(fk => ForeignKeyGraphQL.getForeignKeyField(fk))
+      val columnFields = table.columns.map { col =>
+        ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull)
+      }
+      val fkFields = table.foreignKeys.map(fk => ForeignKeyGraphQL.getForeignKeyField(schema, table, fk))
       val tableFieldset = fields[GraphQLContext, QueryResultRow](columnFields ++ fkFields: _*)
       table -> ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fields = tableFieldset)
     }
