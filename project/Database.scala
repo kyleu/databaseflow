@@ -4,7 +4,7 @@ import sbt._
 object Database {
   private[this] val dependencies = {
     import Dependencies._
-    Seq(Logging.slf4jApi, Jdbc.hikariCp, Jdbc.h2, Jdbc.mysql, Jdbc.postgres, Jdbc.sqlite, Jdbc.sqlServer)
+    Seq(Jdbc.hikariCp, Jdbc.h2, Jdbc.mysql, Jdbc.postgres, Jdbc.sqlite, Jdbc.sqlServer)
   }
 
   private[this] lazy val dblibsSettings = Shared.commonSettings ++ Seq(name := "Database Library", libraryDependencies ++= dependencies)
