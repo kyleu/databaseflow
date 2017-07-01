@@ -33,7 +33,7 @@ object ConnectionGraphQL {
       name = "explore",
       description = Some("Database objects in an easily-explored graph for this connection."),
       fieldType = ExploreService.exploreType(cs),
-      resolve = c => ExploreService.resolve(c.ctx.user, cs)
+      resolve = c => SchemaService.getSchemaWithDetailsFor(c.ctx.user, cs)
     ),
     Field(
       name = "schema",
@@ -61,6 +61,15 @@ object ConnectionGraphQL {
       description = Some("Returns the saved queries available for this connection."),
       fieldType = ListType(QueryResultGraphQL.savedQueryType),
       resolve = c => SavedQueryService.getForUser(c.ctx.user, cs.id, None)
+    )
+  )
+
+  def mutationFieldsForConnection(cs: ConnectionSettings) = fields[GraphQLContext, Unit](
+    Field(
+      name = "tables",
+      fieldType = StringType,
+      description = Some("The tables of this database."),
+      resolve = c => "Hello!"
     )
   )
 }

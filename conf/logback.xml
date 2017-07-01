@@ -1,16 +1,12 @@
 <configuration>
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
+
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <charset>UTF-8</charset>
-      <pattern>%msg%n%xException</pattern>
+      <pattern>%-5coloredLevel %d{HH:mm:ss.SSS} %cyan(%logger{15}): %msg%n%xException</pattern>
     </encoder>
   </appender>
-
-  <logger name="play" level="WARN" />
-  <logger name="application" level="WARN" />
-  <logger name="databaseflow" level="WARN" />
-
-  <logger name="com.mohiva" level="INFO" />
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
   <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF" />
@@ -18,7 +14,7 @@
   <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
   <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
 
-  <root level="WARN">
+  <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

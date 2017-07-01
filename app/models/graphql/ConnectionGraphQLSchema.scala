@@ -5,15 +5,20 @@ import sangria.renderer.SchemaRenderer
 import sangria.schema._
 
 case class ConnectionGraphQLSchema(cs: ConnectionSettings) {
-  val queryFields = ConnectionGraphQL.queryFieldsForConnection(cs)
-
   val queryType = ObjectType(
     name = "Query",
     description = s"The main query interface for [${cs.name}].",
-    fields = queryFields
+    fields = ConnectionGraphQL.queryFieldsForConnection(cs)
   )
 
-  val schema = sangria.schema.Schema(query = queryType)
+  val mutationType = ObjectType(
+    name = "Mutation",
+    description = s"The main mutation interface for [${cs.name}].",
+    fields = ConnectionGraphQL.mutationFieldsForConnection(cs)
+  )
+
+  val schema = sangria.schema.Schema(query = queryType, mutation = None)
+  //val schema = sangria.schema.Schema(query = queryType, mutation = Some(mutationType))
 
   lazy val renderedSchema = SchemaRenderer.renderSchema(schema)
 }

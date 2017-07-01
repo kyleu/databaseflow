@@ -47,12 +47,6 @@ object ExploreService {
       case (None, None) => fields[GraphQLContext, models.schema.Schema]()
     }
 
-    val explore = ObjectType(name = "explore", description = "Explore this database's objects in a simple graph.", fields = exploreFields)
-
-    explore
-  }
-
-  def resolve(user: User, cs: ConnectionSettings) = {
-    SchemaService.getSchemaWithDetailsFor(user, cs)
+    ObjectType(name = "explore", description = "Explore this database's objects in a simple graph.", fields = exploreFields)
   }
 }
