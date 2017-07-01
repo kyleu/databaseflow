@@ -23,4 +23,5 @@ GET         /activity/remove/all        controllers.admin.ActivityController.rem
 GET         /activity/remove/:id        controllers.admin.ActivityController.removeAudit(id: java.util.UUID)
 
 GET         /sandbox                    controllers.admin.SandboxController.list
+GET         /export/:conn               controllers.admin.SandboxController.export(conn)
 GET         /sandbox/:key               controllers.admin.SandboxController.sandbox(key)

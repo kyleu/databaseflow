@@ -3,6 +3,9 @@ package controllers.admin
 import akka.util.Timeout
 import controllers.BaseController
 import models.sandbox.SandboxTask
+import services.connection.ConnectionSettingsService
+import services.scalaexport.ScalaExportService
+import services.schema.SchemaService
 import utils.FutureUtils.defaultContext
 import utils.ApplicationContext
 
@@ -21,6 +24,17 @@ class SandboxController @javax.inject.Inject() (override val ctx: ApplicationCon
     val sandbox = SandboxTask.withName(key)
     sandbox.run(ctx).map { result =>
       Ok(views.html.admin.sandbox.run(request.identity, sandbox, result))
+    }
+  }
+
+  def export(conn: String) = withAdminSession("sandbox.export") { implicit request =>
+    ConnectionSettingsService.connFor(conn) match {
+      case Some(cs) => SchemaService.getSchemaWithDetails(cs).flatMap { schema =>
+        ScalaExportService.export(schema).map { result =>
+          Ok(result.toString)
+        }
+      }
+      case None => throw new IllegalStateException(s"Invalid connection [$conn].")
     }
   }
 }

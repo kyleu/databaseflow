@@ -8,7 +8,7 @@ import services.query.QueryResultRowService
 object ForeignKeyGraphQL {
   def getForeignKeyField(schema: models.schema.Schema, tableTypes: Seq[(Table, ObjectType[GraphQLContext, QueryResultRow])], table: Table, fk: ForeignKey) = {
     val tableType = tableTypes.find(_._1.name.equalsIgnoreCase(fk.targetTable)).map(_._2).getOrElse {
-      throw new IllegalStateException("Missing output type for [].")
+      throw new IllegalStateException(s"Missing output type for [${table.name}].")
     }
     val whereClause = fk.references.map(r => s"${r.target} = ?").mkString(" and ")
 

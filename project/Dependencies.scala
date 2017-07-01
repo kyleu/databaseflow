@@ -95,6 +95,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
     val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "2.17.1"
   }
 
   object Testing {
