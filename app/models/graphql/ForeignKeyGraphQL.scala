@@ -1,11 +1,25 @@
 package models.graphql
 
+import models.result.QueryResultRow
 import models.schema.{ForeignKey, Table}
+import sangria.schema.{Context, Field, ObjectType, ListType}
+import services.query.QueryResultRowService
 
 object ForeignKeyGraphQL {
-  def getForeignKeyField(schema: models.schema.Schema, table: Table, fk: ForeignKey) = {
-    val firstRef = fk.references.headOption.getOrElse(throw new IllegalStateException("No references!"))
-    val col = table.columns.find(_.name.equalsIgnoreCase(firstRef.source)).getOrElse(throw new IllegalStateException(s"Missing column [${firstRef.source}]."))
-    ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(fk.name), col.name, col.description, col.columnType, col.notNull)
+  def getForeignKeyField(schema: models.schema.Schema, tableTypes: Seq[(Table, ObjectType[GraphQLContext, QueryResultRow])], table: Table, fk: ForeignKey) = {
+    val tableType = tableTypes.find(_._1.name.equalsIgnoreCase(fk.targetTable)).map(_._2).getOrElse {
+      throw new IllegalStateException("Missing output type for [].")
+    }
+    val whereClause = fk.references.map(r => s"${r.target} = ?").mkString(" and ")
+
+    Field(
+      name = CommonGraphQL.cleanName(fk.name),
+      fieldType = ListType(tableType),
+      description = Some(fk.name),
+      resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => {
+        val values = fk.references.map(r => ctx.value.getCell(r.source))
+        QueryResultRowService.getTableDataWhereClause(ctx.ctx.user, schema.connectionId, table.name, whereClause, values)
+      }
+    )
   }
 }

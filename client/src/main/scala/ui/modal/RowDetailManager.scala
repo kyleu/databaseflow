@@ -43,7 +43,7 @@ object RowDetailManager {
     val name = activeTable.getOrElse(throw new IllegalStateException("No active table"))
     val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
     val keyData = activePk.flatMap { col =>
-      activeData.find(_._1.name.compareToIgnoreCase(col) == 0).map(_._2)
+      activeData.find(_._1.name.equalsIgnoreCase(col)).map(_._2)
     }
     val pk = activePk.zip(keyData)
     RowUpdateManager.show(insert = false, name, pk, columns, activeData.map(x => x._1.name -> x._2).toMap)

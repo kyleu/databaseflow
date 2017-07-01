@@ -2,7 +2,6 @@ package services.explore
 
 import models.connection.ConnectionSettings
 import models.graphql.GraphQLContext
-import models.user.User
 import sangria.schema._
 import services.schema.SchemaService
 

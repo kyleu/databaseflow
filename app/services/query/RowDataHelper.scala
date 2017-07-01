@@ -25,15 +25,15 @@ object RowDataHelper extends Logging {
         }
         val columnsWithPrimaryKey = result.cols.map { col =>
           params.pk match {
-            case Some(k) => col.copy(primaryKey = k.columns.exists(_.compareToIgnoreCase(col.name) == 0))
+            case Some(k) => col.copy(primaryKey = k.columns.exists(_.equalsIgnoreCase(col.name)))
             case None => col
           }
         }
         val columnsWithRelations = columnsWithPrimaryKey.map { col =>
-          params.keys.find(_.references.exists(_.source.compareToIgnoreCase(col.name) == 0)) match {
+          params.keys.find(_.references.exists(_.source.equalsIgnoreCase(col.name))) match {
             case Some(fk) => col.copy(
               relationTable = Some(fk.targetTable),
-              relationColumn = fk.references.find(_.source.compareToIgnoreCase(col.name) == 0).map(_.target)
+              relationColumn = fk.references.find(_.source.equalsIgnoreCase(col.name)).map(_.target)
             )
             case None => col
           }
