@@ -8,10 +8,6 @@ import models.user.User
 import utils.FutureUtils.defaultContext
 
 object QueryResultRowService {
-  def getTableDataWhereClause(user: User, connectionId: UUID, name: String, whereClause: String, values: Seq[Any]) = {
-    RowDataService.getRowDataWhereClause(user, connectionId, name, whereClause, values).map(transform)
-  }
-
   def getTableData(user: User, connectionId: UUID, name: String, rdo: RowDataOptions) = {
     RowDataService.getRowData(user, connectionId, "table", name, rdo).map(transform)
   }
