@@ -15,7 +15,7 @@ object DataFilterTemplate {
       div(cls := "row")(
         div(cls := "input-field col s4")(
           select(cls := "filter-select filter-col-select theme-text")(r.columns.map(c =>
-            if (source.filterColumn.contains(c.name)) {
+            if (source.filterOpt.exists(_.col == c.name)) {
               option(selected)(c.name)
             } else {
               option(c.name)
@@ -23,33 +23,33 @@ object DataFilterTemplate {
         ),
         div(cls := "input-field col s2")(
           select(cls := "filter-select filter-op-select theme-text")(FilterOp.values.map { op =>
-            if (source.filterOp.contains(op)) {
+            if (source.filterOpt.exists(_.op == op)) {
               option(value := op.key, selected)(op.symbol)
             } else {
               option(value := op.key)(op.symbol)
             }
           })
         ),
-        div(cls := "single-value" + (if (source.filterOp.contains(FilterOp.Between)) { " initially-hidden" } else { "" }))(
+        div(cls := "single-value" + (if (source.filterOpt.exists(_.op == FilterOp.Between)) { " initially-hidden" } else { "" }))(
           div(cls := "input-field col s6")(
-            if (source.filterOp.contains(FilterOp.Between)) {
+            if (source.filterOpt.exists(_.op == FilterOp.Between)) {
               input(cls := "filter-single-val theme-text", `type` := "text")
             } else {
-              input(cls := "filter-single-val theme-text", `type` := "text", value := source.filterValue.getOrElse(""))
+              input(cls := "filter-single-val theme-text", `type` := "text", value := source.filterOpt.map(_.v).getOrElse(""))
             }
           )
         ),
-        div(cls := "double-value" + (if (source.filterOp.contains(FilterOp.Between)) { "" } else { " initially-hidden" }))(
+        div(cls := "double-value" + (if (source.filterOpt.exists(_.op == FilterOp.Between)) { "" } else { " initially-hidden" }))(
           div(cls := "input-field col s3")(
-            if (source.filterOp.contains(FilterOp.Between)) {
-              input(cls := "filter-double-val-a theme-text", `type` := "text", value := source.filterValue.getOrElse("|").split('|')(0))
+            if (source.filterOpt.exists(_.op == FilterOp.Between)) {
+              input(cls := "filter-double-val-a theme-text", `type` := "text", value := source.filterOpt.map(_.v).getOrElse("|").split('|')(0))
             } else {
               input(cls := "filter-double-val-a theme-text", `type` := "text")
             }
           ),
           div(cls := "input-field col s3")(
-            if (source.filterOp.contains(FilterOp.Between)) {
-              input(cls := "filter-double-val-b theme-text", `type` := "text", value := source.filterValue.getOrElse("|").split('|')(1))
+            if (source.filterOpt.exists(_.op == FilterOp.Between)) {
+              input(cls := "filter-double-val-b theme-text", `type` := "text", value := source.filterOpt.map(_.v).getOrElse("|").split('|')(1))
             } else {
               input(cls := "filter-double-val-b theme-text", `type` := "text")
             }

@@ -2,8 +2,8 @@ package test.query
 
 import models.engine.DatabaseEngine.{MySQL, PostgreSQL, SQLServer}
 import models.engine.EngineQueries
-import models.query.RowDataOptions
-import models.schema.FilterOp
+import models.query.{QueryFilter, RowDataOptions}
+import models.schema.{ColumnType, FilterOp}
 import org.scalatest.{FlatSpec, Matchers}
 
 class EngineQueriesTest extends FlatSpec with Matchers {
@@ -11,11 +11,7 @@ class EngineQueriesTest extends FlatSpec with Matchers {
     limit = Some(1000)
   )
 
-  val rdoCol = RowDataOptions(
-    filterCol = Some("y"),
-    filterOp = Some(FilterOp.Equal),
-    filterVal = Some("z")
-  )
+  val rdoCol = RowDataOptions(filters = Seq(QueryFilter("y", FilterOp.Equal, ColumnType.StringType, "z")))
 
   val rdoOrder = RowDataOptions(
     orderByCol = Some("y")

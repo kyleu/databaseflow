@@ -2,7 +2,7 @@ package ui.query
 
 import java.util.UUID
 
-import models.query.RowDataOptions
+import models.query.{QueryFilter, RowDataOptions}
 import models.schema.{ColumnType, FilterOp, Table}
 import models.template.column.TableColumnDetailTemplate
 import models.template.tbl.{TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
@@ -73,12 +73,7 @@ trait TableDetailHelper {
         } else {
           ColumnType.withName(first) -> remaining.tail.mkString(":")
         }
-        RowDataOptions(
-          filterCol = filter.headOption,
-          filterOp = Some(FilterOp.Equal),
-          filterType = Some(t),
-          filterVal = Some(v)
-        )
+        RowDataOptions(filters = Seq(QueryFilter(col = filter.head, op = FilterOp.Equal, t = t, v = v)))
       } else {
         Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
         RowDataOptions.empty

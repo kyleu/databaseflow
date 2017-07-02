@@ -2,7 +2,7 @@ package services.query
 
 import java.util.UUID
 
-import models.query.{QueryResult, RowDataOptions, SharedResult}
+import models.query.{QueryFilter, QueryResult, RowDataOptions, SharedResult}
 import models.schema.{ColumnType, FilterOp}
 import org.scalajs.dom
 import org.scalajs.jquery._
@@ -47,7 +47,7 @@ object QueryEventHandlers {
       val col = jq.data("rel-col").toString
       val t = ColumnType.withName(jq.data("rel-type").toString)
       val v = jq.data("rel-val").toString
-      TableManager.tableDetail(table, RowDataOptions(filterCol = Some(col), filterOp = Some(FilterOp.Equal), filterType = Some(t), filterVal = Some(v)))
+      TableManager.tableDetail(table, RowDataOptions(filters = Seq(QueryFilter(col = col, op = FilterOp.Equal, t = t, v = v))))
     })
 
     TemplateUtils.clickHandler($(".view-row-link", e), jq => dataClickHandler(jq, qr))

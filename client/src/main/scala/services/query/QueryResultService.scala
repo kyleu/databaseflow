@@ -68,7 +68,7 @@ object QueryResultService {
     })
 
     TemplateUtils.clickHandler($(".filter-cancel-link", panel), jq => {
-      val newOptions = options.copy(filterCol = None, filterOp = None, filterVal = None)
+      val newOptions = options.copy(filters = Nil)
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 

@@ -13,7 +13,7 @@ case class PoolSettings(
   url: String,
   username: String,
   password: String,
-  maxWait: Long = 1000,
+  maxWait: Long = 30000,
   maxSize: Int = 16,
   jdbcProperties: Map[String, String] = Map.empty,
   sslSettings: Option[SslSettings] = None,

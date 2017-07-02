@@ -44,25 +44,31 @@ object EngineQueries {
     }
 
     val quotedName = engine.cap.leftQuote + name + engine.cap.rightQuote
-    val (whereClause, values) = options.filterCol match {
-      case Some(col) =>
-        val t = options.filterType.getOrElse(ColumnType.StringType)
-        val op = options.filterOp.getOrElse(FilterOp.Equal)
-        val fVal = options.filterVal.getOrElse("?")
-        val (q, v) = op match {
+
+    val filterClauses = if(options.filters.isEmpty) {
+      Nil
+    } else {
+      options.filters.map { filter =>
+        val (q, v) = filter.op match {
           case FilterOp.Between =>
-            val split = fVal.split('|').toSeq
-            (" " + split.map(s => "?").mkString(" and ")) -> split.map(s => parse(t, s.trim))
+            val split = filter.v.split('|').toSeq
+            (" " + split.map(s => "?").mkString(" and ")) -> split.map(s => parse(filter.t, s.trim))
           case FilterOp.In =>
-            val split = fVal.split(',').toSeq
-            " (" + split.map(s => "?").mkString(", ") + ")" -> split.map(s => parse(t, s))
+            val split = filter.v.split(',').toSeq
+            " (" + split.map(s => "?").mkString(", ") + ")" -> split.map(s => parse(filter.t, s))
           case FilterOp.IsNull | FilterOp.IsNotNull => "" -> Nil
-          case FilterOp.Like if !fVal.contains('%') => " ?" -> Seq(parse(t, s"%$fVal%"))
-          case _ => " ?" -> Seq(parse(t, fVal))
+          case FilterOp.Like if !filter.v.contains('%') => " ?" -> Seq(parse(filter.t, s"%${filter.v}%"))
+          case _ => " ?" -> Seq(parse(filter.t, filter.v))
         }
-        val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
-        s" where ${engine.cap.leftQuote}$col${engine.cap.rightQuote} ${op.sqlSymbol}$q$additions" -> v
-      case None => whereClauseAdditions.map(" where" + _).getOrElse("") -> Nil
+        s"${engine.cap.leftQuote}${filter.col}${engine.cap.rightQuote} ${filter.op.sqlSymbol}$q" -> v
+      }
+    }
+
+    val (whereClause, values) = if(options.filters.isEmpty) {
+      whereClauseAdditions.map(" where" + _).getOrElse("") -> Nil
+    } else {
+      val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
+      s" where ${filterClauses.map(_._1).mkString(" and ")}$additions" -> filterClauses.flatMap(_._2)
     }
     val orderByClause = options.orderByCol.map { orderCol =>
       val ordering = if (options.orderByAsc.contains(false)) { "desc" } else { "asc" }

@@ -2,9 +2,8 @@ package models.schema
 
 import models.graphql.GraphQLContext
 import models.graphql.CommonGraphQL._
-
 import models.result.QueryResultGraphQL._
-import models.query.RowDataOptions
+import models.query.{QueryFilter, RowDataOptions}
 import sangria.macros.derive._
 import sangria.schema._
 import services.query.RowDataService
@@ -17,10 +16,13 @@ object SchemaModelGraphQL {
     val fo = c.arg(filterOpArg)
     val ft = c.arg(filterTypeArg)
     val fv = c.arg(filterValueArg)
+    val filters = fc match {
+      case Some(col) => Seq(QueryFilter(col, fo.getOrElse(FilterOp.Equal), ft.getOrElse(ColumnType.StringType), fv.getOrElse("")))
+      case None => Nil
+    }
     val l = c.arg(limitArg)
     val o = c.arg(offsetArg)
-    def strip(s: String) = if (s.isEmpty) { None } else { Some(s) }
-    RowDataOptions(sc, sa, fc, fo, ft, fv, l, o)
+    RowDataOptions(sc, sa, filters, l, o)
   }
 
   implicit val referenceType = deriveObjectType[GraphQLContext, Reference](ObjectTypeDescription("A reference to a different table or view."))

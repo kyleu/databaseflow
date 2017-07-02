@@ -22,8 +22,11 @@ object ExploreTableHelper {
     }
 
     schema.tables.map { table =>
-      val fn = () => tableFieldset(table)
-      tableTypes += table -> ObjectType(name = table.name, description = table.description.getOrElse(s"Table [${table.name}]"), fieldsFn = fn)
+      tableTypes += table -> ObjectType(
+        name = table.name,
+        description = table.description.getOrElse(s"Table [${table.name}]"),
+        fieldsFn = () => tableFieldset(table)
+      )
     }
 
     val tableFields = fields[GraphQLContext, Unit](tableTypes.map { t =>

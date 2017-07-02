@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
-import models.query.{QueryResult, SharedResult}
+import models.query.{QueryFilter, QueryResult, SharedResult}
 import models.schema.{ColumnType, FilterOp}
 import models.user.Permission
 import services.schema.JdbcHelper
@@ -33,7 +33,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
     ))
     override val values = Seq[Any](
       sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql, sr.source.t, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
-      sr.source.filterColumn, sr.source.filterOp.map(_.toString), sr.source.filterType.map(_.toString), sr.source.filterValue, sr.chart,
+      sr.source.filterOpt.map(_.col), sr.source.filterOpt.map(_.op.toString), sr.source.filterOpt.map(_.t.toString), sr.source.filterOpt.map(_.v), sr.chart,
       new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created), sr.id
     )
   }
@@ -79,10 +79,15 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       name = row.as[String]("source_name"),
       sortedColumn = row.asOpt[String]("source_sort_column"),
       sortedAscending = row.asOpt[Long]("source_sort_asc").map(_ != 0L),
-      filterColumn = row.asOpt[String]("filter_column"),
-      filterOp = row.asOpt[String]("filter_op").map(FilterOp.withName),
-      filterType = row.asOpt[String]("filter_type").map(ColumnType.withName),
-      filterValue = row.asOpt[String]("filter_value")
+      filters = row.asOpt[String]("filter_column") match {
+        case Some(col) => Seq(QueryFilter(
+          col = col,
+          op = FilterOp.withName(row.as[String]("filter_op")),
+          t = ColumnType.withName(row.as[String]("filter_type")),
+          v = row.asOpt[String]("filter_value").getOrElse("")
+        ))
+        case None => Nil
+      }
     ),
     chart = row.asOpt[Any]("chart").map(s => JdbcHelper.stringVal(s)),
     lastAccessed = row.as[java.sql.Timestamp]("last_accessed").getTime,
@@ -92,7 +97,7 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
   override protected def toDataSeq(sr: SharedResult) = Seq[Any](
     sr.id, sr.title, sr.description, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql, sr.source.t,
     sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
-    sr.source.filterColumn, sr.source.filterOp.map(_.toString), sr.source.filterType.map(_.toString), sr.source.filterValue,
+    sr.source.filterOpt.map(_.col), sr.source.filterOpt.map(_.op.toString), sr.source.filterOpt.map(_.t.toString), sr.source.filterOpt.map(_.v),
     sr.chart, new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created)
   )
 }

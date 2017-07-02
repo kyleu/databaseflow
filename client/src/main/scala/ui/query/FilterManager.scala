@@ -2,7 +2,7 @@ package ui.query
 
 import java.util.UUID
 
-import models.query.QueryResult
+import models.query.{QueryFilter, QueryResult}
 import models.query.QueryResult.Source
 import models.schema.{ColumnType, FilterOp}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
@@ -60,12 +60,7 @@ object FilterManager {
         singleVal.`val`().toString
       }
 
-      val options = src.copy(
-        filterColumn = Some(column),
-        filterOp = Some(FilterOp.withName(op)),
-        filterType = Some(t),
-        filterValue = Some(v)
-      ).asRowDataOptions(Some(Config.pageSize))
+      val options = src.copy(filters = Seq(QueryFilter(col = column, op = FilterOp.withName(op), t = t, v = v))).asRowDataOptions(Some(Config.pageSize))
 
       RowDataManager.showRowData(key, queryId, name, options, resultId)
     })

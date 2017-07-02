@@ -2,8 +2,8 @@ package models.query
 
 import java.util.UUID
 
+import models.schema.ColumnType
 import models.schema.ColumnType.StringType
-import models.schema.{ColumnType, FilterOp}
 
 object QueryResult {
   case class Col(
@@ -22,19 +22,15 @@ object QueryResult {
       sortable: Boolean = true,
       sortedColumn: Option[String] = None,
       sortedAscending: Option[Boolean] = None,
-      filterColumn: Option[String] = None,
-      filterOp: Option[FilterOp] = None,
-      filterType: Option[ColumnType] = None,
-      filterValue: Option[String] = None,
+      filters: Seq[QueryFilter] = Nil,
       dataOffset: Int = 0
   ) {
+    def filterOpt = filters.headOption
+
     def asRowDataOptions(limit: Option[Int]) = RowDataOptions(
       orderByCol = sortedColumn,
       orderByAsc = sortedAscending,
-      filterCol = filterColumn,
-      filterOp = filterOp,
-      filterType = filterType,
-      filterVal = filterValue,
+      filters = filters,
       limit = limit,
       offset = Some(dataOffset)
     )
