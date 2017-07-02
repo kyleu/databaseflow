@@ -45,7 +45,7 @@ object Dependencies {
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.19.3"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.1.7.jre8-preview"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.2.0.jre8"
   }
 
   object Hibernate {
@@ -79,7 +79,7 @@ object Dependencies {
 
   object ScalaJS {
     val scalaTagsVersion = "0.6.5"
-    val jQueryVersion = "0.9.1"
+    val jQueryVersion = "0.9.2"
   }
 
   object GraphQL {
@@ -95,7 +95,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
     val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "2.17.1"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.0.0"
     val guava = "com.google.guava" % "guava" % "22.0"
   }
 
