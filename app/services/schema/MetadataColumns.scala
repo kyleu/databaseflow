@@ -25,8 +25,9 @@ object MetadataColumns {
   }
 
   private[this] def fromRow(row: Row) = {
-    val notNull = JdbcHelper.intVal(row.as[Any]("NULLABLE"))
+    val nullable = JdbcHelper.intVal(row.as[Any]("NULLABLE"))
     val colType = JdbcHelper.intVal(row.as[Any]("DATA_TYPE"))
+    val colTypeName = row.asOpt[Any]("TYPE_NAME").map(x => JdbcHelper.stringVal(x)).getOrElse("")
     val colSize = row.asOpt[Any]("COLUMN_SIZE").map(JdbcHelper.intVal)
     val position = JdbcHelper.intVal(row.as[Any]("ORDINAL_POSITION"))
     position -> Column(
@@ -34,15 +35,15 @@ object MetadataColumns {
       description = row.asOpt[String]("REMARKS"),
       definition = row.asOpt[String]("COLUMN_DEF"),
       primaryKey = false, //row.as[Boolean]("?"),
-      notNull = notNull == 0, // IS_NULLABLE?
+      notNull = nullable == 0, // IS_NULLABLE?
       autoIncrement = try {
         row.asOpt[String]("IS_AUTOINCREMENT").contains("YES")
       } catch {
         case NonFatal(x) => false
       },
-      columnType = QueryTranslations.forType(colType), // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
-      sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
-      sqlTypeName = row.as[String]("TYPE_NAME"),
+      columnType = QueryTranslations.forType(colType, colTypeName),
+      sqlTypeCode = colType,
+      sqlTypeName = colTypeName,
       size = row.asOpt[Any]("COLUMN_SIZE").fold("?")(_.toString),
       sizeAsInt = colSize.getOrElse(0), // ?
       scale = 0, // BUFFER_LENGTH? DECIMAL_DIGITS? NUM_PREC_RADIX?

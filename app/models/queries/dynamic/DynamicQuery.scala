@@ -21,7 +21,7 @@ object DynamicQuery {
   }
 
   def getColumnMetadata(md: ResultSetMetaData, colIdx: Int) = {
-    val columnType = QueryTranslations.forType(md.getColumnType(colIdx))
+    val columnType = QueryTranslations.forType(md.getColumnType(colIdx), md.getColumnTypeName(colIdx))
     val precision = md.getPrecision(colIdx) match {
       case x if x < 1 => None
       case x => Some(x)

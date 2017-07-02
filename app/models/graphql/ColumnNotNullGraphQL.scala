@@ -1,5 +1,7 @@
 package models.graphql
 
+import java.util.UUID
+
 import models.result.QueryResultRow
 import models.schema.ColumnType
 import sangria.schema._
@@ -56,7 +58,14 @@ object ColumnNotNullGraphQL {
         resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
       )
 
-      case ColumnType.RefType | ColumnType.XmlType | ColumnType.UuidType => Field(
+      case ColumnType.UuidType => Field(
+        name = cleanName,
+        fieldType = CommonGraphQL.uuidType,
+        description = description,
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => UUID.fromString(x.value.getRequiredCell(name))
+      )
+
+      case ColumnType.RefType | ColumnType.XmlType => Field(
         name = cleanName,
         fieldType = StringType,
         description = description,

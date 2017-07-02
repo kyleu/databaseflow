@@ -46,6 +46,8 @@ object MetadataProcedures extends Logging {
 
   private[this] def columnFromRow(row: Row) = {
     val paramType = JdbcHelper.intVal(row.as[Any]("COLUMN_TYPE"))
+    val colType = JdbcHelper.intVal(row.as[Any]("DATA_TYPE"))
+    val colTypeName = row.asOpt[Any]("TYPE_NAME").map(x => JdbcHelper.stringVal(x)).getOrElse("")
 
     row.as[Int]("ORDINAL_POSITION") -> ProcedureParam(
       name = row.as[String]("COLUMN_NAME"),
@@ -59,9 +61,9 @@ object MetadataProcedures extends Logging {
         case DatabaseMetaData.procedureColumnResult => "result"
         case x => "?"
       },
-      columnType = QueryTranslations.forType(row.as[Int]("DATA_TYPE")),
-      sqlTypeCode = row.as[Int]("DATA_TYPE"), // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
-      sqlTypeName = row.as[String]("TYPE_NAME"),
+      columnType = QueryTranslations.forType(colType, colTypeName),
+      sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
+      sqlTypeName = colTypeName,
       nullable = row.as[String]("IS_NULLABLE") == "YES"
     )
   }

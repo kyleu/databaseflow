@@ -1,5 +1,7 @@
 package models.graphql
 
+import java.util.UUID
+
 import models.result.QueryResultRow
 import models.schema.ColumnType
 import sangria.schema._
@@ -56,7 +58,14 @@ object ColumnNullableGraphQL {
         resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(name)
       )
 
-      case ColumnType.RefType | ColumnType.XmlType | ColumnType.UuidType => Field(
+      case ColumnType.UuidType => Field(
+        name = cleanName,
+        fieldType = OptionType(CommonGraphQL.uuidType),
+        description = description,
+        resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(name).map(UUID.fromString)
+      )
+
+      case ColumnType.RefType | ColumnType.XmlType => Field(
         name = cleanName,
         fieldType = OptionType(StringType),
         description = description,

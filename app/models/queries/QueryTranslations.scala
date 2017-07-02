@@ -6,7 +6,7 @@ import models.schema.ColumnType._
 import utils.Logging
 
 object QueryTranslations extends Logging {
-  def forType(i: Int) = i match {
+  def forType(i: Int, n: String) = i match {
     case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => StringType
     case NUMERIC | DECIMAL => BigDecimalType
     case BIT | BOOLEAN => BooleanType
@@ -22,7 +22,13 @@ object QueryTranslations extends Logging {
     case TIMESTAMP | TIMESTAMP_WITH_TIMEZONE => TimestampType
     case REF | REF_CURSOR => RefType
     case SQLXML => XmlType
-    case OTHER => UnknownType
+    case OTHER => n match {
+      case "uuid" => UuidType
+      case "json" => StringType
+      case x =>
+        log.warn(s"Encountered unknown field type [$x]. ")
+        UnknownType
+    }
 
     case NULL => UnknownType
     case JAVA_OBJECT => ObjectType
