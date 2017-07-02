@@ -20,7 +20,7 @@ object ForeignKeyGraphQL {
         val filters = fk.references.map(r => QueryFilter(
           col = r.target,
           op = FilterOp.Equal,
-          t = ColumnType.IntegerType,
+          t = table.columns.find(_.name.equalsIgnoreCase(r.source)).map(_.columnType).getOrElse(ColumnType.StringType),
           v = ctx.value.getCell(r.source).getOrElse("")
         ))
         val options = RowDataOptions(filters = filters)

@@ -58,6 +58,7 @@ object EngineQueries {
             " (" + split.map(s => "?").mkString(", ") + ")" -> split.map(s => parse(filter.t, s))
           case FilterOp.IsNull | FilterOp.IsNotNull => "" -> Nil
           case FilterOp.Like if !filter.v.contains('%') => " ?" -> Seq(parse(filter.t, s"%${filter.v}%"))
+          case FilterOp.Like => " ?" -> Seq(parse(filter.t, filter.v))
           case _ => " ?" -> Seq(parse(filter.t, filter.v))
         }
         s"${engine.cap.leftQuote}${filter.col}${engine.cap.rightQuote} ${filter.op.sqlSymbol}$q" -> v
