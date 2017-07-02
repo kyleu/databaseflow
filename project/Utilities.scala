@@ -21,11 +21,17 @@ object Utilities {
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
 
+  lazy val scalaExport = (project in file("util/scalaExport"))
+    .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
+    .settings(Shared.commonSettings: _*)
+    .settings(libraryDependencies ++= Seq(Utils.enumeratum, Utils.betterFiles, Utils.guava))
+    .dependsOn(Shared.sharedJvm)
+
   lazy val translation = (project in file("util/translation"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
-    .settings(libraryDependencies ++= Seq(Utils.enumeratum, Play.ws))
     .settings(Shared.commonSettings: _*)
+    .settings(libraryDependencies ++= Seq(Utils.enumeratum, Play.ws))
 
   lazy val benchmarking = (project in file("util/benchmarking"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)

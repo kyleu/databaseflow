@@ -96,6 +96,7 @@ object Dependencies {
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
     val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"
     val betterFiles = "com.github.pathikrit" %% "better-files" % "2.17.1"
+    val guava = "com.google.guava" % "guava" % "22.0"
   }
 
   object Testing {

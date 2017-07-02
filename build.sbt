@@ -18,6 +18,8 @@ lazy val metrics = Utilities.metrics
 
 lazy val iconCreator = Utilities.iconCreator
 
+lazy val scalaExport = Utilities.scalaExport
+
 lazy val translation = Utilities.translation
 
 lazy val benchmarking = Utilities.benchmarking
