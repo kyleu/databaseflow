@@ -8,37 +8,13 @@
     </encoder>
   </appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/databaseflow.site.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/databaseflow.site.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>50MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-      <maxHistory>356</maxHistory>
-    </rollingPolicy>
-
-    <encoder>
-      <charset>UTF-8</charset>
-      <pattern>[%level] %date from %logger in %thread %n%message%n%xException%n</pattern>
-    </encoder>
-  </appender>
-
-  <logger name="play" level="INFO" />
-  <logger name="application" level="INFO" />
-  <logger name="databaseflow" level="INFO" />
-
-  <logger name="com.mohiva" level="INFO" />
-  <logger name="com.github.mauricio.async.db" level="WARN" />
-
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
   <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF" />
   <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF" />
   <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
   <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
 
-  <root level="ERROR">
+  <root level="INFO">
     <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE" />
   </root>
 </configuration>
