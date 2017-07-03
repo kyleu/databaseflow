@@ -7,7 +7,7 @@ import services.notification.NotificationService
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class NewsletterController @javax.inject.Inject() (implicit val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
+class NewsletterController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
   def form() = act("newsletter.form") { implicit request =>
     Future.successful(Ok(views.html.newsletter(isAdmin = false)))
   }

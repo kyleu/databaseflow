@@ -1,6 +1,5 @@
 package controllers
 
-import play.api.mvc.Action
 import services.connection.ConnectionSettingsService
 import utils.ApplicationContext
 

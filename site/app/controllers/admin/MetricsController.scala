@@ -11,7 +11,7 @@ class MetricsController @javax.inject.Inject() (implicit override val messagesAp
     implicit val req = request
 
     val url = "http://localhost:9001/metrics?pretty=true"
-    val call = ws.url(url).withHeaders("Accept" -> "application/json")
+    val call = ws.url(url).withHttpHeaders("Accept" -> "application/json")
     val f = call.get()
 
     f.map { json =>

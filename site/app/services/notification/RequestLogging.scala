@@ -9,7 +9,6 @@ import play.api.mvc.RequestHeader
 object RequestLogging {
   case class RequestLog(
     id: UUID,
-    tags: Map[String, String],
     version: String,
     remoteAddress: String,
     secure: Boolean,
@@ -28,7 +27,6 @@ object RequestLogging {
   def apply(id: UUID, request: RequestHeader) = {
     RequestLog(
       id = id,
-      tags = request.tags,
       version = request.version,
       remoteAddress = request.remoteAddress,
       secure = request.secure,

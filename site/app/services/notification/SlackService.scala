@@ -21,7 +21,7 @@ class SlackService @javax.inject.Inject() (ws: WSClient) extends Logging {
       "text" -> Js.Str(msg)
     )
 
-    val call = ws.url(url).withHeaders("Accept" -> "application/json")
+    val call = ws.url(url).withHttpHeaders("Accept" -> "application/json")
     val f = call.post(upickle.json.write(body))
     val ret = f.map { x =>
       if (x.status == 200) {
@@ -31,9 +31,7 @@ class SlackService @javax.inject.Inject() (ws: WSClient) extends Logging {
         "ERROR"
       }
     }
-    ret.onFailure {
-      case x => log.warn("Unable to post to Slack.", x)
-    }
+    ret.failed.foreach(x => log.warn("Unable to post to Slack.", x))
     ret
   } else {
     log.info(s"Post to [$channel] with Slack disabled: [$msg].")

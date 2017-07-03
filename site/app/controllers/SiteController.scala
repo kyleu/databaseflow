@@ -21,18 +21,15 @@ object SiteController {
 @javax.inject.Singleton
 class SiteController @javax.inject.Inject() (
     implicit
-    val messagesApi: MessagesApi,
-    val actorSystem: ActorSystem,
-    val lifecycle: ApplicationLifecycle,
-    val config: Configuration
+    override val messagesApi: MessagesApi, val actorSystem: ActorSystem, val lifecycle: ApplicationLifecycle, val config: Configuration
 ) extends BaseSiteController {
   val metricsConfig: MetricsConfig = MetricsConfig(
-    jmxEnabled = config.getBoolean("metrics.jmx.enabled").getOrElse(true),
-    graphiteEnabled = config.getBoolean("metrics.graphite.enabled").getOrElse(false),
-    graphiteServer = config.getString("metrics.graphite.server").getOrElse("127.0.0.1"),
-    graphitePort = config.getInt("metrics.graphite.port").getOrElse(2003),
-    servletEnabled = config.getBoolean("metrics.servlet.enabled").getOrElse(true),
-    servletPort = config.getInt("metrics.servlet.port").getOrElse(9001)
+    jmxEnabled = config.get[Option[Boolean]]("metrics.jmx.enabled").getOrElse(true),
+    graphiteEnabled = config.get[Option[Boolean]]("metrics.graphite.enabled").getOrElse(false),
+    graphiteServer = config.get[Option[String]]("metrics.graphite.server").getOrElse("127.0.0.1"),
+    graphitePort = config.get[Option[Int]]("metrics.graphite.port").getOrElse(2003),
+    servletEnabled = config.get[Option[Boolean]]("metrics.servlet.enabled").getOrElse(true),
+    servletPort = config.get[Option[Int]]("metrics.servlet.port").getOrElse(9001)
   )
 
   actorSystem.actorOf(MetricsServletActor.props(metricsConfig), "metrics-servlet")
