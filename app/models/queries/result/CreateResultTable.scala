@@ -47,7 +47,7 @@ object CreateResultTable {
 
       case UnknownType => "text"
 
-      case x => throw new IllegalStateException(s"Unhandled column type [${col.t}].")
+      case _ => throw new IllegalStateException(s"Unhandled column type [${col.t}].")
     }
     s"${engine.cap.leftQuote}${col.name}${engine.cap.rightQuote} $colDeclaration"
   }

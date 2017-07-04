@@ -19,7 +19,7 @@ object ChartingService {
 
   def init() = {
     ChartRenderService.init()
-    dom.window.onresize = (ev: UIEvent) => activeCharts.foreach { x =>
+    dom.window.onresize = (_: UIEvent) => activeCharts.foreach { x =>
       val height = org.scalajs.dom.window.innerHeight.toInt
       $(".chart-container").css("height", (height - 100) + "px")
       $(".chart-panel").css("height", (height - 102) + "px")

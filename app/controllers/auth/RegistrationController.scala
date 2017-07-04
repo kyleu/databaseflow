@@ -53,7 +53,7 @@ class RegistrationController @javax.inject.Inject() (
               request.lang
             ))
           )
-          case Some(user) => Future.successful(
+          case Some(_) => Future.successful(
             Redirect(controllers.auth.routes.RegistrationController.register()).flashing("error" -> messagesApi("registration.email.taken")(request.lang))
           )
           case None if !SettingsService.allowSignIn => Future.successful(
@@ -80,7 +80,7 @@ class RegistrationController @javax.inject.Inject() (
               case None => Redirect(controllers.routes.HomeController.home())
             }
             for {
-              authInfo <- authInfoRepository.add(loginInfo, authInfo)
+              _ <- authInfoRepository.add(loginInfo, authInfo)
               authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
               value <- ctx.silhouette.env.authenticatorService.init(authenticator)
               result <- ctx.silhouette.env.authenticatorService.embed(value, result)

@@ -14,7 +14,7 @@ object SchemaRefreshService extends Logging {
   private[this] var refreshCount = 0
   private[this] val activeRefreshes = collection.mutable.HashMap.empty[UUID, Future[Schema]]
 
-  def refreshSchema(db: DatabaseConnection, onSuccess: (Schema) => Unit = s => Unit, onFailure: (Throwable) => Unit = (x) => Unit) = Try {
+  def refreshSchema(db: DatabaseConnection, onSuccess: (Schema) => Unit = _ => Unit, onFailure: (Throwable) => Unit = _ => Unit) = Try {
     SchemaService.get(db.connectionId) match {
       case Some(schema) if activeRefreshes.isDefinedAt(db.connectionId) =>
         log.info(s"Awaiting current refresh of schema [${schema.connectionId}]: $refreshCount.")

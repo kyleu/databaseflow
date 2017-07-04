@@ -35,13 +35,13 @@ object Shared {
 
     test in assembly := {},
     assemblyMergeStrategy in assembly := {
-      case PathList("javax", "servlet", xs@_*) => MergeStrategy.first
-      case PathList("javax", "xml", xs@_*) => MergeStrategy.first
+      case PathList("javax", "servlet", _ @ _*) => MergeStrategy.first
+      case PathList("javax", "xml", _ @ _*) => MergeStrategy.first
       case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
-      case PathList("org", "apache", "commons", "logging", xs@_*) => MergeStrategy.first
-      case PathList("play", "api", "libs", "ws", xs@_*) => MergeStrategy.first
+      case PathList("org", "apache", "commons", "logging", _ @ _*) => MergeStrategy.first
+      case PathList("play", "api", "libs", "ws", _ @ _*) => MergeStrategy.first
       case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
-      case PathList("sqlj", xs@_*) => MergeStrategy.first
+      case PathList("sqlj", _ @ _*) => MergeStrategy.first
       case PathList("play", "reference-overrides.conf") => MergeStrategy.first
       case "messages" => MergeStrategy.concat
       case "pom.xml" => MergeStrategy.discard

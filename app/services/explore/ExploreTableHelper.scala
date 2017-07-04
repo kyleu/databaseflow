@@ -13,9 +13,9 @@ object ExploreTableHelper {
     description = "Empty table used as a placeholder when things go wrong",
     fieldsFn = () => {
     fields[GraphQLContext, QueryResultRow](Field(
-      name = "unused",
+      name = "unavailable",
       fieldType = StringType,
-      resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => "unused"
+      resolve = (_: Context[GraphQLContext, QueryResultRow]) => "unavailable"
     ))
   }
   )

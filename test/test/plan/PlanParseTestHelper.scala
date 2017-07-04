@@ -39,7 +39,7 @@ object PlanParseTestHelper extends Logging {
   }
 
   private[this] def debugNode(node: PlanNode, depth: Int): Unit = {
-    val title = ((0 until depth).map(i => "  ").mkString + node.title).padTo(27, ' ').substring(0, 27)
+    val title = ((0 until depth).map(_ => "  ").mkString + node.title).padTo(27, ' ').substring(0, 27)
     val tp = node.nodeType.toString.padTo(14, ' ')
     val rel = node.relation.map(_.toString).getOrElse("").padTo(18, ' ').substring(0, 18)
     val output = node.output.map(_.mkString(", ")).getOrElse("").padTo(18, ' ').substring(0, 18)

@@ -16,9 +16,7 @@ object ColumnDetailManager {
 
   private[this] var activeRequest: Option[(String, String)] = None
 
-  def init() = TemplateUtils.clickHandler(modalLink, jq => {
-    close()
-  })
+  def init() = TemplateUtils.clickHandler(modalLink, _ => close())
 
   def installHandlers(selector: JQuery, owner: String) = {
     TemplateUtils.clickHandler(selector, jq => ColumnDetailManager.show(owner, jq.data("col").toString, jq.data("t").toString))

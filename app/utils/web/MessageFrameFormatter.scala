@@ -27,7 +27,7 @@ class MessageFrameFormatter(debug: Boolean) extends Logging {
     try {
       json.read(s)
     } catch {
-      case NonFatal(x) => Js.Arr(Js.Str("models.MalformedRequest"), Js.Obj(
+      case NonFatal(_) => Js.Arr(Js.Str("models.MalformedRequest"), Js.Obj(
         "reason" -> Js.Str("Invalid JSON"),
         "content" -> Js.Str(s)
       ))

@@ -23,7 +23,7 @@ object CommonGraphQL {
   implicit val uuidType = ScalarType[UUID](
     name = "UUID",
     description = Some("A string representing a UUID, in format [00000000-0000-0000-0000-000000000000]."),
-    coerceOutput = (u, caps) => u.toString,
+    coerceOutput = (u, _) => u.toString,
     coerceUserInput = {
       case s: String => parseUuid(s)
       case _ => Left(UuidCoercionViolation)

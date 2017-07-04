@@ -16,7 +16,7 @@ object ReconnectManager {
     throw new IllegalStateException("Missing reconnect link.")
   }
 
-  def init() = TemplateUtils.clickHandler(link, jq => {
+  def init() = TemplateUtils.clickHandler(link, _ => {
     activeCallback match {
       case Some(cb) => cb()
       case None => throw new IllegalStateException("No active callback.")

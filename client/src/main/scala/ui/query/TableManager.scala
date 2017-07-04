@@ -48,7 +48,7 @@ object TableManager extends TableDetailHelper {
 
         QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-        TemplateUtils.clickHandler($(".view-data-link", queryPanel), jq => {
+        TemplateUtils.clickHandler($(".view-data-link", queryPanel), _ => {
           val newOptions = options.copy(
             offset = None,
             limit = Some(UserManager.rowsReturned),
@@ -59,12 +59,12 @@ object TableManager extends TableDetailHelper {
           )
           RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
         })
-        TemplateUtils.clickHandler($(".query-open-link", queryPanel), jq => {
-          val (sql, values) = EngineQueries.selectFrom(name, options)(MetadataManager.engine.getOrElse(throw new IllegalStateException()))
+        TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
+          val (sql, _) = EngineQueries.selectFrom(name, options)(MetadataManager.engine.getOrElse(throw new IllegalStateException()))
           AdHocQueryManager.addAdHocQuery(UUID.randomUUID, name + " Data", sql)
         })
 
-        TemplateUtils.clickHandler($(".insert-data-link", queryPanel), jq => {
+        TemplateUtils.clickHandler($(".insert-data-link", queryPanel), _ => {
           val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
           RowUpdateManager.show(insert = true, name, Nil, columns, Map.empty)
         })

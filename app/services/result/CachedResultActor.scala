@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 
 object CachedResultActor {
   case class Cleanup(since: Option[LocalDateTime])
-  def props() = Props(classOf[CachedResultActor])
+  def props() = Props(new CachedResultActor())
 }
 
 class CachedResultActor() extends InstrumentedActor with Logging {

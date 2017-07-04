@@ -41,10 +41,10 @@ class QueryController @javax.inject.Inject() (
     ctx.silhouette.SecuredRequestHandler { securedRequest =>
       Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
     }.map {
-      case HandlerResult(r, Some(user)) => Right(ActorFlow.actorRef { out =>
+      case HandlerResult(_, Some(user)) => Right(ActorFlow.actorRef { out =>
         SocketService.props(None, ctx.supervisor, connectionId, user, out, request.remoteAddress, messages)
       })
-      case HandlerResult(r, None) => Left(Redirect(controllers.routes.HomeController.home()))
+      case HandlerResult(_, None) => Left(Redirect(controllers.routes.HomeController.home()))
     }
   }
 }

@@ -35,7 +35,7 @@ object QueryTranslations extends Logging {
     case STRUCT => StructType
     case ARRAY => ArrayType
 
-    case x =>
+    case _ =>
       log.warn(s"Encountered unknown columm type [$i].")
       UnknownType
   }

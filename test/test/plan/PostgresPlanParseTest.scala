@@ -1,6 +1,6 @@
 package test.plan
 
-import models.engine.PostgreSQL
+import models.engine.DatabaseEngine.PostgreSQL
 import org.scalatest.{FlatSpec, Matchers}
 
 class PostgresPlanParseTest extends FlatSpec with Matchers {

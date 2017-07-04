@@ -30,7 +30,7 @@ object SettingsService {
     } else {
       MasterDatabase.transaction { t =>
         t.query(SettingQueries.getById(key)) match {
-          case Some(setting) => t.executeUpdate(SettingQueries.Update(s))
+          case Some(_) => t.executeUpdate(SettingQueries.Update(s))
           case None => t.executeUpdate(SettingQueries.insert(s))
         }
       }

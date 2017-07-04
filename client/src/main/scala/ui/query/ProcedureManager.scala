@@ -44,7 +44,7 @@ object ProcedureManager {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      TemplateUtils.clickHandler($(".call-procedure-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".call-procedure-link", queryPanel), _ => {
         MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")

@@ -13,7 +13,7 @@ trait ChartOptions {
 
   protected[this] def getDataColumn(key: String, settings: ChartSettings, columns: Seq[(String, String)], data: js.Array[js.Array[String]]) = {
     settings.selects.get(key) match {
-      case Some(x) =>
+      case Some(_) =>
         val col = settings.selects.getOrElse(key, "")
         val idx = columns.indexWhere(_._1 == col)
         val ret = if (idx == -1) { js.Array() } else { data.map(_(idx)) }

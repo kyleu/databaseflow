@@ -20,7 +20,7 @@ class YandexApi @javax.inject.Inject() (ws: WSClient) extends ApiProvider("Yande
   }
 
   override def translate(lang: String, key: String, text: String) = {
-    ws.url(url(lang)).withHeaders("Accept" -> "application/json").post(body(text)).map { response =>
+    ws.url(url(lang)).withHttpHeaders("Accept" -> "application/json").post(body(text)).map { response =>
       val json = Json.parse(response.body)
       val t = (json \ "code").as[Int] match {
         case 200 => (json \ "text").as[Seq[String]].head

@@ -32,7 +32,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
 
   case class RemoveForUser(userId: UUID, connectionId: Option[UUID]) extends Statement {
     override val sql = connectionId match {
-      case Some(c) => s"""delete from "$tableName" where "owner" = ? and "connection" = ?"""
+      case Some(_) => s"""delete from "$tableName" where "owner" = ? and "connection" = ?"""
       case None => s"""delete from "$tableName" where "owner" = ?"""
     }
     override val values = connectionId match {
@@ -42,7 +42,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord] {
   }
   case class RemoveForAnonymous(connectionId: Option[UUID]) extends Statement {
     override val sql = connectionId match {
-      case Some(c) => s"""delete from "$tableName" where "owner" = is null and "connection" = ?"""
+      case Some(_) => s"""delete from "$tableName" where "owner" = is null and "connection" = ?"""
       case None => s"""delete from "$tableName" where "owner" is null"""
     }
     override val values = connectionId match {

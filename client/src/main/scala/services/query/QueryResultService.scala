@@ -37,7 +37,7 @@ object QueryResultService {
 
     val sqlEl = $(".query-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), jq => {
+    TemplateUtils.clickHandler($(".results-sql-link", panel), _ => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })
@@ -67,13 +67,13 @@ object QueryResultService {
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
-    TemplateUtils.clickHandler($(".filter-cancel-link", panel), jq => {
+    TemplateUtils.clickHandler($(".filter-cancel-link", panel), _ => {
       val newOptions = options.copy(filters = Nil)
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
     val appendRowsLink = $(".append-rows-link", panel)
-    TemplateUtils.clickHandler(appendRowsLink, (j) => {
+    TemplateUtils.clickHandler(appendRowsLink, _ => {
       val limit = appendRowsLink.data("limit").toString.toInt
       val offset = appendRowsLink.data("offset").toString.toInt match {
         case 0 => 100

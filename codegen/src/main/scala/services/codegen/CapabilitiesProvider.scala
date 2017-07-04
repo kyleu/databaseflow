@@ -28,14 +28,14 @@ object CapabilitiesProvider {
     dialect.getFunctions.asScala.toSeq.sortBy(_._1).map { f =>
       val name = f._1
       val typ = f._2 match {
-        case x: StandardSQLFunction => "standard"
-        case x: VarArgsSQLFunction => "varargs"
-        case x: NoArgSQLFunction => "noargs"
-        case x: SQLFunctionTemplate => "template"
-        case x: PositionSubstringFunction => "substring"
-        case x: CastFunction => "cast"
-        case x: NvlFunction => "nvl"
-        case x: AnsiTrimEmulationFunction => "ansitrim"
+        case _: StandardSQLFunction => "standard"
+        case _: VarArgsSQLFunction => "varargs"
+        case _: NoArgSQLFunction => "noargs"
+        case _: SQLFunctionTemplate => "template"
+        case _: PositionSubstringFunction => "substring"
+        case _: CastFunction => "cast"
+        case _: NvlFunction => "nvl"
+        case _: AnsiTrimEmulationFunction => "ansitrim"
         case unknown => throw new IllegalArgumentException(s"Unhandled function type [${unknown.getClass.getName}].")
       }
       Capabilities.SqlFunction(name, typ)
@@ -51,7 +51,7 @@ object CapabilitiesProvider {
         }
         x.toString -> name
       } catch {
-        case NonFatal(ex) => x.toString -> None
+        case NonFatal(_) => x.toString -> None
       }
     }
   }

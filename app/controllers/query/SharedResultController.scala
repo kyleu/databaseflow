@@ -28,7 +28,7 @@ class SharedResultController @javax.inject.Inject() (override val ctx: Applicati
           val results = SharedResultService.getData(request.identity, sr, RowDataOptions())
           val ownerName = UserService.instance.getOrElse(throw new IllegalStateException()).usernameLookup(sr.owner)
           sr.chart match {
-            case Some(chart) => Future.successful(
+            case Some(_) => Future.successful(
               Ok(views.html.result.viewChart(request.identity, sr, ownerName.getOrElse("guest"), results.cols, results.data, ctx.config.debug))
             )
             case None => Future.successful(

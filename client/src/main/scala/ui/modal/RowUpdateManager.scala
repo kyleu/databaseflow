@@ -22,12 +22,12 @@ object RowUpdateManager {
   private[this] var activeColumns: Option[Seq[Column]] = None
 
   def init() = {
-    TemplateUtils.clickHandler(linkInsert, jq => {
+    TemplateUtils.clickHandler(linkInsert, _ => {
       val msg = activeMessage.getOrElse(throw new IllegalStateException("Missing active InsertRow message."))
       val updated = msg.copy(params = getParams)
       NetworkMessage.sendMessage(updated)
     })
-    TemplateUtils.clickHandler(linkCancel, jq => close())
+    TemplateUtils.clickHandler(linkCancel, _ => close())
   }
 
   def show(insert: Boolean, name: String, pk: Seq[(String, String)], columns: Seq[Column], data: Map[String, String]) = {
@@ -38,7 +38,7 @@ object RowUpdateManager {
     activeColumns = Some(columns)
     val html = RowUpdateTemplate.forColumns(insert, name, columns, data)
     modalContent.html(html.render)
-    TemplateUtils.keyUpHandler($(".row-update-input", modalContent), (jq, i) => {
+    TemplateUtils.keyUpHandler($(".row-update-input", modalContent), (jq, _) => {
       if (jq.value().toString.nonEmpty) {
         $(s"#row-update-toggle-${jq.data("col")}").attr("checked", "checked")
       }

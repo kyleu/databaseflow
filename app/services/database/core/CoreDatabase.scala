@@ -39,7 +39,7 @@ abstract class CoreDatabase extends Logging {
   def isOpen = connOpt.isDefined
 
   def open() = {
-    connOpt.foreach(x => throw new IllegalStateException(s"$name database connection already open."))
+    connOpt.foreach(_ => throw new IllegalStateException(s"$name database connection already open."))
 
     settings = Some(ConnectionSettings(
       id = connectionId,

@@ -25,8 +25,8 @@ object InitService {
     wireSideNav()
     installTimers()
 
-    TemplateUtils.clickHandler($("#commit-button"), jq => TransactionService.commitTransaction())
-    TemplateUtils.clickHandler($("#rollback-button"), jq => TransactionService.rollbackTransaction())
+    TemplateUtils.clickHandler($("#commit-button"), _ => TransactionService.commitTransaction())
+    TemplateUtils.clickHandler($("#rollback-button"), _ => TransactionService.rollbackTransaction())
 
     js.Dynamic.global.$("select").material_select()
 
@@ -49,13 +49,13 @@ object InitService {
   }
 
   private[this] def wireSideNav() = {
-    TemplateUtils.clickHandler($("#begin-tx-link"), jq => TransactionService.beginTransaction())
-    TemplateUtils.clickHandler($("#new-query-link"), jq => AdHocQueryManager.addNewQuery())
+    TemplateUtils.clickHandler($("#begin-tx-link"), _ => TransactionService.beginTransaction())
+    TemplateUtils.clickHandler($("#new-query-link"), _ => AdHocQueryManager.addNewQuery())
     TemplateUtils.clickHandler($(".show-list-link"), jq => ModelListManager.showList(jq.data("key").toString))
-    TemplateUtils.clickHandler($("#sidenav-help-link"), jq => HelpManager.show())
-    TemplateUtils.clickHandler($("#sidenav-feedback-link"), jq => FeedbackManager.show())
-    TemplateUtils.clickHandler($("#sidenav-refresh-link"), jq => MetadataManager.refreshSchema())
-    TemplateUtils.clickHandler($("#sidenav-history-link"), jq => HistoryManager.show())
+    TemplateUtils.clickHandler($("#sidenav-help-link"), _ => HelpManager.show())
+    TemplateUtils.clickHandler($("#sidenav-feedback-link"), _ => FeedbackManager.show())
+    TemplateUtils.clickHandler($("#sidenav-refresh-link"), _ => MetadataManager.refreshSchema())
+    TemplateUtils.clickHandler($("#sidenav-history-link"), _ => HistoryManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 

@@ -36,7 +36,7 @@ object ProgressManager {
     }
 
     val cancelLink = $(".cancel-query-link", queryWorkspace)
-    TemplateUtils.clickHandler(cancelLink, jq => {
+    TemplateUtils.clickHandler(cancelLink, _ => {
       NetworkMessage.sendMessage(CancelQuery(queryId, resultId))
     })
 

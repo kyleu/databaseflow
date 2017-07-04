@@ -5,7 +5,7 @@ import models.graphql.CommonGraphQL._
 import models.graphql.GraphQLContext
 import sangria.macros.derive._
 import sangria.schema._
-import SchemaModelGraphQL._
+import models.schema.SchemaModelGraphQL._
 
 object SchemaGraphQL {
   implicit val schemaType = deriveObjectType[GraphQLContext, Schema](

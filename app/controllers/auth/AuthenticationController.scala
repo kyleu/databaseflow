@@ -23,7 +23,7 @@ class AuthenticationController @javax.inject.Inject() (
     credentialsProvider: CredentialsProvider
 ) extends BaseController {
   def signInForm = withoutSession("form") { implicit request =>
-    val src = request.headers.get("Referer").filter(_.contains(request.host))
+    // TODO: val src = request.headers.get("Referer").filter(_.contains(request.host))
     Future.successful(Ok(views.html.auth.signin(request.identity, UserForms.signInForm)))
   }
 
@@ -53,7 +53,7 @@ class AuthenticationController @javax.inject.Inject() (
             case None => Future.failed(new IdentityNotFoundException(messagesApi("error.missing.user", loginInfo.providerID)(request.lang)))
           }
         }.recover {
-          case e: ProviderException =>
+          case _: ProviderException =>
             Redirect(controllers.auth.routes.AuthenticationController.signInForm()).flashing("error" -> messagesApi("authentication.invalid.credentials")(
               request.lang
             ))

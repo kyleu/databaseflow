@@ -16,9 +16,7 @@ object QueryExportFormManager {
   private[this] val inputQueryId = $("#input-export-query-id", modal)
   private[this] val inputSource = $("#input-export-source", modal)
 
-  def init() = {
-    TemplateUtils.clickHandler($("#export-cancel-link", modal), jq => modal.closeModal())
-  }
+  def init() = TemplateUtils.clickHandler($("#export-cancel-link", modal), _ => modal.closeModal())
 
   def show(queryId: UUID, source: QueryResult.Source) = {
     inputQueryId.value(queryId.toString)

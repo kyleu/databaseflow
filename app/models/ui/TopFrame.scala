@@ -37,7 +37,7 @@ class TopFrame() extends MainFrame {
 
   listenTo(SwingPanels.statusLabel.mouse.clicks)
   reactions += {
-    case x: MouseClicked => if (java.awt.Desktop.isDesktopSupported) {
+    case _: MouseClicked => if (java.awt.Desktop.isDesktopSupported) {
       java.awt.Desktop.getDesktop.browse(new URI("http://localhost:4260"))
     }
   }

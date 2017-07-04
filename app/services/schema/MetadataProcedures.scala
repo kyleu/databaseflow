@@ -59,7 +59,7 @@ object MetadataProcedures extends Logging {
         case DatabaseMetaData.procedureColumnOut => "out"
         case DatabaseMetaData.procedureColumnReturn => "return"
         case DatabaseMetaData.procedureColumnResult => "result"
-        case x => "?"
+        case _ => "?"
       },
       columnType = QueryTranslations.forType(colType, colTypeName),
       sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?

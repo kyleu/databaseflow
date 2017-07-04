@@ -12,7 +12,6 @@ object IconCreator extends App {
   Files.createDirectories(tmpDir)
   val outDir = Paths.get(".", "out")
 
-  private val startMs = System.currentTimeMillis
   go()
 
   def go() = {

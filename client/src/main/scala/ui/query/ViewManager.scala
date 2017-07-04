@@ -47,14 +47,14 @@ object ViewManager extends ViewDetailHelper {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      TemplateUtils.clickHandler($(".view-data-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".view-data-link", queryPanel), _ => {
         RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
       })
-      TemplateUtils.clickHandler($(".query-open-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
         AdHocQueryManager.addAdHocQuery(UUID.randomUUID, "Query Name", "select * from something")
       })
 
-      def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, jq => {
+      def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, _ => {
         val resultId = UUID.randomUUID
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, title)

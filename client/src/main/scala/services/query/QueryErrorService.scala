@@ -16,7 +16,7 @@ object QueryErrorService {
     val panel = $("#" + qer.id)
     val sqlEl = $(".query-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), jq => {
+    TemplateUtils.clickHandler($(".results-sql-link", panel), _ => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })

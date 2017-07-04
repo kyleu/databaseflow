@@ -10,7 +10,7 @@ trait TransactionHelper { this: SocketService =>
   private[this] def sendState(state: TransactionState) = out ! TransactionStatus(state = state, occurred = System.currentTimeMillis)
 
   def handleBeginTransaction() = activeTransaction match {
-    case Some(tx) => throw new IllegalStateException(messages("socket.duplicate.transaction", Nil))
+    case Some(_) => throw new IllegalStateException(messages("socket.duplicate.transaction", Nil))
     case None =>
       val connection = db.source.getConnection
       connection.setAutoCommit(false)

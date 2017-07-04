@@ -12,7 +12,7 @@ object VersionService extends Logging {
   private[this] val insecureUrl = "http://databaseflow.com/version"
 
   def loadServerVersion(ws: WSClient) = ws.url(url).get().map(_.body).recoverWith {
-    case x => ws.url(insecureUrl).get().map(_.body).recoverWith {
+    case _ => ws.url(insecureUrl).get().map(_.body).recoverWith {
       case ex =>
         log.info(s"Unable to retreive latest version from public server: [${ex.getMessage}].")
         Future.successful("?")

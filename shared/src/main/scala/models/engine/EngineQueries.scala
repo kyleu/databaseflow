@@ -16,7 +16,7 @@ object EngineQueries {
         case Some(o) => Some(s" rownum <= ${l + o} and rownum > $o")
         case None => None
       }
-      case Some(l) => None
+      case Some(_) => None
       case None => options.offset match {
         case Some(o) if o > 0 => Some(s" rownum > $o")
         case _ => None
@@ -36,7 +36,7 @@ object EngineQueries {
         case Some(o) => s" offset $o rows fetch next $l rows only"
         case None => s" offset 0 rows fetch next $l rows only"
       }
-      case Some(e) => throw new IllegalStateException(s"No limit support for engine [$engine].")
+      case Some(_) => throw new IllegalStateException(s"No limit support for engine [$engine].")
       case None => options.offset match {
         case Some(o) if o > 0 => s" offset $o rows"
         case _ => ""
@@ -52,10 +52,10 @@ object EngineQueries {
         val (q, v) = filter.op match {
           case FilterOp.Between =>
             val split = filter.v.split('|').toSeq
-            (" " + split.map(s => "?").mkString(" and ")) -> split.map(s => parse(filter.t, s.trim))
+            (" " + split.map(_ => "?").mkString(" and ")) -> split.map(s => parse(filter.t, s.trim))
           case FilterOp.In =>
             val split = filter.v.split(',').toSeq
-            " (" + split.map(s => "?").mkString(", ") + ")" -> split.map(s => parse(filter.t, s))
+            " (" + split.map(_ => "?").mkString(", ") + ")" -> split.map(s => parse(filter.t, s))
           case FilterOp.IsNull | FilterOp.IsNotNull => "" -> Nil
           case FilterOp.Like if !filter.v.contains('%') => " ?" -> Seq(parse(filter.t, s"%${filter.v}%"))
           case FilterOp.Like => " ?" -> Seq(parse(filter.t, filter.v))

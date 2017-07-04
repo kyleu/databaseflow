@@ -20,7 +20,7 @@ object SearchFilterManager extends SearchFilterFields {
   }
 
   private[this] def highlightTitleMatches(title: String, matches: Seq[String], anchorEl: JQuery, titleEl: JQuery) = {
-    val replaced = matches.foldLeft(title) { (x, y) =>
+    val replaced = matches.foldLeft(title) { (_, y) =>
       val titleLc = title.toLowerCase
       val idx = titleLc.indexOf(y)
       if (idx == -1) { title } else { s"""${title.substring(0, idx)}[[${title.substring(idx, idx + y.length)}]]${title.substring(idx + y.length)}""" }
@@ -32,7 +32,7 @@ object SearchFilterManager extends SearchFilterFields {
 
   private[this] def highlightAdditionalMatches(keys: Seq[(String, String)], matches: Seq[String], anchorEl: JQuery, titleEl: JQuery) = {
     val els = keys.map { key =>
-      val replaced = matches.foldLeft(key._2) { (x, y) =>
+      val replaced = matches.foldLeft(key._2) { (_, y) =>
         val keyLc = key._2.toLowerCase
         val idx = keyLc.indexOf(y)
         if (idx == -1) { key._2 } else { s"""${key._2.substring(0, idx)}[${key._2.substring(idx, idx + y.length)}]${key._2.substring(idx + y.length)}""" }

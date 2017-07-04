@@ -38,7 +38,7 @@ object SavedQueryManager extends SavedQueryChangeManager {
   }
 
   def savedQueryDetail(id: UUID) = openSavedQueries.find(_ == id) match {
-    case Some(queryId) => TabManager.selectTab(id)
+    case Some(_) => TabManager.selectTab(id)
     case None =>
       addSavedQuery(savedQueries.getOrElse(id, throw new IllegalStateException(s"Unknown saved query [$id].")))
       openSavedQueries = openSavedQueries + id

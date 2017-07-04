@@ -57,7 +57,7 @@ class UserCreateController @javax.inject.Inject() (
       for {
         _ <- authInfoRepository.add(loginInfo, authInfo)
         authenticator <- ctx.silhouette.env.authenticatorService.create(loginInfo)
-        value <- ctx.silhouette.env.authenticatorService.init(authenticator)
+        _ <- ctx.silhouette.env.authenticatorService.init(authenticator)
       } yield {
         ctx.silhouette.env.eventBus.publish(SignUpEvent(userSaved, request))
         Redirect(controllers.admin.routes.UserEditController.view(id)).flashing("success" -> s"User [${form("email")}] added.")

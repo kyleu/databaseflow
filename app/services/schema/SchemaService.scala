@@ -13,7 +13,6 @@ import scala.util.{Failure, Success, Try}
 
 object SchemaService extends Logging {
   private[this] var schemaMap: Map[UUID, Schema] = Map.empty
-  private[this] var refreshCount = 0
 
   def get(connectionId: UUID) = schemaMap.get(connectionId)
 
@@ -23,7 +22,7 @@ object SchemaService extends Logging {
 
   def getSchema(db: DatabaseConnection, forceRefresh: Boolean = false) = Try {
     schemaMap.get(db.connectionId) match {
-      case Some(schema) if forceRefresh =>
+      case Some(_) if forceRefresh =>
         val s = SchemaHelper.calculateSchema(db)
         set(db.connectionId, s)
         SchemaRefreshService.refreshSchema(db)
@@ -51,7 +50,7 @@ object SchemaService extends Logging {
     }
     getSchema(db) match {
       case Success(schema) if schema.detailsLoadedAt.isDefined => Future.successful(schema)
-      case Success(schema) =>
+      case Success(_) =>
         val promise = Promise[Schema]()
         def onSuccess(s: Schema): Unit = promise.complete(Success(s))
         def onFailure(t: Throwable): Unit = promise.complete(Failure(t))
@@ -63,7 +62,7 @@ object SchemaService extends Logging {
   def getSchemaWithDetailsFor(user: User, cs: ConnectionSettings) = {
     getSchemaFor(user, cs) match {
       case schema if schema.detailsLoadedAt.isDefined => Future.successful(schema)
-      case schema =>
+      case _ =>
         val promise = Promise[Schema]()
         def onSuccess(s: Schema): Unit = promise.complete(Success(s))
         def onFailure(t: Throwable): Unit = promise.complete(Failure(t))

@@ -48,7 +48,7 @@ trait DetailHelper { this: SocketService =>
   }
 
   protected[this] def handleGetColumnDetail(owner: String, name: String, t: String) = {
-    import ColumnType._
+    import models.schema.ColumnType._
     val colType = withNameInsensitive(t)
     def work() = if (colType.isNumeric) {
       db.query(ColumnDetailQueries.NumberColumnDetail(db.engine, owner, name))

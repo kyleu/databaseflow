@@ -34,7 +34,7 @@ object FeedbackManager {
 
       val queryPanel = $(s"#panel-$feedbackId")
 
-      TemplateUtils.clickHandler($(".submit-feedback", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".submit-feedback", queryPanel), _ => {
         val email = $("#feedback-email-input", queryPanel).value().toString
         val content = $("#feedback-content-input", queryPanel).value().toString
         submitFeedback(email, content)
@@ -54,7 +54,7 @@ object FeedbackManager {
         email = email,
         content = content
       ),
-      success = { (data: js.Any, textStatus: String, jqXHR: JQueryXHR) =>
+      success = { (_: js.Any, _: String, _: JQueryXHR) =>
         NotificationService.info("Feedback Success", "Thanks!")
         if (QueryManager.closeQuery(feedbackId)) {
           isOpen = false

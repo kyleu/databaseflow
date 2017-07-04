@@ -48,7 +48,8 @@ class UserEditController @javax.inject.Inject() (
     }
 
     if (newUsername.isEmpty) {
-      Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Username")(request.lang)))
+      val content = Redirect(controllers.admin.routes.UserEditController.edit(id))
+      Future.successful(content.flashing("error" -> messagesApi("error.empty", "Username")(request.lang)))
     } else if (newEmail.isEmpty) {
       Future.successful(Redirect(controllers.admin.routes.UserEditController.edit(id)).flashing("error" -> messagesApi("error.empty", "Email Address")(
         request.lang

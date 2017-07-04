@@ -19,8 +19,8 @@ object SharedResultFormManager {
   private[this] val inputSql = $("#input-shared-result-sql", modal)
 
   def init() = {
-    TemplateUtils.clickHandler($("#input-shared-result-cancel-link", modal), jq => modal.closeModal())
-    TemplateUtils.clickHandler($("#input-shared-result-share-link", modal), jq => share())
+    TemplateUtils.clickHandler($("#input-shared-result-cancel-link", modal), _ => modal.closeModal())
+    TemplateUtils.clickHandler($("#input-shared-result-share-link", modal), _ => share())
   }
 
   def show(sharedResult: SharedResult) = {

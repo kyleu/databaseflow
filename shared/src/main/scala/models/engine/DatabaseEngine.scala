@@ -59,7 +59,7 @@ sealed abstract class DatabaseEngine(
     val id: String, val name: String, val driverClass: String, val defaultPort: Option[Int], val cap: EngineCapabilities
 ) extends EnumEntry {
   def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = dbName match {
-    case Some(d) => throw new IllegalStateException(s"Cannot form url for provided [$host:$port/$dbName:$extra].")
+    case Some(_) => throw new IllegalStateException(s"Cannot form url for provided [$host:$port/$dbName:$extra].")
     case None => cap.exampleUrl
   }
   override def toString = id

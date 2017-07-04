@@ -32,9 +32,9 @@ class PasswordInfoService @javax.inject.Inject() () extends DelegableAuthInfoDAO
 
   override def save(loginInfo: LoginInfo, authInfo: PasswordInfo) = {
     MasterDatabase.transaction { conn =>
-      val rowsAffected = MasterDatabase.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
+      val rowsAffected = conn.executeUpdate(PasswordInfoQueries.UpdatePasswordInfo(loginInfo, authInfo))
       if (rowsAffected == 0) {
-        MasterDatabase.executeUpdate(PasswordInfoQueries.CreatePasswordInfo(loginInfo, authInfo))
+        conn.executeUpdate(PasswordInfoQueries.CreatePasswordInfo(loginInfo, authInfo))
         Future.successful(authInfo)
       } else {
         Future.successful(authInfo)

@@ -56,13 +56,13 @@ object ConnectionSettingsService {
 
   def insert(connSettings: ConnectionSettings) = {
     MasterDatabase.query(ConnectionSettingsQueries.GetExisting(connSettings.id, connSettings.name, connSettings.slug)) match {
-      case Some(c) => throw new IllegalStateException(s"There is already a connection named [${connSettings.name}].")
+      case Some(_) => throw new IllegalStateException(s"There is already a connection named [${connSettings.name}].")
       case None => MasterDatabase.executeUpdate(ConnectionSettingsQueries.insert(connSettings))
     }
   }
   def update(connSettings: ConnectionSettings) = {
     MasterDatabase.query(ConnectionSettingsQueries.GetExisting(connSettings.id, connSettings.name, connSettings.slug)) match {
-      case Some(c) => throw new IllegalStateException(s"There is already a connection named [${connSettings.name}].")
+      case Some(_) => throw new IllegalStateException(s"There is already a connection named [${connSettings.name}].")
       case None =>
         DatabaseRegistry.flush(connSettings.id)
         MasterDatabase.executeUpdate(ConnectionSettingsQueries.Update(connSettings))

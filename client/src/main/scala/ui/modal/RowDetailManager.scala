@@ -20,8 +20,8 @@ object RowDetailManager {
   private[this] val linkOk = $("#row-detail-ok-link", modal)
 
   def init() = {
-    TemplateUtils.clickHandler(linkEdit, jq => edit())
-    TemplateUtils.clickHandler(linkOk, jq => close())
+    TemplateUtils.clickHandler(linkEdit, _ => edit())
+    TemplateUtils.clickHandler(linkOk, _ => close())
   }
 
   def show(table: Option[String], pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {

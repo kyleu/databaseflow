@@ -13,7 +13,7 @@ object PlanNodeDetailManager {
   private[this] val modalContent = $("#plan-node-modal-content", modal)
   private[this] val modalLink = $("#plan-node-ok-link", modal)
 
-  def init() = TemplateUtils.clickHandler(modalLink, jq => {
+  def init() = TemplateUtils.clickHandler(modalLink, _ => {
     close()
   })
 

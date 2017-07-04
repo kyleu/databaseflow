@@ -22,26 +22,26 @@ object ExploreService {
           name = "table",
           fieldType = t,
           description = Some("This database's tables."),
-          resolve = (x: Context[GraphQLContext, models.schema.Schema]) => ()
+          resolve = (_: Context[GraphQLContext, models.schema.Schema]) => ()
         ),
         Field(
           name = "view",
           fieldType = v,
           description = Some("This database's views."),
-          resolve = (x: Context[GraphQLContext, models.schema.Schema]) => ()
+          resolve = (_: Context[GraphQLContext, models.schema.Schema]) => ()
         )
       )
       case (Some(t), None) => fields[GraphQLContext, models.schema.Schema](Field(
         name = "table",
         fieldType = t,
         description = Some("This database's tables."),
-        resolve = (x: Context[GraphQLContext, models.schema.Schema]) => ()
+        resolve = (_: Context[GraphQLContext, models.schema.Schema]) => ()
       ))
       case (None, Some(v)) => fields[GraphQLContext, models.schema.Schema](Field(
         name = "view",
         fieldType = v,
         description = Some("This database's views."),
-        resolve = (x: Context[GraphQLContext, models.schema.Schema]) => ()
+        resolve = (_: Context[GraphQLContext, models.schema.Schema]) => ()
       ))
       case (None, None) => fields[GraphQLContext, models.schema.Schema]()
     }

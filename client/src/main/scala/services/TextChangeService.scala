@@ -10,7 +10,7 @@ import utils.NullUtils
 object TextChangeService {
   private[this] val dirtyEditors = collection.mutable.HashSet.empty[UUID]
 
-  def init() = dom.window.onbeforeunload = (e: BeforeUnloadEvent) => {
+  def init() = dom.window.onbeforeunload = (_: BeforeUnloadEvent) => {
     if (TransactionService.isInTransaction) {
       "Your active transaction will be rolled back."
     } else if (dirtyEditors.nonEmpty) {

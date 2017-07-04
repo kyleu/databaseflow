@@ -23,12 +23,12 @@ class AdminController @javax.inject.Inject() (implicit override val messagesApi:
     }
   }
 
-  def sandbox() = withAdminSession("admin-sandbox") { (username, request) =>
+  def sandbox() = withAdminSession("admin-sandbox") { (_, request) =>
     implicit val req = request
     Future.successful(Ok(Html("Ok!")))
   }
 
-  def toggleLogging() = withAdminSession("toggle-logging") { (username, request) =>
+  def toggleLogging() = withAdminSession("toggle-logging") { (_, _) =>
     LogService.enabled = !LogService.enabled
     Future.successful(Ok(s"OK: ${LogService.enabled}"))
   }

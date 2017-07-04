@@ -62,7 +62,7 @@ $(function(global) {
     });
   }
 
-  $('html > head').append($('<style>.variable-editor {display: none !important}</style>'))
+  $('html > head').append($('<style>.variable-editor {display: none !important}</style>'));
 
   global.renderGraphiql = function(elem) {
     $('.save-body-input').val(parameters.query);

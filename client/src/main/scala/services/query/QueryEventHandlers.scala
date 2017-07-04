@@ -16,10 +16,10 @@ import utils.TemplateUtils
 object QueryEventHandlers {
   def wireLinks(panel: JQuery, result: QueryResult, chartId: UUID) = {
     val src = result.source.getOrElse(throw new IllegalStateException())
-    TemplateUtils.clickHandler($(".results-export-link", panel), jq => {
+    TemplateUtils.clickHandler($(".results-export-link", panel), _ => {
       QueryExportFormManager.show(result.queryId, src)
     })
-    TemplateUtils.clickHandler($(".results-share-link", panel), jq => {
+    TemplateUtils.clickHandler($(".results-share-link", panel), _ => {
       val chart = ChartService.getSettings(chartId).trim match {
         case x if x.isEmpty => None
         case x => Some(x)

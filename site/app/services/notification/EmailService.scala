@@ -22,7 +22,7 @@ class EmailService @javax.inject.Inject() (mailerClient: MailerClient) extends L
       )
       mailerClient.send(email)
     }
-    f.foreach(x => log.info(s"Successfully sent email to [$address]."))
+    f.foreach(_ => log.info(s"Successfully sent email to [$address]."))
     f.failed.foreach(x => log.warn(s"Unable to send email to [$address].", x))
   }
 }

@@ -46,10 +46,10 @@ class UserService @javax.inject.Inject() (hasher: PasswordHasher) extends Loggin
   def remove(userId: UUID) = {
     val startTime = System.nanoTime
     MasterDatabase.transaction { conn =>
-      getById(userId).map { user =>
-        MasterDatabase.executeUpdate(PasswordInfoQueries.removeById(Seq(user.profile.providerID, user.profile.providerKey)))
+      conn.query(UserQueries.getById(Seq(userId))).map { user =>
+        conn.executeUpdate(PasswordInfoQueries.removeById(Seq(user.profile.providerID, user.profile.providerKey)))
       }
-      val users = MasterDatabase.executeUpdate(UserQueries.removeById(Seq(userId)))
+      val users = conn.executeUpdate(UserQueries.removeById(Seq(userId)))
       UserCache.removeUser(userId)
       val timing = ((System.nanoTime - startTime) / 1000000).toInt
       Map("users" -> users, "timing" -> timing)

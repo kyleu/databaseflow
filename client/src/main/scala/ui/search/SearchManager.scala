@@ -23,17 +23,17 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
-    TemplateUtils.clickHandler(searchIcon, jq => {
+    TemplateUtils.clickHandler(searchIcon, _ => {
       searchInput.value("")
       clearSearch()
       searchInput.trigger("focus")
       searchInput.trigger("blur")
     })
 
-    searchInput.keyup { (e: JQueryEventObject) =>
+    searchInput.keyup { _: JQueryEventObject =>
       onTextChange(searchInput.value().toString.stripPrefix("/"))
     }
-    searchInput.blur { (e: JQueryEventObject) =>
+    searchInput.blur { _: JQueryEventObject =>
       onTextChange(searchInput.value().toString.stripPrefix("/"))
     }
   }

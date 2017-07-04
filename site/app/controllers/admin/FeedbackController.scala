@@ -10,13 +10,13 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class FeedbackController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  def list() = withAdminSession("feedback-list") { (username, request) =>
+  def list() = withAdminSession("feedback-list") { (_, request) =>
     implicit val req = request
     val feedbacks = FeedbackService.list().map(FeedbackService.load).toSeq
     Future.successful(Ok(views.html.admin.audit.feedbacks(feedbacks)))
   }
 
-  def remove(id: UUID) = withAdminSession("feedback-remove") { (username, request) =>
+  def remove(id: UUID) = withAdminSession("feedback-remove") { (_, request) =>
     implicit val req = request
     FeedbackService.remove(id)
     Future.successful(Redirect(controllers.admin.routes.FeedbackController.list()).flashing("success" -> "Feedback removed."))

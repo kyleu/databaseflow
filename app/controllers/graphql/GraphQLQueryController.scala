@@ -17,7 +17,6 @@ class GraphQLQueryController @javax.inject.Inject() (override val ctx: Applicati
   def load(connection: String, queryId: UUID) = withSession("graphql.load") { implicit request =>
     Future.successful(ConnectionSettingsService.connFor(connection) match {
       case Some(c) =>
-        val q = GraphQLQueryService.getById(queryId, Some(request.identity))
         Redirect(controllers.graphql.routes.GraphQLController.graphql(c.slug, Some(queryId)).url)
       case None => Redirect(controllers.routes.HomeController.home())
     })
@@ -38,7 +37,7 @@ class GraphQLQueryController @javax.inject.Inject() (override val ctx: Applicati
           edit = gqlf.edit
         )
         gqlOpt match {
-          case Some(existing) =>
+          case Some(_) =>
             GraphQLQueryService.update(updated, request.identity)
             Ok("Updated")
           case None =>

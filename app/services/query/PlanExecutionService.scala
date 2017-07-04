@@ -22,7 +22,7 @@ object PlanExecutionService extends Logging {
 
         val initialResult = tx.executeUnknown(DynamicQuery(explainSql)) match {
           case Left(res) => res
-          case Right(i) => DynamicQuery.Results(Nil, Nil)
+          case Right(_) => DynamicQuery.Results(Nil, Nil)
         }
 
         val result = engine match {

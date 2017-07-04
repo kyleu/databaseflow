@@ -7,18 +7,19 @@ trait BaseQueries[T] {
   protected def tableName: String = "_invalid_"
   protected def idColumns = Seq("id")
   protected def columns: Seq[String]
+  protected lazy val quotedColumns = columns.map("\"" + _ + "\"").mkString(", ")
+  protected lazy val columnPlaceholders = columns.map(_ => "?").mkString(", ")
   protected def searchColumns: Seq[String]
 
   protected def fromRow(row: Row): T
   protected def toDataSeq(t: T): Seq[Any]
 
-  protected lazy val insertSql = {
-    s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values (${columns.map(x => "?").mkString(", ")})"""
-  }
+  protected lazy val insertSql = s"""insert into "$tableName" ($quotedColumns) values ($columnPlaceholders)"""
 
-  protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = JdbcUtils.trim(s"""
-    update \"$tableName\" set ${updateColumns.map(x => s""""$x" = ?""").mkString(", ")}${additionalUpdates.fold("")(x => s", $x")} where $idWhereClause
-  """)
+  protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = {
+    val updateCols = updateColumns.map(x => s""""$x" = ?""").mkString(", ")
+    s"""update \"$tableName\" set $updateCols${additionalUpdates.fold("")(x => s", $x")} where $idWhereClause"""
+  }
 
   protected def getSql(
     whereClause: Option[String] = None,
@@ -62,11 +63,6 @@ trait BaseQueries[T] {
     override val sql = insertSql
     override val values: Seq[Any] = toDataSeq(model)
   }
-  protected case class InsertBatch(models: Seq[T]) extends Statement {
-    private[this] val valuesClause = models.map(m => s"(${columns.map(x => "?").mkString(", ")})").mkString(", ")
-    override val sql = s"""insert into "$tableName" (${columns.map("\"" + _ + "\"").mkString(", ")}) values $valuesClause"""
-    override val values: Seq[Any] = models.flatMap(toDataSeq)
-  }
 
   protected case class RemoveById(override val values: Seq[Any]) extends Statement {
     override val sql = s"""delete from "$tableName" where $idWhereClause"""
@@ -83,10 +79,10 @@ trait BaseQueries[T] {
   }
   protected case class Search(q: String, orderBy: String, page: Option[Int], groupBy: Option[String] = None) extends Query[List[T]] {
     private[this] val whereClause = if (q.isEmpty) { None } else { Some(searchColumns.map(c => s"lower($c) like lower(?)").mkString(" or ")) }
-    private[this] val limit = page.map(x => Config.pageSize)
+    private[this] val limit = page.map(_ => Config.pageSize)
     private[this] val offset = page.map(x => x * Config.pageSize)
     override val sql = getSql(whereClause, groupBy, Some(orderBy), limit, offset)
-    override val values = if (q.isEmpty) { Seq.empty } else { searchColumns.map(c => s"%$q%") }
+    override val values = if (q.isEmpty) { Seq.empty } else { searchColumns.map(_ => s"%$q%") }
     override def reduce(rows: Iterator[Row]) = rows.map(fromRow).toList
   }
 

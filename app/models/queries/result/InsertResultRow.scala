@@ -9,7 +9,7 @@ case class InsertResultRow(tableName: String, columns: Seq[String], override val
     s"""insert into $quotedName (
       ${columns.map(engine.cap.leftQuote + _ + engine.cap.rightQuote).mkString(", ")}
     ) values (
-      ${values.map(y => "?").mkString(", ")}
+      ${values.map(_ => "?").mkString(", ")}
     )
     """
   }

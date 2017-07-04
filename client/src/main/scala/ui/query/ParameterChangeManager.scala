@@ -38,7 +38,7 @@ trait ParameterChangeManager {
         val v = sql.substring(startIndex + 1, idx)
         val ret = v.indexOf(':') match {
           case -1 => v -> "string"
-          case i =>
+          case _ =>
             val split = v.split(':')
             split.headOption.getOrElse(throw new IllegalStateException()).trim -> split.tail.mkString(":").trim
         }

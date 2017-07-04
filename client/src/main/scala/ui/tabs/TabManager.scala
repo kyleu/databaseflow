@@ -63,7 +63,7 @@ object TabManager {
     $(".tabs .indicator").remove()
     dynamicTabBar.tabs()
     val queryPanel = $(s"#panel-$id")
-    TemplateUtils.clickHandler($(s".${Icons.close}", queryPanel), jq => {
+    TemplateUtils.clickHandler($(s".${Icons.close}", queryPanel), _ => {
       onClose()
     })
     selectTab(id)

@@ -41,11 +41,11 @@ object HelpManager {
 
       tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
 
-      TemplateUtils.clickHandler($(".previous-tip-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".previous-tip-link", queryPanel), _ => {
         if (tipIdx == 0) { tipIdx = TipsAndTricks.values.length - 1 } else { tipIdx = tipIdx - 1 }
         tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
       })
-      TemplateUtils.clickHandler($(".next-tip-link", queryPanel), jq => {
+      TemplateUtils.clickHandler($(".next-tip-link", queryPanel), _ => {
         if (tipIdx == TipsAndTricks.values.length - 1) { tipIdx = 0 } else { tipIdx = tipIdx + 1 }
         tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
       })

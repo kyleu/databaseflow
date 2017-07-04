@@ -12,11 +12,11 @@ object FilterManager {
   def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, columns: Seq[QueryResult.Col], resultId: UUID) = {
     val filterContainer = $(".filter-container", panel)
     var filterShown = false
-    TemplateUtils.clickHandler($(".results-filter-link", panel), jq => {
+    TemplateUtils.clickHandler($(".results-filter-link", panel), _ => {
       if (filterShown) { filterContainer.hide() } else { filterContainer.show() }
       filterShown = !filterShown
     })
-    TemplateUtils.clickHandler($(".results-filter-cancel", panel), jq => {
+    TemplateUtils.clickHandler($(".results-filter-cancel", panel), _ => {
       $(".filter-container", panel).hide()
     })
 
@@ -45,7 +45,7 @@ object FilterManager {
       }
     }
 
-    TemplateUtils.clickHandler($(".results-filter-go", panel), jq => {
+    TemplateUtils.clickHandler($(".results-filter-go", panel), _ => {
       $(".filter-container", panel).hide()
 
       val column = $(":selected", colSelect).`val`().toString

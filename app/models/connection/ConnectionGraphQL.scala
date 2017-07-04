@@ -69,7 +69,7 @@ object ConnectionGraphQL {
       name = "tables",
       fieldType = StringType,
       description = Some("The tables of this database."),
-      resolve = c => "Hello!"
+      resolve = _ => "Hello!"
     )
   )
 }

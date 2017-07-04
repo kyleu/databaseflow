@@ -32,12 +32,12 @@ object HistoryManager {
       QueryManager.activeQueries = QueryManager.activeQueries :+ historyId
 
       val queryPanel = $(s"#panel-$historyId")
-      TemplateUtils.clickHandler($(".refresh-history-link", queryPanel), e => {
+      TemplateUtils.clickHandler($(".refresh-history-link", queryPanel), _ => {
         refresh()
       })
 
       val msg = "This will remove all activity history for this connection. Are you sure?"
-      TemplateUtils.clickHandler($(".remove-all-history-link", queryPanel), e => {
+      TemplateUtils.clickHandler($(".remove-all-history-link", queryPanel), _ => {
         if (dom.window.confirm(msg)) {
           NetworkMessage.sendMessage(RemoveAuditHistory(None))
         }

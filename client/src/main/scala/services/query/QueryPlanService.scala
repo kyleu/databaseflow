@@ -27,15 +27,13 @@ object QueryPlanService {
     val costs = pr.result.node.costs
     val total = costs.cost.map(Left(_)).getOrElse(Right(costs.duration.orElse(costs.actualRows.map(_.toDouble)).getOrElse(costs.estimatedRows.toDouble)))
     nodes.foreach { node =>
-      TemplateUtils.clickHandler($(s"#plan-node-${node.id}", panel), (x) => {
-        PlanNodeDetailManager.show(node, total)
-      })
+      TemplateUtils.clickHandler($(s"#plan-node-${node.id}", panel), _ => PlanNodeDetailManager.show(node, total))
     }
 
     val planViewToggle = $(".plan-view-toggle", workspace)
     var showingChart = true
 
-    TemplateUtils.clickHandler(planViewToggle, (f) => {
+    TemplateUtils.clickHandler(planViewToggle, _ => {
       if (showingChart) {
         planViewToggle.text("View Plan Chart")
         chart.hide()

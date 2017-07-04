@@ -20,8 +20,8 @@ object SavedQueryFormManager {
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
   def init() = {
-    TemplateUtils.clickHandler($("#input-query-cancel-link", modal), jq => modal.closeModal())
-    TemplateUtils.clickHandler($("#input-query-save-link", modal), jq => save())
+    TemplateUtils.clickHandler($("#input-query-cancel-link", modal), _ => modal.closeModal())
+    TemplateUtils.clickHandler($("#input-query-save-link", modal), _ => save())
   }
 
   def show(savedQuery: SavedQuery) = {
@@ -41,7 +41,7 @@ object SavedQueryFormManager {
       case Permission.Private => $("#input-query-edit-private", modal).prop("checked", true)
     }
     savedQuery.connection match {
-      case Some(conn) => inputConnectionTrue.prop("checked", true)
+      case Some(_) => inputConnectionTrue.prop("checked", true)
       case None => inputConnectionFalse.prop("checked", true)
     }
 

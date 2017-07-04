@@ -55,7 +55,7 @@ class Transaction(connection: Connection) extends Queryable {
 
   def transaction[A](f: Transaction => A): A = f(this)
 
-  var onCommit: ListBuffer[() => Unit] = ListBuffer.empty[() => Unit]
-  var onClose: ListBuffer[() => Unit] = ListBuffer.empty[() => Unit]
-  var onRollback: ListBuffer[() => Unit] = ListBuffer.empty[() => Unit]
+  val onCommit: ListBuffer[() => Unit] = ListBuffer.empty[() => Unit]
+  val onClose: ListBuffer[() => Unit] = ListBuffer.empty[() => Unit]
+  val onRollback: ListBuffer[() => Unit] = ListBuffer.empty[() => Unit]
 }

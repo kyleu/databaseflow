@@ -39,7 +39,7 @@ object MetadataColumns {
       autoIncrement = try {
         row.asOpt[String]("IS_AUTOINCREMENT").contains("YES")
       } catch {
-        case NonFatal(x) => false
+        case NonFatal(_) => false
       },
       columnType = QueryTranslations.forType(colType, colTypeName),
       sqlTypeCode = colType,

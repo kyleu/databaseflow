@@ -18,7 +18,7 @@ object PlanParseService {
     case MySQL => MySqlParseService.parse(sql, queryId, plan, startMs)
     case Oracle => OracleParseService.parse(sql, queryId, plan, startMs)
     case PostgreSQL => PostgresParseService.parse(sql, queryId, plan, startMs)
-    case x => throw new IllegalStateException("Engine [] does not support execution plans.")
+    case x => throw new IllegalStateException(s"Engine [$x] does not support execution plans.")
   }
 
   def resultPlanString(result: DynamicQuery.Results)(implicit engine: DatabaseEngine) = engine match {

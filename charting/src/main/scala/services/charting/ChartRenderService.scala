@@ -22,7 +22,7 @@ object ChartRenderService {
   def renderChart(el: Element, data: Seq[js.Dynamic], options: js.Dynamic) = {
     //utils.Logging.logJs(js.Array(data: _*))
     plotly.map(_.newPlot(el, js.Array(data: _*), options))
-    $(".modebar-btn", el).each { (x: Int, y: dom.Element) =>
+    $(".modebar-btn", el).each { (_: Int, y: dom.Element) =>
       val jq = $(y)
       if (strippedTitles.contains(jq.data("title").toString)) {
         jq.remove()

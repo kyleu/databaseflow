@@ -90,7 +90,7 @@ object MetadataTables extends Logging {
     definition = try {
       row.asOpt[String]("SQL")
     } catch {
-      case NonFatal(x) => None
+      case NonFatal(_) => None
     }
   )
 }

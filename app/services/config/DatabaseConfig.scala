@@ -11,22 +11,22 @@ object DatabaseConfig {
     val engine = try {
       DatabaseEngine.withName(cfg.getString("db"))
     } catch {
-      case NonFatal(x) => H2
+      case NonFatal(_) => H2
     }
     val url = try {
       cfg.getString("url")
     } catch {
-      case NonFatal(x) => "default"
+      case NonFatal(_) => "default"
     }
     val username = try {
       cfg.getString("username")
     } catch {
-      case NonFatal(x) => "databaseflow"
+      case NonFatal(_) => "databaseflow"
     }
     val password = try {
       cfg.getString("password")
     } catch {
-      case NonFatal(x) => "flow"
+      case NonFatal(_) => "flow"
     }
     DatabaseConfig(engine, url, username, password)
   }
