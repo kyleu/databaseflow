@@ -8,38 +8,57 @@ import sangria.schema._
 import services.query.QueryResultRowService
 
 object ExploreTableHelper {
+  val emptyObjectType = ObjectType(
+    name = "empty",
+    description = "Empty table used as a placeholder when things go wrong",
+    fieldsFn = () => {
+    fields[GraphQLContext, QueryResultRow](Field(
+      name = "unused",
+      fieldType = StringType,
+      resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => "unused"
+    ))
+  }
+  )
+
   def getTables(schema: models.schema.Schema) = if (schema.tables.isEmpty) {
     None
   } else {
-    val tableTypes = collection.mutable.ArrayBuffer.empty[(Table, ObjectType[GraphQLContext, QueryResultRow])]
+    var tableTypes: Option[Seq[(Table, ObjectType[GraphQLContext, QueryResultRow])]] = None
 
-    def tableFieldset(table: Table) = {
-      val columnFields = table.columns.map { col =>
+    def tableFieldset(src: Table) = {
+      val columnFields = src.columns.map { col =>
         ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull)
       }
-      val fkFields = table.foreignKeys.map(fk => ForeignKeyGraphQL.getForeignKeyField(schema, tableTypes, table, fk))
+      val fkFields = src.foreignKeys.map { fk =>
+        val types = tableTypes.getOrElse(throw new IllegalStateException("No available table types."))
+        val tgt = types.find(_._1.name.equalsIgnoreCase(fk.targetTable)).map(_._2).getOrElse(emptyObjectType)
+        ForeignKeyGraphQL.getForeignKeyField(schema, src, tgt, fk)
+      }
       fields[GraphQLContext, QueryResultRow](columnFields ++ fkFields: _*)
     }
 
-    schema.tables.map { table =>
-      tableTypes += table -> ObjectType(
-        name = table.name,
-        description = table.description.getOrElse(s"Table [${table.name}]"),
+    tableTypes = Some(schema.tables.map { table =>
+      table -> ObjectType(
+        name = CommonGraphQL.cleanName(table.name),
+        description = table.description.getOrElse(s"Table [$table.name]"),
         fieldsFn = () => tableFieldset(table)
       )
-    }
+    })
 
-    val tableFields = fields[GraphQLContext, Unit](tableTypes.map { t =>
-      Field(
-        name = t._1.name,
-        fieldType = ListType(t._2),
-        description = t._1.description,
-        resolve = (x: Context[GraphQLContext, Unit]) => {
-          QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
-        },
-        arguments = resultArgs
-      )
-    }: _*)
+    val tableFields = {
+      val types = tableTypes.getOrElse(throw new IllegalStateException("No available table types."))
+      fields[GraphQLContext, Unit](types.map { t =>
+        Field(
+          name = t._1.name,
+          fieldType = ListType(t._2),
+          description = t._1.description,
+          resolve = (x: Context[GraphQLContext, Unit]) => {
+            QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
+          },
+          arguments = resultArgs
+        )
+      }: _*)
+    }
 
     Some(ObjectType(name = "tables", description = "The tables contained in this schema.", fields = tableFields))
   }

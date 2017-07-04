@@ -16,7 +16,7 @@ object CommonGraphQL {
   }
 
   def cleanName(s: String) = {
-    val ret = s.replaceAllLiterally(" ", "_").replaceAllLiterally(".", "_")
+    val ret = s.replaceAllLiterally(" ", "_").replaceAllLiterally(".", "_").replaceAllLiterally("(", "").replaceAllLiterally(")", "")
     if (ret.head.isDigit) { "_" + ret } else { ret }
   }
 
