@@ -40,7 +40,7 @@ object ExploreTableHelper {
     tableTypes = Some(schema.tables.map { table =>
       table -> ObjectType(
         name = CommonGraphQL.cleanName(table.name),
-        description = table.description.getOrElse(s"Table [$table.name]"),
+        description = table.description.getOrElse(s"Table [${table.name}]"),
         fieldsFn = () => tableFieldset(table)
       )
     })
