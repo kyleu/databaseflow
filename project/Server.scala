@@ -22,7 +22,7 @@ import sbt.Keys._
 import sbt.Project.projectToRef
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
-import playscalajs.PlayScalaJS.autoImport._
+import webscalajs.WebScalaJS.autoImport._
 
 object Server {
   private[this] val dependencies = {
@@ -52,7 +52,10 @@ object Server {
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
-    pipelineStages := Seq(scalaJSProd, digest, gzip),
+
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+    pipelineStages := Seq(digest, gzip),
+
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
