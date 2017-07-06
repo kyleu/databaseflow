@@ -27,7 +27,7 @@ class Configuration @javax.inject.Inject() (val cnf: play.api.Configuration, env
     CookieAuthenticatorSettings(
       cookieName = cfg.get[Option[String]]("name").getOrElse(throw new IllegalArgumentException()),
       cookiePath = cfg.get[Option[String]]("path").getOrElse(throw new IllegalArgumentException()),
-      cookieDomain = cfg.get[Option[String]]("domain"),
+      cookieDomain = None,
       secureCookie = cfg.get[Option[Boolean]]("secure").getOrElse(throw new IllegalArgumentException()),
       httpOnlyCookie = true,
       useFingerprinting = cfg.get[Option[Boolean]]("useFingerprinting").getOrElse(throw new IllegalArgumentException()),
