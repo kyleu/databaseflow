@@ -1,8 +1,10 @@
 package services.translation.api
 
 import utils.FutureUtils.defaultContext
-import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
+
+import io.circe._
+import io.circe.parser._
 
 @javax.inject.Singleton
 class YandexApi @javax.inject.Inject() (ws: WSClient) extends ApiProvider("Yandex") {
@@ -21,10 +23,10 @@ class YandexApi @javax.inject.Inject() (ws: WSClient) extends ApiProvider("Yande
 
   override def translate(lang: String, key: String, text: String) = {
     ws.url(url(lang)).withHttpHeaders("Accept" -> "application/json").post(body(text)).map { response =>
-      val json = Json.parse(response.body)
-      val t = (json \ "code").as[Int] match {
-        case 200 => (json \ "text").as[Seq[String]].head
-        case _ => (json \ "message").as[String]
+      val json = decode[JsonObject](response.body).right.get.toMap
+      val t = json("code").as[Int].right.get match {
+        case 200 => json("text").as[Seq[String]].right.get.head
+        case _ => json("message").as[String].right.get
       }
       Some(key -> t)
     }

@@ -4,7 +4,6 @@ import org.joda.time.LocalDateTime
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.MessagesApi
-import play.api.libs.json.{JsObject, JsString}
 import services.audit.FeedbackService
 import services.audit.FeedbackService.Feedback
 import services.notification.NotificationService
@@ -24,9 +23,7 @@ object FeedbackController {
 }
 
 @javax.inject.Singleton
-class FeedbackController @javax.inject.Inject() (implicit
-  override val messagesApi: MessagesApi, notificationService: NotificationService
-) extends BaseSiteController {
+class FeedbackController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
   def feedbackForm() = act("feedback-form") { implicit request =>
     Future.successful(Ok(views.html.feedbackForm()))
   }
@@ -43,7 +40,7 @@ class FeedbackController @javax.inject.Inject() (implicit
         notificationService.onFeedbackSubmitted(feedback.id, feedback.from, feedback.content, feedback.occurred)
 
         if (ajax) {
-          Ok(JsObject(Seq("status" -> JsString("OK"))))
+          Ok("{ \"status\": \"OK\" }").as("application/json")
         } else {
           Redirect(controllers.routes.SiteController.index()).flashing("success" -> "Thanks for your feedback!")
         }
