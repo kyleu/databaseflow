@@ -6,38 +6,34 @@ import services.scalaexport.file.{ClassFile, QueriesFile, ServiceFile}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object ScalaExportService {
-  def test(schema: Schema)(implicit ec: ExecutionContext) = {
-    val id = schema.catalog.orElse(schema.schemaName).getOrElse(schema.username)
-    ExportFiles.reset(id)
+case class ScalaExportService(schema: Schema) {
+  val id = schema.catalog.orElse(schema.schemaName).getOrElse(schema.username)
+
+  def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
     export(id, schema).map { result =>
-      ExportFiles.persist(result)
+      if (persist) {
+        ExportFiles.persist(result)
+        ExportFiles.merge(result.id)
+      }
       result
     }
   }
 
   def export(projectId: String, schema: Schema) = {
     val tableResults = schema.tables.flatMap(exportTable)
-    val files = Seq("index.scala" -> "Hello, world!") ++ tableResults
+    val files = tableResults
     Future.successful(ExportResult(projectId, files))
   }
 
-  private[this] val classNameSubstitutions = Map(
-    "AdhocQueries" -> "AdhocQuery",
-    "AnalyticsEvents" -> "AnalyticsEvent",
-    "Games" -> "Game",
-    "GameSeeds" -> "GameSeed",
-    "Installs" -> "Install",
-    "Opens" -> "Open",
-    "Users" -> "User"
-  )
+  private[this] val (classNameSubstitutions, packages) = ExportConfig.load(id)
 
   private[this] def exportTable(t: Table) = {
     val asClassName = ExportHelper.toScalaClassName.convert(t.name)
     val className = classNameSubstitutions.getOrElse(asClassName, asClassName)
-    val cls = ClassFile.export(className, t.columns)
-    val queries = QueriesFile.export(className, t)
-    val svc = ServiceFile.export(className, t)
+    val pkg = packages.get(t.name).map(x => x.split("\\.").toList).getOrElse(Nil)
+    val cls = ClassFile.export(className, pkg, t.columns)
+    val queries = QueriesFile.export(className, pkg, t)
+    val svc = ServiceFile.export(className, pkg, t)
     Seq(cls, queries, svc)
   }
 }

@@ -1,16 +1,13 @@
 package models.scalaexport
 
-case class ScalaFile(pkg: String, key: String) {
-
+case class ScalaFile(pkg: Seq[String], key: String) {
   private[this] var currentIndent = 0
-
-  val filename = pkg.replaceAllLiterally(".", "/") + "/" + key + ".scala"
-
   private[this] var imports = Set.empty[(String, String)]
+  private[this] val lines = new StringBuilder()
+
+  val filename = key + ".scala"
 
   def addImport(p: String, c: String) = imports += (p -> c)
-
-  private[this] val lines = new StringBuilder()
 
   def add(line: String = "", indentDelta: Int = 0) = {
     if (indentDelta < 0) {
@@ -25,7 +22,7 @@ case class ScalaFile(pkg: String, key: String) {
   }
 
   def render() = {
-    val pkgString = s"package $pkg\n\n"
+    val pkgString = s"package ${pkg.mkString(".")}\n\n"
 
     val impString = if (imports.isEmpty) {
       ""

@@ -7,8 +7,8 @@
         <li class="collection-header"><h4>@result.id</h4></li>
         @result.files.map { f =>
           <li class="collection-item">
-            @f._1
-            <pre>@f._2</pre>
+            @f._1.mkString("/")/@f._2
+            <pre>@f._3</pre>
           </li>
         }
       </ul>

@@ -22,9 +22,9 @@ object ColumnType extends Enum[ColumnType] {
   case object FloatType extends ColumnType("float", "Float", isNumeric = true)
   case object DoubleType extends ColumnType("double", "Double", isNumeric = true)
   case object ByteArrayType extends ColumnType("bytearray", "Array[Byte]")
-  case object DateType extends ColumnType("date", "LocalDate", requiredImport = Some("org.joda"))
-  case object TimeType extends ColumnType("time", "LocalTime", requiredImport = Some("org.joda"))
-  case object TimestampType extends ColumnType("timestamp", "LocalDateTime", requiredImport = Some("org.joda"))
+  case object DateType extends ColumnType("date", "LocalDate", requiredImport = Some("org.joda.time"))
+  case object TimeType extends ColumnType("time", "LocalTime", requiredImport = Some("org.joda.time"))
+  case object TimestampType extends ColumnType("timestamp", "LocalDateTime", requiredImport = Some("org.joda.time"))
 
   case object RefType extends ColumnType("ref", "String")
   case object XmlType extends ColumnType("xml", "String")
