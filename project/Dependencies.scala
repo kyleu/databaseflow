@@ -2,15 +2,14 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.0"
+    private[this] val version = "2.6.1"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % version
+    val json = "com.typesafe.play" %% "play-json" % "2.6.2"
     val test = "com.typesafe.play" %% "play-test" % version % "test"
-    val twirl = "com.typesafe.play" %% "twirl-api" % "1.3.3"
 
     val mailer = "com.typesafe.play" %% "play-mailer" % "6.0.0"
     val mailerGuice = "com.typesafe.play" %% "play-mailer-guice" % "6.0.0"
@@ -84,7 +83,7 @@ object Dependencies {
 
   object GraphQL {
     val sangria = "org.sangria-graphql" %% "sangria" % "1.2.2"
-    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.2"
+    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.3"
   }
 
   object Utils {

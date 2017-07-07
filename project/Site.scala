@@ -16,7 +16,7 @@ import sbtassembly.AssemblyPlugin.autoImport._
 object Site {
   private[this] val dependencies = {
     import Dependencies._
-    Seq(Akka.actor, Akka.logging, Akka.testkit, Play.filters, Play.ws, Play.twirl, Play.cache, Play.guice, Play.mailer, Play.mailerGuice, Play.test)
+    Seq(Akka.actor, Akka.logging, Akka.testkit, Play.filters, Play.ws, Play.cache, Play.guice, Play.mailer, Play.mailerGuice, Play.test)
   }
 
   private[this] lazy val siteSettings = Shared.commonSettings ++ Seq(
