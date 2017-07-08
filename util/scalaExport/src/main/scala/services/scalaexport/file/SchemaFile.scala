@@ -24,7 +24,26 @@ object SchemaFile {
         pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
         file.addImport("sangria.execution.deferred", "HasId")
         file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
+        file.add()
       case _ => // multiple columns
+    }
+    if (et.t.foreignKeys.size > 1) {
+      file.addImport("sangria.execution.deferred", "Relation")
+
+      et.t.foreignKeys.foreach { fk =>
+        val targetTable = et.s.getTable(fk.targetTable).getOrElse(throw new IllegalStateException(s"Missing table [${fk.targetTable}]."))
+        val tgtClassName = ExportHelper.toClassName(targetTable.name)
+        fk.references.toList match {
+          case h :: Nil =>
+            val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+            val typ = if (col.notNull) { col.columnType.asScala } else { s"Option[${col.columnType.asScala}]" }
+
+            val tgtPropName = ExportHelper.toIdentifier(h.source)
+            file.add(s"""val ${et.propertyName}By$tgtClassName = Relation[${et.className}, $typ]("by$tgtClassName", x => Seq(x.$tgtPropName))""")
+          case _ => // noop
+        }
+      }
+      file.add()
     }
 
     file.add(s"implicit val ${et.propertyName}Type = deriveObjectType[GraphQLContext, ${et.className}]()")

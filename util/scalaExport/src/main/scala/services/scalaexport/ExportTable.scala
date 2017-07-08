@@ -15,5 +15,5 @@ case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
     throw new IllegalStateException(s"Cannot derive primary key for [${t.name}] with key [${t.primaryKey}].")
   }).toList
 
-  val referencingTables = s.tables.filter(t => t.foreignKeys.exists(_.targetTable == t.name))
+  val referencingTables = s.tables.filter(tbl => tbl.name != t.name && tbl.foreignKeys.exists(_.targetTable == t.name))
 }
