@@ -1,10 +1,11 @@
 package services.scalaexport
 
 import better.files._
+import models.scalaexport.ExportResult
 
 object ExportMerge {
   private[this] def projectNameReplacements(key: String, root: File) = {
-    val className = ExportHelper.toScalaClassName.convert(key)
+    val className = ExportHelper.toClassName(key)
     def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", key).replaceAllLiterally("Boilerplay", className))
 
     fix(root / "app" / "utils" / "web" / "LoggingFilter.scala")
@@ -30,14 +31,30 @@ object ExportMerge {
     cssFile.moveTo(cssFile.parent / (key + ".less"))
   }
 
-  def merge(key: String) = {
-    val rootDir = s"./tmp/$key".toFile
+  private[this] def getSrcDir(result: ExportResult) = {
+    val dir = "./tmp/boilerplay".toFile
+    if (!dir.exists) {
+      import scala.sys.process._
+
+      result.log("Cloning boilerplay.")
+      "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
+
+      result.log("Deleting boilerplay git history.")
+      (dir / ".git").delete()
+    }
+    dir
+  }
+
+  def merge(result: ExportResult) = {
+    val rootDir = s"./tmp/${result.id}".toFile
     if (rootDir.exists) { rootDir.delete() }
     rootDir.createDirectory()
 
-    "./tmp/boilerplay".toFile.copyTo(rootDir)
-    projectNameReplacements(key, rootDir)
+    getSrcDir(result).copyTo(rootDir)
+    projectNameReplacements(result.id, rootDir)
 
     "./tmp/scalaexport".toFile.copyTo(rootDir / "app")
+
+    result.log("Merge complete.")
   }
 }

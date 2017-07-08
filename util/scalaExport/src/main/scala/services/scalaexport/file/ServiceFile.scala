@@ -17,16 +17,22 @@ object ServiceFile {
       case _ => // multiple columns
     }
 
-    file.add(s"def getAll(${ExportHelper.getAllArgs}) = Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
+    file.add(s"def getAll(${ExportHelper.getAllArgs}) = {", 1)
+    file.add(s"Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
+    file.add("}", -1)
     file.add()
-    file.add(s"def search(${ExportHelper.searchArgs}) = Database.query(${et.className}Queries.search(q, orderBy, limit, offset))")
     file.add(s"def searchCount(q: String) = Database.query(${et.className}Queries.searchCount(q))")
+    file.add(s"def search(${ExportHelper.searchArgs}) = {", 1)
+    file.add(s"Database.query(${et.className}Queries.search(q, orderBy, limit, offset))")
+    file.add("}", -1)
     file.add()
     file.add(s"def insert(model: ${et.className}) = Database.execute(${et.className}Queries.insert(model))")
 
     et.pkColumns match {
       case Nil => // noop
-      case col :: Nil => file.add(s"def remove(${col.name}: ${col.columnType.asScala}) = Database.execute(${et.className}Queries.removeById(${col.name}))")
+      case col :: Nil =>
+        col.columnType.requiredImport.foreach(x => file.addImport(x, col.columnType.asScala))
+        file.add(s"def remove(${col.name}: ${col.columnType.asScala}) = Database.execute(${et.className}Queries.removeById(${col.name}))")
       case _ => // multiple columns
     }
 

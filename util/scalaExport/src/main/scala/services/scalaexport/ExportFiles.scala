@@ -20,6 +20,8 @@ object ExportFiles {
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)
     }
+
+    result.log("File write complete.")
   }
 
   def exportTable(s: Schema, et: ExportTable) = {

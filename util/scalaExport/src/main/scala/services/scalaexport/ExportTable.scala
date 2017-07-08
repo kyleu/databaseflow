@@ -3,10 +3,10 @@ package services.scalaexport
 import models.schema.{Schema, Table}
 
 case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
-  val asClassName = ExportHelper.toScalaClassName.convert(t.name)
+  val asClassName = ExportHelper.toClassName(t.name)
   val className = config.classNames.getOrElse(asClassName, asClassName)
 
-  val asPropertyName = ExportHelper.toScalaIdentifier.convert(t.name)
+  val asPropertyName = ExportHelper.toIdentifier(t.name)
   val propertyName = config.propertyNames.getOrElse(asPropertyName, asPropertyName)
 
   val pkg = config.packages.get(t.name).map(x => x.split("\\.").toList).getOrElse(Nil)

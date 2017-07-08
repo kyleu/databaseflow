@@ -26,9 +26,10 @@ object QueriesFile {
     et.pkColumns match {
       case Nil => // noop
       case pkCol :: Nil =>
+        val name = ExportHelper.toIdentifier(pkCol.name)
         pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
-        file.add(s"def getById(${pkCol.name}: ${pkCol.columnType.asScala}) = GetById(Seq(${pkCol.name}))")
-        file.add(s"// def getByIds(${pkCol.name}: Seq[${pkCol.columnType.asScala}]) = GetByIds(${pkCol.name})")
+        file.add(s"def getById($name: ${pkCol.columnType.asScala}) = GetById(Seq($name))")
+        file.add(s"// def getByIds(${name}Seq: Seq[${pkCol.columnType.asScala}]) = GetByIds(${name}Seq)")
         file.add()
       case _ => // multiple columns
     }
@@ -42,7 +43,9 @@ object QueriesFile {
     file.add(s"def insert(model: ${et.className}) = Insert(model)")
     et.pkColumns match {
       case Nil => // noop
-      case pkCol :: Nil => file.add(s"def removeById(${pkCol.name}: ${pkCol.columnType.asScala}) = RemoveById(Seq(${pkCol.name}))")
+      case pkCol :: Nil =>
+        val name = ExportHelper.toIdentifier(pkCol.name)
+        file.add(s"def removeById($name: ${pkCol.columnType.asScala}) = RemoveById(Seq($name))")
       case _ => // multiple columns
     }
     file.add()
@@ -52,11 +55,9 @@ object QueriesFile {
       col.columnType.requiredImport.foreach { p =>
         file.addImport(p, col.columnType.asScala)
       }
-
       val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
-      val propName = ExportHelper.toScalaIdentifier.convert(col.name)
       val asType = if (col.notNull) { s"as[${col.columnType.asScala}]" } else { s"asOpt[${col.columnType.asScala}]" }
-      file.add(s"""$propName = row.$asType("${col.name}")$comma""")
+      file.add(s"""${ExportHelper.toIdentifier(col.name)} = row.$asType("${col.name}")$comma""")
     }
     file.add(")", -1)
     file.add(s"override protected def toDataSeq(model: ${et.className}) = model.productIterator.toSeq")

@@ -8,8 +8,13 @@ import services.query.QueryResultRowService
 
 object ForeignKeyGraphQL {
   def getForeignKeyField(schema: models.schema.Schema, src: Table, tgt: ObjectType[GraphQLContext, QueryResultRow], fk: ForeignKey) = {
+    val fkName = if (src.columns.exists(_.name == fk.name)) {
+      "fk_" + CommonGraphQL.cleanName(fk.name)
+    } else {
+      CommonGraphQL.cleanName(fk.name)
+    }
     Field(
-      name = "fk_" + CommonGraphQL.cleanName(fk.name),
+      name = fkName,
       fieldType = ListType(tgt),
       description = Some(fk.name),
       resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => {

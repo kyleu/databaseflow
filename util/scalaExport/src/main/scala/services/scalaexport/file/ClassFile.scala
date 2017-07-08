@@ -13,7 +13,7 @@ object ClassFile {
         file.addImport(p, col.columnType.asScala)
       }
 
-      val propName = ExportHelper.toScalaIdentifier.convert(col.name)
+      val propName = ExportHelper.toIdentifier(col.name)
       val propType = if (col.notNull) { col.columnType.asScala } else { "Option[" + col.columnType.asScala + "]" }
       val propDefault = if (col.columnType == ColumnType.StringType) {
         col.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")

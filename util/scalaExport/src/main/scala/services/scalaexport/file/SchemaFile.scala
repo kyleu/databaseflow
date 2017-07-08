@@ -1,7 +1,7 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.ExportTable
+import services.scalaexport.{ExportHelper, ExportTable}
 
 object SchemaFile {
   def export(et: ExportTable) = {
@@ -20,7 +20,10 @@ object SchemaFile {
 
     et.pkColumns match {
       case Nil => // noop
-      case pkCol :: Nil => file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${pkCol.name})")
+      case pkCol :: Nil =>
+        pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
+        file.addImport("sangria.execution.deferred", "HasId")
+        file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
       case _ => // multiple columns
     }
 
@@ -30,8 +33,12 @@ object SchemaFile {
 
     file.add(s"""name = "${et.propertyName}",""")
     file.add(s"fieldType = ListType(${et.propertyName}Type),")
+    file.add(s"arguments = queryArg :: limitArg :: offsetArg :: Nil,")
 
-    file.add(s"resolve = c => ${et.className}Service.getAll()")
+    file.add(s"resolve = c => c.arg(CommonSchema.queryArg) match {", 1)
+    file.add(s"case Some(q) => ${et.className}Service.search(q, None, c.arg(limitArg), c.arg(offsetArg))")
+    file.add(s"case _ => ${et.className}Service.getAll(None, c.arg(limitArg), c.arg(offsetArg))")
+    file.add("}", -1)
 
     file.add("))", -1)
     file.add("}", -1)
