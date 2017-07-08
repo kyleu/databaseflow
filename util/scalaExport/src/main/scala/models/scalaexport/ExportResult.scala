@@ -2,5 +2,6 @@ package models.scalaexport
 
 case class ExportResult(
   id: String,
-  files: Seq[(Seq[String], String, String)]
+  models: Seq[String],
+  files: Seq[ScalaFile]
 )

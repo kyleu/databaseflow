@@ -1,14 +1,14 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import models.schema.{Column, ColumnType}
-import services.scalaexport.ExportHelper
+import models.schema.ColumnType
+import services.scalaexport.{ExportHelper, ExportTable}
 
 object ClassFile {
-  def export(className: String, pkg: Seq[String], columns: Seq[Column]) = {
-    val file = ScalaFile("models" +: pkg, className)
-    file.add(s"case class $className(", 1)
-    columns.map { col =>
+  def export(et: ExportTable) = {
+    val file = ScalaFile("models" +: et.pkg, et.className)
+    file.add(s"case class ${et.className}(", 1)
+    et.t.columns.map { col =>
       col.columnType.requiredImport.foreach { p =>
         file.addImport(p, col.columnType.asScala)
       }
@@ -21,12 +21,11 @@ object ClassFile {
         ""
       }
       val propDecl = s"$propName: $propType$propDefault"
-      val comma = if (columns.lastOption.contains(col)) { "" } else { "," }
+      val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
 
       file.add(propDecl + comma)
     }
     file.add(")", -1)
-    val ret = ("models" +: pkg, file.filename, file.render())
-    ret
+    file
   }
 }

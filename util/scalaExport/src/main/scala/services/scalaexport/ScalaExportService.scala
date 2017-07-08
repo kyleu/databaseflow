@@ -1,39 +1,31 @@
 package services.scalaexport
 
 import models.scalaexport.ExportResult
-import models.schema.{Schema, Table}
-import services.scalaexport.file.{ClassFile, QueriesFile, ServiceFile}
+import models.schema.Schema
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class ScalaExportService(schema: Schema) {
-  val id = schema.catalog.orElse(schema.schemaName).getOrElse(schema.username)
+  val id = ExportHelper.toScalaIdentifier.convert(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
 
   def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
     export(id, schema).map { result =>
       if (persist) {
         ExportFiles.persist(result)
-        ExportFiles.merge(result.id)
+        ExportMerge.merge(result.id)
+        ExportInject.inject(result)
       }
       result
     }
   }
 
+  private[this] val config = ExportConfig.load(id)
+
   def export(projectId: String, schema: Schema) = {
-    val tableResults = schema.tables.flatMap(exportTable)
-    val files = tableResults
-    Future.successful(ExportResult(projectId, files))
-  }
+    val tables = schema.tables.map(t => ExportFiles.exportTable(schema, ExportTable(t, config, schema)))
 
-  private[this] val (classNameSubstitutions, packages) = ExportConfig.load(id)
-
-  private[this] def exportTable(t: Table) = {
-    val asClassName = ExportHelper.toScalaClassName.convert(t.name)
-    val className = classNameSubstitutions.getOrElse(asClassName, asClassName)
-    val pkg = packages.get(t.name).map(x => x.split("\\.").toList).getOrElse(Nil)
-    val cls = ClassFile.export(className, pkg, t.columns)
-    val queries = QueriesFile.export(className, pkg, t)
-    val svc = ServiceFile.export(className, pkg, t)
-    Seq(cls, queries, svc)
+    val models = tables.map(t => t._1.className)
+    val files = tables.flatMap(t => t._2)
+    Future.successful(ExportResult(projectId, models, files))
   }
 }

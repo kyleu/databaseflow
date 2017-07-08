@@ -1,14 +1,36 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import models.schema.Table
+import services.scalaexport.{ExportHelper, ExportTable}
 
 object ServiceFile {
-  def export(className: String, pkg: Seq[String], table: Table) = {
-    val file = ScalaFile("services" +: pkg, className + "Service")
-    file.addImport(("models" +: pkg).mkString("."), className)
-    file.add(s"object ${className}Service {", 1)
+  def export(et: ExportTable) = {
+    val file = ScalaFile("services" +: et.pkg, et.className + "Service")
+    file.addImport(("models" +: et.pkg).mkString("."), et.className)
+    file.addImport(("models" +: "queries" +: et.pkg).mkString("."), et.className + "Queries")
+    file.addImport(("services" :: "database" :: Nil).mkString("."), "Database")
+    file.add(s"object ${et.className}Service {", 1)
+
+    et.pkColumns match {
+      case Nil => // noop
+      case col :: Nil => file.add(s"def getById(${col.name}: ${col.columnType.asScala}) = Database.query(${et.className}Queries.getById(${col.name}))")
+      case _ => // multiple columns
+    }
+
+    file.add(s"def getAll(${ExportHelper.getAllArgs}) = Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
+    file.add()
+    file.add(s"def search(${ExportHelper.searchArgs}) = Database.query(${et.className}Queries.search(q, orderBy, limit, offset))")
+    file.add(s"def searchCount(q: String) = Database.query(${et.className}Queries.searchCount(q))")
+    file.add()
+    file.add(s"def insert(model: ${et.className}) = Database.execute(${et.className}Queries.insert(model))")
+
+    et.pkColumns match {
+      case Nil => // noop
+      case col :: Nil => file.add(s"def remove(${col.name}: ${col.columnType.asScala}) = Database.execute(${et.className}Queries.removeById(${col.name}))")
+      case _ => // multiple columns
+    }
+
     file.add("}", -1)
-    ("services" +: pkg, file.filename, file.render())
+    file
   }
 }

@@ -5,10 +5,13 @@
     <div class="col s12">
       <ul class="collection with-header">
         <li class="collection-header"><h4>@result.id</h4></li>
+        <li class="collection-item">
+          Models: @result.models.mkString(", ")
+        </li>
         @result.files.map { f =>
           <li class="collection-item">
-            @f._1.mkString("/")/@f._2
-            <pre>@f._3</pre>
+            @f.pkg.mkString("/")/@f.filename
+            <pre>@f.rendered</pre>
           </li>
         }
       </ul>
