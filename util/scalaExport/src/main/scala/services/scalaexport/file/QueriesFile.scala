@@ -17,7 +17,7 @@ object QueriesFile {
     file.add(s"object ${et.className}Queries extends BaseQueries[${et.className}] {", 1)
     file.add(s"""override protected val tableName = "${et.t.name}"""")
     file.add("override protected val columns = Seq(" + et.t.columns.map("\"" + _.name + "\"").mkString(", ") + ")")
-    et.t.primaryKey.map { pk =>
+    et.t.primaryKey.foreach { pk =>
       file.add("override protected val idColumns = Seq(" + pk.columns.map("\"" + _ + "\"").mkString(", ") + ")")
       val searchColumns = et.config.searchColumns.getOrElse(et.t.name, pk.columns)
       file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _ + "\"").mkString(", ")})")
@@ -35,6 +35,8 @@ object QueriesFile {
     }
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")
     file.add()
+
+    ForeignKeysFile.writeQueries(et, file)
 
     file.add(s"def search(${ExportHelper.searchArgs}) = Search(q, orderBy, limit, offset)")
     file.add("def searchCount(q: String) = SearchCount(q)")

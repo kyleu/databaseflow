@@ -4,13 +4,13 @@ case class ScalaFile(pkg: Seq[String], key: String) {
   private[this] var hasRendered = false
   private[this] var currentIndent = 0
   private[this] var imports = Set.empty[(String, String)]
-  private[this] val lines = new StringBuilder()
+  private[this] val lines = collection.mutable.ArrayBuffer.empty[String]
 
   val filename = key + ".scala"
 
   def addImport(p: String, c: String) = imports += (p -> c)
 
-  def add(line: String = "", indentDelta: Int = 0) = {
+  def add(line: String = "", indentDelta: Int = 0): Unit = {
     if (hasRendered) {
       throw new IllegalStateException("Already rendered.")
     }
@@ -22,7 +22,7 @@ case class ScalaFile(pkg: Seq[String], key: String) {
       currentIndent += indentDelta
     }
 
-    lines.append(ws + line + "\n")
+    lines += (ws + line + "\n")
   }
 
   lazy val rendered = {
@@ -41,6 +41,6 @@ case class ScalaFile(pkg: Seq[String], key: String) {
 
     hasRendered = true
 
-    pkgString + impString + lines.toString
+    pkgString + impString + lines.mkString
   }
 }

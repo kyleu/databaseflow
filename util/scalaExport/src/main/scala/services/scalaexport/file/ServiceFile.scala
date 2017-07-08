@@ -21,6 +21,9 @@ object ServiceFile {
     file.add(s"Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
     file.add("}", -1)
     file.add()
+
+    ForeignKeysFile.writeService(et, file)
+
     file.add(s"def searchCount(q: String) = Database.query(${et.className}Queries.searchCount(q))")
     file.add(s"def search(${ExportHelper.searchArgs}) = {", 1)
     file.add(s"Database.query(${et.className}Queries.search(q, orderBy, limit, offset))")
