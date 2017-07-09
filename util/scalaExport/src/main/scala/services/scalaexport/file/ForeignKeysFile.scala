@@ -34,11 +34,10 @@ object ForeignKeysFile {
 
   def writeSchema(et: ExportTable, file: ScalaFile) = if (et.t.foreignKeys.size > 1) {
     file.addImport("sangria.execution.deferred", "Relation")
+    file.addImport("sangria.execution.deferred", "Fetcher")
 
     et.t.foreignKeys.foreach { fk =>
-      file.addImport("sangria.execution.deferred", "Fetcher")
       val targetTable = et.s.getTable(fk.targetTable).getOrElse(throw new IllegalStateException(s"Missing table [${fk.targetTable}]."))
-      val tgtClassName = ExportHelper.toClassName(targetTable.name)
       fk.references.toList match {
         case h :: Nil =>
           val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
@@ -48,18 +47,18 @@ object ForeignKeysFile {
           val srcClass = ExportHelper.toClassName(h.source)
           val seq = if (col.notNull) { s"Seq(x.$propName)" } else { s"x.$propName.toSeq" }
           file.addMarker("fetcher", (file.pkg :+ s"${et.className}Schema" :+ s"${et.propertyName}By${srcClass}Fetcher").mkString("."))
-          file.add(s"""val ${et.propertyName}By$srcClass = Relation[${et.className}, $typ]("by$tgtClassName", x => $seq)""")
+          file.add(s"""val ${et.propertyName}By$srcClass = Relation[${et.className}, $typ]("by$srcClass", x => $seq)""")
           file.add(s"val ${et.propertyName}By${srcClass}Fetcher = Fetcher.rel[GraphQLContext, ${et.className}, ${et.className}, $typ](", 1)
-          file.add(s"(_, ids) => ${et.className}Service.getBy${srcClass}Seq(ids),")
+          file.add(s"(_, ids) => ${et.className}Service.getByIdSeq(ids),")
           file.add(s"(_, rels) => ${et.className}Service.getBy${srcClass}Seq(rels(${et.propertyName}By$srcClass))")
 
           file.addImport("sangria.execution.deferred", "HasId")
-          file.add(s")(HasId[${et.className}, ${if (col.notNull) { typ } else { s"Option[$typ]" }}](x => x.$propName))", -1)
+          //file.add(s")(HasId[${et.className}, ${if (col.notNull) { typ } else { s"Option[$typ]" }}](x => x.$propName))", -1)
+          file.add(")", -1)
 
           file.add()
-        case _ => // noop
+        case _ => println("!!!!!!!!!!!!!! " + fk) // noop
       }
     }
-    file.add()
   }
 }
