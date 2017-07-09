@@ -43,8 +43,6 @@ object EngineQueries {
       }
     }
 
-    val quotedName = engine.cap.leftQuote + name + engine.cap.rightQuote
-
     val filterClauses = if(options.filters.isEmpty) {
       Nil
     } else {
@@ -75,7 +73,14 @@ object EngineQueries {
       val ordering = if (options.orderByAsc.contains(false)) { "desc" } else { "asc" }
       s" order by ${engine.cap.leftQuote}$orderCol${engine.cap.rightQuote} $ordering"
     }.getOrElse("")
-    val sql = s"select$preColumnsClause * from $quotedName$whereClause$orderByClause$postQueryClauses"
+
+    selectFromSql(preColumnsClause, name, whereClause + orderByClause + postQueryClauses, values)
+  }
+
+
+  def selectFromSql(preCols: String, name: String, clauses: String, values: Seq[Any])(implicit engine: DatabaseEngine) = {
+    val quotedName = engine.cap.leftQuote + name + engine.cap.rightQuote
+    val sql = s"select$preCols * from $quotedName $clauses"
     sql -> values
   }
 }

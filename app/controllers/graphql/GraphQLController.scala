@@ -10,7 +10,7 @@ import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.playJson._
 import sangria.parser.SyntaxError
 import services.connection.ConnectionSettingsService
-import services.graphql.{GraphQLQueryService, GraphQLService}
+import services.graphql.GraphQLService
 import utils.ApplicationContext
 
 import scala.concurrent.Future
@@ -19,10 +19,7 @@ import scala.concurrent.Future
 class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationContext, svc: GraphQLService) extends BaseController {
   def graphql(connection: String, id: Option[UUID]) = withSession("graphql.ui") { implicit request =>
     Future.successful(ConnectionSettingsService.connFor(connection) match {
-      case Some(c) =>
-        val list = GraphQLQueryService.getVisible(request.identity, Some(c.id), None, None)
-        val q = id.flatMap(i => GraphQLQueryService.getById(i, Some(request.identity)))
-        Ok(views.html.graphql.graphiql(request.identity, c.id, c.slug, list, q))
+      case Some(c) => Ok(views.html.graphql.graphiql(request.identity, c))
       case None => Redirect(controllers.routes.HomeController.home())
     })
   }

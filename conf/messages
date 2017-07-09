@@ -155,7 +155,7 @@ shared.results.public.none = No public shared results available.
 
 # GraphQL
 graphql.title = GraphQL
-
+schema.title = Schema
 
 # Socket Service
 socket.connect.error = Error attempting to connect to database.

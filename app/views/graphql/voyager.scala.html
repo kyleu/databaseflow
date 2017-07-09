@@ -1,46 +1,62 @@
-@(connectionId: java.util.UUID)<!DOCTYPE html>
-<html>
-  <head>
-    <script src="@routes.Assets.versioned("lib/graphql/react.min.js").url"></script>
-    <script src="@routes.Assets.versioned("lib/graphql/react-dom.min.js").url"></script>
-    <title>GraphQL Voyager</title>
-    <link rel="stylesheet" href="@routes.Assets.versioned("lib/graphql/voyager.css").url" />
-    <script src="@routes.Assets.versioned("lib/graphql/voyager.min.js").url"></script>
-    <style>
-      .title-area, .type-doc>.doc-navigation {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="voyager">Loading...</div>
-    <script>
-        function introspectionProvider(introspectionQuery) {
-          // This example expects a GraphQL server at the path /graphql.
-          // Change this to point wherever you host your GraphQL server.
-          return fetch('/graphql/@connectionId', {
-            method: 'post',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({query: introspectionQuery}),
-            credentials: 'include'
-          }).then(function (response) {
-            return response.text();
-          }).then(function (responseBody) {
-            try {
-              return JSON.parse(responseBody);
-            } catch (error) {
-              return responseBody;
-            }
-          });
-        }
+@(user: models.user.User, connection: models.connection.ConnectionSettings)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.materialize(Some(user), connection.name + " Schema", scripts = Seq(
+  routes.Assets.versioned("lib/graphql/react.min.js").url,
+  routes.Assets.versioned("lib/graphql/react-dom.min.js").url,
+  routes.Assets.versioned("lib/graphql/voyager.min.js").url
+), stylesheets = Seq(
+  routes.Assets.versioned("lib/graphql/voyager.css").url
+)) {
+  @views.html.layout.themeStyles(user.preferences.theme)
 
-        // Render <Voyager />
-        GraphQLVoyager.init(document.getElementById('voyager'), {
-          introspection: introspectionProvider
-        })
-    </script>
-  </body>
-</html>
+  <style>
+    .title-area, .type-doc>.doc-navigation {
+      display: none;
+    }
+  </style>
+
+  <header>
+    @views.html.components.userDropdown(Some(user))
+
+    <div class="nb-container navbar-fixed">
+      <nav id="topnav" class="theme">
+        <div class="nav-wrapper">
+          <a href="@controllers.routes.HomeController.home()" class="brand-logo"><i class="fa @models.template.Icons.database"></i> @connection.name Schema</a>
+          <ul class="right hide-on-small-only">
+            <li><a class="dropdown-button" href="#" data-activates="dropdown-user">
+              @user.username <i id="user-dropdown-toggle" class="fa @models.template.Icons.dropdownToggle right"></i>
+            </a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="voyager">Loading...</main>
+  <script>
+    function introspectionProvider(introspectionQuery) {
+      return fetch('/graphql/@connection.id', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({query: introspectionQuery}),
+        credentials: 'include'
+      }).then(function (response) {
+        return response.text();
+      }).then(function (responseBody) {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          console.log(error);
+          return responseBody;
+        }
+      });
+    }
+
+    GraphQLVoyager.init(document.getElementById('voyager'), {
+      introspection: introspectionProvider
+    })
+  </script>
+}

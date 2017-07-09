@@ -4,8 +4,12 @@
   <div class="row">
     <div class="col s12">
       <div class="content-panel">
-        <span class="panel-title">@s.name Result</span>
-        <div>@result</div>
+        <div>
+          <div style="float: right;">@result.status [@{result.elapsed}ms]</div>
+          @s.name
+        </div>
+        <div><em>@result.task.description</em></div>
+        <pre>@result.result</pre>
       </div>
     </div>
   </div>

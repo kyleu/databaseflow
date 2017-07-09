@@ -21,7 +21,6 @@ object AuditType extends Enum[AuditType] {
 
   case object SaveGraphQL extends AuditType("Save GraphQL", Icons.graphQL)
   case object DeleteGraphQL extends AuditType("Delete GraphQL", Icons.close)
-  case object GraphQLQuery extends AuditType("GraphQL Query", Icons.graphQL)
 
   override val values = findValues
 }

@@ -18,7 +18,7 @@ class SchemaController @javax.inject.Inject() (override val ctx: ApplicationCont
 
   def voyager(connection: String) = withSession("schema.render") { implicit request =>
     Future.successful(ConnectionSettingsService.connFor(connection) match {
-      case Some(c) => Ok(views.html.graphql.voyager(c.id))
+      case Some(c) => Ok(views.html.graphql.voyager(request.identity, c))
       case None => Redirect(controllers.routes.HomeController.home())
     })
   }

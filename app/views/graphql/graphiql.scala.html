@@ -1,50 +1,113 @@
-@(user: models.user.User, connectionId: java.util.UUID, connectionSlug: String, queries: Seq[models.graphql.GraphQLQuery], query: Option[models.graphql.GraphQLQuery])(
+@(user: models.user.User, connection: models.connection.ConnectionSettings)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.basic(Some(user), utils.Config.projectName + " GraphQL", scripts = Seq(
+)@layout.basic(Some(user), connection.name + " GraphQL", scripts = Seq(
   routes.Assets.versioned("lib/graphql/fetch.min.js").url,
   routes.Assets.versioned("lib/graphql/react.min.js").url,
   routes.Assets.versioned("lib/graphql/react-dom.min.js").url,
-  routes.Assets.versioned("lib/graphql/graphiql.min.js").url,
   routes.Assets.versioned("lib/jquery/jquery.min.js").url,
-  routes.Assets.versioned("lib/graphql/app-graphiql.js").url
+  routes.Assets.versioned("lib/graphql/graphiql.min.js").url
 ), stylesheets = Seq(
   routes.Assets.versioned("lib/graphql/graphiql.css").url,
   routes.Assets.versioned("stylesheets/graphiql.min.css").url
 )) {
-  <style>
-  .graphiql-container .topBar {
-    background: @user.preferences.theme.color;
-    color: #fff;
-  }
+  <script>
+    $(function() {
+      var search = window.location.search;
+      var parameters = {};
+      search.substr(1).split('&').forEach(function(entry) {
+        var eq = entry.indexOf('=');
+        if(eq >= 0) {
+          parameters[decodeURIComponent(entry.slice(0, eq))] =
+            decodeURIComponent(entry.slice(eq + 1).replace(/\+/g, '%20'));
+        }
+      });
 
-  .graphiql-container .docExplorerShow {
-    background: @user.preferences.theme.color;
-    color: #fff;
-    border-left: none;
-  }
+      if(parameters.variables) {
+        try {
+          parameters.variables = JSON.stringify(JSON.parse(query.variables), null, 2);
+        } catch(e) {
+          console.log('Cannot parse parameters.', e);
+        }
+      }
+
+      function onEditQuery(newQuery) {
+        parameters.query = newQuery;
+
+        $('.save-body-input').val(newQuery);
+      }
+
+      function onEditVariables(newVariables) {
+        parameters.variables = newVariables;
+      }
+
+      function graphQLFetcher(graphQLParams) {
+        return fetch(window.location.origin + window.graphQLUrl, {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(graphQLParams),
+          credentials: 'include'
+        }).then(function(response) {
+          return response.text();
+        }).then(function(responseBody) {
+          try {
+            return JSON.parse(responseBody);
+          } catch(error) {
+            console.log(error);
+            return responseBody;
+          }
+        });
+      }
+
+      $('html > head').append($('<style>.variable-editor {display: none !important}</style>'));
+
+      function renderGraphiql(elem) {
+        $('.save-body-input').val(parameters.query);
+        $('.save-dir-input').val(parameters.dir);
+        $('.save-name-input').val(parameters.name);
+
+        var gqlChildren = [
+          React.createElement(GraphiQL.Logo, {}, [
+            React.createElement("a", { "href": "/", "className": "title-link" }, "@connection.name GraphQL")
+          ])
+        ];
+
+        var gqlProps = {
+          fetcher: graphQLFetcher,
+          query: parameters.query,
+          variables: parameters.variables,
+          response: parameters.response,
+          onEditQuery: onEditQuery,
+          onEditVariables: onEditVariables,
+          defaultQuery: "query FirstQuery {\n  schema {\n    tables {\n      name\n    }\n  }\n}"
+        };
+
+        var gql = React.createElement(GraphiQL, gqlProps, gqlChildren);
+
+        ReactDOM.render(gql, elem);
+      }
+
+      renderGraphiql(document.getElementById('graphiql'));
+    });
+  </script>
+  <style>
+    .graphiql-container .topBar {
+      background: @user.preferences.theme.color;
+      color: #fff;
+    }
+
+    .graphiql-container .docExplorerShow {
+      background: @user.preferences.theme.color;
+      color: #fff;
+      border-left: none;
+    }
   </style>
 
   <script>
-    window.graphQLUrl = '/graphql/@connectionId';
+    window.graphQLUrl = '/graphql/@connection.id';
   </script>
 
-  @if(query.isDefined) {
-    @defining(query.get) { q =>
-      <script>
-          window.graphQLQuery = {
-            "id": "@q.id",
-            "connection": "@q.connection.getOrElse("")",
-            "category": "@q.category.getOrElse("")",
-            "name": "@q.name",
-            "query": "@q.query",
-            "read": "@q.read",
-            "edit": "@q.edit"
-          };
-      </script>
-    }
-  }
-
-  @views.html.graphql.options(connectionId, connectionSlug, queries, user.preferences.theme.color)
   <div id="graphiql">Loading...</div>
-  <script>renderGraphiql(document.getElementById('graphiql'))</script>
 }

@@ -22,6 +22,10 @@
           <i class="fa @models.template.Icons.adHocQuery" style="font-size: 1rem;"></i>
           @messages("query.title")
         </a>
+        <a href="@controllers.graphql.routes.SchemaController.voyager(c.slug)" class="waves-effect waves-light btn theme" style="margin: 10px 10px 10px 0;">
+          <i class="fa @models.template.Icons.schema" style="font-size: 1rem;"></i>
+          @messages("schema.title")
+        </a>
         <a href="@controllers.graphql.routes.GraphQLController.graphql(c.slug)" class="waves-effect waves-light btn theme" style="margin: 10px 10px 10px 0;">
           <i class="fa @models.template.Icons.graphQL" style="font-size: 1rem;"></i>
           @messages("graphql.title")

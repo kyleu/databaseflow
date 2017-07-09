@@ -32,8 +32,6 @@ GET         /voyager/:conn                           controllers.graphql.SchemaC
 GET         /graphql/:conn                           controllers.graphql.GraphQLController.graphql(conn, id: Option[java.util.UUID] ?= None)
 GET         /graphql/:conn/query                     controllers.graphql.GraphQLController.graphqlQuery(conn, q)
 POST        /graphql/:conn                           controllers.graphql.GraphQLController.graphqlBody(conn: java.util.UUID)
-GET         /graphql/:conn/load                      controllers.graphql.GraphQLQueryController.load(conn, id: java.util.UUID)
-POST        /graphql/:conn/save                      controllers.graphql.GraphQLQueryController.save(conn: java.util.UUID)
 
 # Admin
 ->          /admin                                   admin.Routes

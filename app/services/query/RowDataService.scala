@@ -7,23 +7,19 @@ import models._
 import models.database.Queryable
 import models.engine.DatabaseEngine
 import models.queries.result.CachedResultQueries
-import models.query.{QueryResult, RowDataOptions}
+import models.query.RowDataOptions
 import models.schema.{ForeignKey, PrimaryKey}
 import models.user.User
-import utils.FutureUtils.defaultContext
 import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.SchemaService
+import utils.FutureUtils.defaultContext
 import utils.Logging
 
 import scala.concurrent.Future
 
 object RowDataService extends Logging {
   case class Params(queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID)
-
-  def getRowDataWhereClause(user: User, connectionId: UUID, name: String, whereClause: String, values: Seq[Any]) = {
-    Future.successful(QueryResult(UUID.randomUUID, "", elapsedMs = 0))
-  }
 
   def getRowData(user: User, connectionId: UUID, key: String, name: String, options: RowDataOptions) = {
     val dbAccess = DatabaseRegistry.databaseForUser(user, connectionId) match {
