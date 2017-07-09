@@ -1,4 +1,4 @@
-@(result: models.scalaexport.ExportResult)(
+@(result: models.scalaexport.ExportResult, injected: Seq[(String, String)])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )@layout.simple(user = None, title = s"Scala Export Result") {
   <div class="row">
@@ -15,6 +15,12 @@
             }</tbody>
           </table>
         </li>
+        @injected.map { f =>
+          <li class="collection-item">
+            @f._1
+            <pre>@f._2</pre>
+          </li>
+        }
         @result.files.map { f =>
           <li class="collection-item">
             @f.pkg.mkString("/")/@f.filename

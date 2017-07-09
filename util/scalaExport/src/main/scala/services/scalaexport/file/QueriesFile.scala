@@ -19,7 +19,7 @@ object QueriesFile {
     file.add("override protected val columns = Seq(" + et.t.columns.map("\"" + _.name + "\"").mkString(", ") + ")")
     et.t.primaryKey.foreach { pk =>
       file.add("override protected val idColumns = Seq(" + pk.columns.map("\"" + _ + "\"").mkString(", ") + ")")
-      val searchColumns = et.config.searchColumns.getOrElse(et.t.name, pk.columns)
+      val searchColumns = et.config.searchColumns.getOrElse(ExportHelper.toIdentifier(et.t.name), pk.columns)
       file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _ + "\"").mkString(", ")})")
     }
     file.add()
@@ -29,7 +29,7 @@ object QueriesFile {
         val name = ExportHelper.toIdentifier(pkCol.name)
         pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
         file.add(s"def getById($name: ${pkCol.columnType.asScala}) = GetById(Seq($name))")
-        file.add(s"// def getByIds(${name}Seq: Seq[${pkCol.columnType.asScala}]) = GetByIds(${name}Seq)")
+        file.add(s"""def getByIds(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
         file.add()
       case _ => // multiple columns
     }

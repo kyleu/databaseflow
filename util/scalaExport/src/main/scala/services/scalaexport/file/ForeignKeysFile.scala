@@ -11,10 +11,8 @@ object ForeignKeysFile {
         val typ = col.columnType.asScala
         val propId = ExportHelper.toIdentifier(h.source)
         val propCls = ExportHelper.toClassName(h.source)
-        file.add(s"""case class GetBy$propCls($propId: $typ) extends SeqQuery(s"where ${h.source} = ?", Seq($propId))""")
-        val placeholders = propId + "Seq.map(_ => \"?\").mkString(\", \")"
-        val whereClause = s""""where ${h.source} in (" + $placeholders + ")""""
-        file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[$typ]) extends SeqQuery($whereClause, ${propId}Seq)""")
+        file.add(s"""case class GetBy$propCls($propId: $typ) extends SeqQuery("where \\"${h.source}\\" = ?", Seq($propId))""")
+        file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[$typ]) extends ColSeqQuery("${h.source}", ${propId}Seq)""")
         file.add()
       case _ => // noop
     }

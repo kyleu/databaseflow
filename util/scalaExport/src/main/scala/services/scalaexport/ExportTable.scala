@@ -7,13 +7,13 @@ object ExportTable {
 }
 
 case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
-  val asClassName = ExportHelper.toClassName(t.name)
-  val className = config.classNames.getOrElse(asClassName, asClassName)
-
-  val asPropertyName = ExportHelper.toIdentifier(t.name)
+  private[this] val asPropertyName = ExportHelper.toIdentifier(t.name)
   val propertyName = config.propertyNames.getOrElse(asPropertyName, asPropertyName)
 
-  val pkg = config.packages.get(t.name).map(x => x.split("\\.").toList).getOrElse(Nil)
+  private[this] val asClassName = ExportHelper.toClassName(t.name)
+  val className = config.classNames.getOrElse(asPropertyName, asClassName)
+
+  val pkg = config.packages.get(propertyName).map(x => x.split("\\.").toList).getOrElse(Nil)
 
   val pkColumns = t.primaryKey.map(_.columns).getOrElse(Nil).map(c => t.columns.find(_.name == c).getOrElse {
     throw new IllegalStateException(s"Cannot derive primary key for [${t.name}] with key [${t.primaryKey}].")
@@ -31,11 +31,12 @@ case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
             case x => x
           }
           val cls = ExportHelper.toClassName(refTable.name)
-          val pkg = config.packages.get(cls).map(x => x.split("\\.").toList).getOrElse(Nil)
+          val p = ExportHelper.toIdentifier(refTable.name)
+          val pkg = config.packages.get(p).map(x => x.split("\\.").toList).getOrElse(Nil)
           val prop = ExportHelper.toIdentifier(ref.source)
           val tgt = ExportHelper.toIdentifier(ref.target)
-          val srcCol = refTable.columns.find(_.name == ref.source).getOrElse(throw new IllegalStateException(s"Missing column [${ref.source}]."))
-          Some(ExportTable.Reference(pkg, cls, prop, name, tgt, srcCol.notNull))
+          val tgtCol = t.columns.find(_.name == ref.target).getOrElse(throw new IllegalStateException(s"Missing column [${ref.target}]."))
+          Some(ExportTable.Reference(pkg, cls, prop, name, tgt, tgtCol.notNull))
         case _ => None // multiple refs
       }
     }

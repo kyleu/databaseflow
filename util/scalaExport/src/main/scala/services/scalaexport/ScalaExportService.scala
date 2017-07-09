@@ -10,12 +10,14 @@ case class ScalaExportService(schema: Schema) {
 
   def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
     export(id, schema).map { result =>
-      if (persist) {
+      val injected = if (persist) {
         ExportFiles.persist(result)
         ExportMerge.merge(result)
         ExportInject.inject(result)
+      } else {
+        Nil
       }
-      result
+      result -> injected
     }
   }
 

@@ -4,17 +4,20 @@ import models.scalaexport.ScalaFile
 import services.scalaexport.{ExportHelper, ExportTable}
 
 object SchemaFile {
-  def export(et: ExportTable) = {
-    val file = ScalaFile("models" +: et.pkg, et.className + "Schema")
-
-    file.addImport(("services" +: et.pkg).mkString("."), et.className + "Service")
-
+  def addImports(file: ScalaFile) = {
     file.addImport("models.graphql", "CommonSchema")
     file.addImport("models.graphql", "GraphQLContext")
     file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
     file.addImport("models.graphql.CommonSchema", "_")
     file.addImport("models.graphql.DateTimeSchema", "_")
+  }
+
+  def export(et: ExportTable) = {
+    val file = ScalaFile("models" +: et.pkg, et.className + "Schema")
+
+    file.addImport(("services" +: et.pkg).mkString("."), et.className + "Service")
+    addImports(file)
 
     file.add(s"object ${et.className}Schema {", 1)
 
@@ -24,6 +27,11 @@ object SchemaFile {
         pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
         file.addImport("sangria.execution.deferred", "HasId")
         file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
+        file.addImport("sangria.execution.deferred", "Fetcher")
+        val fetcherName = s"${et.propertyName}FetcherBy${ExportHelper.toClassName(pkCol.name)}"
+        val pn = ExportHelper.toIdentifier(pkCol.name) + "Seq"
+        file.addMarker("fetcher", (file.pkg :+ (et.className + "Schema")).mkString(".") + "." + fetcherName)
+        file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, $pn: Seq[${pkCol.columnType.asScala}]) => ${et.className}Service.getByIds($pn))")
         file.add()
       case _ => // multiple columns
     }
@@ -54,7 +62,7 @@ object SchemaFile {
         if (ref.notNull) {
           file.add(s"""resolve = ctx => ${ref.cls}Service.getBy${ExportHelper.toClassName(ref.prop)}(ctx.value.${ref.tgt})""")
         } else {
-          file.add(s"resolve = ctx => ctx.value.${ref.tgt}.map { x =>", 1)
+          file.add(s"resolve = ctx => ctx.value.${ref.prop}.map { x =>", 1)
           file.add(s"${ref.cls}Service.getBy${ExportHelper.toClassName(ref.prop)}(x)")
           file.add("}.getOrElse(scala.concurrent.Future.successful(Nil))", -1)
         }

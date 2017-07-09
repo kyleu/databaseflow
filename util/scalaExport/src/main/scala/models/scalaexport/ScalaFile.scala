@@ -6,6 +6,10 @@ case class ScalaFile(pkg: Seq[String], key: String) {
   private[this] var imports = Set.empty[(String, String)]
   private[this] val lines = collection.mutable.ArrayBuffer.empty[String]
 
+  private[this] val markers = collection.mutable.HashMap.empty[String, Seq[String]]
+  def markersFor(key: String) = markers.getOrElseUpdate(key, Nil)
+  def addMarker(key: String, v: String) = markers(key) = markersFor(key) :+ v
+
   val filename = key + ".scala"
 
   def addImport(p: String, c: String) = imports += (p -> c)

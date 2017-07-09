@@ -37,14 +37,14 @@ object ExportConfig {
         // Comment, noop.
       } else if (line.contains('=')) {
         val prop = line.split("=").toList match {
-          case h :: t :: Nil => h.trim() -> t.trim()
+          case h :: t :: Nil => ExportHelper.toIdentifier(h.trim()) -> t.trim()
           case _ => throw new IllegalStateException(s"Invalid property line [$line].")
         }
         currentSection match {
           case "classname" => classNames += prop
           case "propertyname" => propertyNames += prop
           case "package" => packages += prop
-          case "searchcolumns" => searchColumns += prop._1 -> prop._2.split(",").map(_.trim)
+          case "searchcolumns" => searchColumns += ExportHelper.toIdentifier(prop._1) -> prop._2.split(",").map(_.trim)
           case _ => throw new IllegalStateException(s"Invalid section [$currentSection].")
         }
       } else {
