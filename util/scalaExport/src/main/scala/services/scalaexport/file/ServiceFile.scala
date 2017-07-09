@@ -16,7 +16,7 @@ object ServiceFile {
       case col :: Nil =>
         val colProp = ExportHelper.toIdentifier(col.name)
         file.add(s"def getById($colProp: ${col.columnType.asScala}) = Database.query(${et.className}Queries.getById($colProp))")
-        file.add(s"def getByIds(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${et.className}Queries.getByIds(${colProp}Seq))")
+        file.add(s"def getByIdSeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${et.className}Queries.getByIdSeq(${colProp}Seq))")
       case _ => // multiple columns
     }
 

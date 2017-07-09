@@ -29,7 +29,7 @@ object QueriesFile {
         val name = ExportHelper.toIdentifier(pkCol.name)
         pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
         file.add(s"def getById($name: ${pkCol.columnType.asScala}) = GetById(Seq($name))")
-        file.add(s"""def getByIds(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
+        file.add(s"""def getByIdSeq(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
         file.add()
       case _ => // multiple columns
     }

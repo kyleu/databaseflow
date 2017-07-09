@@ -28,10 +28,10 @@ object SchemaFile {
         file.addImport("sangria.execution.deferred", "HasId")
         file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
         file.addImport("sangria.execution.deferred", "Fetcher")
-        val fetcherName = s"${et.propertyName}FetcherBy${ExportHelper.toClassName(pkCol.name)}"
+        val fetcherName = s"${et.propertyName}By${ExportHelper.toClassName(pkCol.name)}Fetcher"
         val pn = ExportHelper.toIdentifier(pkCol.name) + "Seq"
         file.addMarker("fetcher", (file.pkg :+ (et.className + "Schema")).mkString(".") + "." + fetcherName)
-        file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, $pn: Seq[${pkCol.columnType.asScala}]) => ${et.className}Service.getByIds($pn))")
+        file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, $pn: Seq[${pkCol.columnType.asScala}]) => ${et.className}Service.getByIdSeq($pn))")
         file.add()
       case _ => // multiple columns
     }

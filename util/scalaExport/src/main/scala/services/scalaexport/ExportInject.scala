@@ -6,14 +6,14 @@ import models.scalaexport.ExportResult
 object ExportInject {
   def inject(result: ExportResult) = {
     def queryFieldsFor(s: String) = {
-      val newContent = result.models.map(m => s" ++\n    models.${(m._1 :+ m._2).mkString(".")}Schema.queryFields").mkString
+      val newContent = result.models.map(m => s" ++\n    models.${(m._1 :+ m._2).mkString(".")}Schema.queryFields").sorted.mkString
       s.replaceAllLiterally("queryFields // ++ others", s"queryFields$newContent")
     }
 
     def fetcherFieldsFor(s: String) = if (result.getMarkers("fetcher").isEmpty) {
       s
     } else {
-      val newContent = result.getMarkers("fetcher").mkString(",\n    ")
+      val newContent = result.getMarkers("fetcher").sorted.mkString(",\n    ")
       s.replaceAllLiterally("fetchers()", s"fetchers(\n    $newContent\n  )")
     }
 

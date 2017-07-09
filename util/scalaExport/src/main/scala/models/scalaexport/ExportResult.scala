@@ -6,5 +6,5 @@ case class ExportResult(id: String, models: Seq[(Seq[String], String)], files: S
   def log(msg: String) = logs += ((System.currentTimeMillis - startTime).toInt -> msg)
   val getLogs: Seq[(Int, String)] = logs
 
-  def getMarkers(key: String) = files.flatMap(_.markersFor(key))
+  def getMarkers(key: String) = files.flatMap(_.markersFor(key)).distinct
 }
