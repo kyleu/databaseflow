@@ -32,7 +32,8 @@ object ExploreTableHelper {
       val fkFields = src.foreignKeys.map { fk =>
         val types = tableTypes.getOrElse(throw new IllegalStateException("No available table types."))
         val tgt = types.find(_._1.name.equalsIgnoreCase(fk.targetTable)).map(_._2).getOrElse(emptyObjectType)
-        ForeignKeyGraphQL.getForeignKeyField(schema, src, tgt, fk)
+        val notNull = fk.references.forall(ref => src.columns.exists(col => col.name == ref.source && col.notNull))
+        ForeignKeyGraphQL.getForeignKeyField(schema, src, tgt, notNull, fk)
       }
       fields[GraphQLContext, QueryResultRow](columnFields ++ fkFields: _*)
     }
