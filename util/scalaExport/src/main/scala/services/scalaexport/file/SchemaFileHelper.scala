@@ -16,16 +16,29 @@ object SchemaFileHelper {
   def addPrimaryKey(et: ExportTable, file: ScalaFile) = et.pkColumns match {
     case Nil => // noop
     case pkCol :: Nil =>
-      pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
       file.addImport("sangria.execution.deferred", "HasId")
+      pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
       file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
+      file.add()
+
       file.addImport("sangria.execution.deferred", "Fetcher")
       val fetcherName = s"${et.propertyName}By${ExportHelper.toClassName(pkCol.name)}Fetcher"
       val pn = ExportHelper.toIdentifier(pkCol.name) + "Seq"
       file.addMarker("fetcher", (file.pkg :+ (et.className + "Schema")).mkString(".") + "." + fetcherName)
       file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, $pn: Seq[${pkCol.columnType.asScala}]) => ${et.className}Service.getByIdSeq($pn))")
       file.add()
-    case _ => // multiple columns
+    case pkCols =>
+      file.addImport("sangria.execution.deferred", "HasId")
+      val method = "x => (" + pkCols.map(c => "x." + ExportHelper.toIdentifier(c.name)).mkString(", ") + ")"
+      file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${et.pkType.getOrElse("String")}]($method)")
+      file.add()
+
+      file.addImport("sangria.execution.deferred", "Fetcher")
+      val fetcherName = s"${et.propertyName}ByIdFetcher"
+      file.addMarker("fetcher", (file.pkg :+ (et.className + "Schema")).mkString(".") + "." + fetcherName)
+      file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${et.pkType.getOrElse("String")}]) => ${et.className}Service.getByIdSeq(idSeq))")
+      file.add()
+
   }
 
   def addReferences(et: ExportTable, file: ScalaFile) = if (et.references.nonEmpty) {

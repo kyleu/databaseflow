@@ -17,8 +17,12 @@ object ServiceFile {
         val colProp = ExportHelper.toIdentifier(col.name)
         file.add(s"def getById($colProp: ${col.columnType.asScala}) = Database.query(${et.className}Queries.getById($colProp))")
         file.add(s"def getByIdSeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${et.className}Queries.getByIdSeq(${colProp}Seq))")
-      case _ => // multiple columns
+      case cols => // multiple columns
+        val colTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
+        file.add(s"def getById(id: $colTyp) = Database.query(${et.className}Queries.getById(id))")
+        file.add(s"def getByIdSeq(idSeq: Seq[$colTyp]) = Database.query(${et.className}Queries.getByIdSeq(idSeq))")
     }
+    file.add()
 
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = {", 1)
     file.add(s"Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")

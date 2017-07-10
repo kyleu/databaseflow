@@ -48,12 +48,11 @@ object ForeignKeysFile {
           val seq = if (col.notNull) { s"Seq(x.$propName)" } else { s"x.$propName.toSeq" }
           file.addMarker("fetcher", (file.pkg :+ s"${et.className}Schema" :+ s"${et.propertyName}By${srcClass}Fetcher").mkString("."))
           file.add(s"""val ${et.propertyName}By$srcClass = Relation[${et.className}, $typ]("by$srcClass", x => $seq)""")
-          file.add(s"val ${et.propertyName}By${srcClass}Fetcher = Fetcher.rel[GraphQLContext, ${et.className}, ${et.className}, $typ](", 1)
+          val relType = s"GraphQLContext, ${et.className}, ${et.className}, ${et.pkType.getOrElse("String")}"
+          file.add(s"val ${et.propertyName}By${srcClass}Fetcher = Fetcher.rel[$relType](", 1)
           file.add(s"(_, ids) => ${et.className}Service.getByIdSeq(ids),")
           file.add(s"(_, rels) => ${et.className}Service.getBy${srcClass}Seq(rels(${et.propertyName}By$srcClass))")
 
-          file.addImport("sangria.execution.deferred", "HasId")
-          //file.add(s")(HasId[${et.className}, ${if (col.notNull) { typ } else { s"Option[$typ]" }}](x => x.$propName))", -1)
           file.add(")", -1)
 
           file.add()
