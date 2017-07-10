@@ -41,7 +41,7 @@
       }
 
       function graphQLFetcher(graphQLParams) {
-        return fetch(window.location.origin + window.graphQLUrl, {
+        return fetch(window.location.origin + '/graphql/@connection.id', {
           method: 'post',
           headers: {
             'Accept': 'application/json',
@@ -92,6 +92,7 @@
       renderGraphiql(document.getElementById('graphiql'));
     });
   </script>
+
   <style>
     .graphiql-container .topBar {
       background: @user.preferences.theme.color;
@@ -104,10 +105,6 @@
       border-left: none;
     }
   </style>
-
-  <script>
-    window.graphQLUrl = '/graphql/@connection.id';
-  </script>
 
   <div id="graphiql">Loading...</div>
 }

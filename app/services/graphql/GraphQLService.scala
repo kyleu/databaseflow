@@ -6,9 +6,10 @@ import models.connection.ConnectionSettings
 import models.graphql.{ConnectionGraphQLSchema, GraphQLContext}
 import models.user.User
 import utils.FutureUtils.defaultContext
-import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import io.circe.Json
+import io.circe.parser._
 import sangria.execution.{Executor, HandledException}
-import sangria.marshalling.playJson._
+import sangria.marshalling.circe._
 import sangria.parser.QueryParser
 import sangria.schema.Schema
 import services.connection.ConnectionSettingsService
@@ -21,10 +22,10 @@ object GraphQLService {
     case (_, e: IllegalStateException) => HandledException(e.getMessage)
   }
 
-  protected def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
+  def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
     Json.obj()
   } else {
-    Json.parse(variables).as[JsObject]
+    parse(variables).right.get
   }
 }
 
@@ -44,14 +45,13 @@ case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
     ret
   }
 
-  def execute(body: JsValue, user: User, connectionId: UUID) = {
-    val query = (body \ "query").as[String]
-    val operation = (body \ "operationName").asOpt[String]
+  def execute(json: Json, user: User, connectionId: UUID) = {
+    val body = json.asObject.get.filter(x => x._1 != "variables").toMap
+    val query = body("query").as[String].getOrElse("{}")
+    val operation = body.get("operationName").flatMap(_.asString)
 
-    val variables = (body \ "variables").toOption.flatMap {
-      case JsString(vars) => Some(GraphQLService.parseVariables(vars))
-      case obj: JsObject => Some(obj)
-      case _ => None
+    val variables = body.get("variables").map { x =>
+      x.asString.map(GraphQLService.parseVariables).getOrElse(x)
     }
 
     val schema = getConnectionSchema(user, connectionId)._2.schema
@@ -59,7 +59,7 @@ case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
     executeQuery(schema, query, variables, operation, user)
   }
 
-  private[this] def executeQuery(schema: Schema[GraphQLContext, Unit], query: String, variables: Option[JsObject], operation: Option[String], user: User) = {
+  private[this] def executeQuery(schema: Schema[GraphQLContext, Unit], query: String, variables: Option[Json], operation: Option[String], user: User) = {
     QueryParser.parse(query) match {
       case Success(ast) => Executor.execute(
         schema = schema,
@@ -73,5 +73,11 @@ case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
       )
       case Failure(error) => throw error
     }
+  }
+
+  def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
+    Json.obj()
+  } else {
+    parse(variables).right.get
   }
 }
