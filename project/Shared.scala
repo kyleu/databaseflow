@@ -76,7 +76,7 @@ object Shared {
       "io.circe" %%% "circe-generic" % Dependencies.Serialization.circeVersion,
       "io.circe" %%% "circe-generic-extras" % Dependencies.Serialization.circeVersion,
       "io.circe" %%% "circe-parser" % Dependencies.Serialization.circeVersion,
-      "com.beachape" %%% "enumeratum-circe" % Dependencies.Utils.enumeratumVersion
+      "com.beachape" %%% "enumeratum-circe" % Dependencies.Utils.enumeratumCirceVersion
     )
   )
 

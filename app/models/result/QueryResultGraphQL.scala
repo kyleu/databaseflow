@@ -57,7 +57,7 @@ object QueryResultGraphQL {
       name = "results",
       description = Some("Returns this shared result's data."),
       fieldType = dynamicQueryResultType,
-      arguments = sortColArg :: sortAscArg :: filterColArg :: filterOpArg :: filterTypeArg :: filterValueArg :: limitArg :: offsetArg :: Nil,
+      arguments = resultArgs,
       resolve = c => SharedResultService.getData(Some(c.ctx.user), c.value, SchemaModelGraphQL.rowDataOptionsFor(c))
     ))
   )

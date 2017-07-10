@@ -1,6 +1,6 @@
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
-resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
+resolvers += Resolver.typesafeRepo("releases")
 
 // Dependency Resolution
 addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-M15-1")

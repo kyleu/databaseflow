@@ -90,6 +90,7 @@ object Dependencies {
   object Utils {
     val scapegoatVersion = "1.3.1"
     val enumeratumVersion = "1.5.11"
+    val enumeratumCirceVersion = "1.5.11"
 
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion

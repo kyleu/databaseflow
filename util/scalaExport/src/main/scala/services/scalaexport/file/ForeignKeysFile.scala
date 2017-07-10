@@ -57,7 +57,7 @@ object ForeignKeysFile {
           file.add(")", -1)
 
           file.add()
-        case _ => println("!!!!!!!!!!!!!! " + fk) // noop
+        case _ => // noop
       }
     }
   }

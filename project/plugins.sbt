@@ -1,7 +1,5 @@
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
-resolvers += Resolver.typesafeRepo("releases")
-
 resolvers += Resolver.url("jetbrains-bintray", url("http://dl.bintray.com/jetbrains/sbt-plugins/"))(Resolver.ivyStylePatterns)
 
 // The Play plugin

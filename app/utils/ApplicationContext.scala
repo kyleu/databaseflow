@@ -12,7 +12,6 @@ import org.joda.time.{DateTimeZone, LocalDateTime}
 import play.api.Environment
 import play.api.i18n.MessagesApi
 import play.api.inject.ApplicationLifecycle
-import utils.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
 import services.config.ConfigFileService
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
@@ -38,7 +37,7 @@ class ApplicationContext @javax.inject.Inject() (
     val actorSystem: ActorSystem,
     val silhouette: Silhouette[AuthEnv],
     val ws: WSClient
-) extends Logging {
+) extends Logging with ApplicationHelper {
   if (ApplicationContext.initialized) {
     log.info("Skipping initialization after failure.")
   } else {
@@ -77,12 +76,7 @@ class ApplicationContext @javax.inject.Inject() (
 
     VersionService.upgradeIfNeeded(ws)
 
-    if ((!config.debug) && java.awt.Desktop.isDesktopSupported && (System.getProperty("show.gui", "false") != "true")) {
-      Future {
-        Thread.sleep(2000)
-        java.awt.Desktop.getDesktop.browse(new java.net.URI("http://localhost:4260"))
-      }
-    }
+    startupComplete(config.debug)
   }
 
   private[this] def stop() = {

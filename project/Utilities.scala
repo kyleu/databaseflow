@@ -31,7 +31,7 @@ object Utilities {
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .enablePlugins(SbtWeb, play.sbt.PlayScala)
     .settings(Shared.commonSettings: _*)
-    .settings(libraryDependencies ++= Seq("com.beachape" %% "enumeratum-circe" % Utils.enumeratumVersion, Play.ws))
+    .settings(libraryDependencies ++= Seq("com.beachape" %% "enumeratum-circe" % Utils.enumeratumCirceVersion, Play.ws))
 
   lazy val benchmarking = (project in file("util/benchmarking"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)

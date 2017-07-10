@@ -1,8 +1,7 @@
 package services.explore
 
 import models.graphql.{ColumnGraphQL, CommonGraphQL, ForeignKeyGraphQL, GraphQLContext}
-import models.result.QueryResultGraphQL._
-import models.result.QueryResultRow
+import models.result.{QueryResultGraphQL, QueryResultRow}
 import models.schema.{SchemaModelGraphQL, Table}
 import sangria.schema._
 import services.query.QueryResultRowService
@@ -53,10 +52,10 @@ object ExploreTableHelper {
           name = t._1.name,
           fieldType = ListType(t._2),
           description = t._1.description,
+          arguments = QueryResultGraphQL.resultArgs,
           resolve = (x: Context[GraphQLContext, Unit]) => {
             QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
-          },
-          arguments = resultArgs
+          }
         )
       }: _*)
     }
