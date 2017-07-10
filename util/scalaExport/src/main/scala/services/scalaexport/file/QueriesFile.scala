@@ -32,10 +32,9 @@ object QueriesFile {
         file.add(s"""def getByIdSeq(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
         file.add()
       case pkCols =>
-        file.add(s"def getById(id: ${et.pkType}) = GetById(id.productIterator.toSeq)")
-        file.add(s"""def getByIdSeq(idSeq: Seq[${et.pkType}]) = new ColSeqQuery("??? TODO ???", idSeq)""")
+        file.add(s"def getById(id: ${et.pkType.getOrElse("String")}) = GetById(id.productIterator.toSeq)")
+        file.add(s"""def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new ColSeqQuery("??? TODO ???", idSeq)""")
         file.add()
-      // multiple columns
     }
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")
     file.add()
