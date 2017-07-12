@@ -15,7 +15,11 @@ object ClassFile {
       }
 
       val propName = ExportHelper.toIdentifier(col.name)
-      val propType = if (col.notNull) { col.columnType.asScala } else { "Option[" + col.columnType.asScala + "]" }
+      val colScala = col.columnType match {
+        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(col.sqlTypeName)
+        case x => x.asScala
+      }
+      val propType = if (col.notNull) { colScala } else { "Option[" + colScala + "]" }
       val propDefault = if (col.columnType == ColumnType.StringType) {
         col.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
       } else {

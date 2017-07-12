@@ -17,6 +17,7 @@ object SchemaFileHelper {
     case Nil => // noop
     case pkCol :: Nil =>
       file.addImport("sangria.execution.deferred", "HasId")
+      pkCol.columnType.requiredImport.foreach(pkg => file.addImport(pkg, pkCol.columnType.asScala))
       pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
       file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
       file.add()
@@ -28,6 +29,7 @@ object SchemaFileHelper {
       file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, $pn: Seq[${pkCol.columnType.asScala}]) => ${et.className}Service.getByIdSeq($pn))")
       file.add()
     case pkCols =>
+      pkCols.foreach(pkCol => pkCol.columnType.requiredImport.foreach(pkg => file.addImport(pkg, pkCol.columnType.asScala)))
       file.addImport("sangria.execution.deferred", "HasId")
       val method = "x => (" + pkCols.map(c => "x." + ExportHelper.toIdentifier(c.name)).mkString(", ") + ")"
       file.add(s"implicit val ${et.propertyName}Id = HasId[${et.className}, ${et.pkType.getOrElse("String")}]($method)")
@@ -52,7 +54,7 @@ object SchemaFileHelper {
       file.add(s"""fieldType = ListType(${ref.cls}Schema.${ExportHelper.toIdentifier(ref.cls)}Type),""")
       file.add(s"""arguments = CommonSchema.limitArg :: CommonSchema.offsetArg :: Nil,""")
 
-      val fetcherRef = s"${ref.cls}Schema.${ExportHelper.toIdentifier(ref.cls)}By${ExportHelper.toClassName(ref.tgt)}Fetcher"
+      val fetcherRef = s"${ref.cls}Schema.${ExportHelper.toIdentifier(ref.cls)}By${ExportHelper.toClassName(ref.prop)}Fetcher"
       if (ref.notNull) {
         file.add(s"resolve = ctx => $fetcherRef.deferSeq(Seq(ctx.value.${ref.tgt}))")
       } else {

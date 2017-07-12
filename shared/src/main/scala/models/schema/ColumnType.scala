@@ -32,7 +32,12 @@ object ColumnType extends Enum[ColumnType] {
 
   case object ObjectType extends ColumnType("object", "String")
   case object StructType extends ColumnType("struct", "String")
-  case object ArrayType extends ColumnType("array", "Array[Any]")
+  case object ArrayType extends ColumnType("array", "Array[Any]") {
+    def forSqlType(s: String) = s match {
+      case _ if s.startsWith("_int") => "Seq[Long]"
+      case _ => "Seq[String]"
+    }
+  }
 
   case object UnknownType extends ColumnType("unknown", "Any")
 

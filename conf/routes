@@ -26,6 +26,7 @@ GET         /shared/:id/remove                       controllers.query.SharedRes
 GET         /shared/:id/export/:fmt                  controllers.query.ExportController.exportShared(id: java.util.UUID, fmt)
 
 # GraphQL
+GET         /json/:conn                              controllers.graphql.SchemaController.json(conn)
 GET         /schema/:conn                            controllers.graphql.SchemaController.render(conn)
 GET         /voyager/:conn                           controllers.graphql.SchemaController.voyager(conn)
 

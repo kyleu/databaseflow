@@ -1,9 +1,12 @@
 package controllers.graphql
 
 import controllers.BaseController
+import models.SchemaResponse
 import services.connection.ConnectionSettingsService
 import services.graphql.GraphQLService
-import utils.ApplicationContext
+import services.schema.SchemaService
+import utils.FutureUtils.defaultContext
+import utils.{ApplicationContext, JsonSerializers}
 
 import scala.concurrent.Future
 
@@ -21,5 +24,15 @@ class SchemaController @javax.inject.Inject() (override val ctx: ApplicationCont
       case Some(c) => Ok(views.html.graphql.voyager(request.identity, c))
       case None => Redirect(controllers.routes.HomeController.home())
     })
+  }
+
+  def json(connection: String) = withSession("schema.json") { implicit request =>
+    ConnectionSettingsService.connFor(connection) match {
+      case Some(c) => SchemaService.getSchemaWithDetails(c).map { s =>
+        val jsVal = JsonSerializers.writeResponseMessage(SchemaResponse(s), debug = true)
+        Ok(jsVal).as("application/json")
+      }
+      case None => Future.successful(Redirect(controllers.routes.HomeController.home()))
+    }
   }
 }

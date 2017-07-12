@@ -14,10 +14,12 @@ object ServiceFile {
     et.pkColumns match {
       case Nil => // noop
       case col :: Nil =>
+        col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala))
         val colProp = ExportHelper.toIdentifier(col.name)
         file.add(s"def getById($colProp: ${col.columnType.asScala}) = Database.query(${et.className}Queries.getById($colProp))")
         file.add(s"def getByIdSeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${et.className}Queries.getByIdSeq(${colProp}Seq))")
       case cols => // multiple columns
+        cols.foreach(col => col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala)))
         val colTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
         file.add(s"def getById(id: $colTyp) = Database.query(${et.className}Queries.getById(id))")
         file.add(s"def getByIdSeq(idSeq: Seq[$colTyp]) = Database.query(${et.className}Queries.getByIdSeq(idSeq))")

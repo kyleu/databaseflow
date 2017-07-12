@@ -13,7 +13,7 @@ object ExploreViewHelper {
   } else {
     val viewTypes = schema.views.map { view =>
       val fieldset = fields[GraphQLContext, QueryResultRow](view.columns.map { col =>
-        ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull)
+        ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull, col.sqlTypeName)
       }: _*)
       view -> ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
     }

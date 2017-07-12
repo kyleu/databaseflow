@@ -23,6 +23,7 @@ object ForeignKeysFile {
       case h :: Nil =>
         val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
         val typ = col.columnType.asScala
+        col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, typ))
         val propId = ExportHelper.toIdentifier(h.source)
         val propCls = ExportHelper.toClassName(h.source)
         file.add(s"""def getBy$propCls($propId: $typ) = Database.query(${et.className}Queries.GetBy$propCls($propId))""")
@@ -42,7 +43,7 @@ object ForeignKeysFile {
         case h :: Nil =>
           val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           val typ = col.columnType.asScala
-
+          col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, typ))
           val propName = ExportHelper.toIdentifier(h.source)
           val srcClass = ExportHelper.toClassName(h.source)
           val seq = if (col.notNull) { s"Seq(x.$propName)" } else { s"x.$propName.toSeq" }
@@ -52,7 +53,6 @@ object ForeignKeysFile {
           file.add(s"val ${et.propertyName}By${srcClass}Fetcher = Fetcher.rel[$relType](", 1)
           file.add(s"(_, ids) => ${et.className}Service.getByIdSeq(ids),")
           file.add(s"(_, rels) => ${et.className}Service.getBy${srcClass}Seq(rels(${et.propertyName}By$srcClass))")
-
           file.add(")", -1)
 
           file.add()

@@ -1,6 +1,7 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
+import models.schema.ColumnType
 import services.scalaexport.{ExportHelper, ExportTable}
 
 object QueriesFile {
@@ -61,7 +62,11 @@ object QueriesFile {
         file.addImport(p, col.columnType.asScala)
       }
       val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
-      val asType = if (col.notNull) { s"as[${col.columnType.asScala}]" } else { s"asOpt[${col.columnType.asScala}]" }
+      val colScala = col.columnType match {
+        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(col.sqlTypeName)
+        case x => x.asScala
+      }
+      val asType = if (col.notNull) { s"as[$colScala]" } else { s"asOpt[$colScala]" }
       file.add(s"""${ExportHelper.toIdentifier(col.name)} = row.$asType("${col.name}")$comma""")
     }
     file.add(")", -1)
