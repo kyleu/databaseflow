@@ -28,7 +28,8 @@ object ForeignKeyGraphQL {
         fieldType = tgt,
         description = Some(fk.name),
         resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => {
-          QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, RowDataOptions(filters = getFilters(ctx))).map(_.head)
+          val columns = Seq("*")
+          QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, columns, RowDataOptions(filters = getFilters(ctx))).map(_.head)
         }
       )
     } else {
@@ -37,7 +38,9 @@ object ForeignKeyGraphQL {
         fieldType = OptionType(tgt),
         description = Some(fk.name),
         resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => {
-          QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, RowDataOptions(filters = getFilters(ctx))).map(_.headOption)
+          val columns = Seq("*") // TODO
+          val rdo = RowDataOptions(filters = getFilters(ctx))
+          QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, columns, rdo).map(_.headOption)
         }
       )
     }

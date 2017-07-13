@@ -24,7 +24,7 @@ object ExploreViewHelper {
         fieldType = ListType(v._2),
         description = v._1.description,
         resolve = (x: Context[GraphQLContext, Unit]) => {
-          QueryResultRowService.getViewData(x.ctx.user, schema.connectionId, v._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
+          QueryResultRowService.getViewData(x.ctx.user, schema.connectionId, v._1.name, Nil, SchemaModelGraphQL.rowDataOptionsFor(x))
         },
         arguments = resultArgs
       )

@@ -53,9 +53,9 @@ object ExploreTableHelper {
           fieldType = ListType(t._2),
           description = t._1.description,
           arguments = QueryResultGraphQL.resultArgs,
-          resolve = (x: Context[GraphQLContext, Unit]) => {
-            QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, SchemaModelGraphQL.rowDataOptionsFor(x))
-          }
+          resolve = Projector(1, (x: Context[GraphQLContext, Unit], names) => {
+            QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, names.map(_.name), SchemaModelGraphQL.rowDataOptionsFor(x))
+          })
         )
       }: _*)
     }

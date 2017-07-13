@@ -14,7 +14,7 @@ object RowDataHelper extends Logging {
     def work() = {
       val startMs = DateUtils.nowMillis
       val optionsNewLimit = params.options.copy(limit = params.options.limit.map(_ + 1))
-      val (sql, values: Seq[Any]) = EngineQueries.selectFrom(params.name, optionsNewLimit)(engine)
+      val (sql, values: Seq[Any]) = EngineQueries.selectFrom(params.name, params.columns, optionsNewLimit)(engine)
       log.info(s"Showing data for [${params.name}] using sql [$sql] with values [${values.mkString(", ")}].")
       JdbcUtils.sqlCatch(params.queryId, sql, startMs, params.resultId, 0) { () =>
         val result = database.query(DynamicQuery(sql, values))

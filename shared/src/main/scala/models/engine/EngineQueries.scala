@@ -10,7 +10,7 @@ object EngineQueries {
     case Left(z) => z
   }
 
-  def selectFrom(name: String, options: RowDataOptions = RowDataOptions.empty)(implicit engine: DatabaseEngine) = {
+  def selectFrom(name: String, columns: Seq[String], options: RowDataOptions = RowDataOptions.empty)(implicit engine: DatabaseEngine) = {
     val whereClauseAdditions = options.limit match {
       case Some(l) if engine == Oracle => options.offset match {
         case Some(o) => Some(s" rownum <= ${l + o} and rownum > $o")
@@ -74,13 +74,18 @@ object EngineQueries {
       s" order by ${engine.cap.leftQuote}$orderCol${engine.cap.rightQuote} $ordering"
     }.getOrElse("")
 
-    selectFromSql(preColumnsClause, name, whereClause + orderByClause + postQueryClauses, values)
+    selectFromSql(preColumnsClause, columns, name, whereClause + orderByClause + postQueryClauses, values)
   }
 
 
-  def selectFromSql(preCols: String, name: String, clauses: String, values: Seq[Any])(implicit engine: DatabaseEngine) = {
+  def selectFromSql(preCols: String, columns: Seq[String], name: String, clauses: String, values: Seq[Any])(implicit engine: DatabaseEngine) = {
     val quotedName = engine.cap.leftQuote + name + engine.cap.rightQuote
-    val sql = s"select$preCols * from $quotedName $clauses"
+    val finalCols = columns match {
+      case x if x.isEmpty => "*"
+      case x if x.size == 1 && x.headOption.contains("*") => "*"
+      case _ => columns.map("\"" + _ + "\"").mkString(", ")
+    }
+    val sql = s"select$preCols $finalCols from $quotedName $clauses"
     sql -> values
   }
 }

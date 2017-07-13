@@ -60,7 +60,7 @@ object TableManager extends TableDetailHelper {
           RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
         })
         TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
-          val (sql, _) = EngineQueries.selectFrom(name, options)(MetadataManager.engine.getOrElse(throw new IllegalStateException()))
+          val (sql, _) = EngineQueries.selectFrom(name, Nil, options)(MetadataManager.engine.getOrElse(throw new IllegalStateException()))
           AdHocQueryManager.addAdHocQuery(UUID.randomUUID, name + " Data", sql)
         })
 

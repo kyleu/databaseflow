@@ -41,7 +41,10 @@ object SchemaModelGraphQL {
       description = Some("Return this table's data, passing filters as arguments."),
       fieldType = resultType,
       arguments = resultArgs,
-      resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, "table", c.value.name, rowDataOptionsFor(c))
+      resolve = c => {
+        val columns = Seq("*") // TODO
+        RowDataService.getRowData(c.ctx.user, c.value.connection, "table", c.value.name, columns, rowDataOptionsFor(c))
+      }
     ))
   )
 
@@ -52,7 +55,7 @@ object SchemaModelGraphQL {
       description = Some("Return this view's data, passing filters as arguments."),
       fieldType = resultType,
       arguments = resultArgs,
-      resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, "view", c.value.name, rowDataOptionsFor(c))
+      resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, "view", c.value.name, Nil, rowDataOptionsFor(c))
     ))
   )
 

@@ -55,7 +55,7 @@ object SharedResultService {
 
     val src = sr.source.asRowDataOptions(None).merge(rdo)
 
-    val (sql, values: Seq[Any]) = EngineQueries.selectFrom(sr.source.name, src)(db.engine)
+    val (sql, values: Seq[Any]) = EngineQueries.selectFrom(sr.source.name, Nil, src)(db.engine)
     db.query(DynamicQuery(sql, values))
   }
 

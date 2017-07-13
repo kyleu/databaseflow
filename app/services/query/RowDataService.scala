@@ -19,63 +19,60 @@ import utils.Logging
 import scala.concurrent.Future
 
 object RowDataService extends Logging {
-  case class Params(queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], options: RowDataOptions, resultId: UUID)
+  case class Params(
+    queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], columns: Seq[String], options: RowDataOptions, resultId: UUID
+  )
+  case class Config(queryId: UUID, name: String, columns: Seq[String], options: RowDataOptions, resultId: UUID, out: Option[ActorRef])
 
-  def getRowData(user: User, connectionId: UUID, key: String, name: String, options: RowDataOptions) = {
+  def getRowData(user: User, connectionId: UUID, key: String, name: String, columns: Seq[String], options: RowDataOptions) = {
     val dbAccess = DatabaseRegistry.databaseForUser(user, connectionId) match {
       case Right(database) => (connectionId, database, database.engine)
       case Left(x) => throw x
     }
-    handleGetRowData(dbAccess, key, UUID.randomUUID, name, options, UUID.randomUUID, None).map {
+    handleGetRowData(dbAccess, key, Config(UUID.randomUUID, name, columns, options, UUID.randomUUID, None)).map {
       case qrr: QueryResultResponse => qrr.result
       case se: ServerError => throw new IllegalStateException(se.reason + ": " + se.content)
       case x => throw new IllegalStateException(x.toString)
     }
   }
 
-  def handleGetRowData(
-    dbAccess: (UUID, Queryable, DatabaseEngine), key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]
-  ) = {
+  def handleGetRowData(dbAccess: (UUID, Queryable, DatabaseEngine), key: String, config: Config) = {
     val (conn, db, engine) = dbAccess
     key match {
-      case "table" => handleGetTableRowData(conn, db, engine, queryId, name, options, resultId, out)
-      case "view" => handleGetViewRowData(conn, db, engine, queryId, name, options, resultId, out)
-      case "cache" => handleGetCacheRowData(queryId, name, options, resultId, out)
+      case "table" => handleGetTableRowData(conn, db, engine, config)
+      case "view" => handleGetViewRowData(conn, db, engine, config)
+      case "cache" => handleGetCacheRowData(config)
     }
   }
 
-  private[this] def handleGetTableRowData(
-    conn: UUID, db: Queryable, engine: DatabaseEngine, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]
-  ) = {
-    SchemaService.getTable(conn, name) match {
+  private[this] def handleGetTableRowData(conn: UUID, db: Queryable, engine: DatabaseEngine, config: Config) = {
+    SchemaService.getTable(conn, config.name) match {
       case Some(table) =>
-        val params = Params(queryId, "table", table.name, table.primaryKey, table.foreignKeys, options, resultId)
-        RowDataHelper.showDataResponse(params, db, engine, out)
+        val params = Params(config.queryId, "table", table.name, table.primaryKey, table.foreignKeys, config.columns, config.options, config.resultId)
+        RowDataHelper.showDataResponse(params, db, engine, config.out)
       case None =>
-        log.warn(s"Attempted to show data for invalid table [$name].")
-        val msg = ServerError("Invalid Table", s"[$name] is not a valid table.")
-        out.foreach(_ ! msg)
+        log.warn(s"Attempted to show data for invalid table [${config.name}].")
+        val msg = ServerError("Invalid Table", s"[${config.name}] is not a valid table.")
+        config.out.foreach(_ ! msg)
         Future.successful(msg)
     }
   }
 
-  private[this] def handleGetViewRowData(
-    conn: UUID, db: Queryable, engine: DatabaseEngine, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]
-  ) = {
-    SchemaService.getView(conn, name) match {
+  private[this] def handleGetViewRowData(conn: UUID, db: Queryable, engine: DatabaseEngine, config: Config) = {
+    SchemaService.getView(conn, config.name) match {
       case Some(view) =>
-        val params = Params(queryId, "view", view.name, None, Nil, options, resultId)
-        RowDataHelper.showDataResponse(params, db, engine, out)
+        val params = Params(config.queryId, "view", view.name, None, Nil, config.columns, config.options, config.resultId)
+        RowDataHelper.showDataResponse(params, db, engine, config.out)
       case None =>
-        log.warn(s"Attempted to show data for invalid view [$name].")
-        val msg = ServerError("Invalid View", s"[$name] is not a valid view.")
-        out.foreach(_ ! msg)
+        log.warn(s"Attempted to show data for invalid view [${config.name}].")
+        val msg = ServerError("Invalid View", s"[${config.name}] is not a valid view.")
+        config.out.foreach(_ ! msg)
         Future.successful(msg)
     }
   }
 
-  private[this] def handleGetCacheRowData(queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, out: Option[ActorRef]) = {
-    MasterDatabase.query(CachedResultQueries.getById(resultId)) match {
+  private[this] def handleGetCacheRowData(config: Config) = {
+    MasterDatabase.query(CachedResultQueries.getById(config.resultId)) match {
       case Some(result) =>
         val (pk, fks) = result.source match {
           case Some(src) => SchemaService.getTable(result.connectionId, src) match {
@@ -84,12 +81,12 @@ object RowDataService extends Logging {
           }
           case None => None -> Nil
         }
-        val params = Params(queryId, "cache", name, pk, fks, options, resultId)
-        RowDataHelper.showDataResponse(params, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine, out)
+        val params = Params(config.queryId, "cache", config.name, pk, fks, config.columns, config.options, config.resultId)
+        RowDataHelper.showDataResponse(params, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine, config.out)
       case None =>
-        log.warn(s"Attempted to show data for invalid view [$name].")
-        val msg = ServerError("Invalid Cached Result", s"Unknown cached result [$resultId].")
-        out.foreach(_ ! msg)
+        log.warn(s"Attempted to show data for invalid view [${config.name}].")
+        val msg = ServerError("Invalid Cached Result", s"Unknown cached result [${config.resultId}].")
+        config.out.foreach(_ ! msg)
         Future.successful(msg)
     }
   }

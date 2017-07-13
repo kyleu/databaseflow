@@ -66,7 +66,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
       case "cache" => (ResultCacheDatabase.connectionId, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine)
       case _ => (connectionId, activeTransaction.getOrElse(db), db.engine)
     }
-    RowDataService.handleGetRowData(dbAccess, key, queryId, name, options, resultId, Some(out))
+    RowDataService.handleGetRowData(dbAccess, key, RowDataService.Config(queryId, name, Nil, options, resultId, Some(out)))
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
