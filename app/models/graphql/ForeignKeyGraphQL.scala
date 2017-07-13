@@ -3,7 +3,7 @@ package models.graphql
 import models.query.{QueryFilter, RowDataOptions}
 import models.result.QueryResultRow
 import models.schema.{ColumnType, FilterOp, ForeignKey, Table}
-import sangria.schema.{Context, Field, ObjectType, OptionType}
+import sangria.schema.{Context, Field, ObjectType, OptionType, Projector}
 import services.query.QueryResultRowService
 import utils.FutureUtils.defaultContext
 
@@ -27,21 +27,22 @@ object ForeignKeyGraphQL {
         name = fkName,
         fieldType = tgt,
         description = Some(fk.name),
-        resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => {
-          val columns = Seq("*")
-          QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, columns, RowDataOptions(filters = getFilters(ctx))).map(_.head)
-        }
+        resolve = Projector((ctx: Context[GraphQLContext, QueryResultRow], names) => {
+          val columns = if (names.exists(n => !src.columns.exists(_.name == n.name))) { Seq("*") } else { names.map(_.name) }
+          val rdo = RowDataOptions(filters = getFilters(ctx))
+          QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, columns, rdo).map(_.head)
+        })
       )
     } else {
       Field(
         name = fkName,
         fieldType = OptionType(tgt),
         description = Some(fk.name),
-        resolve = (ctx: Context[GraphQLContext, QueryResultRow]) => {
-          val columns = Seq("*") // TODO
+        resolve = Projector((ctx: Context[GraphQLContext, QueryResultRow], names) => {
+          val columns = if (names.exists(n => !src.columns.exists(_.name == n.name))) { Seq("*") } else { names.map(_.name) }
           val rdo = RowDataOptions(filters = getFilters(ctx))
           QueryResultRowService.getTableData(ctx.ctx.user, schema.connectionId, fk.targetTable, columns, rdo).map(_.headOption)
-        }
+        })
       )
     }
   }

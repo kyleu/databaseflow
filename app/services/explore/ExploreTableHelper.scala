@@ -10,13 +10,11 @@ object ExploreTableHelper {
   val emptyObjectType = ObjectType(
     name = "empty",
     description = "Empty table used as a placeholder when things go wrong",
-    fieldsFn = () => {
-    fields[GraphQLContext, QueryResultRow](Field(
-      name = "unavailable",
-      fieldType = StringType,
-      resolve = (_: Context[GraphQLContext, QueryResultRow]) => "unavailable"
-    ))
-  }
+    fieldsFn = () => fields[GraphQLContext, QueryResultRow](Field(
+    name = "unavailable",
+    fieldType = StringType,
+    resolve = (_: Context[GraphQLContext, QueryResultRow]) => "unavailable"
+  ))
   )
 
   def getTables(schema: models.schema.Schema) = if (schema.tables.isEmpty) {
@@ -54,7 +52,9 @@ object ExploreTableHelper {
           description = t._1.description,
           arguments = QueryResultGraphQL.resultArgs,
           resolve = Projector(1, (x: Context[GraphQLContext, Unit], names) => {
-            QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, names.map(_.name), SchemaModelGraphQL.rowDataOptionsFor(x))
+            val noRels = names.forall(n => t._1.columns.exists(_.name == n.name))
+            val columns = if (noRels) { names.map(_.name) } else { Nil }
+            QueryResultRowService.getTableData(x.ctx.user, schema.connectionId, t._1.name, columns, SchemaModelGraphQL.rowDataOptionsFor(x))
           })
         )
       }: _*)
