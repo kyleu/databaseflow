@@ -19,7 +19,7 @@ object SharedResultRow {
     connectionId = row.as[UUID]("connection_id"),
     sql = row.as[String]("sql"),
     source = QueryResult.Source(
-      t = row.as[String]("source_type"),
+      t = QueryResult.SourceType.withNameInsensitive(row.as[String]("source_type")),
       name = row.as[String]("source_name"),
       sortedColumn = row.asOpt[String]("source_sort_column"),
       sortedAscending = row.asOpt[Long]("source_sort_asc").map(_ != 0L),

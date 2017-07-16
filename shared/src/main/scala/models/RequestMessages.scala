@@ -25,7 +25,7 @@ case object CommitTransaction extends RequestMessage
 
 case class CheckQuery(queryId: UUID, sql: String) extends RequestMessage
 case class SubmitQuery(queryId: UUID, sql: String, params: Seq[SavedQuery.Param], action: Option[String] = None, resultId: UUID) extends RequestMessage
-case class GetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) extends RequestMessage
+case class GetRowData(key: QueryResult.SourceType, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID) extends RequestMessage
 case class CancelQuery(queryId: UUID, resultId: UUID) extends RequestMessage
 case class CloseQuery(queryId: UUID) extends RequestMessage
 

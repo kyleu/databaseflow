@@ -3,7 +3,7 @@ package models.schema
 import models.graphql.GraphQLContext
 import models.graphql.CommonGraphQL._
 import models.result.QueryResultGraphQL._
-import models.query.{QueryFilter, RowDataOptions}
+import models.query.{QueryFilter, QueryResult, RowDataOptions}
 import sangria.macros.derive._
 import sangria.schema._
 import services.query.RowDataService
@@ -44,7 +44,7 @@ object SchemaModelGraphQL {
       arguments = resultArgs,
       resolve = c => {
         val columns = Seq("*") // TODO
-        RowDataService.getRowData(c.ctx.user, c.value.connection, "table", c.value.name, columns, rowDataOptionsFor(c))
+        RowDataService.getRowData(c.ctx.user, c.value.connection, QueryResult.SourceType.Table, c.value.name, columns, rowDataOptionsFor(c))
       }
     ))
   )
@@ -56,7 +56,7 @@ object SchemaModelGraphQL {
       description = Some("Return this view's data, passing filters as arguments."),
       fieldType = resultType,
       arguments = resultArgs,
-      resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, "view", c.value.name, Nil, rowDataOptionsFor(c))
+      resolve = c => RowDataService.getRowData(c.ctx.user, c.value.connection, QueryResult.SourceType.View, c.value.name, Nil, rowDataOptionsFor(c))
     ))
   )
 

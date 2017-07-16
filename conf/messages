@@ -167,7 +167,9 @@ socket.no.transaction = Not currently in a transaction.
 # Modals
 modal.confirm.prompt = Are you sure?
 modal.export.action = Export
+modal.export.text = This will export all rows from your query result in the format you choose.
 modal.export.csv = Comma Separated Values
+modal.export.sql = SQL Insert Statements
 modal.export.excel = Microsoft Excel
 modal.reconnect.prompt = Connection error. Would you like to retry?
 modal.reconnect.action = Reconnect

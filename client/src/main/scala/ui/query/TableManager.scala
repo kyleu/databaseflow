@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.GetTableDetail
 import models.engine.EngineQueries
-import models.query.RowDataOptions
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.Table
 import models.template._
 import models.template.tbl.TableDetailTemplate
@@ -57,7 +57,7 @@ object TableManager extends TableDetailHelper {
               case _ => None
             }
           )
-          RowDataManager.showRowData("table", queryId, name, newOptions, UUID.randomUUID)
+          RowDataManager.showRowData(QueryResult.SourceType.Table, queryId, name, newOptions, UUID.randomUUID)
         })
         TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
           val (sql, _) = EngineQueries.selectFrom(name, Nil, options)(MetadataManager.engine.getOrElse(throw new IllegalStateException()))
@@ -73,7 +73,7 @@ object TableManager extends TableDetailHelper {
         queryId
     }
     if (options.isFiltered) {
-      RowDataManager.showRowData("table", qId, name, options.copy(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
+      RowDataManager.showRowData(QueryResult.SourceType.Table, qId, name, options.copy(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
     }
   }
 }

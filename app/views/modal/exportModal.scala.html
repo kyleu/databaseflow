@@ -8,11 +8,19 @@
           <div class="row">
             <div class="input-field col s12">
               <div class="card-panel option-panel">
+                <div>@messages("modal.export.text")</div>
                 <p>
                   <input id="input-export-format-csv" name="format" type="radio" value="csv" checked="checked" />
                   <label for="input-export-format-csv">
                     <code>csv</code><br/>
                     <em>@messages("modal.export.csv")</em>
+                  </label>
+                </p>
+                <p>
+                  <input id="input-export-format-sql" name="format" type="radio" value="sql" />
+                  <label for="input-export-format-sql">
+                    <code>sql</code><br/>
+                    <em>@messages("modal.export.sql")</em>
                   </label>
                 </p>
                 <div class="clear"></div>

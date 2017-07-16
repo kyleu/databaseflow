@@ -2,6 +2,7 @@ package models.query
 
 import java.util.UUID
 
+import enumeratum._
 import models.schema.ColumnType
 import models.schema.ColumnType.StringType
 
@@ -16,8 +17,18 @@ object QueryResult {
     relationColumn: Option[String] = None
   )
 
+  sealed trait SourceType extends EnumEntry
+
+  object SourceType extends Enum[SourceType] {
+    case object Table extends SourceType
+    case object View extends SourceType
+    case object Cache extends SourceType
+
+    override val values = findValues
+  }
+
   case class Source(
-      t: String,
+      t: SourceType,
       name: String,
       sortable: Boolean = true,
       sortedColumn: Option[String] = None,

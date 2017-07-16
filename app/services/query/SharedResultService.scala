@@ -6,7 +6,7 @@ import akka.actor.ActorRef
 import models.engine.EngineQueries
 import models.queries.dynamic.DynamicQuery
 import models.queries.result.SharedResultQueries
-import models.query.{RowDataOptions, SharedResult}
+import models.query.{QueryResult, RowDataOptions, SharedResult}
 import models.user.{Permission, Role, User}
 import models.{SharedResultResponse, SharedResultSaveResponse}
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
@@ -40,7 +40,7 @@ object SharedResultService {
   }
 
   def getData(user: Option[User], sr: SharedResult, rdo: RowDataOptions) = {
-    val db = if (sr.source.t == "cache") {
+    val db = if (sr.source.t == QueryResult.SourceType.Cache) {
       ResultCacheDatabase.conn
     } else {
       user match {

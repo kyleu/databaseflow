@@ -4,6 +4,7 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import models._
+import models.query.QueryResult.SourceType
 import models.query.{RowDataOptions, SavedQuery}
 import services.audit.AuditRecordService
 import services.database.core.ResultCacheDatabase
@@ -61,9 +62,9 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case _ => throw new IllegalArgumentException(action)
   }
 
-  private[this] def handleGetRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, someRef: Some[ActorRef]) = {
+  private[this] def handleGetRowData(key: SourceType, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID, someRef: Some[ActorRef]) = {
     val dbAccess = key match {
-      case "cache" => (ResultCacheDatabase.connectionId, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine)
+      case SourceType.Cache => (ResultCacheDatabase.connectionId, ResultCacheDatabase.conn, ResultCacheDatabase.conn.engine)
       case _ => (connectionId, activeTransaction.getOrElse(db), db.engine)
     }
     RowDataService.handleGetRowData(dbAccess, key, RowDataService.Config(queryId, name, Nil, options, resultId, Some(out)))

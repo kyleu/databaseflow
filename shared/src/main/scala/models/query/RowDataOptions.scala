@@ -28,7 +28,7 @@ case class RowDataOptions(
   }
 
   def toSource(t: String, name: String, sortable: Boolean) = QueryResult.Source(
-    t = t,
+    t = QueryResult.SourceType.withNameInsensitive(t),
     name = name,
     sortable = sortable,
     sortedColumn = orderByCol,

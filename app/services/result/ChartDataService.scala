@@ -6,6 +6,7 @@ import akka.actor.ActorRef
 import models.database.Transaction
 import models.engine.EngineQueries
 import models.queries.dynamic.DynamicQuery
+import models.query.QueryResult
 import models.user.User
 import models.{ChartDataRequest, ChartDataResponse}
 import services.database.DatabaseRegistry
@@ -20,7 +21,7 @@ object ChartDataService extends Logging {
     out: ActorRef,
     activeTransaction: Option[Transaction]
   ) = {
-    val db = if (cdr.source.t == "cache") {
+    val db = if (cdr.source.t == QueryResult.SourceType.Cache) {
       ResultCacheDatabase.conn
     } else {
       DatabaseRegistry.databaseForUser(user, connectionId) match {

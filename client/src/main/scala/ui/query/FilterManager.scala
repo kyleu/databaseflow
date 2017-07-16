@@ -9,7 +9,7 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import util.{Config, TemplateUtils}
 
 object FilterManager {
-  def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, columns: Seq[QueryResult.Col], resultId: UUID) = {
+  def init(key: QueryResult.SourceType, queryId: UUID, name: String, panel: JQuery, src: Source, columns: Seq[QueryResult.Col], resultId: UUID) = {
     val filterContainer = $(".filter-container", panel)
     var filterShown = false
     TemplateUtils.clickHandler($(".results-filter-link", panel), _ => {

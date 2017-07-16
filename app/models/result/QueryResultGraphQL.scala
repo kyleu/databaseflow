@@ -24,6 +24,12 @@ object QueryResultGraphQL {
     values = FilterOp.values.map(t => t -> t.entryName).toList
   )
 
+  implicit val sourceTypeEnum = CommonGraphQL.deriveEnumeratumType(
+    name = "SourceType",
+    description = "A source for cached results and saved queries.",
+    values = QueryResult.SourceType.values.map(t => t -> t.entryName).toList
+  )
+
   val whereClauseArg = Argument("whereClause", OptionInputType(StringType), description = "Adds the provided string to the where clause (i.e. \"id = 1\").")
 
   val sortColArg = Argument("sortCol", OptionInputType(StringType), description = "Sorts the returned results by the provided column.")

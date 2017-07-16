@@ -83,10 +83,7 @@ object ResultQueryHelper extends Logging {
         data = mappedData,
         rowsAffected = mappedData.size,
         moreRowsAvailable = moreRowsAvailable,
-        source = Some(QueryResult.Source(
-          t = "cache",
-          name = result.tableName
-        )),
+        source = Some(QueryResult.Source(t = QueryResult.SourceType.Cache, name = result.tableName)),
         elapsedMs = elapsedMs
       ))
       o ! msg

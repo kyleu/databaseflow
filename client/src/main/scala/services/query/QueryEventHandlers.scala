@@ -54,7 +54,7 @@ object QueryEventHandlers {
   }
 
   private[this] def dataClickHandler(jq: JQuery, result: QueryResult) = {
-    val table = result.source.filter(_.t == "table").map(_.name)
+    val table = result.source.filter(_.t == QueryResult.SourceType.Table).map(_.name)
     val pk = result.columns.filter(_.primaryKey).map(_.name)
 
     var tdData = Seq.empty[String]

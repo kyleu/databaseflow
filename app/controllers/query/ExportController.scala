@@ -5,7 +5,7 @@ import java.util.UUID
 
 import controllers.BaseController
 import models.engine.EngineQueries
-import models.queries.export.CsvExportQuery
+import models.queries.export.{CsvExportQuery, SqlExportQuery}
 import models.query.QueryResult
 import models.user.User
 import play.api.i18n.Lang
@@ -47,7 +47,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
   }
 
   private[this] def send(user: Option[User], connectionId: UUID, source: QueryResult.Source, format: String, lang: Lang) = {
-    val db = if (source.t == "cache") {
+    val db = if (source.t == QueryResult.SourceType.Cache) {
       ResultCacheDatabase.conn
     } else {
       user match {
@@ -66,6 +66,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val (sql, values: Seq[Any]) = EngineQueries.selectFrom(source.name, Nil, source.asRowDataOptions(None))(db.engine)
     val (mimeType, query) = format match {
       case "csv" => "text/csv" -> CsvExportQuery(sql, values, os)
+      case "sql" => "application/octet-stream" -> SqlExportQuery(sql, values, source, db.engine, os)
       case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format)(lang))
     }
     try {

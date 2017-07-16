@@ -7,7 +7,7 @@ import models._
 import models.database.Queryable
 import models.engine.DatabaseEngine
 import models.queries.result.CachedResultQueries
-import models.query.RowDataOptions
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.{ForeignKey, PrimaryKey}
 import models.user.User
 import services.database.DatabaseRegistry
@@ -24,7 +24,7 @@ object RowDataService extends Logging {
   )
   case class Config(queryId: UUID, name: String, columns: Seq[String], options: RowDataOptions, resultId: UUID, out: Option[ActorRef])
 
-  def getRowData(user: User, connectionId: UUID, key: String, name: String, columns: Seq[String], options: RowDataOptions) = {
+  def getRowData(user: User, connectionId: UUID, key: QueryResult.SourceType, name: String, columns: Seq[String], options: RowDataOptions) = {
     val dbAccess = DatabaseRegistry.databaseForUser(user, connectionId) match {
       case Right(database) => (connectionId, database, database.engine)
       case Left(x) => throw x
@@ -36,12 +36,12 @@ object RowDataService extends Logging {
     }
   }
 
-  def handleGetRowData(dbAccess: (UUID, Queryable, DatabaseEngine), key: String, config: Config) = {
+  def handleGetRowData(dbAccess: (UUID, Queryable, DatabaseEngine), key: QueryResult.SourceType, config: Config) = {
     val (conn, db, engine) = dbAccess
     key match {
-      case "table" => handleGetTableRowData(conn, db, engine, config)
-      case "view" => handleGetViewRowData(conn, db, engine, config)
-      case "cache" => handleGetCacheRowData(config)
+      case QueryResult.SourceType.Table => handleGetTableRowData(conn, db, engine, config)
+      case QueryResult.SourceType.View => handleGetViewRowData(conn, db, engine, config)
+      case QueryResult.SourceType.Cache => handleGetCacheRowData(config)
     }
   }
 

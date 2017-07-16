@@ -6,6 +6,7 @@ import java.util.UUID
 import models.database.{Query, Row}
 import models.queries.QueryTranslations
 import models.query.QueryResult
+import models.schema.ColumnType
 import org.h2.jdbc.JdbcClob
 
 object DynamicQuery {
@@ -21,7 +22,7 @@ object DynamicQuery {
   }
 
   def getColumnMetadata(md: ResultSetMetaData, colIdx: Int) = {
-    val columnType = QueryTranslations.forType(md.getColumnType(colIdx), md.getColumnTypeName(colIdx))
+    val columnType: ColumnType = QueryTranslations.forType(md.getColumnType(colIdx), md.getColumnTypeName(colIdx))
     val precision = md.getPrecision(colIdx) match {
       case x if x < 1 => None
       case x => Some(x)

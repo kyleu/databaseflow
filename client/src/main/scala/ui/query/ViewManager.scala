@@ -3,7 +3,7 @@ package ui.query
 import java.util.UUID
 
 import models.engine.EngineQueries
-import models.query.RowDataOptions
+import models.query.{QueryResult, RowDataOptions}
 import models.schema.View
 import models.template._
 import models.template.view.ViewDetailTemplate
@@ -48,7 +48,7 @@ object ViewManager extends ViewDetailHelper {
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
       TemplateUtils.clickHandler($(".view-data-link", queryPanel), _ => {
-        RowDataManager.showRowData("view", queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
+        RowDataManager.showRowData(QueryResult.SourceType.View, queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
       })
       TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
         AdHocQueryManager.addAdHocQuery(UUID.randomUUID, "Query Name", "select * from something")
