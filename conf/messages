@@ -178,7 +178,9 @@ modal.save.description = Description
 modal.save.available.from = Available From
 modal.save.all.databases = All Databases
 modal.save.this.database = This Database Only
+modal.share.results.text = This will allow you to share your query result with an audience of your choosing. The query is cached, and will not be run again.
 modal.share.results.title = Title
+modal.share.results.title.error = Please enter a name for this result.
 modal.share.results.description = Description
 
 # User

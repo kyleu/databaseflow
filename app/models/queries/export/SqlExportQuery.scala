@@ -17,8 +17,8 @@ case class SqlExportQuery(
     case QueryResult.SourceType.Cache => "table_name"
   }) + engine.cap.rightQuote
 
-  private[this] def forCol(x: ColumnType, d: Option[String]) = d match {
-    case Some(data) => s"'$data'"
+  private[this] def forCol(ct: ColumnType, d: Option[String]) = d match {
+    case Some(data) => if (ct.isNumeric) { data } else { "'" + data + "'" }
     case None => "null"
   }
 

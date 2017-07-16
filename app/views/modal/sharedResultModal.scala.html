@@ -7,10 +7,13 @@
       <div class="row">
         <form class="col s12">
           <div class="row">
+            <p class="col s12">
+            @messages("modal.share.results.text")
+            </p>
             <div class="input-field col s12">
               <input id="input-shared-result-title" name="title" type="text" minlength="1" class="validate" placeholder="">
               <label for="input-shared-result-title">@messages("modal.share.results.title")</label>
-              <div class="share-name-error initially-hidden">Please enter a name for this result.</div>
+              <div class="share-name-error initially-hidden">@messages("modal.share.results.title.error")</div>
             </div>
 
             <div class="input-field col s12">

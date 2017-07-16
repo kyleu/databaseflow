@@ -51,7 +51,7 @@ object QueryResultService {
     }
 
     dom.document.getElementById(resultId.toString).scrollIntoView()
-    dom.window.scrollBy(0, if (TabManager.tabCount == 1) { -46 } else { -96 })
+    dom.window.scrollBy(0, if (TabManager.tabCount == 1) { -60 } else { -110 })
   }
 
   private[this] def onComplete(result: QueryResult, src: Source, panel: JQuery, resultId: UUID) = {
