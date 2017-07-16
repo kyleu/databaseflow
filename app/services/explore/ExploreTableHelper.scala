@@ -3,6 +3,7 @@ package services.explore
 import models.graphql.{ColumnGraphQL, CommonGraphQL, ForeignKeyGraphQL, GraphQLContext}
 import models.result.{QueryResultGraphQL, QueryResultRow}
 import models.schema.{SchemaModelGraphQL, Table}
+import sangria.execution.deferred.HasId
 import sangria.schema._
 import services.query.QueryResultRowService
 

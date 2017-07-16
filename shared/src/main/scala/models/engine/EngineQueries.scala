@@ -43,7 +43,7 @@ object EngineQueries {
       }
     }
 
-    val filterClauses = if(options.filters.isEmpty) {
+    lazy val filterClauses = if(options.filters.isEmpty) {
       Nil
     } else {
       options.filters.map { filter =>
@@ -63,8 +63,14 @@ object EngineQueries {
       }
     }
 
-    val (whereClause, values) = if(options.filters.isEmpty) {
-      whereClauseAdditions.map(" where" + _).getOrElse("") -> Nil
+    val whereClauseOverride = options.whereClause.map(_.trim).getOrElse("")
+
+    val (whereClause, values) = if(whereClauseOverride.nonEmpty && options.filters.nonEmpty) {
+      throw new IllegalStateException("You may specify either \"whereClause\" or \"filterCol\", not both.")
+    } else if(whereClauseOverride.nonEmpty) {
+      " where " + whereClauseOverride + whereClauseAdditions.map(" and " + _).getOrElse("") -> Nil
+    } else if(options.filters.isEmpty) {
+      whereClauseAdditions.map(" where " + _).getOrElse("") -> Nil
     } else {
       val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
       s" where ${filterClauses.map(_._1).mkString(" and ")}$additions" -> filterClauses.flatMap(_._2)

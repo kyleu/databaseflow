@@ -8,6 +8,7 @@ case class RowDataOptions(
     orderByCol: Option[String] = None,
     orderByAsc: Option[Boolean] = None,
     filters: Seq[QueryFilter] = Nil,
+    whereClause: Option[String] = None,
     limit: Option[Int] = None,
     offset: Option[Int] = None
 ) {

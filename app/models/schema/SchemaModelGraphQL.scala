@@ -20,9 +20,10 @@ object SchemaModelGraphQL {
       case Some(col) => Seq(QueryFilter(col, fo.getOrElse(FilterOp.Equal), ft.getOrElse(ColumnType.StringType), fv.getOrElse("")))
       case None => Nil
     }
+    val wc = c.arg(whereClauseArg)
     val l = c.arg(limitArg)
     val o = c.arg(offsetArg)
-    RowDataOptions(sc, sa, filters, l, o)
+    RowDataOptions(sc, sa, filters, wc, l, o)
   }
 
   implicit val referenceType = deriveObjectType[GraphQLContext, Reference](ObjectTypeDescription("A reference to a different table or view."))

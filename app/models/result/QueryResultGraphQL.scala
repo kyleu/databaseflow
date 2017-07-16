@@ -24,6 +24,8 @@ object QueryResultGraphQL {
     values = FilterOp.values.map(t => t -> t.entryName).toList
   )
 
+  val whereClauseArg = Argument("whereClause", OptionInputType(StringType), description = "Adds the provided string to the where clause (i.e. \"id = 1\").")
+
   val sortColArg = Argument("sortCol", OptionInputType(StringType), description = "Sorts the returned results by the provided column.")
   val sortAscArg = Argument("sortAsc", OptionInputType(BooleanType), description = "Sorts the returned results ascending or descending.")
 
@@ -35,7 +37,7 @@ object QueryResultGraphQL {
   val limitArg = Argument("limit", OptionInputType(IntType), description = "Caps the number of returned results.")
   val offsetArg = Argument("offset", OptionInputType(IntType), description = "Starts the returned results after this number of rows.")
 
-  val resultArgs = sortColArg :: sortAscArg :: filterColArg :: filterOpArg :: filterTypeArg :: filterValueArg :: limitArg :: offsetArg :: Nil
+  val resultArgs = sortColArg :: sortAscArg :: whereClauseArg :: filterColArg :: filterOpArg :: filterTypeArg :: filterValueArg :: limitArg :: offsetArg :: Nil
 
   implicit val queryFilterType = deriveObjectType[GraphQLContext, QueryFilter](ObjectTypeDescription("A filter applied to this query."))
 

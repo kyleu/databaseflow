@@ -13,13 +13,15 @@ import sangria.marshalling.circe._
 import sangria.parser.QueryParser
 import sangria.schema.Schema
 import services.connection.ConnectionSettingsService
-import util.ApplicationContext
+import util.{ApplicationContext, Logging}
 
 import scala.util.{Failure, Success}
 
-object GraphQLService {
+object GraphQLService extends Logging {
   protected val exceptionHandler: Executor.ExceptionHandler = {
-    case (_, e: IllegalStateException) => HandledException(e.getMessage)
+    case (_, e: IllegalStateException) =>
+      log.warn("Error encountered while running GraphQL query.", e)
+      HandledException(e.getMessage)
   }
 
   def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
