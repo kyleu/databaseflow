@@ -5,7 +5,7 @@ import java.util.UUID
 import org.scalajs.dom
 import org.scalajs.dom.BeforeUnloadEvent
 import services.query.TransactionService
-import utils.NullUtils
+import util.NullUtils
 
 object TextChangeService {
   private[this] val dirtyEditors = collection.mutable.HashSet.empty[UUID]

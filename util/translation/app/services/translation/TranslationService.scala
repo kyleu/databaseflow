@@ -2,12 +2,12 @@ package services.translation
 
 import java.io.{File, PrintWriter}
 
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.translation.api.{BingApi, GoogleApi, YandexApi}
 
 import scala.concurrent.Future
 import scala.io.Source
-import utils.Language
+import util.Language
 
 @javax.inject.Singleton()
 class TranslationService @javax.inject.Inject() (yandex: YandexApi, bing: BingApi, google: GoogleApi) {

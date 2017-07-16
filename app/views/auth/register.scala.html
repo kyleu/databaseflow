@@ -1,13 +1,13 @@
 @(user: Option[models.user.User], form: Form[models.user.RegistrationData])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(user = user, title = messages("registration.title", utils.Config.projectName), stylesheets = Seq(controllers.routes.Assets.versioned("stylesheets/databaseflow.min.css").url)) {
+)@layout.simple(user = user, title = messages("registration.title", util.Config.projectName), stylesheets = Seq(controllers.routes.Assets.versioned("stylesheets/databaseflow.min.css").url)) {
   <form method="post" action="@controllers.auth.routes.RegistrationController.register()">
     <div class="row">
       <div class="col s12">
         <div class="card">
           <div class="card-content">
-            <div class="card-title">@messages("registration.call.to.action", utils.Config.projectName)</div>
-            <p>@messages("registration.notice", utils.Config.projectName)</p>
+            <div class="card-title">@messages("registration.call.to.action", util.Config.projectName)</div>
+            <p>@messages("registration.notice", util.Config.projectName)</p>
             <div class="row">
               <div class="input-field col s12">
                 <input id="input-username" type="text" class="form-control validate" name="username" value="@form("username").value" />

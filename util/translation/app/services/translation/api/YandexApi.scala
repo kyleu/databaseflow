@@ -1,6 +1,6 @@
 package services.translation.api
 
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
 
 import io.circe._

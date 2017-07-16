@@ -1,8 +1,8 @@
 package services.supervisor
 
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
-import utils.Logging
+import util.Logging
 
 import scala.concurrent.Future
 
@@ -21,9 +21,9 @@ object VersionService extends Logging {
 
   def upgradeIfNeeded(ws: WSClient) = loadServerVersion(ws).map { v =>
     if (localVersion == v) {
-      log.info(s"You are currently running the latest version of ${utils.Config.projectName}.")
+      log.info(s"You are currently running the latest version of ${util.Config.projectName}.")
     } else {
-      log.warn(s"A new version of ${utils.Config.projectName} is available ($v). Head to [${utils.Config.projectUrl}] to download the new version.")
+      log.warn(s"A new version of ${util.Config.projectName} is available ($v). Head to [${util.Config.projectUrl}] to download the new version.")
     }
   }
 }

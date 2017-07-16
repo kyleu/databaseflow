@@ -8,8 +8,8 @@ import models._
 import models.user.User
 import org.joda.time.LocalDateTime
 import services.result.CachedResultActor
-import utils.metrics.{InstrumentedActor, MetricsServletActor}
-import utils.{ApplicationContext, DateUtils, Logging}
+import util.metrics.{InstrumentedActor, MetricsServletActor}
+import util.{ApplicationContext, DateUtils, Logging}
 
 object ActorSupervisor {
   case class SocketRecord(userId: UUID, name: String, actorRef: ActorRef, started: LocalDateTime)

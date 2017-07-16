@@ -3,7 +3,7 @@ package services.audit
 import java.nio.file.{Files, Paths}
 import java.util.UUID
 
-import utils.FileCacheService
+import util.FileCacheService
 import org.joda.time.LocalDateTime
 
 object FeedbackService {

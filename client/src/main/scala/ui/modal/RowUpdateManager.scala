@@ -7,7 +7,7 @@ import models.schema.Column
 import models.template.tbl.RowUpdateTemplate
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
-import utils.{Messages, NetworkMessage, TemplateUtils}
+import util.{Messages, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -58,7 +58,7 @@ object RowUpdateManager {
       val (k, msg) = if (pk.isEmpty) {
         "Row Inserted" -> "Added one new row."
       } else {
-        "Row Updated" -> s"${utils.NumberUtils.toWords(rowsAffected, properCase = true)} row(s) affected."
+        "Row Updated" -> s"${util.NumberUtils.toWords(rowsAffected, properCase = true)} row(s) affected."
       }
       NotificationService.info(k, msg)
       close()

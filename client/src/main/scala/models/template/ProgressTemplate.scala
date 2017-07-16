@@ -2,7 +2,7 @@ package models.template
 
 import java.util.UUID
 
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

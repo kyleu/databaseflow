@@ -9,7 +9,7 @@ import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
 import ui.tabs.TabManager
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 import scalatags.Text.all._
 

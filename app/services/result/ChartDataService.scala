@@ -10,7 +10,7 @@ import models.user.User
 import models.{ChartDataRequest, ChartDataResponse}
 import services.database.DatabaseRegistry
 import services.database.core.ResultCacheDatabase
-import utils.Logging
+import util.Logging
 
 object ChartDataService extends Logging {
   def handleChartDataRequest(

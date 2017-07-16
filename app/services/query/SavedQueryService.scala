@@ -10,7 +10,7 @@ import models.user.{Role, User}
 import services.database.DatabaseWorkerPool
 import services.database.core.MasterDatabase
 import services.user.UserService
-import utils.ExceptionUtils
+import util.ExceptionUtils
 
 object SavedQueryService {
   def canRead(user: User, sq: SavedQuery) = Role.matchPermissions(Some(user), sq.owner, "query", "read", sq.read)

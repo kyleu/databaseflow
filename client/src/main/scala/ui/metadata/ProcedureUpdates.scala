@@ -4,7 +4,7 @@ import models.schema.Procedure
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ProcedureManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object ProcedureUpdates {
   var procedures: Option[Seq[(String, JQuery, JQuery)]] = None

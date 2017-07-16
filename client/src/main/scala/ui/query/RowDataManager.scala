@@ -5,7 +5,7 @@ import java.util.UUID
 import models.GetRowData
 import models.query.RowDataOptions
 import ui.ProgressManager
-import utils.{Logging, NetworkMessage}
+import util.{Logging, NetworkMessage}
 
 object RowDataManager {
   def showRowData(key: String, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID): Unit = {

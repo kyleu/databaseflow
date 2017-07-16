@@ -10,7 +10,7 @@ import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import services.NotificationService
 import ui.query._
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 object MetadataManager {
   var engine: Option[DatabaseEngine] = None

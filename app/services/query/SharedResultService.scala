@@ -12,7 +12,7 @@ import models.{SharedResultResponse, SharedResultSaveResponse}
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
 import services.user.UserService
-import utils.ExceptionUtils
+import util.ExceptionUtils
 
 object SharedResultService {
   def getById(id: UUID) = MasterDatabase.conn.query(SharedResultQueries.getById(id))

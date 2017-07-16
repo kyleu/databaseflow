@@ -7,7 +7,7 @@ import services.database.{DatabaseRegistry, DatabaseWorkerPool}
 import services.query.{SavedQueryService, SharedResultService}
 import services.schema.{SchemaRefreshService, SchemaService}
 import services.supervisor.ActorSupervisor
-import utils.{ExceptionUtils, Logging}
+import util.{ExceptionUtils, Logging}
 
 import scala.util.{Failure, Success, Try}
 

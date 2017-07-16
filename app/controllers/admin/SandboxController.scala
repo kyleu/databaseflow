@@ -6,8 +6,8 @@ import models.sandbox.SandboxTask
 import services.connection.ConnectionSettingsService
 import services.scalaexport.ScalaExportService
 import services.schema.SchemaService
-import utils.FutureUtils.defaultContext
-import utils.ApplicationContext
+import util.FutureUtils.defaultContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

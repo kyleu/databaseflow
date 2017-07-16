@@ -7,8 +7,8 @@ import models.query.RowDataOptions
 import models.user.Permission
 import services.query.SharedResultService
 import services.user.UserService
-import utils.ApplicationContext
-import utils.web.FormUtils
+import util.ApplicationContext
+import util.web.FormUtils
 
 import scala.concurrent.Future
 

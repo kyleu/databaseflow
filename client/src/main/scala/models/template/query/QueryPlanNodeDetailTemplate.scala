@@ -1,7 +1,7 @@
 package models.template.query
 
 import models.plan.PlanNode
-import utils.{Messages, NumberUtils}
+import util.{Messages, NumberUtils}
 
 import scalatags.Text.all._
 

@@ -2,7 +2,7 @@ package services.schema
 
 import models.schema.Schema
 import services.database.DatabaseConnection
-import utils.Logging
+import util.Logging
 
 object SchemaHelper extends Logging {
   def calculateSchema(db: DatabaseConnection) = db.withConnection { conn =>

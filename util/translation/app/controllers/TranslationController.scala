@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.InjectedController
 import services.translation.TranslationService
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 
 import scala.concurrent.Future
 

@@ -12,7 +12,7 @@ import ui.metadata.MetadataManager
 import ui.modal.{ConfirmManager, SavedQueryFormManager}
 import ui.UserManager
 import ui.tabs.TabManager
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 trait SavedQueryChangeManager {
   var savedQueries = Map.empty[UUID, SavedQuery]

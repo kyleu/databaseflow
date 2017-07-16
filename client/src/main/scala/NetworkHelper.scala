@@ -1,7 +1,7 @@
 import models.{Ping, RequestMessage}
 import services.{NavigationService, NotificationService}
 import ui.modal.ReconnectManager
-import utils.{JsonSerializers, Logging, NetworkMessage, NetworkSocket}
+import util.{JsonSerializers, Logging, NetworkMessage, NetworkSocket}
 
 import scala.scalajs.js.timers._
 

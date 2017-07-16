@@ -1,7 +1,7 @@
 package controllers
 
 import services.connection.ConnectionSettingsService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

@@ -4,11 +4,11 @@ import java.util.UUID
 
 import models.schema.Schema
 import services.database.{DatabaseConnection, DatabaseWorkerPool}
-import utils.Logging
+import util.Logging
 
 import scala.concurrent.Future
 import scala.util.Try
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 
 object SchemaRefreshService extends Logging {
   private[this] var refreshCount = 0

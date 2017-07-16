@@ -1,7 +1,7 @@
 package services.query
 
 import models.query.SavedQuery
-import utils.Logging
+import util.Logging
 
 object ParameterService extends Logging {
   def merge(sql: String, params: Seq[SavedQuery.Param]) = {

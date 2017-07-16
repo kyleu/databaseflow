@@ -5,7 +5,7 @@ import models.{QueryCheckResponse, QueryErrorResponse}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
 import ui.editor.EditorManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object QueryErrorService {
   def handleQueryErrorResponse(qer: QueryErrorResponse) = {

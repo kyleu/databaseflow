@@ -3,7 +3,7 @@ package services
 import java.util.UUID
 
 import org.scalajs.dom
-import utils.KeyboardShortcut
+import util.KeyboardShortcut
 
 import scala.scalajs.js
 

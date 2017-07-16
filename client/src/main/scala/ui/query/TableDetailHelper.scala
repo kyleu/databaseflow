@@ -8,7 +8,7 @@ import models.template.column.TableColumnDetailTemplate
 import models.template.tbl.{TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import ui.modal.ColumnDetailManager
-import utils.{Logging, NumberUtils}
+import util.{Logging, NumberUtils}
 
 trait TableDetailHelper {
   protected[this] def setTableDetails(uuid: UUID, table: Table) = {

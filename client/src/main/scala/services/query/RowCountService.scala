@@ -2,7 +2,7 @@ package services.query
 
 import models.QueryResultRowCount
 import org.scalajs.jquery.{jQuery => $}
-import utils.NumberUtils
+import util.NumberUtils
 
 object RowCountService {
   def handleResultRowCount(qrrc: QueryResultRowCount) = {

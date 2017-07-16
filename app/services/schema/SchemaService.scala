@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.schema.Schema
 import models.user.User
 import services.database.{DatabaseConnection, DatabaseRegistry}
-import utils.Logging
+import util.Logging
 
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success, Try}

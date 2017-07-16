@@ -11,7 +11,7 @@ import models.query.SavedQuery
 import models.{PlanErrorResponse, PlanResultResponse, ResponseMessage, ServerError}
 import services.database.DatabaseWorkerPool
 import services.plan.PlanParseService
-import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
+import util.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 object PlanExecutionService extends Logging {
   private[this] def getResult(db: Queryable, engine: DatabaseEngine, queryId: UUID, sql: String, explainSql: String, resultId: UUID) = {

@@ -13,7 +13,7 @@ import services.connection.ConnectionSettingsService
 import services.database.{DatabaseRegistry, SampleDatabaseService}
 import services.schema.SchemaService
 import services.settings.SettingsService
-import utils.{ApplicationContext, PasswordEncryptUtils}
+import util.{ApplicationContext, PasswordEncryptUtils}
 
 import scala.concurrent.Future
 

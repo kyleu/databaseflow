@@ -3,14 +3,14 @@ package services.database.core
 import java.util.UUID
 
 import models.database._
-import utils.Logging
+import util.Logging
 
 object MasterDatabase extends CoreDatabase with Logging {
   override val connectionId = UUID.fromString("00000000-0000-0000-0000-000000000000")
-  override val name = s"${utils.Config.projectName} Storage"
-  override val slug = s"${utils.Config.projectSlug}-storage"
-  override val title = s"${utils.Config.projectName} Storage"
-  override val description = s"Internal storage used by ${utils.Config.projectName}."
+  override val name = s"${util.Config.projectName} Storage"
+  override val slug = s"${util.Config.projectSlug}-storage"
+  override val title = s"${util.Config.projectName} Storage"
+  override val description = s"Internal storage used by ${util.Config.projectName}."
   override val configKey = "master"
   override val dbName = "databaseflow"
 

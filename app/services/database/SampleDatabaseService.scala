@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils
 import services.config.ConfigFileService
 import services.connection.ConnectionSettingsService
 import services.database.core.MasterDatabase
-import utils.{Logging, SlugUtils}
+import util.{Logging, SlugUtils}
 
 object SampleDatabaseService extends Logging {
   private[this] val databaseName = "sampledb"

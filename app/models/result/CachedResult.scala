@@ -3,7 +3,7 @@ package models.result
 import java.util.UUID
 
 import org.joda.time.LocalDateTime
-import utils.DateUtils
+import util.DateUtils
 
 case class CachedResult(
     resultId: UUID,

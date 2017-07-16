@@ -2,7 +2,7 @@ package controllers
 
 import play.api.i18n.MessagesApi
 import play.twirl.api.Html
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.audit.DownloadService
 
 import scala.concurrent.Future

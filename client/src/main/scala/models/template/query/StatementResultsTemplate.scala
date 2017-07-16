@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import models.template.StaticPanelTemplate
-import utils.{Messages, TemplateUtils}
+import util.{Messages, TemplateUtils}
 
 import scalatags.Text.all._
 

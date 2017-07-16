@@ -7,13 +7,13 @@ import akka.stream.Materializer
 import com.mohiva.play.silhouette.api.HandlerResult
 import controllers.BaseController
 import models.{RequestMessage, ResponseMessage}
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 import services.connection.ConnectionSettingsService
 import services.socket.SocketService
-import utils.ApplicationContext
-import utils.web.MessageFrameFormatter
+import util.ApplicationContext
+import util.web.MessageFrameFormatter
 
 import scala.concurrent.Future
 

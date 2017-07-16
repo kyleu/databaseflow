@@ -11,11 +11,11 @@ import models.queries.auth.UserQueries
 import models.settings.SettingKey
 import models.user._
 import play.api.i18n.Messages
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.database.core.MasterDatabase
 import services.settings.SettingsService
 import services.user.{UserSearchService, UserService}
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

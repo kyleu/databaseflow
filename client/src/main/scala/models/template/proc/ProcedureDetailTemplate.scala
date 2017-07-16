@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.schema.ProcedureParam
 import models.template.{Icons, StaticPanelTemplate}
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._

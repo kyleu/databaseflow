@@ -4,7 +4,7 @@ import models.GetColumnDetail
 import models.schema.ColumnDetails
 import models.template.column.ColumnTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
@@ -23,7 +23,7 @@ object ColumnDetailManager {
   }
 
   def show(owner: String, name: String, t: String) = {
-    //utils.Logging.info(s"Column details for $modelType [$modelName::$name]. ($t)")
+    //util.Logging.info(s"Column details for $modelType [$modelName::$name]. ($t)")
 
     val content = ColumnTemplate.columnDetailsPanel(owner, name, t)
     modalContent.html(content.toString)

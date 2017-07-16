@@ -7,8 +7,8 @@ import com.mohiva.play.silhouette.api.services.IdentityService
 import models.queries.auth.UserQueries
 import models.user.User
 import services.database.core.MasterDatabase
-import utils.Logging
-import utils.cache.UserCache
+import util.Logging
+import util.cache.UserCache
 
 import scala.concurrent.Future
 

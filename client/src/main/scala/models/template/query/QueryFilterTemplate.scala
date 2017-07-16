@@ -2,7 +2,7 @@ package models.template.query
 
 import models.query.QueryResult
 import models.template.Icons
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

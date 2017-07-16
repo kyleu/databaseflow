@@ -4,7 +4,7 @@ import java.net.{Socket, InetAddress}
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl._
 
-import utils.NullUtils
+import util.NullUtils
 
 object ClientSideCertSslSockets {
   val configs = new ConcurrentHashMap[String, SslParams]

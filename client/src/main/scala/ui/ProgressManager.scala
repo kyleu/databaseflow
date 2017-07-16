@@ -5,7 +5,7 @@ import java.util.UUID
 import models.CancelQuery
 import models.template.ProgressTemplate
 import org.scalajs.jquery.{jQuery => $}
-import utils.{TemplateUtils, NetworkMessage}
+import util.{TemplateUtils, NetworkMessage}
 
 import scala.scalajs.js.timers
 import scalatags.Text.TypedTag

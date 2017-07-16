@@ -5,7 +5,7 @@ import java.sql.DatabaseMetaData
 import models.database.Row
 import models.queries.QueryTranslations
 import models.schema.{Procedure, ProcedureParam}
-import utils.{Logging, NullUtils}
+import util.{Logging, NullUtils}
 
 import scala.util.control.NonFatal
 

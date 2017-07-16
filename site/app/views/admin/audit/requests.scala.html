@@ -1,11 +1,11 @@
 @(seq: Seq[play.api.libs.json.JsValue])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple(utils.Config.projectName + " Requests", "admin", isAdmin = true) {
+@layout.simple(util.Config.projectName + " Requests", "admin", isAdmin = true) {
 <div class="container">
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">@utils.Config.projectName Requests</span>
+          <span class="card-title">@util.Config.projectName Requests</span>
           @if(seq.isEmpty) {
             <p>No available requests.</p>
           } else {

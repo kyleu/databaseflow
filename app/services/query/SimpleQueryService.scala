@@ -9,10 +9,10 @@ import models.database.Queryable
 import models.queries.dynamic.DynamicQuery
 import models.query.QueryResult
 import models.user.User
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.audit.AuditRecordService
 import services.database.DatabaseRegistry
-import utils.{DateUtils, Logging}
+import util.{DateUtils, Logging}
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal

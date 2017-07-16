@@ -2,9 +2,9 @@ package services.result
 
 import akka.actor.Props
 import org.joda.time.LocalDateTime
-import utils.FutureUtils.defaultContext
-import utils.Logging
-import utils.metrics.InstrumentedActor
+import util.FutureUtils.defaultContext
+import util.Logging
+import util.metrics.InstrumentedActor
 
 import scala.concurrent.duration._
 

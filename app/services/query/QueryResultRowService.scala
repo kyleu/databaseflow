@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.{QueryResult, RowDataOptions}
 import models.result.QueryResultRow
 import models.user.User
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 
 object QueryResultRowService {
   def getTableData(user: User, connectionId: UUID, name: String, columns: Seq[String], rdo: RowDataOptions) = {

@@ -20,7 +20,7 @@ object ChartRenderService {
   def render(v: ChartingService.ChartValues) = renderChart(v.chartPanel.get(0), v.chartData, v.baseOptions)
 
   def renderChart(el: Element, data: Seq[js.Dynamic], options: js.Dynamic) = {
-    //utils.Logging.logJs(js.Array(data: _*))
+    //util.Logging.logJs(js.Array(data: _*))
     plotly.map(_.newPlot(el, js.Array(data: _*), options))
     $(".modebar-btn", el).each { (_: Int, y: dom.Element) =>
       val jq = $(y)

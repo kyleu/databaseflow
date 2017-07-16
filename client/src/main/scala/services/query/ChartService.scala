@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.QueryResult
 import models.{ChartDataRequest, ChartDataResponse}
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import utils.{NetworkMessage, ScriptLoader}
+import util.{NetworkMessage, ScriptLoader}
 
 import scala.scalajs.js
 
@@ -55,7 +55,7 @@ object ChartService {
 
       case None =>
         val chartingLoadSuccess = () => {
-          utils.Logging.info("Charting script loaded.")
+          util.Logging.info("Charting script loaded.")
           charting = Some(js.Dynamic.global.Charting)
           loadPlotly()
           startChart(chartId, columns, source)

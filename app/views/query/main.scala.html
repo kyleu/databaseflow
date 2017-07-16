@@ -2,7 +2,7 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@views.html.layout.materialize(
   user = Some(user),
-  title = dbName + " - " + utils.Config.projectName,
+  title = dbName + " - " + util.Config.projectName,
   scripts = Seq(
     routes.Assets.versioned("lib/momentjs/moment.min.js").url,
     routes.Assets.versioned("lib/mousetrap/mousetrap.min.js").url

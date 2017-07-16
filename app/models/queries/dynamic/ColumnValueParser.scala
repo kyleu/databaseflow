@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.schema.ColumnType
 import models.schema.ColumnType._
-import utils.DateUtils
+import util.DateUtils
 
 import scala.util.control.NonFatal
 

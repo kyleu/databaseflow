@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.QueryResult
 import models.template.Icons
 import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
-import utils.{Messages, NumberUtils, TemplateUtils}
+import util.{Messages, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
 
@@ -31,7 +31,7 @@ object QueryResultsTemplate {
 
       div(cls := "additional-results")(
         a(cls := "append-rows-link theme-text initially-hidden", data("offset") := "0", data("limit") := qr.data.size.toString, href := "#")(
-          Messages("query.load.more", utils.NumberUtils.withCommas(qr.data.size))
+          Messages("query.load.more", util.NumberUtils.withCommas(qr.data.size))
         ),
         em(cls := "no-rows-remaining initially-hidden")(Messages("query.no.more.rows"))
       )

@@ -1,5 +1,5 @@
 @()(implicit messages: Messages)
-@panel(e: utils.SiteEngine) = {
+@panel(e: util.SiteEngine) = {
   <div id="@e.id" class="col s6 m3 db-panel">
     <a class="theme-text" href="@routes.ContentController.database(e.id)">
       <div class="logo">
@@ -18,7 +18,7 @@
   <div class="col s12">
     <div class="section-header">Supported Databases</div>
     <div class="row padded-top">
-      @utils.SiteEngine.values.map { v =>
+      @util.SiteEngine.values.map { v =>
         @panel(v)
       }
     </div>

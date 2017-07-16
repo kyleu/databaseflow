@@ -11,12 +11,12 @@ import models.parse.StatementParser
 import models.queries.result.CachedResultQueries
 import models.query.{QueryResult, SavedQuery, SqlParser}
 import models.result.{CachedResult, CachedResultQuery}
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.audit.AuditRecordService
 import services.database.DatabaseWorkerPool
 import services.database.core.MasterDatabase
 import services.result.CachedResultService
-import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
+import util.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 import scala.concurrent.Future
 

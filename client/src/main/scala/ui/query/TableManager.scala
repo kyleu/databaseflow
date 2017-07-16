@@ -13,7 +13,7 @@ import ui.metadata.MetadataManager
 import ui._
 import ui.modal.RowUpdateManager
 import ui.tabs.TabManager
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 object TableManager extends TableDetailHelper {
   private[this] var openTables = Map.empty[String, UUID]

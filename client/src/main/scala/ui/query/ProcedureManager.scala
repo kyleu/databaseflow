@@ -11,7 +11,7 @@ import services.NotificationService
 import ui.metadata.MetadataManager
 import ui.tabs.TabManager
 import ui.{ProgressManager, WorkspaceManager}
-import utils.{Logging, NetworkMessage, TemplateUtils}
+import util.{Logging, NetworkMessage, TemplateUtils}
 
 object ProcedureManager {
   var openProcedures = Map.empty[String, UUID]

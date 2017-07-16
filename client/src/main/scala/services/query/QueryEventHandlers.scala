@@ -11,7 +11,7 @@ import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
 import ui.UserManager
 import ui.query.TableManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object QueryEventHandlers {
   def wireLinks(panel: JQuery, result: QueryResult, chartId: UUID) = {
@@ -65,7 +65,7 @@ object QueryEventHandlers {
       }
     }
     val data = result.columns.zip(tdData.reverse)
-    //utils.Logging.info(s"Showing [$table] row (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
+    //util.Logging.info(s"Showing [$table] row (PK: ${pk.mkString(", ")}) with data [${data.map(d => d._1.name + ": " + d._2).mkString(", ")}].")
     RowDetailManager.show(table, pk, data)
   }
 }

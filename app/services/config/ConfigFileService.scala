@@ -3,7 +3,7 @@ package services.config
 import java.io.PrintWriter
 
 import com.typesafe.config.ConfigFactory
-import utils.Logging
+import util.Logging
 
 import scala.io.Source
 
@@ -31,7 +31,7 @@ object ConfigFileService extends Logging {
         if (d.isDirectory && d.canWrite) {
           d
         } else {
-          val share = new java.io.File("/usr/share/" + utils.Config.projectId)
+          val share = new java.io.File("/usr/share/" + util.Config.projectId)
           if (share.isDirectory && share.canWrite) {
             share
           } else {

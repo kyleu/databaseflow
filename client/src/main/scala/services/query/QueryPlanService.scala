@@ -7,7 +7,7 @@ import models.template.query.{QueryErrorTemplate, QueryPlanTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
 import ui.modal.PlanNodeDetailManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object QueryPlanService {
   def handlePlanResultResponse(pr: PlanResultResponse) = {

@@ -2,7 +2,7 @@ package services.database
 
 import models.database.Queryable
 import models.ddl._
-import utils.Logging
+import util.Logging
 
 object MasterDdl extends Logging {
   val tables = Seq(

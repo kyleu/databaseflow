@@ -6,7 +6,7 @@ import models.query.{QueryFilter, QueryResult}
 import models.query.QueryResult.Source
 import models.schema.{ColumnType, FilterOp}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
-import utils.{Config, TemplateUtils}
+import util.{Config, TemplateUtils}
 
 object FilterManager {
   def init(key: String, queryId: UUID, name: String, panel: JQuery, src: Source, columns: Seq[QueryResult.Col], resultId: UUID) = {

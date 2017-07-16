@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import org.scalajs.jquery.{jQuery => $}
-import utils.TemplateUtils
+import util.TemplateUtils
 
 import scala.scalajs.js
 

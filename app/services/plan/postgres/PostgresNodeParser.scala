@@ -3,7 +3,7 @@ package services.plan.postgres
 import models.plan.PlanNode
 import services.plan.postgres.PostgresParseKeys._
 import upickle.Js
-import utils.JsonUtils
+import util.JsonUtils
 
 object PostgresNodeParser {
   private[this] val blacklistedProperties = Seq(keyPlans, keyOutput)

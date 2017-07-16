@@ -9,8 +9,8 @@ import services.audit.AuditRecordService
 import services.database.core.ResultCacheDatabase
 import services.query._
 import services.result.{CachedResultService, ChartDataService}
-import utils.Config
-import utils.metrics.InstrumentedActor
+import util.Config
+import util.metrics.InstrumentedActor
 
 trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
   override def receiveRequest = {

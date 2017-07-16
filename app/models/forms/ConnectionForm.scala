@@ -5,7 +5,7 @@ import models.engine.DatabaseEngine
 import models.user.Permission
 import play.api.data.Form
 import play.api.data.Forms._
-import utils.SlugUtils
+import util.SlugUtils
 
 object ConnectionForm {
   val form = Form(

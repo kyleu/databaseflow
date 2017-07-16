@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.template.Icons
 import org.scalajs.jquery.{JQueryEventObject, jQuery => $}
-import utils.{NullUtils, TemplateUtils}
+import util.{NullUtils, TemplateUtils}
 
 import scala.scalajs.js
 

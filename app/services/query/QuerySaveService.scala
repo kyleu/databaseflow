@@ -7,7 +7,7 @@ import models._
 import models.audit.AuditType
 import models.query.SavedQuery
 import services.audit.AuditRecordService
-import utils.Logging
+import util.Logging
 
 import scala.util.control.NonFatal
 

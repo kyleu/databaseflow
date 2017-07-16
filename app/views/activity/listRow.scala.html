@@ -19,13 +19,13 @@
     @a.status
   }
   </td>
-  <td>@a.rowsAffected.map(utils.NumberUtils.withCommas)</td>
+  <td>@a.rowsAffected.map(util.NumberUtils.withCommas)</td>
   <td>@if(a.elapsed > 0) {
-    @utils.NumberUtils.withCommas(a.elapsed)ms
+    @util.NumberUtils.withCommas(a.elapsed)ms
   }</td>
-  <td>@defining(utils.DateUtils.fromMillis(a.occurred)) { dt =>
+  <td>@defining(util.DateUtils.fromMillis(a.occurred)) { dt =>
     @defining(dt.toString("yyyy-MM-dd HH:mm:ss") + " UTC") { dtString =>
-      <time class="timeago" title="@dtString" data-datetime="@utils.DateUtils.toIsoString(dt)">@dtString</time>
+      <time class="timeago" title="@dtString" data-datetime="@util.DateUtils.toIsoString(dt)">@dtString</time>
     }
   }</td>
   @removeCall.map { call => <td>

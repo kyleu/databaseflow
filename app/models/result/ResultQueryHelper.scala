@@ -11,7 +11,7 @@ import models.queries.result.{CreateResultTable, InsertResultRow}
 import models.query.QueryResult
 import models.schema.ColumnType.{ArrayType, UnknownType}
 import services.database.core.ResultCacheDatabase
-import utils.Logging
+import util.Logging
 
 object ResultQueryHelper extends Logging {
   private[this] val badChars = Seq(" ", "\"", "\'", "\\", ":", "(", ")", ",", ".")

@@ -1,13 +1,13 @@
 package models.template
 
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 
 object FeedbackTemplate {
   def content(email: String) = {
     val content = div(id := "feedback-panel")(
-      p(Messages("feedback.notice", utils.Config.projectName)),
+      p(Messages("feedback.notice", util.Config.projectName)),
       div(cls := "input-field")(
         input(id := "feedback-email-input", cls := "validate", `type` := "email", value := email, placeholder := Messages("feedback.email"))()
       ),

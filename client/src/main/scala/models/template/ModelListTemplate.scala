@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.{SavedQuery, SharedResult}
 import models.schema.{Procedure, Table, View}
-import utils.{Messages, NumberUtils}
+import util.{Messages, NumberUtils}
 
 import scalatags.Text.TypedTag
 import scalatags.Text.all._

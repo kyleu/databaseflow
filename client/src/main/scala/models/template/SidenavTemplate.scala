@@ -2,7 +2,7 @@ package models.template
 
 import models.query.{SavedQuery, SharedResult}
 import models.schema.{Procedure, Table, View}
-import utils.TemplateUtils
+import util.TemplateUtils
 
 import scalatags.Text.all._
 

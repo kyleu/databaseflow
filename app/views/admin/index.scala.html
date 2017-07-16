@@ -1,7 +1,7 @@
 @(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.admin(user, "", messages("admin.index.title", utils.Config.projectName)) {
+@layout.admin(user, "", messages("admin.index.title", util.Config.projectName)) {
   <div class="content-panel">
-    <div class="panel-title">@messages("admin.index.title", utils.Config.projectName)</div>
+    <div class="panel-title">@messages("admin.index.title", util.Config.projectName)</div>
 
     @messages("admin.index.prompt")
 
@@ -23,7 +23,7 @@
         <div><em>@messages("admin.activity.description")</em></div>
       </li>
       <li class="collection-item">
-        <a class="theme-text" href="@controllers.admin.routes.AdminController.status()">@messages("admin.status.title", utils.Config.projectName)</a>
+        <a class="theme-text" href="@controllers.admin.routes.AdminController.status()">@messages("admin.status.title", util.Config.projectName)</a>
         <div><em>@messages("admin.status.description")</em></div>
       </li>
     </ul>

@@ -3,7 +3,7 @@ package models.ui
 import java.net.URI
 import javax.swing.JOptionPane
 
-import utils.Logging
+import util.Logging
 
 import scala.swing._
 import scala.swing.event.MouseClicked

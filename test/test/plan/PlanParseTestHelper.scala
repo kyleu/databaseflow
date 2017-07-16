@@ -5,7 +5,7 @@ import java.util.UUID
 import models.engine.DatabaseEngine
 import models.plan.{PlanNode, PlanResult}
 import services.plan.PlanParseService
-import utils.Logging
+import util.Logging
 
 import scala.io.Source
 
@@ -23,7 +23,7 @@ object PlanParseTestHelper extends Logging {
   def test(key: String, engine: DatabaseEngine) = {
     val (sql, plan) = load(key)
     val queryId = UUID.randomUUID
-    PlanParseService.parse(sql, queryId, plan, utils.DateUtils.nowMillis)(engine) match {
+    PlanParseService.parse(sql, queryId, plan, util.DateUtils.nowMillis)(engine) match {
       case Right(result) => result
       case Left(err) => throw new IllegalStateException(err.toString)
     }

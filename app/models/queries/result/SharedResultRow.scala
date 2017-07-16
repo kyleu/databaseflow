@@ -7,7 +7,7 @@ import models.query.{QueryFilter, QueryResult, SharedResult}
 import models.schema.{ColumnType, FilterOp}
 import models.user.Permission
 import services.schema.JdbcHelper
-import utils.JdbcUtils
+import util.JdbcUtils
 
 object SharedResultRow {
   def fromRow(row: Row) = SharedResult(

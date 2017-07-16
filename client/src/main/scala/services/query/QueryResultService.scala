@@ -10,7 +10,7 @@ import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.{FilterManager, RowDataManager}
 import ui.ProgressManager
 import ui.tabs.TabManager
-import utils.{Config, Logging, TemplateUtils}
+import util.{Config, Logging, TemplateUtils}
 
 import scala.scalajs.js
 import scala.util.Random

@@ -3,7 +3,7 @@ package models.template.query
 import models.PlanResultResponse
 import models.plan.PlanNode
 import models.template.{Icons, StaticPanelTemplate}
-import utils.{Messages, NumberUtils, TemplateUtils}
+import util.{Messages, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
 

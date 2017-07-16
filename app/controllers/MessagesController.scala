@@ -4,7 +4,7 @@ import java.net.URL
 
 import models.user.Language
 import play.api.i18n.Messages
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

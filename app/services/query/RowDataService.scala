@@ -13,8 +13,8 @@ import models.user.User
 import services.database.DatabaseRegistry
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.schema.SchemaService
-import utils.FutureUtils.defaultContext
-import utils.Logging
+import util.FutureUtils.defaultContext
+import util.Logging
 
 import scala.concurrent.Future
 

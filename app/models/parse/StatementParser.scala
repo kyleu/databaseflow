@@ -1,7 +1,7 @@
 package models.parse
 
 import fastparse.all._
-import utils.Logging
+import util.Logging
 
 object StatementParser extends Logging {
   def sourceFor(sql: String) = singleTable(sql) match {

@@ -1,7 +1,7 @@
 package models.template.tbl
 
 import models.schema.ForeignKey
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

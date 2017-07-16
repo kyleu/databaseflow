@@ -5,7 +5,7 @@ import java.util.UUID
 import models.charting.{ChartSettings, ChartType}
 import models.template.ChartOptionsTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import utils.TemplateUtils
+import util.TemplateUtils
 
 import scala.scalajs.js
 

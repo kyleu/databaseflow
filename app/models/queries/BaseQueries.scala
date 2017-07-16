@@ -1,7 +1,7 @@
 package models.queries
 
 import models.database.{FlatSingleRowQuery, Query, Row, Statement}
-import utils.{Config, JdbcUtils}
+import util.{Config, JdbcUtils}
 
 trait BaseQueries[T] {
   protected def tableName: String = "_invalid_"

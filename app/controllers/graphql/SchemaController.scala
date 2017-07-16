@@ -5,8 +5,8 @@ import models.SchemaResponse
 import services.connection.ConnectionSettingsService
 import services.graphql.GraphQLService
 import services.schema.SchemaService
-import utils.FutureUtils.defaultContext
-import utils.{ApplicationContext, JsonSerializers}
+import util.FutureUtils.defaultContext
+import util.{ApplicationContext, JsonSerializers}
 
 import scala.concurrent.Future
 

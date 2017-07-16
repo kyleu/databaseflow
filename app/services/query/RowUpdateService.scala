@@ -8,7 +8,7 @@ import models.user.User
 import models.{ResponseMessage, RowUpdateResponse}
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
 import services.schema.SchemaService
-import utils.Logging
+import util.Logging
 
 object RowUpdateService extends Logging {
   def process(connectionId: UUID, user: User, name: String, pk: Seq[(String, String)], params: Map[String, String], resultId: UUID, out: ActorRef) = {

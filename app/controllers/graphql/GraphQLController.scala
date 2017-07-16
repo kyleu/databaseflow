@@ -7,14 +7,14 @@ import io.circe.Json
 import io.circe.parser
 import models.user.User
 import play.api.libs.json.JsObject
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.circe._
 import sangria.marshalling.MarshallingUtil._
 import sangria.parser.SyntaxError
 import services.connection.ConnectionSettingsService
 import services.graphql.GraphQLService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

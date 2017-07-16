@@ -3,7 +3,7 @@ package models.template.tbl
 import java.util.UUID
 
 import models.template.{Icons, StaticPanelTemplate}
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

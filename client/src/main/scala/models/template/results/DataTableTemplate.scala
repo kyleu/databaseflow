@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import models.template.Icons
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

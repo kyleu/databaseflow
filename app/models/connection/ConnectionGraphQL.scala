@@ -8,7 +8,7 @@ import models.user.Permission
 import sangria.schema._
 import services.query.{SavedQueryService, SharedResultService, SimpleQueryService}
 import services.schema.SchemaService
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.explore.ExploreService
 
 object ConnectionGraphQL {

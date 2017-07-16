@@ -6,7 +6,7 @@ import models.template.{HelpTemplate, Icons}
 import org.scalajs.jquery.{jQuery => $}
 import ui.query.QueryManager
 import ui.tabs.TabManager
-import utils._
+import util._
 
 import scala.util.Random
 import scalatags.Text.all._
@@ -39,15 +39,15 @@ object HelpManager {
         throw new IllegalStateException(s"Encountered [${tipContent.length}] tip contents.")
       }
 
-      tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
+      tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, util.Config.projectName))
 
       TemplateUtils.clickHandler($(".previous-tip-link", queryPanel), _ => {
         if (tipIdx == 0) { tipIdx = TipsAndTricks.values.length - 1 } else { tipIdx = tipIdx - 1 }
-        tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
+        tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, util.Config.projectName))
       })
       TemplateUtils.clickHandler($(".next-tip-link", queryPanel), _ => {
         if (tipIdx == TipsAndTricks.values.length - 1) { tipIdx = 0 } else { tipIdx = tipIdx + 1 }
-        tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, utils.Config.projectName))
+        tipContent.text(Messages("help.tip." + TipsAndTricks.values(tipIdx).key, util.Config.projectName))
       })
 
       updateCounts()
@@ -59,8 +59,8 @@ object HelpManager {
   private[this] def updateCounts() = {
     val queryPanel = $(s"#panel-$helpId")
     val latency = NumberUtils.withCommas(NetworkMessage.latencyMs.getOrElse(0))
-    val sentCount = NumberUtils.withCommas(utils.NetworkMessage.sentMessageCount)
-    val receivedCount = NumberUtils.withCommas(utils.NetworkMessage.receivedMessageCount)
+    val sentCount = NumberUtils.withCommas(util.NetworkMessage.sentMessageCount)
+    val receivedCount = NumberUtils.withCommas(util.NetworkMessage.receivedMessageCount)
     val msg = Messages("help.connection.status", latency, sentCount, receivedCount)
     $(".connection-status", queryPanel).text(msg)
   }

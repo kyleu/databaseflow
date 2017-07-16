@@ -1,9 +1,9 @@
-@(e: utils.SiteEngine, isAdmin: Boolean)(
+@(e: util.SiteEngine, isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
+)@layout.simple(title = util.Config.projectName, section = "features", isAdmin = isAdmin) {
   @views.html.layout.hero(
-    title = messages("database.hero.title", utils.Config.projectName, e.title),
-    subtitle = messages(s"database.${e.title.toLowerCase}.subtitle", utils.Config.projectName, e.title)
+    title = messages("database.hero.title", util.Config.projectName, e.title),
+    subtitle = messages(s"database.${e.title.toLowerCase}.subtitle", util.Config.projectName, e.title)
   )
   <div class="container">
     @views.html.content.features()

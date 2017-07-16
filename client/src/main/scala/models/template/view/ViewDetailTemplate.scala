@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.engine.DatabaseEngine
 import models.template.{Icons, StaticPanelTemplate}
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

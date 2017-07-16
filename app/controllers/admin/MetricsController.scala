@@ -1,8 +1,8 @@
 package controllers.admin
 
 import controllers.BaseController
-import utils.ApplicationContext
-import utils.FutureUtils.defaultContext
+import util.ApplicationContext
+import util.FutureUtils.defaultContext
 
 @javax.inject.Singleton
 class MetricsController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {

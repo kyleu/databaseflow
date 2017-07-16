@@ -3,7 +3,7 @@ package models.queries
 import java.sql.Types._
 
 import models.schema.ColumnType._
-import utils.Logging
+import util.Logging
 
 object QueryTranslations extends Logging {
   def forType(i: Int, n: String) = i match {

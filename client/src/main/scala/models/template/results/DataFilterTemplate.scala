@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import models.schema.FilterOp
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

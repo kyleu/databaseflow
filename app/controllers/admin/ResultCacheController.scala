@@ -7,7 +7,7 @@ import models.ddl.DdlQueries
 import services.database.core.ResultCacheDatabase
 import services.result.CachedResultService
 import services.user.UserSearchService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

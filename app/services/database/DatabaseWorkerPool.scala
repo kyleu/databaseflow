@@ -1,7 +1,7 @@
 package services.database
 
 import models.database.{Query, Queryable, Statement}
-import utils.Logging
+import util.Logging
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

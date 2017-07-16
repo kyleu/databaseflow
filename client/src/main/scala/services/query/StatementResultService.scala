@@ -6,7 +6,7 @@ import models.query.QueryResult
 import models.template.query.StatementResultsTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object StatementResultService {
   def handleNewStatementResults(resultId: UUID, index: Int, result: QueryResult, durationMs: Int): Unit = {

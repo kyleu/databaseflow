@@ -1,15 +1,15 @@
 package services.notification
 
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.libs.mailer.{Email, MailerClient}
-import utils.Logging
+import util.Logging
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
 class EmailService @javax.inject.Inject() (mailerClient: MailerClient) extends Logging {
   def sendAdminMessage(subject: String, htmlBody: String) = {
-    sendMessage(utils.Config.projectName + " Admin", "kyle@databaseflow.com", subject, htmlBody)
+    sendMessage(util.Config.projectName + " Admin", "kyle@databaseflow.com", subject, htmlBody)
   }
 
   def sendMessage(name: String, address: String, subject: String, htmlBody: String) = {

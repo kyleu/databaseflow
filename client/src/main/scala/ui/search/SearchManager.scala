@@ -3,7 +3,7 @@ package ui.search
 import models.template.Icons
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import ui.metadata.{MetadataManager, ProcedureUpdates, TableUpdates, ViewUpdates}
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object SearchManager {
   private[this] lazy val searchContainer = $(".search-wrapper")

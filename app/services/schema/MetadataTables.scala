@@ -7,7 +7,7 @@ import models.database.{Query, Row}
 import models.engine.DatabaseEngine.{MySQL, PostgreSQL}
 import models.schema.Table
 import services.database.DatabaseConnection
-import utils.{Logging, NullUtils}
+import util.{Logging, NullUtils}
 
 import scala.util.control.NonFatal
 

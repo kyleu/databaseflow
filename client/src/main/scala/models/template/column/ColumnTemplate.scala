@@ -22,14 +22,14 @@ object ColumnTemplate {
 
   def columnDetails(details: ColumnDetails) = {
     val rows = Seq(
-      Some(tr(td("Count"), td(utils.NumberUtils.withCommas(details.count)))),
-      Some(tr(td("Distinct Values"), td(utils.NumberUtils.withCommas(details.distinctCount)))),
-      details.min.map(x => tr(td("Min"), td(utils.NumberUtils.withCommas(x)))),
-      details.max.map(x => tr(td("Max"), td(utils.NumberUtils.withCommas(x)))),
-      details.sum.map(x => tr(td("Sum"), td(utils.NumberUtils.withCommas(x)))),
-      details.avg.map(x => tr(td("Average"), td(utils.NumberUtils.withCommas(x)))),
-      details.variance.map(x => tr(td("Variance"), td(utils.NumberUtils.withCommas(x)))),
-      details.stdDev.map(x => tr(td("Std Dev"), td(utils.NumberUtils.withCommas(x)))),
+      Some(tr(td("Count"), td(util.NumberUtils.withCommas(details.count)))),
+      Some(tr(td("Distinct Values"), td(util.NumberUtils.withCommas(details.distinctCount)))),
+      details.min.map(x => tr(td("Min"), td(util.NumberUtils.withCommas(x)))),
+      details.max.map(x => tr(td("Max"), td(util.NumberUtils.withCommas(x)))),
+      details.sum.map(x => tr(td("Sum"), td(util.NumberUtils.withCommas(x)))),
+      details.avg.map(x => tr(td("Average"), td(util.NumberUtils.withCommas(x)))),
+      details.variance.map(x => tr(td("Variance"), td(util.NumberUtils.withCommas(x)))),
+      details.stdDev.map(x => tr(td("Std Dev"), td(util.NumberUtils.withCommas(x)))),
       details.error.map(err => tr(td("Error"), td(cls := "column-details-error")(err)))
     ).flatten
     table(cls := "bordered highlight")(

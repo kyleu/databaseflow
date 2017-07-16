@@ -4,7 +4,7 @@ import java.io.FileInputStream
 import java.security.KeyStore
 import java.util.UUID
 
-import utils.NullUtils
+import util.NullUtils
 
 object SslInit {
   def initSsl(ssl: SslSettings): Map[String, String] = {

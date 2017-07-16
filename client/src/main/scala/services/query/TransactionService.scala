@@ -4,7 +4,7 @@ import models.query.TransactionState
 import models.{BeginTransaction, CommitTransaction, RollbackTransaction}
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
-import utils.{NetworkMessage, NumberUtils, TemplateUtils}
+import util.{NetworkMessage, NumberUtils, TemplateUtils}
 
 import scalatags.Text.all._
 

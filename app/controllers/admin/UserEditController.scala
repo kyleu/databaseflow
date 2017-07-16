@@ -5,8 +5,8 @@ import java.util.UUID
 import controllers.BaseController
 import models.user.Role
 import services.user.{UserSearchService, UserService}
-import utils.ApplicationContext
-import utils.web.FormUtils
+import util.ApplicationContext
+import util.web.FormUtils
 
 import scala.concurrent.Future
 

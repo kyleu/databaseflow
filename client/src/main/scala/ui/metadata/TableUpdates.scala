@@ -5,7 +5,7 @@ import models.schema.Table
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.TableManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object TableUpdates {
   var tables: Option[Seq[(String, JQuery, JQuery)]] = None

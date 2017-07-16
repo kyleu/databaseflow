@@ -7,10 +7,10 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.BaseController
 import models.user.UserForms
 import play.api.i18n.Lang
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.user.UserService
-import utils.ApplicationContext
-import utils.web.FormUtils
+import util.ApplicationContext
+import util.web.FormUtils
 
 import scala.concurrent.Future
 

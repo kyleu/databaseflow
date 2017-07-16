@@ -21,6 +21,6 @@ class UpdateController @javax.inject.Inject() (implicit override val messagesApi
 
   def install() = act("install") { implicit request =>
     InstallService.add(request.remoteAddress, "web")
-    Future.successful(Ok(Html(s"Thanks for installing ${utils.Config.projectName}!")))
+    Future.successful(Ok(Html(s"Thanks for installing ${util.Config.projectName}!")))
   }
 }

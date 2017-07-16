@@ -13,7 +13,7 @@ import ui.metadata.MetadataManager
 import ui.modal.SavedQueryFormManager
 import ui.UserManager
 import ui.tabs.TabManager
-import utils.{Messages, NetworkMessage, TemplateUtils}
+import util.{Messages, NetworkMessage, TemplateUtils}
 
 import scala.util.Random
 

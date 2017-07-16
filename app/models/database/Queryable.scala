@@ -4,7 +4,7 @@ import java.sql.{Connection, PreparedStatement, Types}
 import java.util.UUID
 
 import services.query.QueryExecutionService
-import utils.{Logging, NullUtils}
+import util.{Logging, NullUtils}
 
 import scala.annotation.tailrec
 

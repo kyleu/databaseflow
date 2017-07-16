@@ -1,7 +1,7 @@
 package models.template.column
 
 import models.schema.Column
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

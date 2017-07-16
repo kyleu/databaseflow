@@ -9,7 +9,7 @@ import models.{QueryCheckResponse, ResponseMessage}
 import org.h2.jdbc.JdbcSQLException
 import org.postgresql.util.PSQLException
 import services.database.{DatabaseConnection, DatabaseWorkerPool}
-import utils.{ExceptionUtils, Logging}
+import util.{ExceptionUtils, Logging}
 
 object QueryCheckService extends Logging {
   @SuppressWarnings(Array("CatchThrowable"))

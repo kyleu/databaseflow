@@ -2,7 +2,7 @@ package models.template.query
 
 import models.template.{Icons, StaticPanelTemplate}
 import models.{PlanErrorResponse, QueryErrorResponse}
-import utils.{Messages, TemplateUtils}
+import util.{Messages, TemplateUtils}
 
 import scalatags.Text.all._
 

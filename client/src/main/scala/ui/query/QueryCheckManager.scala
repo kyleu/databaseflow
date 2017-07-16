@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.CheckQuery
 import org.scalajs.dom
-import utils.NetworkMessage
+import util.NetworkMessage
 
 object QueryCheckManager {
   private[this] var sqlChecks = Map.empty[UUID, String]
@@ -12,7 +12,7 @@ object QueryCheckManager {
   def isChanged(queryId: UUID, s: String) = !sqlChecks.get(queryId).contains(s)
 
   def check(queryId: UUID, sql: String) = {
-    //utils.Logging.info(s"Checking SQL [$sql].")
+    //util.Logging.info(s"Checking SQL [$sql].")
     dom.window.setTimeout(() => {
       val currentSql = SqlManager.getSql(queryId)
       val params = ParameterManager.getParams(currentSql, queryId)._2

@@ -3,7 +3,7 @@ package services.query
 import java.util.UUID
 
 import services.schema.SchemaService
-import utils.Logging
+import util.Logging
 
 object ProcedureService extends Logging {
   def callProcedure(connectionId: UUID, userId: UUID, queryId: UUID, name: String, params: Map[String, String], resultId: UUID) = {

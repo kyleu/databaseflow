@@ -2,7 +2,7 @@ package services.translation.api
 
 import java.net.URLEncoder
 
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
 
 @javax.inject.Singleton

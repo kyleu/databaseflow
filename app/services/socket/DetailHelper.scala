@@ -5,7 +5,7 @@ import models.queries.column.ColumnDetailQueries
 import models.schema._
 import services.database.DatabaseWorkerPool
 import services.schema.{MetadataProcedures, MetadataTables, MetadataViews, SchemaService}
-import utils.ExceptionUtils
+import util.ExceptionUtils
 
 trait DetailHelper { this: SocketService =>
   protected[this] def handleGetTableDetail(name: String) = SchemaService.getTable(connectionId, name).foreach { t =>

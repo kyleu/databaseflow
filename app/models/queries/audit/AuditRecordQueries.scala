@@ -6,7 +6,7 @@ import java.util.UUID
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
-import utils.JdbcUtils
+import util.JdbcUtils
 
 object AuditRecordQueries extends BaseQueries[AuditRecord] {
   override protected val tableName = "audit_records"

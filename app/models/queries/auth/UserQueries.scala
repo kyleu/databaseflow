@@ -7,8 +7,8 @@ import models.database._
 import models.queries.BaseQueries
 import models.user.{Role, User, UserPreferences}
 import upickle.default._
-import utils.JdbcUtils
-import utils.JsonSerializers.{themeReader, themeWriter}
+import util.JdbcUtils
+import util.JsonSerializers.{themeReader, themeWriter}
 
 object UserQueries extends BaseQueries[User] {
   override protected val tableName = "dbf_users"

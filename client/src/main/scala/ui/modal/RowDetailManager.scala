@@ -4,7 +4,7 @@ import models.query.QueryResult
 import models.template.tbl.RowDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 import scala.scalajs.js
 

@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.QueryResult
 import models.template.results.DataTableTemplate
 import org.scalajs.jquery.{jQuery => $}
-import utils.Logging
+import util.Logging
 
 import scala.util.Random
 

@@ -1,7 +1,7 @@
 @(user: models.user.User)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.admin(user, "status", messages("admin.status.title", utils.Config.projectName)) {
+@layout.admin(user, "status", messages("admin.status.title", util.Config.projectName)) {
   <div class="content-panel">
-    <div class="panel-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.status.title", utils.Config.projectName)</div>
+    <div class="panel-title"><i class="fa @models.template.Icons.settings"></i> @messages("admin.status.title", util.Config.projectName)</div>
 
     <div class="row">
       <div class="col s12">

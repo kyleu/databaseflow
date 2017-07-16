@@ -1,6 +1,6 @@
 @(user: models.user.User, connections: Seq[models.connection.ConnectionSettings])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(Some(user), utils.Config.projectName) {
+)@layout.simple(Some(user), util.Config.projectName) {
   <div class="row">
     @views.html.components.motd()
     <div class="col s12">

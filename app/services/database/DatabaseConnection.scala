@@ -9,7 +9,7 @@ import com.zaxxer.hikari.HikariDataSource
 import models.database._
 import models.engine.DatabaseEngine
 import services.database.transaction.{TransactionManager, TransactionProvider}
-import utils.metrics.Instrumented
+import util.metrics.Instrumented
 
 import scala.util.control.NonFatal
 

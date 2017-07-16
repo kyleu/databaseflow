@@ -9,7 +9,7 @@ import services.TextChangeService
 import services.query.ChartService
 import ui.ProgressManager
 import ui.tabs.TabManager
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]

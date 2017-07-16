@@ -1,10 +1,10 @@
 @(isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(title = utils.Config.projectName, section = "index", isAdmin = isAdmin) {
+)@layout.simple(title = util.Config.projectName, section = "index", isAdmin = isAdmin) {
   @views.html.layout.hero(
     title = messages("index.hero.title"),
-    subtitle = messages("index.hero.subtitle1", utils.Config.projectName),
-    subtitle2 = Some(messages("index.hero.subtitle2", utils.Config.projectName))
+    subtitle = messages("index.hero.subtitle1", util.Config.projectName),
+    subtitle2 = Some(messages("index.hero.subtitle2", util.Config.projectName))
   )
   <div class="container">
     @views.html.content.downloads()

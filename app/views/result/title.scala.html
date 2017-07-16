@@ -1,7 +1,7 @@
 @(result: models.query.SharedResult, username: String)
 <span class="panel-title"> @result.title</span>
 <div style="padding-bottom: 10px;">
-  <em>Created @utils.DateUtils.niceDate(utils.DateUtils.fromMillis(result.created).toLocalDate) by @username</em>
+  <em>Created @util.DateUtils.niceDate(util.DateUtils.fromMillis(result.created).toLocalDate) by @username</em>
 </div>
 <div class="z-depth-1 query-result-sql">
   <pre class="pre-wrap">@result.sql</pre>

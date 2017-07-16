@@ -21,7 +21,7 @@ class ContentController @javax.inject.Inject() (implicit override val messagesAp
 
   def database(key: String) = act(s"db.$key") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.database(utils.SiteEngine.withName(key), isAdmin)))
+    Future.successful(Ok(views.html.database(util.SiteEngine.withName(key), isAdmin)))
   }
 
   def technology() = act("technology") { implicit request =>

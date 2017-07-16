@@ -41,14 +41,14 @@
                 </td>
                 <td>@r.status</td>
                 <td>@r.columns</td>
-                <td>@utils.NumberUtils.withCommas(r.rows)</td>
+                <td>@util.NumberUtils.withCommas(r.rows)</td>
                 <td>@if(tables.contains(r.tableName)) {
                   Ok
                 } else {
                   Missing
                 }</td>
-                <td>@{utils.NumberUtils.withCommas(r.firstMessage)}ms</td>
-                <td>@{utils.NumberUtils.withCommas(r.duration)}ms</td>
+                <td>@{util.NumberUtils.withCommas(r.firstMessage)}ms</td>
+                <td>@{util.NumberUtils.withCommas(r.duration)}ms</td>
                 <td>@r.lastAccessed.toString("yyyy-MM-dd HH:mm:ss")</td>
                 <td>@r.created.toString("yyyy-MM-dd HH:mm:ss")</td>
                 <td>

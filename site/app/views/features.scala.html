@@ -1,9 +1,9 @@
 @(isAdmin: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
-)@layout.simple(title = utils.Config.projectName, section = "features", isAdmin = isAdmin) {
+)@layout.simple(title = util.Config.projectName, section = "features", isAdmin = isAdmin) {
   @views.html.layout.hero(
-    title = messages("features.hero.title", utils.Config.projectName),
-    subtitle = messages("features.hero.subtitle1", utils.Config.projectName)
+    title = messages("features.hero.title", util.Config.projectName),
+    subtitle = messages("features.hero.subtitle1", util.Config.projectName)
   )
   <div class="container">
     @views.html.content.features()

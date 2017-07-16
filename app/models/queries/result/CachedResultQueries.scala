@@ -7,7 +7,7 @@ import models.database.{Query, Row, Statement}
 import models.queries.BaseQueries
 import models.result.CachedResult
 import services.schema.JdbcHelper
-import utils.{DateUtils, JdbcUtils}
+import util.{DateUtils, JdbcUtils}
 
 object CachedResultQueries extends BaseQueries[CachedResult] {
   override protected val tableName = "query_results"

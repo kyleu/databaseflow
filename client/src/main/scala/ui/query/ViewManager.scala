@@ -12,7 +12,7 @@ import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.metadata.MetadataManager
 import ui.tabs.TabManager
 import ui.{ProgressManager, UserManager, _}
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 object ViewManager extends ViewDetailHelper {
   var openViews = Map.empty[String, UUID]

@@ -5,7 +5,7 @@ import java.util.UUID
 import controllers.BaseController
 import services.audit.AuditRecordService
 import services.user.UserSearchService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

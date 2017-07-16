@@ -2,7 +2,7 @@ package services
 
 import java.util.UUID
 
-import utils.Logging
+import util.Logging
 
 import scala.scalajs.js
 

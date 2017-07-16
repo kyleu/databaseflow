@@ -10,7 +10,7 @@ import models.schema.Schema
 import models.user.User
 import services.audit.AuditRecordService
 import services.database.core.MasterDatabase
-import utils.metrics.InstrumentedActor
+import util.metrics.InstrumentedActor
 
 object SocketService {
   type i18n = (String, Seq[Any]) => String

@@ -7,7 +7,7 @@ import models.engine.{DatabaseEngine, EngineQueries}
 import models.queries.dynamic.DynamicQuery
 import models.query.QueryResult
 import services.database.DatabaseWorkerPool
-import utils.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
+import util.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 object RowDataHelper extends Logging {
   def showDataResponse(params: RowDataService.Params, database: Queryable, engine: DatabaseEngine, out: Option[ActorRef]) = {

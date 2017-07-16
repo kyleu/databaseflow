@@ -27,7 +27,7 @@
               @data.map { d =>
                 <tr>
                   @d.zipWithIndex.map { cell =>
-                    <td>@utils.web.DataOutputFormatter.cellValue(columns(cell._2), cell._1)</td>
+                    <td>@util.web.DataOutputFormatter.cellValue(columns(cell._2), cell._1)</td>
                   }
                 </tr>
               }

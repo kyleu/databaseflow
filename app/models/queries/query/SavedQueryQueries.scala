@@ -6,7 +6,7 @@ import models.database.{Row, Statement}
 import models.queries.BaseQueries
 import models.query.SavedQuery
 import models.user.Permission
-import utils.{DateUtils, JdbcUtils}
+import util.{DateUtils, JdbcUtils}
 import upickle.default._
 
 import scala.util.control.NonFatal

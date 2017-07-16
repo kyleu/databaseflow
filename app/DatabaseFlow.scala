@@ -1,7 +1,7 @@
 import models.ui.TopFrame
 import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
-import utils.Logging
+import util.Logging
 
 import scala.util.control.NonFatal
 

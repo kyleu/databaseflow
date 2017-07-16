@@ -6,9 +6,9 @@ import akka.actor.ActorRef
 import models.audit.{AuditRecord, AuditStatus, AuditType}
 import models.queries.audit.{AuditRecordQueries, AuditReportQueries}
 import models.{AuditRecordRemoved, AuditRecordResponse, GetQueryHistory, RemoveAuditHistory}
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.database.core.MasterDatabase
-import utils.{DateUtils, Logging}
+import util.{DateUtils, Logging}
 
 import scala.concurrent.Future
 

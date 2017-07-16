@@ -6,7 +6,7 @@ import controllers.BaseController
 import models.settings.SettingKey
 import services.audit.AuditRecordService
 import services.settings.SettingsService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

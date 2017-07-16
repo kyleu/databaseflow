@@ -1,6 +1,6 @@
 package models.template
 
-import utils.{KeyboardShortcut, Messages}
+import util.{KeyboardShortcut, Messages}
 
 import scalatags.Text.all._
 
@@ -45,7 +45,7 @@ object HelpTemplate {
         div(cls := "connection-status")()
       )
     )
-    StaticPanelTemplate.row(StaticPanelTemplate.panel(content, iconAndTitle = Some(Icons.help -> span(Messages("help.title", utils.Config.projectName)))))
+    StaticPanelTemplate.row(StaticPanelTemplate.panel(content, iconAndTitle = Some(Icons.help -> span(Messages("help.title", util.Config.projectName)))))
   }
 
   private[this] def patternToRow(s: KeyboardShortcut) = tr(td(s.pattern), td(Messages("help.hotkey." + s.key)))

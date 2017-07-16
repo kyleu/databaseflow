@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.SavedQuery
 import models.template.query.QueryParametersTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object ParameterManager extends ParameterChangeManager {
   def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
@@ -23,7 +23,7 @@ object ParameterManager extends ParameterChangeManager {
         val v = jq.value().toString
         val orig = activeParams(queryId)
         val merged = orig.filterNot(_._1 == k) :+ ((k, t, v))
-        utils.Logging.info(s"Orig: $orig / Merged: $merged")
+        util.Logging.info(s"Orig: $orig / Merged: $merged")
         set(queryId, merged)
         val mergedSql = merge(sql, merged.map(x => SavedQuery.Param(x._1, x._3)))
         QueryCheckManager.check(queryId, mergedSql)
@@ -47,7 +47,7 @@ object ParameterManager extends ParameterChangeManager {
   }
 
   private[this] def render(queryId: UUID, keys: Seq[(String, String)], panel: JQuery) = {
-    //utils.Logging.info("Render Keys: " + keys.mkString(", "))
+    //util.Logging.info("Render Keys: " + keys.mkString(", "))
     if (panel.length != 1) { throw new IllegalStateException(s"Encountered [${panel.length}] parameter panels.") }
     if (keys.isEmpty) {
       set(queryId, Nil)

@@ -6,7 +6,7 @@ import models.schema.View
 import models.template.column.ViewColumnDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.modal.ColumnDetailManager
-import utils.Logging
+import util.Logging
 
 trait ViewDetailHelper {
   protected[this] def setViewDetails(uuid: UUID, view: View) = {

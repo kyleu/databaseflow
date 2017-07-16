@@ -13,8 +13,8 @@ import services.database.DatabaseRegistry
 import services.database.core.ResultCacheDatabase
 import services.query.SharedResultService
 import upickle.default._
-import utils.web.FormUtils
-import utils.{ApplicationContext, DateUtils}
+import util.web.FormUtils
+import util.{ApplicationContext, DateUtils}
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
@@ -60,7 +60,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     }
 
     val ts = DateUtils.now.toString("yyyy-MM-dd")
-    val finalName = s"${utils.Config.projectId}-export-$ts.$format"
+    val finalName = s"${util.Config.projectId}-export-$ts.$format"
 
     val os = new ByteArrayOutputStream()
     val (sql, values: Seq[Any]) = EngineQueries.selectFrom(source.name, Nil, source.asRowDataOptions(None))(db.engine)

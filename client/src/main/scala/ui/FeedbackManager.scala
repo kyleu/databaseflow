@@ -7,7 +7,7 @@ import org.scalajs.jquery.{JQueryAjaxSettings, JQueryXHR, jQuery => $}
 import services.NotificationService
 import ui.query.QueryManager
 import ui.tabs.TabManager
-import utils.{Logging, TemplateUtils}
+import util.{Logging, TemplateUtils}
 
 import scala.scalajs.js
 import scalatags.Text.all._

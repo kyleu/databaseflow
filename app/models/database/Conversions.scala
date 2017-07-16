@@ -3,7 +3,7 @@ package models.database
 import java.sql.Timestamp
 
 import org.joda.time.{LocalDateTime, LocalDate, DateTime, ReadableInstant}
-import utils.DateUtils
+import util.DateUtils
 
 object Conversions {
   @SuppressWarnings(Array("MethodReturningAny"))

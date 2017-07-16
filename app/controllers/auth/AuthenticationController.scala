@@ -8,11 +8,11 @@ import controllers.BaseController
 import models.audit.AuditType
 import models.user.{Role, UserForms}
 import play.api.i18n.{Lang, Messages}
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import services.audit.AuditRecordService
 import services.settings.SettingsService
 import services.user.UserSearchService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.concurrent.Future
 

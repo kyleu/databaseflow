@@ -4,7 +4,7 @@ import models.schema.View
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ViewManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 object ViewUpdates {
   var views: Option[Seq[(String, JQuery, JQuery)]] = None

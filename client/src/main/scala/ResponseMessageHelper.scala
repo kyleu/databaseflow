@@ -3,7 +3,7 @@ import services._
 import services.query._
 import _root_.ui.modal.{RowUpdateManager, ColumnDetailManager}
 import _root_.ui.{HistoryManager, UserManager}
-import utils.{Logging, NetworkMessage}
+import util.{Logging, NetworkMessage}
 
 trait ResponseMessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {

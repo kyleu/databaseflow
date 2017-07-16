@@ -1,7 +1,7 @@
 package models.template
 
 import models.audit.AuditRecord
-import utils.{Messages, TemplateUtils}
+import util.{Messages, TemplateUtils}
 
 import scalatags.Text.all._
 

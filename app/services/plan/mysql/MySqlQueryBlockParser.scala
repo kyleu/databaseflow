@@ -3,7 +3,7 @@ package services.plan.mysql
 import models.plan.PlanNode
 import upickle.Js
 import upickle.Js.Value
-import utils.JsonUtils
+import util.JsonUtils
 
 object MySqlQueryBlockParser {
   def parseQueryBlock(json: Js.Value): PlanNode = {

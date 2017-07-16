@@ -1,11 +1,11 @@
 @(files: Seq[(String, Int)])(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@layout.simple(utils.Config.projectName + " Logs", "admin", isAdmin = true) {
+@layout.simple(util.Config.projectName + " Logs", "admin", isAdmin = true) {
 <div class="container">
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">@utils.web.PlayFormUtils.withCommas(files.size) Log Files</span>
+          <span class="card-title">@util.web.PlayFormUtils.withCommas(files.size) Log Files</span>
           @if(files.isEmpty) {
             <p>No log files found.</p>
           } else {
@@ -20,7 +20,7 @@
               @for(file <- files) {
                 <tr>
                   <td><a class="theme-text" href="@controllers.admin.routes.LogController.view(file._1)">@file._1</a></td>
-                  <td>@utils.web.PlayFormUtils.withCommas(file._2)B</td>
+                  <td>@util.web.PlayFormUtils.withCommas(file._2)B</td>
                 </tr>
               }
               </tbody>

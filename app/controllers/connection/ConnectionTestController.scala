@@ -8,7 +8,7 @@ import models.engine.DatabaseEngine
 import models.forms.ConnectionForm
 import services.connection.ConnectionSettingsService
 import services.database.DatabaseRegistry
-import utils.{ApplicationContext, PasswordEncryptUtils, SlugUtils}
+import util.{ApplicationContext, PasswordEncryptUtils, SlugUtils}
 
 import scala.concurrent.Future
 
@@ -17,7 +17,7 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
   def test(connectionId: UUID) = withSession("connection.test") { implicit request =>
     val result = ConnectionForm.form.bindFromRequest.fold(
       formWithErrors => {
-        val errors = utils.web.FormUtils.errorsToString(formWithErrors.errors)
+        val errors = util.web.FormUtils.errorsToString(formWithErrors.errors)
         BadRequest(s"Invalid form: $errors")
       },
       cf => {

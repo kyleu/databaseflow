@@ -3,7 +3,7 @@ package models.template.results
 import models.query.QueryResult
 import models.schema.ColumnType._
 import models.template.Icons
-import utils.Messages
+import util.Messages
 
 import scalatags.Text.all._
 

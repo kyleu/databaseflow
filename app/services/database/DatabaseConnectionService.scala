@@ -6,7 +6,7 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import models.database.PoolSettings
 import models.engine.DatabaseEngine
 import services.database.ssl.SslInit
-import utils.metrics.{Checked, Instrumented}
+import util.metrics.{Checked, Instrumented}
 
 object DatabaseConnectionService {
   private[this] var initialized = false

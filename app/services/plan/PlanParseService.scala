@@ -10,7 +10,7 @@ import services.plan.h2.H2ParseService
 import services.plan.mysql.MySqlParseService
 import services.plan.oracle.OracleParseService
 import services.plan.postgres.PostgresParseService
-import utils.Logging
+import util.Logging
 
 object PlanParseService {
   def parse(sql: String, queryId: UUID, plan: String, startMs: Long)(implicit engine: DatabaseEngine) = engine match {

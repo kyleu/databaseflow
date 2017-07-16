@@ -5,7 +5,7 @@ import java.util.UUID
 import models.connection.ConnectionSettings
 import models.graphql.{ConnectionGraphQLSchema, GraphQLContext}
 import models.user.User
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import io.circe.Json
 import io.circe.parser._
 import sangria.execution.{Executor, HandledException}
@@ -13,7 +13,7 @@ import sangria.marshalling.circe._
 import sangria.parser.QueryParser
 import sangria.schema.Schema
 import services.connection.ConnectionSettingsService
-import utils.ApplicationContext
+import util.ApplicationContext
 
 import scala.util.{Failure, Success}
 

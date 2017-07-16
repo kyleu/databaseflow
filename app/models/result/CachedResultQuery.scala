@@ -4,7 +4,7 @@ import akka.actor.ActorRef
 import models.database.{Query, Row}
 import models.{QueryResultRowCount, ResponseMessage}
 import services.result.CachedResultService
-import utils.DateUtils
+import util.DateUtils
 
 object CachedResultQuery {
   val maxRows = 50000

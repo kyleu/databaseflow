@@ -14,7 +14,7 @@ import ui.modal._
 import ui.query._
 import ui.search.SearchManager
 import ui.tabs.TabManager
-import utils.{Logging, NetworkMessage, TemplateUtils}
+import util.{Logging, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 

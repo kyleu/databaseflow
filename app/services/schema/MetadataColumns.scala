@@ -5,7 +5,7 @@ import java.sql.DatabaseMetaData
 import models.database.Row
 import models.queries.QueryTranslations
 import models.schema.Column
-import utils.NullUtils
+import util.NullUtils
 
 import scala.util.control.NonFatal
 

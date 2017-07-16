@@ -6,7 +6,7 @@ import models.user.Permission
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.query.SharedResultManager
-import utils.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 

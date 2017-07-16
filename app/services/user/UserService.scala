@@ -8,8 +8,8 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.queries.auth._
 import models.user.{Role, User}
 import services.database.core.MasterDatabase
-import utils.Logging
-import utils.cache.UserCache
+import util.Logging
+import util.cache.UserCache
 
 object UserService {
   var instance: Option[UserService] = None

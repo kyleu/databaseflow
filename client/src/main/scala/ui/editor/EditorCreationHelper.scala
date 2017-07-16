@@ -34,7 +34,7 @@ object EditorCreationHelper {
         }
       }.flatten
     }.getOrElse(Nil)
-    callback(utils.NullUtils.inst, js.Array(schemaMatches ++ engineMatches ++ tableMatches: _*))
+    callback(util.NullUtils.inst, js.Array(schemaMatches ++ engineMatches ++ tableMatches: _*))
   }
 
   def initEditorFramework() = {

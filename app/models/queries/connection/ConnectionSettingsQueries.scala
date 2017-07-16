@@ -7,7 +7,7 @@ import models.database.{FlatSingleRowQuery, Row, Statement}
 import models.engine.DatabaseEngine
 import models.queries.BaseQueries
 import models.user.{Permission, Role, User}
-import utils.JdbcUtils
+import util.JdbcUtils
 
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"

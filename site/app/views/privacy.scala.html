@@ -1,11 +1,11 @@
 @(isAdmin: Boolean)(implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages)
-@views.html.layout.simple(utils.Config.projectName + " Privacy Policy", "", isAdmin = isAdmin) {
+@views.html.layout.simple(util.Config.projectName + " Privacy Policy", "", isAdmin = isAdmin) {
 <div class="container">
   <div class="row">
     <div class="col s12">
       <div class="card">
         <div class="card-content">
-          <span class="card-title">@utils.Config.projectName Privacy Policy</span>
+          <span class="card-title">@util.Config.projectName Privacy Policy</span>
           <div class="row">
             <div class="col s12" style="padding-top: 20px;">
               This privacy policy has been compiled to better serve those who are concerned with how their 'Personally Identifiable Information' (PII) is being used online.

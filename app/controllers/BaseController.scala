@@ -3,11 +3,11 @@ package controllers
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 import models.auth.AuthEnv
 import play.api.i18n.I18nSupport
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.mvc._
 import services.user.UserService
-import utils.metrics.Instrumented
-import utils.{ApplicationContext, Logging}
+import util.metrics.Instrumented
+import util.{ApplicationContext, Logging}
 
 import scala.concurrent.Future
 
@@ -49,7 +49,7 @@ abstract class BaseController() extends InjectedController with I18nSupport with
               case _ => Redirect(controllers.auth.routes.AuthenticationController.signInForm())
             }
             Future.successful(result.flashing(
-              "error" -> messagesApi("error.must.sign.in", utils.Config.projectName)(request.lang)
+              "error" -> messagesApi("error.must.sign.in", util.Config.projectName)(request.lang)
             )).map(r => if (!request.uri.contains("signin")) {
               r.withSession(r.session + ("returnUrl" -> request.uri))
             } else {

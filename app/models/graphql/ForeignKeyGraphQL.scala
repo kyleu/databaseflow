@@ -5,7 +5,7 @@ import models.result.QueryResultRow
 import models.schema.{ColumnType, FilterOp, ForeignKey, Table}
 import sangria.schema.{Context, Field, ObjectType, OptionType, Projector}
 import services.query.QueryResultRowService
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 
 object ForeignKeyGraphQL {
   def getForeignKeyField(schema: models.schema.Schema, src: Table, tgt: ObjectType[GraphQLContext, QueryResultRow], notNull: Boolean, fk: ForeignKey) = {

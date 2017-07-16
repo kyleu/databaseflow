@@ -10,7 +10,7 @@ import services.NavigationService
 import ui.query._
 import ui.WorkspaceManager
 import ui.tabs.TabManager
-import utils.TemplateUtils
+import util.TemplateUtils
 
 import scalatags.Text.all._
 

@@ -1,6 +1,6 @@
 @(section: String, isAdmin: Boolean)(implicit messages: Messages)<header>
   <ul id="language" class="dropdown-content">
-    @utils.Language.values.map { l =>
+    @util.Language.values.map { l =>
       <li><a class="theme-text" href="@controllers.routes.SiteController.language(l.code)">@l.toString</a></li>
     }
   </ul>
@@ -26,11 +26,11 @@
           }
         }
         <li><a class="dropdown-button" href="#" data-activates="language">
-          @utils.Language.values.find(_.code == messages.lang.code).getOrElse(utils.Language.English)
+          @util.Language.values.find(_.code == messages.lang.code).getOrElse(util.Language.English)
           <i class="fa fa-angle-down" style="height: auto;"></i>
         </a></li>
       </ul>}
-      <a href="@controllers.routes.SiteController.index()" class="brand-title"><i class="fa fa-database logo-icon"></i> @utils.Config.projectName</a>
+      <a href="@controllers.routes.SiteController.index()" class="brand-title"><i class="fa fa-database logo-icon"></i> @util.Config.projectName</a>
       <div class="clear"></div>
     </div>
   </nav>

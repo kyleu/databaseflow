@@ -3,7 +3,7 @@ package ui.modal
 import models.plan.PlanNode
 import models.template.query.QueryPlanNodeDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
-import utils.TemplateUtils
+import util.TemplateUtils
 
 import scala.scalajs.js
 

@@ -5,7 +5,7 @@ import com.codahale.metrics.SharedMetricRegistries
 import play.api.Configuration
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.inject.ApplicationLifecycle
-import utils.metrics.{MetricsConfig, MetricsServletActor}
+import util.metrics.{MetricsConfig, MetricsServletActor}
 
 import scala.concurrent.Future
 

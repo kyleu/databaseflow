@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.SqlParser
 import org.scalajs.jquery.JQuery
 import ui.editor.EditorCreationHelper
-import utils.Messages
+import util.Messages
 
 import scala.scalajs.js
 

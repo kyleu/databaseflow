@@ -1,10 +1,10 @@
 package controllers
 
 import play.api.i18n.I18nSupport
-import utils.FutureUtils.defaultContext
+import util.FutureUtils.defaultContext
 import play.api.mvc._
-import utils.Logging
-import utils.metrics.Instrumented
+import util.Logging
+import util.metrics.Instrumented
 
 import scala.concurrent.Future
 
