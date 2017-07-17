@@ -8,7 +8,7 @@ object ExportMerge {
     val className = ExportHelper.toClassName(key)
     def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", key).replaceAllLiterally("Boilerplay", className))
 
-    fix(root / "app" / "utils" / "web" / "LoggingFilter.scala")
+    fix(root / "app" / "util" / "web" / "LoggingFilter.scala")
     fix(root / "app" / "views" / "index.scala.html")
     fix(root / "app" / "views" / "layout" / "simple.scala.html")
     fix(root / "client" / "src" / "main" / "scala" / "NetworkHelper.scala")
@@ -18,10 +18,10 @@ object ExportMerge {
     fix(root / "public" / "manifest.json")
     fix(root / "project" / "Server.scala")
     fix(root / "project" / "Shared.scala")
-    fix(root / "shared" / "src" / "main" / "scala" / "utils" / "Config.scala")
-    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "utils" / "Logging.scala")
-    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "utils" / "metrics" / "Checked.scala")
-    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "utils" / "metrics" / "Instrumented.scala")
+    fix(root / "shared" / "src" / "main" / "scala" / "util" / "Config.scala")
+    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "Logging.scala")
+    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "metrics" / "Checked.scala")
+    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "metrics" / "Instrumented.scala")
 
     val jsFile = root / "client" / "src" / "main" / "scala" / "Boilerplay.scala"
     fix(jsFile)

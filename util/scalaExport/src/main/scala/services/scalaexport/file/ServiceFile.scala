@@ -31,7 +31,7 @@ object ServiceFile {
     file.add("}", -1)
     file.add()
 
-    ForeignKeysFile.writeService(et, file)
+    ForeignKeysHelper.writeService(et, file)
 
     file.add(s"def searchCount(q: String) = Database.query(${et.className}Queries.searchCount(q))")
     file.add(s"def search(${ExportHelper.searchArgs}) = {", 1)

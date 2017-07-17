@@ -1,9 +1,9 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.{ExportConfig, ExportHelper, ExportTable}
 
-object ForeignKeysFile {
+object ForeignKeysHelper {
   def writeQueries(et: ExportTable, file: ScalaFile) = et.t.foreignKeys.foreach { fk =>
     fk.references.toList match {
       case h :: Nil =>
@@ -33,12 +33,11 @@ object ForeignKeysFile {
     }
   }
 
-  def writeSchema(et: ExportTable, file: ScalaFile) = if (et.t.foreignKeys.size > 1) {
+  def writeSchema(et: ExportTable, file: ScalaFile) = if (et.t.foreignKeys.nonEmpty) {
     file.addImport("sangria.execution.deferred", "Relation")
     file.addImport("sangria.execution.deferred", "Fetcher")
 
     et.t.foreignKeys.foreach { fk =>
-      val targetTable = et.s.getTable(fk.targetTable).getOrElse(throw new IllegalStateException(s"Missing table [${fk.targetTable}]."))
       fk.references.toList match {
         case h :: Nil =>
           val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
@@ -56,6 +55,45 @@ object ForeignKeysFile {
           file.add(")", -1)
 
           file.add()
+        case _ => // noop
+      }
+    }
+  }
+
+  def writeFields(et: ExportTable, file: ScalaFile, config: ExportConfig.Result) = if (et.t.foreignKeys.nonEmpty) {
+    et.t.foreignKeys.foreach { fk =>
+      val targetTable = et.s.getTable(fk.targetTable).getOrElse(throw new IllegalStateException(s"Missing table [${fk.targetTable}]."))
+      fk.references.toList match {
+        case h :: Nil =>
+          val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+          val typ = col.columnType.asScala
+          col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, typ))
+          val tgtClass = ExportHelper.toClassName(targetTable.name)
+          val tgtProp = ExportHelper.toIdentifier(tgtClass)
+          val srcProp = ExportHelper.toIdentifier(h.source)
+          val p = ExportHelper.toIdentifier(fk.targetTable)
+          val cls = config.classNames.getOrElse(p, ExportHelper.toClassName(fk.targetTable))
+          val pkg = config.packages.get(p).map(x => x.split("\\.").toList).getOrElse(Nil)
+          if (pkg != et.pkg) {
+            file.addImport(("models" +: pkg).mkString("."), cls + "Schema")
+          }
+
+          file.add("Field(", 1)
+          file.add(s"""name = "${srcProp}Rel",""")
+          if (col.notNull) {
+            file.add(s"""fieldType = ${tgtClass}Schema.${tgtProp}Type,""")
+          } else {
+            file.add(s"""fieldType = OptionType(${tgtClass}Schema.${tgtProp}Type),""")
+          }
+
+          val fetcherRef = s"${tgtClass}Schema.${tgtProp}By${ExportHelper.toClassName(h.target)}Fetcher"
+          if (col.notNull) {
+            file.add(s"resolve = ctx => $fetcherRef.defer(ctx.value.$srcProp)")
+          } else {
+            file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.$srcProp)")
+          }
+          val comma = if (et.t.foreignKeys.lastOption.contains(fk)) { "" } else { "," }
+          file.add(")" + comma, -1)
         case _ => // noop
       }
     }

@@ -40,7 +40,7 @@ object QueriesFile {
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")
     file.add()
 
-    ForeignKeysFile.writeQueries(et, file)
+    ForeignKeysHelper.writeQueries(et, file)
 
     file.add(s"def search(${ExportHelper.searchArgs}) = Search(q, orderBy, limit, offset)")
     file.add("def searchCount(q: String) = SearchCount(q)")

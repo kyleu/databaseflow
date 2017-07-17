@@ -24,11 +24,11 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportTable(s: Schema, et: ExportTable) = {
+  def exportTable(s: Schema, et: ExportTable, config: ExportConfig.Result) = {
     val cls = ClassFile.export(et)
     val queries = QueriesFile.export(et)
     val svc = ServiceFile.export(et)
-    val sch = SchemaFile.export(et)
+    val sch = SchemaFile.export(et, config)
     et -> Seq(cls, queries, svc, sch)
   }
 }

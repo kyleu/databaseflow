@@ -26,7 +26,7 @@ object SchemaModelGraphQL {
     RowDataOptions(sc, sa, filters, wc, l, o)
   }
 
-  implicit val referenceType = deriveObjectType[GraphQLContext, Reference](ObjectTypeDescription("A reference to a different table or view."))
+  implicit val referenceType: ObjectType[GraphQLContext, Reference] = deriveObjectType[GraphQLContext, Reference](ObjectTypeDescription("A reference to a different table or view."))
   implicit val primaryKeyType = deriveObjectType[GraphQLContext, PrimaryKey](ObjectTypeDescription("A primary key for this table or view."))
   implicit val foreignKeyType = deriveObjectType[GraphQLContext, ForeignKey](ObjectTypeDescription("A foreign key for this table or view."))
 

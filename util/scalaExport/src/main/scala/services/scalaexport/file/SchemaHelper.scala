@@ -3,7 +3,7 @@ package services.scalaexport.file
 import models.scalaexport.ScalaFile
 import services.scalaexport.{ExportHelper, ExportTable}
 
-object SchemaFileHelper {
+object SchemaHelper {
   def addImports(file: ScalaFile) = {
     file.addImport("models.graphql", "CommonSchema")
     file.addImport("models.graphql", "GraphQLContext")
@@ -40,29 +40,5 @@ object SchemaFileHelper {
       file.addMarker("fetcher", (file.pkg :+ (et.className + "Schema")).mkString(".") + "." + fetcherName)
       file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${et.pkType.getOrElse("String")}]) => ${et.className}Service.getByIdSeq(idSeq))")
       file.add()
-
-  }
-
-  def addReferences(et: ExportTable, file: ScalaFile) = if (et.references.nonEmpty) {
-    file.add("AddFields(", 1)
-    et.references.foreach { ref =>
-      if (ref.pkg != et.pkg) {
-        file.addImport(("models" +: ref.pkg).mkString("."), ref.cls + "Schema")
-      }
-      file.add("Field(", 1)
-      file.add(s"""name = "${ref.name}",""")
-      file.add(s"""fieldType = ListType(${ref.cls}Schema.${ExportHelper.toIdentifier(ref.cls)}Type),""")
-      file.add(s"""arguments = CommonSchema.limitArg :: CommonSchema.offsetArg :: Nil,""")
-
-      val fetcherRef = s"${ref.cls}Schema.${ExportHelper.toIdentifier(ref.cls)}By${ExportHelper.toClassName(ref.prop)}Fetcher"
-      if (ref.notNull) {
-        file.add(s"resolve = ctx => $fetcherRef.deferSeq(Seq(ctx.value.${ref.tgt}))")
-      } else {
-        file.add(s"resolve = ctx => $fetcherRef.deferSeq(ctx.value.${ref.tgt}.toSeq)")
-      }
-      val comma = if (et.references.lastOption.contains(ref)) { "" } else { "," }
-      file.add(")" + comma, -1)
-    }
-    file.add(")", -1)
   }
 }

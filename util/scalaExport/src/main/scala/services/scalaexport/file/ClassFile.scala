@@ -10,9 +10,7 @@ object ClassFile {
     et.t.description.foreach(d => file.add(s"/** $d */"))
     file.add(s"case class ${et.className}(", 1)
     et.t.columns.foreach { col =>
-      col.columnType.requiredImport.foreach { p =>
-        file.addImport(p, col.columnType.asScala)
-      }
+      col.columnType.requiredImport.foreach(p => file.addImport(p, col.columnType.asScala))
 
       val propName = ExportHelper.toIdentifier(col.name)
       val colScala = col.columnType match {
