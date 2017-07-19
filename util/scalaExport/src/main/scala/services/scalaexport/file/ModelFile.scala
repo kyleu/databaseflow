@@ -4,7 +4,7 @@ import models.scalaexport.ScalaFile
 import models.schema.ColumnType
 import services.scalaexport.{ExportHelper, ExportTable}
 
-object ClassFile {
+object ModelFile {
   def export(et: ExportTable) = {
     val file = ScalaFile("models" +: et.pkg, et.className)
     et.t.description.foreach(d => file.add(s"/** $d */"))

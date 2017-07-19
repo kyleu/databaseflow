@@ -3,7 +3,7 @@ package services.scalaexport
 import better.files._
 import models.scalaexport.ExportResult
 import models.schema.{Schema, Table}
-import services.scalaexport.file.{ClassFile, QueriesFile, SchemaFile, ServiceFile}
+import services.scalaexport.file.{ModelFile, QueriesFile, SchemaFile, ServiceFile}
 
 object ExportFiles {
   def persist(result: ExportResult) = {
@@ -25,7 +25,7 @@ object ExportFiles {
   }
 
   def exportTable(s: Schema, et: ExportTable, config: ExportConfig.Result) = {
-    val cls = ClassFile.export(et)
+    val cls = ModelFile.export(et)
     val queries = QueriesFile.export(et)
     val svc = ServiceFile.export(et)
     val sch = SchemaFile.export(et, config)

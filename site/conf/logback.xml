@@ -9,10 +9,12 @@
   </appender>
 
   <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
-  <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF" />
-  <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF" />
-  <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
-  <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
+  <logger name="com.zaxxer.hikari" level="OFF" />
+  <logger name="org.eclipse.jetty" level="OFF" />
+  <logger name="akka.actor" level="ERROR" />
+
+  <logger name="play.core.server.AkkaHttpServer" level="OFF" />
+  <logger name="play.core.server.ssl.DefaultSSLEngineProvider" level="OFF" />
 
   <root level="INFO">
     <appender-ref ref="STDOUT" />
