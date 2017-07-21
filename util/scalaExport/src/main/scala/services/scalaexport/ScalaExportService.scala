@@ -6,10 +6,11 @@ import models.schema.Schema
 import scala.concurrent.{ExecutionContext, Future}
 
 case class ScalaExportService(schema: Schema) {
-  val id = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
+  private[this] val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
+  private[this] val config = ExportConfig.load(schemaId)
 
   def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
-    export(id, schema).map { result =>
+    export(config.projectName, schema).map { result =>
       val injected = if (persist) {
         ExportFiles.persist(result)
         ExportMerge.merge(result)
@@ -20,8 +21,6 @@ case class ScalaExportService(schema: Schema) {
       result -> injected
     }
   }
-
-  private[this] val config = ExportConfig.load(id)
 
   def export(projectId: String, schema: Schema) = {
     val exportTables = schema.tables.map(t => ExportTable(t, config, schema))

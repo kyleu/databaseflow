@@ -13,8 +13,8 @@ object ExportHelper {
 
   private[this] def converterFor(src: CaseFormat, tgt: CaseFormat) = converters.getOrElseUpdate(src -> tgt, src.converterTo(tgt))
 
-  def toIdentifier(s: String) = converterFor(getSource(s), CaseFormat.LOWER_CAMEL).convert(s)
-  def toClassName(s: String) = converterFor(getSource(s), CaseFormat.UPPER_CAMEL).convert(s)
+  def toIdentifier(s: String) = converterFor(getSource(s), CaseFormat.LOWER_CAMEL).convert(s.replaceAllLiterally(" ", ""))
+  def toClassName(s: String) = converterFor(getSource(s), CaseFormat.UPPER_CAMEL).convert(s.replaceAllLiterally(" ", ""))
 
   val getAllArgs = "orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
   val searchArgs = "q: String, orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"

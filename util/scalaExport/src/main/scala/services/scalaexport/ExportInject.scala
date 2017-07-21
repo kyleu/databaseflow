@@ -17,7 +17,7 @@ object ExportInject {
       s.replaceAllLiterally("fetchers()", s"fetchers(\n    $newContent\n  )")
     }
 
-    val rootDir = s"./tmp/${result.id}".toFile
+    val rootDir = s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
 
     val schemaSourceFile = rootDir / "app" / "models" / "graphql" / "Schema.scala"
     val newContent = fetcherFieldsFor(queryFieldsFor(schemaSourceFile.contentAsString))

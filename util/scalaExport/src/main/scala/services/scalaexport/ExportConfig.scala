@@ -4,28 +4,30 @@ import better.files._
 
 object ExportConfig {
   case class Result(
+    projectName: String,
     classNames: Map[String, String],
     propertyNames: Map[String, String],
     packages: Map[String, String],
     searchColumns: Map[String, Seq[String]]
   )
 
-  val emptyResult = {
+  def emptyResult(k: String) = {
     val em = Map.empty[String, String]
-    Result(em, em, em, Map.empty[String, Seq[String]])
+    Result(k, em, em, em, Map.empty[String, Seq[String]])
   }
 
   def load(key: String) = {
     val f = s"./tmp/$key.txt".toFile
     if (f.exists) {
-      loadConfig(f.lineIterator)
+      loadConfig(key, f.lineIterator)
     } else {
-      emptyResult
+      emptyResult(key)
     }
   }
 
-  private[this] def loadConfig(lines: Iterator[String]) = {
+  private[this] def loadConfig(key: String, lines: Iterator[String]) = {
     var currentSection = "unknown"
+    var projectName = key
     var classNames = Map.empty[String, String]
     var propertyNames = Map.empty[String, String]
     var packages = Map.empty[String, String]
@@ -41,6 +43,10 @@ object ExportConfig {
           case _ => throw new IllegalStateException(s"Invalid property line [$line].")
         }
         currentSection match {
+          case "project" => prop._1 match {
+            case "name" => projectName = prop._2
+            case _ => throw new IllegalStateException(s"Unhandled project key [${prop._1}].")
+          }
           case "classname" => classNames += prop
           case "propertyname" => propertyNames += prop
           case "package" => packages += prop
@@ -52,6 +58,6 @@ object ExportConfig {
       }
     }
 
-    Result(classNames, propertyNames, packages, searchColumns)
+    Result(projectName, classNames, propertyNames, packages, searchColumns)
   }
 }

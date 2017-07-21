@@ -4,8 +4,9 @@ import better.files._
 import models.scalaexport.ExportResult
 
 object ExportMerge {
-  private[this] def projectNameReplacements(key: String, root: File) = {
-    val className = ExportHelper.toClassName(key)
+  private[this] def projectNameReplacements(id: String, root: File) = {
+    val key = ExportHelper.toIdentifier(id)
+    val className = ExportHelper.toClassName(id)
     def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", key).replaceAllLiterally("Boilerplay", className))
 
     fix(root / "app" / "util" / "web" / "LoggingFilter.scala")
@@ -46,7 +47,7 @@ object ExportMerge {
   }
 
   def merge(result: ExportResult) = {
-    val rootDir = s"./tmp/${result.id}".toFile
+    val rootDir = s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
     if (rootDir.exists) { rootDir.delete() }
     rootDir.createDirectory()
 
