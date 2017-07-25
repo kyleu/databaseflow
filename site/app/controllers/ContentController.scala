@@ -8,7 +8,9 @@ import play.api.inject.ApplicationLifecycle
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ContentController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, val actorSystem: ActorSystem, val lifecycle: ApplicationLifecycle, val config: Configuration) extends BaseSiteController {
+class ContentController @javax.inject.Inject() (implicit
+  override val messagesApi: MessagesApi, val actorSystem: ActorSystem, val lifecycle: ApplicationLifecycle, val config: Configuration
+) extends BaseSiteController {
   def features() = act("features") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.features(isAdmin)))

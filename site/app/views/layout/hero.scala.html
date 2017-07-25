@@ -7,10 +7,11 @@
           <h4>@title</h4>
           <p>@subtitle</p>
           @subtitle2.map { s => <p>@s</p> }
-          @if(showButtons) { <div class="hero-links">
+          @if(showButtons) {<div class="hero-links">
             <a href="https://demo.databaseflow.com" class="index-button btn white theme-text">@messages("index.demo.link")</a>
             <a href="@routes.DownloadController.index()" class="index-button btn white theme-text">@messages("index.download.link")</a>
-          </div> }
+            <a href="https://github.com/KyleU/databaseflow" class="index-button btn white theme-text">@messages("index.github.link")</a>
+          </div>}
         </div>
       </div>
     </div>
