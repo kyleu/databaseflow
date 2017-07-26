@@ -1,6 +1,7 @@
 package services.scalaexport
 
 import models.schema.{Schema, Table}
+import services.scalaexport.config.ExportConfig
 
 object ExportTable {
   case class Reference(pkg: Seq[String], cls: String, prop: String, name: String, tgt: String, notNull: Boolean)

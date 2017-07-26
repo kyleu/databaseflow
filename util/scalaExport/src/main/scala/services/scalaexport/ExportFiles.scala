@@ -3,6 +3,7 @@ package services.scalaexport
 import better.files._
 import models.scalaexport.ExportResult
 import models.schema.{Schema, Table}
+import services.scalaexport.config.ExportConfig
 import services.scalaexport.file.{ModelFile, QueriesFile, SchemaFile, ServiceFile}
 
 object ExportFiles {

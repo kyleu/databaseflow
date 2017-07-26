@@ -2,12 +2,13 @@ package services.scalaexport
 
 import models.scalaexport.ExportResult
 import models.schema.Schema
+import services.scalaexport.config.ExportConfigReader
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class ScalaExportService(schema: Schema) {
   private[this] val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
-  private[this] val config = ExportConfig.load(schemaId)
+  private[this] val config = ExportConfigReader.read(schemaId)
 
   def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
     export(config.projectName, schema).map { result =>

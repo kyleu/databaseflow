@@ -1,22 +1,11 @@
-package services.scalaexport
+package services.scalaexport.config
 
+import services.scalaexport.ExportHelper
+import services.scalaexport.config.ExportConfig.{Result, emptyResult}
 import better.files._
 
-object ExportConfig {
-  case class Result(
-    projectName: String,
-    classNames: Map[String, String],
-    propertyNames: Map[String, String],
-    packages: Map[String, String],
-    searchColumns: Map[String, Seq[String]]
-  )
-
-  def emptyResult(k: String) = {
-    val em = Map.empty[String, String]
-    Result(k, em, em, em, Map.empty[String, Seq[String]])
-  }
-
-  def load(key: String) = {
+object ExportConfigReader {
+  def read(key: String) = {
     val f = s"./tmp/$key.txt".toFile
     if (f.exists) {
       loadConfig(key, f.lineIterator)
@@ -47,9 +36,9 @@ object ExportConfig {
             case "name" => projectName = prop._2
             case _ => throw new IllegalStateException(s"Unhandled project key [${prop._1}].")
           }
-          case "classname" => classNames += prop
-          case "propertyname" => propertyNames += prop
-          case "package" => packages += prop
+          case "classnames" => classNames += prop
+          case "propertynames" => propertyNames += prop
+          case "packages" => packages += prop
           case "searchcolumns" => searchColumns += ExportHelper.toIdentifier(prop._1) -> prop._2.split(",").map(_.trim)
           case _ => throw new IllegalStateException(s"Invalid section [$currentSection].")
         }
@@ -58,6 +47,6 @@ object ExportConfig {
       }
     }
 
-    Result(projectName, classNames, propertyNames, packages, searchColumns)
+    Result(key, projectName, classNames, propertyNames, packages, searchColumns)
   }
 }

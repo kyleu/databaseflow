@@ -1,7 +1,8 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.{ExportConfig, ExportHelper, ExportTable}
+import services.scalaexport.config.ExportConfig
+import services.scalaexport.{ExportHelper, ExportTable}
 
 object SchemaFile {
   def export(et: ExportTable, config: ExportConfig.Result) = {

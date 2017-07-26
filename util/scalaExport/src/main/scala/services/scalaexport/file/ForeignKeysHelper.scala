@@ -1,7 +1,8 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.{ExportConfig, ExportHelper, ExportTable}
+import services.scalaexport.config.ExportConfig
+import services.scalaexport.{ExportHelper, ExportTable}
 
 object ForeignKeysHelper {
   def writeQueries(et: ExportTable, file: ScalaFile) = et.t.foreignKeys.foreach { fk =>

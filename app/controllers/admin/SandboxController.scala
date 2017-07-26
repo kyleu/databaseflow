@@ -26,15 +26,4 @@ class SandboxController @javax.inject.Inject() (override val ctx: ApplicationCon
       Ok(views.html.admin.sandbox.run(request.identity, sandbox, result))
     }
   }
-
-  def export(conn: String) = withAdminSession("sandbox.export") { implicit request =>
-    ConnectionSettingsService.connFor(conn) match {
-      case Some(cs) => SchemaService.getSchemaWithDetails(cs).flatMap { schema =>
-        ScalaExportService(schema).test(persist = true).map { result =>
-          Ok(views.html.admin.sandbox.export(result._1, result._2))
-        }
-      }
-      case None => throw new IllegalStateException(s"Invalid connection [$conn].")
-    }
-  }
 }
