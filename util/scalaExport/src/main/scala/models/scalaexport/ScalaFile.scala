@@ -1,35 +1,11 @@
 package models.scalaexport
 
-case class ScalaFile(pkg: Seq[String], key: String) {
-  private[this] var hasRendered = false
-  private[this] var currentIndent = 0
+case class ScalaFile(override val pkg: Seq[String], override val key: String) extends OutputFile(pkg, key, key + ".scala") {
   private[this] var imports = Set.empty[(String, String)]
-  private[this] val lines = collection.mutable.ArrayBuffer.empty[String]
-
-  private[this] val markers = collection.mutable.HashMap.empty[String, Seq[String]]
-  def markersFor(key: String) = markers.getOrElseUpdate(key, Nil)
-  def addMarker(key: String, v: String) = markers(key) = markersFor(key) :+ v
-
-  val filename = key + ".scala"
 
   def addImport(p: String, c: String) = imports += (p -> c)
 
-  def add(line: String = "", indentDelta: Int = 0): Unit = {
-    if (hasRendered) {
-      throw new IllegalStateException("Already rendered.")
-    }
-    if (indentDelta < 0) {
-      currentIndent += indentDelta
-    }
-    val ws = if (line.trim.isEmpty) { "" } else { (0 until currentIndent).map(_ => "  ").mkString }
-    if (indentDelta > 0) {
-      currentIndent += indentDelta
-    }
-
-    lines += (ws + line + "\n")
-  }
-
-  lazy val rendered = {
+  override def prefix = {
     val pkgString = s"package ${pkg.mkString(".")}\n\n"
 
     val impString = if (imports.isEmpty) {
@@ -43,8 +19,6 @@ case class ScalaFile(pkg: Seq[String], key: String) {
       }.mkString("\n") + "\n\n"
     }
 
-    hasRendered = true
-
-    pkgString + impString + lines.mkString
+    pkgString + impString
   }
 }

@@ -43,7 +43,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
 
         val result = ExportConfig.Result(schemaId, projectName, classNames, propertyNames, packages, searchColumns)
-        ExportConfigWriter.save(result)
+        ExportConfigWriter.write(result)
 
         ScalaExportService(schema).test(persist = true).map { result =>
           Ok(views.html.admin.scalaExport.export(result._1, result._2))

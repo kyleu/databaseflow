@@ -12,6 +12,7 @@
   <logger name="com.zaxxer.hikari" level="OFF" />
   <logger name="org.eclipse.jetty" level="OFF" />
   <logger name="akka.actor" level="ERROR" />
+  <logger name="play.api.mvc.DefaultJWTCookieDataCodec" level="ERROR" />
 
   <logger name="play.core.server.AkkaHttpServer" level="OFF" />
   <logger name="play.core.server.ssl.DefaultSSLEngineProvider" level="OFF" />

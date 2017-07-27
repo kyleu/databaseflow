@@ -4,7 +4,7 @@ import better.files._
 import models.scalaexport.ExportResult
 import models.schema.{Schema, Table}
 import services.scalaexport.config.ExportConfig
-import services.scalaexport.file.{ModelFile, QueriesFile, SchemaFile, ServiceFile}
+import services.scalaexport.file._
 
 object ExportFiles {
   def persist(result: ExportResult) = {
@@ -25,11 +25,14 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportTable(s: Schema, et: ExportTable, config: ExportConfig.Result) = {
+  def exportTable(s: Schema, et: ExportTable, result: ExportConfig.Result) = {
     val cls = ModelFile.export(et)
     val queries = QueriesFile.export(et)
     val svc = ServiceFile.export(et)
-    val sch = SchemaFile.export(et, config)
-    et -> Seq(cls, queries, svc, sch)
+    val sch = SchemaFile.export(et, result)
+
+    val views = ViewFiles.export(et)
+
+    et -> (Seq(cls, queries, svc, sch) ++ views)
   }
 }
