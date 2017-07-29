@@ -31,6 +31,28 @@ platform.linux = Linux
 platform.docker = Docker
 platform.universal = Universal (requires Java 8)
 
+# Features
+features.manage.title = Manage Your Data
+features.manage.content = Run SQL queries, view tables and other database objects, and share and visualize the results. Database Flow is self-hosted, so your data always remains private.
+features.editor.title = Advanced SQL Editor
+features.editor.content = Syntax highlighting and auto-completion make writing complicated queries easy. Use query parameters to help others use your shared SQL.
+features.charting.title = Charting
+features.charting.content = We use plotly.js to bring you the best charts available. Share charts and results with ease, and save queries for later use.
+features.plan.title = Query Plan
+features.plan.content = Visualize the performance of your queries with a sophisticated plan viewer. Supporting explain and analyze plans, improving the performance of your queries just got easier.
+features.graphql.title = GraphQL
+features.graphql.content = Use the power of GraphQL to explore and discover your database. Query your database schema and browse table relationships using GraphiQL.
+features.schema.title = Explore Your Schema
+features.schema.content = Visualize the relationships and columns in your database schema. Using GraphQL Voyager, you can pan, zoom and navigate through all your data.
+features.responsive.title = Responsive Interface
+features.responsive.content = High definition retina graphics and a responsive interface help you navigate your data on any device. Hotkeys and shortcuts increase your productivity.
+features.databases.title = Database Support
+features.databases.content = Database Flow supports the most popular database engines, and provides features that help you make the most of your data.
+features.filter.title = Result Filtering
+features.filter.content = Sort and filter your results without re-running your query. By linking to related tables, Database Flow helps you drill down to the data you need.
+features.history.title = Query History
+features.history.content = Query history and audit logs ensure you never forget the queries you write. Granular permissions help you share databases and results with your team.
+
 # Newsletter
 newsletter.title = Newsletter
 newsletter.subscribe = Subscribe
