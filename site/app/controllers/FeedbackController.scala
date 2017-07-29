@@ -23,9 +23,7 @@ object FeedbackController {
 }
 
 @javax.inject.Singleton
-class FeedbackController @javax.inject.Inject() (implicit
-    override val messagesApi: MessagesApi, notificationService: NotificationService
-) extends BaseSiteController {
+class FeedbackController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi, notificationService: NotificationService) extends BaseSiteController {
   def feedbackForm() = act("feedback-form") { implicit request =>
     Future.successful(Ok(views.html.feedbackForm()))
   }
