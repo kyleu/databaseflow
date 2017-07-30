@@ -9,7 +9,7 @@ object ViewFiles {
     listFile.add(s"@(modelSeq: Seq[models.${et.pkg.mkString(".")}.${et.className}])")
     listFile.add(s"""<div class="collection with-header">""", 1)
     listFile.add(s"""<div class="collection-header">""", 1)
-    listFile.add(s"<h5>@util.NumberUtils.withCommas(modelSeq.size) ${et.className} Objects</h5>")
+    listFile.add(s"""<h5><i class="fa @models.template.Icons.${et.propertyName}"></i> @util.NumberUtils.withCommas(modelSeq.size) ${et.className} Objects</h5>""")
     listFile.add(s"</div>", -1)
     listFile.add("@modelSeq.map { model =>", 1)
     listFile.add("""<a href="" class="collection-item">@model</a>""")

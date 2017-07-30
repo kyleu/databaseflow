@@ -2,7 +2,7 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.ExportResult
-import models.schema.{Schema, Table}
+import models.schema.Schema
 import services.scalaexport.config.ExportConfig
 import services.scalaexport.file._
 
@@ -30,9 +30,10 @@ object ExportFiles {
     val queries = QueriesFile.export(et)
     val svc = ServiceFile.export(et)
     val sch = SchemaFile.export(et, result)
+    val cntr = ControllerFile.export(et)
 
     val views = ViewFiles.export(et)
 
-    et -> (Seq(cls, queries, svc, sch) ++ views)
+    et -> (Seq(cls, queries, svc, sch, cntr) ++ views)
   }
 }
