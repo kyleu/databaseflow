@@ -40,7 +40,7 @@ object Dependencies {
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
     val h2 = "com.h2database" % "h2" % "1.4.196"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.42" // 6.0 is all different
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.43" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
     val sqlite = "org.xerial" % "sqlite-jdbc" % "3.19.3"
