@@ -1,5 +1,5 @@
 @()(implicit messages: Messages)
-@section(key: String, filename: String) = {
+@section(key: String, name: String, filename: String) = {
   <div class="col s12 m6 l3">
     <div id="@key" class="download-section">
       <a class="theme-text" href="@controllers.routes.DownloadController.download(filename)">
@@ -9,7 +9,7 @@
         <div class="off">
           <img src="@routes.Assets.versioned(s"images/os/$key.png")" width="64" height="64" />
         </div>
-        @messages(s"platform.$key")
+        @name
       </a>
     </div>
   </div>
@@ -18,18 +18,18 @@
   <div class="col s12">
     <div class="section-header">@messages("downloads.title")</div>
     <div class="row padded-top">
-      @section("osx", "DatabaseFlow.dmg")
-      @section("windows", "DatabaseFlow.zip")
-      @section("linux", "DatabaseFlow.jar")
-      @section("docker", "databaseflow.docker.gz")
+      @section("osx", "macOS", "DatabaseFlow.dmg")
+      @section("windows", "Windows", "DatabaseFlow.zip")
+      @section("linux", "Linux", "DatabaseFlow.jar")
+      @section("docker", "Docker", "databaseflow.docker.gz")
     </div>
     <div class="row padded-top">
       <div class="col s12" style="text-align: center;">
         Or, download a
-        <a class="theme-text" href="@controllers.routes.DownloadController.download("DatabaseFlow.jar")">jar file</a>
-        or
-        <a class="theme-text" href="@controllers.routes.DownloadController.download("databaseflow.server.zip")">universal zip</a>
-        (Java 8 required).
+        <a class="theme-text" href="@controllers.routes.DownloadController.download("DatabaseFlow.jar")">jar</a>
+        file or universal
+        <a class="theme-text" href="@controllers.routes.DownloadController.download("databaseflow.server.zip")">zip</a>
+        (@messages("downloads.dependency.java8")).
       </div>
     </div>
   </div>

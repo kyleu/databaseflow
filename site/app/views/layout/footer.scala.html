@@ -1,19 +1,18 @@
-@(showLinks: Boolean)(implicit messages: Messages)
+@()(implicit messages: Messages)
 @link(key: String, name: String, url: String) = {
   <a class="left" href="@url" target="_blank"><img src="@routes.Assets.versioned(s"images/social/$key-white.png")" width="16" height="16" /></a>
 }
 <footer class="page-footer theme">
   <div class="container">
     <div class="footer-copyright">
-      @if(showLinks) {
-        @link("github", "Github", "https://github.com/KyleU/databaseflow")
-        @link("gitter", "Gitter", "https://gitter.im/databaseflow/databaseflow")
-        @link("twitter", "Twitter", "https://twitter.com/databaseflow")
-        @link("facebook", "Facebook", "https://www.facebook.com/databaseflow")
-        <a class="grey-text text-lighten-4 right" href="@controllers.routes.FeedbackController.feedbackForm()">@messages("footer.feedback")</a>
-        <a class="grey-text text-lighten-4 right" href="@controllers.routes.NewsletterController.form()">@messages("footer.newsletter")</a>
-        <a class="grey-text text-lighten-4 right" href="@controllers.routes.ContentController.technology()">@messages("footer.technology")</a>
-      }
+      @link("github", "Github", "https://github.com/KyleU/databaseflow")
+      @link("gitter", "Gitter", "https://gitter.im/databaseflow/databaseflow")
+      @link("twitter", "Twitter", "https://twitter.com/databaseflow")
+      @link("facebook", "Facebook", "https://www.facebook.com/databaseflow")
+
+      <a class="grey-text text-lighten-4 right" href="@controllers.routes.FeedbackController.feedbackForm()">@messages("footer.feedback")</a>
+      <a class="grey-text text-lighten-4 right" href="@controllers.routes.NewsletterController.form()">@messages("footer.newsletter")</a>
+      <a class="grey-text text-lighten-4 right" href="@controllers.routes.ContentController.technology()">@messages("footer.technology")</a>
     </div>
   </div>
 </footer>
