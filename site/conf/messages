@@ -18,22 +18,17 @@ index.welcome1 = The best way to query and report on your own data.
 index.welcome2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 index.hero.title = The best way to query and visualize your database.
-index.hero.subtitle1 = {0} is a self-hosted collaborative SQL client and charting application that works with your database.
-index.hero.subtitle2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
+index.hero.subtitle1 = {0} is a self-hosted collaborative SQL client, GraphQL server, and charting application that works with your database.
+index.hero.subtitle2 = Visualize schemas, query plans, charts, and results. You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 # Downloads
 downloads.title = Download Now
 downloads.hero.title = Get started with {0} right away.
 downloads.hero.subtitle1 = Free software, no registration required. Downloads are available for all major platforms.
-platform.osx = macOS
-platform.windows = Windows
-platform.linux = Linux
-platform.docker = Docker
-platform.universal = Universal (requires Java 8)
-
+downloads.dependency.java8 = Java 8 required
 # Features
 features.manage.title = Manage Your Data
-features.manage.content = Run SQL queries, view tables and other database objects, and share and visualize the results. Database Flow is self-hosted, so your data always remains private.
+features.manage.content = Run SQL queries, emplore database objects, and share and visualize the results. Database Flow is self-hosted, so your data always remains private.
 features.editor.title = Advanced SQL Editor
 features.editor.content = Syntax highlighting and auto-completion make writing complicated queries easy. Use query parameters to help others use your shared SQL.
 features.charting.title = Charting
@@ -72,6 +67,7 @@ technology.hero.title = {0} relies on tremendous open source projects.
 technology.hero.subtitle1 = Here''s a few of them.
 
 # Database
+database.supported.databases = Supported Databases
 database.hero.title = {0} is the best SQL client for working with {1}
 database.postgresql.subtitle = {0} is our primary supported database, we support normal installations, Amazon RDS or Redshift, and Greenplum.
 

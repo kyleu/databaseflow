@@ -34,7 +34,7 @@ index.no.connections = أضف أول اتصال لك بالنقر على الر�
 index.new.connection = اتصال جديد
 registration.title = تسجيل
 registration.call.to.action = سجل ل {0}
-registration.notice = أنت بصدد إنشاء حساب لهذا التثبيت المحلي {0}. 
+registration.notice = أنت بصدد إنشاء حساب لهذا التثبيت المحلي {0}.
 registration.register = سجل
 registration.email.taken = عنوان البريد الالكتروني ذاك تم استخدامه مسبقا
 registration.form.username = اسم
@@ -43,16 +43,16 @@ registration.form.password = كلمه السر
 registration.form.password.confirm = تأكيد كلمة المرور
 registration.passwords.do.not.match = كلمات المرور غير متطابقة
 registration.already.member = عضوا فعلا؟
-registration.disabled = لا يمكنك الاشتراك في الوقت الحالي. 
+registration.disabled = لا يمكنك الاشتراك في الوقت الحالي.
 authentication.call.to.action = تسجيل الدخول إلى {0}
-authentication.notice = هذا الحساب هو فقط لهذا التثبيت من {0}. 
+authentication.notice = هذا الحساب هو فقط لهذا التثبيت من {0}.
 authentication.sign.in = تسجيل الدخول
 authentication.sign.out = خروج
 authentication.form.email = عنوان البريد الإلكتروني
 authentication.form.password = كلمه السر
 authentication.invalid.credentials = بيانات الاعتماد غير صالحة
 authentication.not.member = ليس عضوا؟
-authentication.registration.disabled = التسجيل معطل على هذا الخادم. 
+authentication.registration.disabled = التسجيل معطل على هذا الخادم.
 profile.title = الملف الشخصي
 profile.save = حفظ التغييرات
 profile.cancel = إلغاء
@@ -128,6 +128,7 @@ shared.results.personal.title = النتائج المشتركة
 shared.results.public.title = النتائج العامة المشتركة
 shared.results.public.none = لا تتوفر نتائج مشتركة عامة.
 graphql.title = GraphQL
+schema.title = مخطط
 socket.connect.error = حدث خطأ أثناء محاولة الاتصال بقاعدة البيانات.
 socket.connect.failed = فشل الاتصال
 socket.too.many.users = يسمح الإصدار الشخصي لمستخدم واحد بالاتصال في وقت واحد، و [{0}] متصل بالفعل.
@@ -135,16 +136,20 @@ socket.duplicate.transaction = بالفعل في معاملة.
 socket.no.transaction = ليس حاليا في معاملة.
 modal.confirm.prompt = هل أنت واثق؟
 modal.export.action = تصدير
+modal.export.text = سيؤدي هذا إلى تصدير جميع الصفوف من نتيجة طلب البحث بالتنسيق الذي تختاره.
 modal.export.csv = قيم مفصولة بفواصل
+modal.export.sql = بيانات إدراج سكل
 modal.export.excel = مايكروسوفت اكسل
-modal.reconnect.prompt = خطأ في الإتصال. 
+modal.reconnect.prompt = خطأ في الإتصال.
 modal.reconnect.action = إعادة الاتصال
 modal.save.query.name = اسم الاستعلام
 modal.save.description = وصف
 modal.save.available.from = متاح من
 modal.save.all.databases = جميع قواعد البيانات
 modal.save.this.database = قاعدة البيانات هذه فقط
+modal.share.results.text = سيتيح لك ذلك مشاركة نتيجة طلب البحث مع جمهور من اختيارك. 
 modal.share.results.title = عنوان
+modal.share.results.title.error = الرجاء إدخال اسم لهذه النتيجة.
 modal.share.results.description = وصف
 user.password.changed = تم تغيير كلمة السر.
 user.password.check.fail = كلمة المرور القديمة غير متطابقة ({0}).
@@ -179,9 +184,9 @@ error.must.sign.in = يجب تسجيل الدخول أو التسجيل قبل �
 error.missing.parameter = مفقود [{0}] معلمة.
 error.unknown.format = تنسيق غير معروف [{0}].
 error.exception.encountered = يتعذر تصدير طلب البحث: [{0}: {1}].
-error.sign.in.disabled = يمكن للمشرفين فقط تسجيل الدخول في الوقت الحالي. 
+error.sign.in.disabled = يمكن للمشرفين فقط تسجيل الدخول في الوقت الحالي.
 error.missing.user = تعذر العثور على المستخدم {0}.
-error.cannot.sign.up = تعذر الاشتراك في الوقت الحالي. 
+error.cannot.sign.up = تعذر الاشتراك في الوقت الحالي.
 error.empty = {0} مطلوب.
 error.invalid.user = مستخدم غير صالح [{0}].
 error.remove.self = لا يمكنك إزالة دور المشرف الخاص بك.
