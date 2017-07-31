@@ -4,11 +4,15 @@ import better.files.File
 import models.scalaexport.ExportResult
 
 object InjectExplore {
-  def inject(result: ExportResult, rootDir: File) = {
+  def injectMenu(result: ExportResult, rootDir: File) = {
     def queryFieldsFor(s: String) = {
-      val newContent = result.models.map { m =>
-        s"""  <li><a href="">${m._2}</a></li>"""
-      }.sorted.mkString("\n").stripPrefix("  ")
+      val newContent = result.tables.map { et =>
+        val controllerClass = et.pkg match {
+          case Nil => s"controllers.admin.routes.${et.className}Controller"
+          case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
+        }
+        s"""<li><a href="@$controllerClass.list()">${et.className}</a></li>"""
+      }.sorted.mkString("\n  ")
       s.replaceAllLiterally("<!-- Other Models -->", newContent)
     }
 
@@ -16,6 +20,30 @@ object InjectExplore {
     val newContent = queryFieldsFor(schemaSourceFile.contentAsString)
     schemaSourceFile.overwrite(newContent)
 
-    "Schema.scala" -> newContent
+    "adminMenu.scala.html" -> newContent
+  }
+
+  def injectHtml(result: ExportResult, rootDir: File) = {
+    def queryFieldsFor(s: String) = {
+      val newContent = result.tables.map { et =>
+        val controllerClass = et.pkg match {
+          case Nil => s"controllers.admin.routes.${et.className}Controller"
+          case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
+        }
+        s"""
+      <li class="collection-item">
+        <a class="theme-text" href="@$controllerClass.list()">${et.className} Management</a>
+        <div><em>Manage the ${et.propertyName} of the system.</em></div>
+      </li>
+        """.trim()
+      }.sorted.mkString("\n      ")
+      s.replaceAllLiterally("<!-- Other Models -->", newContent)
+    }
+
+    val schemaSourceFile = rootDir / "app" / "views" / "admin" / "explore.scala.html"
+    val newContent = queryFieldsFor(schemaSourceFile.contentAsString)
+    schemaSourceFile.overwrite(newContent)
+
+    "explore.scala.html" -> newContent
   }
 }

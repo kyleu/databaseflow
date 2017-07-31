@@ -11,9 +11,10 @@ object ExportInject {
     val s = InjectSchema.inject(result, rootDir)
     val i = InjectIcons.inject(result, rootDir)
     val r = InjectRoutes.inject(result, rootDir)
-    val x = InjectExplore.inject(result, rootDir)
+    val xm = InjectExplore.injectMenu(result, rootDir)
+    val xh = InjectExplore.injectHtml(result, rootDir)
 
     result.log("Injection complete.")
-    Seq(s, i, r, x)
+    Seq(s, i, r, xm, xh)
   }
 }

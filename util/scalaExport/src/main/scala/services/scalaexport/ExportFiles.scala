@@ -32,8 +32,9 @@ object ExportFiles {
     val sch = SchemaFile.export(et, result)
     val cntr = ControllerFile.export(et)
 
-    val views = ViewFiles.export(et)
+    val tl = TwirlListFile.export(et)
+    val tv = TwirlViewFile.export(et)
 
-    et -> (Seq(cls, queries, svc, sch, cntr) ++ views)
+    et -> Seq(cls, queries, svc, sch, cntr, tl, tv)
   }
 }
