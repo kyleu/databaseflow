@@ -13,16 +13,23 @@ object InjectRoutes {
         val comment = s"# ${ExportHelper.toClassName(m._2)} Routes"
 
         val listUrl = ExportHelper.toIdentifier(m._2)
-        val listWhitespace = (0 until (22 - listUrl.length)).map(_ => " ").mkString
+        val listWhitespace = (0 until (32 - listUrl.length)).map(_ => " ").mkString
         val list = s"GET         /$listUrl $listWhitespace $controller.list(limit: Option[Int] ?= None, offset: Option[Int] ?= None)"
 
-        val detailUrl = ExportHelper.toIdentifier(m._2) + "/:id"
-        val detailWhitespace = (0 until (22 - detailUrl.length)).map(_ => " ").mkString
-        val detail = s"GET         /$detailUrl $detailWhitespace $controller.view(id: Int)"
+        val et = result.getExportTable(ExportHelper.toIdentifier(m._2))
+        val detail = et.pkColumns match {
+          case Nil => None
+          case h :: Nil =>
+            val hProp = ExportHelper.toIdentifier(h.name)
+            val detailUrl = ExportHelper.toIdentifier(m._2) + s"/:$hProp"
+            val detailWhitespace = (0 until (32 - detailUrl.length)).map(_ => " ").mkString
+            Some(s"GET         /$detailUrl $detailWhitespace $controller.view($hProp: ${h.columnType.asScalaFull})")
+          case _ => None // todo
+        }
 
-        Seq(comment, list, detail).mkString("\n") + "\n\n"
-      }.mkString
-      s.replaceAllLiterally(".saveSettings\n\n", s".saveSettings\n\n$newContent")
+        (Seq(comment, list) ++ detail.toSeq).mkString("\n") + "\n\n"
+      }.mkString.stripSuffix("\n\n")
+      s.replaceAllLiterally("# Other models...", newContent)
     }
 
     val routesFile = rootDir / "conf" / "admin.routes"

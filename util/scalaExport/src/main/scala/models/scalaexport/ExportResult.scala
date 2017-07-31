@@ -1,8 +1,15 @@
 package models.scalaexport
 
-case class ExportResult(id: String, models: Seq[(Seq[String], String)], files: Seq[OutputFile]) {
+import services.scalaexport.ExportTable
+
+case class ExportResult(id: String, tables: Seq[ExportTable], files: Seq[OutputFile]) {
   private[this] val startTime = System.currentTimeMillis
   private[this] val logs = collection.mutable.ArrayBuffer.empty[(Int, String)]
+
+  val models = tables.map(t => t.pkg -> t.className)
+
+  def getExportTable(id: String) = tables.find(t => t.propertyName == id || t.t.name == id).getOrElse(throw new IllegalStateException(s"Missing table [$id]."))
+
   def log(msg: String) = logs += ((System.currentTimeMillis - startTime).toInt -> msg)
   val getLogs: Seq[(Int, String)] = logs
 

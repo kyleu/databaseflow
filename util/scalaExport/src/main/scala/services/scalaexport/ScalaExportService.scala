@@ -27,8 +27,6 @@ case class ScalaExportService(schema: Schema) {
     val exportTables = schema.tables.map(t => ExportTable(t, config, schema))
     val tables = exportTables.map(t => ExportFiles.exportTable(schema, t, config))
 
-    val models = tables.map(t => t._1.pkg -> t._1.className)
-    val files = tables.flatMap(t => t._2)
-    Future.successful(ExportResult(projectId, models, files))
+    Future.successful(ExportResult(projectId, tables.map(_._1), tables.flatMap(t => t._2)))
   }
 }

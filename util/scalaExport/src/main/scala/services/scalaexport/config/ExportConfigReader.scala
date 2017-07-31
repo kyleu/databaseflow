@@ -17,10 +17,14 @@ object ExportConfigReader {
   private[this] def loadConfig(key: String, lines: Iterator[String]) = {
     var currentSection = "unknown"
     var projectName = key
-    var classNames = Map.empty[String, String]
-    var propertyNames = Map.empty[String, String]
-    var packages = Map.empty[String, String]
-    var searchColumns = Map.empty[String, Seq[String]]
+
+    val em = Map.empty[String, String]
+    val emSeq = Map.empty[String, Seq[String]]
+
+    var classNames = em
+    var propertyNames = em
+    var packages = em
+    var searchColumns = emSeq
     lines.filterNot(_.trim.isEmpty).foreach { line =>
       if (line.startsWith("[")) {
         currentSection = line.replaceAllLiterally("[", "").replaceAllLiterally("]", "")

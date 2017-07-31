@@ -12,6 +12,7 @@ object ExportConfig {
 
   def emptyResult(k: String) = {
     val em = Map.empty[String, String]
-    Result(k, k, em, em, em, Map.empty[String, Seq[String]])
+    val emSeq = Map.empty[String, Seq[String]]
+    Result(k, k, em, em, em, emSeq)
   }
 }

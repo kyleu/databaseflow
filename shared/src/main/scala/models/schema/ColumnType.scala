@@ -8,6 +8,11 @@ sealed abstract class ColumnType(
   val requiredImport: Option[String] = None,
   val isNumeric: Boolean = false
 ) extends EnumEntry {
+  val asScalaFull = requiredImport match {
+    case Some(pkg) => pkg + "." + asScala
+    case None => asScala
+  }
+
   override def toString = key
 }
 
