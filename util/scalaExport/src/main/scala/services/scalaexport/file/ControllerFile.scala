@@ -21,9 +21,17 @@ object ControllerFile {
     file.add("@javax.inject.Singleton")
     file.add(s"class ${et.className}Controller @javax.inject.Inject() (override val app: Application) extends BaseController {", 1)
 
-    file.add(s"""def list(limit: Option[Int], offset: Option[Int] = None) = withAdminSession("${et.propertyName}.list") { implicit request =>""", 1)
-    file.add(s"""${et.className}Service.getAll(limit = limit, offset = offset).map { models =>""", 1)
-    file.add(s"""Ok($viewPkg.list${et.className}(request.identity, models))""")
+    file.add(s"""def list(q: Option[String], limit: Option[Int], offset: Option[Int] = None) = {""", 1)
+    file.add(s"""withAdminSession("${et.propertyName}.list") { implicit request =>""", 1)
+
+    file.add("val f = q match {", 1)
+    file.add(s"case Some(query) if query.nonEmpty => ${et.className}Service.search(query, None, limit.orElse(Some(100)), offset)")
+    file.add(s"case _ => ${et.className}Service.getAll(None, limit.orElse(Some(100)), offset)")
+    file.add("}", -1)
+    file.add("f.map { users =>", 1)
+    file.add(s"Ok($viewPkg.list${et.className}(request.identity, q, users, limit.getOrElse(100), offset.getOrElse(0)))")
+    file.add("}", -1)
+
     file.add("}", -1)
     file.add("}", -1)
 

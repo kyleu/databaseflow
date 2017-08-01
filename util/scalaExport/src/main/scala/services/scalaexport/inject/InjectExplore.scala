@@ -40,7 +40,7 @@ object InjectExplore {
       s.replaceAllLiterally("<!-- Other Models -->", newContent)
     }
 
-    val schemaSourceFile = rootDir / "app" / "views" / "admin" / "explore.scala.html"
+    val schemaSourceFile = rootDir / "app" / "views" / "admin" / "explore" / "explore.scala.html"
     val newContent = queryFieldsFor(schemaSourceFile.contentAsString)
     schemaSourceFile.overwrite(newContent)
 

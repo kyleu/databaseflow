@@ -18,35 +18,19 @@ object TwirlListFile {
     val searchColumns = et.config.searchColumns.getOrElse(et.propertyName, et.pkColumns.map(_.name))
 
     val listFile = TwirlFile(pkg, "list" + et.className)
-    listFile.add(s"@(user: models.user.User, modelSeq: Seq[$modelClass])(")
-    listFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
-    listFile.add(s""")@layout.admin(user, "explore", s"${et.className} List") {""", 1)
-    listFile.add("<div class=\"collection with-header\">", 1)
-    listFile.add("<div class=\"collection-header\">", 1)
-    listFile.add("<h5>", 1)
-    listFile.add(s"""<i class="fa @models.template.Icons.${et.propertyName}"></i>""")
-    listFile.add(s"""@util.NumberUtils.withCommas(modelSeq.size) ${et.className} Objects""")
-    listFile.add("</h5>", -1)
-    listFile.add("</div>", -1)
 
-    listFile.add("<div class=\"collection-item\">", 1)
-    listFile.add("<table class=\"bordered highlight\">", 1)
-    listFile.add("<thead>", 1)
+    listFile.add(s"@(user: models.user.User, q: Option[String], modelSeq: Seq[$modelClass], limit: Int, offset: Int)(", 2)
+    listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash")
+    listFile.add(s")", -2)
+    listFile.add()
+    listFile.add(s"@resultFor(model: $modelClass) = {", 1)
     listFile.add("<tr>", 1)
     searchColumns.foreach { c =>
-      listFile.add(s"<th>${ExportHelper.toClassName(c)}</th>")
-    }
-    listFile.add("</tr>", -1)
-    listFile.add("</thead>", -1)
-    listFile.add("<tbody>", 1)
-    listFile.add("@modelSeq.map { model =>", 1)
-    listFile.add("<tr>", 1)
-    val href = et.pkColumns match {
-      case Nil => ""
-      case h :: Nil => s"""@$controllerClass.view(model.${ExportHelper.toIdentifier(h.name)})"""
-      case _ => "" // todo
-    }
-    searchColumns.foreach { c =>
+      val href = et.pkColumns match {
+        case Nil => ""
+        case h :: Nil => s"""@$controllerClass.view(model.${ExportHelper.toIdentifier(h.name)})"""
+        case _ => "" // todo
+      }
       if (et.pkColumns.exists(pk => ExportHelper.toClassName(pk.name) == ExportHelper.toClassName(c))) {
         listFile.add(s"""<td><a href="$href" class="theme-text">@model.${ExportHelper.toIdentifier(c)}</a></td>""")
       } else {
@@ -54,12 +38,27 @@ object TwirlListFile {
       }
     }
     listFile.add("</tr>", -1)
-    listFile.add("}", -1)
-    listFile.add("</tbody>", -1)
-    listFile.add("</table>", -1)
-    listFile.add("</div>", -1)
-    listFile.add("</div>", -1)
-    listFile.add("}", -1)
+    listFile.add(s"}", -1)
+    listFile.add()
+
+    listFile.add("@views.html.admin.explore.list(", 1)
+    listFile.add("user = user,")
+    listFile.add(s"""model = "${et.className}",""")
+    listFile.add(s"""modelPlural = "${et.className} Models",""")
+    listFile.add(s"icon = models.template.Icons.${et.propertyName},")
+    listFile.add("cols = Seq(", 1)
+    searchColumns.foreach {
+      case c if searchColumns.lastOption.contains(c) => listFile.add(s""""$c" -> "${ExportHelper.toClassName(c)}"""")
+      case c => listFile.add(s""""$c" -> "${ExportHelper.toClassName(c)}",""")
+    }
+    listFile.add("),", -1)
+    listFile.add("rows = modelSeq.map(resultFor),")
+    listFile.add(s"nextUrl = $controllerClass.list(q, Some(limit), Some(offset + limit)),")
+    listFile.add("limit = limit,")
+    listFile.add("offset = offset,")
+    listFile.add("showSearch = true,")
+    listFile.add("q = q")
+    listFile.add(")", -1)
 
     listFile
   }
