@@ -1,5 +1,6 @@
 package services.scalaexport
 
+import better.files.File.CopyOptions
 import better.files._
 import models.scalaexport.ExportResult
 
@@ -48,13 +49,16 @@ object ExportMerge {
 
   def merge(result: ExportResult) = {
     val rootDir = s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
-    if (rootDir.exists) { rootDir.delete() }
-    rootDir.createDirectory()
+    if (rootDir.exists) {
+      result.log("Overwriting existing project..")
+    } else {
+      result.log("Creating initial project.")
+      rootDir.createDirectory()
+      getSrcDir(result).copyTo(rootDir)
+      projectNameReplacements(result.id, rootDir)
+    }
 
-    getSrcDir(result).copyTo(rootDir)
-    projectNameReplacements(result.id, rootDir)
-
-    "./tmp/scalaexport".toFile.copyTo(rootDir / "app")
+    "./tmp/scalaexport".toFile.copyTo(rootDir / "app")(CopyOptions(true))
 
     result.log("Merge complete.")
   }

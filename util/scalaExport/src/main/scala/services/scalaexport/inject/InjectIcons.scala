@@ -8,7 +8,7 @@ object InjectIcons {
   def inject(result: ExportResult, rootDir: File) = {
     def iconFieldsFor(s: String) = {
       val newContent = result.models.map(m => s"""\n  val ${ExportHelper.toIdentifier(m._2)} = "fa-folder-o"""").sorted.mkString
-      s.replaceAllLiterally("val user = \"fa-user\"", s"""val user = "fa-user"\n\n  //Model Icons$newContent""")
+      s.replaceAllLiterally("// Add additional icons here", s"\n  $newContent")
     }
 
     val iconSourceFile = rootDir / "shared" / "src" / "main" / "scala" / "models" / "template" / "Icons.scala"
