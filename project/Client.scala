@@ -1,7 +1,9 @@
 import Dependencies.Utils
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import sbtcrossproject.CrossPlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{toScalaJSGroupID => _, _}
+
 import webscalajs.ScalaJSWeb
 import sbt.Keys._
 import sbt._
@@ -13,7 +15,6 @@ object Client {
       "com.lihaoyi" %%% "scalatags" % Dependencies.ScalaJS.scalaTagsVersion
     ),
     testFrameworks += new TestFramework("utest.runner.Framework"),
-    scalaJSStage in Global := FastOptStage,
     scapegoatIgnoredFiles := Seq(".*/Messages.scala", ".*/JsonUtils.scala", ".*/JsonSerializers.scala")
   )
 
@@ -28,7 +29,6 @@ object Client {
       "com.lihaoyi" %%% "scalatags" % Dependencies.ScalaJS.scalaTagsVersion,
       "com.beachape" %%% "enumeratum" % Utils.enumeratumVersion
     ),
-    scalaJSStage in Global := FastOptStage,
     scapegoatIgnoredFiles := Seq(".*/JsonUtils.scala", ".*/JsonSerializers.scala")
   )
 

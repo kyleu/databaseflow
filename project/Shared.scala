@@ -2,11 +2,14 @@ import Dependencies._
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import webscalajs.ScalaJSWeb
 import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
+
+import sbtcrossproject.CrossPlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{toScalaJSGroupID => _, _}
+import sbtcrossproject.{crossProject, CrossType}
 
 object Shared {
   val projectId = "databaseflow"
@@ -67,7 +70,7 @@ object Shared {
     proj.aggregate(inc).dependsOn(inc)
   }
 
-  lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
+  lazy val shared = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
       "com.lihaoyi" %%% "upickle" % Serialization.uPickleVersion,
       "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion,
@@ -80,7 +83,7 @@ object Shared {
     )
   )
 
-  lazy val sharedJs = shared.js.enablePlugins(ScalaJSWeb).settings(scalaJSStage in Global := FastOptStage)
+  lazy val sharedJs = shared.js.enablePlugins(ScalaJSWeb)
 
   lazy val sharedJvm = shared.jvm
 }
