@@ -11,9 +11,11 @@ object InjectExplore {
           case Nil => s"controllers.admin.routes.${et.className}Controller"
           case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
         }
-        s"""<li><a href="@$controllerClass.list()">${et.className}</a></li>"""
-      }.sorted.mkString("\n  ")
-      s.replaceAllLiterally("<!-- Other Models -->", newContent)
+        s"""  <li><a href="@$controllerClass.list()">${et.className}</a></li>"""
+      }.sorted.mkString("\n")
+      InjectHelper.replaceBetween(
+        original = s, start = "  <!-- Start model list routes -->", end = "  <!-- End model list routes -->", newContent = newContent
+      )
     }
 
     val schemaSourceFile = rootDir / "app" / "views" / "layout" / "adminMenu.scala.html"
@@ -30,14 +32,15 @@ object InjectExplore {
           case Nil => s"controllers.admin.routes.${et.className}Controller"
           case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
         }
-        s"""
-      <li class="collection-item">
+        s"""      <li class="collection-item">
         <a class="theme-text" href="@$controllerClass.list()">${et.className} Management</a>
         <div><em>Manage the ${et.propertyName} of the system.</em></div>
-      </li>
-        """.trim()
-      }.sorted.mkString("\n      ")
-      s.replaceAllLiterally("<!-- Other Models -->", newContent)
+      </li>"""
+      }.sorted.mkString("\n")
+
+      InjectHelper.replaceBetween(
+        original = s, start = "      <!-- Start model list routes -->", end = "      <!-- End model list routes -->", newContent = newContent
+      )
     }
 
     val schemaSourceFile = rootDir / "app" / "views" / "admin" / "explore" / "explore.scala.html"

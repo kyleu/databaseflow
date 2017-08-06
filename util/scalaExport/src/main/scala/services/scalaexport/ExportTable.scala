@@ -41,11 +41,9 @@ case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
     }
   }
 
-  val pkType = t.primaryKey.map(_.columns).getOrElse(Nil).toList match {
+  val pkType = pkColumns match {
     case Nil => None
-    case h :: Nil => t.columns.find(_.name == h).map(_.columnType.asScala)
-    case cols => Some("(" + cols.flatMap(c => t.columns.find(_.name == c)).map { col =>
-      col.columnType.asScala
-    }.mkString(", ") + ")")
+    case h :: Nil => Some(h.columnType.asScala)
+    case cols => Some("(" + cols.map(_.columnType.asScala).mkString(", ") + ")")
   }
 }

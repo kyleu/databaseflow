@@ -18,18 +18,20 @@ object InjectRoutes {
 
         val et = result.getExportTable(ExportHelper.toIdentifier(m._2))
         val detail = et.pkColumns match {
-          case Nil => None
-          case h :: Nil =>
-            val hProp = ExportHelper.toIdentifier(h.name)
-            val detailUrl = ExportHelper.toIdentifier(m._2) + s"/:$hProp"
+          case Nil => Nil
+          case pkCols =>
+            val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
+            val urlArgs = pkCols.map(x => ":" + ExportHelper.toIdentifier(x.name)).mkString("/")
+
+            val detailUrl = ExportHelper.toIdentifier(m._2) + "/" + urlArgs
             val detailWhitespace = (0 until (32 - detailUrl.length)).map(_ => " ").mkString
-            Some(s"GET         /$detailUrl $detailWhitespace $controller.view($hProp: ${h.columnType.asScalaFull})")
-          case _ => None // todo
+            Seq(s"GET         /$detailUrl $detailWhitespace $controller.view($args)")
         }
 
-        (Seq(comment, list) ++ detail.toSeq).mkString("\n") + "\n\n"
+        (Seq(comment, list) ++ detail).mkString("\n") + "\n\n"
       }.mkString.stripSuffix("\n\n")
-      s.replaceAllLiterally("# Other models...", newContent)
+
+      InjectHelper.replaceBetween(original = s, start = "# Start model routes", end = "# End model routes", newContent = newContent)
     }
 
     val routesFile = rootDir / "conf" / "admin.routes"

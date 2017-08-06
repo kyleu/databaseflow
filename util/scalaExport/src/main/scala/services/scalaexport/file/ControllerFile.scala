@@ -37,16 +37,18 @@ object ControllerFile {
 
     et.pkColumns match {
       case Nil => // noop
-      case h :: Nil =>
-        val hProp = ExportHelper.toIdentifier(h.name)
+      case pkCols =>
+        val viewArgs = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
+        val getArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
+        val logArgs = pkCols.map(x => "$" + ExportHelper.toIdentifier(x.name)).mkString(", ")
+
         file.add()
-        file.add(s"""def view($hProp: ${h.columnType.asScalaFull}) = withAdminSession("${et.propertyName}.view") { implicit request =>""", 1)
-        file.add(s"""${et.className}Service.getById($hProp).map {""", 1)
+        file.add(s"""def view($viewArgs) = withAdminSession("${et.propertyName}.view") { implicit request =>""", 1)
+        file.add(s"""${et.className}Service.getById($getArgs).map {""", 1)
         file.add(s"""case Some(model) => Ok($viewPkg.view${et.className}(request.identity, model))""")
-        file.add(s"""case None => NotFound(s"No $hProp found with id [$$$hProp].")""")
+        file.add(s"""case None => NotFound(s"No ${et.className} found with $getArgs [$logArgs].")""")
         file.add("}", -1)
         file.add("}", -1)
-      case _ => // todo
     }
     file.add("}", -1)
     file

@@ -29,7 +29,9 @@ object TwirlListFile {
       val href = et.pkColumns match {
         case Nil => ""
         case h :: Nil => s"""@$controllerClass.view(model.${ExportHelper.toIdentifier(h.name)})"""
-        case _ => "" // todo
+        case cols =>
+          val args = cols.map(c => s"model.${ExportHelper.toIdentifier(c.name)}").mkString(", ")
+          s"""@$controllerClass.view($args)"""
       }
       if (et.pkColumns.exists(pk => ExportHelper.toClassName(pk.name) == ExportHelper.toClassName(c))) {
         listFile.add(s"""<td><a href="$href" class="theme-text">@model.${ExportHelper.toIdentifier(c)}</a></td>""")

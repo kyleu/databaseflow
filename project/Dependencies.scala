@@ -43,7 +43,7 @@ object Dependencies {
     val mysql = "mysql" % "mysql-connector-java" % "5.1.43" // 6.0 is all different
     val postgres = "org.postgresql" % "postgresql" % "9.4.1212"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.19.3"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.20.0"
     val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.2.1.jre8"
   }
 
@@ -97,7 +97,7 @@ object Dependencies {
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
     val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.0.0"
-    val guava = "com.google.guava" % "guava" % "22.0"
+    val guava = "com.google.guava" % "guava" % "23.0"
   }
 
   object Testing {

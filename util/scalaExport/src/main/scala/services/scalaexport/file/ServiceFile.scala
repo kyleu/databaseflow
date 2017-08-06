@@ -11,18 +11,20 @@ object ServiceFile {
     file.addImport(("services" :: "database" :: Nil).mkString("."), "Database")
     file.add(s"object ${et.className}Service {", 1)
 
+    et.pkColumns.foreach(col => col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala)))
+
     et.pkColumns match {
       case Nil => // noop
       case col :: Nil =>
-        col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala))
         val colProp = ExportHelper.toIdentifier(col.name)
         file.add(s"def getById($colProp: ${col.columnType.asScala}) = Database.query(${et.className}Queries.getById($colProp))")
         file.add(s"def getByIdSeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${et.className}Queries.getByIdSeq(${colProp}Seq))")
       case cols => // multiple columns
-        cols.foreach(col => col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala)))
-        val colTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
-        file.add(s"def getById(id: $colTyp) = Database.query(${et.className}Queries.getById(id))")
-        file.add(s"def getByIdSeq(idSeq: Seq[$colTyp]) = Database.query(${et.className}Queries.getByIdSeq(idSeq))")
+        val tupleTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
+        val colArgs = cols.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
+        val queryArgs = cols.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
+        file.add(s"def getById($colArgs) = Database.query(${et.className}Queries.getById($queryArgs))")
+        file.add(s"def getByIdSeq(idSeq: Seq[$tupleTyp]) = Database.query(${et.className}Queries.getByIdSeq(idSeq))")
     }
     file.add()
 

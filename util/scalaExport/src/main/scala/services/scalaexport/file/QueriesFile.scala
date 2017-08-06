@@ -25,15 +25,11 @@ object QueriesFile {
     file.add()
     et.pkColumns match {
       case Nil => // noop
-      case pkCol :: Nil =>
-        val name = ExportHelper.toIdentifier(pkCol.name)
-        pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
-        file.add(s"def getById($name: ${pkCol.columnType.asScala}) = GetById(Seq($name))")
-        file.add(s"""def getByIdSeq(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
-        file.add()
       case pkCols =>
-        file.add(s"def getById(id: ${et.pkType.getOrElse("String")}) = GetById(id.productIterator.toSeq)")
-        file.add(s"""def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new ColSeqQuery("??? TODO ???", idSeq)""")
+        val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
+        val seqArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
+        file.add(s"def getById($args) = GetById(Seq($seqArgs))")
+        file.add(s"""def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new SeqQuery("??? TODO ???", idSeq)""")
         file.add()
     }
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")

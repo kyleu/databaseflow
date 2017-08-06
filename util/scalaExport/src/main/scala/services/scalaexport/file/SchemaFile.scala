@@ -23,25 +23,30 @@ object SchemaFile {
   }
 
   private[this] def addObjectType(et: ExportTable, file: ScalaFile, config: ExportConfig.Result) = {
-    file.add(s"implicit lazy val ${et.propertyName}Type: ObjectType[GraphQLContext, ${et.className}] = deriveObjectType(", 1)
     val columnsDescriptions = et.t.columns.flatMap(col => col.description.map(d => s"""DocumentField("${ExportHelper.toIdentifier(col.name)}", "$d")"""))
-    et.t.description.foreach {
-      case d if columnsDescriptions.isEmpty && et.references.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
-      case d => file.add(s"""ObjectTypeDescription("$d"),""")
-    }
-    columnsDescriptions.foreach {
-      case d if columnsDescriptions.lastOption.contains(d) && et.references.isEmpty => file.add(d)
-      case d => file.add(d + ",")
-    }
-    if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
-      file.add("AddFields(", 1)
-    }
-    ReferencesHelper.writeFields(et, file)
-    ForeignKeysHelper.writeFields(et, file, config)
-    if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
+    if (columnsDescriptions.isEmpty && et.t.foreignKeys.isEmpty && et.references.isEmpty) {
+      file.add(s"implicit lazy val ${et.propertyName}Type: ObjectType[GraphQLContext, ${et.className}] = deriveObjectType()")
+    } else {
+      file.add(s"implicit lazy val ${et.propertyName}Type: ObjectType[GraphQLContext, ${et.className}] = deriveObjectType(", 1)
+      et.t.description.foreach {
+        case d if columnsDescriptions.isEmpty && et.references.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
+        case d => file.add(s"""ObjectTypeDescription("$d"),""")
+      }
+      columnsDescriptions.foreach {
+        case d if columnsDescriptions.lastOption.contains(d) && et.references.isEmpty => file.add(d)
+        case d => file.add(d + ",")
+      }
+      if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
+        file.add("AddFields(", 1)
+      }
+      ReferencesHelper.writeFields(et, file)
+      ForeignKeysHelper.writeFields(et, file, config)
+      if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
+        file.add(")", -1)
+      }
       file.add(")", -1)
     }
-    file.add(")", -1)
+
     file.add()
   }
 
