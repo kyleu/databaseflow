@@ -18,10 +18,12 @@ object SchemaRefreshService extends Logging {
     SchemaService.get(db.connectionId) match {
       case Some(schema) if activeRefreshes.isDefinedAt(db.connectionId) =>
         log.info(s"Awaiting current refresh of schema [${schema.connectionId}]: $refreshCount.")
-        activeRefreshes(db.connectionId).map { s =>
+        val f = activeRefreshes(db.connectionId).map { s =>
           onSuccess(s)
           s
         }
+        f.failed.foreach(onFailure)
+        f
       case Some(schema) =>
         val startMs = System.currentTimeMillis
         def work() = db.withConnection { conn =>
@@ -44,7 +46,13 @@ object SchemaRefreshService extends Logging {
           onSuccess(schema)
         }
 
-        val f = DatabaseWorkerPool.submitWork(work _, onSuccessMapped, onFailure)
+        def onFailureWrapped(t: Throwable) = {
+          log.warn(s"Unable to refresh schema for [${db.name}].", t)
+          activeRefreshes.remove(db.connectionId)
+          onFailure(t)
+        }
+
+        val f = DatabaseWorkerPool.submitWork(work _, onSuccessMapped, onFailureWrapped)
         activeRefreshes(db.connectionId) = f
         f
       case None => throw new IllegalStateException(s"Attempted to refresh schema [$db.connectionId], which is not loaded.")
