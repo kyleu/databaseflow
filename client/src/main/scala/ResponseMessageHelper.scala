@@ -1,11 +1,12 @@
 import models._
 import services._
 import services.query._
-import _root_.ui.modal.{RowUpdateManager, ColumnDetailManager}
+import _root_.ui.modal.{ColumnDetailManager, RowUpdateManager}
 import _root_.ui.{HistoryManager, UserManager}
-import util.{Logging, NetworkMessage}
+import scribe.Logging
+import util.NetworkMessage
 
-trait ResponseMessageHelper { this: DatabaseFlow =>
+trait ResponseMessageHelper extends Logging { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
 
     case p: Pong => NetworkMessage.latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
@@ -52,6 +53,6 @@ trait ResponseMessageHelper { this: DatabaseFlow =>
     case rur: RowUpdateResponse => RowUpdateManager.handleRowUpdateResponse(rur.pk, rur.rowsAffected, rur.errors)
 
     case se: ServerError => handleServerError(se.reason, se.content)
-    case _ => Logging.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")
+    case _ => logger.warn(s"Received unknown message of type [${rm.getClass.getSimpleName}].")
   }
 }

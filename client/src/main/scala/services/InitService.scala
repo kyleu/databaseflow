@@ -6,6 +6,7 @@ import java.util.UUID
 import models.RequestMessage
 import org.scalajs.dom
 import org.scalajs.jquery.{jQuery => $}
+import scribe.Logging
 import services.query.TransactionService
 import ui._
 import ui.editor.EditorCreationHelper
@@ -14,13 +15,13 @@ import ui.modal._
 import ui.query._
 import ui.search.SearchManager
 import ui.tabs.TabManager
-import util.{Logging, NetworkMessage, TemplateUtils}
+import util.{LogHelper, NetworkMessage, TemplateUtils}
 
 import scala.scalajs.js
 
-object InitService {
+object InitService extends Logging {
   def init(sendMessage: (RequestMessage) => Unit, connect: () => Unit): Unit = {
-    Logging.installErrorHandler()
+    LogHelper.init(debug = false)
     NetworkMessage.register(sendMessage)
     wireSideNav()
     installTimers()
@@ -44,7 +45,7 @@ object InitService {
     QueryExportFormManager.init()
     PlanNodeDetailManager.init()
     ColumnDetailManager.init()
-    Logging.debug("Database Flow has started.")
+    logger.debug("Database Flow has started.")
     connect()
   }
 
@@ -75,7 +76,7 @@ object InitService {
       case ("procedure", Some(id)) => ProcedureManager.procedureDetail(id)
       case ("sql", Some(sql)) => AdHocQueryManager.addNewQuery(initialSql = Some(URLDecoder.decode(sql, "UTF-8")))
       case (key, id) =>
-        Logging.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
+        logger.info(s"Unhandled initial message [$key:${id.getOrElse("")}].")
         AdHocQueryManager.addNewQuery()
     }
   }

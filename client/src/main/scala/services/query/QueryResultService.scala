@@ -7,15 +7,16 @@ import models.query.QueryResult.Source
 import models.template.query.QueryResultsTemplate
 import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, jQuery => $}
+import scribe.Logging
 import ui.query.{FilterManager, RowDataManager}
 import ui.ProgressManager
 import ui.tabs.TabManager
-import util.{Config, Logging, TemplateUtils}
+import util.{Config, TemplateUtils}
 
 import scala.scalajs.js
 import scala.util.Random
 
-object QueryResultService {
+object QueryResultService extends Logging {
   def handleNewQueryResults(resultId: UUID, index: Int, result: QueryResult, durationMs: Int): Unit = {
     val occurred = new scalajs.js.Date(result.occurred.toDouble)
     TransactionService.incrementCount()
@@ -80,7 +81,7 @@ object QueryResultService {
         case x => x
       }
       val newOptions = options.copy(limit = Some(limit), offset = Some(offset))
-      Logging.debug(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}] and limit [$limit].")
+      logger.debug(s"Requesting additional rows from offset [${newOptions.offset.getOrElse(0)}] and limit [$limit].")
       appendRowsLink.data("offset", offset + limit)
       appendRowsLink.hide()
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)

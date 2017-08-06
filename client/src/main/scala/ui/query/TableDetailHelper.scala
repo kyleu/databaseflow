@@ -7,10 +7,11 @@ import models.schema.{ColumnType, FilterOp, Table}
 import models.template.column.TableColumnDetailTemplate
 import models.template.tbl.{TableForeignKeyDetailTemplate, TableIndexDetailTemplate}
 import org.scalajs.jquery.{jQuery => $}
+import scribe.Logging
 import ui.modal.ColumnDetailManager
-import util.{Logging, NumberUtils}
+import util.NumberUtils
 
-trait TableDetailHelper {
+trait TableDetailHelper extends Logging {
   protected[this] def setTableDetails(uuid: UUID, table: Table) = {
     val panel = $(s"#panel-$uuid")
     if (panel.length != 1) {
@@ -57,7 +58,7 @@ trait TableDetailHelper {
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
-    Logging.debug(s"Table [${table.name}] loaded.")
+    logger.debug(s"Table [${table.name}] loaded.")
   }
 
   def forString(id: String) = id.indexOf("::") match {
@@ -75,7 +76,7 @@ trait TableDetailHelper {
         }
         RowDataOptions(filters = Seq(QueryFilter(col = filter.head, op = FilterOp.Equal, t = t, v = v)))
       } else {
-        Logging.info(s"Unable to parse filter [${filter.mkString("=")}].")
+        logger.info(s"Unable to parse filter [${filter.mkString("=")}].")
         RowDataOptions.empty
       }
       TableManager.tableDetail(name, options)

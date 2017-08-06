@@ -7,13 +7,14 @@ import models.schema.Procedure
 import models.template.Icons
 import models.template.proc.ProcedureDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
+import scribe.Logging
 import services.NotificationService
 import ui.metadata.MetadataManager
 import ui.tabs.TabManager
 import ui.{ProgressManager, WorkspaceManager}
-import util.{Logging, NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateUtils}
 
-object ProcedureManager {
+object ProcedureManager extends Logging {
   var openProcedures = Map.empty[String, UUID]
 
   def addProcedure(p: Procedure) = {
@@ -55,7 +56,7 @@ object ProcedureManager {
   }
 
   private[this] def callProcedure(queryId: UUID, procedure: Procedure) = {
-    Logging.debug(s"Calling procedure [$queryId]: " + procedure)
+    logger.debug(s"Calling procedure [$queryId]: " + procedure)
     val resultId = UUID.randomUUID
     ProgressManager.startProgress(queryId, resultId, procedure.name)
     NetworkMessage.sendMessage(CallProcedure(queryId, procedure.name, Map.empty, resultId))
@@ -71,7 +72,7 @@ object ProcedureManager {
       $(".description", panel).text(desc)
     }
 
-    Logging.debug(s"Procedure [${proc.name}] loaded.")
+    logger.debug(s"Procedure [${proc.name}] loaded.")
 
     if (proc.params.nonEmpty) {
       val section = $(".params-section", panel)

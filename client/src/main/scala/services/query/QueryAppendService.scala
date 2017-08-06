@@ -5,11 +5,11 @@ import java.util.UUID
 import models.query.QueryResult
 import models.template.results.DataTableTemplate
 import org.scalajs.jquery.{jQuery => $}
-import util.Logging
+import scribe.Logging
 
 import scala.util.Random
 
-object QueryAppendService {
+object QueryAppendService extends Logging {
   def handleAppendQueryResult(resultId: UUID, qr: QueryResult): Unit = {
     val workspace = $(s"#workspace-${qr.queryId}")
     val panel = $(s"#$resultId", workspace)
@@ -38,6 +38,6 @@ object QueryAppendService {
       additionalResults.show()
     }
 
-    Logging.debug(s"Appended [${qr.data.length}] rows to result [$resultId].")
+    logger.debug(s"Appended [${qr.data.length}] rows to result [$resultId].")
   }
 }

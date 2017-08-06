@@ -5,9 +5,10 @@ import java.util.UUID
 import models.query.SavedQuery
 import models.template.query.QueryParametersTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
+import scribe.Logging
 import util.TemplateUtils
 
-object ParameterManager extends ParameterChangeManager {
+object ParameterManager extends ParameterChangeManager with Logging {
   def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
     val keys = getKeys(sql)
     val hasChanged = forceRefresh || (activeParams.get(queryId) match {
@@ -23,7 +24,7 @@ object ParameterManager extends ParameterChangeManager {
         val v = jq.value().toString
         val orig = activeParams(queryId)
         val merged = orig.filterNot(_._1 == k) :+ ((k, t, v))
-        util.Logging.info(s"Orig: $orig / Merged: $merged")
+        logger.info(s"Orig: $orig / Merged: $merged")
         set(queryId, merged)
         val mergedSql = merge(sql, merged.map(x => SavedQuery.Param(x._1, x._3)))
         QueryCheckManager.check(queryId, mergedSql)

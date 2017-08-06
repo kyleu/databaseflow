@@ -4,12 +4,13 @@ import java.util.UUID
 
 import models.GetRowData
 import models.query.{QueryResult, RowDataOptions}
+import scribe.Logging
 import ui.ProgressManager
-import util.{Logging, NetworkMessage}
+import util.NetworkMessage
 
-object RowDataManager {
+object RowDataManager extends Logging {
   def showRowData(key: QueryResult.SourceType, queryId: UUID, name: String, options: RowDataOptions, resultId: UUID): Unit = {
-    Logging.debug(s"Showing [$key] row data for [$name] with options [$options].")
+    logger.debug(s"Showing [$key] row data for [$name] with options [$options].")
     if (options.offset.forall(_ == 0)) {
       ProgressManager.startProgress(queryId, resultId, name)
     }

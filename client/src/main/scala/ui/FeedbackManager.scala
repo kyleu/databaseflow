@@ -4,15 +4,16 @@ import java.util.UUID
 
 import models.template.{FeedbackTemplate, Icons}
 import org.scalajs.jquery.{JQueryAjaxSettings, JQueryXHR, jQuery => $}
+import scribe.Logging
 import services.NotificationService
 import ui.query.QueryManager
 import ui.tabs.TabManager
-import util.{Logging, TemplateUtils}
+import util.TemplateUtils
 
 import scala.scalajs.js
 import scalatags.Text.all._
 
-object FeedbackManager {
+object FeedbackManager extends Logging {
   private[this] val feedbackId = UUID.fromString("22222222-2222-2222-2222-222222222222")
   private[this] var isOpen = false
 
@@ -61,7 +62,7 @@ object FeedbackManager {
         }
       },
       error = { (jqXHR: JQueryXHR, textStatus: String, errorThrow: String) =>
-        Logging.info(s"Ajax Error: jqXHR=$jqXHR, text=$textStatus, err=$errorThrow")
+        logger.info(s"Ajax Error: jqXHR=$jqXHR, text=$textStatus, err=$errorThrow")
       },
       `type` = "POST"
     ).asInstanceOf[JQueryAjaxSettings])

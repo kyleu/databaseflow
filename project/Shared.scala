@@ -72,6 +72,8 @@ object Shared {
 
   lazy val shared = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
     libraryDependencies ++= Seq(
+      "com.outr" %%% "scribe" % Utils.scribeVersion,
+
       "com.lihaoyi" %%% "upickle" % Serialization.uPickleVersion,
       "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion,
 

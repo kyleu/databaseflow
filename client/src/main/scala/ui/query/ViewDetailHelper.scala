@@ -5,10 +5,10 @@ import java.util.UUID
 import models.schema.View
 import models.template.column.ViewColumnDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
+import scribe.Logging
 import ui.modal.ColumnDetailManager
-import util.Logging
 
-trait ViewDetailHelper {
+trait ViewDetailHelper extends Logging {
   protected[this] def setViewDetails(uuid: UUID, view: View) = {
     val panel = $(s"#panel-$uuid")
     if (panel.length != 1) {
@@ -36,6 +36,6 @@ trait ViewDetailHelper {
 
     scalajs.js.Dynamic.global.$(".collapsible", panel).collapsible()
 
-    Logging.debug(s"View [${view.name}] loaded.")
+    logger.debug(s"View [${view.name}] loaded.")
   }
 }

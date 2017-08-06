@@ -4,18 +4,18 @@ import java.util.UUID
 
 import models.query.QueryCheckResult
 import org.scalajs.jquery.{jQuery => $}
+import scribe.Logging
 import ui.query.{ParameterManager, SqlManager}
 import ui.tabs.TabManager
-import util.Logging
 
 import scala.scalajs.js
 
-object EditorManager {
+object EditorManager extends Logging {
   def onSave(id: UUID) = {
     val queryPanel = $(s"#panel-$id")
     val saveLink = $(".save-query-link", queryPanel)
     if (saveLink.length != 1) {
-      Logging.warn(s"Found [${queryPanel.length}] panels and [${saveLink.length}] links for query [$id].")
+      logger.warn(s"Found [${queryPanel.length}] panels and [${saveLink.length}] links for query [$id].")
     }
     saveLink.click()
   }
@@ -24,7 +24,7 @@ object EditorManager {
     val queryPanel = $(s"#panel-$id")
     val runLink = $(".run-query-link", queryPanel)
     if (runLink.length != 1) {
-      Logging.warn(s"Found [${queryPanel.length}] panels and [${runLink.length}] links for query [$id].")
+      logger.warn(s"Found [${queryPanel.length}] panels and [${runLink.length}] links for query [$id].")
     }
     runLink.click()
   }
@@ -33,7 +33,7 @@ object EditorManager {
     val queryPanel = $(s"#panel-$id")
     val runAllLink = $(".run-query-all-link", queryPanel)
     if (runAllLink.length != 1) {
-      Logging.warn(s"Found [${queryPanel.length}] panels and [${runAllLink.length}] links for query [$id].")
+      logger.warn(s"Found [${queryPanel.length}] panels and [${runAllLink.length}] links for query [$id].")
     }
     runAllLink.click()
   }

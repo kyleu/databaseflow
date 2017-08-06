@@ -2,11 +2,11 @@ package services
 
 import java.util.UUID
 
-import util.Logging
+import scribe.Logging
 
 import scala.scalajs.js
 
-object NavigationService {
+object NavigationService extends Logging {
   private[this] lazy val loc = org.scalajs.dom.document.location
 
   lazy val connectionId = {
@@ -35,7 +35,7 @@ object NavigationService {
     case x if x.startsWith("procedure-") => "procedure" -> Some(x.substring(10))
     case x if x.startsWith("sql-") => "sql" -> Some(x.substring(4))
     case x =>
-      Logging.warn(s"Unhandled initial action [$x].")
+      logger.warn(s"Unhandled initial action [$x].")
       "new" -> None
   }
 }
