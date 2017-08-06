@@ -28,7 +28,6 @@ object TwirlListFile {
     searchColumns.foreach { c =>
       val href = et.pkColumns match {
         case Nil => ""
-        case h :: Nil => s"""@$controllerClass.view(model.${ExportHelper.toIdentifier(h.name)})"""
         case cols =>
           val args = cols.map(c => s"model.${ExportHelper.toIdentifier(c.name)}").mkString(", ")
           s"""@$controllerClass.view($args)"""

@@ -1,6 +1,8 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
+import models.schema.ColumnType
+import services.scalaexport.inject.InjectSearchParams
 import services.scalaexport.{ExportHelper, ExportTable}
 
 object ServiceFile {
@@ -19,6 +21,17 @@ object ServiceFile {
         val colProp = ExportHelper.toIdentifier(col.name)
         file.add(s"def getById($colProp: ${col.columnType.asScala}) = Database.query(${et.className}Queries.getById($colProp))")
         file.add(s"def getByIdSeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${et.className}Queries.getByIdSeq(${colProp}Seq))")
+
+        col.columnType match {
+          case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(
+            pkg = et.pkg, className = et.className, pkColumns = Seq(col.name -> col.columnType.asScalaFull)
+          ).toString)
+          case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(
+            pkg = et.pkg, className = et.className, pkColumns = Seq(col.name -> col.columnType.asScalaFull)
+          ).toString)
+          case _ => // noop
+        }
+
       case cols => // multiple columns
         val tupleTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
         val colArgs = cols.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
@@ -27,6 +40,10 @@ object ServiceFile {
         file.add(s"def getByIdSeq(idSeq: Seq[$tupleTyp]) = Database.query(${et.className}Queries.getByIdSeq(idSeq))")
     }
     file.add()
+
+    file.addMarker("string-search", InjectSearchParams(
+      pkg = et.pkg, className = et.className, pkColumns = et.pkColumns.map(c => c.name -> c.columnType.asScalaFull)
+    ).toString)
 
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = {", 1)
     file.add(s"Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
@@ -39,6 +56,8 @@ object ServiceFile {
     file.add(s"def search(${ExportHelper.searchArgs}) = {", 1)
     file.add(s"Database.query(${et.className}Queries.search(q, orderBy, limit, offset))")
     file.add("}", -1)
+    file.add()
+    file.add(s"""def searchExact(${ExportHelper.searchArgs}) = Database.query(${et.className}Queries.searchExact(q, orderBy, limit, offset))""")
     file.add()
     file.add(s"def insert(model: ${et.className}) = Database.execute(${et.className}Queries.insert(model))")
 

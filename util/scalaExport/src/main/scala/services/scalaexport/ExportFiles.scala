@@ -34,7 +34,8 @@ object ExportFiles {
 
     val tl = TwirlListFile.export(et)
     val tv = TwirlViewFile.export(et)
+    val tsr = TwirlSearchResultFile.export(et)
 
-    et -> Seq(cls, queries, svc, sch, cntr, tl, tv)
+    et -> Seq(cls, queries, svc, sch, cntr, tl, tv, tsr)
   }
 }

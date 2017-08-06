@@ -25,11 +25,21 @@ object QueriesFile {
     file.add()
     et.pkColumns match {
       case Nil => // noop
+      case pkCol :: Nil =>
+        val name = ExportHelper.toIdentifier(pkCol.name)
+        pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
+        file.add(s"def getById($name: ${pkCol.columnType.asScala}) = GetById(Seq($name))")
+        file.add(s"""def getByIdSeq(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
+        file.add()
       case pkCols =>
         val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
         val seqArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
         file.add(s"def getById($args) = GetById(Seq($seqArgs))")
-        file.add(s"""def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new SeqQuery("??? TODO ???", idSeq)""")
+        val whereClause = s"""s"where (?)""""
+        file.add(s"def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new SeqQuery(", 1)
+        file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkCols.map(c => s"""\\"${c.name}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
+        file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
+        file.add(")", -1)
         file.add()
     }
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")
@@ -37,8 +47,10 @@ object QueriesFile {
 
     ForeignKeysHelper.writeQueries(et, file)
 
-    file.add(s"def search(${ExportHelper.searchArgs}) = Search(q, orderBy, limit, offset)")
     file.add("def searchCount(q: String) = SearchCount(q)")
+    file.add(s"def search(${ExportHelper.searchArgs}) = Search(q, orderBy, limit, offset)")
+    file.add()
+    file.add(s"def searchExact(${ExportHelper.searchArgs}) = SearchExact(q, orderBy, limit, offset)")
     file.add()
 
     file.add(s"def insert(model: ${et.className}) = Insert(model)")
