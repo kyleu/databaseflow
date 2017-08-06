@@ -1,12 +1,11 @@
 import models.{Ping, RequestMessage}
-import scribe.Logging
 import services.{NavigationService, NotificationService}
 import ui.modal.ReconnectManager
 import util.{JsonSerializers, NetworkMessage, NetworkSocket}
 
 import scala.scalajs.js.timers._
 
-trait NetworkHelper extends Logging { this: DatabaseFlow =>
+trait NetworkHelper { this: DatabaseFlow =>
   private[this] val socket = new NetworkSocket(onSocketConnect _, onSocketMessage, onSocketError, onSocketClose _)
 
   protected[this] var latencyMs: Option[Int] = None

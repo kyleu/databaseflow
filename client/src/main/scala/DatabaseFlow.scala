@@ -1,13 +1,16 @@
 import org.scalajs.jquery.{jQuery => $}
+import scribe.Logging
 import services.{InitService, NotificationService}
 
 import scala.scalajs.js.annotation.JSExportTopLevel
 
 @JSExportTopLevel(name = "DatabaseFlow")
-class DatabaseFlow extends NetworkHelper with ResponseMessageHelper {
+class DatabaseFlow extends Logging with NetworkHelper with ResponseMessageHelper {
   val debug = true
 
   InitService.init(sendMessage, connect _)
+
+  logger.info("Database Flow has started.")
 
   protected[this] def handleServerError(reason: String, content: String) = {
     val lp = $("#loading-panel")

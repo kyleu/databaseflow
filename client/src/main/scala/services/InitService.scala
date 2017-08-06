@@ -45,7 +45,6 @@ object InitService extends Logging {
     QueryExportFormManager.init()
     PlanNodeDetailManager.init()
     ColumnDetailManager.init()
-    logger.debug("Database Flow has started.")
     connect()
   }
 

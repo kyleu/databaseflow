@@ -3,10 +3,9 @@ import services._
 import services.query._
 import _root_.ui.modal.{ColumnDetailManager, RowUpdateManager}
 import _root_.ui.{HistoryManager, UserManager}
-import scribe.Logging
 import util.NetworkMessage
 
-trait ResponseMessageHelper extends Logging { this: DatabaseFlow =>
+trait ResponseMessageHelper { this: DatabaseFlow =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
 
     case p: Pong => NetworkMessage.latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)
