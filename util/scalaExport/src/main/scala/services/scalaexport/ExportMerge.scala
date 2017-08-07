@@ -47,10 +47,9 @@ object ExportMerge {
     dir
   }
 
-  def merge(result: ExportResult) = {
-    val rootDir = s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
+  def merge(result: ExportResult, rootDir: File) = {
     if (rootDir.exists) {
-      result.log("Overwriting existing project..")
+      result.log("Overwriting existing project.")
     } else {
       result.log("Creating initial project.")
       rootDir.createDirectory()

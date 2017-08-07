@@ -17,6 +17,7 @@ object ExportConfigReader {
   private[this] def loadConfig(key: String, lines: Iterator[String]) = {
     var currentSection = "unknown"
     var projectName = key
+    var projectLocation: Option[String] = None
 
     val em = Map.empty[String, String]
     val emSeq = Map.empty[String, Seq[String]]
@@ -38,6 +39,7 @@ object ExportConfigReader {
         currentSection match {
           case "project" => prop._1 match {
             case "name" => projectName = prop._2
+            case "location" => projectLocation = Some(prop._2)
             case _ => throw new IllegalStateException(s"Unhandled project key [${prop._1}].")
           }
           case "classnames" => classNames += prop
@@ -51,6 +53,6 @@ object ExportConfigReader {
       }
     }
 
-    Result(key, projectName, classNames, propertyNames, packages, searchColumns)
+    Result(key, projectName, projectLocation, classNames, propertyNames, packages, searchColumns)
   }
 }

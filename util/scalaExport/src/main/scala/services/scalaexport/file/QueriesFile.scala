@@ -32,10 +32,10 @@ object QueriesFile {
         file.add(s"""def getByIdSeq(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
         file.add()
       case pkCols =>
+        pkCols.foreach(pkCol => pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala)))
         val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
         val seqArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
         file.add(s"def getById($args) = GetById(Seq($seqArgs))")
-        val whereClause = s"""s"where (?)""""
         file.add(s"def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new SeqQuery(", 1)
         file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkCols.map(c => s"""\\"${c.name}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")

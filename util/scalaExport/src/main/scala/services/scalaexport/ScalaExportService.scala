@@ -1,5 +1,6 @@
 package services.scalaexport
 
+import better.files._
 import models.scalaexport.ExportResult
 import models.schema.Schema
 import services.scalaexport.config.ExportConfigReader
@@ -14,8 +15,19 @@ case class ScalaExportService(schema: Schema) {
     export(config.projectName, schema).map { result =>
       val injected = if (persist) {
         ExportFiles.persist(result)
-        ExportMerge.merge(result)
-        ExportInject.inject(result)
+
+        val rootDir = config.projectLocation match {
+          case Some(l) =>
+            val f = l.toFile
+            if (!f.exists) {
+              throw new IllegalStateException(s"Project location [${f.pathAsString}] does not exist.")
+            }
+            f
+          case None => s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
+        }
+
+        ExportMerge.merge(result, rootDir)
+        ExportInject.inject(result, rootDir)
       } else {
         Nil
       }

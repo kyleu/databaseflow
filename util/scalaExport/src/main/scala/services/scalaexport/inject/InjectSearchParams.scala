@@ -4,13 +4,13 @@ import services.scalaexport.ExportHelper
 
 object InjectSearchParams {
   def fromString(s: String) = s.split('/').toList match {
-    case pkg :: className :: Nil => InjectSearchParams(pkg = pkg.split('.').toList, className = className, pkColumns = Nil)
+    case pkg :: className :: Nil => InjectSearchParams(pkg = pkg.split('.').toList.filter(_.trim.nonEmpty), className = className, pkColumns = Nil)
     case pkg :: className :: pkColumns :: Nil =>
       val pkCols = pkColumns.split(',').map(_.split(':').toList match {
         case name :: t :: Nil => name -> t
         case x => throw new IllegalStateException(s"Unhandled pkCol [$x].")
       })
-      InjectSearchParams(pkg = pkg.split('.').toList, className = className, pkColumns = pkCols)
+      InjectSearchParams(pkg = pkg.split('.').toList.filter(_.trim.nonEmpty), className = className, pkColumns = pkCols)
     case _ => throw new IllegalStateException(s"Cannot parse search params from [$s].")
   }
 }

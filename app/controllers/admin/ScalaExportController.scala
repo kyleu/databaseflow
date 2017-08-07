@@ -33,6 +33,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     }.toMap
 
     val projectName = form("projectName")
+    val projectLocation = Some(form("projectLocation")).filter(_.trim.nonEmpty)
     val classNames = formKeyToMap("classNames")
     val propertyNames = formKeyToMap("propertyNames")
     val packages = formKeyToMap("packages")
@@ -42,7 +43,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
       case Some(cs) => SchemaService.getSchemaWithDetails(cs).flatMap { schema =>
         val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
 
-        val result = ExportConfig.Result(schemaId, projectName, classNames, propertyNames, packages, searchColumns)
+        val result = ExportConfig.Result(schemaId, projectName, projectLocation, classNames, propertyNames, packages, searchColumns)
         ExportConfigWriter.write(result)
 
         ScalaExportService(schema).test(persist = true).map { result =>

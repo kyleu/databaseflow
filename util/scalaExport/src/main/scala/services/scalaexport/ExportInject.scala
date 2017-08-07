@@ -5,9 +5,7 @@ import models.scalaexport.ExportResult
 import services.scalaexport.inject._
 
 object ExportInject {
-  def inject(result: ExportResult) = {
-    val rootDir = s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
-
+  def inject(result: ExportResult, rootDir: File) = {
     val s = InjectSchema.inject(result, rootDir)
     val i = InjectIcons.inject(result, rootDir)
     val r = InjectRoutes.inject(result, rootDir)

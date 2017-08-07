@@ -23,6 +23,10 @@
             <input name="projectName" value="@cfg.projectName" />
           </li>
           <li class="collection-item">
+            <div>Project Location</div>
+            <input name="projectLocation" value="@cfg.projectLocation" placeholder="Leave empty to clone Boilerplay" />
+          </li>
+          <li class="collection-item">
             <div>Class Names</div>
             <textarea name="classNames">@cfg.classNames.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
           </li>

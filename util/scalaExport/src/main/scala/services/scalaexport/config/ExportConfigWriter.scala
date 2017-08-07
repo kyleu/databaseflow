@@ -9,12 +9,13 @@ object ExportConfigWriter {
     val fileContents = new StringBuilder()
     def log(s: String = "") = fileContents.append(s + "\n")
 
+    log("# Project settings")
+    log("[project]")
     if (result.projectName.trim.nonEmpty) {
-      log("# Project settings")
-      log("[project]")
       log(s"name = ${result.projectName}")
       log()
     }
+    result.projectLocation.foreach(l => log(s"location = $l"))
 
     if (result.classNames.nonEmpty) {
       log("# Transforms names of generated classes.")
