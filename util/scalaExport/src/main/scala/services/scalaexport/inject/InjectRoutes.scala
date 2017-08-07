@@ -13,7 +13,7 @@ object InjectRoutes {
         val comment = s"# ${ExportHelper.toClassName(m._2)} Routes"
 
         val listUrl = ExportHelper.toIdentifier(m._2)
-        val listWs = (0 until (32 - listUrl.length)).map(_ => " ").mkString
+        val listWs = (0 until (40 - listUrl.length)).map(_ => " ").mkString
         val list = s"GET         /$listUrl $listWs $controller.list(q: Option[String] ?= None, limit: Option[Int] ?= None, offset: Option[Int] ?= None)"
 
         val et = result.getExportTable(ExportHelper.toIdentifier(m._2))
@@ -24,7 +24,7 @@ object InjectRoutes {
             val urlArgs = pkCols.map(x => ":" + ExportHelper.toIdentifier(x.name)).mkString("/")
 
             val detailUrl = ExportHelper.toIdentifier(m._2) + "/" + urlArgs
-            val detailWhitespace = (0 until (32 - detailUrl.length)).map(_ => " ").mkString
+            val detailWhitespace = (0 until (40 - detailUrl.length)).map(_ => " ").mkString
             Seq(s"GET         /$detailUrl $detailWhitespace $controller.view($args)")
         }
 

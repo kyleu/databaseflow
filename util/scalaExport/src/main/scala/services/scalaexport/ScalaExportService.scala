@@ -17,12 +17,7 @@ case class ScalaExportService(schema: Schema) {
         ExportFiles.persist(result)
 
         val rootDir = config.projectLocation match {
-          case Some(l) =>
-            val f = l.toFile
-            if (!f.exists) {
-              throw new IllegalStateException(s"Project location [${f.pathAsString}] does not exist.")
-            }
-            f
+          case Some(l) => l.toFile
           case None => s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
         }
 
@@ -36,7 +31,8 @@ case class ScalaExportService(schema: Schema) {
   }
 
   def export(projectId: String, schema: Schema) = {
-    val exportTables = schema.tables.map(t => ExportTable(t, config, schema))
+    val filteredTables = schema.tables.filterNot(t => config.ignored.contains(ExportHelper.toIdentifier(t.name)))
+    val exportTables = filteredTables.map(t => ExportTable(t, config, schema))
     val tables = exportTables.map(t => ExportFiles.exportTable(schema, t, config))
 
     Future.successful(ExportResult(projectId, tables.map(_._1), tables.flatMap(t => t._2)))

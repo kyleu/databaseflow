@@ -1,7 +1,7 @@
 package services.scalaexport
 
 import better.files._
-import models.scalaexport.ExportResult
+import models.scalaexport.{ExportResult, OutputFile}
 import models.schema.Schema
 import services.scalaexport.config.ExportConfig
 import services.scalaexport.file._
@@ -25,7 +25,7 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportTable(s: Schema, et: ExportTable, result: ExportConfig.Result) = {
+  def exportTable(s: Schema, et: ExportTable, result: ExportConfig.Result): (ExportTable, Seq[OutputFile]) = {
     val cls = ModelFile.export(et)
     val queries = QueriesFile.export(et)
     val svc = ServiceFile.export(et)

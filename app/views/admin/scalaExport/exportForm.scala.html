@@ -27,8 +27,16 @@
             <input name="projectLocation" value="@cfg.projectLocation" placeholder="Leave empty to clone Boilerplay" />
           </li>
           <li class="collection-item">
+            <div>Ignored Classes</div>
+            <textarea name="ignored">@cfg.ignored.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
+          </li>
+          <li class="collection-item">
             <div>Class Names</div>
             <textarea name="classNames">@cfg.classNames.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
+          </li>
+          <li class="collection-item">
+            <div>Extends Models</div>
+            <textarea name="extendModels">@cfg.extendModels.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
           </li>
           <li class="collection-item">
             <div>Property Names</div>

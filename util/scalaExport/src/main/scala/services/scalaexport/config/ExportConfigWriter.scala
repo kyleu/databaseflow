@@ -13,14 +13,30 @@ object ExportConfigWriter {
     log("[project]")
     if (result.projectName.trim.nonEmpty) {
       log(s"name = ${result.projectName}")
-      log()
     }
     result.projectLocation.foreach(l => log(s"location = $l"))
+    log()
 
+    if (result.ignored.nonEmpty) {
+      log("# Ignores all files for tables set to \"true\".")
+      log("[ignored]")
+      result.ignored.map { c =>
+        log(s"${c._1} = ${c._2}")
+      }
+      log()
+    }
     if (result.classNames.nonEmpty) {
       log("# Transforms names of generated classes.")
       log("[classnames]")
       result.classNames.map { c =>
+        log(s"${c._1} = ${c._2}")
+      }
+      log()
+    }
+    if (result.extendModels.nonEmpty) {
+      log("# Makes models extend a provided class.")
+      log("[extendmodels]")
+      result.extendModels.map { c =>
         log(s"${c._1} = ${c._2}")
       }
       log()

@@ -8,6 +8,7 @@ object ModelFile {
   def export(et: ExportTable) = {
     val file = ScalaFile("models" +: et.pkg, et.className)
     et.t.description.foreach(d => file.add(s"/** $d */"))
+
     file.add(s"case class ${et.className}(", 1)
     et.t.columns.foreach { col =>
       col.columnType.requiredImport.foreach(p => file.addImport(p, col.columnType.asScala))
@@ -28,7 +29,10 @@ object ModelFile {
       col.description.foreach(d => file.add("/** " + d + " */"))
       file.add(propDecl + comma)
     }
-    file.add(")", -1)
+    et.config.extendModels.get(et.propertyName) match {
+      case Some(x) => file.add(") extends " + x, -1)
+      case None => file.add(")", -1)
+    }
     file
   }
 }

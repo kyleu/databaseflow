@@ -19,7 +19,7 @@ object InjectSearch {
           "    }"
       }
       val uuidFutures = uuidModels.map(_.identifier + "F")
-      val newContent = uuidFields.sorted.mkString("\n") + s"\n\n    val uuidSearches = Seq(${uuidFutures.mkString(", ")})"
+      val newContent = uuidFields.sorted.mkString("\n") + s"\n\n    val uuidSearches = Seq[Future[Seq[Html]]](${uuidFutures.mkString(", ")})"
       InjectHelper.replaceBetween(original = s, start = "    // Start uuid searches", end = "    // End uuid searches", newContent = newContent)
     }
 
@@ -32,7 +32,7 @@ object InjectSearch {
           "    }"
       }
       val intFutures = intModels.map(_.identifier + "F")
-      val newContent = intFields.sorted.mkString("\n") + s"\n\n    val intSearches = Seq(${intFutures.mkString(", ")})"
+      val newContent = intFields.sorted.mkString("\n") + s"\n\n    val intSearches = Seq[Future[Seq[Html]]](${intFutures.mkString(", ")})"
       InjectHelper.replaceBetween(original = s, start = "    // Start int searches", end = "    // End int searches", newContent = newContent)
     }
 
@@ -45,7 +45,7 @@ object InjectSearch {
           "    }"
       }
       val stringFutures = stringModels.map(_.identifier + "F")
-      val newContent = stringFields.sorted.mkString("\n") + s"\n\n    val stringSearches = Seq(${stringFutures.mkString(", ")})"
+      val newContent = stringFields.sorted.mkString("\n") + s"\n\n    val stringSearches = Seq[Future[Seq[Html]]](${stringFutures.mkString(", ")})"
       InjectHelper.replaceBetween(original = s, start = "    // Start string searches", end = "    // End string searches", newContent = newContent)
     }
 
