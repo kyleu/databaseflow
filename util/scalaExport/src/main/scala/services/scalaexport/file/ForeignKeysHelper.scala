@@ -69,7 +69,7 @@ object ForeignKeysHelper {
           val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           val typ = col.columnType.asScala
           col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, typ))
-          val tgtClass = ExportHelper.toClassName(targetTable.name)
+          val tgtClass = ExportHelper.toClassName(config.classNames.getOrElse(ExportHelper.toIdentifier(targetTable.name), targetTable.name))
           val tgtProp = ExportHelper.toIdentifier(tgtClass)
           val srcProp = ExportHelper.toIdentifier(h.source)
           val p = ExportHelper.toIdentifier(fk.targetTable)

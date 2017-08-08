@@ -8,7 +8,7 @@ import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
 
 import sbtcrossproject.CrossPlugin.autoImport._
-import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{toScalaJSGroupID => _, _}
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{ JSCrossProjectOps, JSPlatform}
 import sbtcrossproject.{crossProject, CrossType}
 
 object Shared {

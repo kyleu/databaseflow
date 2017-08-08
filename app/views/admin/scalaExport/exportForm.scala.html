@@ -1,7 +1,9 @@
 @import services.scalaexport.config.ExportConfig
 @(cs: models.connection.ConnectionSettings, schema: models.schema.Schema, cfg: ExportConfig.Result)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
-)@layout.simple(user = None, title = s"${cfg.projectName} Scala Export") {
+)
+
+@layout.simple(user = None, title = s"${cfg.projectName} Scala Export") {
   <style>
     textarea {
       min-height: 120px;
@@ -27,8 +29,8 @@
             <input name="projectLocation" value="@cfg.projectLocation" placeholder="Leave empty to clone Boilerplay" />
           </li>
           <li class="collection-item">
-            <div>Ignored Classes</div>
-            <textarea name="ignored">@cfg.ignored.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
+            <div>Provided Classes</div>
+            <textarea name="provided">@cfg.provided.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
           </li>
           <li class="collection-item">
             <div>Class Names</div>

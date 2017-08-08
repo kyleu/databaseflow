@@ -2,16 +2,19 @@ package services.scalaexport.inject
 
 import better.files.File
 import models.scalaexport.ExportResult
+import services.scalaexport.ExportHelper
 
 object InjectSchema {
   def inject(result: ExportResult, rootDir: File) = {
+    val models = result.models.filterNot(m => result.config.provided.contains(ExportHelper.toIdentifier(m._2)))
+
     def queryFieldsFor(s: String) = {
-      val newContent = result.models.map(m => s"    models.${(m._1 :+ m._2).mkString(".")}Schema.queryFields").sorted.mkString(" ++\n  ")
+      val newContent = models.map(m => s"    models.${(m._1 :+ m._2).mkString(".")}Schema.queryFields").sorted.mkString(" ++\n  ")
       InjectHelper.replaceBetween(original = s, start = "    // Start model query fields", end = s"    // End model query fields", newContent = newContent)
     }
 
     def mutationFieldsFor(s: String) = {
-      val newContent = result.models.map(m => s" ++\n    models.${(m._1 :+ m._2).mkString(".")}Schema.mutationFields").sorted.mkString
+      val newContent = models.map(m => s" ++\n    models.${(m._1 :+ m._2).mkString(".")}Schema.mutationFields").sorted.mkString
       InjectHelper.replaceBetween(original = s, start = "    // Start model mutation fields", end = s"    // End model mutation fields", newContent = newContent)
     }
 

@@ -5,7 +5,7 @@ object ExportConfig {
       key: String,
       projectName: String,
       projectLocation: Option[String],
-      ignored: Map[String, String],
+      provided: Map[String, String],
       classNames: Map[String, String],
       extendModels: Map[String, String],
       propertyNames: Map[String, String],
@@ -13,7 +13,7 @@ object ExportConfig {
       searchColumns: Map[String, Seq[String]]
   ) {
     def withDefaults = copy(
-      ignored = Map() ++ ignored,
+      provided = Map() ++ provided,
       classNames = Map("users" -> "User") ++ classNames,
       extendModels = Map("user" -> "com.mohiva.play.silhouette.api.Identity") ++ extendModels,
       propertyNames = Map() ++ propertyNames,

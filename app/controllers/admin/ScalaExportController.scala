@@ -27,6 +27,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
     def formKeyToMap(key: String) = form(key).split('\n').map(_.trim).filter(_.nonEmpty).map { s =>
       s.split('=').map(_.trim).filter(_.nonEmpty).toList match {
+        case one :: Nil => one -> "true"
         case one :: two :: Nil => one -> two
         case x => throw new IllegalStateException(s"Invalid line [$x].")
       }
@@ -34,7 +35,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
     val projectName = form("projectName")
     val projectLocation = Some(form("projectLocation")).filter(_.trim.nonEmpty)
-    val ignored = formKeyToMap("ignored")
+    val provided = formKeyToMap("provided")
     val classNames = formKeyToMap("classNames")
     val extendModels = formKeyToMap("extendModels")
     val propertyNames = formKeyToMap("propertyNames")
@@ -46,7 +47,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
 
         val result = ExportConfig.Result(
-          schemaId, projectName, projectLocation, ignored, classNames, extendModels, propertyNames, packages, searchColumns
+          schemaId, projectName, projectLocation, provided, classNames, extendModels, propertyNames, packages, searchColumns
         ).withDefaults
         ExportConfigWriter.write(result)
 

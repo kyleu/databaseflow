@@ -14,7 +14,7 @@ object InjectSearch {
       val uuidModels = result.getMarkers("uuid-search").map(InjectSearchParams.fromString)
 
       val uuidFields = uuidModels.map { m =>
-        s"    val ${m.identifier}F = ${m.serviceClass}.getById(id).map { modelOpt =>\n" ++
+        s"    val ${m.identifier}F = ${m.serviceClass}.getById(id).map { modelOpt =>\n" +
           s"      modelOpt.map(model => ${m.viewClass}(model, ${m.message})).toSeq\n" +
           "    }"
       }

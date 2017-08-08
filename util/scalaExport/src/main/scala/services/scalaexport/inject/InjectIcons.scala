@@ -7,8 +7,15 @@ import services.scalaexport.ExportHelper
 object InjectIcons {
   def inject(result: ExportResult, rootDir: File) = {
     def iconFieldsFor(s: String) = {
-      val newContent = result.models.map(m => s"""  val ${ExportHelper.toIdentifier(m._2)} = "fa-folder-o"""").sorted.mkString("\n")
-      InjectHelper.replaceBetween(original = s, start = "  // Start model icons", end = "  // End model icons", newContent = newContent)
+      val startString = "  // Start model icons"
+      val startIndex = s.indexOf(startString)
+      val newContent = result.models.flatMap { m =>
+        s.indexOf(ExportHelper.toIdentifier(m._2)) match {
+          case x if x > -1 && x < startIndex => None
+          case _ => Some(s"""  val ${ExportHelper.toIdentifier(m._2)} = "fa-folder-o"""")
+        }
+      }.sorted.mkString("\n")
+      InjectHelper.replaceBetween(original = s, start = startString, end = "  // End model icons", newContent = newContent)
     }
 
     val iconSourceFile = rootDir / "shared" / "src" / "main" / "scala" / "models" / "template" / "Icons.scala"

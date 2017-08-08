@@ -17,10 +17,10 @@ object ExportConfigWriter {
     result.projectLocation.foreach(l => log(s"location = $l"))
     log()
 
-    if (result.ignored.nonEmpty) {
-      log("# Ignores all files for tables set to \"true\".")
-      log("[ignored]")
-      result.ignored.map { c =>
+    if (result.provided.nonEmpty) {
+      log("# Ignores most files for provided tables.")
+      log("[provided]")
+      result.provided.map { c =>
         log(s"${c._1} = ${c._2}")
       }
       log()

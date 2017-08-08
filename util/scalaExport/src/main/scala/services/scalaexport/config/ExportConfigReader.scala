@@ -46,7 +46,7 @@ object ExportConfigReader {
             case "location" => projectLocation = Some(prop._2)
             case _ => throw new IllegalStateException(s"Unhandled project key [${prop._1}].")
           }
-          case "ignored" => ignored += prop
+          case "provided" => ignored += prop
           case "classnames" => classNames += prop
           case "extendmodels" => extendModels += prop
           case "propertynames" => propertyNames += prop

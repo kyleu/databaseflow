@@ -26,16 +26,20 @@ object ExportFiles {
   }
 
   def exportTable(s: Schema, et: ExportTable, result: ExportConfig.Result): (ExportTable, Seq[OutputFile]) = {
-    val cls = ModelFile.export(et)
-    val queries = QueriesFile.export(et)
-    val svc = ServiceFile.export(et)
-    val sch = SchemaFile.export(et, result)
-    val cntr = ControllerFile.export(et)
+    if (et.config.provided.contains(et.propertyName)) {
+      et -> Seq.empty
+    } else {
+      val cls = ModelFile.export(et)
+      val queries = QueriesFile.export(et)
+      val svc = ServiceFile.export(et)
+      val sch = SchemaFile.export(et, result)
+      val cntr = ControllerFile.export(et)
 
-    val tl = TwirlListFile.export(et)
-    val tv = TwirlViewFile.export(et)
-    val tsr = TwirlSearchResultFile.export(et)
+      val tl = TwirlListFile.export(et)
+      val tv = TwirlViewFile.export(et)
+      val tsr = TwirlSearchResultFile.export(et)
 
-    et -> Seq(cls, queries, svc, sch, cntr, tl, tv, tsr)
+      et -> Seq(cls, queries, svc, sch, cntr, tl, tv, tsr)
+    }
   }
 }
