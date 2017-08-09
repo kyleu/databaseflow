@@ -11,8 +11,9 @@ object ExportConfigReader {
       loadConfig(key, f.lineIterator)
     } else {
       val em = Map.empty[String, String]
-      val emSeq = Map.empty[String, Seq[(String, String)]]
-      Result(key, key, None, em, em, em, em, em, em, emSeq).withDefaults
+      val emPair = Map.empty[String, (String, String)]
+      val emSeqPair = Map.empty[String, Seq[(String, String)]]
+      Result(key, key, None, em, em, em, em, em, emPair, emSeqPair).withDefaults
     }
   }
 
@@ -25,10 +26,10 @@ object ExportConfigReader {
 
     var ignored = em
     var classNames = em
-    var plurals = em
     var extendModels = em
     var propertyNames = em
     var packages = em
+    var titles = Map.empty[String, (String, String)]
     var searchColumns = Map.empty[String, Seq[(String, String)]]
     lines.filterNot(_.trim.isEmpty).foreach { line =>
       if (line.startsWith("[")) {
@@ -48,7 +49,13 @@ object ExportConfigReader {
           }
           case "provided" => ignored += prop
           case "classnames" => classNames += prop
-          case "plurals" => plurals += prop
+          case "titles" =>
+            val idx = prop._2.indexOf(':')
+            val v = idx match {
+              case -1 => prop._2 -> (prop._2 + "s")
+              case _ => prop._2.substring(0, idx) -> prop._2.substring(idx + 1)
+            }
+            titles += (prop._1 -> v)
           case "extendmodels" => extendModels += prop
           case "propertynames" => propertyNames += prop
           case "packages" => packages += prop
@@ -67,6 +74,6 @@ object ExportConfigReader {
       }
     }
 
-    Result(key, projectName, projectLocation, ignored, classNames, plurals, extendModels, propertyNames, packages, searchColumns).withDefaults
+    Result(key, projectName, projectLocation, ignored, classNames, extendModels, propertyNames, packages, titles, searchColumns).withDefaults
   }
 }

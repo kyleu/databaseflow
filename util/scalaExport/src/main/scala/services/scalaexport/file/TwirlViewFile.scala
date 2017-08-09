@@ -15,14 +15,14 @@ object TwirlViewFile {
     viewFile.add(s"@(user: models.user.User, model: $modelClass)(")
     viewFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
     val toInterp = et.pkColumns.map(c => "${model." + ExportHelper.toIdentifier(c.name) + "}").mkString(", ")
-    viewFile.add(s""")@layout.admin(user, "explore", s"${et.className} [$toInterp]") {""", 1)
+    viewFile.add(s""")@layout.admin(user, "explore", s"${et.title} [$toInterp]") {""", 1)
 
     viewFile.add("""<div class="collection with-header">""", 1)
     viewFile.add("<div class=\"collection-header\">", 1)
     viewFile.add("<h5>", 1)
     viewFile.add(s"""<i class="fa @models.template.Icons.${et.propertyName}"></i>""")
     val toTwirl = et.pkColumns.map(c => "@model." + ExportHelper.toIdentifier(c.name)).mkString(", ")
-    viewFile.add(s"""${et.className} [$toTwirl]""")
+    viewFile.add(s"""${et.title} [$toTwirl]""")
     viewFile.add("</h5>", -1)
     viewFile.add("</div>", -1)
 

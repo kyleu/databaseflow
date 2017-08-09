@@ -37,10 +37,16 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     val projectLocation = Some(form("projectLocation")).filter(_.trim.nonEmpty)
     val provided = formKeyToMap("provided")
     val classNames = formKeyToMap("classNames")
-    val plurals = formKeyToMap("plurals")
     val extendModels = formKeyToMap("extendModels")
     val propertyNames = formKeyToMap("propertyNames")
     val packages = formKeyToMap("packages")
+    val titles = formKeyToMap("titles").mapValues { v =>
+      val idx = v.indexOf(':')
+      idx match {
+        case -1 => v -> (v + "s")
+        case _ => v.substring(0, idx) -> v.substring(idx + 1)
+      }
+    }
     val searchColumns = formKeyToMap("searchColumns").mapValues(_.split(",").map(_.trim).filter(_.nonEmpty).map { col =>
       val idx = col.indexOf(':')
       if (idx == -1) {
@@ -55,7 +61,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
 
         val result = ExportConfig.Result(
-          schemaId, projectName, projectLocation, provided, classNames, plurals, extendModels, propertyNames, packages, searchColumns
+          schemaId, projectName, projectLocation, provided, classNames, extendModels, propertyNames, packages, titles, searchColumns
         ).withDefaults
         ExportConfigWriter.write(result)
 

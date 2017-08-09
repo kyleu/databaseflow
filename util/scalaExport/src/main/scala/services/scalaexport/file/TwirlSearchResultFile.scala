@@ -20,7 +20,7 @@ object TwirlSearchResultFile {
     val listFile = TwirlFile(pkg, "searchResult" + et.className)
 
     listFile.add(s"""@(model: $modelClass, hit: String)<div class="search-result">""", 1)
-    listFile.add("<div class=\"right\">???</div>")
+    listFile.add(s"""<div class="right">${et.title}</div>""")
     listFile.add("<div>", 1)
     listFile.add(s"""<i class="fa @models.template.Icons.${et.propertyName}"></i>""")
     val cs = et.pkColumns.map(c => "model." + ExportHelper.toIdentifier(c.name))

@@ -37,10 +37,6 @@
             <textarea name="classNames">@cfg.classNames.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
           </li>
           <li class="collection-item">
-            <div>Plurals</div>
-            <textarea name="plurals">@cfg.plurals.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
-          </li>
-          <li class="collection-item">
             <div>Extends Models</div>
             <textarea name="extendModels">@cfg.extendModels.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
           </li>
@@ -51,6 +47,10 @@
           <li class="collection-item">
             <div>Packages</div>
             <textarea name="packages">@cfg.packages.map(x => x._1 + " = " + x._2).mkString("\n")</textarea>
+          </li>
+          <li class="collection-item">
+            <div>Titles</div>
+            <textarea name="titles">@cfg.titles.map(x => x._1 + " = " + x._2._1 + ":" + x._2._2).mkString("\n")</textarea>
           </li>
           <li class="collection-item">
             <div>Search Columns</div>

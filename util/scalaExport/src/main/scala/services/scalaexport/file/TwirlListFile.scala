@@ -44,7 +44,7 @@ object TwirlListFile {
 
     listFile.add("@views.html.admin.explore.list(", 1)
     listFile.add("user = user,")
-    listFile.add(s"""model = "${et.className}",""")
+    listFile.add(s"""model = "${et.title}",""")
     listFile.add(s"""modelPlural = "${et.plural}",""")
     listFile.add(s"icon = models.template.Icons.${et.propertyName},")
     listFile.add("cols = Seq(", 1)

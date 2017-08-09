@@ -14,7 +14,7 @@ object InjectExplore {
             case Nil => s"controllers.admin.routes.${et.className}Controller"
             case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
           }
-          Some(s"""  <li><a href="@$controllerClass.list()">${et.plural}</a></li>""")
+          Some(s"""  <li><a href="@$controllerClass.list()">${et.title}</a></li>""")
         }
 
       }.sorted.mkString("\n")
@@ -41,7 +41,7 @@ object InjectExplore {
             case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
           }
           Some(s"""      <li class="collection-item">
-          <a class="theme-text" href="@$controllerClass.list()">${et.className} Management</a>
+          <a class="theme-text" href="@$controllerClass.list()">${et.title} Management</a>
           <div><em>Manage the ${et.propertyName} of the system.</em></div>
         </li>""")
         }

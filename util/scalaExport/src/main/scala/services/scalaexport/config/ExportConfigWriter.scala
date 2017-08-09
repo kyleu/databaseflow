@@ -33,14 +33,6 @@ object ExportConfigWriter {
       }
       log()
     }
-    if (result.classNames.nonEmpty) {
-      log("# Overrides the stupid plural system, which only appends \"s\".")
-      log("[plurals]")
-      result.plurals.map { c =>
-        log(s"${c._1} = ${c._2}")
-      }
-      log()
-    }
     if (result.extendModels.nonEmpty) {
       log("# Makes models extend a provided class.")
       log("[extendmodels]")
@@ -65,7 +57,14 @@ object ExportConfigWriter {
       }
       log()
     }
-
+    if (result.titles.nonEmpty) {
+      log("# Titles for models. Separate with \":\" to add a plural.")
+      log("[titles]")
+      result.titles.map { c =>
+        log(s"${c._1} = ${c._2._1}:${c._2._2}")
+      }
+      log()
+    }
     if (result.searchColumns.nonEmpty) {
       log("# Defines columns to search for a provided table name.")
       log("[searchcolumns]")
