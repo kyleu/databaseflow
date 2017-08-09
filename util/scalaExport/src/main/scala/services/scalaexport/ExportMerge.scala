@@ -3,6 +3,7 @@ package services.scalaexport
 import better.files.File.CopyOptions
 import better.files._
 import models.scalaexport.ExportResult
+import services.scalaexport.file.ReadmeFile
 
 object ExportMerge {
   private[this] def projectNameReplacements(id: String, root: File) = {
@@ -55,6 +56,7 @@ object ExportMerge {
       rootDir.createDirectory()
       getSrcDir(result).copyTo(rootDir)
       (rootDir / "license").delete(swallowIOExceptions = true)
+      (rootDir / "readme.md").overwrite(ReadmeFile.content(result.id))
       projectNameReplacements(result.id, rootDir)
     }
 
