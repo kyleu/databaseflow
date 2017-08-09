@@ -7,10 +7,11 @@ object ExportConfig {
       projectLocation: Option[String],
       provided: Map[String, String],
       classNames: Map[String, String],
+      plurals: Map[String, String],
       extendModels: Map[String, String],
       propertyNames: Map[String, String],
       packages: Map[String, String],
-      searchColumns: Map[String, Seq[String]]
+      searchColumns: Map[String, Seq[(String, String)]]
   ) {
     def withDefaults = copy(
       provided = Map() ++ provided,

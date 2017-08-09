@@ -8,12 +8,13 @@ import models.user.User
 import util.FutureUtils.defaultContext
 import io.circe.Json
 import io.circe.parser._
-import sangria.execution.{Executor, HandledException}
+import sangria.execution.{Executor, HandledException, QueryReducer}
 import sangria.marshalling.circe._
 import sangria.parser.QueryParser
-import sangria.schema.Schema
 import services.connection.ConnectionSettingsService
 import util.{ApplicationContext, Logging}
+import sangria.schema.Schema
+import sangria.validation.QueryValidator
 
 import scala.util.{Failure, Success}
 
@@ -21,7 +22,7 @@ object GraphQLService extends Logging {
   protected val exceptionHandler: Executor.ExceptionHandler = {
     case (_, e: IllegalStateException) =>
       log.warn("Error encountered while running GraphQL query.", e)
-      HandledException(e.getMessage)
+      HandledException(message = e.getMessage, additionalFields = Map.empty)
   }
 
   def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
@@ -34,6 +35,7 @@ object GraphQLService extends Logging {
 @javax.inject.Singleton
 case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
   private[this] val schemas = collection.mutable.HashMap.empty[UUID, (ConnectionSettings, ConnectionGraphQLSchema)]
+  private[this] val rejectComplexQueries = QueryReducer.rejectComplexQueries[Any](1000, (_, _) => new IllegalArgumentException(s"Query is too complex."))
 
   def getConnectionSchema(user: User, connectionId: UUID) = {
     val ret = schemas.getOrElseUpdate(connectionId, {
@@ -69,9 +71,11 @@ case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
         userContext = GraphQLContext(app, user),
         operationName = operation,
         variables = variables.getOrElse(Json.obj()),
-        //deferredResolver = GraphQLResolver,
+        //deferredResolver = schema.resolver,
         exceptionHandler = GraphQLService.exceptionHandler,
-        maxQueryDepth = Some(10)
+        maxQueryDepth = Some(10),
+        queryValidator = QueryValidator.default,
+        queryReducers = List(rejectComplexQueries)
       )
       case Failure(error) => throw error
     }

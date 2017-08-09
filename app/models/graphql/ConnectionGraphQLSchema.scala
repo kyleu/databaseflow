@@ -17,8 +17,7 @@ case class ConnectionGraphQLSchema(cs: ConnectionSettings) {
     fields = ConnectionGraphQL.mutationFieldsForConnection(cs)
   )
 
-  val schema = sangria.schema.Schema(query = queryType, mutation = None)
-  //val schema = sangria.schema.Schema(query = queryType, mutation = Some(mutationType))
+  val schema = sangria.schema.Schema(query = queryType, mutation = None, subscription = None, additionalTypes = Nil)
 
   lazy val renderedSchema = SchemaRenderer.renderSchema(schema)
 }

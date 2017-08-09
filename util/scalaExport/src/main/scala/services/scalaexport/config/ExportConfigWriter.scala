@@ -33,6 +33,14 @@ object ExportConfigWriter {
       }
       log()
     }
+    if (result.classNames.nonEmpty) {
+      log("# Overrides the stupid plural system, which only appends \"s\".")
+      log("[plurals]")
+      result.plurals.map { c =>
+        log(s"${c._1} = ${c._2}")
+      }
+      log()
+    }
     if (result.extendModels.nonEmpty) {
       log("# Makes models extend a provided class.")
       log("[extendmodels]")
@@ -62,7 +70,15 @@ object ExportConfigWriter {
       log("# Defines columns to search for a provided table name.")
       log("[searchcolumns]")
       result.searchColumns.map { c =>
-        log(s"${c._1} = ${c._2.mkString(", ")}")
+        log(s"${c._1} = ${
+          c._2.map { x =>
+            if (x._1 == x._2) {
+              x._1
+            } else {
+              x._1 + ":" + x._2
+            }
+          }.mkString(", ")
+        }")
       }
       log()
     }

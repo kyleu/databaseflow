@@ -11,6 +11,7 @@ case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
   private[this] val asPropertyName = ExportHelper.toIdentifier(t.name)
   val className = config.classNames.getOrElse(asPropertyName, ExportHelper.toClassName(t.name))
   val propertyName = ExportHelper.toIdentifier(className)
+  val plural = config.plurals.getOrElse(propertyName, className + "s")
 
   val pkg = config.packages.get(asPropertyName).map(x => x.split("\\.").toList).getOrElse(Nil)
 

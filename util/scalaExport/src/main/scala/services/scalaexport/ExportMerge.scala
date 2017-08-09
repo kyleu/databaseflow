@@ -54,6 +54,7 @@ object ExportMerge {
       result.log("Creating initial project.")
       rootDir.createDirectory()
       getSrcDir(result).copyTo(rootDir)
+      (rootDir / "license").delete(swallowIOExceptions = true)
       projectNameReplacements(result.id, rootDir)
     }
 

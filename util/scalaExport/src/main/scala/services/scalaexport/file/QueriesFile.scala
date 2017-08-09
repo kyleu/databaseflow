@@ -19,8 +19,8 @@ object QueriesFile {
     file.add("override protected val columns = Seq(" + et.t.columns.map("\"" + _.name + "\"").mkString(", ") + ")")
     et.t.primaryKey.foreach { pk =>
       file.add("override protected val idColumns = Seq(" + pk.columns.map("\"" + _ + "\"").mkString(", ") + ")")
-      val searchColumns = et.config.searchColumns.getOrElse(ExportHelper.toIdentifier(et.t.name), pk.columns)
-      file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _ + "\"").mkString(", ")})")
+      val searchColumns = et.config.searchColumns.getOrElse(ExportHelper.toIdentifier(et.t.name), pk.columns.map(x => x -> x))
+      file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _._1 + "\"").mkString(", ")})")
     }
     file.add()
     et.pkColumns match {

@@ -11,8 +11,8 @@ object ExportConfigReader {
       loadConfig(key, f.lineIterator)
     } else {
       val em = Map.empty[String, String]
-      val emSeq = Map.empty[String, Seq[String]]
-      Result(key, key, None, em, em, em, em, em, emSeq).withDefaults
+      val emSeq = Map.empty[String, Seq[(String, String)]]
+      Result(key, key, None, em, em, em, em, em, em, emSeq).withDefaults
     }
   }
 
@@ -22,14 +22,14 @@ object ExportConfigReader {
     var projectLocation: Option[String] = None
 
     val em = Map.empty[String, String]
-    val emSeq = Map.empty[String, Seq[String]]
 
     var ignored = em
     var classNames = em
+    var plurals = em
     var extendModels = em
     var propertyNames = em
     var packages = em
-    var searchColumns = emSeq
+    var searchColumns = Map.empty[String, Seq[(String, String)]]
     lines.filterNot(_.trim.isEmpty).foreach { line =>
       if (line.startsWith("[")) {
         currentSection = line.replaceAllLiterally("[", "").replaceAllLiterally("]", "")
@@ -48,10 +48,18 @@ object ExportConfigReader {
           }
           case "provided" => ignored += prop
           case "classnames" => classNames += prop
+          case "plurals" => plurals += prop
           case "extendmodels" => extendModels += prop
           case "propertynames" => propertyNames += prop
           case "packages" => packages += prop
-          case "searchcolumns" => searchColumns += ExportHelper.toIdentifier(prop._1) -> prop._2.split(",").map(_.trim)
+          case "searchcolumns" => searchColumns += ExportHelper.toIdentifier(prop._1) -> prop._2.split(",").map(_.trim).filter(_.nonEmpty).map { col =>
+            val idx = col.indexOf(':')
+            if (idx == -1) {
+              col -> ExportHelper.toClassName(col)
+            } else {
+              col.substring(0, idx).trim -> col.substring(idx + 1).trim
+            }
+          }
           case _ => throw new IllegalStateException(s"Invalid section [$currentSection].")
         }
       } else {
@@ -59,6 +67,6 @@ object ExportConfigReader {
       }
     }
 
-    Result(key, projectName, projectLocation, ignored, classNames, extendModels, propertyNames, packages, searchColumns).withDefaults
+    Result(key, projectName, projectLocation, ignored, classNames, plurals, extendModels, propertyNames, packages, searchColumns).withDefaults
   }
 }

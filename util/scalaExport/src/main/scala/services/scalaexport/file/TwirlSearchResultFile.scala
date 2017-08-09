@@ -17,8 +17,6 @@ object TwirlSearchResultFile {
       case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
     }
 
-    val searchColumns = et.config.searchColumns.getOrElse(et.propertyName, et.pkColumns.map(_.name))
-
     val listFile = TwirlFile(pkg, "searchResult" + et.className)
 
     listFile.add(s"""@(model: $modelClass, hit: String)<div class="search-result">""", 1)
