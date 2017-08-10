@@ -7,7 +7,7 @@ object ControllerFile {
   def export(et: ExportTable) = {
     val file = ScalaFile("controllers" +: "admin" +: et.pkg, et.className + "Controller")
 
-    val viewPkg = ("views" +: "html" +: "admin" +: et.pkg :+ et.propertyName).mkString(".")
+    val viewPkg = ("views" +: "html" +: "admin" +: et.pkg).mkString(".")
     val modelPkg = ("models" +: et.pkg :+ et.className).mkString(".")
 
     file.addImport("util", "Application")
@@ -38,7 +38,7 @@ object ControllerFile {
     file.add("}", -1)
 
     file.add("for (models <- f; total <- c) yield {", 1)
-    file.add(s"Ok($viewPkg.list${et.className}(request.identity, q, Some(total), models, limit.getOrElse(100), offset.getOrElse(0)))")
+    file.add(s"Ok($viewPkg.${et.propertyName}List(request.identity, q, Some(total), models, limit.getOrElse(100), offset.getOrElse(0)))")
     file.add("}", -1)
 
     file.add("}", -1)
@@ -54,7 +54,7 @@ object ControllerFile {
         file.add()
         file.add(s"""def view($viewArgs) = withAdminSession("${et.propertyName}.view") { implicit request =>""", 1)
         file.add(s"""${et.className}Service.getById($getArgs).map {""", 1)
-        file.add(s"""case Some(model) => Ok($viewPkg.view${et.className}(request.identity, model))""")
+        file.add(s"""case Some(model) => Ok($viewPkg.${et.propertyName}View(request.identity, model))""")
         file.add(s"""case None => NotFound(s"No ${et.className} found with $getArgs [$logArgs].")""")
         file.add("}", -1)
         file.add("}", -1)
@@ -62,7 +62,7 @@ object ControllerFile {
         file.add()
         file.add(s"""def formEdit($viewArgs) = withAdminSession("${et.propertyName}.formEdit") { implicit request =>""", 1)
         file.add(s"""${et.className}Service.getById($getArgs).map {""", 1)
-        file.add(s"""case Some(model) => Ok($viewPkg.form${et.className}(request.identity, model))""")
+        file.add(s"""case Some(model) => Ok($viewPkg.${et.propertyName}Form(request.identity, model))""")
         file.add(s"""case None => NotFound(s"No ${et.className} found with $getArgs [$logArgs].")""")
         file.add("}", -1)
         file.add("}", -1)
@@ -70,7 +70,7 @@ object ControllerFile {
 
     file.add()
     file.add(s"""def formNew = withAdminSession("${et.propertyName}.formNew") { implicit request =>""", 1)
-    file.add(s"Future.successful(Ok($viewPkg.form${et.className}(request.identity, $modelPkg.empty, isNew = true)))")
+    file.add(s"Future.successful(Ok($viewPkg.${et.propertyName}Form(request.identity, $modelPkg.empty, isNew = true)))")
     file.add("}", -1)
 
     file.add("}", -1)

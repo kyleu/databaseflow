@@ -22,8 +22,8 @@ case class InjectSearchParams(pkg: List[String], className: String, pkColumns: S
     case _ => "services." + pkg.mkString(".") + "." + className + "Service"
   }
   val viewClass = pkg match {
-    case Nil => s"views.html.admin.$identifier.searchResult$className"
-    case _ => s"views.html.admin.${pkg.mkString(".")}.$identifier.searchResult$className"
+    case Nil => s"views.html.admin.${identifier}SearchResult"
+    case _ => s"views.html.admin.${pkg.mkString(".")}.${identifier}SearchResult"
   }
   val message = pkColumns match {
     case Nil => s"""s"$className matched [$$q].""""
