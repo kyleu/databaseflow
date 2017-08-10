@@ -5,7 +5,7 @@ import services.scalaexport.{ExportHelper, ExportTable}
 
 object TwirlSearchResultFile {
   def export(et: ExportTable) = {
-    val pkg = "views" +: "admin" +: et.pkg :+ et.propertyName
+    val pkg = "views" +: "admin" +: et.pkg
 
     val modelClass = et.pkg match {
       case Nil => s"models.${et.className}"
@@ -17,7 +17,7 @@ object TwirlSearchResultFile {
       case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
     }
 
-    val listFile = TwirlFile(pkg, "searchResult" + et.className)
+    val listFile = TwirlFile(pkg, et.propertyName + "SearchResult")
 
     listFile.add(s"""@(model: $modelClass, hit: String)<div class="search-result">""", 1)
     listFile.add(s"""<div class="right">${et.title}</div>""")

@@ -45,6 +45,7 @@ object ServiceFile {
       pkg = et.pkg, className = et.className, pkColumns = et.pkColumns.map(c => c.name -> c.columnType.asScalaFull)
     ).toString)
 
+    file.add(s"def totalCount() = Database.query(${et.className}Queries.count())")
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = {", 1)
     file.add(s"Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
     file.add("}", -1)

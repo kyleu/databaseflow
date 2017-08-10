@@ -5,13 +5,13 @@ import services.scalaexport.{ExportHelper, ExportTable}
 
 object TwirlFormFile {
   def export(et: ExportTable) = {
-    val pkg = "views" +: "admin" +: et.pkg :+ et.propertyName
+    val pkg = "views" +: "admin" +: et.pkg
     val modelClass = et.pkg match {
       case Nil => s"models.${et.className}"
       case _ => s"models.${et.pkg.mkString(".")}.${et.className}"
     }
 
-    val viewFile = TwirlFile(pkg, "form" + et.className)
+    val viewFile = TwirlFile(pkg, et.propertyName + "Form")
     viewFile.add(s"@(user: models.user.User, model: $modelClass, isNew: Boolean = false)(")
     viewFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
     val toInterp = et.pkColumns.map(c => "${model." + ExportHelper.toIdentifier(c.name) + "}").mkString(", ")

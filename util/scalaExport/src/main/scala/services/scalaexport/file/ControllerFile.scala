@@ -31,8 +31,14 @@ object ControllerFile {
     file.add(s"case Some(query) if query.nonEmpty => ${et.className}Service.search(query, orderBy, limit.orElse(Some(100)), offset)")
     file.add(s"case _ => ${et.className}Service.getAll(orderBy, limit.orElse(Some(100)), offset)")
     file.add("}", -1)
-    file.add("f.map { users =>", 1)
-    file.add(s"Ok($viewPkg.list${et.className}(request.identity, q, users, limit.getOrElse(100), offset.getOrElse(0)))")
+
+    file.add("val c = q match {", 1)
+    file.add(s"case Some(query) if query.nonEmpty => ${et.className}Service.searchCount(query)")
+    file.add(s"case _ => ${et.className}Service.totalCount()")
+    file.add("}", -1)
+
+    file.add("for (models <- f; total <- c) yield {", 1)
+    file.add(s"Ok($viewPkg.list${et.className}(request.identity, q, Some(total), models, limit.getOrElse(100), offset.getOrElse(0)))")
     file.add("}", -1)
 
     file.add("}", -1)

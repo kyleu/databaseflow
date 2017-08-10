@@ -5,7 +5,7 @@ import services.scalaexport.{ExportHelper, ExportTable}
 
 object TwirlListFile {
   def export(et: ExportTable) = {
-    val pkg = "views" +: "admin" +: et.pkg :+ et.propertyName
+    val pkg = "views" +: "admin" +: et.pkg
     val modelClass = et.pkg match {
       case Nil => s"models.${et.className}"
       case _ => s"models.${et.pkg.mkString(".")}.${et.className}"
@@ -17,9 +17,9 @@ object TwirlListFile {
 
     val searchColumns = et.config.searchColumns.getOrElse(et.propertyName, et.pkColumns.map(x => x.name -> x.name))
 
-    val listFile = TwirlFile(pkg, "list" + et.className)
+    val listFile = TwirlFile(pkg, et.propertyName + "List")
 
-    listFile.add(s"@(user: models.user.User, q: Option[String], modelSeq: Seq[$modelClass], limit: Int, offset: Int)(", 2)
+    listFile.add(s"@(user: models.user.User, q: Option[String], totalCount: Option[Int], modelSeq: Seq[$modelClass], limit: Int, offset: Int)(", 2)
     listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash")
     listFile.add(s")", -2)
     listFile.add()
@@ -53,6 +53,7 @@ object TwirlListFile {
       case c => listFile.add(s""""${c._1}" -> "${c._2}",""")
     }
     listFile.add("),", -1)
+    listFile.add("totalCount = totalCount,")
     listFile.add("rows = modelSeq.map(resultFor),")
     listFile.add(s"newUrl = Some($controllerClass.formNew()),")
     listFile.add(s"nextUrl = $controllerClass.list(q, None, Some(limit), Some(offset + limit)),")

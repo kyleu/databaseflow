@@ -42,6 +42,7 @@ object QueriesFile {
         file.add(")", -1)
         file.add()
     }
+    file.add("def count(whereClause: Option[String] = None) = new Count(s\"\"\"select count(*) as c from \"$tableName\" ${whereClause.getOrElse(\"\")}\"\"\")")
     file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")
     file.add()
 
