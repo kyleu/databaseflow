@@ -6,6 +6,14 @@ An opinionated modern database interface.
 
 Running locally or on a shared server, Database Flow helps you discover and search your database from a browser.
 
+## Features
+
+* Supports MySQL, PostgreSQL, SQLite, Oracle, SQL Server, H2, DB2, and Informix.
+* Rich SQL editor with auto-complete and live syntax checking based on your schema.
+* Explore tables, views and stored procedures and share saved results or sql queries.
+* A sophisticated GraphQL server, providing a detailed efficient graph for your schema and data.
+* Supports local single-user app installations, as well as a server mode to run for your whole team.   
+
 ## Installation
 
 * If you've installed the universal jar, you'll need Java 8 installed. Then run "java -jar DatabaseFlow.jar".

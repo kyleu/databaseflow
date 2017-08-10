@@ -1,6 +1,8 @@
 package services.database
 
 import java.io.FileOutputStream
+
+import better.files._
 import java.util.UUID
 
 import models.connection.ConnectionSettings
@@ -30,7 +32,7 @@ object SampleDatabaseService extends Logging {
       edit = Permission.Administrator,
       description = "A sample SQLite database containing music information.",
       engine = DatabaseEngine.SQLite,
-      dbName = Some(sampleFile.getPath)
+      dbName = Some(sampleFile.path.toString)
     )
     ConnectionSettingsService.insert(cs)
     createSavedQueries(owner, cs.id)
@@ -38,16 +40,16 @@ object SampleDatabaseService extends Logging {
   }
 
   private[this] def getSampleFile = {
-    val f = new java.io.File(ConfigFileService.configDir, filename)
+    val f = ConfigFileService.configDir / filename
     if (!f.exists()) {
       writeSampleFile(f)
     }
     f
   }
 
-  private[this] def writeSampleFile(f: java.io.File) = {
+  private[this] def writeSampleFile(f: File) = {
     val is = getClass.getClassLoader.getResourceAsStream(resourcePath)
-    val os = new FileOutputStream(f)
+    val os = new FileOutputStream(f.toJava)
     IOUtils.copy(is, os)
     os.close()
   }

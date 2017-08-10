@@ -1,7 +1,6 @@
 package services.logging
 
-import java.io.File
-
+import better.files._
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -12,13 +11,13 @@ object LogService {
 
   private[this] val logStartPhrases = LogLevel.values.map(_.startPhrase)
 
-  val logDir = new File("logs")
+  val logDir = "logs".toFile
   if (!logDir.exists) {
     throw new IllegalStateException("Log directory does not exist.")
   }
 
-  def listFiles() = logDir.listFiles().filter(_.getName.endsWith(".log")).toSeq.sortBy(_.getName).map { f =>
-    f.getName -> f.length.toInt
+  def listFiles() = logDir.children.filter(_.name.endsWith(".log")).toSeq.sortBy(_.name).map { f =>
+    f.name -> f.size.toInt
   }
 
   def getLogs(name: String) = {
@@ -41,7 +40,7 @@ object LogService {
     ret
   }
 
-  private[this] def getLines(name: String) = Source.fromFile(new File(logDir, name)).getLines()
+  private[this] def getLines(name: String) = (logDir / name).lines().toSeq
 
   private[this] val dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss,SSS")
 

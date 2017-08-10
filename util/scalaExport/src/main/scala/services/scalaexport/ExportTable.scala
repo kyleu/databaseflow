@@ -7,7 +7,7 @@ object ExportTable {
   case class Reference(pkg: Seq[String], cls: String, prop: String, name: String, tgt: String, notNull: Boolean)
 }
 
-case class ExportTable(t: Table, config: ExportConfig.Result, s: Schema) {
+case class ExportTable(t: Table, config: ExportConfig, s: Schema) {
   private[this] val asPropertyName = ExportHelper.toIdentifier(t.name)
   val className = config.classNames.getOrElse(asPropertyName, ExportHelper.toClassName(t.name))
   val propertyName = ExportHelper.toIdentifier(className)

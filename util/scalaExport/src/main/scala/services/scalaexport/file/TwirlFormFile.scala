@@ -3,36 +3,22 @@ package services.scalaexport.file
 import models.scalaexport.TwirlFile
 import services.scalaexport.{ExportHelper, ExportTable}
 
-object TwirlViewFile {
+object TwirlFormFile {
   def export(et: ExportTable) = {
-    val controllerClass = et.pkg match {
-      case Nil => s"controllers.admin.routes.${et.className}Controller"
-      case _ => s"controllers.admin.${et.pkg.mkString(".")}.routes.${et.className}Controller"
-    }
-
-    val href = et.pkColumns match {
-      case Nil => ""
-      case cols =>
-        val args = cols.map(col => s"model.${ExportHelper.toIdentifier(col.name)}").mkString(", ")
-        s"""@$controllerClass.formEdit($args)"""
-    }
-
     val pkg = "views" +: "admin" +: et.pkg :+ et.propertyName
     val modelClass = et.pkg match {
       case Nil => s"models.${et.className}"
       case _ => s"models.${et.pkg.mkString(".")}.${et.className}"
     }
 
-    val viewFile = TwirlFile(pkg, "view" + et.className)
-    viewFile.add(s"@(user: models.user.User, model: $modelClass)(")
+    val viewFile = TwirlFile(pkg, "form" + et.className)
+    viewFile.add(s"@(user: models.user.User, model: $modelClass, isNew: Boolean = false)(")
     viewFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
     val toInterp = et.pkColumns.map(c => "${model." + ExportHelper.toIdentifier(c.name) + "}").mkString(", ")
     viewFile.add(s""")@layout.admin(user, "explore", s"${et.title} [$toInterp]") {""", 1)
 
     viewFile.add("""<div class="collection with-header">""", 1)
     viewFile.add("<div class=\"collection-header\">", 1)
-
-    viewFile.add(s"""<div class="right"><a class="theme-text" href="$href">Edit</a></div>""")
     viewFile.add("<h5>", 1)
     viewFile.add(s"""<i class="fa @models.template.Icons.${et.propertyName}"></i>""")
     val toTwirl = et.pkColumns.map(c => "@model." + ExportHelper.toIdentifier(c.name)).mkString(", ")
@@ -45,7 +31,10 @@ object TwirlViewFile {
     viewFile.add("<tbody>", 1)
     et.t.columns.foreach { col =>
       val label = ExportHelper.toIdentifier(col.name)
-      viewFile.add(s"<tr><th>$label</th><td>@model.$label</td></tr>")
+      viewFile.add("<tr>", 1)
+      viewFile.add(s"""<th><label for="input-$label">$label</label></th>""")
+      viewFile.add(s"""<td><input id="input-$label" type="text" name="$label" value="@model.$label" /></td>""")
+      viewFile.add("</tr>", -1)
     }
     viewFile.add("</tbody>", -1)
     viewFile.add("</table>", -1)

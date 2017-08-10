@@ -1,5 +1,5 @@
 @import services.scalaexport.config.ExportConfig
-@(cs: models.connection.ConnectionSettings, schema: models.schema.Schema, cfg: ExportConfig.Result)(
+@(cs: models.connection.ConnectionSettings, schema: models.schema.Schema, cfg: ExportConfig)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )
 
@@ -27,6 +27,10 @@
           <li class="collection-item">
             <div>Project Location</div>
             <input name="projectLocation" value="@cfg.projectLocation" placeholder="Leave empty to clone Boilerplay" />
+          </li>
+          <li class="collection-item">
+            <div>Engine</div>
+            <input name="engine" value="@cfg.engine" />
           </li>
           <li class="collection-item">
             <div>Provided Classes</div>

@@ -25,7 +25,7 @@ abstract class CoreDatabase extends Logging {
   }
 
   private[this] lazy val finalUrl = if (config.url.isEmpty || config.url == "default") {
-    s"jdbc:h2:${ConfigFileService.configDir.getAbsolutePath}/$dbName"
+    s"jdbc:h2:${ConfigFileService.configDir.path}/$dbName"
   } else {
     config.url
   }

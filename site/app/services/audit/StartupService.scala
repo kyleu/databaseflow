@@ -1,6 +1,6 @@
 package services.audit
 
-import java.io.{BufferedWriter, FileWriter}
+import better.files._
 import java.util.UUID
 
 import util.FileCacheService
@@ -11,17 +11,13 @@ import scala.io.Source
 object StartupService {
   case class Startup(id: UUID = UUID.randomUUID, ip: String, license: UUID, occurred: LocalDateTime = new LocalDateTime())
 
-  private[this] val startupFile = FileCacheService.cacheDir + "/startup.log"
-  private[this] val output = new BufferedWriter(new FileWriter(startupFile, true))
+  private[this] val f = FileCacheService.cacheDir / "startup.log"
   private[this] val trialId = UUID.fromString("00000000-0000-0000-0000-000000000000")
 
   def list() = {
-    val f = new java.io.File(startupFile)
-    if (!f.exists) {
-      f.createNewFile()
-    }
+    f.createIfNotExists()
 
-    val lines = Source.fromFile(f).getLines.toSeq
+    val lines = f.lines.toSeq
     lines.map { l =>
       val split = l.split('|')
       if (split.length == 4) {
@@ -37,7 +33,6 @@ object StartupService {
   def add(ip: String, license: Option[UUID]) = {
     val id = UUID.randomUUID
     val s = s"$id|$ip|${license.getOrElse(trialId)}|${new LocalDateTime()}"
-    output.write(s + '\n')
-    output.flush()
+    f.appendLine(s)
   }
 }

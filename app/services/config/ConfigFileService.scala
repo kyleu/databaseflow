@@ -1,6 +1,6 @@
 package services.config
 
-import java.io.PrintWriter
+import better.files._
 
 import com.typesafe.config.ConfigFactory
 import util.Logging
@@ -11,7 +11,7 @@ object ConfigFileService extends Logging {
   private[this] var initialized = false
 
   def init() = {
-    log.info(s"File service initialized, using [${configDir.getAbsolutePath}] as home directory.")
+    log.info(s"File service initialized, using [${configDir.path.toAbsolutePath}] as home directory.")
     if (initialized) {
       throw new IllegalStateException("Initialized called more than once for [FileService].")
     }
@@ -21,18 +21,18 @@ object ConfigFileService extends Logging {
   val configDir = {
     val osName = System.getProperty("os.name").toUpperCase
     val (homeDir, programFilename) = if (osName.contains("WIN")) {
-      new java.io.File(System.getenv("APPDATA")) -> "DatabaseFlow"
+      System.getenv("APPDATA").toFile -> "DatabaseFlow"
     } else {
       val dir = System.getProperty("user.home")
       val cleanDir = if (dir == "/usr/sbin") {
-        new java.io.File("/opt/databaseflow") // Docker bullshit
+        "/opt/databaseflow".toFile // Docker bullshit
       } else {
-        val d = new java.io.File(dir)
-        if (d.isDirectory && d.canWrite) {
+        val d = dir.toFile
+        if (d.isDirectory && d.isWriteable) {
           d
         } else {
-          val share = new java.io.File("/usr/share/" + util.Config.projectId)
-          if (share.isDirectory && share.canWrite) {
+          val share = "/usr/share/" / util.Config.projectId
+          if (share.isDirectory && share.isWriteable) {
             share
           } else {
             throw new IllegalStateException("Cannot find directory to write config file.")
@@ -43,28 +43,26 @@ object ConfigFileService extends Logging {
     }
 
     if (homeDir.exists) {
-      if (!homeDir.canWrite) { throw new IllegalStateException(s"Can't write to config root [$homeDir].") }
-      val programDir = new java.io.File(homeDir, programFilename)
-      if (!programDir.exists) { programDir.mkdir() }
+      if (!homeDir.isWriteable) { throw new IllegalStateException(s"Can't write to config root [$homeDir].") }
+      val programDir = homeDir / programFilename
+      if (!programDir.exists) { programDir.createDirectory }
       if (!programDir.isDirectory) { throw new IllegalStateException(s"Non-directory [$programFilename] found in config root [$programDir].") }
-      if (!programDir.canWrite) { throw new IllegalStateException(s"Can't write to [$programFilename] in config root [$programDir].") }
+      if (!programDir.isWriteable) { throw new IllegalStateException(s"Can't write to [$programFilename] in config root [$programDir].") }
       programDir
     } else {
       throw new IllegalStateException(s"Cannot read home directory [$homeDir].")
     }
   }
 
-  val isDocker = configDir.getAbsolutePath.contains("/opt/databaseflow")
+  val isDocker = configDir.path.toAbsolutePath.toString.contains("/opt/databaseflow")
 
   val config = {
-    val cfg = new java.io.File(configDir, "databaseflow.conf")
+    val cfg = configDir / "databaseflow.conf"
     if (!cfg.exists()) {
       val refCnfStream = getClass.getClassLoader.getResourceAsStream("initial-config.conf")
       val refCnf = Source.fromInputStream(refCnfStream).getLines.toSeq.mkString("\n")
-      val writer = new PrintWriter(cfg)
-      writer.write(refCnf)
-      writer.close()
+      cfg.overwrite(refCnf)
     }
-    ConfigFactory.parseFile(cfg)
+    ConfigFactory.parseFile(cfg.toJava)
   }
 }

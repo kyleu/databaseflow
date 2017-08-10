@@ -9,7 +9,7 @@
           <li class="collection-item">
             <a href="@controllers.admin.routes.MetricsController.showMetrics()" class="theme-text">Configuration</a>
             @defining(services.config.ConfigFileService.configDir) { c =>
-              <div>@messages("admin.status.file.loaded", c.getAbsolutePath)</div>
+              <div>@messages("admin.status.file.loaded", c.path.toAbsolutePath)</div>
             }
           </li>
           <li class="collection-item">

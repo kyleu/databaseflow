@@ -9,6 +9,35 @@ object ModelFile {
     val file = ScalaFile("models" +: et.pkg, et.className)
     et.t.description.foreach(d => file.add(s"/** $d */"))
 
+    file.add(s"object ${et.className} {", 1)
+    file.add(s"val empty = ${et.className}(", 1)
+
+    et.t.columns.foreach { col =>
+      val propName = ExportHelper.toIdentifier(col.name)
+
+      val value = col.columnType match {
+        case ColumnType.UuidType => "UUID.randomUUID"
+        case ColumnType.BooleanType => "false"
+        case ColumnType.IntegerType => "0"
+        case ColumnType.TimestampType => "util.DateUtils.now"
+        case ColumnType.DateType => "util.DateUtils.today"
+        case _ => "\"" + col.defaultValue.getOrElse("") + "\""
+      }
+
+      val withOption = if (col.notNull) {
+        value
+      } else {
+        "Some(" + value + ")"
+      }
+
+      val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
+
+      file.add(s"$propName = $withOption$comma")
+    }
+    file.add(")", -1)
+    file.add("}", -1)
+    file.add()
+
     file.add(s"case class ${et.className}(", 1)
     et.t.columns.foreach { col =>
       col.columnType.requiredImport.foreach(p => file.addImport(p, col.columnType.asScala))

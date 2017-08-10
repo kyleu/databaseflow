@@ -1,11 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.ExportConfig
 import services.scalaexport.{ExportHelper, ExportTable}
 
 object SchemaFile {
-  def export(et: ExportTable, config: ExportConfig.Result) = {
+  def export(et: ExportTable) = {
     val file = ScalaFile("models" +: et.pkg, et.className + "Schema")
 
     file.addImport(("services" +: et.pkg).mkString("."), et.className + "Service")
@@ -16,13 +15,13 @@ object SchemaFile {
     SchemaHelper.addPrimaryKey(et, file)
     ForeignKeysHelper.writeSchema(et, file)
 
-    addObjectType(et, file, config)
+    addObjectType(et, file)
 
     addQueryFields(et, file)
     file
   }
 
-  private[this] def addObjectType(et: ExportTable, file: ScalaFile, config: ExportConfig.Result) = {
+  private[this] def addObjectType(et: ExportTable, file: ScalaFile) = {
     val columnsDescriptions = et.t.columns.flatMap(col => col.description.map(d => s"""DocumentField("${ExportHelper.toIdentifier(col.name)}", "$d")"""))
     if (columnsDescriptions.isEmpty && et.t.foreignKeys.isEmpty && et.references.isEmpty) {
       file.add(s"implicit lazy val ${et.propertyName}Type: ObjectType[GraphQLContext, ${et.className}] = deriveObjectType()")
@@ -40,7 +39,7 @@ object SchemaFile {
         file.add("AddFields(", 1)
       }
       ReferencesHelper.writeFields(et, file)
-      ForeignKeysHelper.writeFields(et, file, config)
+      ForeignKeysHelper.writeFields(et, file)
       if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
         file.add(")", -1)
       }

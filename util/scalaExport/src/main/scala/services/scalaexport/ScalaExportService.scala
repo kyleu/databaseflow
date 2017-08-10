@@ -32,7 +32,7 @@ case class ScalaExportService(schema: Schema) {
 
   def export(projectId: String, schema: Schema) = {
     val exportTables = schema.tables.map(t => ExportTable(t, config, schema))
-    val tables = exportTables.map(t => ExportFiles.exportTable(schema, t, config))
+    val tables = exportTables.map(t => ExportFiles.exportTable(schema, t))
 
     Future.successful(ExportResult(projectId, tables.map(_._1), tables.flatMap(t => t._2), config))
   }

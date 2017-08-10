@@ -1,6 +1,5 @@
 package services.scalaexport.config
 
-import services.scalaexport.config.ExportConfig.Result
 import better.files._
 import services.scalaexport.ExportHelper
 
@@ -13,7 +12,7 @@ object ExportConfigReader {
       val em = Map.empty[String, String]
       val emPair = Map.empty[String, (String, String)]
       val emSeqPair = Map.empty[String, Seq[(String, String)]]
-      Result(key, key, None, em, em, em, em, em, emPair, emSeqPair).withDefaults
+      ExportConfig(key, key, "postgres", None, em, em, em, em, em, emPair, emSeqPair).withDefaults
     }
   }
 
@@ -21,6 +20,7 @@ object ExportConfigReader {
     var currentSection = "unknown"
     var projectName = key
     var projectLocation: Option[String] = None
+    var engine = "postgres"
 
     val em = Map.empty[String, String]
 
@@ -45,6 +45,7 @@ object ExportConfigReader {
           case "project" => prop._1 match {
             case "name" => projectName = prop._2
             case "location" => projectLocation = Some(prop._2)
+            case "engine" => engine = prop._2
             case _ => throw new IllegalStateException(s"Unhandled project key [${prop._1}].")
           }
           case "provided" => ignored += prop
@@ -74,6 +75,6 @@ object ExportConfigReader {
       }
     }
 
-    Result(key, projectName, projectLocation, ignored, classNames, extendModels, propertyNames, packages, titles, searchColumns).withDefaults
+    ExportConfig(key, projectName, engine, projectLocation, ignored, classNames, extendModels, propertyNames, packages, titles, searchColumns).withDefaults
   }
 }

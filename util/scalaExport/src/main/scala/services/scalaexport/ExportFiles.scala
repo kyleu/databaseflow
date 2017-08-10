@@ -3,7 +3,6 @@ package services.scalaexport
 import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
 import models.schema.Schema
-import services.scalaexport.config.ExportConfig
 import services.scalaexport.file._
 
 object ExportFiles {
@@ -25,21 +24,22 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportTable(s: Schema, et: ExportTable, result: ExportConfig.Result): (ExportTable, Seq[OutputFile]) = {
+  def exportTable(s: Schema, et: ExportTable): (ExportTable, Seq[OutputFile]) = {
     if (et.config.provided.contains(et.propertyName)) {
       et -> Seq.empty
     } else {
       val cls = ModelFile.export(et)
       val queries = QueriesFile.export(et)
       val svc = ServiceFile.export(et)
-      val sch = SchemaFile.export(et, result)
+      val sch = SchemaFile.export(et)
       val cntr = ControllerFile.export(et)
 
       val tl = TwirlListFile.export(et)
       val tv = TwirlViewFile.export(et)
+      val tf = TwirlFormFile.export(et)
       val tsr = TwirlSearchResultFile.export(et)
 
-      et -> Seq(cls, queries, svc, sch, cntr, tl, tv, tsr)
+      et -> Seq(cls, queries, svc, sch, cntr, tl, tv, tf, tsr)
     }
   }
 }

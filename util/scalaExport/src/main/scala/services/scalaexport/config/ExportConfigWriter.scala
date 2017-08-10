@@ -1,10 +1,9 @@
 package services.scalaexport.config
 
-import services.scalaexport.config.ExportConfig.Result
 import better.files._
 
 object ExportConfigWriter {
-  def write(result: Result) = {
+  def write(result: ExportConfig) = {
     val f = s"./tmp/${result.key}.txt".toFile
     val fileContents = new StringBuilder()
     def log(s: String = "") = fileContents.append(s + "\n")
@@ -15,6 +14,7 @@ object ExportConfigWriter {
       log(s"name = ${result.projectName}")
     }
     result.projectLocation.foreach(l => log(s"location = $l"))
+    log(s"engine = ${result.engine}")
     log()
 
     if (result.provided.nonEmpty) {

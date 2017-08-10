@@ -54,7 +54,8 @@ object TwirlListFile {
     }
     listFile.add("),", -1)
     listFile.add("rows = modelSeq.map(resultFor),")
-    listFile.add(s"nextUrl = $controllerClass.list(q, Some(limit), Some(offset + limit)),")
+    listFile.add(s"newUrl = Some($controllerClass.formNew()),")
+    listFile.add(s"nextUrl = $controllerClass.list(q, None, Some(limit), Some(offset + limit)),")
     listFile.add("limit = limit,")
     listFile.add("offset = offset,")
     listFile.add("showSearch = true,")

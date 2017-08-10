@@ -1,7 +1,6 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.ExportConfig
 import services.scalaexport.{ExportHelper, ExportTable}
 
 object ForeignKeysHelper {
@@ -61,7 +60,7 @@ object ForeignKeysHelper {
     }
   }
 
-  def writeFields(et: ExportTable, file: ScalaFile, config: ExportConfig.Result) = if (et.t.foreignKeys.nonEmpty) {
+  def writeFields(et: ExportTable, file: ScalaFile) = if (et.t.foreignKeys.nonEmpty) {
     et.t.foreignKeys.foreach { fk =>
       val targetTable = et.s.getTable(fk.targetTable).getOrElse(throw new IllegalStateException(s"Missing table [${fk.targetTable}]."))
       fk.references.toList match {
@@ -69,12 +68,12 @@ object ForeignKeysHelper {
           val col = et.t.columns.find(_.name == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           val typ = col.columnType.asScala
           col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, typ))
-          val tgtClass = ExportHelper.toClassName(config.classNames.getOrElse(ExportHelper.toIdentifier(targetTable.name), targetTable.name))
+          val tgtClass = ExportHelper.toClassName(et.config.classNames.getOrElse(ExportHelper.toIdentifier(targetTable.name), targetTable.name))
           val tgtProp = ExportHelper.toIdentifier(tgtClass)
           val srcProp = ExportHelper.toIdentifier(h.source)
           val p = ExportHelper.toIdentifier(fk.targetTable)
-          val cls = config.classNames.getOrElse(p, ExportHelper.toClassName(fk.targetTable))
-          val pkg = config.packages.get(p).map(x => x.split("\\.").toList).getOrElse(Nil)
+          val cls = et.config.classNames.getOrElse(p, ExportHelper.toClassName(fk.targetTable))
+          val pkg = et.config.packages.get(p).map(x => x.split("\\.").toList).getOrElse(Nil)
           if (pkg != et.pkg) {
             file.addImport(("models" +: pkg).mkString("."), cls + "Schema")
           }

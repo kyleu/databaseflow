@@ -1,24 +1,17 @@
 package services.audit
 
-import java.io.{BufferedWriter, FileWriter}
-
-import util.FileCacheService
+import better.files._
 import play.api.libs.json.Json
 import services.notification.RequestLogging.RequestLog
-
-import scala.io.Source
+import util.FileCacheService
 
 object RequestService {
-  private[this] val requestFile = FileCacheService.cacheDir + "/request.log"
-  private[this] val output = new BufferedWriter(new FileWriter(requestFile, true))
+  private[this] val f = FileCacheService.cacheDir / "request.log"
 
   def list() = {
-    val f = new java.io.File(requestFile)
-    if (!f.exists) {
-      f.createNewFile()
-    }
+    f.createIfNotExists()
 
-    val lines = Source.fromFile(f).getLines.toSeq
+    val lines = f.lines.toSeq
     lines.map { l =>
       Json.parse(l)
     }
@@ -27,7 +20,6 @@ object RequestService {
   def add(request: RequestLog) = {
     import services.notification.RequestLogging.jsonFmt
     val json = Json.toJson(request)
-    output.write(json.toString + '\n')
-    output.flush()
+    f.appendLine(json.toString)
   }
 }
