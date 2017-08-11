@@ -7,10 +7,13 @@ import services.audit.DownloadService
 
 import scala.concurrent.Future
 
+object DownloadController {
+  val version = "1.0.0"
+}
+
 @javax.inject.Singleton
 class DownloadController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  private[this] val version = "1.0.0"
-  private[this] val baseUrl = s"https://s3.amazonaws.com/databaseflow/$version/"
+  private[this] val baseUrl = s"https://github.com/KyleU/databaseflow/releases/download/v${DownloadController.version}/"
 
   def index() = act("download-index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
@@ -19,12 +22,12 @@ class DownloadController @javax.inject.Inject() (implicit override val messagesA
 
   def download(filename: String) = act(s"download-$filename") { implicit request =>
     val (isOk, platform) = filename match {
-      case "DatabaseFlow.dmg" => true -> "macos"
-      case "DatabaseFlow.jar" => true -> "jar"
-      case "DatabaseFlow.pkg" => true -> "appstore"
-      case "DatabaseFlow.zip" => true -> "windows"
+      case "databaseflow.dmg" => true -> "macos"
+      case "databaseflow.jar" => true -> "jar"
+      case "databaseflow.pkg" => true -> "appstore"
+      case "databaseflow.windows.zip" => true -> "windows"
       case "databaseflow.docker.gz" => true -> "docker"
-      case "databaseflow.server.zip" => true -> "universal"
+      case "databaseflow.universal.zip" => true -> "universal"
       case x => false -> s"unknown:$x"
     }
     Future(DownloadService.add(request.remoteAddress, platform))

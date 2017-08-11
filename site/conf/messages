@@ -14,11 +14,9 @@ index.demo.link = View Demo
 index.download.link = Download
 index.github.link = Github
 index.admin.link = Admin
-index.welcome1 = The best way to query and report on your own data.
-index.welcome2 = You can run {0} locally for your own use, or install to a shared server for the whole team.
 
-index.hero.title = The best way to query and visualize your database.
-index.hero.subtitle1 = {0} is an open source self-hosted collaborative SQL client, GraphQL server, and charting application that works with your database.
+index.hero.title = Query and report on your data with a modern SQL/GraphQL web interface.
+index.hero.subtitle1 = {0} is an open source self-hosted SQL client, GraphQL server, and charting application that works with your database.
 index.hero.subtitle2 = Visualize schemas, query plans, charts, and results. You can run {0} locally for your own use, or install to a shared server for the whole team.
 
 # Downloads

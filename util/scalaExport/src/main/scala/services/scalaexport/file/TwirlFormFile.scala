@@ -32,7 +32,7 @@ object TwirlFormFile {
     et.t.columns.foreach { col =>
       val label = ExportHelper.toIdentifier(col.name)
       formFile.add("<tr>", 1)
-      formFile.add(s"""<th><label for="input-$label">$label</label></th>""")
+      formFile.add(s"""<th>$label</th>""")
       formFile.add(s"""<td><input id="input-$label" type="text" name="$label" value="@model.$label" /></td>""")
       formFile.add("</tr>", -1)
     }

@@ -14,21 +14,22 @@
     </div>
   </div>
 }
+
 <div class="row">
   <div class="col s12">
     <div class="section-header">@messages("downloads.title")</div>
     <div class="row padded-top">
-      @section("osx", "macOS", "DatabaseFlow.dmg")
-      @section("windows", "Windows", "DatabaseFlow.zip")
-      @section("linux", "Linux", "DatabaseFlow.jar")
-      @section("docker", "Docker", "databaseflow.docker.gz")
+      @section("osx", "macOS", s"databaseflow.dmg")
+      @section("windows", "Windows", s"databaseflow.windows.zip")
+      @section("linux", "Linux", s"databaseflow.jar")
+      @section("docker", "Docker", s"databaseflow.docker.gz")
     </div>
     <div class="row padded-top">
       <div class="col s12" style="text-align: center;">
         Or, download a
-        <a class="theme-text" href="@controllers.routes.DownloadController.download("DatabaseFlow.jar")">jar</a>
+        <a class="theme-text" href="@controllers.routes.DownloadController.download(s"databaseflow.jar")">jar</a>
         file or universal
-        <a class="theme-text" href="@controllers.routes.DownloadController.download("databaseflow.server.zip")">zip</a>
+        <a class="theme-text" href="@controllers.routes.DownloadController.download(s"databaseflow.universal.zip")">zip</a>
         (@messages("downloads.dependency.java8")).
       </div>
     </div>

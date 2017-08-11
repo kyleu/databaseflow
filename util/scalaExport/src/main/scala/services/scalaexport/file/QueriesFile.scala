@@ -16,7 +16,16 @@ object QueriesFile {
 
     file.add(s"object ${et.className}Queries extends BaseQueries[${et.className}] {", 1)
     file.add(s"""override protected val tableName = "${et.t.name}"""")
-    file.add("override protected val columns = Seq(" + et.t.columns.map("\"" + _.name + "\"").mkString(", ") + ")")
+
+    file.addImport("models.database", "DatabaseField")
+    file.add("override protected val columns = Seq(", 1)
+    et.t.columns.foreach { c =>
+      val field = "DatabaseField(prop = \"" + ExportHelper.toIdentifier(c.name) + "\", col = \"" + c.name + "\", typ = \"string\")"
+      val comma = if (et.t.columns.lastOption.contains(c)) { "" } else { "," }
+      file.add(field + comma)
+    }
+    file.add(")", -1)
+
     et.t.primaryKey.foreach { pk =>
       file.add("override protected val idColumns = Seq(" + pk.columns.map("\"" + _ + "\"").mkString(", ") + ")")
       val searchColumns = et.config.searchColumns.getOrElse(ExportHelper.toIdentifier(et.t.name), pk.columns.map(x => x -> x))
