@@ -8,6 +8,7 @@ object SchemaFile {
     val file = ScalaFile("models" +: et.pkg, et.className + "Schema")
 
     file.addImport(("services" +: et.pkg).mkString("."), et.className + "Service")
+    file.addImport("util.FutureUtils", "graphQlContext")
     SchemaHelper.addImports(file)
 
     file.add(s"object ${et.className}Schema {", 1)
@@ -45,19 +46,39 @@ object SchemaFile {
       }
       file.add(")", -1)
     }
-
+    file.add()
+    file.add(s"implicit lazy val ${et.propertyName}ResultType: ObjectType[GraphQLContext, ${et.className}Result] = deriveObjectType()")
     file.add()
   }
 
   private[this] def addQueryFields(et: ExportTable, file: ScalaFile) = {
     file.add("val queryFields = fields[GraphQLContext, Unit](Field(", 1)
     file.add(s"""name = "${et.propertyName}",""")
-    file.add(s"fieldType = ListType(${et.propertyName}Type),")
-    file.add(s"arguments = queryArg :: limitArg :: offsetArg :: Nil,")
-    file.add(s"resolve = c => c.arg(CommonSchema.queryArg) match {", 1)
-    file.add(s"case Some(q) => ${et.className}Service.search(q, None, c.arg(limitArg), c.arg(offsetArg))")
-    file.add(s"case _ => ${et.className}Service.getAll(None, c.arg(limitArg), c.arg(offsetArg))")
+    file.add(s"fieldType = ${et.propertyName}ResultType,")
+
+    file.add(s"arguments = queryArg :: reportFiltersArg :: orderBysArg :: limitArg :: offsetArg :: Nil,")
+    file.add(s"resolve = c =>")
+    file.add("{", 1)
+
+    file.add("val start = util.DateUtils.now")
+    file.add("val filters = c.arg(reportFiltersArg).getOrElse(Nil)")
+    file.add("val orderBys = c.arg(orderBysArg).getOrElse(Nil)")
+    file.add("val limit = c.arg(limitArg)")
+    file.add("val offset = c.arg(offsetArg)")
+
+    file.add("val f = c.arg(CommonSchema.queryArg) match {", 1)
+    file.add(s"case Some(q) => ${et.className}Service.searchWithCount(q, filters, orderBys, limit, offset)")
+    file.add(s"case _ => ${et.className}Service.getAllWithCount(filters, orderBys, limit, offset)")
     file.add("}", -1)
+
+    file.add("f.map { r =>", 1)
+    file.add("val paging = PagingOptions.from(r._1, limit, offset)")
+    file.add("val durationMs = (System.currentTimeMillis - util.DateUtils.toMillis(start)).toInt")
+    file.add(s"${et.className}Result(paging = paging, filters = filters, orderBys = orderBys, totalCount = r._1, records = r._2, durationMs = durationMs)")
+    file.add("}", -1)
+
+    file.add("}", -1)
+
     file.add("))", -1)
     file.add("}", -1)
   }

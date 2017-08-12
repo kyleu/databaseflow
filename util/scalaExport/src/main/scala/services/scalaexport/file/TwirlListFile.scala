@@ -18,8 +18,9 @@ object TwirlListFile {
     val searchColumns = et.config.searchColumns.getOrElse(et.propertyName, et.pkColumns.map(x => x.name -> x.name))
 
     val listFile = TwirlFile(pkg, et.propertyName + "List")
+    val viewArgs = "user: models.user.User, q: Option[String], orderBy: Option[String], orderAsc: Boolean, totalCount: Option[Int]"
 
-    listFile.add(s"@(user: models.user.User, q: Option[String], totalCount: Option[Int], modelSeq: Seq[$modelClass], limit: Int, offset: Int)(", 2)
+    listFile.add(s"@($viewArgs, modelSeq: Seq[$modelClass], limit: Int, offset: Int)(", 2)
     listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash")
     listFile.add(s")", -2)
     listFile.add()

@@ -11,7 +11,7 @@ object ReferencesHelper {
         file.addImport(("models" +: ref.pkg).mkString("."), refCls + "Schema")
       }
       file.add("Field(", 1)
-      file.add(s"""name = "${ref.name}",""")
+      file.add(s"""name = "${ExportHelper.toIdentifier(ref.name)}",""")
       file.add(s"""fieldType = ListType(${refCls}Schema.${ExportHelper.toIdentifier(refCls)}Type),""")
       //file.add(s"""arguments = CommonSchema.limitArg :: CommonSchema.offsetArg :: Nil,""")
 

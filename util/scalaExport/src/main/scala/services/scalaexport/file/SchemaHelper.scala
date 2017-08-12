@@ -11,6 +11,10 @@ object SchemaHelper {
     file.addImport("sangria.schema", "_")
     file.addImport("models.graphql.CommonSchema", "_")
     file.addImport("models.graphql.DateTimeSchema", "_")
+    file.addImport("models.result.filter.FilterSchema", "_")
+    file.addImport("models.result.orderBy.OrderBySchema", "_")
+    file.addImport("models.result.paging", "PagingOptions")
+    file.addImport("models.result.paging.PagingSchema", "pagingOptionsType")
   }
 
   def addPrimaryKey(et: ExportTable, file: ScalaFile) = et.pkColumns match {

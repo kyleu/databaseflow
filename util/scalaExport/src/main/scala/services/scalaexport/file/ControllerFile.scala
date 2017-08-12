@@ -14,6 +14,7 @@ object ControllerFile {
     file.addImport("util.FutureUtils", "defaultContext")
     file.addImport("controllers", "BaseController")
     file.addImport("scala.concurrent", "Future")
+    file.addImport("models.result.orderBy", "OrderBy")
 
     if (et.pkg.isEmpty) {
       file.addImport(s"services", s"${et.className}Service")
@@ -24,22 +25,17 @@ object ControllerFile {
     file.add("@javax.inject.Singleton")
     file.add(s"class ${et.className}Controller @javax.inject.Inject() (override val app: Application) extends BaseController {", 1)
 
-    file.add(s"""def list(q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None) = {""", 1)
+    file.add(s"""def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int]) = {""", 1)
     file.add(s"""withAdminSession("${et.propertyName}.list") { implicit request =>""", 1)
 
+    file.add("val orderBys = orderBy.map(o => OrderBy(col = o, dir = OrderBy.Direction.fromBoolAsc(orderAsc))).toSeq")
     file.add("val f = q match {", 1)
-    file.add(s"case Some(query) if query.nonEmpty => ${et.className}Service.search(query, orderBy, limit.orElse(Some(100)), offset)")
-    file.add(s"case _ => ${et.className}Service.getAll(orderBy, limit.orElse(Some(100)), offset)")
+    file.add(s"case Some(query) if query.nonEmpty => ${et.className}Service.searchWithCount(query, Nil, orderBys, limit.orElse(Some(100)), offset)")
+    file.add(s"case _ => ${et.className}Service.getAllWithCount(Nil, orderBys, limit.orElse(Some(100)), offset)")
     file.add("}", -1)
-
-    file.add("val c = q match {", 1)
-    file.add(s"case Some(query) if query.nonEmpty => ${et.className}Service.searchCount(query)")
-    file.add(s"case _ => ${et.className}Service.totalCount()")
-    file.add("}", -1)
-
-    file.add("for (models <- f; total <- c) yield {", 1)
-    file.add(s"Ok($viewPkg.${et.propertyName}List(request.identity, q, Some(total), models, limit.getOrElse(100), offset.getOrElse(0)))")
-    file.add("}", -1)
+    file.add(s"f.map(r => Ok($viewPkg.${et.propertyName}List(", 1)
+    file.add("request.identity, q, orderBy, orderAsc, Some(r._1), r._2, limit.getOrElse(100), offset.getOrElse(0)")
+    file.add(")))", -1)
 
     file.add("}", -1)
     file.add("}", -1)

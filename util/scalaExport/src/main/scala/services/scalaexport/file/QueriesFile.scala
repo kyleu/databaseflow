@@ -18,9 +18,9 @@ object QueriesFile {
     file.add(s"""override protected val tableName = "${et.t.name}"""")
 
     file.addImport("models.database", "DatabaseField")
-    file.add("override protected val columns = Seq(", 1)
+    file.add("override protected val fields = Seq(", 1)
     et.t.columns.foreach { c =>
-      val field = "DatabaseField(prop = \"" + ExportHelper.toIdentifier(c.name) + "\", col = \"" + c.name + "\", typ = \"string\")"
+      val field = s"""DatabaseField(title = "${ExportHelper.toClassName(c.name)}", prop = "${ExportHelper.toIdentifier(c.name)}", col = "${c.name}", typ = "string")"""
       val comma = if (et.t.columns.lastOption.contains(c)) { "" } else { "," }
       file.add(field + comma)
     }
@@ -32,6 +32,16 @@ object QueriesFile {
       file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _._1 + "\"").mkString(", ")})")
     }
     file.add()
+
+    file.addImport("models.result.filter", "Filter")
+    file.add("def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)")
+    file.add("def getAll = GetAll")
+    file.add()
+    file.add("val search = Search")
+    file.add("val searchCount = SearchCount")
+    file.add("val searchExact = SearchExact")
+    file.add()
+
     et.pkColumns match {
       case Nil => // noop
       case pkCol :: Nil =>
@@ -51,17 +61,8 @@ object QueriesFile {
         file.add(")", -1)
         file.add()
     }
-    file.add("def count(whereClause: Option[String] = None) = new Count(s\"\"\"select count(*) as c from \"$tableName\" ${whereClause.getOrElse(\"\")}\"\"\")")
-    file.add(s"def getAll(${ExportHelper.getAllArgs}) = GetAll(orderBy, limit, offset)")
-    file.add()
 
     ForeignKeysHelper.writeQueries(et, file)
-
-    file.add("def searchCount(q: String) = SearchCount(q)")
-    file.add(s"def search(${ExportHelper.searchArgs}) = Search(q, orderBy, limit, offset)")
-    file.add()
-    file.add(s"def searchExact(${ExportHelper.searchArgs}) = SearchExact(q, orderBy, limit, offset)")
-    file.add()
 
     file.add(s"def insert(model: ${et.className}) = Insert(model)")
     et.pkColumns match {

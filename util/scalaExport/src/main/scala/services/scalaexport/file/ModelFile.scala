@@ -7,7 +7,6 @@ import services.scalaexport.{ExportHelper, ExportTable}
 object ModelFile {
   def export(et: ExportTable) = {
     val file = ScalaFile("models" +: et.pkg, et.className)
-    et.t.description.foreach(d => file.add(s"/** $d */"))
 
     file.add(s"object ${et.className} {", 1)
     file.add(s"val empty = ${et.className}(", 1)
@@ -21,13 +20,14 @@ object ModelFile {
         case ColumnType.IntegerType => "0"
         case ColumnType.TimestampType => "util.DateUtils.now"
         case ColumnType.DateType => "util.DateUtils.today"
+        case ColumnType.BigDecimalType => "BigDecimal(0)"
         case _ => "\"" + col.defaultValue.getOrElse("") + "\""
       }
 
       val withOption = if (col.notNull) {
         value
       } else {
-        "Some(" + value + ")"
+        s"Some($value)"
       }
 
       val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
@@ -38,6 +38,7 @@ object ModelFile {
     file.add("}", -1)
     file.add()
 
+    et.t.description.foreach(d => file.add(s"/** $d */"))
     file.add(s"case class ${et.className}(", 1)
     et.t.columns.foreach { col =>
       col.columnType.requiredImport.foreach(p => file.addImport(p, col.columnType.asScala))

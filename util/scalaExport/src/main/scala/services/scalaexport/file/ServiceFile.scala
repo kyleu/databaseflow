@@ -10,8 +10,10 @@ object ServiceFile {
     val file = ScalaFile("services" +: et.pkg, et.className + "Service")
     file.addImport(("models" +: et.pkg).mkString("."), et.className)
     file.addImport(("models" +: "queries" +: et.pkg).mkString("."), et.className + "Queries")
-    file.addImport(("services" :: "database" :: Nil).mkString("."), "Database")
-    file.add(s"object ${et.className}Service {", 1)
+    file.addImport("services.database", "Database")
+    file.addImport("services", "ModelServiceHelper")
+
+    file.add(s"object ${et.className}Service extends ModelServiceHelper[${et.className}] {", 1)
 
     et.pkColumns.foreach(col => col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala)))
 
@@ -45,21 +47,26 @@ object ServiceFile {
       pkg = et.pkg, className = et.className, pkColumns = et.pkColumns.map(c => c.name -> c.columnType.asScalaFull)
     ).toString)
 
-    file.add(s"def totalCount() = Database.query(${et.className}Queries.count())")
-    file.add(s"def getAll(${ExportHelper.getAllArgs}) = {", 1)
-    file.add(s"Database.query(${et.className}Queries.getAll(orderBy, limit, offset))")
+    file.addImport("models.result.filter", "Filter")
+    file.addImport("models.result.orderBy", "OrderBy")
+
+    file.add(s"override def countAll(filters: Seq[Filter] = Nil) = Database.query(${et.className}Queries.countAll(filters))")
+    file.add("override def getAll(filters: Seq[Filter], orderBys: Seq[OrderBy], limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
+    file.add(s"Database.query(${et.className}Queries.getAll(filters, orderBys, limit, offset))")
+    file.add("}", -1)
+    file.add()
+    file.add(s"override def searchCount(q: String, filters: Seq[Filter]) = Database.query(${et.className}Queries.searchCount(q, filters))")
+    file.add("override def search(q: String, filters: Seq[Filter], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]) = {", 1)
+    file.add(s"Database.query(${et.className}Queries.search(q, filters, orderBys, limit, offset))")
+    file.add("}", -1)
+    file.add()
+    file.add("def searchExact(q: String, orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]) = {", 1)
+    file.add(s"Database.query(${et.className}Queries.searchExact(q, orderBys, limit, offset))")
     file.add("}", -1)
     file.add()
 
     ForeignKeysHelper.writeService(et, file)
 
-    file.add(s"def searchCount(q: String) = Database.query(${et.className}Queries.searchCount(q))")
-    file.add(s"def search(${ExportHelper.searchArgs}) = {", 1)
-    file.add(s"Database.query(${et.className}Queries.search(q, orderBy, limit, offset))")
-    file.add("}", -1)
-    file.add()
-    file.add(s"""def searchExact(${ExportHelper.searchArgs}) = Database.query(${et.className}Queries.searchExact(q, orderBy, limit, offset))""")
-    file.add()
     file.add(s"def insert(model: ${et.className}) = Database.execute(${et.className}Queries.insert(model))")
 
     et.pkColumns match {

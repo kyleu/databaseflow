@@ -29,6 +29,7 @@ object ExportFiles {
       et -> Seq.empty
     } else {
       val cls = ModelFile.export(et)
+      val res = ResultFile.export(et)
       val queries = QueriesFile.export(et)
       val svc = ServiceFile.export(et)
       val sch = SchemaFile.export(et)
@@ -39,7 +40,7 @@ object ExportFiles {
       val tf = TwirlFormFile.export(et)
       val tsr = TwirlSearchResultFile.export(et)
 
-      et -> Seq(cls, queries, svc, sch, cntr, tl, tv, tf, tsr)
+      et -> Seq(cls, res, queries, svc, sch, cntr, tl, tv, tf, tsr)
     }
   }
 }

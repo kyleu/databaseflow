@@ -50,7 +50,7 @@ object InjectSearch {
         s
       } else {
         val stringFields = stringModels.map { m =>
-          s"    val ${m.identifier}F = ${m.serviceClass}.searchExact(q, limit = Some(5)).map { models =>\n" ++
+          s"    val ${m.identifier}F = ${m.serviceClass}.searchExact(q = q, orderBys = Nil, limit = Some(5), offset = None).map { models =>\n" ++
             s"      models.map(model => ${m.viewClass}(model, ${m.message}))\n" +
             "    }"
         }

@@ -18,7 +18,7 @@ object InjectRoutes {
           val comment = s"# ${ExportHelper.toClassName(m._2)} Routes"
 
           val listWs = (0 until (56 - prop.length)).map(_ => " ").mkString
-          val list = s"GET         /$prop $listWs $controller.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, limit: Option[Int] ?= None, offset: Option[Int] ?= None)"
+          val list = s"GET         /$prop $listWs $controller.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None)"
 
           val formNew = s"GET         /$prop/new ${listWs.drop(4)} $controller.formNew"
 
