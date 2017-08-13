@@ -70,12 +70,14 @@ object ServiceFile {
 
     file.add(s"def insert(model: ${model.className}) = Database.execute(${model.className}Queries.insert(model))")
 
-    model.pkColumns match {
-      case Nil => // noop
-      case col :: Nil =>
-        col.columnType.requiredImport.foreach(x => file.addImport(x, col.columnType.asScala))
-        file.add(s"def remove(${col.name}: ${col.columnType.asScala}) = Database.execute(${model.className}Queries.removeById(${col.name}))")
-      case _ => // multiple columns
+    if (model.pkColumns.nonEmpty) {
+      file.addImport("models.result.data", "DataField")
+      model.pkColumns.foreach(col => col.columnType.requiredImport.foreach(x => file.addImport(x, col.columnType.asScala)))
+      val sig = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
+      val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
+      file.add(s"def remove($sig) = Database.execute(${model.className}Queries.removeById($call))")
+      file.add()
+      file.add(s"def update($sig, fields: Seq[DataField]) = Database.execute(${model.className}Queries.update($call, fields))")
     }
 
     file.add("}", -1)
