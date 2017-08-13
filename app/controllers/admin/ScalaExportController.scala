@@ -64,7 +64,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     }
   }
 
-  private[this] def modelForTable(schema: Schema, t: Table, form: Map[String, String]) = ExportConfiguration.Model(
+  private[this] def modelForTable(schema: Schema, t: Table, form: Map[String, String]) = ExportModel(
     tableName = t.name,
     pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
     propertyName = form("propertyName"),
@@ -81,19 +81,17 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     provided = form.get("provided").contains("true")
   )
 
-  private[this] def fieldForColumn(col: Column, form: Map[String, String]) = {
-    ExportConfiguration.Model.Field(
-      columnName = col.name,
-      propertyName = form(col.name + ".propertyName"),
-      title = form(col.name + ".title"),
-      description = form.get(col.name + ".description").filter(_.nonEmpty),
-      t = ColumnType.withNameInsensitive(form(col.name + ".t")),
-      sqlTypeName = col.sqlTypeName,
-      defaultValue = form.get(col.name + ".defaultValue").orElse(col.defaultValue),
-      notNull = form.get(col.name + ".notNull").map(_ == "true").getOrElse(col.notNull),
-      inSearch = form.get(col.name + ".inSearch").contains("true"),
-      inView = form.get(col.name + ".inView").contains("true"),
-      ignored = form.get(col.name + ".ignored").contains("true")
-    )
-  }
+  private[this] def fieldForColumn(col: Column, form: Map[String, String]) = ExportField(
+    columnName = col.name,
+    propertyName = form(col.name + ".propertyName"),
+    title = form(col.name + ".title"),
+    description = form.get(col.name + ".description").filter(_.nonEmpty),
+    t = ColumnType.withNameInsensitive(form(col.name + ".t")),
+    sqlTypeName = col.sqlTypeName,
+    defaultValue = form.get(col.name + ".defaultValue").orElse(col.defaultValue),
+    notNull = form.get(col.name + ".notNull").map(_ == "true").getOrElse(col.notNull),
+    inSearch = form.get(col.name + ".inSearch").contains("true"),
+    inView = form.get(col.name + ".inView").contains("true"),
+    ignored = form.get(col.name + ".ignored").contains("true")
+  )
 }

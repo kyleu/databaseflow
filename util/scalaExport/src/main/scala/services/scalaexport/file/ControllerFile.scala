@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 
 object ControllerFile {
-  def export(model: ExportConfiguration.Model) = {
+  def export(model: ExportModel) = {
     val file = ScalaFile("controllers" +: "admin" +: model.pkg, model.className + "Controller")
 
     val viewPkg = ("views" +: "html" +: "admin" +: model.pkg).mkString(".")
@@ -58,7 +58,7 @@ object ControllerFile {
     file
   }
 
-  private[this] def writePks(model: ExportConfiguration.Model, file: ScalaFile, viewPkg: String, routesClass: String) = {
+  private[this] def writePks(model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = {
     if (model.pkColumns.nonEmpty) {
       val viewArgs = model.pkColumns.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
       val callArgs = model.pkColumns.map(x => s"${ExportHelper.toIdentifier(x.name)} = ${ExportHelper.toIdentifier(x.name)}").mkString(", ")

@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object ForeignKeysHelper {
-  def writeQueries(model: ExportConfiguration.Model, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+  def writeQueries(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
     fk.references.toList match {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
@@ -19,7 +19,7 @@ object ForeignKeysHelper {
     }
   }
 
-  def writeService(model: ExportConfiguration.Model, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+  def writeService(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
     fk.references.toList match {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
@@ -34,7 +34,7 @@ object ForeignKeysHelper {
     }
   }
 
-  def writeSchema(model: ExportConfiguration.Model, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
+  def writeSchema(model: ExportModel, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
     file.addImport("sangria.execution.deferred", "Relation")
     file.addImport("sangria.execution.deferred", "Fetcher")
 
@@ -61,7 +61,7 @@ object ForeignKeysHelper {
     }
   }
 
-  def writeFields(config: ExportConfiguration, model: ExportConfiguration.Model, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
+  def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
     model.foreignKeys.foreach { fk =>
       val targetTable = config.getModel(fk.targetTable)
       fk.references.toList match {

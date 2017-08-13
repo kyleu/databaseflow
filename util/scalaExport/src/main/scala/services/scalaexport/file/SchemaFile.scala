@@ -1,10 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object SchemaFile {
-  def export(config: ExportConfiguration, model: ExportConfiguration.Model) = {
+  def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile("models" +: model.pkg, model.className + "Schema")
 
     file.addImport(("services" +: model.pkg).mkString("."), model.className + "Service")
@@ -22,7 +22,7 @@ object SchemaFile {
     file
   }
 
-  private[this] def addObjectType(config: ExportConfiguration, model: ExportConfiguration.Model, file: ScalaFile) = {
+  private[this] def addObjectType(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
     if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && model.references.isEmpty) {
       file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
@@ -51,7 +51,7 @@ object SchemaFile {
     file.add()
   }
 
-  private[this] def addQueryFields(model: ExportConfiguration.Model, file: ScalaFile) = {
+  private[this] def addQueryFields(model: ExportModel, file: ScalaFile) = {
     file.add("val queryFields = fields[GraphQLContext, Unit](Field(", 1)
     file.add(s"""name = "${model.propertyName}",""")
     file.add(s"fieldType = ${model.propertyName}ResultType,")

@@ -3,7 +3,7 @@ package services.scalaexport.file
 import models.scalaexport.ScalaFile
 import models.schema.Column
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 
 object SchemaHelper {
   def addImports(file: ScalaFile) = {
@@ -25,7 +25,7 @@ object SchemaHelper {
     case cols => Some("(" + cols.map(_.columnType.asScala).mkString(", ") + ")")
   }
 
-  def addPrimaryKey(model: ExportConfiguration.Model, file: ScalaFile) = model.pkColumns match {
+  def addPrimaryKey(model: ExportModel, file: ScalaFile) = model.pkColumns match {
     case Nil => // noop
     case pkCol :: Nil =>
       file.addImport("sangria.execution.deferred", "HasId")
@@ -55,7 +55,7 @@ object SchemaHelper {
       file.add()
   }
 
-  def addPrimaryKeyArguments(model: ExportConfiguration.Model, file: ScalaFile) = model.pkColumns match {
+  def addPrimaryKeyArguments(model: ExportModel, file: ScalaFile) = model.pkColumns match {
     case Nil => // noop
     case pkCols => pkCols.foreach { pkCol =>
       val field = model.getField(pkCol.name)
@@ -65,7 +65,7 @@ object SchemaHelper {
     }
   }
 
-  def addMutationFields(model: ExportConfiguration.Model, file: ScalaFile) = if (model.pkColumns.nonEmpty) {
+  def addMutationFields(model: ExportModel, file: ScalaFile) = if (model.pkColumns.nonEmpty) {
     val pks = model.pkColumns.map(c => model.getField(c.name))
     val pkNames = pks.map(_.propertyName).mkString(", ")
     val pkArgs = pks.map(pk => model.propertyName + pk.className + "Arg")

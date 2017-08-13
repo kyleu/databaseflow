@@ -3,11 +3,11 @@ package services.scalaexport.file
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 import services.scalaexport.inject.InjectSearchParams
 
 object ServiceFile {
-  def export(model: ExportConfiguration.Model) = {
+  def export(model: ExportModel) = {
     val file = ScalaFile("services" +: model.pkg, model.className + "Service")
     file.addImport(("models" +: model.pkg).mkString("."), model.className)
     file.addImport(("models" +: "queries" +: model.pkg).mkString("."), model.className + "Queries")

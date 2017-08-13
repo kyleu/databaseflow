@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.TwirlFile
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 
 object TwirlFormFile {
-  def export(model: ExportConfiguration.Model) = {
+  def export(model: ExportModel) = {
     val pkg = "views" +: "admin" +: model.pkg
     val modelClass = model.pkg match {
       case Nil => s"models.${model.className}"

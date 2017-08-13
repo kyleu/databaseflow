@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 
 object QueriesFile {
-  def export(model: ExportConfiguration.Model) = {
+  def export(model: ExportModel) = {
     val file = ScalaFile("models" +: "queries" +: model.pkg, model.className + "Queries")
 
     file.addImport(("models" +: model.pkg).mkString("."), model.className)

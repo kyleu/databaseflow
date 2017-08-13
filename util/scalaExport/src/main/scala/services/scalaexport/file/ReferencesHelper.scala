@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import services.scalaexport.ExportHelper
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object ReferencesHelper {
-  def writeFields(config: ExportConfiguration, model: ExportConfiguration.Model, file: ScalaFile) = if (model.references.nonEmpty) {
+  def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.references.nonEmpty) {
     model.references.foreach { ref =>
       val model = config.getModel(ref.srcTable)
       val prop = model.getField(ref.srcCol)

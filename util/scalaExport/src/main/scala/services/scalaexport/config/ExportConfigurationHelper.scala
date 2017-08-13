@@ -1,7 +1,6 @@
 package services.scalaexport.config
 
 import models.schema.{Schema, Table}
-import services.scalaexport.ExportHelper
 
 object ExportConfigurationHelper {
   def pkColumns(schema: Schema, t: Table) = {
@@ -23,7 +22,7 @@ object ExportConfigurationHelper {
               case x => x
             }
             val tgtCol = t.columns.find(_.name == ref.target).getOrElse(throw new IllegalStateException(s"Missing column [${ref.target}]."))
-            Seq(ExportConfiguration.Model.Reference(name = name, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull))
+            Seq(ExportModel.Reference(name = name, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull))
           case _ => None // multiple refs
         }
       }

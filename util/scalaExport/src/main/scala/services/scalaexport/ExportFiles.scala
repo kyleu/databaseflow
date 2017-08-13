@@ -2,7 +2,7 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 import services.scalaexport.file._
 
 object ExportFiles {
@@ -24,7 +24,7 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportModel(config: ExportConfiguration, model: ExportConfiguration.Model): (ExportConfiguration.Model, Seq[OutputFile]) = {
+  def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
     if (model.provided) {
       model -> Seq.empty
     } else {

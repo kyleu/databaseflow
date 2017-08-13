@@ -1,8 +1,8 @@
 package models.scalaexport
 
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
-case class ExportResult(config: ExportConfiguration, models: Seq[ExportConfiguration.Model], files: Seq[OutputFile]) {
+case class ExportResult(config: ExportConfiguration, models: Seq[ExportModel], files: Seq[OutputFile]) {
   private[this] val startTime = System.currentTimeMillis
   private[this] val logs = collection.mutable.ArrayBuffer.empty[(Int, String)]
 

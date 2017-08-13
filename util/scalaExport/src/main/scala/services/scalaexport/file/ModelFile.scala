@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 
 object ModelFile {
-  def export(model: ExportConfiguration.Model) = {
+  def export(model: ExportModel) = {
     val file = ScalaFile("models" +: model.pkg, model.className)
 
     file.add(s"object ${model.className} {", 1)

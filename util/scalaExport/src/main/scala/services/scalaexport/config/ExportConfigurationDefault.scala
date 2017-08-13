@@ -1,7 +1,6 @@
 package services.scalaexport.config
 
 import models.schema.{Schema, Table}
-import ExportConfiguration._
 import services.scalaexport.ExportHelper
 import services.scalaexport.ExportHelper._
 
@@ -18,7 +17,7 @@ object ExportConfigurationDefault {
       case _ => false
     }
 
-    Model(
+    ExportModel(
       tableName = t.name,
       propertyName = toIdentifier(t.name),
       className = cn,
@@ -35,7 +34,7 @@ object ExportConfigurationDefault {
 
   private[this] def loadFields(t: Table) = t.columns.toList.map { col =>
     val inSearch = t.primaryKey.exists(_.name == col.name) || t.indexes.exists(i => i.columns.exists(_.name == col.name))
-    Model.Field(
+    ExportField(
       columnName = col.name,
       propertyName = toIdentifier(col.name),
       title = toClassName(col.name),

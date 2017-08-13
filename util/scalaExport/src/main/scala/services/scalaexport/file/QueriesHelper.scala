@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.config.ExportConfiguration
+import services.scalaexport.config.ExportModel
 
 object QueriesHelper {
-  def fromRow(model: ExportConfiguration.Model, file: ScalaFile) = {
+  def fromRow(model: ExportModel, file: ScalaFile) = {
     file.add(s"override protected def fromRow(row: Row) = ${model.className}(", 1)
     model.fields.foreach { field =>
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
@@ -32,7 +32,7 @@ object QueriesHelper {
     file.add(")", -1)
   }
 
-  def toDataSeq(model: ExportConfiguration.Model, file: ScalaFile) = {
+  def toDataSeq(model: ExportModel, file: ScalaFile) = {
     file.add(s"override protected def toDataSeq(o: ${model.className}) = Seq[Any](", 1)
     file.add(model.fields.map { field =>
       val cn = field.propertyName
