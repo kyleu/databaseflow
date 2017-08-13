@@ -20,7 +20,8 @@ object InjectRoutes {
             "limit: Option[Int] ?= None, offset: Option[Int] ?= None"
           val list = s"GET         /${m.propertyName} $listWs $controller.list($listArgs)"
 
-          val formNew = s"GET         /${m.propertyName}/new ${listWs.drop(4)} $controller.formNew"
+          val createForm = s"GET         /${m.propertyName}/form ${listWs.drop(5)} $controller.createForm"
+          val createAct = s"POST        /${m.propertyName} $listWs $controller.create"
 
           val et = result.getModel(m.propertyName)
           val detail = et.pkColumns match {
@@ -33,11 +34,12 @@ object InjectRoutes {
               val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
               Seq(
                 s"GET         /$detailUrl $detailWs $controller.view($args)",
-                s"GET         /$detailUrl/edit ${detailWs.drop(5)} $controller.formEdit($args)"
+                s"GET         /$detailUrl/form ${detailWs.drop(5)} $controller.editForm($args)",
+                s"POST        /$detailUrl $detailWs $controller.edit($args)"
               )
           }
 
-          (comment +: list +: formNew +: detail).mkString("\n") + "\n\n"
+          (comment +: list +: createForm +: createAct +: detail).mkString("\n") + "\n\n"
         }
       }.mkString.stripSuffix("\n\n")
 

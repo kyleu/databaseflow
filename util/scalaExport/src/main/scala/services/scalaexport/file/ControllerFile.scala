@@ -11,6 +11,11 @@ object ControllerFile {
     val viewPkg = ("views" +: "html" +: "admin" +: model.pkg).mkString(".")
     val modelPkg = ("models" +: model.pkg :+ model.className).mkString(".")
 
+    val routesClass = model.pkg match {
+      case Nil => s"controllers.admin.routes.${model.className}Controller"
+      case _ => s"controllers.admin.${model.pkg.mkString(".")}.routes.${model.className}Controller"
+    }
+
     file.addImport("util", "Application")
     file.addImport("util.FutureUtils", "defaultContext")
     file.addImport("controllers", "BaseController")
@@ -25,6 +30,17 @@ object ControllerFile {
 
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (override val app: Application) extends BaseController {", 1)
+
+    file.add(s"""def createForm = withAdminSession("${model.propertyName}.createForm") { implicit request =>""", 1)
+    file.add(s"val call = $routesClass.create()")
+    file.add(s"Future.successful(Ok($viewPkg.${model.propertyName}Form(request.identity, $modelPkg.empty, call, isNew = true)))")
+    file.add("}", -1)
+    file.add()
+
+    file.add(s"""def create = withAdminSession("${model.propertyName}.create") { implicit request =>""", 1)
+    file.add("Future.successful(Ok(\"OK\"))")
+    file.add("}", -1)
+    file.add()
 
     file.add(s"""def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int]) = {""", 1)
     file.add(s"""withAdminSession("${model.propertyName}.list") { implicit request =>""", 1)
@@ -57,18 +73,19 @@ object ControllerFile {
         file.add("}", -1)
 
         file.add()
-        file.add(s"""def formEdit($viewArgs) = withAdminSession("${model.propertyName}.formEdit") { implicit request =>""", 1)
+        file.add(s"""def editForm($viewArgs) = withAdminSession("${model.propertyName}.editForm") { implicit request =>""", 1)
+        file.add(s"val call = $routesClass.edit($getArgs)")
         file.add(s"""${model.className}Service.getById($getArgs).map {""", 1)
-        file.add(s"""case Some(model) => Ok($viewPkg.${model.propertyName}Form(request.identity, model))""")
+        file.add(s"""case Some(model) => Ok($viewPkg.${model.propertyName}Form(request.identity, model, call))""")
         file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
         file.add("}", -1)
         file.add("}", -1)
+        file.add()
+        file.add(s"""def edit($viewArgs) = withAdminSession("${model.propertyName}.edit") { implicit request =>""", 1)
+        file.add("val fields = modelForm(request.body.asFormUrlEncoded)")
+        file.add("Future.successful(Ok(play.twirl.api.Html(fields.toString)))")
+        file.add("}", -1)
     }
-
-    file.add()
-    file.add(s"""def formNew = withAdminSession("${model.propertyName}.formNew") { implicit request =>""", 1)
-    file.add(s"Future.successful(Ok($viewPkg.${model.propertyName}Form(request.identity, $modelPkg.empty, isNew = true)))")
-    file.add("}", -1)
 
     file.add("}", -1)
     file

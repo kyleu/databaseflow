@@ -21,7 +21,7 @@ object TwirlViewFile {
       case Nil => ""
       case cols =>
         val args = cols.map(col => s"model.${ExportHelper.toIdentifier(col.name)}").mkString(", ")
-        s"""@$controllerClass.formEdit($args)"""
+        s"""@$controllerClass.editForm($args)"""
     }
 
     val viewFile = TwirlFile(pkg, et.propertyName + "View")
