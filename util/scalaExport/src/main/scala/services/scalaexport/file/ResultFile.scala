@@ -18,7 +18,7 @@ object ResultFile {
     file.add("override val orderBys: Seq[OrderBy] = Nil,")
     file.add("override val totalCount: Int = 0,")
     file.add("override val paging: PagingOptions = PagingOptions(),")
-    file.add(s"override val records: Seq[${et.className}] = Nil,")
+    file.add(s"override val results: Seq[${et.className}] = Nil,")
     file.add("override val durationMs: Int = 0,")
     file.add("override val occurred: LocalDateTime = util.DateUtils.now")
     file.add(s") extends BaseResult[${et.className}]", -1)

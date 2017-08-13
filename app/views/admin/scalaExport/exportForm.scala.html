@@ -1,9 +1,8 @@
-@import services.scalaexport.config.ExportConfig
-@(cs: models.connection.ConnectionSettings, schema: models.schema.Schema, cfg: ExportConfig)(
+@(user: models.user.User, cs: models.connection.ConnectionSettings, schema: models.schema.Schema, cfg: services.scalaexport.config.ExportConfig)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )
 
-@layout.simple(user = None, title = s"${cfg.projectName} Scala Export") {
+@layout.admin(user = user, title = s"${cfg.projectName} Scala Export", activeSection = "") {
   <style>
     textarea {
       min-height: 120px;

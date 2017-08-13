@@ -74,7 +74,7 @@ object SchemaFile {
     file.add("f.map { r =>", 1)
     file.add("val paging = PagingOptions.from(r._1, limit, offset)")
     file.add("val durationMs = (System.currentTimeMillis - util.DateUtils.toMillis(start)).toInt")
-    file.add(s"${et.className}Result(paging = paging, filters = filters, orderBys = orderBys, totalCount = r._1, records = r._2, durationMs = durationMs)")
+    file.add(s"${et.className}Result(paging = paging, filters = filters, orderBys = orderBys, totalCount = r._1, results = r._2, durationMs = durationMs)")
     file.add("}", -1)
 
     file.add("}", -1)

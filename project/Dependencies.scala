@@ -2,13 +2,13 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.2"
+    private[this] val version = "2.6.3"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.6.2"
+    val json = "com.typesafe.play" %% "play-json" % version
     val test = "com.typesafe.play" %% "play-test" % version % "test"
 
     val mailer = "com.typesafe.play" %% "play-mailer" % "6.0.0"
@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.5.3"
+    private[this] val version = "2.5.4"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version

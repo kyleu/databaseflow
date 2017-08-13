@@ -8,8 +8,8 @@ import services.scalaexport.config.ExportConfigReader
 import scala.concurrent.{ExecutionContext, Future}
 
 case class ScalaExportService(schema: Schema) {
-  private[this] val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
-  private[this] val config = ExportConfigReader.read(schemaId)
+  private[this] val schemaKey = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
+  private[this] val config = ExportConfigReader.read(schemaKey)
 
   def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
     export(config.projectName, schema).map { result =>
@@ -37,3 +37,4 @@ case class ScalaExportService(schema: Schema) {
     Future.successful(ExportResult(projectId, tables.map(_._1), tables.flatMap(t => t._2), config))
   }
 }
+
