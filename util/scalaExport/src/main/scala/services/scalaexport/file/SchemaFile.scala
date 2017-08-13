@@ -12,13 +12,13 @@ object SchemaFile {
     SchemaHelper.addImports(file)
 
     file.add(s"object ${model.className}Schema {", 1)
-
     SchemaHelper.addPrimaryKey(model, file)
+    SchemaHelper.addPrimaryKeyArguments(model, file)
     ForeignKeysHelper.writeSchema(model, file)
-
     addObjectType(config, model, file)
-
     addQueryFields(model, file)
+    SchemaHelper.addMutationFields(model, file)
+    file.add("}", -1)
     file
   }
 
@@ -80,6 +80,5 @@ object SchemaFile {
     file.add("}", -1)
 
     file.add("))", -1)
-    file.add("}", -1)
   }
 }

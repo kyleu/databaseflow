@@ -45,7 +45,7 @@ object ForeignKeysHelper {
           val typ = col.t.asScala
           col.t.requiredImport.foreach(pkg => file.addImport(pkg, typ))
           val propName = col.propertyName
-          val srcClass = ExportHelper.toClassName(propName)
+          val srcClass = col.className
           val seq = if (col.notNull) { s"Seq(x.$propName)" } else { s"x.$propName.toSeq" }
           file.addMarker("fetcher", (file.pkg :+ s"${model.className}Schema" :+ s"${model.propertyName}By${srcClass}Fetcher").mkString("."))
           file.add(s"""val ${model.propertyName}By$srcClass = Relation[${model.className}, $typ]("by$srcClass", x => $seq)""")

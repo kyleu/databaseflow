@@ -13,7 +13,7 @@ object InjectSchema {
     }
 
     def mutationFieldsFor(s: String) = {
-      val newContent = models.map(m => s" ++\n    models.${(m.pkg :+ m.className).mkString(".")}Schema.mutationFields").sorted.mkString
+      val newContent = models.map(m => s"    models.${(m.pkg :+ m.className).mkString(".")}Schema.mutationFields").sorted.mkString(" ++\n  ")
       InjectHelper.replaceBetween(original = s, start = "    // Start model mutation fields", end = s"    // End model mutation fields", newContent = newContent)
     }
 
@@ -25,7 +25,7 @@ object InjectSchema {
     }
 
     val schemaSourceFile = rootDir / "app" / "models" / "graphql" / "Schema.scala"
-    val newContent = fetcherFieldsFor(queryFieldsFor(schemaSourceFile.contentAsString))
+    val newContent = fetcherFieldsFor(queryFieldsFor(mutationFieldsFor(schemaSourceFile.contentAsString)))
     schemaSourceFile.overwrite(newContent)
 
     "Schema.scala" -> newContent

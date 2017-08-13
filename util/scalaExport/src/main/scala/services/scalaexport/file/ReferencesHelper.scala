@@ -17,7 +17,7 @@ object ReferencesHelper {
       file.add(s"""fieldType = ListType(${model.className}Schema.${model.propertyName}Type),""")
       //file.add(s"""arguments = CommonSchema.limitArg :: CommonSchema.offsetArg :: Nil,""")
 
-      val relationRef = s"${model.className}Schema.${model.propertyName}By${ExportHelper.toClassName(prop.propertyName)}"
+      val relationRef = s"${model.className}Schema.${model.propertyName}By${prop.className}"
       val fetcherRef = relationRef + "Fetcher"
       if (ref.notNull) {
         file.add(s"resolve = ctx => $fetcherRef.deferRelSeq($relationRef, ctx.value.${ref.tgt})")

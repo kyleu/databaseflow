@@ -50,7 +50,49 @@ object SchemaHelper {
       file.addImport("sangria.execution.deferred", "Fetcher")
       val fetcherName = s"${model.propertyName}ByIdFetcher"
       file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
-      file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${pkType(pkCols).getOrElse("String")}]) => ${model.className}Service.getByIdSeq(idSeq))")
+      val idType = pkType(pkCols).getOrElse("String")
+      file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[$idType]) => ${model.className}Service.getByIdSeq(idSeq))")
       file.add()
+  }
+
+  def addPrimaryKeyArguments(model: ExportConfiguration.Model, file: ScalaFile) = model.pkColumns match {
+    case Nil => // noop
+    case pkCols => pkCols.foreach { pkCol =>
+      val field = model.getField(pkCol.name)
+      val desc = s"Returns the ${model.title} matching the provided ${field.title}."
+      file.add(s"""val ${model.propertyName}${field.className}Arg = Argument("${field.propertyName}", ${field.graphQlArgType}, description = "$desc")""")
+      file.add()
+    }
+  }
+
+  def addMutationFields(model: ExportConfiguration.Model, file: ScalaFile) = if (model.pkColumns.nonEmpty) {
+    val pks = model.pkColumns.map(c => model.getField(c.name))
+    val pkNames = pks.map(_.propertyName).mkString(", ")
+    val pkArgs = pks.map(pk => model.propertyName + pk.className + "Arg")
+    val argProps = pkArgs.map(arg => s"c.args.arg($arg)").mkString(", ")
+
+    file.addImport("models.result.data", "DataFieldSchema")
+
+    file.add()
+    file.add(s"val ${model.propertyName}MutationType = ObjectType(", 1)
+    file.add(s"""name = "${model.propertyName}",""")
+    file.add(s"""description = "Mutations for ${model.plural}.",""")
+    file.add("fields = fields[GraphQLContext, Unit](Field(", 1)
+    file.add("name = \"update\",")
+    file.add(s"""description = Some("Updates the ${model.title} with the provided $pkNames."),""")
+    file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: DataFieldSchema.dataFieldsArg :: Nil,")
+    file.add(s"fieldType = OptionType(${model.propertyName}Type),")
+    file.add(s"resolve = c => ${model.className}Service.update($argProps, c.args.arg(DataFieldSchema.dataFieldsArg)).flatMap { _ =>", 1)
+    file.add(s"${model.className}Service.getById($argProps)")
+    file.add("}", -1)
+    file.add("))", -1)
+    file.add(")", -1)
+
+    file.add()
+    file.add("val mutationFields = fields[GraphQLContext, Unit](Field(", 1)
+    file.add(s"""name = "${model.propertyName}",""")
+    file.add(s"fieldType = ${model.propertyName}MutationType,")
+    file.add("resolve = _ => ()")
+    file.add("))", -1)
   }
 }
