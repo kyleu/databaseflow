@@ -31,10 +31,9 @@ object TwirlFormFile {
     formFile.add("<table class=\"highlight\">", 1)
     formFile.add("<tbody>", 1)
     et.fields.foreach { field =>
-      val label = field.title
       formFile.add("<tr>", 1)
-      formFile.add(s"""<th>$label</th>""")
-      formFile.add(s"""<td><input id="input-$label" type="text" name="$label" value="@model.$label" /></td>""")
+      formFile.add(s"""<th>${field.title}</th>""")
+      formFile.add(s"""<td><input id="input-${field.propertyName}" type="text" name="${field.propertyName}" value="@model.${field.propertyName}" /></td>""")
       formFile.add("</tr>", -1)
     }
     formFile.add("</tbody>", -1)

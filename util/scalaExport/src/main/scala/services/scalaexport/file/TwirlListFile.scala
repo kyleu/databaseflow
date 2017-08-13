@@ -55,13 +55,16 @@ object TwirlListFile {
       case c => listFile.add(s""""${c.propertyName}" -> "${c.title}",""")
     }
     listFile.add("),", -1)
+    listFile.add("orderBy = orderBy,")
+    listFile.add("orderAsc = orderAsc,")
     listFile.add("totalCount = totalCount,")
     listFile.add("rows = modelSeq.map(resultFor),")
     listFile.add(s"newUrl = Some($controllerClass.formNew()),")
+    listFile.add(s"orderByUrl = Some($controllerClass.list(q, _, _, Some(limit), Some(0))),")
+    listFile.add(s"searchUrl = Some($controllerClass.list(None, orderBy, orderAsc, Some(limit), None)),")
     listFile.add(s"nextUrl = $controllerClass.list(q, None, Some(limit), Some(offset + limit)),")
     listFile.add("limit = limit,")
     listFile.add("offset = offset,")
-    listFile.add("showSearch = true,")
     listFile.add("q = q")
     listFile.add(")", -1)
 
