@@ -1,60 +1,60 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.config.ExportConfiguration
 
 object SchemaFile {
-  def export(et: ExportTable) = {
-    val file = ScalaFile("models" +: et.pkg, et.className + "Schema")
+  def export(config: ExportConfiguration, model: ExportConfiguration.Model) = {
+    val file = ScalaFile("models" +: model.pkg, model.className + "Schema")
 
-    file.addImport(("services" +: et.pkg).mkString("."), et.className + "Service")
+    file.addImport(("services" +: model.pkg).mkString("."), model.className + "Service")
     file.addImport("util.FutureUtils", "graphQlContext")
     SchemaHelper.addImports(file)
 
-    file.add(s"object ${et.className}Schema {", 1)
+    file.add(s"object ${model.className}Schema {", 1)
 
-    SchemaHelper.addPrimaryKey(et, file)
-    ForeignKeysHelper.writeSchema(et, file)
+    SchemaHelper.addPrimaryKey(model, file)
+    ForeignKeysHelper.writeSchema(model, file)
 
-    addObjectType(et, file)
+    addObjectType(config, model, file)
 
-    addQueryFields(et, file)
+    addQueryFields(model, file)
     file
   }
 
-  private[this] def addObjectType(et: ExportTable, file: ScalaFile) = {
-    val columnsDescriptions = et.t.columns.flatMap(col => col.description.map(d => s"""DocumentField("${ExportHelper.toIdentifier(col.name)}", "$d")"""))
-    if (columnsDescriptions.isEmpty && et.t.foreignKeys.isEmpty && et.references.isEmpty) {
-      file.add(s"implicit lazy val ${et.propertyName}Type: ObjectType[GraphQLContext, ${et.className}] = deriveObjectType()")
+  private[this] def addObjectType(config: ExportConfiguration, model: ExportConfiguration.Model, file: ScalaFile) = {
+    val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
+    if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && model.references.isEmpty) {
+      file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
     } else {
-      file.add(s"implicit lazy val ${et.propertyName}Type: ObjectType[GraphQLContext, ${et.className}] = deriveObjectType(", 1)
-      et.t.description.foreach {
-        case d if columnsDescriptions.isEmpty && et.references.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
+      file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
+      model.description.foreach {
+        case d if columnsDescriptions.isEmpty && model.references.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
         case d => file.add(s"""ObjectTypeDescription("$d"),""")
       }
       columnsDescriptions.foreach {
-        case d if columnsDescriptions.lastOption.contains(d) && et.references.isEmpty => file.add(d)
+        case d if columnsDescriptions.lastOption.contains(d) && model.references.isEmpty => file.add(d)
         case d => file.add(d + ",")
       }
-      if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
+      if (model.foreignKeys.nonEmpty || model.references.nonEmpty) {
         file.add("AddFields(", 1)
       }
-      ReferencesHelper.writeFields(et, file)
-      ForeignKeysHelper.writeFields(et, file)
-      if (et.t.foreignKeys.nonEmpty || et.references.nonEmpty) {
+      ReferencesHelper.writeFields(config, model, file)
+      ForeignKeysHelper.writeFields(config, model, file)
+      if (model.foreignKeys.nonEmpty || model.references.nonEmpty) {
         file.add(")", -1)
       }
       file.add(")", -1)
     }
     file.add()
-    file.add(s"implicit lazy val ${et.propertyName}ResultType: ObjectType[GraphQLContext, ${et.className}Result] = deriveObjectType()")
+    file.add(s"implicit lazy val ${model.propertyName}ResultType: ObjectType[GraphQLContext, ${model.className}Result] = deriveObjectType()")
     file.add()
   }
 
-  private[this] def addQueryFields(et: ExportTable, file: ScalaFile) = {
+  private[this] def addQueryFields(model: ExportConfiguration.Model, file: ScalaFile) = {
     file.add("val queryFields = fields[GraphQLContext, Unit](Field(", 1)
-    file.add(s"""name = "${et.propertyName}",""")
-    file.add(s"fieldType = ${et.propertyName}ResultType,")
+    file.add(s"""name = "${model.propertyName}",""")
+    file.add(s"fieldType = ${model.propertyName}ResultType,")
 
     file.add(s"arguments = queryArg :: reportFiltersArg :: orderBysArg :: limitArg :: offsetArg :: Nil,")
     file.add(s"resolve = c =>")
@@ -67,14 +67,14 @@ object SchemaFile {
     file.add("val offset = c.arg(offsetArg)")
 
     file.add("val f = c.arg(CommonSchema.queryArg) match {", 1)
-    file.add(s"case Some(q) => ${et.className}Service.searchWithCount(q, filters, orderBys, limit, offset)")
-    file.add(s"case _ => ${et.className}Service.getAllWithCount(filters, orderBys, limit, offset)")
+    file.add(s"case Some(q) => ${model.className}Service.searchWithCount(q, filters, orderBys, limit, offset)")
+    file.add(s"case _ => ${model.className}Service.getAllWithCount(filters, orderBys, limit, offset)")
     file.add("}", -1)
 
     file.add("f.map { r =>", 1)
     file.add("val paging = PagingOptions.from(r._1, limit, offset)")
     file.add("val durationMs = (System.currentTimeMillis - util.DateUtils.toMillis(start)).toInt")
-    file.add(s"${et.className}Result(paging = paging, filters = filters, orderBys = orderBys, totalCount = r._1, results = r._2, durationMs = durationMs)")
+    file.add(s"${model.className}Result(paging = paging, filters = filters, orderBys = orderBys, totalCount = r._1, results = r._2, durationMs = durationMs)")
     file.add("}", -1)
 
     file.add("}", -1)

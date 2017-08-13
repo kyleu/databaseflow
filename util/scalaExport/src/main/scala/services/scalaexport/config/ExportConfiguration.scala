@@ -1,14 +1,20 @@
 package services.scalaexport.config
 
-import models.schema.ColumnType
+import models.schema.{Column, ColumnType, ForeignKey}
 
 object ExportConfiguration {
   object Model {
+    case class Reference(name: String, srcTable: String, srcCol: String, tgt: String, notNull: Boolean)
+
     case class Field(
       columnName: String,
       propertyName: String,
       title: String,
+      description: Option[String],
       t: ColumnType,
+      sqlTypeName: String,
+      defaultValue: Option[String],
+      notNull: Boolean = false,
       inSearch: Boolean = false,
       inView: Boolean = true,
       ignored: Boolean = false
@@ -17,12 +23,16 @@ object ExportConfiguration {
 
   case class Model(
       tableName: String,
-      pkg: Seq[String] = Nil,
+      pkg: List[String] = Nil,
       propertyName: String,
       className: String,
       title: String,
+      description: Option[String],
       plural: String,
-      fields: Seq[Model.Field],
+      fields: List[Model.Field],
+      pkColumns: List[Column],
+      foreignKeys: List[ForeignKey],
+      references: List[Model.Reference],
       extendsClass: Option[String] = None,
       ignored: Boolean = false,
       provided: Boolean = false

@@ -1,10 +1,11 @@
 package services.scalaexport.file
 
 import models.scalaexport.TwirlFile
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.ExportHelper
+import services.scalaexport.config.ExportConfiguration
 
 object TwirlViewFile {
-  def export(et: ExportTable) = {
+  def export(et: ExportConfiguration.Model) = {
     val pkg = "views" +: "admin" +: et.pkg
     val modelClass = et.pkg match {
       case Nil => s"models.${et.className}"
@@ -43,9 +44,8 @@ object TwirlViewFile {
     viewFile.add("<div class=\"collection-item\">", 1)
     viewFile.add("<table class=\"highlight\">", 1)
     viewFile.add("<tbody>", 1)
-    et.t.columns.foreach { col =>
-      val label = ExportHelper.toIdentifier(col.name)
-      viewFile.add(s"<tr><th>$label</th><td>@model.$label</td></tr>")
+    et.fields.foreach { field =>
+      viewFile.add(s"<tr><th>${field.title}</th><td>@model.${field.propertyName}</td></tr>")
     }
     viewFile.add("</tbody>", -1)
     viewFile.add("</table>", -1)

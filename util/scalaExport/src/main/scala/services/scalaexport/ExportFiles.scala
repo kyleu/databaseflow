@@ -2,7 +2,7 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
-import models.schema.Schema
+import services.scalaexport.config.ExportConfiguration
 import services.scalaexport.file._
 
 object ExportFiles {
@@ -24,23 +24,24 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportTable(s: Schema, et: ExportTable): (ExportTable, Seq[OutputFile]) = {
-    if (et.config.provided.contains(et.propertyName)) {
-      et -> Seq.empty
+  def exportModel(config: ExportConfiguration, model: ExportConfiguration.Model): (ExportConfiguration.Model, Seq[OutputFile]) = {
+    if (model.provided) {
+      model -> Seq.empty
     } else {
-      val cls = ModelFile.export(et)
-      val res = ResultFile.export(et)
-      val queries = QueriesFile.export(et)
-      val svc = ServiceFile.export(et)
-      val sch = SchemaFile.export(et)
-      val cntr = ControllerFile.export(et)
+      val cls = ModelFile.export(model)
+      val res = ResultFile.export(model)
+      val queries = QueriesFile.export(model)
+      val svc = ServiceFile.export(model)
+      val sch = SchemaFile.export(config, model)
+      val cntr = ControllerFile.export(model)
 
-      val tl = TwirlListFile.export(et)
-      val tv = TwirlViewFile.export(et)
-      val tf = TwirlFormFile.export(et)
-      val tsr = TwirlSearchResultFile.export(et)
+      val tl = TwirlListFile.export(model)
+      val tv = TwirlViewFile.export(model)
+      val tf = TwirlFormFile.export(model)
 
-      et -> Seq(cls, res, queries, svc, sch, cntr, tl, tv, tf, tsr)
+      val tsr = TwirlSearchResultFile.export(model)
+
+      model -> Seq(cls, res, queries, svc, sch, cntr, tl, tv, tf, tsr)
     }
   }
 }

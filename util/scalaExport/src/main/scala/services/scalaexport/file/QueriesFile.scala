@@ -1,35 +1,36 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.ExportHelper
+import services.scalaexport.config.ExportConfiguration
 
 object QueriesFile {
-  def export(et: ExportTable) = {
-    val file = ScalaFile("models" +: "queries" +: et.pkg, et.className + "Queries")
+  def export(model: ExportConfiguration.Model) = {
+    val file = ScalaFile("models" +: "queries" +: model.pkg, model.className + "Queries")
 
-    file.addImport(("models" +: et.pkg).mkString("."), et.className)
+    file.addImport(("models" +: model.pkg).mkString("."), model.className)
     file.addImport("models.database", "Row")
 
-    if (et.pkg.nonEmpty) {
+    if (model.pkg.nonEmpty) {
       file.addImport("models.queries", "BaseQueries")
     }
 
-    file.add(s"object ${et.className}Queries extends BaseQueries[${et.className}] {", 1)
-    file.add(s"""override protected val tableName = "${et.t.name}"""")
+    file.add(s"object ${model.className}Queries extends BaseQueries[${model.className}] {", 1)
+    file.add(s"""override protected val tableName = "${model.tableName}"""")
 
     file.addImport("models.database", "DatabaseField")
     file.add("override protected val fields = Seq(", 1)
-    et.t.columns.foreach { c =>
-      val field = s"""DatabaseField(title = "${ExportHelper.toClassName(c.name)}", prop = "${ExportHelper.toIdentifier(c.name)}", col = "${c.name}", typ = "string")"""
-      val comma = if (et.t.columns.lastOption.contains(c)) { "" } else { "," }
+    model.fields.foreach { f =>
+      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = "string")"""
+      val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
       file.add(field + comma)
     }
     file.add(")", -1)
 
-    et.t.primaryKey.foreach { pk =>
-      file.add("override protected val idColumns = Seq(" + pk.columns.map("\"" + _ + "\"").mkString(", ") + ")")
-      val searchColumns = et.config.searchColumns.getOrElse(ExportHelper.toIdentifier(et.t.name), pk.columns.map(x => x -> x))
-      file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _._1 + "\"").mkString(", ")})")
+    if (model.pkColumns.nonEmpty) {
+      file.add("override protected val idColumns = Seq(" + model.pkColumns.map("\"" + _.name + "\"").mkString(", ") + ")")
+      val searchColumns = model.fields.filter(_.inSearch)
+      file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _.columnName + "\"").mkString(", ")})")
     }
     file.add()
 
@@ -42,7 +43,7 @@ object QueriesFile {
     file.add("val searchExact = SearchExact")
     file.add()
 
-    et.pkColumns match {
+    model.pkColumns match {
       case Nil => // noop
       case pkCol :: Nil =>
         val name = ExportHelper.toIdentifier(pkCol.name)
@@ -55,17 +56,17 @@ object QueriesFile {
         val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
         val seqArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
         file.add(s"def getById($args) = GetById(Seq($seqArgs))")
-        file.add(s"def getByIdSeq(idSeq: Seq[${et.pkType.getOrElse("String")}]) = new SeqQuery(", 1)
+        file.add(s"def getByIdSeq(idSeq: Seq[${SchemaHelper.pkType(model.pkColumns).getOrElse("String")}]) = new SeqQuery(", 1)
         file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkCols.map(c => s"""\\"${c.name}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
         file.add(")", -1)
         file.add()
     }
 
-    ForeignKeysHelper.writeQueries(et, file)
+    ForeignKeysHelper.writeQueries(model, file)
 
-    file.add(s"def insert(model: ${et.className}) = Insert(model)")
-    et.pkColumns match {
+    file.add(s"def insert(model: ${model.className}) = Insert(model)")
+    model.pkColumns match {
       case Nil => // noop
       case pkCol :: Nil =>
         val name = ExportHelper.toIdentifier(pkCol.name)
@@ -74,8 +75,8 @@ object QueriesFile {
     }
     file.add()
 
-    QueriesHelper.fromRow(et, file)
-    QueriesHelper.toDataSeq(et, file)
+    QueriesHelper.fromRow(model, file)
+    QueriesHelper.toDataSeq(model, file)
 
     file.add("}", -1)
     file

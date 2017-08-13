@@ -6,10 +6,8 @@ import models.scalaexport.ExportResult
 import services.scalaexport.file.ReadmeFile
 
 object ExportMerge {
-  private[this] def projectNameReplacements(id: String, root: File) = {
-    val key = ExportHelper.toIdentifier(id)
-    val className = ExportHelper.toClassName(id)
-    def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", key).replaceAllLiterally("Boilerplay", className))
+  private[this] def projectNameReplacements(prop: String, cls: String, root: File) = {
+    def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", prop).replaceAllLiterally("Boilerplay", cls))
 
     fix(root / "app" / "util" / "web" / "LoggingFilter.scala")
     fix(root / "app" / "views" / "index.scala.html")
@@ -28,10 +26,10 @@ object ExportMerge {
 
     val jsFile = root / "client" / "src" / "main" / "scala" / "Boilerplay.scala"
     fix(jsFile)
-    jsFile.moveTo(jsFile.parent / (className + ".scala"))
+    jsFile.moveTo(jsFile.parent / (cls + ".scala"))
 
     val cssFile = root / "app" / "assets" / "stylesheets" / "boilerplay.less"
-    cssFile.moveTo(cssFile.parent / (key + ".less"))
+    cssFile.moveTo(cssFile.parent / (prop + ".less"))
   }
 
   private[this] def getSrcDir(result: ExportResult) = {
@@ -56,8 +54,8 @@ object ExportMerge {
       rootDir.createDirectory()
       getSrcDir(result).copyTo(rootDir)
       (rootDir / "license").delete(swallowIOExceptions = true)
-      (rootDir / "readme.md").overwrite(ReadmeFile.content(result.id))
-      projectNameReplacements(result.id, rootDir)
+      (rootDir / "readme.md").overwrite(ReadmeFile.content(result.config.projectTitle))
+      projectNameReplacements(result.config.projectId, result.config.projectTitle, rootDir)
     }
 
     "./tmp/scalaexport".toFile.copyTo(rootDir / "app")(CopyOptions(true))

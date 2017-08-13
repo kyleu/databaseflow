@@ -2,42 +2,42 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.config.ExportConfiguration
 
 object QueriesHelper {
-  def fromRow(et: ExportTable, file: ScalaFile) = {
-    file.add(s"override protected def fromRow(row: Row) = ${et.className}(", 1)
-    et.t.columns.foreach { col =>
-      val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
-      val colScala = col.columnType match {
-        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(col.sqlTypeName)
-        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => s"org.joda.time.${col.columnType.asScala}"
+  def fromRow(model: ExportConfiguration.Model, file: ScalaFile) = {
+    file.add(s"override protected def fromRow(row: Row) = ${model.className}(", 1)
+    model.fields.foreach { field =>
+      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
+      val colScala = field.t match {
+        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
+        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => s"org.joda.time.${field.t.asScala}"
         case x =>
           x.requiredImport.foreach { p =>
-            file.addImport(p, col.columnType.asScala)
+            file.addImport(p, field.t.asScala)
           }
           x.asScala
       }
-      val asType = if (col.notNull) { s"as[$colScala]" } else { s"asOpt[$colScala]" }
+      val asType = if (field.notNull) { s"as[$colScala]" } else { s"asOpt[$colScala]" }
 
-      col.columnType match {
-        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => if (col.notNull) {
-          file.add(s"""${ExportHelper.toIdentifier(col.name)} = fromJoda(row.$asType("${col.name}"))$comma""")
+      field.t match {
+        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => if (field.notNull) {
+          file.add(s"""${field.propertyName} = fromJoda(row.$asType("${field.columnName}"))$comma""")
         } else {
-          file.add(s"""${ExportHelper.toIdentifier(col.name)} = row.$asType("${col.name}").map(fromJoda)$comma""")
+          file.add(s"""${field.propertyName} = row.$asType("${field.columnName}").map(fromJoda)$comma""")
         }
-        case x => file.add(s"""${ExportHelper.toIdentifier(col.name)} = row.$asType("${col.name}")$comma""")
+        case x => file.add(s"""${field.propertyName} = row.$asType("${field.columnName}")$comma""")
       }
     }
     file.add(")", -1)
   }
 
-  def toDataSeq(et: ExportTable, file: ScalaFile) = {
-    file.add(s"override protected def toDataSeq(o: ${et.className}) = Seq[Any](", 1)
-    file.add(et.t.columns.map { col =>
-      val cn = ExportHelper.toIdentifier(col.name)
-      col.columnType match {
-        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => if (col.notNull) {
+  def toDataSeq(model: ExportConfiguration.Model, file: ScalaFile) = {
+    file.add(s"override protected def toDataSeq(o: ${model.className}) = Seq[Any](", 1)
+    file.add(model.fields.map { field =>
+      val cn = field.propertyName
+      field.t match {
+        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => if (field.notNull) {
           s"toJoda(o.$cn)"
         } else {
           s"o.$cn.map(toJoda)"

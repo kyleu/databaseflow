@@ -110,15 +110,15 @@
                         <td><input name="model.@{model.tableName}.field.@{field.columnName}.t" class="validate" value="@field.t" /></td>
                         <td>
                           <input name="model.@{model.tableName}.field.@{field.columnName}.inSearch" id="model.@{model.tableName}.field.@{field.columnName}.inSearch" @if(field.inSearch) { checked="checked" } type="checkbox" value="true" />
-                          <label for="model.@{model.tableName}.inSearch"></label>
+                          <label for="model.@{model.tableName}.field.@{field.columnName}.inSearch"></label>
                         </td>
                         <td>
                           <input name="model.@{model.tableName}.field.@{field.columnName}.inView" id="model.@{model.tableName}.field.@{field.columnName}.inView" @if(field.inView) { checked="checked" } type="checkbox" value="true" />
-                          <label for="model.@{model.tableName}.inView"></label>
+                          <label for="model.@{model.tableName}.field.@{field.columnName}.inView"></label>
                         </td>
                         <td>
                           <input name="model.@{model.tableName}.field.@{field.columnName}.ignored" id="model.@{model.tableName}.field.@{field.columnName}.ignored" @if(field.ignored) { checked="checked" } type="checkbox" value="true" />
-                          <label for="model.@{model.tableName}.ignored"></label>
+                          <label for="model.@{model.tableName}.field.@{field.columnName}.ignored"></label>
                         </td>
                       </tr>
                     }

@@ -2,7 +2,6 @@ package services.scalaexport.inject
 
 import better.files.File
 import models.scalaexport.ExportResult
-import services.scalaexport.ExportHelper
 
 object InjectIcons {
   def inject(result: ExportResult, rootDir: File) = {
@@ -10,9 +9,9 @@ object InjectIcons {
       val startString = "  // Start model icons"
       val startIndex = s.indexOf(startString)
       val newContent = result.models.flatMap { m =>
-        s.indexOf(ExportHelper.toIdentifier(m._2)) match {
+        s.indexOf(m.propertyName) match {
           case x if x > -1 && x < startIndex => None
-          case _ => Some(s"""  val ${ExportHelper.toIdentifier(m._2)} = "fa-folder-o"""")
+          case _ => Some(s"""  val ${m.propertyName} = "fa-folder-o"""")
         }
       }.sorted.mkString("\n")
       InjectHelper.replaceBetween(original = s, start = startString, end = "  // End model icons", newContent = newContent)

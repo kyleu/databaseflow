@@ -25,6 +25,5 @@ GET         /activity/remove/:id        controllers.admin.ActivityController.rem
 GET         /sandbox                    controllers.admin.SandboxController.list
 GET         /sandbox/:key               controllers.admin.SandboxController.sandbox(key)
 
-GET         /export/:conn/new           controllers.admin.ScalaExportController.exportFormNew(conn)
 GET         /export/:conn               controllers.admin.ScalaExportController.exportForm(conn)
 POST        /export/:conn               controllers.admin.ScalaExportController.export(conn)

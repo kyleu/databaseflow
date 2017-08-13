@@ -8,28 +8,28 @@ object InjectRoutes {
   def inject(result: ExportResult, rootDir: File) = {
     def routesFor(s: String) = {
       val newContent = result.models.map { m =>
-        val prop = ExportHelper.toIdentifier(m._2)
-
-        if (result.config.provided.contains(prop)) {
+        if (m.provided) {
           ""
         } else {
-          val controller = ("controllers" +: "admin" +: m._1 :+ (ExportHelper.toClassName(m._2) + "Controller")).mkString(".")
+          val controller = ("controllers" +: "admin" +: m.pkg :+ (m.className + "Controller")).mkString(".")
 
-          val comment = s"# ${ExportHelper.toClassName(m._2)} Routes"
+          val comment = s"# ${m.title} Routes"
 
-          val listWs = (0 until (56 - prop.length)).map(_ => " ").mkString
-          val list = s"GET         /$prop $listWs $controller.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None)"
+          val listWs = (0 until (56 - m.propertyName.length)).map(_ => " ").mkString
+          val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " +
+            "limit: Option[Int] ?= None, offset: Option[Int] ?= None"
+          val list = s"GET         /${m.propertyName} $listWs $controller.list($listArgs)"
 
-          val formNew = s"GET         /$prop/new ${listWs.drop(4)} $controller.formNew"
+          val formNew = s"GET         /${m.propertyName}/new ${listWs.drop(4)} $controller.formNew"
 
-          val et = result.getExportTable(prop)
+          val et = result.getModel(m.propertyName)
           val detail = et.pkColumns match {
             case Nil => Nil
             case pkCols =>
               val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
               val urlArgs = pkCols.map(x => ":" + ExportHelper.toIdentifier(x.name)).mkString("/")
 
-              val detailUrl = prop + "/" + urlArgs
+              val detailUrl = m.propertyName + "/" + urlArgs
               val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
               Seq(
                 s"GET         /$detailUrl $detailWs $controller.view($args)",

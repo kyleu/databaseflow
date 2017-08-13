@@ -1,10 +1,11 @@
 package services.scalaexport.file
 
 import models.scalaexport.TwirlFile
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.ExportHelper
+import services.scalaexport.config.ExportConfiguration
 
 object TwirlSearchResultFile {
-  def export(et: ExportTable) = {
+  def export(et: ExportConfiguration.Model) = {
     val pkg = "views" +: "admin" +: et.pkg
 
     val modelClass = et.pkg match {

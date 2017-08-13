@@ -2,64 +2,61 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.{ExportHelper, ExportTable}
+import services.scalaexport.config.ExportConfiguration
 
 object ModelFile {
-  def export(et: ExportTable) = {
-    val file = ScalaFile("models" +: et.pkg, et.className)
+  def export(model: ExportConfiguration.Model) = {
+    val file = ScalaFile("models" +: model.pkg, model.className)
 
-    file.add(s"object ${et.className} {", 1)
-    file.add(s"val empty = ${et.className}(", 1)
+    file.add(s"object ${model.className} {", 1)
+    file.add(s"val empty = ${model.className}(", 1)
 
-    et.t.columns.foreach { col =>
-      val propName = ExportHelper.toIdentifier(col.name)
-
-      val value = col.columnType match {
-        case ColumnType.UuidType => "UUID.randomUUID"
-        case ColumnType.BooleanType => "false"
-        case ColumnType.IntegerType => "0"
+    model.fields.foreach { field =>
+      val value = field.t match {
+        case ColumnType.UuidType => field.defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
+        case ColumnType.BooleanType => field.defaultValue.getOrElse("false")
+        case ColumnType.IntegerType => field.defaultValue.getOrElse("0")
         case ColumnType.TimestampType => "util.DateUtils.now"
         case ColumnType.DateType => "util.DateUtils.today"
-        case ColumnType.BigDecimalType => "BigDecimal(0)"
-        case _ => "\"" + col.defaultValue.getOrElse("") + "\""
+        case ColumnType.BigDecimalType => s"BigDecimal(${field.defaultValue.getOrElse("0")})"
+        case _ => "\"" + field.defaultValue.getOrElse("") + "\""
       }
 
-      val withOption = if (col.notNull) {
+      val withOption = if (field.notNull) {
         value
       } else {
         s"Some($value)"
       }
 
-      val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
+      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
 
-      file.add(s"$propName = $withOption$comma")
+      file.add(s"${field.propertyName} = $withOption$comma")
     }
     file.add(")", -1)
     file.add("}", -1)
     file.add()
 
-    et.t.description.foreach(d => file.add(s"/** $d */"))
-    file.add(s"case class ${et.className}(", 1)
-    et.t.columns.foreach { col =>
-      col.columnType.requiredImport.foreach(p => file.addImport(p, col.columnType.asScala))
+    model.description.foreach(d => file.add(s"/** $d */"))
+    file.add(s"case class ${model.className}(", 1)
+    model.fields.foreach { field =>
+      field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
 
-      val propName = ExportHelper.toIdentifier(col.name)
-      val colScala = col.columnType match {
-        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(col.sqlTypeName)
+      val colScala = field.t match {
+        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
         case x => x.asScala
       }
-      val propType = if (col.notNull) { colScala } else { "Option[" + colScala + "]" }
-      val propDefault = if (col.columnType == ColumnType.StringType) {
-        col.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
+      val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
+      val propDefault = if (field.t == ColumnType.StringType) {
+        field.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
       } else {
         ""
       }
-      val propDecl = s"$propName: $propType$propDefault"
-      val comma = if (et.t.columns.lastOption.contains(col)) { "" } else { "," }
-      col.description.foreach(d => file.add("/** " + d + " */"))
+      val propDecl = s"${field.propertyName}: $propType$propDefault"
+      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
+      field.description.foreach(d => file.add("/** " + d + " */"))
       file.add(propDecl + comma)
     }
-    et.config.extendModels.get(et.propertyName) match {
+    model.extendsClass match {
       case Some(x) => file.add(") extends " + x, -1)
       case None => file.add(")", -1)
     }

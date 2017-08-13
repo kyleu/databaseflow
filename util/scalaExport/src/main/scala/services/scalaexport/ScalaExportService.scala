@@ -2,39 +2,34 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.ExportResult
-import models.schema.Schema
-import services.scalaexport.config.ExportConfigReader
+import services.scalaexport.config.ExportConfiguration
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class ScalaExportService(schema: Schema) {
-  private[this] val schemaKey = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
-  private[this] val config = ExportConfigReader.read(schemaKey)
-
+case class ScalaExportService(config: ExportConfiguration) {
   def test(persist: Boolean = false)(implicit ec: ExecutionContext) = {
-    export(config.projectName, schema).map { result =>
+    export(config).map { result =>
       val injected = if (persist) {
         ExportFiles.persist(result)
 
         val rootDir = config.projectLocation match {
           case Some(l) => l.toFile
-          case None => s"./tmp/${ExportHelper.toIdentifier(result.id)}".toFile
+          case None => s"./tmp/${result.config.key}".toFile
         }
 
         ExportMerge.merge(result, rootDir)
         ExportInject.inject(result, rootDir)
       } else {
+        result.log("Test run completed.")
         Nil
       }
       result -> injected
     }
   }
 
-  def export(projectId: String, schema: Schema) = {
-    val exportTables = schema.tables.map(t => ExportTable(t, config, schema))
-    val tables = exportTables.map(t => ExportFiles.exportTable(schema, t))
-
-    Future.successful(ExportResult(projectId, tables.map(_._1), tables.flatMap(t => t._2), config))
+  def export(config: ExportConfiguration) = {
+    val models = config.models.map(model => ExportFiles.exportModel(config, model))
+    Future.successful(ExportResult(config, models.map(_._1), models.flatMap(t => t._2)))
   }
 }
 

@@ -5,8 +5,8 @@
     <div class="col s12">
       <ul class="collection with-header">
         <li class="collection-header">
-          <h4>@result.id</h4>
-          @result.models.map(m => (m._1 :+ m._2).mkString(".")).mkString(", ")
+          <h4>@result.config.projectTitle</h4>
+          @result.models.map(m => (m.pkg :+ m.className).mkString(".")).mkString(", ")
         </li>
         <li class="collection-item">
           <table>
