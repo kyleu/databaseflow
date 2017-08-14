@@ -49,7 +49,7 @@ object ForeignKeysHelper {
           val seq = if (col.notNull) { s"Seq(x.$propName)" } else { s"x.$propName.toSeq" }
           file.addMarker("fetcher", (file.pkg :+ s"${model.className}Schema" :+ s"${model.propertyName}By${srcClass}Fetcher").mkString("."))
           file.add(s"""val ${model.propertyName}By$srcClass = Relation[${model.className}, $typ]("by$srcClass", x => $seq)""")
-          val relType = s"GraphQLContext, ${model.className}, ${model.className}, ${SchemaHelper.pkType(model.pkColumns).getOrElse("String")}"
+          val relType = s"GraphQLContext, ${model.className}, ${model.className}, ${SchemaHelper.pkType(model.pkColumns)}"
           file.add(s"val ${model.propertyName}By${srcClass}Fetcher = Fetcher.rel[$relType](", 1)
           file.add(s"(_, ids) => ${model.className}Service.getByIdSeq(ids),")
           file.add(s"(_, rels) => ${model.className}Service.getBy${srcClass}Seq(rels(${model.propertyName}By$srcClass))")

@@ -56,7 +56,7 @@ object QueriesFile {
         val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
         val seqArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
         file.add(s"def getById($args) = GetById(Seq($seqArgs))")
-        file.add(s"def getByIdSeq(idSeq: Seq[${SchemaHelper.pkType(model.pkColumns).getOrElse("String")}]) = new SeqQuery(", 1)
+        file.add(s"def getByIdSeq(idSeq: Seq[${SchemaHelper.pkType(model.pkColumns)}]) = new SeqQuery(", 1)
         file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkCols.map(c => s"""\\"${c.name}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
         file.add(")", -1)
@@ -72,6 +72,7 @@ object QueriesFile {
       val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
       file.add(s"def removeById($sig) = RemoveById(Seq($call))")
       file.add()
+      file.add("def create(fields: Seq[DataField]) = CreateFields(fields)")
       file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq($call), fields)")
     }
 

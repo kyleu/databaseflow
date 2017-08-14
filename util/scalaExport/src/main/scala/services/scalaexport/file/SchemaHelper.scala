@@ -2,7 +2,6 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.Column
-import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 
 object SchemaHelper {
@@ -20,49 +19,37 @@ object SchemaHelper {
   }
 
   def pkType(pkColumns: Seq[Column]) = pkColumns match {
-    case Nil => None
-    case h :: Nil => Some(h.columnType.asScala)
-    case cols => Some("(" + cols.map(_.columnType.asScala).mkString(", ") + ")")
+    case Nil => throw new IllegalStateException("No PK.")
+    case h :: Nil => h.columnType.asScala
+    case cols => "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
   }
 
-  def addPrimaryKey(model: ExportModel, file: ScalaFile) = model.pkColumns match {
-    case Nil => // noop
-    case pkCol :: Nil =>
-      file.addImport("sangria.execution.deferred", "HasId")
-      pkCol.columnType.requiredImport.foreach(pkg => file.addImport(pkg, pkCol.columnType.asScala))
-      pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
-      file.add(s"implicit val ${model.propertyName}Id = HasId[${model.className}, ${pkCol.columnType.asScala}](_.${ExportHelper.toIdentifier(pkCol.name)})")
-      file.add()
+  def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkColumns.nonEmpty) {
+    val pkCols = model.pkColumns.map(c => model.getField(c.name))
+    pkCols.foreach(pkCol => pkCol.t.requiredImport.foreach(pkg => file.addImport(pkg, pkCol.t.asScala)))
+    file.addImport("sangria.execution.deferred", "HasId")
+    val method = if (model.pkColumns.size == 1) {
+      pkCols.headOption.map(c => "_." + c.propertyName).getOrElse(throw new IllegalStateException())
+    } else {
+      "x => (" + pkCols.map(c => "x." + c.propertyName).mkString(", ") + ")"
+    }
+    file.add(s"implicit val ${model.propertyName}Id = HasId[${model.className}, ${pkType(model.pkColumns)}]($method)")
+    file.add()
 
-      file.addImport("sangria.execution.deferred", "Fetcher")
-      val fetcherName = s"${model.propertyName}By${ExportHelper.toClassName(pkCol.name)}Fetcher"
-      val pn = ExportHelper.toIdentifier(pkCol.name) + "Seq"
-      file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
-      file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, $pn: Seq[${pkCol.columnType.asScala}]) => ${model.className}Service.getByIdSeq($pn))")
-      file.add()
-    case pkCols =>
-      pkCols.foreach(pkCol => pkCol.columnType.requiredImport.foreach(pkg => file.addImport(pkg, pkCol.columnType.asScala)))
-      file.addImport("sangria.execution.deferred", "HasId")
-      val method = "x => (" + pkCols.map(c => "x." + ExportHelper.toIdentifier(c.name)).mkString(", ") + ")"
-      file.add(s"implicit val ${model.propertyName}Id = HasId[${model.className}, ${pkType(pkCols).getOrElse("String")}]($method)")
-      file.add()
-
-      file.addImport("sangria.execution.deferred", "Fetcher")
-      val fetcherName = s"${model.propertyName}ByIdFetcher"
-      file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
-      val idType = pkType(pkCols).getOrElse("String")
-      file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[$idType]) => ${model.className}Service.getByIdSeq(idSeq))")
-      file.add()
+    file.addImport("sangria.execution.deferred", "Fetcher")
+    val fetcherName = s"${model.propertyName}ByIdFetcher"
+    file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
+    file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${pkType(model.pkColumns)}]) => ${model.className}Service.getByIdSeq(idSeq))")
+    file.add()
   }
 
-  def addPrimaryKeyArguments(model: ExportModel, file: ScalaFile) = model.pkColumns match {
-    case Nil => // noop
-    case pkCols => pkCols.foreach { pkCol =>
+  def addPrimaryKeyArguments(model: ExportModel, file: ScalaFile) = if (model.pkColumns.nonEmpty) {
+    model.pkColumns.foreach { pkCol =>
       val field = model.getField(pkCol.name)
       val desc = s"Returns the ${model.title} matching the provided ${field.title}."
       file.add(s"""val ${model.propertyName}${field.className}Arg = Argument("${field.propertyName}", ${field.graphQlArgType}, description = "$desc")""")
-      file.add()
     }
+    file.add()
   }
 
   def addMutationFields(model: ExportModel, file: ScalaFile) = if (model.pkColumns.nonEmpty) {

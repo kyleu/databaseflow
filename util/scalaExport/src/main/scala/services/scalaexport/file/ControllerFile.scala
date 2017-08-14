@@ -35,8 +35,12 @@ object ControllerFile {
     file.add(s"Future.successful(Ok($viewPkg.${model.propertyName}Form(request.identity, $modelPkg.empty, call, isNew = true)))")
     file.add("}", -1)
     file.add()
+
     file.add(s"""def create = withAdminSession("${model.propertyName}.create") { implicit request =>""", 1)
-    file.add("Future.successful(Ok(\"OK\"))")
+    file.add("val fields = modelForm(request.body.asFormUrlEncoded)")
+    file.add(s"${model.className}Service.create(fields = fields).map { res =>", 1)
+    file.add("Ok(play.twirl.api.Html(fields.toString))")
+    file.add("}", -1)
     file.add("}", -1)
     file.add()
     file.add(s"""def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int]) = {""", 1)
@@ -86,8 +90,6 @@ object ControllerFile {
       file.add(s"""${model.className}Service.update($callArgs, fields = fields).map { res =>""", 1)
       file.add("Ok(play.twirl.api.Html(fields.toString))")
       file.add("}", -1)
-
-      file.add("Future.successful(Ok(play.twirl.api.Html(fields.toString)))")
       file.add("}", -1)
     }
   }
