@@ -16,7 +16,7 @@ object InjectSearch {
         s
       } else {
         val uuidFields = uuidModels.map { m =>
-          s"    val ${m.identifier}F = ${m.serviceClass}.getById(id).map { modelOpt =>\n" +
+          s"    val ${m.identifier}F = ${m.serviceClass}.getByPrimaryKey(id).map { modelOpt =>\n" +
             s"      modelOpt.map(model => ${m.viewClass}(model, ${m.message})).toSeq\n" +
             "    }"
         }
@@ -33,7 +33,7 @@ object InjectSearch {
         s
       } else {
         val intFields = intModels.map { m =>
-          s"    val ${m.identifier}F = ${m.serviceClass}.getById(id).map { modelOpt =>\n" ++
+          s"    val ${m.identifier}F = ${m.serviceClass}.getByPrimaryKey(id).map { modelOpt =>\n" ++
             s"      modelOpt.map(model => ${m.viewClass}(model, ${m.message})).toSeq\n" +
             "    }"
         }

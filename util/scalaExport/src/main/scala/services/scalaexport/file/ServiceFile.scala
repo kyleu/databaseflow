@@ -53,14 +53,14 @@ object ServiceFile {
       val sig = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
       val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
       val interp = model.pkColumns.map(c => "$" + ExportHelper.toIdentifier(c.name)).mkString(", ")
-      file.add(s"def remove($sig) = Database.query(${model.className}Queries.getById($call)).flatMap {", 1)
-      file.add(s"case Some(current) => Database.execute(${model.className}Queries.removeById($call)).map(_ => current)")
+      file.add(s"def remove($sig) = Database.query(${model.className}Queries.getByPrimaryKey($call)).flatMap {", 1)
+      file.add(s"case Some(current) => Database.execute(${model.className}Queries.removeByPrimaryKey($call)).map(_ => current)")
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find Note matching [$interp].")""")
       file.add("}", -1)
       file.add()
-      file.add(s"def update($sig, fields: Seq[DataField]) = Database.query(${model.className}Queries.getById($call)).flatMap {", 1)
+      file.add(s"def update($sig, fields: Seq[DataField]) = Database.query(${model.className}Queries.getByPrimaryKey($call)).flatMap {", 1)
       file.add(s"case Some(current) => Database.execute(${model.className}Queries.update($call, fields)).flatMap { _ =>", 1)
-      file.add(s"Database.query(${model.className}Queries.getById($call)).map {", 1)
+      file.add(s"Database.query(${model.className}Queries.getByPrimaryKey($call)).map {", 1)
       file.add("case Some(newModel) => newModel")
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")
       file.add("}", -1)
@@ -78,8 +78,8 @@ object ServiceFile {
       case Nil => // noop
       case col :: Nil =>
         val colProp = ExportHelper.toIdentifier(col.name)
-        file.add(s"def getById($colProp: ${col.columnType.asScala}) = Database.query(${model.className}Queries.getById($colProp))")
-        file.add(s"def getByIdSeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${model.className}Queries.getByIdSeq(${colProp}Seq))")
+        file.add(s"def getByPrimaryKey($colProp: ${col.columnType.asScala}) = Database.query(${model.className}Queries.getByPrimaryKey($colProp))")
+        file.add(s"def getByPrimaryKeySeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))")
         col.columnType match {
           case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(
             pkg = model.pkg, className = model.className, pkColumns = Seq(col.name -> col.columnType.asScalaFull)
@@ -93,8 +93,8 @@ object ServiceFile {
         val tupleTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
         val colArgs = cols.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
         val queryArgs = cols.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
-        file.add(s"def getById($colArgs) = Database.query(${model.className}Queries.getById($queryArgs))")
-        file.add(s"def getByIdSeq(idSeq: Seq[$tupleTyp]) = Database.query(${model.className}Queries.getByIdSeq(idSeq))")
+        file.add(s"def getByPrimaryKey($colArgs) = Database.query(${model.className}Queries.getByPrimaryKey($queryArgs))")
+        file.add(s"def getByPrimaryKeySeq(pkSeq: Seq[$tupleTyp]) = Database.query(${model.className}Queries.getByPrimaryKeySeq(pkSeq))")
     }
     file.add()
   }

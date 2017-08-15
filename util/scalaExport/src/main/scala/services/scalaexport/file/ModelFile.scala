@@ -54,7 +54,6 @@ object ModelFile {
 
       val colScala = field.t match {
         case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
-        case ColumnType.ByteType => ColumnType.IntegerType.asScala
         case x => x.asScala
       }
       val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }

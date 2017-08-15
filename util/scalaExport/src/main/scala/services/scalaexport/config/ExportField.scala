@@ -24,7 +24,7 @@ case class ExportField(
       case StringType => "StringType"
       case BigDecimalType => "BigDecimalType"
       case BooleanType => "BooleanType"
-      case ByteType => "IntType"
+      case ByteType => "byteType"
       case ShortType => "IntType"
       case IntegerType => "IntType"
       case LongType => "LongType"

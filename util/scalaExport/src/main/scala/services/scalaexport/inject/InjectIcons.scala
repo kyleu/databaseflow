@@ -9,7 +9,7 @@ object InjectIcons {
       val startString = "  // Start model icons"
       val startIndex = s.indexOf(startString)
       val newContent = result.models.flatMap { m =>
-        s.indexOf(m.propertyName) match {
+        s.indexOf("val " + m.propertyName + " = ") match {
           case x if x > -1 && x < startIndex => None
           case _ => Some(s"""  val ${m.propertyName} = "fa-folder-o"""")
         }

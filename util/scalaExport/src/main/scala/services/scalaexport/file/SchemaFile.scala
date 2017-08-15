@@ -29,7 +29,7 @@ object SchemaFile {
     } else {
       file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
       model.description.foreach {
-        case d if columnsDescriptions.isEmpty && model.references.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
+        case d if columnsDescriptions.isEmpty && model.references.isEmpty && model.foreignKeys.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
         case d => file.add(s"""ObjectTypeDescription("$d"),""")
       }
       columnsDescriptions.foreach {

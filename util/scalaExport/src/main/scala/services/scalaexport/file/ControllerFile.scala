@@ -71,7 +71,7 @@ object ControllerFile {
 
     file.add()
     file.add(s"""def view($viewArgs) = withAdminSession("${model.propertyName}.view") { implicit request =>""", 1)
-    file.add(s"""${model.className}Service.getById($getArgs).map {""", 1)
+    file.add(s"""${model.className}Service.getByPrimaryKey($getArgs).map {""", 1)
     file.add(s"""case Some(model) => Ok($viewPkg.${model.propertyName}View(request.identity, model))""")
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
     file.add("}", -1)
@@ -79,7 +79,7 @@ object ControllerFile {
     file.add()
     file.add(s"""def editForm($viewArgs) = withAdminSession("${model.propertyName}.editForm") { implicit request =>""", 1)
     file.add(s"val call = $routesClass.edit($getArgs)")
-    file.add(s"""${model.className}Service.getById($getArgs).map {""", 1)
+    file.add(s"""${model.className}Service.getByPrimaryKey($getArgs).map {""", 1)
     file.add(s"""case Some(model) => Ok($viewPkg.${model.propertyName}Form(request.identity, model, call))""")
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
     file.add("}", -1)

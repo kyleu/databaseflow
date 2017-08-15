@@ -25,7 +25,6 @@ object QueriesHelper {
         } else {
           file.add(s"""${field.propertyName} = row.$asType("${field.columnName}").map(fromJoda)$comma""")
         }
-        case ColumnType.ByteType => file.add(s"""${field.propertyName} = row.$asType("${field.columnName}").map(_.toInt)$comma""")
         case x => file.add(s"""${field.propertyName} = row.$asType("${field.columnName}")$comma""")
       }
     }
@@ -38,7 +37,6 @@ object QueriesHelper {
       val cn = field.propertyName
       field.t match {
         case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => if (field.notNull) { s"toJoda(o.$cn)" } else { s"o.$cn.map(toJoda)" }
-        case ColumnType.ByteType => if (field.notNull) { s"o.$cn.toByte" } else { s"o.$cn.map(_.toByte)" }
         case x => s"o.$cn"
       }
     }.mkString(", "))

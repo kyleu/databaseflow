@@ -51,7 +51,7 @@ object ForeignKeysHelper {
           file.add(s"""val ${model.propertyName}By$srcClass = Relation[${model.className}, $typ]("by$srcClass", x => $seq)""")
           val relType = s"GraphQLContext, ${model.className}, ${model.className}, ${SchemaHelper.pkType(model.pkColumns)}"
           file.add(s"val ${model.propertyName}By${srcClass}Fetcher = Fetcher.rel[$relType](", 1)
-          file.add(s"(_, ids) => ${model.className}Service.getByIdSeq(ids),")
+          file.add(s"(_, ids) => ${model.className}Service.getByPrimaryKeySeq(ids),")
           file.add(s"(_, rels) => ${model.className}Service.getBy${srcClass}Seq(rels(${model.propertyName}By$srcClass))")
           file.add(")", -1)
 

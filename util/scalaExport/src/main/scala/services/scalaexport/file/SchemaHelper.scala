@@ -39,7 +39,7 @@ object SchemaHelper {
     file.addImport("sangria.execution.deferred", "Fetcher")
     val fetcherName = s"${model.propertyName}By${pkCols.map(_.className).mkString}Fetcher"
     file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
-    file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${pkType(model.pkColumns)}]) => ${model.className}Service.getByIdSeq(idSeq))")
+    file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${pkType(model.pkColumns)}]) => ${model.className}Service.getByPrimaryKeySeq(idSeq))")
     file.add()
   }
 
