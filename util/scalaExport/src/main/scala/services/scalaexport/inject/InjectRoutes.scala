@@ -35,7 +35,8 @@ object InjectRoutes {
               Seq(
                 s"GET         /$detailUrl $detailWs $controller.view($args)",
                 s"GET         /$detailUrl/form ${detailWs.drop(5)} $controller.editForm($args)",
-                s"POST        /$detailUrl $detailWs $controller.edit($args)"
+                s"POST        /$detailUrl $detailWs $controller.edit($args)",
+                s"GET         /$detailUrl/remove ${detailWs.drop(7)} $controller.remove($args)"
               )
           }
 

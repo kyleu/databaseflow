@@ -32,11 +32,16 @@ object ExportConfigurationDefault {
     )
   }
 
+  private[this] def clean(str: String) = str match {
+    case "type" => "typ"
+    case _ => str
+  }
+
   private[this] def loadFields(t: Table) = t.columns.toList.map { col =>
     val inSearch = t.primaryKey.exists(_.name == col.name) || t.indexes.exists(i => i.columns.exists(_.name == col.name))
     ExportField(
       columnName = col.name,
-      propertyName = toIdentifier(col.name),
+      propertyName = clean(toIdentifier(col.name)),
       title = toClassName(col.name),
       description = col.description,
       t = col.columnType,

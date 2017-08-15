@@ -10,8 +10,8 @@ object ForeignKeysHelper {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
         val typ = col.t.asScala
-        val propId = ExportHelper.toIdentifier(h.source)
-        val propCls = ExportHelper.toClassName(h.source)
+        val propId = col.propertyName
+        val propCls = col.className
         file.add(s"""case class GetBy$propCls($propId: $typ) extends SeqQuery("where \\"${h.source}\\" = ?", Seq($propId))""")
         file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[$typ]) extends ColSeqQuery("${h.source}", ${propId}Seq)""")
         file.add()
@@ -25,8 +25,8 @@ object ForeignKeysHelper {
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
         val typ = col.t.asScala
         col.t.requiredImport.foreach(pkg => file.addImport(pkg, typ))
-        val propId = ExportHelper.toIdentifier(h.source)
-        val propCls = ExportHelper.toClassName(h.source)
+        val propId = col.propertyName
+        val propCls = col.className
         file.add(s"""def getBy$propCls($propId: $typ) = Database.query(${model.className}Queries.GetBy$propCls($propId))""")
         file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[$typ]) = Database.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))""")
         file.add()
@@ -40,7 +40,7 @@ object ForeignKeysHelper {
 
     model.foreignKeys.foreach { fk =>
       fk.references.toList match {
-        case h :: Nil =>
+        case h :: Nil if model.pkColumns.nonEmpty =>
           val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           val typ = col.t.asScala
           col.t.requiredImport.foreach(pkg => file.addImport(pkg, typ))
@@ -63,36 +63,37 @@ object ForeignKeysHelper {
 
   def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
     model.foreignKeys.foreach { fk =>
-      val targetTable = config.getModel(fk.targetTable)
-      fk.references.toList match {
-        case h :: Nil =>
-          val field = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-          val typ = field.t.asScala
-          field.t.requiredImport.foreach(pkg => file.addImport(pkg, typ))
-          val tgtClass = targetTable.className
-          val tgtProp = targetTable.propertyName
-          val srcProp = field.propertyName
-          val p = targetTable.propertyName
-          val cls = targetTable.className
-          val pkg = targetTable.pkg
-          if (pkg != model.pkg) { file.addImport(("models" +: pkg).mkString("."), cls + "Schema") }
-          file.add("Field(", 1)
-          file.add(s"""name = "${srcProp}Rel",""")
-          if (field.notNull) {
-            file.add(s"""fieldType = ${tgtClass}Schema.${tgtProp}Type,""")
-          } else {
-            file.add(s"""fieldType = OptionType(${tgtClass}Schema.${tgtProp}Type),""")
-          }
+      config.getModelOpt(fk.targetTable).foreach { targetTable =>
+        fk.references.toList match {
+          case h :: Nil =>
+            val field = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+            val typ = field.t.asScala
+            field.t.requiredImport.foreach(pkg => file.addImport(pkg, typ))
+            val tgtClass = targetTable.className
+            val tgtProp = targetTable.propertyName
+            val srcProp = field.propertyName
+            val p = targetTable.propertyName
+            val cls = targetTable.className
+            val pkg = targetTable.pkg
+            if (pkg != model.pkg) { file.addImport(("models" +: pkg).mkString("."), cls + "Schema") }
+            file.add("Field(", 1)
+            file.add(s"""name = "${srcProp}Rel",""")
+            if (field.notNull) {
+              file.add(s"""fieldType = ${tgtClass}Schema.${tgtProp}Type,""")
+            } else {
+              file.add(s"""fieldType = OptionType(${tgtClass}Schema.${tgtProp}Type),""")
+            }
 
-          val fetcherRef = s"${tgtClass}Schema.${tgtProp}By${ExportHelper.toClassName(h.target)}Fetcher"
-          if (field.notNull) {
-            file.add(s"resolve = ctx => $fetcherRef.defer(ctx.value.$srcProp)")
-          } else {
-            file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.$srcProp)")
-          }
-          val comma = if (model.foreignKeys.lastOption.contains(fk)) { "" } else { "," }
-          file.add(")" + comma, -1)
-        case _ => // noop
+            val fetcherRef = s"${tgtClass}Schema.${tgtProp}By${ExportHelper.toClassName(h.target)}Fetcher"
+            if (field.notNull) {
+              file.add(s"resolve = ctx => $fetcherRef.defer(ctx.value.$srcProp)")
+            } else {
+              file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.$srcProp)")
+            }
+            val comma = if (model.foreignKeys.lastOption.contains(fk)) { "" } else { "," }
+            file.add(")" + comma, -1)
+          case _ => // noop
+        }
       }
     }
   }

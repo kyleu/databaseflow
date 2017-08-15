@@ -37,7 +37,7 @@ object SchemaHelper {
     file.add()
 
     file.addImport("sangria.execution.deferred", "Fetcher")
-    val fetcherName = s"${model.propertyName}ByIdFetcher"
+    val fetcherName = s"${model.propertyName}By${pkCols.map(_.className).mkString}Fetcher"
     file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
     file.add(s"val $fetcherName = Fetcher((_: GraphQLContext, idSeq: Seq[${pkType(model.pkColumns)}]) => ${model.className}Service.getByIdSeq(idSeq))")
     file.add()
@@ -64,22 +64,31 @@ object SchemaHelper {
     file.add(s"val ${model.propertyName}MutationType = ObjectType(", 1)
     file.add(s"""name = "${model.propertyName}",""")
     file.add(s"""description = "Mutations for ${model.plural}.",""")
-    file.add("fields = fields[GraphQLContext, Unit](Field(", 1)
+    file.add("fields = fields[GraphQLContext, Unit](", 1)
+    file.add("Field(", 1)
     file.add("name = \"update\",")
     file.add(s"""description = Some("Updates the ${model.title} with the provided $pkNames."),""")
     file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: DataFieldSchema.dataFieldsArg :: Nil,")
-    file.add(s"fieldType = OptionType(${model.propertyName}Type),")
-    file.add(s"resolve = c => ${model.className}Service.update($argProps, c.args.arg(DataFieldSchema.dataFieldsArg)).flatMap { _ =>", 1)
-    file.add(s"${model.className}Service.getById($argProps)")
+    file.add(s"fieldType = ${model.propertyName}Type,")
+    file.add(s"resolve = c => {", 1)
+    file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
+    file.add(s"${model.className}Service.update($argProps, dataFields)")
     file.add("}", -1)
-    file.add("))", -1)
+    file.add("),", -1)
+
+    file.add("Field(", 1)
+    file.add("name = \"remove\",")
+    file.add(s"""description = Some("Removes the Note with the provided id."),""")
+    file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: Nil,")
+    file.add(s"fieldType = ${model.propertyName}Type,")
+    file.add(s"resolve = c => ${model.className}Service.remove($argProps)")
+    file.add(")", -1)
+
+    file.add(")", -1)
     file.add(")", -1)
 
     file.add()
-    file.add("val mutationFields = fields[GraphQLContext, Unit](Field(", 1)
-    file.add(s"""name = "${model.propertyName}",""")
-    file.add(s"fieldType = ${model.propertyName}MutationType,")
-    file.add("resolve = _ => ()")
-    file.add("))", -1)
+    val fields = "fields[GraphQLContext, Unit]"
+    file.add(s"""val mutationFields = $fields(Field(name = "${model.propertyName}", fieldType = ${model.propertyName}MutationType, resolve = _ => ()))""")
   }
 }

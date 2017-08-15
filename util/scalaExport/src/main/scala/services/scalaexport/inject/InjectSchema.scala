@@ -13,7 +13,9 @@ object InjectSchema {
     }
 
     def mutationFieldsFor(s: String) = {
-      val newContent = models.map(m => s"    models.${(m.pkg :+ m.className).mkString(".")}Schema.mutationFields").sorted.mkString(" ++\n  ")
+      val newContent = models.filter(_.pkColumns.nonEmpty).map { m =>
+        s"    models.${(m.pkg :+ m.className).mkString(".")}Schema.mutationFields"
+      }.sorted.mkString(" ++\n  ")
       InjectHelper.replaceBetween(original = s, start = "    // Start model mutation fields", end = s"    // End model mutation fields", newContent = newContent)
     }
 

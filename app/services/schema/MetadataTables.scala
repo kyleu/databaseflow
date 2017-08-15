@@ -77,7 +77,7 @@ object MetadataTables extends Logging {
     )
   } catch {
     case NonFatal(x) =>
-      log.warn(s"Cannot get table details for [${table.name}]", x)
+      log.warn(s"Unable to get table details for [${table.name}]", x)
       table
   }
 

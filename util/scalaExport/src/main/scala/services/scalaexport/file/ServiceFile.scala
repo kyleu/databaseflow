@@ -13,7 +13,9 @@ object ServiceFile {
     file.addImport(("models" +: model.pkg).mkString("."), model.className)
     file.addImport(("models" +: "queries" +: model.pkg).mkString("."), model.className + "Queries")
     file.addImport("services.database", "Database")
-    file.addImport("services", "ModelServiceHelper")
+    if (model.pkg.nonEmpty) {
+      file.addImport("services", "ModelServiceHelper")
+    }
 
     file.add(s"object ${model.className}Service extends ModelServiceHelper[${model.className}] {", 1)
     addGetters(model, file)
@@ -42,15 +44,19 @@ object ServiceFile {
     ForeignKeysHelper.writeService(model, file)
     file.add(s"def insert(model: ${model.className}) = Database.execute(${model.className}Queries.insert(model))")
 
+    file.addImport("models.result.data", "DataField")
+    file.add(s"def create(fields: Seq[DataField]) = Database.execute(${model.className}Queries.create(fields))")
+    file.add()
+
     if (model.pkColumns.nonEmpty) {
-      file.addImport("models.result.data", "DataField")
       model.pkColumns.foreach(col => col.columnType.requiredImport.foreach(x => file.addImport(x, col.columnType.asScala)))
       val sig = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
       val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
       val interp = model.pkColumns.map(c => "$" + ExportHelper.toIdentifier(c.name)).mkString(", ")
-      file.add(s"def remove($sig) = Database.execute(${model.className}Queries.removeById($call))")
-      file.add()
-      file.add(s"def create(fields: Seq[DataField]) = Database.execute(${model.className}Queries.create(fields))")
+      file.add(s"def remove($sig) = Database.query(${model.className}Queries.getById($call)).flatMap {", 1)
+      file.add(s"case Some(current) => Database.execute(${model.className}Queries.removeById($call)).map(_ => current)")
+      file.add(s"""case None => throw new IllegalStateException(s"Cannot find Note matching [$interp].")""")
+      file.add("}", -1)
       file.add()
       file.add(s"def update($sig, fields: Seq[DataField]) = Database.query(${model.className}Queries.getById($call)).flatMap {", 1)
       file.add(s"case Some(current) => Database.execute(${model.className}Queries.update($call, fields)).flatMap { _ =>", 1)

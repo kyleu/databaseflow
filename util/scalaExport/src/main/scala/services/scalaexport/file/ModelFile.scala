@@ -13,12 +13,23 @@ object ModelFile {
 
     model.fields.foreach { field =>
       val value = field.t match {
-        case ColumnType.UuidType => field.defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
-        case ColumnType.BooleanType => field.defaultValue.getOrElse("false")
+        case ColumnType.BooleanType => field.defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
+
+        case ColumnType.ByteType => field.defaultValue.getOrElse("0")
+
         case ColumnType.IntegerType => field.defaultValue.getOrElse("0")
+        case ColumnType.LongType => field.defaultValue.getOrElse("0") + "L"
+        case ColumnType.ShortType => field.defaultValue.getOrElse("0") + ".toShort"
+        case ColumnType.FloatType => field.defaultValue.getOrElse("0.0") + "f"
+        case ColumnType.DoubleType => field.defaultValue.getOrElse("0.0")
+        case ColumnType.BigDecimalType => s"BigDecimal(${field.defaultValue.getOrElse("0")})"
+
+        case ColumnType.UuidType => field.defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
+
         case ColumnType.TimestampType => "util.DateUtils.now"
         case ColumnType.DateType => "util.DateUtils.today"
-        case ColumnType.BigDecimalType => s"BigDecimal(${field.defaultValue.getOrElse("0")})"
+        case ColumnType.TimeType => "util.DateUtils.currentTime"
+
         case _ => "\"" + field.defaultValue.getOrElse("") + "\""
       }
 
@@ -43,11 +54,16 @@ object ModelFile {
 
       val colScala = field.t match {
         case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
+        case ColumnType.ByteType => ColumnType.IntegerType.asScala
         case x => x.asScala
       }
       val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
       val propDefault = if (field.t == ColumnType.StringType) {
-        field.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
+        if (field.notNull) {
+          field.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
+        } else {
+          field.defaultValue.map(v => " = Some(\"" + v + "\")").getOrElse("")
+        }
       } else {
         ""
       }

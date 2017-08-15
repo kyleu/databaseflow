@@ -38,7 +38,7 @@ object MetadataViews extends Logging {
     )
   } catch {
     case NonFatal(x) =>
-      log.info("Unable to get view details.", x)
+      log.info(s"Unable to get view details for [${view.name}].", x)
       view
   }
 

@@ -25,7 +25,7 @@ object MetadataProcedures extends Logging {
     procedure.copy(params = columns)
   } catch {
     case NonFatal(x) =>
-      log.info("Unable to get procedure details.", x)
+      log.info(s"Unable to get procedure details for [${procedure.name}].", x)
       procedure
   }
 

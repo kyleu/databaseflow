@@ -41,7 +41,7 @@ object SchemaRefreshService extends Logging {
         def onSuccessMapped(schema: Schema) = {
           SchemaService.set(db.connectionId, schema)
           log.info(s"Schema update complete for [${schema.schemaName.getOrElse(schema.connectionId)}] in [${System.currentTimeMillis - startMs}ms].")
-          log.info(s"Processed details for [${schema.tables.size}] tables.")
+          log.info(s"Processed details for [${schema.tables.size}] tables and [${schema.views.size}] views.")
           activeRefreshes.remove(db.connectionId)
           onSuccess(schema)
         }

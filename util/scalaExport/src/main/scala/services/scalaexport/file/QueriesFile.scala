@@ -66,13 +66,15 @@ object QueriesFile {
     ForeignKeysHelper.writeQueries(model, file)
 
     file.add(s"def insert(model: ${model.className}) = Insert(model)")
+
+    file.addImport("models.result.data", "DataField")
+    file.add("def create(fields: Seq[DataField]) = CreateFields(fields)")
+
     if (model.pkColumns.nonEmpty) {
-      file.addImport("models.result.data", "DataField")
       val sig = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
       val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
       file.add(s"def removeById($sig) = RemoveById(Seq($call))")
       file.add()
-      file.add("def create(fields: Seq[DataField]) = CreateFields(fields)")
       file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq($call), fields)")
     }
 
