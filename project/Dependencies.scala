@@ -27,7 +27,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "5.0.0-RC3"
+    private[this] val version = "5.0.0"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -95,7 +95,7 @@ object Dependencies {
     val commonsIo = "commons-io" % "commons-io" % "2.5"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
-    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.3"
+    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.4"
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
 

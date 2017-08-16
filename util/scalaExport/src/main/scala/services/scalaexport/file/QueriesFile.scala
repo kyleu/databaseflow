@@ -1,25 +1,23 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 
 object QueriesFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile("models" +: "queries" +: model.pkg, model.className + "Queries")
+    val file = ScalaFile(model.queriesPackage, model.className + "Queries")
 
-    file.addImport(("models" +: model.pkg).mkString("."), model.className)
+    file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport("models.database", "Row")
+    file.addImport("models.database", "DatabaseField")
 
     if (model.pkg.nonEmpty) {
       file.addImport("models.queries", "BaseQueries")
     }
 
     file.add(s"object ${model.className}Queries extends BaseQueries[${model.className}] {", 1)
-    file.add(s"""override protected val tableName = "${model.tableName}"""")
-
-    file.addImport("models.database", "DatabaseField")
-    file.add("override protected val fields = Seq(", 1)
+    file.add(s"""override val tableName = "${model.tableName}"""")
+    file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
       val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = "string")"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
@@ -27,8 +25,8 @@ object QueriesFile {
     }
     file.add(")", -1)
 
-    if (model.pkColumns.nonEmpty) {
-      file.add("override protected val pkColumns = Seq(" + model.pkColumns.map("\"" + _.name + "\"").mkString(", ") + ")")
+    if (model.pkFields.nonEmpty) {
+      file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.columnName + "\"").mkString(", ") + ")")
       val searchColumns = model.fields.filter(_.inSearch)
       file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _.columnName + "\"").mkString(", ")})")
     }
@@ -43,21 +41,21 @@ object QueriesFile {
     file.add("val searchExact = SearchExact")
     file.add()
 
-    model.pkColumns match {
+    model.pkFields match {
       case Nil => // noop
-      case pkCol :: Nil =>
-        val name = ExportHelper.toIdentifier(pkCol.name)
-        pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala))
-        file.add(s"def getByPrimaryKey($name: ${pkCol.columnType.asScala}) = GetByPrimaryKey(Seq($name))")
-        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${pkCol.columnType.asScala}]) = new ColSeqQuery("${pkCol.name}", ${name}Seq)""")
+      case pkField :: Nil =>
+        val name = pkField.propertyName
+        pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala))
+        file.add(s"def getByPrimaryKey($name: ${SchemaHelper.pkType(model.pkFields)}) = GetByPrimaryKey(Seq($name))")
+        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${SchemaHelper.pkType(model.pkFields)}]) = new ColSeqQuery("${pkField.columnName}", ${name}Seq)""")
         file.add()
-      case pkCols =>
-        pkCols.foreach(pkCol => pkCol.columnType.requiredImport.foreach(x => file.addImport(x, pkCol.columnType.asScala)))
-        val args = pkCols.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
-        val seqArgs = pkCols.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
-        file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq($seqArgs))")
-        file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${SchemaHelper.pkType(model.pkColumns)}]) = new SeqQuery(", 1)
-        file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkCols.map(c => s"""\\"${c.name}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
+      case pkFields =>
+        pkFields.foreach(pkField => pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala)))
+        val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScala}").mkString(", ")
+        val seqArgs = pkFields.map(_.propertyName).mkString(", ")
+        file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
+        file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${SchemaHelper.pkType(model.pkFields)}]) = new SeqQuery(", 1)
+        file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkFields.map(f => s"""\\"${f.columnName}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
         file.add(")", -1)
         file.add()
@@ -70,12 +68,12 @@ object QueriesFile {
     file.addImport("models.result.data", "DataField")
     file.add("def create(fields: Seq[DataField]) = CreateFields(fields)")
 
-    if (model.pkColumns.nonEmpty) {
-      val sig = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
-      val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
-      file.add(s"def removeByPrimaryKey($sig) = RemoveByPrimaryKey(Seq($call))")
+    if (model.pkFields.nonEmpty) {
+      val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+      val call = model.pkFields.map(_.propertyName).mkString(", ")
+      file.add(s"def removeByPrimaryKey($sig) = RemoveByPrimaryKey(Seq[Any]($call))")
       file.add()
-      file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq($call), fields)")
+      file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq[Any]($call), fields)")
     }
 
     QueriesHelper.fromRow(model, file)

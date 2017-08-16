@@ -5,16 +5,16 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile("models" +: model.pkg, model.className + "Schema")
+    val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
-    file.addImport(("services" +: model.pkg).mkString("."), model.className + "Service")
+    file.addImport(model.servicesPackage.mkString("."), model.className + "Service")
     file.addImport("util.FutureUtils", "graphQlContext")
     SchemaHelper.addImports(file)
 
     file.add(s"object ${model.className}Schema {", 1)
     SchemaHelper.addPrimaryKey(model, file)
     SchemaHelper.addPrimaryKeyArguments(model, file)
-    ForeignKeysHelper.writeSchema(model, file)
+    ForeignKeysHelper.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
     SchemaHelper.addMutationFields(model, file)

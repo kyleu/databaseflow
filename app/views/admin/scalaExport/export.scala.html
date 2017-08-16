@@ -6,7 +6,7 @@
       <ul class="collection with-header">
         <li class="collection-header">
           <h4>@result.config.projectTitle</h4>
-          @result.models.map(m => (m.pkg :+ m.className).mkString(".")).mkString(", ")
+          @result.models.map(_.fullClassName).mkString(", ")
         </li>
         <li class="collection-item">
           <table>

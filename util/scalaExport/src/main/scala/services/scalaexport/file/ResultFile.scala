@@ -5,7 +5,7 @@ import services.scalaexport.config.ExportModel
 
 object ResultFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile("models" +: model.pkg, model.className + "Result")
+    val file = ScalaFile(model.modelPackage, model.className + "Result")
 
     file.addImport("java.time", "LocalDateTime")
     file.addImport("models.result", "BaseResult")

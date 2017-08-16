@@ -6,7 +6,7 @@ import services.scalaexport.config.ExportModel
 
 object ModelFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile("models" +: model.pkg, model.className)
+    val file = ScalaFile(model.modelPackage, model.className)
 
     file.add(s"object ${model.className} {", 1)
     file.add(s"val empty = ${model.className}(", 1)

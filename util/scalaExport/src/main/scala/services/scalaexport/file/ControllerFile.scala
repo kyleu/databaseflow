@@ -1,20 +1,12 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 
 object ControllerFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile("controllers" +: "admin" +: model.pkg, model.className + "Controller")
-
-    val viewPkg = ("views" +: "html" +: "admin" +: model.pkg).mkString(".")
-    val modelPkg = ("models" +: model.pkg :+ model.className).mkString(".")
-
-    val routesClass = model.pkg match {
-      case Nil => s"controllers.admin.routes.${model.className}Controller"
-      case _ => s"controllers.admin.${model.pkg.mkString(".")}.routes.${model.className}Controller"
-    }
+    val file = ScalaFile(model.controllerPackage, model.className + "Controller")
+    val viewHtmlPackage = model.viewHtmlPackage.mkString(".")
 
     file.addImport("util", "Application")
     file.addImport("util.FutureUtils", "defaultContext")
@@ -22,17 +14,13 @@ object ControllerFile {
     file.addImport("scala.concurrent", "Future")
     file.addImport("models.result.orderBy", "OrderBy")
 
-    if (model.pkg.isEmpty) {
-      file.addImport(s"services", s"${model.className}Service")
-    } else {
-      file.addImport(s"services.${model.pkg.mkString(".")}", s"${model.className}Service")
-    }
+    file.addImport(model.servicesPackage.mkString("."), model.className + "Service")
 
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (override val app: Application) extends BaseController {", 1)
     file.add(s"""def createForm = withAdminSession("${model.propertyName}.createForm") { implicit request =>""", 1)
-    file.add(s"val call = $routesClass.create()")
-    file.add(s"Future.successful(Ok($viewPkg.${model.propertyName}Form(request.identity, $modelPkg.empty, call, isNew = true)))")
+    file.add(s"val call = ${model.routesClass}.create()")
+    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(request.identity, ${model.modelClass}.empty, call, isNew = true)))")
     file.add("}", -1)
     file.add()
 
@@ -51,23 +39,23 @@ object ControllerFile {
     file.add(s"case Some(query) if query.nonEmpty => ${model.className}Service.searchWithCount(query, Nil, orderBys, limit.orElse(Some(100)), offset)")
     file.add(s"case _ => ${model.className}Service.getAllWithCount(Nil, orderBys, limit.orElse(Some(100)), offset)")
     file.add("}", -1)
-    file.add(s"f.map(r => Ok($viewPkg.${model.propertyName}List(", 1)
+    file.add(s"f.map(r => Ok($viewHtmlPackage.${model.propertyName}List(", 1)
     file.add("request.identity, q, orderBy, orderAsc, Some(r._1), r._2, limit.getOrElse(100), offset.getOrElse(0)")
     file.add(")))", -1)
     file.add("}", -1)
     file.add("}", -1)
 
-    writePks(model, file, viewPkg, routesClass)
+    writePks(model, file, viewHtmlPackage, model.routesClass)
 
     file.add("}", -1)
     file
   }
 
-  private[this] def writePks(model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkColumns.nonEmpty) {
-    val viewArgs = model.pkColumns.map(x => s"${ExportHelper.toIdentifier(x.name)}: ${x.columnType.asScalaFull}").mkString(", ")
-    val callArgs = model.pkColumns.map(x => s"${ExportHelper.toIdentifier(x.name)} = ${ExportHelper.toIdentifier(x.name)}").mkString(", ")
-    val getArgs = model.pkColumns.map(x => ExportHelper.toIdentifier(x.name)).mkString(", ")
-    val logArgs = model.pkColumns.map(x => "$" + ExportHelper.toIdentifier(x.name)).mkString(", ")
+  private[this] def writePks(model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkFields.nonEmpty) {
+    val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.t.asScalaFull}").mkString(", ")
+    val callArgs = model.pkFields.map(x => s"${x.propertyName} = ${x.propertyName}").mkString(", ")
+    val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
+    val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
 
     file.add()
     file.add(s"""def view($viewArgs) = withAdminSession("${model.propertyName}.view") { implicit request =>""", 1)

@@ -2,16 +2,15 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 import services.scalaexport.inject.InjectSearchParams
 
 object ServiceFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile("services" +: model.pkg, model.className + "Service")
+    val file = ScalaFile(model.servicesPackage, model.className + "Service")
     file.addImport("util.FutureUtils", "databaseContext")
-    file.addImport(("models" +: model.pkg).mkString("."), model.className)
-    file.addImport(("models" +: "queries" +: model.pkg).mkString("."), model.className + "Queries")
+    file.addImport(model.modelPackage.mkString("."), model.className)
+    file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")
     file.addImport("services.database", "Database")
     if (model.pkg.nonEmpty) {
       file.addImport("services", "ModelServiceHelper")
@@ -19,9 +18,7 @@ object ServiceFile {
 
     file.add(s"object ${model.className}Service extends ModelServiceHelper[${model.className}] {", 1)
     addGetters(model, file)
-    file.addMarker("string-search", InjectSearchParams(
-      pkg = model.pkg, className = model.className, pkColumns = model.pkColumns.map(c => c.name -> c.columnType.asScalaFull)
-    ).toString)
+    file.addMarker("string-search", InjectSearchParams(model).toString)
 
     file.addImport("models.result.filter", "Filter")
     file.addImport("models.result.orderBy", "OrderBy")
@@ -48,11 +45,11 @@ object ServiceFile {
     file.add(s"def create(fields: Seq[DataField]) = Database.execute(${model.className}Queries.create(fields))")
     file.add()
 
-    if (model.pkColumns.nonEmpty) {
-      model.pkColumns.foreach(col => col.columnType.requiredImport.foreach(x => file.addImport(x, col.columnType.asScala)))
-      val sig = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
-      val call = model.pkColumns.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
-      val interp = model.pkColumns.map(c => "$" + ExportHelper.toIdentifier(c.name)).mkString(", ")
+    if (model.pkFields.nonEmpty) {
+      model.pkFields.foreach(f => f.t.requiredImport.foreach(x => file.addImport(x, f.t.asScala)))
+      val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+      val call = model.pkFields.map(_.propertyName).mkString(", ")
+      val interp = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
       file.add(s"def remove($sig) = Database.query(${model.className}Queries.getByPrimaryKey($call)).flatMap {", 1)
       file.add(s"case Some(current) => Database.execute(${model.className}Queries.removeByPrimaryKey($call)).map(_ => current)")
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find Note matching [$interp].")""")
@@ -73,26 +70,22 @@ object ServiceFile {
   }
 
   private[this] def addGetters(model: ExportModel, file: ScalaFile) = {
-    model.pkColumns.foreach(col => col.columnType.requiredImport.foreach(pkg => file.addImport(pkg, col.columnType.asScala)))
-    model.pkColumns match {
+    model.pkFields.foreach(field => field.t.requiredImport.foreach(pkg => file.addImport(pkg, field.t.asScala)))
+    model.pkFields match {
       case Nil => // noop
-      case col :: Nil =>
-        val colProp = ExportHelper.toIdentifier(col.name)
-        file.add(s"def getByPrimaryKey($colProp: ${col.columnType.asScala}) = Database.query(${model.className}Queries.getByPrimaryKey($colProp))")
-        file.add(s"def getByPrimaryKeySeq(${colProp}Seq: Seq[${col.columnType.asScala}]) = Database.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))")
-        col.columnType match {
-          case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(
-            pkg = model.pkg, className = model.className, pkColumns = Seq(col.name -> col.columnType.asScalaFull)
-          ).toString)
-          case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(
-            pkg = model.pkg, className = model.className, pkColumns = Seq(col.name -> col.columnType.asScalaFull)
-          ).toString)
+      case field :: Nil =>
+        val colProp = field.propertyName
+        file.add(s"def getByPrimaryKey($colProp: ${field.t.asScala}) = Database.query(${model.className}Queries.getByPrimaryKey($colProp))")
+        file.add(s"def getByPrimaryKeySeq(${colProp}Seq: Seq[${field.t.asScala}]) = Database.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))")
+        field.t match {
+          case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
+          case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)
           case _ => // noop
         }
-      case cols => // multiple columns
-        val tupleTyp = "(" + cols.map(_.columnType.asScala).mkString(", ") + ")"
-        val colArgs = cols.map(c => ExportHelper.toIdentifier(c.name) + ": " + c.columnType.asScala).mkString(", ")
-        val queryArgs = cols.map(c => ExportHelper.toIdentifier(c.name)).mkString(", ")
+      case fields => // multiple columns
+        val tupleTyp = "(" + fields.map(_.t.asScala).mkString(", ") + ")"
+        val colArgs = fields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+        val queryArgs = fields.map(_.propertyName).mkString(", ")
         file.add(s"def getByPrimaryKey($colArgs) = Database.query(${model.className}Queries.getByPrimaryKey($queryArgs))")
         file.add(s"def getByPrimaryKeySeq(pkSeq: Seq[$tupleTyp]) = Database.query(${model.className}Queries.getByPrimaryKeySeq(pkSeq))")
     }

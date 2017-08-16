@@ -1,21 +1,14 @@
 package services.scalaexport.file
 
 import models.scalaexport.TwirlFile
-import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 
 object TwirlFormFile {
   def export(model: ExportModel) = {
-    val pkg = "views" +: "admin" +: model.pkg
-    val modelClass = model.pkg match {
-      case Nil => s"models.${model.className}"
-      case _ => s"models.${model.pkg.mkString(".")}.${model.className}"
-    }
-
-    val formFile = TwirlFile(pkg, model.propertyName + "Form")
-    formFile.add(s"@(user: models.user.User, model: $modelClass, act: Call, isNew: Boolean = false)(")
+    val formFile = TwirlFile(model.viewPackage, model.propertyName + "Form")
+    formFile.add(s"@(user: models.user.User, model: ${model.modelClass}, act: Call, isNew: Boolean = false)(")
     formFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
-    val toInterp = model.pkColumns.map(c => "${model." + ExportHelper.toIdentifier(c.name) + "}").mkString(", ")
+    val toInterp = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
     formFile.add(s""")@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
     formFile.add(s"""<form action="@act" method="POST">""", 1)
@@ -27,7 +20,7 @@ object TwirlFormFile {
     formFile.add("</div>", -1)
     formFile.add("<h5>", 1)
     formFile.add(s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>""")
-    val toTwirl = model.pkColumns.map(c => "@model." + ExportHelper.toIdentifier(c.name)).mkString(", ")
+    val toTwirl = model.pkFields.map(f => "@model." + f.propertyName).mkString(", ")
     formFile.add(s"""${model.title} [$toTwirl]""")
     formFile.add("</h5>", -1)
     formFile.add("</div>", -1)
@@ -40,7 +33,7 @@ object TwirlFormFile {
       formFile.add("<tr>", 1)
       formFile.add("<td>", 1)
       val inputFields = s"""type="checkbox" name="${field.propertyName}.include" id="${field.propertyName}.include" value="true""""
-      if (model.pkColumns.exists(_.name == field.columnName)) {
+      if (model.pkFields.exists(_.columnName == field.columnName)) {
         formFile.add(s"""<input $inputFields @if(isNew) { checked="checked" } />""")
       } else if (field.notNull) {
         formFile.add(s"""<input $inputFields @if(isNew) { checked="checked" } />""")

@@ -8,13 +8,13 @@ object InjectSchema {
     val models = result.models.filterNot(_.provided)
 
     def queryFieldsFor(s: String) = {
-      val newContent = models.map(m => s"    models.${(m.pkg :+ m.className).mkString(".")}Schema.queryFields").sorted.mkString(" ++\n  ")
+      val newContent = models.map(m => s"    ${m.modelClass}Schema.queryFields").sorted.mkString(" ++\n  ")
       InjectHelper.replaceBetween(original = s, start = "    // Start model query fields", end = s"    // End model query fields", newContent = newContent)
     }
 
     def mutationFieldsFor(s: String) = {
-      val newContent = models.filter(_.pkColumns.nonEmpty).map { m =>
-        s"    models.${(m.pkg :+ m.className).mkString(".")}Schema.mutationFields"
+      val newContent = models.filter(_.pkFields.nonEmpty).map { m =>
+        s"    ${m.modelClass}Schema.mutationFields"
       }.sorted.mkString(" ++\n  ")
       InjectHelper.replaceBetween(original = s, start = "    // Start model mutation fields", end = s"    // End model mutation fields", newContent = newContent)
     }
