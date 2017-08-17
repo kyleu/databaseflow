@@ -16,7 +16,12 @@ object InjectSchema {
       val newContent = models.filter(_.pkFields.nonEmpty).map { m =>
         s"    ${m.modelClass}Schema.mutationFields"
       }.sorted.mkString(" ++\n  ")
-      InjectHelper.replaceBetween(original = s, start = "    // Start model mutation fields", end = s"    // End model mutation fields", newContent = newContent)
+      InjectHelper.replaceBetween(
+        original = s,
+        start = "    // Start model mutation fields",
+        end = s"    // End model mutation fields",
+        newContent = newContent
+      )
     }
 
     def fetcherFieldsFor(s: String) = if (result.getMarkers("fetcher").isEmpty) {

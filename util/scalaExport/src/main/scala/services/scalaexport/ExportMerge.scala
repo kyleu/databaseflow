@@ -60,6 +60,8 @@ object ExportMerge {
 
     "./tmp/scalaexport".toFile.copyTo(rootDir / "app")(CopyOptions(true))
 
+    result.rootFiles.foreach(x => (rootDir / x.pkg.mkString("/") / x.filename).overwrite(x.rendered))
+
     result.log("Merge complete.")
   }
 }

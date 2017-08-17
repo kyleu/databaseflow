@@ -1,10 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.ExportModel
+import services.scalaexport.config.{ExportEngine, ExportModel}
 
 object QueriesFile {
-  def export(model: ExportModel) = {
+  def export(engine: ExportEngine, model: ExportModel) = {
     val file = ScalaFile(model.queriesPackage, model.className + "Queries")
 
     file.addImport(model.modelPackage.mkString("."), model.className)
@@ -55,7 +55,8 @@ object QueriesFile {
         val seqArgs = pkFields.map(_.propertyName).mkString(", ")
         file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
         file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${SchemaHelper.pkType(model.pkFields)}]) = new SeqQuery(", 1)
-        file.add(s"""additionalSql = " where " + idSeq.map(_ => "(${pkFields.map(f => s"""\\"${f.columnName}\\" = ?""").mkString(" and ")})").mkString(" or "),""")
+        val pkWhere = pkFields.map(f => s"""\\"${f.columnName}\\" = ?""").mkString(" and ")
+        file.add(s"""additionalSql = " where " + idSeq.map(_ => "($pkWhere)").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
         file.add(")", -1)
         file.add()
@@ -76,8 +77,8 @@ object QueriesFile {
       file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq[Any]($call), fields)")
     }
 
-    QueriesHelper.fromRow(model, file)
-    QueriesHelper.toDataSeq(model, file)
+    QueriesHelper.fromRow(engine, model, file)
+    QueriesHelper.toDataSeq(engine, model, file)
 
     file.add("}", -1)
     file

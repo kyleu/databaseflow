@@ -1,4 +1,4 @@
-@(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: services.scalaexport.config.ExportConfiguration)(
+@(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: services.scalaexport.config.ExportConfiguration, schema: models.schema.Schema)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )@layout.admin(user = user, title = s"${cfg.projectTitle} Scala Export", activeSection = "") {
 <form method="post" action="@controllers.admin.routes.ScalaExportController.export(cs.slug)">
@@ -31,102 +31,115 @@
                   <tr>
                     <th>Database Engine</th>
                     <td><select name="engine">
-                      <option value="postgres">PostgreSQL</option>
-                      <option value="mysql">MySQL</option>
+                      @if(cfg.engine == services.scalaexport.config.ExportEngine.PostgreSQL) {
+                        <option value="postgres" selected="selected">PostgreSQL</option>
+                      } else {
+                        <option value="postgres">PostgreSQL</option>
+                      }
+                      @if(cfg.engine == services.scalaexport.config.ExportEngine.MySQL) {
+                        <option value="mysql" selected="selected">MySQL</option>
+                      } else {
+                        <option value="mysql">MySQL</option>
+                      }
                     </select></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </li>
-          @cfg.models.map { model =>
-            <li>
-              <div class="collapsible-header">
-                <i class="fa @models.template.Icons.table"></i> @model.tableName
-              </div>
-              <div class="collapsible-body with-padding">
-                <table class="">
-                  <tbody>
-                    <tr>
-                      <th>Package</th>
-                      <td><input name="model.@{model.tableName}.pkg" class="validate" value="@model.pkg.mkString(".")" /></td>
-                    </tr>
-                    <tr>
-                      <th>Property Name</th>
-                      <td><input name="model.@{model.tableName}.propertyName" class="validate" value="@model.propertyName" /></td>
-                    </tr>
-                    <tr>
-                      <th>Class Name</th>
-                      <td><input name="model.@{model.tableName}.className" class="validate" value="@model.className" /></td>
-                    </tr>
-                    <tr>
-                      <th>Title</th>
-                      <td><input name="model.@{model.tableName}.title" class="validate" value="@model.title" /></td>
-                    </tr>
-                    <tr>
-                      <th>Plural</th>
-                      <td><input name="model.@{model.tableName}.plural" class="validate" value="@model.plural" /></td>
-                    </tr>
-                    <tr>
-                      <th>Extends Class</th>
-                      <td><input name="model.@{model.tableName}.extendsClass" class="validate" value="@model.extendsClass" /></td>
-                    </tr>
-                    <tr>
-                      <th>Ignored</th>
-                      <td>
-                        <input name="model.@{model.tableName}.ignored" id="model.@{model.tableName}.ignored" type="checkbox" @if(model.ignored) { checked="checked" } value="true" />
-                        <label for="model.@{model.tableName}.ignored"></label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Provided</th>
-                      <td>
-                        <input name="model.@{model.tableName}.provided" id="model.@{model.tableName}.provided" type="checkbox" @if(model.provided) { checked="checked" } value="true" />
-                        <label for="model.@{model.tableName}.provided"></label>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <hr />
-                <div>
+          @schema.tables.map { table =>
+            @defining(cfg.getModelOpt(table.name).getOrElse(services.scalaexport.config.ExportConfigurationDefault.loadModel(schema, table))) { model =>
+              <li>
+                <div class="collapsible-header">
+                  <div class="right">
+                    @model.pkg.mkString(".") @if(model.provided) { <em>Provided</em> }@if(model.ignored) { <em>Ignored</em> }
+                  </div>
+                  <i class="fa @models.template.Icons.table"></i> @model.tableName
+                </div>
+                <div class="collapsible-body with-padding">
                   <table class="">
-                    <thead>
-                      <tr>
-                        <th>Column</th>
-                        <th>Property</th>
-                        <th>Title</th>
-                        <th>Type</th>
-                        <th>Search</th>
-                        <th>View</th>
-                        <th>Ignored</th>
-                      </tr>
-                    </thead>
                     <tbody>
-                    @model.fields.map { field =>
                       <tr>
-                        <td>@field.columnName</td>
-                        <td><input name="model.@{model.tableName}.field.@{field.columnName}.propertyName" class="validate" value="@field.propertyName" /></td>
-                        <td><input name="model.@{model.tableName}.field.@{field.columnName}.title" class="validate" value="@field.title" /></td>
-                        <td><input name="model.@{model.tableName}.field.@{field.columnName}.t" class="validate" value="@field.t" /></td>
+                        <th>Package</th>
+                        <td><input name="model.@{model.tableName}.pkg" class="validate" value="@model.pkg.mkString(".")" /></td>
+                      </tr>
+                      <tr>
+                        <th>Property Name</th>
+                        <td><input name="model.@{model.tableName}.propertyName" class="validate" value="@model.propertyName" /></td>
+                      </tr>
+                      <tr>
+                        <th>Class Name</th>
+                        <td><input name="model.@{model.tableName}.className" class="validate" value="@model.className" /></td>
+                      </tr>
+                      <tr>
+                        <th>Title</th>
+                        <td><input name="model.@{model.tableName}.title" class="validate" value="@model.title" /></td>
+                      </tr>
+                      <tr>
+                        <th>Plural</th>
+                        <td><input name="model.@{model.tableName}.plural" class="validate" value="@model.plural" /></td>
+                      </tr>
+                      <tr>
+                        <th>Extends Class</th>
+                        <td><input name="model.@{model.tableName}.extendsClass" class="validate" value="@model.extendsClass" /></td>
+                      </tr>
+                      <tr>
+                        <th>Ignored</th>
                         <td>
-                          <input name="model.@{model.tableName}.field.@{field.columnName}.inSearch" id="model.@{model.tableName}.field.@{field.columnName}.inSearch" @if(field.inSearch) { checked="checked" } type="checkbox" value="true" />
-                          <label for="model.@{model.tableName}.field.@{field.columnName}.inSearch"></label>
-                        </td>
-                        <td>
-                          <input name="model.@{model.tableName}.field.@{field.columnName}.inView" id="model.@{model.tableName}.field.@{field.columnName}.inView" @if(field.inView) { checked="checked" } type="checkbox" value="true" />
-                          <label for="model.@{model.tableName}.field.@{field.columnName}.inView"></label>
-                        </td>
-                        <td>
-                          <input name="model.@{model.tableName}.field.@{field.columnName}.ignored" id="model.@{model.tableName}.field.@{field.columnName}.ignored" @if(field.ignored) { checked="checked" } type="checkbox" value="true" />
-                          <label for="model.@{model.tableName}.field.@{field.columnName}.ignored"></label>
+                          <input name="model.@{model.tableName}.ignored" id="model.@{model.tableName}.ignored" type="checkbox" @if(model.ignored) { checked="checked" } value="true" />
+                          <label for="model.@{model.tableName}.ignored"></label>
                         </td>
                       </tr>
-                    }
+                      <tr>
+                        <th>Provided</th>
+                        <td>
+                          <input name="model.@{model.tableName}.provided" id="model.@{model.tableName}.provided" type="checkbox" @if(model.provided) { checked="checked" } value="true" />
+                          <label for="model.@{model.tableName}.provided"></label>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
+                  <hr />
+                  <div>
+                    <table class="">
+                      <thead>
+                        <tr>
+                          <th>Column</th>
+                          <th>Property</th>
+                          <th>Title</th>
+                          <th>Type</th>
+                          <th>Search</th>
+                          <th>View</th>
+                          <th>Ignored</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      @model.fields.map { field =>
+                        <tr>
+                          <td>@field.columnName</td>
+                          <td><input name="model.@{model.tableName}.field.@{field.columnName}.propertyName" class="validate" value="@field.propertyName" /></td>
+                          <td><input name="model.@{model.tableName}.field.@{field.columnName}.title" class="validate" value="@field.title" /></td>
+                          <td><input name="model.@{model.tableName}.field.@{field.columnName}.t" class="validate" value="@field.t" /></td>
+                          <td>
+                            <input name="model.@{model.tableName}.field.@{field.columnName}.inSearch" id="model.@{model.tableName}.field.@{field.columnName}.inSearch" @if(field.inSearch) { checked="checked" } type="checkbox" value="true" />
+                            <label for="model.@{model.tableName}.field.@{field.columnName}.inSearch"></label>
+                          </td>
+                          <td>
+                            <input name="model.@{model.tableName}.field.@{field.columnName}.inView" id="model.@{model.tableName}.field.@{field.columnName}.inView" @if(field.inView) { checked="checked" } type="checkbox" value="true" />
+                            <label for="model.@{model.tableName}.field.@{field.columnName}.inView"></label>
+                          </td>
+                          <td>
+                            <input name="model.@{model.tableName}.field.@{field.columnName}.ignored" id="model.@{model.tableName}.field.@{field.columnName}.ignored" @if(field.ignored) { checked="checked" } type="checkbox" value="true" />
+                            <label for="model.@{model.tableName}.field.@{field.columnName}.ignored"></label>
+                          </td>
+                        </tr>
+                      }
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            </li>
+              </li>
+            }
           }
         </ul>
       </div>

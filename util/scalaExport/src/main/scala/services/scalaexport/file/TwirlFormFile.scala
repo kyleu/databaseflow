@@ -42,7 +42,10 @@ object TwirlFormFile {
       }
       formFile.add(s"""<label for="${field.propertyName}.include">${field.title}</label>""")
       formFile.add("</td>", -1)
-      formFile.add(s"""<td><input id="input-${field.propertyName}" type="text" name="${field.propertyName}" value="@model.${field.propertyName}" /></td>""")
+
+      formFile.add("<td>", 1)
+      TwirlFormFields.inputFor(field, formFile)
+      formFile.add(s"</td>", -1)
       formFile.add("</tr>", -1)
     }
 

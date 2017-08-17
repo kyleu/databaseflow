@@ -29,7 +29,7 @@ object InjectExplore {
         } else {
           Some(s"""      <li class="collection-item">
           <a class="theme-text" href="@${model.routesClass}.list()">${model.title} Management</a>
-          <div><em>Manage the ${model.propertyName} of the system.</em></div>
+          <div><em>Manage the ${model.plural} of the system.</em></div>
         </li>""")
         }
       }.sorted.mkString("\n")

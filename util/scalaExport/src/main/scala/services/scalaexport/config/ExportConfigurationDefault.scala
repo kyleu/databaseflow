@@ -6,10 +6,14 @@ import services.scalaexport.ExportHelper._
 
 object ExportConfigurationDefault {
   def forSchema(key: String, schema: Schema) = ExportConfiguration(
-    key = key, projectId = key, projectTitle = ExportHelper.toClassName(key), models = schema.tables.map(t => loadModel(schema, t))
+    key = key,
+    projectId = key,
+    projectTitle = ExportHelper.toClassName(key),
+    models = schema.tables.map(t => loadModel(schema, t)),
+    engine = ExportEngine.withNameInsensitive(schema.engine)
   )
 
-  private[this] def loadModel(schema: Schema, t: Table) = {
+  def loadModel(schema: Schema, t: Table) = {
     val cn = toClassName(t.name)
 
     val provided = cn match {

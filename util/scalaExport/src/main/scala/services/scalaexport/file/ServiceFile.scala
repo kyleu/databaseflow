@@ -76,7 +76,8 @@ object ServiceFile {
       case field :: Nil =>
         val colProp = field.propertyName
         file.add(s"def getByPrimaryKey($colProp: ${field.t.asScala}) = Database.query(${model.className}Queries.getByPrimaryKey($colProp))")
-        file.add(s"def getByPrimaryKeySeq(${colProp}Seq: Seq[${field.t.asScala}]) = Database.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))")
+        val seqArgs = s"${colProp}Seq: Seq[${field.t.asScala}]"
+        file.add(s"def getByPrimaryKeySeq($seqArgs) = Database.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))")
         field.t match {
           case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
           case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)

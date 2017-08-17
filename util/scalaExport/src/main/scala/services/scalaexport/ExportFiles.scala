@@ -11,7 +11,7 @@ object ExportFiles {
     if (rootDir.exists) { rootDir.delete() }
     rootDir.createDirectory()
 
-    result.files.map { file =>
+    result.sourceFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
         rootDir / file.filename
       } else {
@@ -30,7 +30,7 @@ object ExportFiles {
     } else {
       val cls = ModelFile.export(model)
       val res = ResultFile.export(model)
-      val queries = QueriesFile.export(model)
+      val queries = QueriesFile.export(config.engine, model)
       val svc = ServiceFile.export(model)
       val sch = SchemaFile.export(config, model)
       val cntr = ControllerFile.export(model)

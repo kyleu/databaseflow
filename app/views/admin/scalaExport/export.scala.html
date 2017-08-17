@@ -5,6 +5,9 @@
     <div class="col s12">
       <ul class="collection with-header">
         <li class="collection-header">
+          <div class="right">
+            @result.config.engine.key
+          </div>
           <h4>@result.config.projectTitle</h4>
           @result.models.map(_.fullClassName).mkString(", ")
         </li>
@@ -15,16 +18,22 @@
             }</tbody>
           </table>
         </li>
+        @result.rootFiles.map { f =>
+          <li class="collection-item">
+            /@f.pkg.mkString("/")/@f.filename
+          <pre>@f.rendered</pre>
+          </li>
+        }
         @injected.map { f =>
           <li class="collection-item">
             @f._1
             <pre>@f._2</pre>
           </li>
         }
-        @result.files.map { f =>
+        @result.sourceFiles.map { f =>
           <li class="collection-item">
             @f.pkg.mkString("/")/@f.filename
-            <pre>@f.rendered</pre>
+          <pre>@f.rendered</pre>
           </li>
         }
       </ul>

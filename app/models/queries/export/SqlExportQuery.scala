@@ -35,11 +35,11 @@ case class SqlExportQuery(
       val columns = (1 to cc).map(i => md.getColumnLabel(i) -> DynamicQuery.getColumnMetadata(md, i)._1)
       val columnsStr = columns.map(c => engine.cap.leftQuote + c._1 + engine.cap.rightQuote).mkString(", ")
       val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).map(_.toString))
-      writer.println(sqlFor(firstRowData, columns, columnsStr))
+      writer.print(sqlFor(firstRowData, columns, columnsStr) + "\n")
 
       rows.foreach { row =>
         val data = (1 to cc).map(i => row.asOpt[Any](i).map(_.toString))
-        writer.println(sqlFor(data, columns, columnsStr))
+        writer.print(sqlFor(data, columns, columnsStr) + "\n")
       }
     }
     writer.close()

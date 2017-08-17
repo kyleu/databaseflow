@@ -28,7 +28,8 @@ object SharedResultQueries extends BaseQueries[SharedResult] {
       "filter_column", "filter_op", "filter_type", "filter_value", "chart", "last_accessed", "created"
     ))
     override val values = Seq[Any](
-      sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql, sr.source.t.toString, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
+      sr.title, sr.owner, sr.viewableBy.toString, sr.connectionId, sr.sql,
+      sr.source.t.toString, sr.source.name, sr.source.sortedColumn, sr.source.sortedAscending,
       sr.source.filterOpt.map(_.col), sr.source.filterOpt.map(_.op.toString), sr.source.filterOpt.map(_.t.toString), sr.source.filterOpt.map(_.v), sr.chart,
       new java.sql.Timestamp(sr.lastAccessed), new java.sql.Timestamp(sr.created), sr.id
     )

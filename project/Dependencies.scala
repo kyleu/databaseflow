@@ -52,7 +52,7 @@ object Dependencies {
   }
 
   object Export {
-    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.4"
+    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
   }
 
   object Ui {

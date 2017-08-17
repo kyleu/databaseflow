@@ -40,7 +40,7 @@ object SchemaFile {
         file.add("AddFields(", 1)
       }
       ReferencesHelper.writeFields(config, model, file)
-      ForeignKeysHelper.writeFields(config, model, file)
+      ForeignKeyFields.writeFields(config, model, file)
       if (model.foreignKeys.nonEmpty || model.references.nonEmpty) {
         file.add(")", -1)
       }

@@ -2,7 +2,7 @@ package models.scalaexport
 
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
-case class ExportResult(config: ExportConfiguration, models: Seq[ExportModel], files: Seq[OutputFile]) {
+case class ExportResult(config: ExportConfiguration, models: Seq[ExportModel], sourceFiles: Seq[OutputFile], rootFiles: Seq[OutputFile]) {
   private[this] val startTime = System.currentTimeMillis
   private[this] val logs = collection.mutable.ArrayBuffer.empty[(Int, String)]
 
@@ -11,5 +11,5 @@ case class ExportResult(config: ExportConfiguration, models: Seq[ExportModel], f
   def log(msg: String) = logs += ((System.currentTimeMillis - startTime).toInt -> msg)
   val getLogs: Seq[(Int, String)] = logs
 
-  def getMarkers(key: String) = files.flatMap(_.markersFor(key)).distinct
+  def getMarkers(key: String) = sourceFiles.flatMap(_.markersFor(key)).distinct
 }

@@ -30,7 +30,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         } else {
           ExportConfigurationDefault.forSchema(schemaId, schema)
         }
-        Ok(views.html.admin.scalaExport.schemaForm(request.identity, cs, config))
+        Ok(views.html.admin.scalaExport.schemaForm(request.identity, cs, config, schema))
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")
     }
@@ -49,7 +49,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           models = schema.tables.map { t =>
             modelForTable(schema, t, form.filter(_._1.startsWith("model." + t.name)).map(x => x._1.stripPrefix("model." + t.name + ".") -> x._2))
           },
-          engine = form("engine"),
+          engine = ExportEngine.withNameInsensitive(form("engine")),
           projectLocation = form.get("project.location").filter(_.nonEmpty)
         )
 
