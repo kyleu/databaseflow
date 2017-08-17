@@ -17,7 +17,7 @@ object SchemaFile {
     ForeignKeysHelper.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
-    SchemaHelper.addMutationFields(model, file)
+    SchemaMutationHelper.addMutationFields(model, file)
     file.add("}", -1)
     file
   }

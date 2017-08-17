@@ -67,7 +67,7 @@ object QueriesFile {
     file.add(s"def insert(model: ${model.className}) = Insert(model)")
 
     file.addImport("models.result.data", "DataField")
-    file.add("def create(fields: Seq[DataField]) = CreateFields(fields)")
+    file.add("def create(dataFields: Seq[DataField]) = CreateFields(dataFields)")
 
     if (model.pkFields.nonEmpty) {
       val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
