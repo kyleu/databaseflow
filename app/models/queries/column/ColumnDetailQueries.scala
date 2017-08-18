@@ -14,21 +14,23 @@ object ColumnDetailQueries {
   }
 
   case class NumberColumnDetail(engine: DatabaseEngine, owner: String, name: String) extends SingleRowQuery[ColumnDetails] {
+    private[this] val (lq, rq) = engine.cap.leftQuote -> engine.cap.rightQuote
+    private[this] val stddev = if (engine == DatabaseEngine.SQLite) { "0" } else { s"stddev($lq$name$rq)" }
     override def sql = s"""
       select
-        count($name) c,
-        count(distinct $name) d,
-        min($name) mn,
-        max($name) mx,
-        sum($name) s,
-        avg($name) a,
-        variance($name) v,
-        stddev($name) sd
+        count($lq$name$rq) c,
+        count(distinct $lq$name$rq) d,
+        min($lq$name$rq) mn,
+        max($lq$name$rq) mx,
+        sum($lq$name$rq) s,
+        avg($lq$name$rq) a,
+        variance($lq$name$rq) v,
+        $stddev sd
       from $owner
-    """
+    """.trim
     override def map(row: Row) = ColumnDetails(
-      count = row.as[Long]("c"),
-      distinctCount = row.as[Long]("d"),
+      count = row.as[Any]("c").toString.toLong,
+      distinctCount = row.as[Any]("d").toString.toLong,
       min = row.asOpt[Any]("mn").map(_.toString.toDouble),
       max = row.asOpt[Any]("mx").map(_.toString.toDouble),
       sum = row.asOpt[Any]("s").map(_.toString.toDouble),
