@@ -39,10 +39,19 @@ object ServiceFile {
     file.add()
 
     ForeignKeysHelper.writeService(model, file)
-    file.add(s"def insert(model: ${model.className}) = Database.execute(${model.className}Queries.insert(model))")
+    file.add(s"def insert(model: ${model.className}) = Database.execute(${model.className}Queries.insert(model)).flatMap {", 1)
+    if (model.pkFields.isEmpty) {
+      file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
+    } else {
+      file.add(s"case 1 => getByPrimaryKey(${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})")
+      file.add(s"""case x => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
+    }
+    file.add("}", -1)
 
     file.addImport("models.result.data", "DataField")
-    file.add(s"def create(fields: Seq[DataField]) = Database.execute(${model.className}Queries.create(fields))")
+    file.add(s"def create(fields: Seq[DataField]) = Database.execute(${model.className}Queries.create(fields)).map { _ =>", 1)
+    file.add(s"None: Option[${model.className}]")
+    file.add("}", -1)
     file.add()
 
     if (model.pkFields.nonEmpty) {

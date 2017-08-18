@@ -72,11 +72,13 @@ object QueriesFile {
     if (model.pkFields.nonEmpty) {
       val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
       val call = model.pkFields.map(_.propertyName).mkString(", ")
+      file.add()
       file.add(s"def removeByPrimaryKey($sig) = RemoveByPrimaryKey(Seq[Any]($call))")
       file.add()
       file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq[Any]($call), fields)")
     }
 
+    file.add()
     QueriesHelper.fromRow(engine, model, file)
     QueriesHelper.toDataSeq(engine, model, file)
 

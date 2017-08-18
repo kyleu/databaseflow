@@ -16,6 +16,18 @@ object SchemaMutationHelper {
     file.add(s"""name = "${model.propertyName}",""")
     file.add(s"""description = "Mutations for ${model.plural}.",""")
     file.add("fields = fields[GraphQLContext, Unit](", 1)
+
+    file.add("Field(", 1)
+    file.add("name = \"create\",")
+    file.add(s"""description = Some("Creates a new ${model.title} using the provided fields."),""")
+    file.add(s"arguments = DataFieldSchema.dataFieldsArg :: Nil,")
+    file.add(s"fieldType = OptionType(${model.propertyName}Type),")
+    file.add(s"resolve = c => {", 1)
+    file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
+    file.add(s"${model.className}Service.create(dataFields)")
+    file.add("}", -1)
+    file.add("),", -1)
+
     file.add("Field(", 1)
     file.add("name = \"update\",")
     file.add(s"""description = Some("Updates the ${model.title} with the provided $pkNames."),""")

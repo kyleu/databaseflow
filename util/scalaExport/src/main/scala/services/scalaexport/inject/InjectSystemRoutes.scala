@@ -9,7 +9,7 @@ object InjectSystemRoutes {
     val systemModels = result.models.filter(_.pkg.isEmpty)
 
     def routesFor(s: String) = {
-      val newContent = systemModels.map(RoutesFiles.routesContentFor).flatMap(_._2).mkString("\n")
+      val newContent = systemModels.flatMap(m => RoutesFiles.routesContentFor(m)).mkString("\n")
       InjectHelper.replaceBetween(original = s, start = "# Start model routes", end = "# End model routes", newContent = newContent)
     }
 

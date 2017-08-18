@@ -9,7 +9,14 @@
             @result.config.engine.key
           </div>
           <h4>@result.config.projectTitle</h4>
-          @result.models.map(_.fullClassName).mkString(", ")
+          <em>@util.NumberUtils.withCommas(result.fileCount) files containing @util.NumberUtils.withCommas(result.fileSizes) characters of Scala.</em>
+        </li>
+        <li class="collection-item">
+          <ul>
+            @result.models.map { model =>
+              <li>@model.fullClassName</li>
+            }
+          </ul>
         </li>
         <li class="collection-item">
           <table>

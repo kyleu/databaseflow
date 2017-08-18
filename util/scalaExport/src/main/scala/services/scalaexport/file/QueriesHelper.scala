@@ -39,9 +39,9 @@ object QueriesHelper {
   }
 
   private[this] def boolTransformer(cn: String, nn: Boolean) = if (nn) {
-    "(if(o." + cn + ") { 1.toByte } else { 0.toByte })"
+    "(if (o." + cn + ") { 1.toByte } else { 0.toByte })"
   } else {
-    "o." + cn + ".map(x => (if(x) { 1.toByte } else { 0.toByte }))"
+    "o." + cn + ".map(x => (if (x) { 1.toByte } else { 0.toByte }))"
   }
 
   def toDataSeq(engine: ExportEngine, model: ExportModel, file: ScalaFile) = {

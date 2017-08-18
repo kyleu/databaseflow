@@ -12,4 +12,7 @@ case class ExportResult(config: ExportConfiguration, models: Seq[ExportModel], s
   val getLogs: Seq[(Int, String)] = logs
 
   def getMarkers(key: String) = sourceFiles.flatMap(_.markersFor(key)).distinct
+
+  val fileCount = sourceFiles.size + rootFiles.size
+  lazy val fileSizes = sourceFiles.map(_.rendered.length).sum + rootFiles.map(_.rendered.length).sum
 }
