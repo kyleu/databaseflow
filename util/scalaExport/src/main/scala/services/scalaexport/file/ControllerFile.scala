@@ -15,7 +15,7 @@ object ControllerFile {
     file.addImport("io.circe.generic.auto", "_")
     file.addImport("io.circe.syntax", "_")
     file.addImport("io.circe.java8.time", "_")
-    file.addImport(model.servicesPackage.mkString("."), model.className + "Service")
+    file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport(model.modelPackage.mkString("."), model.className + "Result")
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (override val app: Application) extends BaseController {", 1)

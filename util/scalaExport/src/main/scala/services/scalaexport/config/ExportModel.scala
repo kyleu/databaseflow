@@ -28,17 +28,26 @@ case class ExportModel(
   val fullClassName = (pkg :+ className).mkString(".")
   val pkFields = pkColumns.map(c => getField(c.name))
 
-  val modelPackage = "models" +: pkg
-  val queriesPackage = "models" +: "queries" +: pkg
-  val servicesPackage = "services" +: pkg
-  val controllerPackage = "controllers" +: "admin" +: (if (pkg.isEmpty) { List("system") } else { pkg })
-  val routesPackage = controllerPackage :+ "routes"
   val viewPackage = "views" +: "admin" +: pkg
   val viewHtmlPackage = "views" +: "html" +: "admin" +: pkg
+  val viewDirectory = "app"
 
+  val modelPackage = "models" +: pkg
+  val modelDirectory = "app"
   val modelClass = (modelPackage :+ className).mkString(".")
-  val serviceClass = (servicesPackage :+ (className + "Service")).mkString(".")
+
+  val queriesPackage = "models" +: "queries" +: pkg
+  val queriesDirectory = "app"
+
+  val servicePackage = "services" +: pkg
+  val serviceDirectory = "app"
+  val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
+
+  val controllerPackage = "controllers" +: "admin" +: (if (pkg.isEmpty) { List("system") } else { pkg })
+  val controllerDirectory = "app"
   val controllerClass = (controllerPackage :+ (className + "Controller")).mkString(".")
+
+  val routesPackage = controllerPackage :+ "routes"
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
 
   def getField(k: String) = getFieldOpt(k).getOrElse(throw new IllegalStateException(s"No field for model [$className] with name [$k]."))

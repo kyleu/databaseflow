@@ -1,6 +1,6 @@
 package models.scalaexport
 
-abstract class OutputFile(val pkg: Seq[String], val key: String, val filename: String) {
+abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String, val filename: String) {
   private[this] var hasRendered = false
   private[this] var currentIndent = 0
   private[this] val lines = collection.mutable.ArrayBuffer.empty[String]

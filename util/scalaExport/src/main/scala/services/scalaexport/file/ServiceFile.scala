@@ -7,7 +7,7 @@ import services.scalaexport.inject.InjectSearchParams
 
 object ServiceFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile(model.servicesPackage, model.className + "Service")
+    val file = ScalaFile(model.servicePackage, model.className + "Service")
     file.addImport("util.FutureUtils", "databaseContext")
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")

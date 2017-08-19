@@ -58,9 +58,12 @@ object ExportMerge {
       projectNameReplacements(result.config.projectId, result.config.projectTitle, rootDir)
     }
 
-    "./tmp/scalaexport".toFile.copyTo(rootDir / "app")(CopyOptions(true))
+    "./tmp/scalaexport".toFile.copyTo(rootDir)(CopyOptions(true))
 
-    result.rootFiles.foreach(x => (rootDir / x.pkg.mkString("/") / x.filename).overwrite(x.rendered))
+    result.rootFiles.foreach {
+      case x if x.pkg.isEmpty => (rootDir / x.dir / x.filename).overwrite(x.rendered)
+      case x => (rootDir / x.dir / x.pkg.mkString("/") / x.filename).overwrite(x.rendered)
+    }
 
     result.log("Merge complete.")
   }

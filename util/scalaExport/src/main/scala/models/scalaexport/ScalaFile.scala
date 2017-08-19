@@ -1,6 +1,6 @@
 package models.scalaexport
 
-case class ScalaFile(override val pkg: Seq[String], override val key: String) extends OutputFile(pkg, key, key + ".scala") {
+case class ScalaFile(override val pkg: Seq[String], override val key: String) extends OutputFile("app", pkg, key, key + ".scala") {
   private[this] var imports = Set.empty[(String, String)]
 
   def addImport(p: String, c: String) = imports += (p -> c)

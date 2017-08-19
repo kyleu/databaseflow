@@ -13,9 +13,9 @@ object ExportFiles {
 
     result.sourceFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
-        rootDir / file.filename
+        rootDir / file.dir / file.filename
       } else {
-        rootDir / file.pkg.mkString("/") / file.filename
+        rootDir / file.dir / file.pkg.mkString("/") / file.filename
       }
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)

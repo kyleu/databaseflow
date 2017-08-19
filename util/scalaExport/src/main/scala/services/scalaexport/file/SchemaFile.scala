@@ -7,7 +7,7 @@ object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
-    file.addImport(model.servicesPackage.mkString("."), model.className + "Service")
+    file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport("util.FutureUtils", "graphQlContext")
     SchemaHelper.addImports(file)
 
