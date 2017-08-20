@@ -27,8 +27,8 @@ object ForeignKeysHelper {
         col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
         val propId = col.propertyName
         val propCls = col.className
-        file.add(s"""def getBy$propCls($propId: $idType) = Database.query(${model.className}Queries.GetBy$propCls($propId))""")
-        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[$idType]) = Database.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))""")
+        file.add(s"""def getBy$propCls($propId: $idType)(implicit trace: TraceData) = Database.query(${model.className}Queries.GetBy$propCls($propId))""")
+        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[$idType])(implicit trace: TraceData) = Database.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))""")
         file.add()
       case _ => // noop
     }
@@ -49,7 +49,7 @@ object ForeignKeysHelper {
           val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
           file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
           file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
-          file.add(s"${src.className}Service.getBy${srcCol.className}Seq(values)")
+          file.add(s"c.${src.serviceReference}.getBy${srcCol.className}Seq(values)(c.trace)")
           file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
           file.add()
         })

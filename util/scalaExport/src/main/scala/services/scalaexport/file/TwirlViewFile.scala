@@ -14,9 +14,9 @@ object TwirlViewFile {
 
     val viewFile = TwirlFile(model.viewPackage, model.propertyName + "View")
     viewFile.add(s"@(user: models.user.User, model: ${model.modelClass})(")
-    viewFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
+    viewFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
-    viewFile.add(s""")@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
+    viewFile.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
     viewFile.add("""<div class="collection with-header">""", 1)
     viewFile.add("<div class=\"collection-header\">", 1)

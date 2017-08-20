@@ -7,9 +7,9 @@ object TwirlFormFile {
   def export(model: ExportModel) = {
     val formFile = TwirlFile(model.viewPackage, model.propertyName + "Form")
     formFile.add(s"@(user: models.user.User, model: ${model.modelClass}, act: Call, isNew: Boolean = false)(")
-    formFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
+    formFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     val toInterp = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
-    formFile.add(s""")@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
+    formFile.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
     formFile.add(s"""<form action="@act" method="POST">""", 1)
     formFile.add("""<div class="collection with-header">""", 1)

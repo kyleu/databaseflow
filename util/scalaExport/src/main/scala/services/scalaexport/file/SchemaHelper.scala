@@ -8,6 +8,7 @@ object SchemaHelper {
   def addImports(file: ScalaFile) = {
     file.addImport("models.graphql", "CommonSchema")
     file.addImport("models.graphql", "GraphQLContext")
+    file.addImport("models.graphql", "SchemaHelper")
     file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
     file.addImport("models.graphql.CommonSchema", "_")
@@ -37,8 +38,8 @@ object SchemaHelper {
     file.addImport("sangria.execution.deferred", "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
     file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
-    file.add(s"val $fetcherName = Fetcher.apply { (_: GraphQLContext, values: Seq[${pkType(model.pkFields)}]) =>", 1)
-    file.add(s"${model.className}Service.getByPrimaryKeySeq(values)")
+    file.add(s"val $fetcherName = Fetcher { (c: GraphQLContext, values: Seq[${pkType(model.pkFields)}]) =>", 1)
+    file.add(s"c.${model.serviceReference}.getByPrimaryKeySeq(values)(c.trace)")
     file.add(s"}(${model.propertyName}PrimaryKeyId)", -1)
     file.add()
   }

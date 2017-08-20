@@ -4,20 +4,25 @@ import models.scalaexport.ScalaFile
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object SchemaFile {
+  val resultArgs = "paging = r.paging, filters = r.args.filters, orderBys = r.args.orderBys, totalCount = r.count, results = r.results, durationMs = r.dur"
+
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
-    file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport("util.FutureUtils", "graphQlContext")
     SchemaHelper.addImports(file)
 
-    file.add(s"object ${model.className}Schema {", 1)
+    file.add(s"""object ${model.className}Schema extends SchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(model, file)
     SchemaHelper.addPrimaryKeyArguments(model, file)
     ForeignKeysHelper.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
     SchemaMutationHelper.addMutationFields(model, file)
+    file.add()
+    file.add(s"private[this] def toResult(r: SearchResult[${model.className}]) = {", 1)
+    file.add(s"${model.className}Result($resultArgs)")
+    file.add("}", -1)
     file.add("}", -1)
     file
   }
@@ -53,31 +58,13 @@ object SchemaFile {
 
   private[this] def addQueryFields(model: ExportModel, file: ScalaFile) = {
     file.add("val queryFields = fields[GraphQLContext, Unit](Field(", 1)
+
     file.add(s"""name = "${model.propertyName}",""")
     file.add(s"fieldType = ${model.propertyName}ResultType,")
-
     file.add(s"arguments = queryArg :: reportFiltersArg :: orderBysArg :: limitArg :: offsetArg :: Nil,")
-    file.add(s"resolve = c =>")
-    file.add("{", 1)
 
-    file.add("val start = util.DateUtils.now")
-    file.add("val filters = c.arg(reportFiltersArg).getOrElse(Nil)")
-    file.add("val orderBys = c.arg(orderBysArg).getOrElse(Nil)")
-    file.add("val limit = c.arg(limitArg)")
-    file.add("val offset = c.arg(offsetArg)")
-
-    file.add("val f = c.arg(CommonSchema.queryArg) match {", 1)
-    file.add(s"case Some(q) => ${model.className}Service.searchWithCount(q, filters, orderBys, limit, offset)")
-    file.add(s"case _ => ${model.className}Service.getAllWithCount(filters, orderBys, limit, offset)")
-    file.add("}", -1)
-
-    file.add("f.map { r =>", 1)
-    file.add("val paging = PagingOptions.from(r._1, limit, offset)")
-    file.add("val durationMs = (System.currentTimeMillis - util.DateUtils.toMillis(start)).toInt")
-    file.add(s"${model.className}Result(paging = paging, filters = filters, orderBys = orderBys, totalCount = r._1, results = r._2, durationMs = durationMs)")
-    file.add("}", -1)
-
-    file.add("}", -1)
+    val args = s"implicit timing => runSearch(c.ctx.${model.serviceReference}, c).map(toResult)"
+    file.add(s"""resolve = c => trace(c.ctx, "search")($args)""")
 
     file.add("))", -1)
   }

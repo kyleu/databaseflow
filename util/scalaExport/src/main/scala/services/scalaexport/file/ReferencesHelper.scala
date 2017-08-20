@@ -21,15 +21,15 @@ object ReferencesHelper {
       val fetcherRef = relationRef + "Fetcher"
       if (ref.notNull) {
         if (srcField.notNull) {
-          file.add(s"resolve = ctx => $fetcherRef.deferSeq(Seq(ctx.value.${tgtField.propertyName}))")
+          file.add(s"resolve = c => $fetcherRef.deferSeq(Seq(c.value.${tgtField.propertyName}))")
         } else {
-          file.add(s"resolve = ctx => $fetcherRef.deferSeq(Seq(Some(ctx.value.${tgtField.propertyName})))")
+          file.add(s"resolve = c => $fetcherRef.deferSeq(Seq(Some(c.value.${tgtField.propertyName})))")
         }
       } else {
         if (srcField.notNull) {
-          file.add(s"resolve = ctx => $fetcherRef.deferSeqOpt(Seq(ctx.value.${tgtField.propertyName}))")
+          file.add(s"resolve = c => $fetcherRef.deferSeqOpt(Seq(c.value.${tgtField.propertyName}))")
         } else {
-          file.add(s"resolve = ctx => $fetcherRef.deferSeqOpt(Seq(Some(ctx.value.${tgtField.propertyName})))")
+          file.add(s"resolve = c => $fetcherRef.deferSeqOpt(Seq(Some(c.value.${tgtField.propertyName})))")
         }
       }
       val comma = if (model.references.lastOption.contains(ref) && !hasFk) { "" } else { "," }

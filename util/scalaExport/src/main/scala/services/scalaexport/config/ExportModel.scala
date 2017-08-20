@@ -42,6 +42,10 @@ case class ExportModel(
   val servicePackage = "services" +: pkg
   val serviceDirectory = "app"
   val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
+  val serviceReference = pkg match {
+    case Nil => "services." + propertyName + "Service"
+    case _ => "services." + pkg.head + "Services." + propertyName + "Service"
+  }
 
   val controllerPackage = "controllers" +: "admin" +: (if (pkg.isEmpty) { List("system") } else { pkg })
   val controllerDirectory = "app"

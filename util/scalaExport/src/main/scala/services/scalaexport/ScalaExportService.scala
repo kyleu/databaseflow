@@ -3,7 +3,7 @@ package services.scalaexport
 import better.files._
 import models.scalaexport.ExportResult
 import services.scalaexport.config.ExportConfiguration
-import services.scalaexport.file.RoutesFiles
+import services.scalaexport.file.{RoutesFiles, ServiceRegistryFiles}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +30,7 @@ case class ScalaExportService(config: ExportConfiguration) {
 
   def export(config: ExportConfiguration) = {
     val modelFiles = config.models.map(model => ExportFiles.exportModel(config, model))
-    val rootFiles = RoutesFiles.files(config.models)
+    val rootFiles = RoutesFiles.files(config.models) ++ ServiceRegistryFiles.files(config.models)
     Future.successful(ExportResult(config, modelFiles.map(_._1), modelFiles.flatMap(_._2), rootFiles))
   }
 }
