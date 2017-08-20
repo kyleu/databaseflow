@@ -20,9 +20,10 @@ object ControllerFile {
     file.add("@javax.inject.Singleton")
     val extend = s"""BaseController("${model.propertyName}")"""
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (override val app: Application, svc: ${model.className}Service) extends $extend {", 1)
-    file.add(s"""def createForm = withSession("${model.propertyName}.createForm", admin = true) { implicit request =>""", 1)
+    file.add(s"""def createForm = withSession("${model.propertyName}.create.form", admin = true) { implicit request =>""", 1)
     file.add(s"val call = ${model.routesClass}.create()")
-    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(request.identity, ${model.modelClass}.empty, call, isNew = true)))")
+    val form = s"""$viewHtmlPackage.${model.propertyName}Form(request.identity, ${model.modelClass}.empty, "New ${model.title}", call, isNew = true)"""
+    file.add(s"Future.successful(Ok($form))")
     file.add("}", -1)
     file.add()
     file.add(s"""def create = withSession("${model.propertyName}.create", admin = true) { implicit request =>""", 1)
@@ -74,7 +75,7 @@ object ControllerFile {
     file.add(s"""def editForm($viewArgs) = withSession("${model.propertyName}.edit.form", admin = true) { implicit request =>""", 1)
     file.add(s"val call = $routesClass.edit($getArgs)")
     file.add(s"svc.getByPrimaryKey($getArgs).map {", 1)
-    file.add(s"""case Some(model) => Ok($viewPkg.${model.propertyName}Form(request.identity, model, call))""")
+    file.add(s"""case Some(model) => Ok($viewPkg.${model.propertyName}Form(request.identity, model, s"${model.title} [$logArgs]", call))""")
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
     file.add("}", -1)
     file.add("}", -1)

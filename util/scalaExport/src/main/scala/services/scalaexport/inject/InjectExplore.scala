@@ -27,15 +27,17 @@ object InjectExplore {
         if (model.provided) {
           None
         } else {
-          Some(s"""      <li class="collection-item">
-          <a class="theme-text" href="@${model.routesClass}.list()">${model.title} Management</a>
-          <div><em>Manage the ${model.plural} of the system.</em></div>
-        </li>""")
+          Some(
+            s"""    <li class="collection-item">
+                |      <a class="theme-text" href="@${model.routesClass}.list()">${model.title} Management</a>
+                |      <div><em>Manage the ${model.plural} of the system.</em></div>
+                |    </li>""".stripMargin
+          )
         }
       }.sorted.mkString("\n")
 
       InjectHelper.replaceBetween(
-        original = s, start = "      <!-- Start model list routes -->", end = "      <!-- End model list routes -->", newContent = newContent
+        original = s, start = "    <!-- Start model list routes -->", end = "    <!-- End model list routes -->", newContent = newContent
       )
     }
 
