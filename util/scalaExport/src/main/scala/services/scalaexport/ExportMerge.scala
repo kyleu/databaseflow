@@ -3,6 +3,7 @@ package services.scalaexport
 import better.files.File.CopyOptions
 import better.files._
 import models.scalaexport.ExportResult
+import services.scalaexport.config.ExportEngine
 import services.scalaexport.file.ReadmeFile
 
 object ExportMerge {
@@ -33,17 +34,30 @@ object ExportMerge {
   }
 
   private[this] def getSrcDir(result: ExportResult) = {
-    val dir = "./tmp/boilerplay".toFile
-    if (!dir.exists) {
-      import scala.sys.process._
+    import scala.sys.process._
 
-      result.log("Cloning boilerplay.")
-      "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
+    result.log(s"Cloning boilerplay [${result.config.engine}].")
 
-      result.log("Deleting boilerplay git history.")
-      (dir / ".git").delete()
+    if (result.config.source == "boilerplay") {
+      result.config.engine match {
+        case ExportEngine.PostgreSQL =>
+          val dir = "./tmp/boilerplay".toFile
+          if (!dir.exists) {
+            "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
+            (dir / ".git").delete()
+          }
+          dir
+        case ExportEngine.MySQL =>
+          val dir = "./tmp/boilerplay.mysql".toFile
+          if (!dir.exists) {
+            "git clone -b mysqlasync https://github.com/KyleU/boilerplay.git ./tmp/boilerplay.mysql".!!
+            (dir / ".git").delete()
+          }
+          dir
+      }
+    } else {
+      throw new IllegalStateException(s"Unsupported export source [${result.config.source}].")
     }
-    dir
   }
 
   def merge(result: ExportResult, rootDir: File) = {
@@ -60,9 +74,10 @@ object ExportMerge {
 
     "./tmp/scalaexport".toFile.copyTo(rootDir)(CopyOptions(true))
 
-    result.rootFiles.foreach {
-      case x if x.pkg.isEmpty => (rootDir / x.dir / x.filename).overwrite(x.rendered)
-      case x => (rootDir / x.dir / x.pkg.mkString("/") / x.filename).overwrite(x.rendered)
+    result.rootFiles.foreach { rf =>
+      val f = rootDir / rf.packageDir / rf.filename
+      f.delete(swallowIOExceptions = true)
+      f.overwrite(rf.rendered)
     }
 
     result.log("Merge complete.")

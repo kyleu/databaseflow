@@ -19,18 +19,15 @@ object ReferencesHelper {
 
       val relationRef = s"${srcModel.className}Schema.${srcModel.propertyName}By${srcField.className}"
       val fetcherRef = relationRef + "Fetcher"
-      if (ref.notNull) {
-        if (srcField.notNull) {
-          file.add(s"resolve = c => $fetcherRef.deferSeq(Seq(c.value.${tgtField.propertyName}))")
-        } else {
-          file.add(s"resolve = c => $fetcherRef.deferSeq(Seq(Some(c.value.${tgtField.propertyName})))")
-        }
+      val v = if (srcField.notNull) { s"c.value.${tgtField.propertyName}" } else { s"Some(c.value.${tgtField.propertyName})" }
+      if (SchemaHelper.shittyFetchers) {
+        val call = if (ref.notNull) { "deferSeq" } else { "deferSeqOpt" }
+        file.add(s"resolve = c => $fetcherRef.$call(Seq($v))")
       } else {
-        if (srcField.notNull) {
-          file.add(s"resolve = c => $fetcherRef.deferSeqOpt(Seq(c.value.${tgtField.propertyName}))")
-        } else {
-          file.add(s"resolve = c => $fetcherRef.deferSeqOpt(Seq(Some(c.value.${tgtField.propertyName})))")
-        }
+        val call = if (ref.notNull) { "deferRelSeq" } else { "deferRelSeqOpt" }
+        file.add(s"resolve = c => $fetcherRef.$call(", 1)
+        file.add(s"${relationRef}Relation, $v")
+        file.add(")", -1)
       }
       val comma = if (model.references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
       file.add(")" + comma, -1)

@@ -46,15 +46,15 @@ object QueriesFile {
       case pkField :: Nil =>
         val name = pkField.propertyName
         pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala))
-        file.add(s"def getByPrimaryKey($name: ${SchemaHelper.pkType(model.pkFields)}) = GetByPrimaryKey(Seq($name))")
-        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${SchemaHelper.pkType(model.pkFields)}]) = new ColSeqQuery("${pkField.columnName}", ${name}Seq)""")
+        file.add(s"def getByPrimaryKey($name: ${model.pkType}) = GetByPrimaryKey(Seq($name))")
+        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery("${pkField.columnName}", ${name}Seq)""")
         file.add()
       case pkFields =>
         pkFields.foreach(pkField => pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala)))
         val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScala}").mkString(", ")
         val seqArgs = pkFields.map(_.propertyName).mkString(", ")
         file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
-        file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${SchemaHelper.pkType(model.pkFields)}]) = new SeqQuery(", 1)
+        file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
         val pkWhere = pkFields.map(f => s"""\\"${f.columnName}\\" = ?""").mkString(" and ")
         file.add(s"""additionalSql = " where " + idSeq.map(_ => "($pkWhere)").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")

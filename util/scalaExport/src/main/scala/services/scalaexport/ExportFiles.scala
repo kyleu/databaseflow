@@ -15,7 +15,7 @@ object ExportFiles {
       val f = if (file.pkg.isEmpty) {
         rootDir / file.dir / file.filename
       } else {
-        rootDir / file.dir / file.pkg.mkString("/") / file.filename
+        rootDir / file.packageDir / file.filename
       }
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)

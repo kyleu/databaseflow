@@ -27,8 +27,8 @@
         </li>
         @result.rootFiles.map { f =>
           <li class="collection-item">
-            /@f.pkg.mkString("/")/@f.filename
-          <pre>@f.rendered</pre>
+            @f.packageDir/@f.filename
+            <pre>@f.rendered</pre>
           </li>
         }
         @injected.map { f =>
@@ -40,7 +40,7 @@
         @result.sourceFiles.map { f =>
           <li class="collection-item">
             @f.pkg.mkString("/")/@f.filename
-          <pre>@f.rendered</pre>
+            <pre>@f.rendered</pre>
           </li>
         }
       </ul>

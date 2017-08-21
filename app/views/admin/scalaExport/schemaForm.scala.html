@@ -29,6 +29,16 @@
                     <td><input name="project.location" class="validate" value="@cfg.projectLocation" /></td>
                   </tr>
                   <tr>
+                    <th>Project Source</th>
+                    <td><select name="project.source">
+                      @if(cfg.source == "boilerplay") {
+                        <option value="boilerplay" selected="selected">Boilerplay</option>
+                      } else {
+                        <option value="boilerplay">Boilerplay</option>
+                      }
+                    </select></td>
+                  </tr>
+                  <tr>
                     <th>Database Engine</th>
                     <td><select name="engine">
                       @if(cfg.engine == services.scalaexport.config.ExportEngine.PostgreSQL) {
@@ -52,7 +62,7 @@
               <li>
                 <div class="collapsible-header">
                   <div class="right">
-                    @model.pkg.mkString(".") @if(model.provided) { <em>Provided</em> }@if(model.ignored) { <em>Ignored</em> }
+                    @model.pkgString @if(model.provided) { <em>Provided</em> }@if(model.ignored) { <em>Ignored</em> }
                   </div>
                   <i class="fa @models.template.Icons.table"></i> @model.tableName
                 </div>
@@ -61,7 +71,7 @@
                     <tbody>
                       <tr>
                         <th>Package</th>
-                        <td><input name="model.@{model.tableName}.pkg" class="validate" value="@model.pkg.mkString(".")" /></td>
+                        <td><input name="model.@{model.tableName}.pkg" class="validate" value="@model.pkgString" /></td>
                       </tr>
                       <tr>
                         <th>Property Name</th>

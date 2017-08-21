@@ -27,8 +27,14 @@ object ForeignKeysHelper {
         col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
         val propId = col.propertyName
         val propCls = col.className
-        file.add(s"""def getBy$propCls($propId: $idType)(implicit trace: TraceData) = Database.query(${model.className}Queries.GetBy$propCls($propId))""")
-        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[$idType])(implicit trace: TraceData) = Database.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))""")
+        file.add(s"""def getBy$propCls($propId: $idType)(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
+        file.add(s"Database.query(${model.className}Queries.GetBy$propCls($propId))(td)")
+        file.add("}", -1)
+
+        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[$idType])(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
+        file.add(s"Database.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
+        file.add("}", -1)
+
         file.add()
       case _ => // noop
     }
@@ -40,18 +46,32 @@ object ForeignKeysHelper {
     fks.foreach { fk =>
       fk.references.toList match {
         case Nil => // noop
-        case h :: Nil => config.getModelOpt(fk.targetTable).foreach({ tgt =>
+        case h :: Nil => config.getModelOpt(fk.targetTable).foreach(tgt => {
           val srcCol = src.getField(h.source)
-          val tgtCol = tgt.getField(h.target)
-          val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
-          srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
-          file.addImport("sangria.execution.deferred", "HasId")
-          val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
-          file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
-          file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
-          file.add(s"c.${src.serviceReference}.getBy${srcCol.className}Seq(values)(c.trace)")
-          file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
-          file.add()
+          if (src.pkColumns.isEmpty) {
+            val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
+            srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
+            file.addImport("sangria.execution.deferred", "HasId")
+            val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
+            file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
+            file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
+            file.add(s"c.${src.serviceReference}.getBy${srcCol.className}Seq(values)(c.trace)")
+            file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
+            file.add()
+          } else {
+            val relName = s"${src.propertyName}By${srcCol.className}"
+            val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
+
+            file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
+            file.addImport("sangria.execution.deferred", "Relation")
+            srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
+            file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
+            file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType}](", 1)
+            file.add(s"getByPrimaryKeySeq, (c, rels) => c.${src.serviceReference}.getBy${srcCol.className}Seq(rels(${relName}Relation))(c.trace)")
+            file.add(")", -1)
+
+            file.add()
+          }
         })
         case _ => // noop
       }

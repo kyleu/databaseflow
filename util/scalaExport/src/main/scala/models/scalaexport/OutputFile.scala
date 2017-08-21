@@ -24,6 +24,11 @@ abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String
     lines += (ws + line + "\n")
   }
 
+  val packageDir = pkg match {
+    case Nil => dir
+    case _ => dir + "/" + pkg.mkString("/")
+  }
+
   def prefix: String = ""
   def suffix: String = ""
 
@@ -31,4 +36,5 @@ abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String
     hasRendered = true
     prefix + lines.mkString + suffix
   }
+
 }

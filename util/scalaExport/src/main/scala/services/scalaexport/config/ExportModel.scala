@@ -27,6 +27,13 @@ case class ExportModel(
 ) {
   val fullClassName = (pkg :+ className).mkString(".")
   val pkFields = pkColumns.map(c => getField(c.name))
+  val pkType = pkFields match {
+    case Nil => "???"
+    case h :: Nil => h.t.asScala
+    case cols => "(" + cols.map(_.t.asScala).mkString(", ") + ")"
+  }
+
+  val pkgString = pkg.mkString(".")
 
   val viewPackage = "views" +: "admin" +: pkg
   val viewHtmlPackage = "views" +: "html" +: "admin" +: pkg

@@ -9,7 +9,7 @@ object ServiceRegistryFiles {
     val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
     val routesContent = packages.map(m => m._1 -> m._2.map { m =>
-      s"""val ${m.propertyName}Service: services.${m.pkg.mkString(".")}.${m.className}Service"""
+      s"""  val ${m.propertyName}Service: ${m.serviceClass}"""
     }.sorted)
 
     routesContent.map { p =>

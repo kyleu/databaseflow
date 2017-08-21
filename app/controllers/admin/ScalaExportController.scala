@@ -49,6 +49,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           models = schema.tables.map { t =>
             modelForTable(schema, t, form.filter(_._1.startsWith("model." + t.name)).map(x => x._1.stripPrefix("model." + t.name + ".") -> x._2))
           },
+          source = form("project.source"),
           engine = ExportEngine.withNameInsensitive(form("engine")),
           projectLocation = form.get("project.location").filter(_.nonEmpty)
         )
@@ -56,7 +57,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         val x = write(result, indent = 2)
         s"./tmp/$schemaId.txt".toFile.overwrite(x)
 
-        ScalaExportService(result).test(persist = true).map { result =>
+        ScalaExportService(result).export(persist = true).map { result =>
           Ok(views.html.admin.scalaExport.export(result._1, result._2))
         }
       }

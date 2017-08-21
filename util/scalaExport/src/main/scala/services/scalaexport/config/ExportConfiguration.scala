@@ -5,6 +5,7 @@ case class ExportConfiguration(
     projectId: String,
     projectTitle: String,
     models: Seq[ExportModel],
+    source: String = "boilerplay",
     engine: ExportEngine = ExportEngine.PostgreSQL,
     projectLocation: Option[String] = None
 ) {

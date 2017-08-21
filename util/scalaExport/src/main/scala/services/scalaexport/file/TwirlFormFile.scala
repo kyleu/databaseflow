@@ -18,10 +18,7 @@ object TwirlFormFile {
     formFile.add("""<div class="collection with-header">""", 1)
 
     formFile.add("<div class=\"collection-header\">", 1)
-    formFile.add("<div class=\"right\">", 1)
-    formFile.add(s"""<a class="right btn-flat theme-text" href="@${model.routesClass}.view($viewArgs)">Cancel</a>""")
-    formFile.add(s"""<button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button>""")
-    formFile.add("</div>", -1)
+    formFile.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     formFile.add(s"""<h5><i class="fa @models.template.Icons.${model.propertyName}"></i> @title</h5>""")
     formFile.add("</div>", -1)
 

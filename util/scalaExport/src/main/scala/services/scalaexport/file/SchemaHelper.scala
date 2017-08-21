@@ -1,12 +1,12 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import models.schema.Column
-import services.scalaexport.config.{ExportField, ExportModel}
+import services.scalaexport.config.ExportModel
 
 object SchemaHelper {
+  val shittyFetchers = false
+
   def addImports(file: ScalaFile) = {
-    file.addImport("models.graphql", "CommonSchema")
     file.addImport("models.graphql", "GraphQLContext")
     file.addImport("models.graphql", "SchemaHelper")
     file.addImport("sangria.macros.derive", "_")
@@ -15,14 +15,7 @@ object SchemaHelper {
     file.addImport("models.graphql.DateTimeSchema", "_")
     file.addImport("models.result.filter.FilterSchema", "_")
     file.addImport("models.result.orderBy.OrderBySchema", "_")
-    file.addImport("models.result.paging", "PagingOptions")
     file.addImport("models.result.paging.PagingSchema", "pagingOptionsType")
-  }
-
-  def pkType(pkFields: Seq[ExportField]) = pkFields match {
-    case Nil => throw new IllegalStateException("No PK.")
-    case h :: Nil => h.t.asScala
-    case cols => "(" + cols.map(_.t.asScala).mkString(", ") + ")"
   }
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
@@ -33,14 +26,14 @@ object SchemaHelper {
     } else {
       "x => (" + model.pkFields.map(f => "x." + f.propertyName).mkString(", ") + ")"
     }
-    file.add(s"val ${model.propertyName}PrimaryKeyId = HasId[${model.className}, ${pkType(model.pkFields)}]($method)")
-
+    file.add(s"implicit val ${model.propertyName}PrimaryKeyId = HasId[${model.className}, ${model.pkType}]($method)")
+    file.add(s"private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[${model.pkType}]) = {", 1)
+    file.add(s"c.${model.serviceReference}.getByPrimaryKeySeq(idSeq)(c.trace)")
+    file.add("}", -1)
     file.addImport("sangria.execution.deferred", "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
     file.addMarker("fetcher", (file.pkg :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
-    file.add(s"val $fetcherName = Fetcher { (c: GraphQLContext, values: Seq[${pkType(model.pkFields)}]) =>", 1)
-    file.add(s"c.${model.serviceReference}.getByPrimaryKeySeq(values)(c.trace)")
-    file.add(s"}(${model.propertyName}PrimaryKeyId)", -1)
+    file.add(s"val $fetcherName = Fetcher(getByPrimaryKeySeq)")
     file.add()
   }
 
