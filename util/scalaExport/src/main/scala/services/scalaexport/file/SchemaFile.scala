@@ -63,7 +63,7 @@ object SchemaFile {
     file.add(s"fieldType = ${model.propertyName}ResultType,")
     file.add(s"arguments = queryArg :: reportFiltersArg :: orderBysArg :: limitArg :: offsetArg :: Nil,")
 
-    val args = s"td => runSearch(c.ctx.${model.serviceReference}, c)(td).map(toResult)"
+    val args = s"td => runSearch(c.ctx.${model.serviceReference}, c).map(toResult)"
     file.add(s"""resolve = c => trace(c.ctx, "search")($args)""")
 
     file.add("))", -1)

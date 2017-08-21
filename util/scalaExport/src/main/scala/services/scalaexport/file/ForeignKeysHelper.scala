@@ -1,10 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.{ExportConfiguration, ExportModel}
+import services.scalaexport.config.{ExportConfiguration, ExportEngine, ExportModel}
 
 object ForeignKeysHelper {
-  def writeQueries(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+  def writeQueries(engine: ExportEngine, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
     fk.references.toList match {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
@@ -12,7 +12,8 @@ object ForeignKeysHelper {
         val idType = if (col.notNull) { col.t.asScala } else { "Option[" + col.t.asScala + "]" }
         val propId = col.propertyName
         val propCls = col.className
-        file.add(s"""case class GetBy$propCls($propId: $idType) extends SeqQuery("where \\"${h.source}\\" = ?", Seq($propId))""")
+        val quotedCol = engine.lQuoteEscaped + h.source + engine.lQuoteEscaped
+        file.add(s"""case class GetBy$propCls($propId: $idType) extends SeqQuery(s"where $quotedCol = ?", Seq($propId))""")
         file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[$idType]) extends ColSeqQuery("${h.source}", ${propId}Seq)""")
         file.add()
       case _ => // noop

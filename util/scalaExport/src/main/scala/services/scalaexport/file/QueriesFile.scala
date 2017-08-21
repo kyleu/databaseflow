@@ -26,9 +26,9 @@ object QueriesFile {
     file.add(")", -1)
 
     if (model.pkFields.nonEmpty) {
-      file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.columnName + "\"").mkString(", ") + ")")
+      file.add("override protected val pkColumns = Seq(" + model.pkFields.map(engine.lQuote + _.columnName + engine.rQuote).mkString(", ") + ")")
       val searchColumns = model.fields.filter(_.inSearch)
-      file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _.columnName + "\"").mkString(", ")})")
+      file.add(s"override protected val searchColumns = Seq(${searchColumns.map(engine.lQuote + _.columnName + engine.rQuote).mkString(", ")})")
     }
     file.add()
 
@@ -55,14 +55,14 @@ object QueriesFile {
         val seqArgs = pkFields.map(_.propertyName).mkString(", ")
         file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
         file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
-        val pkWhere = pkFields.map(f => s"""\\"${f.columnName}\\" = ?""").mkString(" and ")
+        val pkWhere = pkFields.map(f => s"""${engine.lQuoteEscaped}${f.columnName}${engine.rQuoteEscaped} = ?""").mkString(" and ")
         file.add(s"""additionalSql = " where " + idSeq.map(_ => "($pkWhere)").mkString(" or "),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
         file.add(")", -1)
         file.add()
     }
 
-    ForeignKeysHelper.writeQueries(model, file)
+    ForeignKeysHelper.writeQueries(engine, model, file)
 
     file.add(s"def insert(model: ${model.className}) = Insert(model)")
 
