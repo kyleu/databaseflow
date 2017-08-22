@@ -14,23 +14,23 @@ object ServiceHelper {
       val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
       val call = model.pkFields.map(_.propertyName).mkString(", ")
       val interp = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
-      file.add(s"""def remove($sig)$trace = traceF("remove") { td =>""", 1)
-      file.add(s"Database.query(${model.className}Queries.getByPrimaryKey($call))(td).flatMap {", 1)
-      file.add(s"case Some(current) => Database.execute(${model.className}Queries.removeByPrimaryKey($call))(td).map(_ => current)")
+      file.add(s"def remove($sig)$trace = {", 1)
+      file.add(s"""traceF("remove")(td => MasterDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td).flatMap {""", 1)
+      file.add(s"case Some(current) => MasterDatabase.execute(${model.className}Queries.removeByPrimaryKey($call))(td).map(_ => current)")
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find Note matching [$interp].")""")
-      file.add("}", -1)
+      file.add("})", -1)
       file.add("}", -1)
       file.add()
-      file.add(s"""def update($sig, fields: Seq[DataField])$trace = traceF("update") { td =>""", 1)
-      file.add(s"Database.query(${model.className}Queries.getByPrimaryKey($call))(td).flatMap {", 1)
-      file.add(s"case Some(current) => Database.execute(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
-      file.add(s"Database.query(${model.className}Queries.getByPrimaryKey($call))(td).map {", 1)
+      file.add(s"def update($sig, fields: Seq[DataField])$trace = {", 1)
+      file.add(s"""traceF("update")(td => MasterDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td).flatMap {""", 1)
+      file.add(s"case Some(current) => MasterDatabase.execute(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
+      file.add(s"MasterDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td).map {", 1)
       file.add("case Some(newModel) => newModel")
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")
       file.add("}", -1)
       file.add("}", -1)
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")
-      file.add("}", -1)
+      file.add("})", -1)
       file.add("}", -1)
     }
   }
@@ -43,12 +43,12 @@ object ServiceHelper {
       case Nil => // noop
       case field :: Nil =>
         val colProp = field.propertyName
-        file.add(s"""def getByPrimaryKey($colProp: ${field.t.asScala})$td = traceF("get.by.primary.key") { td =>""", 1)
-        file.add(s"Database.query(${model.className}Queries.getByPrimaryKey($colProp))(td)")
+        file.add(s"def getByPrimaryKey($colProp: ${field.t.asScala})$td = {", 1)
+        file.add(s"""traceF("get.by.primary.key")(td => MasterDatabase.query(${model.className}Queries.getByPrimaryKey($colProp))(td))""")
         file.add("}", -1)
         val seqArgs = s"${colProp}Seq: Seq[${field.t.asScala}]"
-        file.add(s"""def getByPrimaryKeySeq($seqArgs)$td = traceF("get.by.primary.key.seq") { td =>""", 1)
-        file.add(s"Database.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td)")
+        file.add(s"def getByPrimaryKeySeq($seqArgs)$td = {", 1)
+        file.add(s"""traceF("get.by.primary.key.seq")(td => MasterDatabase.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
         file.add("}", -1)
         field.t match {
           case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
@@ -60,12 +60,12 @@ object ServiceHelper {
         val colArgs = fields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
         val queryArgs = fields.map(_.propertyName).mkString(", ")
 
-        file.add(s"""def getByPrimaryKey($colArgs)$td = traceF("get.by.primary.key") { td =>""", 1)
-        file.add(s"Database.query(${model.className}Queries.getByPrimaryKey($queryArgs))(td)")
+        file.add(s"def getByPrimaryKey($colArgs)$td = {", 1)
+        file.add(s"""traceF("get.by.primary.key")(td => MasterDatabase.query(${model.className}Queries.getByPrimaryKey($queryArgs))(td))""")
         file.add("}", -1)
 
-        file.add(s"""def getByPrimaryKeySeq(pkSeq: Seq[$tupleTyp])$td = traceF("get.by.primary.key.seq") { td =>""", 1)
-        file.add(s"Database.query(${model.className}Queries.getByPrimaryKeySeq(pkSeq))(td)")
+        file.add(s"def getByPrimaryKeySeq(pkSeq: Seq[$tupleTyp])$td = {", 1)
+        file.add(s"""traceF("get.by.primary.key.seq")(td => MasterDatabase.query(${model.className}Queries.getByPrimaryKeySeq(pkSeq))(td))""")
         file.add("}", -1)
     }
     file.add()

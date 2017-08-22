@@ -7,14 +7,14 @@ object ForeignKeysHelper {
   def writeQueries(engine: ExportEngine, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
     fk.references.toList match {
       case h :: Nil =>
-        val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-        col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
-        val idType = if (col.notNull) { col.t.asScala } else { "Option[" + col.t.asScala + "]" }
-        val propId = col.propertyName
-        val propCls = col.className
-        val quotedCol = engine.lQuoteEscaped + h.source + engine.lQuoteEscaped
-        file.add(s"""case class GetBy$propCls($propId: $idType) extends SeqQuery(s"where $quotedCol = ?", Seq($propId))""")
-        file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[$idType]) extends ColSeqQuery("${h.source}", ${propId}Seq)""")
+        val field = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+        field.t.requiredImport.foreach(pkg => file.addImport(pkg, field.t.asScala))
+        val idType = if (field.notNull) { field.t.asScala } else { "Option[" + field.t.asScala + "]" }
+        val propId = field.propertyName
+        val propCls = field.className
+        val quotedCol = engine.lQuoteEscaped + field.columnName + engine.lQuoteEscaped
+        file.add(s"""case class GetBy$propCls($propId: $idType) extends SeqQuery("where $quotedCol = ?", Seq($propId))""")
+        file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[$idType]) extends ColSeqQuery("${field.columnName}", ${propId}Seq)""")
         file.add()
       case _ => // noop
     }
@@ -29,11 +29,11 @@ object ForeignKeysHelper {
         val propId = col.propertyName
         val propCls = col.className
         file.add(s"""def getBy$propCls($propId: $idType)(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
-        file.add(s"Database.query(${model.className}Queries.GetBy$propCls($propId))(td)")
+        file.add(s"MasterDatabase.query(${model.className}Queries.GetBy$propCls($propId))(td)")
         file.add("}", -1)
 
         file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[$idType])(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
-        file.add(s"Database.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
+        file.add(s"MasterDatabase.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
         file.add("}", -1)
 
         file.add()
