@@ -1,0 +1,24 @@
+@(model: services.scalaexport.config.ExportModel, field: services.scalaexport.config.ExportField)
+
+@chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
+@baseName = {@{s"model.${model.tableName}.field.${field.columnName}"}}
+
+<!-- Field form for [@model.className::@field.propertyName] -->
+<tr>
+  <td>@field.columnName</td>
+  <td><input name="@{baseName}.propertyName" class="validate" value="@field.propertyName" /></td>
+  <td><input name="@{baseName}.title" class="validate" value="@field.title" /></td>
+  <td><input name="@{baseName}.t" class="validate" value="@field.t" /></td>
+  <td>
+    <input name="@{baseName}.inSearch" id="@{baseName}.inSearch" @chk(field.inSearch) type="checkbox" value="true" />
+    <label for="model.@{baseName}.inSearch"></label>
+  </td>
+  <td>
+    <input name="model.@{baseName}.inView" id="model.@{baseName}.inView" @chk(field.inView) type="checkbox" value="true" />
+    <label for="model.@{baseName}.inView"></label>
+  </td>
+  <td>
+    <input name="model.@{baseName}.ignored" id="model.@{baseName}.ignored" @chk(field.ignored) type="checkbox" value="true" />
+    <label for="model.@{baseName}.ignored"></label>
+  </td>
+</tr>

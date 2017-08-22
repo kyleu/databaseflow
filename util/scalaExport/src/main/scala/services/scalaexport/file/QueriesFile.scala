@@ -15,8 +15,7 @@ object QueriesFile {
       file.addImport("models.queries", "BaseQueries")
     }
 
-    file.add(s"object ${model.className}Queries extends BaseQueries[${model.className}] {", 1)
-    file.add(s"""override val tableName = "${model.tableName}"""")
+    file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.tableName}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
       val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = "string")"""
