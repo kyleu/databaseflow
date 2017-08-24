@@ -12,8 +12,7 @@ object TwirlListFile {
 
     listFile.add(s"@($viewArgs, modelSeq: Seq[${model.modelClass}], limit: Int, offset: Int)(", 2)
     listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
-    listFile.add(s")", -2)
-    listFile.add("@traceData.logViewClass(getClass)")
+    listFile.add(s")@traceData.logViewClass(getClass)", -2)
     listFile.add()
     listFile.add(s"@resultFor(model: ${model.modelClass}) = {", 1)
     listFile.add("<tr>", 1)

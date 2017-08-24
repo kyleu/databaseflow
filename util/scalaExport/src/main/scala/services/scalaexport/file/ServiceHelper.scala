@@ -70,4 +70,28 @@ object ServiceHelper {
     }
     file.add()
   }
+
+  def writeForeignKeys(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+    fk.references.toList match {
+      case h :: Nil =>
+        val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+        col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
+        val propId = col.propertyName
+        val propCls = col.className
+
+        file.add(s"// By$propCls")
+        file.add(s"""def countBy$propCls($propId: ${col.t.asScala})(implicit trace: TraceData) = traceF("count.by.$propId") { td =>""", 1)
+        file.add(s"MasterDatabase.query(${model.className}Queries.CountBy$propCls($propId))(td)")
+        file.add("}", -1)
+        file.add(s"""def getBy$propCls($propId: ${col.t.asScala})(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
+        file.add(s"MasterDatabase.query(${model.className}Queries.GetBy$propCls($propId))(td)")
+        file.add("}", -1)
+        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.t.asScala}])(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
+        file.add(s"MasterDatabase.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
+        file.add("}", -1)
+
+        file.add()
+      case _ => // noop
+    }
+  }
 }

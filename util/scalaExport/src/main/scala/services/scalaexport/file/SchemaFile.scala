@@ -15,7 +15,7 @@ object SchemaFile {
     file.add(s"""object ${model.className}Schema extends SchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(model, file)
     SchemaHelper.addPrimaryKeyArguments(model, file)
-    ForeignKeysHelper.writeSchema(config, model, file)
+    SchemaForeignKey.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
     SchemaMutationHelper.addMutationFields(model, file)
@@ -45,7 +45,7 @@ object SchemaFile {
         file.add("AddFields(", 1)
       }
       ReferencesHelper.writeFields(config, model, file)
-      ForeignKeyFields.writeFields(config, model, file)
+      SchemaForeignKey.writeFields(config, model, file)
       if (model.foreignKeys.nonEmpty || model.references.nonEmpty) {
         file.add(")", -1)
       }

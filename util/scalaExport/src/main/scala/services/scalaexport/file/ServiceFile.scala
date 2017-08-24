@@ -39,6 +39,7 @@ object ServiceFile {
     file.add(s"""traceF("get.all")(td => MasterDatabase.query(${model.className}Queries.getAll(filters, orderBys, limit, offset))(td))""")
     file.add("}", -1)
     file.add()
+    file.add("// Search")
     file.add(s"override def searchCount(q: String, filters: Seq[Filter])$trace = {", 1)
     file.add(s"""traceF("search.count")(td => MasterDatabase.query(${model.className}Queries.searchCount(q, filters))(td))""")
     file.add("}", -1)
@@ -46,12 +47,14 @@ object ServiceFile {
     file.add(s"""traceF("search")(td => MasterDatabase.query(${model.className}Queries.search(q, filters, orderBys, limit, offset))(td))""")
     file.add("}", -1)
     file.add()
-    file.add(s"def searchExact(q: String, orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int])$trace = {", 1)
+    file.add(s"def searchExact(q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)$trace = {", 1)
     file.add(s"""traceF("search.exact")(td => MasterDatabase.query(${model.className}Queries.searchExact(q, orderBys, limit, offset))(td))""")
     file.add("}", -1)
     file.add()
 
-    ForeignKeysHelper.writeService(model, file)
+    ServiceHelper.writeForeignKeys(model, file)
+
+    file.add("// Mutations")
     file.add(s"def insert(model: ${model.className})$trace = {", 1)
     file.add(s"""traceF("insert")(td => MasterDatabase.execute(${model.className}Queries.insert(model))(td).flatMap {""", 1)
     if (model.pkFields.isEmpty) {

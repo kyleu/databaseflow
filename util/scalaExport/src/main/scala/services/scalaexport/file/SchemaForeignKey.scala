@@ -3,7 +3,46 @@ package services.scalaexport.file
 import models.scalaexport.ScalaFile
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
-object ForeignKeyFields {
+object SchemaForeignKey {
+  def writeSchema(config: ExportConfiguration, src: ExportModel, file: ScalaFile) = if (src.foreignKeys.nonEmpty) {
+    file.addImport("sangria.execution.deferred", "Fetcher")
+    val fks = src.foreignKeys.filter(_.references.size == 1)
+    fks.foreach { fk =>
+      fk.references.toList match {
+        case Nil => // noop
+        case h :: Nil => config.getModelOpt(fk.targetTable).foreach(tgt => {
+          val srcCol = src.getField(h.source)
+          if (src.pkColumns.isEmpty) {
+            val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
+            srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
+            file.addImport("sangria.execution.deferred", "HasId")
+            val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
+            file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
+            file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
+            file.add(s"c.${src.serviceReference}.getBy${srcCol.className}Seq(values)(c.trace)")
+            file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
+            file.add()
+          } else {
+            val relName = s"${src.propertyName}By${srcCol.className}"
+            val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
+
+            file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
+            file.addImport("sangria.execution.deferred", "Relation")
+            srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
+            file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
+            file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType}](", 1)
+            val rels = if (srcCol.notNull) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
+            file.add(s"getByPrimaryKeySeq, (c, rels) => c.${src.serviceReference}.getBy${srcCol.className}Seq($rels)(c.trace)")
+            file.add(")", -1)
+
+            file.add()
+          }
+        })
+        case _ => // noop
+      }
+    }
+  }
+
   def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
     val fks = model.foreignKeys.filter(_.references.size == 1)
     fks.foreach { fk =>

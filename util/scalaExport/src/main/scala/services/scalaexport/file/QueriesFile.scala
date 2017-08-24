@@ -46,7 +46,7 @@ object QueriesFile {
         val name = pkField.propertyName
         pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala))
         file.add(s"def getByPrimaryKey($name: ${model.pkType}) = GetByPrimaryKey(Seq($name))")
-        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery("${pkField.columnName}", ${name}Seq)""")
+        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery(column = "${pkField.columnName}", values = ${name}Seq)""")
       case pkFields =>
         pkFields.foreach(pkField => pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala)))
         val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScala}").mkString(", ")
@@ -54,13 +54,13 @@ object QueriesFile {
         file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
         file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
         val pkWhere = pkFields.map(f => s"""${engine.lQuoteEscaped}${f.columnName}${engine.rQuoteEscaped} = ?""").mkString(" and ")
-        file.add(s"""additionalSql = " where " + idSeq.map(_ => "($pkWhere)").mkString(" or "),""")
+        file.add(s"""whereClause = Some(idSeq.map(_ => "($pkWhere)").mkString(" or ")),""")
         file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
         file.add(")", -1)
     }
     file.add()
 
-    ForeignKeysHelper.writeQueries(engine, model, file)
+    QueriesHelper.writeForeignKeys(engine, model, file)
 
     file.add(s"def insert(model: ${model.className}) = Insert(model)")
 
@@ -78,7 +78,6 @@ object QueriesFile {
 
     file.add()
     QueriesHelper.fromRow(engine, model, file)
-    QueriesHelper.toDataSeq(engine, model, file)
 
     file.add("}", -1)
     file

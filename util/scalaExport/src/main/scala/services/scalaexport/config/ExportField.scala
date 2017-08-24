@@ -19,32 +19,31 @@ case class ExportField(
 ) {
   val className = ExportHelper.toClassName(propertyName)
 
-  val graphQlArgType = {
-    val argTypeRaw = t match {
-      case StringType => "StringType"
-      case BigDecimalType => "BigDecimalType"
-      case BooleanType => "BooleanType"
-      case ByteType => "byteType"
-      case ShortType => "IntType"
-      case IntegerType => "IntType"
-      case LongType => "LongType"
-      case FloatType => "FloatType"
-      case DoubleType => "DoubleType"
-      case ByteArrayType => "ArrayType(StringType)"
-      case DateType => "localDateType"
-      case TimeType => "localTimeType"
-      case TimestampType => "localDateTimeType"
+  private[this] val graphQLType = t match {
+    case StringType => "StringType"
+    case BigDecimalType => "BigDecimalType"
+    case BooleanType => "BooleanType"
+    case ByteType => "byteType"
+    case ShortType => "IntType"
+    case IntegerType => "IntType"
+    case LongType => "LongType"
+    case FloatType => "FloatType"
+    case DoubleType => "DoubleType"
+    case ByteArrayType => "ArrayType(StringType)"
+    case DateType => "localDateType"
+    case TimeType => "localTimeType"
+    case TimestampType => "localDateTimeType"
 
-      case RefType => "StringType"
-      case XmlType => "StringType"
-      case UuidType => "uuidType"
+    case RefType => "StringType"
+    case XmlType => "StringType"
+    case UuidType => "uuidType"
 
-      case ObjectType => "StringType"
-      case StructType => "StringType"
-      case ArrayType => "ArrayType(StringType)"
+    case ObjectType => "StringType"
+    case StructType => "StringType"
+    case ArrayType => "ArrayType(StringType)"
 
-      case UnknownType => "UnknownType"
-    }
-    if (notNull) { argTypeRaw } else { "OptionInputType(" + argTypeRaw + ")" }
+    case UnknownType => "UnknownType"
   }
+
+  val graphQlArgType = if (notNull) { graphQLType } else { "OptionInputType(" + graphQLType + ")" }
 }

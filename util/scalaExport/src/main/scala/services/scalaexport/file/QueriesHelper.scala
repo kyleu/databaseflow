@@ -38,24 +38,18 @@ object QueriesHelper {
     file.add(")", -1)
   }
 
-  private[this] def boolTransformer(cn: String, nn: Boolean) = if (nn) {
-    "(if (o." + cn + ") { 1.toByte } else { 0.toByte })"
-  } else {
-    "o." + cn + ".map(x => (if (x) { 1.toByte } else { 0.toByte }))"
-  }
-
-  def toDataSeq(engine: ExportEngine, model: ExportModel, file: ScalaFile) = {
-    file.add(s"override protected def toDataSeq(o: ${model.className}) = Seq[Any](", 1)
-    file.add(model.fields.map { field =>
-      val cn = field.propertyName
-      field.t match {
-        case ColumnType.BooleanType if engine == ExportEngine.MySQL => boolTransformer(cn, field.notNull)
-        case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => if (field.notNull) { s"toJoda(o.$cn)" } else { s"o.$cn.map(toJoda)" }
-        case x => s"o.$cn"
-      }
-    }.mkString(", "))
-
-    file.add(")", -1)
-    file
+  def writeForeignKeys(engine: ExportEngine, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+    fk.references.toList match {
+      case h :: Nil =>
+        val field = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+        field.t.requiredImport.foreach(pkg => file.addImport(pkg, field.t.asScala))
+        val propId = field.propertyName
+        val propCls = field.className
+        file.add(s"""case class CountBy$propCls($propId: ${field.t.asScala}) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
+        file.add(s"""case class GetBy$propCls($propId: ${field.t.asScala}) extends ColSeqQuery(column = "${field.columnName}", values = Seq($propId))""")
+        file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[${field.t.asScala}]) extends ColSeqQuery(column = "${field.columnName}", values = ${propId}Seq)""")
+        file.add()
+      case _ => // noop
+    }
   }
 }
