@@ -13,6 +13,8 @@ sealed abstract class ColumnType(
     case None => asScala
   }
 
+  val className = getClass.getSimpleName.stripSuffix("$")
+
   override def toString = key
 }
 
