@@ -23,8 +23,9 @@ object ControllerFile {
     file.add(s"class ${model.className}Controller @javax.inject.Inject() ($args) extends $extend {", 1)
     file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"val call = ${model.routesClass}.create()")
-    val form = s"""$viewHtmlPackage.${model.propertyName}Form(request.identity, ${model.modelClass}.empty, "New ${model.title}", call, isNew = true)"""
-    file.add(s"Future.successful(Ok($form))")
+    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
+    file.add(s"""request.identity, ${model.modelClass}.empty, "New ${model.title}", call, isNew = true, debug = app.config.debug""")
+    file.add(")))", -1)
     file.add("}", -1)
     file.add()
     file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)

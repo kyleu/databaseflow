@@ -1,6 +1,7 @@
 package services.scalaexport.file
 
 import models.scalaexport.{RoutesFile, ScalaFile}
+import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 
 object ServiceRegistryFiles {
@@ -13,9 +14,10 @@ object ServiceRegistryFiles {
     }.sorted)
 
     routesContent.map { p =>
-      val file = ScalaFile(Seq("services", p._1), "ServiceRegistry")
+      val name = ExportHelper.toClassName(p._1) + "ServiceRegistry"
+      val file = ScalaFile(Seq("services", p._1), name)
       file.add("@javax.inject.Singleton")
-      file.add("class ServiceRegistry @javax.inject.Inject() (")
+      file.add(s"class $name @javax.inject.Inject() (")
       file.add(p._2.mkString(",\n"))
       file.add(")")
 

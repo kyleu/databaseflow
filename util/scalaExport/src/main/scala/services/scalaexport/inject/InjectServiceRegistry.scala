@@ -2,13 +2,14 @@ package services.scalaexport.inject
 
 import better.files.File
 import models.scalaexport.ExportResult
+import services.scalaexport.ExportHelper
 
 object InjectServiceRegistry {
   def inject(result: ExportResult, rootDir: File) = {
     def serviceFieldsFor(s: String) = {
       val newContent = {
         val withPackages = result.models.filter(_.pkg.nonEmpty).filter(!_.provided).map(_.pkg.head).distinct.sorted.map { p =>
-          s"""  val ${p}Services: services.$p.ServiceRegistry,"""
+          s"""  val ${p}Services: services.$p.${ExportHelper.toClassName(p)}ServiceRegistry,"""
         }.sorted.mkString("\n")
 
         val withoutPackages = result.models.filter(_.pkg.isEmpty).filter(!_.provided).map { m =>

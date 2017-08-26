@@ -74,8 +74,8 @@ object TwirlViewFile {
     model.references.foreach { r =>
       val tgt = config.getModel(r.srcTable)
       val tgtField = model.getField(r.tgt)
-      val relArgs = s"""data-table="${tgt.propertyName}" data-field="${tgtField.propertyName}" data-singular="${tgt.title}" data-plural="${tgt.plural}"""
-      val relAttrs = s"""id="relation-${tgt.propertyName}"""""
+      val relArgs = s"""data-table="${tgt.propertyName}" data-field="${tgtField.propertyName}" data-singular="${tgt.title}" data-plural="${tgt.plural}""""
+      val relAttrs = "id=\"relation-" + tgt.propertyName + "\" " + relArgs
       val relUrl = tgt.routesClass + s".by${tgt.getField(r.srcCol).className}(model.${tgtField.propertyName}, limit = Some(5))"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)

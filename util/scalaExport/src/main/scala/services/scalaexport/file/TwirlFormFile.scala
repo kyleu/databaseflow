@@ -5,56 +5,58 @@ import services.scalaexport.config.ExportModel
 
 object TwirlFormFile {
   def export(model: ExportModel) = {
-    val formFile = TwirlFile(model.viewPackage, model.propertyName + "Form")
+    val file = TwirlFile(model.viewPackage, model.propertyName + "Form")
 
     val interpArgs = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
     val viewArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
 
-    formFile.add(s"@(user: models.user.User, model: ${model.modelClass}, title: String, act: Call, isNew: Boolean = false)(")
-    formFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
-    formFile.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", title) {""", 1)
+    file.add(s"@(user: models.user.User, model: ${model.modelClass}, title: String, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
+    file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
+    file.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", title) {""", 1)
 
-    formFile.add(s"""<form action="@act" method="post">""", 1)
-    formFile.add("""<div class="collection with-header">""", 1)
+    file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
+    file.add("""<div class="collection with-header">""", 1)
 
-    formFile.add("<div class=\"collection-header\">", 1)
-    formFile.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
-    formFile.add(s"""<h5><i class="fa @models.template.Icons.${model.propertyName}"></i> @title</h5>""")
-    formFile.add("</div>", -1)
+    file.add("<div class=\"collection-header\">", 1)
+    file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
+    file.add(s"""<h5><i class="fa @models.template.Icons.${model.propertyName}"></i> @title</h5>""")
+    file.add("</div>", -1)
 
-    formFile.add("<div class=\"collection-item\">", 1)
-    formFile.add("<table class=\"highlight\">", 1)
-    formFile.add("<tbody>", 1)
+    file.add("<div class=\"collection-item\">", 1)
+    file.add("<table class=\"highlight\">", 1)
+    file.add("<tbody>", 1)
 
     model.fields.foreach { field =>
-      formFile.add("<tr>", 1)
-      formFile.add("<td>", 1)
-      val inputFields = s"""type="checkbox" name="${field.propertyName}.include" id="${field.propertyName}.include" value="true""""
-      if (model.pkFields.exists(_.columnName == field.columnName)) {
-        formFile.add(s"""<input $inputFields @if(isNew) { checked="checked" } />""")
-      } else if (field.notNull) {
-        formFile.add(s"""<input $inputFields @if(isNew) { checked="checked" } />""")
+      file.add("<tr>", 1)
+      file.add("<td>", 1)
+      val inputProps = s"""type="checkbox" name="${field.propertyName}.include" id="${field.propertyName}.include" value="true""""
+      val dataProps = s"""class="data-input" data-type="${field.t}" data-name="${field.propertyName}""""
+      if (field.notNull) {
+        file.add(s"""<input $inputProps @if(isNew) { checked="checked" } $dataProps />""")
       } else {
-        formFile.add(s"""<input $inputFields />""")
+        file.add(s"""<input $inputProps $dataProps />""")
       }
-      formFile.add(s"""<label for="${field.propertyName}.include">${field.title}</label>""")
-      formFile.add("</td>", -1)
+      file.add(s"""<label for="${field.propertyName}.include">${field.title}</label>""")
+      file.add("</td>", -1)
 
-      formFile.add("<td>", 1)
-      TwirlFormFields.inputFor(field, formFile)
-      formFile.add(s"</td>", -1)
-      formFile.add("</tr>", -1)
+      file.add("<td>", 1)
+      TwirlFormFields.inputFor(field, file)
+      file.add(s"</td>", -1)
+      file.add("</tr>", -1)
     }
 
-    formFile.add("</tbody>", -1)
-    formFile.add("</table>", -1)
-    formFile.add("</div>", -1)
+    file.add("</tbody>", -1)
+    file.add("</table>", -1)
+    file.add("</div>", -1)
 
-    formFile.add("</div>", -1)
-    formFile.add("</form>", -1)
+    file.add("</div>", -1)
+    file.add("</form>", -1)
 
-    formFile.add("}", -1)
+    file.add("}", -1)
 
-    formFile
+    file.add("@views.html.components.includeScalaJs(debug)")
+    file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
+
+    file
   }
 }
