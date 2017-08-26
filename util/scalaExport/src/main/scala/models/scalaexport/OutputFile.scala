@@ -9,6 +9,8 @@ abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String
   def markersFor(key: String) = markers.getOrElseUpdate(key, Nil)
   def addMarker(key: String, v: String) = markers(key) = markersFor(key) :+ v
 
+  def indent(indentDelta: Int = 0): Unit = currentIndent += indentDelta
+
   def add(line: String = "", indentDelta: Int = 0): Unit = {
     if (hasRendered) {
       throw new IllegalStateException("Already rendered.")
@@ -36,5 +38,4 @@ abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String
     hasRendered = true
     prefix + lines.mkString + suffix
   }
-
 }

@@ -33,16 +33,17 @@ object ExportFiles {
       val queries = QueriesFile.export(config.engine, model)
       val svc = ServiceFile.export(model)
       val sch = SchemaFile.export(config, model)
-      val cntr = ControllerFile.export(model)
+      val cntr = ControllerFile.export(config, model)
 
+      val tdr = TwirlDataRowFile.export(model)
       val tl = TwirlListFile.export(model)
-      val tr = TwirlRelationsFile.export(model)
-      val tv = TwirlViewFile.export(model)
+      val tv = TwirlViewFile.export(config, model)
       val tf = TwirlFormFile.export(model)
-
       val tsr = TwirlSearchResultFile.export(model)
 
-      model -> Seq(cls, res, queries, svc, sch, cntr, tl, tr, tv, tf, tsr)
+      val trs = TwirlRelationFiles.export(config, model)
+
+      model -> (Seq(cls, res, queries, svc, sch, cntr, tdr, tl, tv, tf, tsr) ++ trs)
     }
   }
 }

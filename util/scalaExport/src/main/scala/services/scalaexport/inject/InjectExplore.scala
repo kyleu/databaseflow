@@ -7,7 +7,12 @@ object InjectExplore {
   def injectMenu(result: ExportResult, rootDir: File) = {
     def queryFieldsFor(s: String) = {
       val newContent = result.models.flatMap { model =>
-        if (model.provided) { None } else { Some(s"""  <li><a href="@${model.routesClass}.list()">${model.title}</a></li>""") }
+        if (model.provided) {
+          None
+        } else {
+          val icon = s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>"""
+          Some(s"""  <li><a href="@${model.routesClass}.list()">$icon ${model.title}</a></li>""")
+        }
       }.sorted.mkString("\n")
       InjectHelper.replaceBetween(
         original = s, start = "  <!-- Start model list routes -->", end = "  <!-- End model list routes -->", newContent = newContent
@@ -27,9 +32,10 @@ object InjectExplore {
         if (model.provided) {
           None
         } else {
+          val icon = s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>"""
           Some(
             s"""    <li class="collection-item">
-                |      <a class="theme-text" href="@${model.routesClass}.list()">${model.title} Management</a>
+                |      <a class="theme-text" href="@${model.routesClass}.list()">$icon ${model.title} Management</a>
                 |      <div><em>Manage the ${model.plural} of the system.</em></div>
                 |    </li>""".stripMargin
           )

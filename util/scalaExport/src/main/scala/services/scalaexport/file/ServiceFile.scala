@@ -73,7 +73,7 @@ object ServiceFile {
     file.add("}", -1)
     file.add()
 
-    ServiceHelper.mutations(model, file)
+    ServiceMutations.mutations(model, file)
 
     file.add("}", -1)
     file

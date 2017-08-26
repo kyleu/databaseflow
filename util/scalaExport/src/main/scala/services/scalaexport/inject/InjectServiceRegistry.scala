@@ -21,10 +21,10 @@ object InjectServiceRegistry {
       InjectHelper.replaceBetween(original = s, start = "  /* Start model service files */", end = "  /* End model service files */", newContent = newContent)
     }
 
-    val iconSourceFile = rootDir / "app" / "services" / "ServiceRegistry.scala"
-    val newContent = serviceFieldsFor(iconSourceFile.contentAsString)
-    iconSourceFile.overwrite(newContent)
+    val srSourceFile = rootDir / "app" / "services" / "ServiceRegistry.scala"
+    val newContent = serviceFieldsFor(srSourceFile.contentAsString)
+    srSourceFile.overwrite(newContent)
 
-    "Icons.scala" -> newContent
+    "ServiceRegistry.scala" -> newContent
   }
 }

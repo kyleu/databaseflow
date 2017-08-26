@@ -39,12 +39,19 @@ object RoutesFiles {
 
           val detailUrl = prefix + "/" + urlArgs
           val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
-          Seq(
-            s"GET         $detailUrl $detailWs ${model.controllerClass}.view($args)",
+
+          val view = s"GET         $detailUrl $detailWs ${model.controllerClass}.view($args)"
+          val counts = if (model.references.isEmpty) {
+            Nil
+          } else {
+            Seq(s"GET         $detailUrl/counts ${detailWs.drop(7)} ${model.controllerClass}.relationCounts($args)")
+          }
+          val extras = Seq(
             s"GET         $detailUrl/form ${detailWs.drop(5)} ${model.controllerClass}.editForm($args)",
             s"POST        $detailUrl $detailWs ${model.controllerClass}.edit($args)",
             s"GET         $detailUrl/remove ${detailWs.drop(7)} ${model.controllerClass}.remove($args)"
           )
+          view +: (counts ++ extras)
       }
       comment +: list +: createForm +: createAct +: (fks ++ detail) :+ ""
     }

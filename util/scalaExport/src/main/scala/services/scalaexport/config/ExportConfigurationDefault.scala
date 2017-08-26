@@ -25,7 +25,7 @@ object ExportConfigurationDefault {
       tableName = t.name,
       propertyName = toIdentifier(t.name),
       className = cn,
-      title = cn,
+      title = toDefaultTitle(cn),
       description = t.description,
       plural = cn + "s",
       fields = loadFields(t),
@@ -46,7 +46,7 @@ object ExportConfigurationDefault {
     ExportField(
       columnName = col.name,
       propertyName = clean(toIdentifier(col.name)),
-      title = toClassName(col.name),
+      title = toDefaultTitle(col.name),
       description = col.description,
       t = col.columnType,
       sqlTypeName = col.sqlTypeName,

@@ -13,8 +13,6 @@ object ExportMerge {
     fix(root / "app" / "util" / "web" / "LoggingFilter.scala")
     fix(root / "app" / "views" / "index.scala.html")
     fix(root / "app" / "views" / "layout" / "simple.scala.html")
-    fix(root / "client" / "src" / "main" / "scala" / "NetworkHelper.scala")
-    fix(root / "client" / "src" / "main" / "scala" / "ResponseMessageHelper.scala")
     fix(root / "conf" / "application.conf")
     fix(root / "conf" / "logback.xml")
     fix(root / "public" / "manifest.json")
@@ -24,10 +22,6 @@ object ExportMerge {
     fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "Logging.scala")
     fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "metrics" / "Checked.scala")
     fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "metrics" / "Instrumented.scala")
-
-    val jsFile = root / "client" / "src" / "main" / "scala" / "Boilerplay.scala"
-    fix(jsFile)
-    jsFile.moveTo(jsFile.parent / (cls + ".scala"))
 
     val cssFile = root / "app" / "assets" / "stylesheets" / "boilerplay.less"
     cssFile.moveTo(cssFile.parent / (prop + ".less"))

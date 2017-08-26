@@ -10,6 +10,9 @@ object QueriesFile {
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport("models.database", "Row")
     file.addImport("models.database", "DatabaseField")
+    file.addImport("models.database.DatabaseFieldType", "_")
+    file.addImport("models.result", "ResultFieldHelper")
+    file.addImport("models.result.orderBy", "OrderBy")
 
     if (model.pkg.nonEmpty) {
       file.addImport("models.queries", "BaseQueries")
@@ -18,7 +21,7 @@ object QueriesFile {
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.tableName}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = "string")"""
+      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = ${f.t.className})"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
       file.add(field + comma)
     }

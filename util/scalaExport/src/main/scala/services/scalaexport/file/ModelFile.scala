@@ -8,6 +8,7 @@ object ModelFile {
   def export(model: ExportModel) = {
     val file = ScalaFile(model.modelPackage, model.className)
 
+    file.addImport("models.result.data", "DataField")
     file.add(s"object ${model.className} {", 1)
     file.add(s"val empty = ${model.className}(", 1)
 
@@ -49,32 +50,47 @@ object ModelFile {
 
     model.description.foreach(d => file.add(s"/** $d */"))
     file.add(s"case class ${model.className}(", 1)
-    model.fields.foreach { field =>
-      field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
-
-      val colScala = field.t match {
-        case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
-        case x => x.asScala
-      }
-      val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
-      val propDefault = if (field.t == ColumnType.StringType) {
-        if (field.notNull) {
-          field.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
-        } else {
-          field.defaultValue.map(v => " = Some(\"" + v + "\")").getOrElse("")
-        }
-      } else {
-        ""
-      }
-      val propDecl = s"${field.propertyName}: $propType$propDefault"
-      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-      field.description.foreach(d => file.add("/** " + d + " */"))
-      file.add(propDecl + comma)
-    }
+    addFields(model, file)
     model.extendsClass match {
-      case Some(x) => file.add(") extends " + x, -1)
-      case None => file.add(")", -1)
+      case Some(x) => file.add(") extends " + x + " {", -1)
+      case None => file.add(") {", -1)
     }
+    file.indent(1)
+    file.add("def toDataFields = Seq(", 1)
+    model.fields.foreach { field =>
+      val x = if (field.notNull) {
+        s"""DataField("${field.propertyName}", Some(${field.propertyName}.toString))"""
+      } else {
+        s"""DataField("${field.propertyName}", ${field.propertyName}.map(_.toString))"""
+      }
+      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
+      file.add(x + comma)
+    }
+    file.add(")", -1)
+    file.add("}", -1)
     file
+  }
+
+  private[this] def addFields(model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
+    field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
+
+    val colScala = field.t match {
+      case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
+      case x => x.asScala
+    }
+    val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
+    val propDefault = if (field.t == ColumnType.StringType) {
+      if (field.notNull) {
+        field.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
+      } else {
+        field.defaultValue.map(v => " = Some(\"" + v + "\")").getOrElse("")
+      }
+    } else {
+      ""
+    }
+    val propDecl = s"${field.propertyName}: $propType$propDefault"
+    val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
+    field.description.foreach(d => file.add("/** " + d + " */"))
+    file.add(propDecl + comma)
   }
 }

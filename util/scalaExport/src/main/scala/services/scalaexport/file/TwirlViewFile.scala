@@ -1,48 +1,92 @@
 package services.scalaexport.file
 
-import models.scalaexport.TwirlFile
-import services.scalaexport.config.ExportModel
+import models.scalaexport.{ScalaFile, TwirlFile}
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object TwirlViewFile {
-  def export(model: ExportModel) = {
+  def export(config: ExportConfiguration, model: ExportModel) = {
+    val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     val href = model.pkFields match {
       case Nil => ""
-      case fields =>
-        val args = fields.map(field => s"model.${field.propertyName}").mkString(", ")
-        s"""@${model.routesClass}.editForm($args)"""
+      case fields => s"""@${model.routesClass}.editForm($args)"""
     }
 
-    val viewFile = TwirlFile(model.viewPackage, model.propertyName + "View")
-    viewFile.add(s"@(user: models.user.User, model: ${model.modelClass})(")
-    viewFile.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
+    val file = TwirlFile(model.viewPackage, model.propertyName + "View")
+    file.add(s"@(user: models.user.User, model: ${model.modelClass}, debug: Boolean)(")
+    file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
-    viewFile.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
+    file.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
-    viewFile.add("""<div class="collection with-header">""", 1)
-    viewFile.add("<div class=\"collection-header\">", 1)
+    file.add("""<div class="collection with-header">""", 1)
+    file.add("<div class=\"collection-header\">", 1)
 
-    viewFile.add(s"""<div class="right"><a class="theme-text" href="$href">Edit</a></div>""")
-    viewFile.add("<h5>", 1)
-    viewFile.add(s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>""")
+    file.add(s"""<div class="right"><a class="theme-text" href="$href">Edit</a></div>""")
+    file.add("<h5>", 1)
+    file.add(s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>""")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
-    viewFile.add(s"""${model.title} [$toTwirl]""")
-    viewFile.add("</h5>", -1)
-    viewFile.add("</div>", -1)
+    file.add(s"""${model.title} [$toTwirl]""")
+    file.add("</h5>", -1)
+    file.add("</div>", -1)
 
-    viewFile.add("<div class=\"collection-item\">", 1)
-    viewFile.add("<table class=\"highlight\">", 1)
-    viewFile.add("<tbody>", 1)
+    file.add("<div class=\"collection-item\">", 1)
+    file.add("<table class=\"highlight\">", 1)
+    file.add("<tbody>", 1)
     model.fields.foreach { field =>
-      viewFile.add(s"<tr><th>${field.title}</th><td>@model.${field.propertyName}</td></tr>")
+      file.add("<tr>", 1)
+      file.add(s"<th>${field.title}</th>")
+      model.foreignKeys.find(_.references.forall(_.source == field.columnName)) match {
+        case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
+          file.add("<td>", 1)
+          val tgt = config.getModel(fk.targetTable)
+          if (tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.columnName))) {
+
+          } else {
+            throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.columnName).mkString(", ")}]...")
+          }
+
+          file.add(s"@model.${field.propertyName}")
+          if (field.notNull) {
+            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${field.propertyName})"><i class="fa @models.template.Icons.${tgt.propertyName}"></i></a>""")
+          } else {
+            file.add(s"@model.${field.propertyName}.map { v =>", 1)
+            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(v)"><i class="fa @models.template.Icons.${tgt.propertyName}"></i></a>""")
+            file.add("}", -1)
+          }
+          file.add("</td>", -1)
+        case _ => file.add(s"<td>@model.${field.propertyName}</td>")
+      }
+      file.add("</tr>", -1)
     }
-    viewFile.add("</tbody>", -1)
-    viewFile.add("</table>", -1)
-    viewFile.add("</div>", -1)
+    file.add("</tbody>", -1)
+    file.add("</table>", -1)
+    file.add("</div>", -1)
+    file.add("</div>", -1)
+    addReferences(config, model, file)
+    file.add("}", -1)
 
-    viewFile.add("</div>", -1)
+    file
+  }
 
-    viewFile.add("}", -1)
-
-    viewFile
+  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.references.nonEmpty) {
+    val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
+    file.add()
+    file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
+    model.references.foreach { r =>
+      val tgt = config.getModel(r.srcTable)
+      val tgtField = model.getField(r.tgt)
+      val relArgs = s"""data-table="${tgt.propertyName}" data-field="${tgtField.propertyName}" data-singular="${tgt.title}" data-plural="${tgt.plural}"""
+      val relAttrs = s"""id="relation-${tgt.propertyName}"""""
+      val relUrl = tgt.routesClass + s".by${tgt.getField(r.srcCol).className}(model.${tgtField.propertyName}, limit = Some(5))"
+      file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
+      file.add("""<div class="collapsible-header">""", 1)
+      file.add(s"""<i class="fa @models.template.Icons.${tgt.propertyName}"></i>""")
+      file.add(s"""<div class="title">${tgt.plural}</div>""")
+      file.add("</div>", -1)
+      file.add(s"""<div class="collapsible-body"><span>Loading...</span></div>""")
+      file.add("</li>", -1)
+    }
+    file.add("</ul>", -1)
+    file.add("@views.html.components.includeScalaJs(debug)")
+    file.add(s"""<script>$$(function() { new RelationService('@${model.routesClass}.relationCounts($args)') });</script>""")
   }
 }

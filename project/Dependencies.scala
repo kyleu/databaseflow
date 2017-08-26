@@ -100,8 +100,6 @@ object Dependencies {
     val guava = "com.google.guava" % "guava" % "23.0"
 
     val scribeVersion = "1.4.5"
-    val scribeSlf4j = "com.outr" %% "scribe-slf4j" % scribeVersion
-    val logbackCore = "ch.qos.logback" % "logback-core" % "1.2.3"
   }
 
   object Testing {
