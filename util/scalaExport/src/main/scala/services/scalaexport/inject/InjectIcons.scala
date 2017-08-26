@@ -24,7 +24,7 @@ object InjectIcons {
       val newContent = result.models.flatMap { m =>
         s.indexOf("val " + m.propertyName + " = ") match {
           case x if x > -1 && x < startIndex => None
-          case _ => Some(s"""  val ${m.propertyName} = "fa-$randomIcon"""")
+          case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon)}"""")
         }
       }.sorted.mkString("\n")
       InjectHelper.replaceBetween(original = s, start = startString, end = "  // End model icons", newContent = newContent)

@@ -78,6 +78,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     foreignKeys = t.foreignKeys.toList,
     references = ExportConfigurationHelper.references(schema, t),
     extendsClass = form.get("extendsClass").filter(_.nonEmpty),
+    icon = form.get("icon").filter(_.nonEmpty),
+    scalaJs = form.get("scalaJs").contains("true"),
     ignored = form.get("ignored").contains("true"),
     provided = form.get("provided").contains("true")
   )

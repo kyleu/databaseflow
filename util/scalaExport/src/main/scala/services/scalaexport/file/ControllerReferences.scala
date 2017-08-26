@@ -16,7 +16,7 @@ object ControllerReferences {
         file.add(s"val ${r._2.propertyName}By${r._3.className}F = ${r._2.propertyName}S.countBy${r._3.className}($pkRefs)")
       }
       val forArgs = refServices.map(r => s"${r._2.propertyName}C <- ${r._2.propertyName}By${r._3.className}F").mkString("; ")
-      file.add(s"for($forArgs) yield {", 1)
+      file.add(s"for ($forArgs) yield {", 1)
 
       val mapArgs = refServices.map(r => s""""${r._2.propertyName}" -> ${r._2.propertyName}C""").mkString(", ")
       file.add(s"Ok(Map($mapArgs).asJson.spaces2).as(JSON)")
@@ -28,6 +28,6 @@ object ControllerReferences {
   def refServiceArgs(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val refServices = model.references.map(_.srcTable).distinct.map(config.getModel)
     refServices.foreach(s => file.addImport(s.servicePackage.mkString("."), s.className + "Service"))
-    refServices.map(s => ", " + s.propertyName + "S: " + s.className + "Service").mkString
+    refServices.map(s => s.propertyName + "S: " + s.className + "Service").mkString(", ")
   }
 }

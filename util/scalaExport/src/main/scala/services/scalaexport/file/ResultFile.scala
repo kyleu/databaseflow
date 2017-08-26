@@ -7,7 +7,8 @@ object ResultFile {
   private[this] val resultArgs = "paging = paging, filters = filters, orderBys = orderBys, totalCount = totalCount, results = results, durationMs = durationMs"
 
   def export(model: ExportModel) = {
-    val file = ScalaFile(model.modelPackage, model.className + "Result")
+    val root = if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None }
+    val file = ScalaFile(model.modelPackage, model.className + "Result", root = root)
 
     file.addImport("java.time", "LocalDateTime")
     file.addImport("models.result", "BaseResult")

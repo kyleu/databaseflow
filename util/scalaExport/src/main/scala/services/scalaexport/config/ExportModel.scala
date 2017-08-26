@@ -2,6 +2,7 @@ package services.scalaexport.config
 
 import models.schema.{Column, ForeignKey}
 import services.scalaexport.ExportHelper
+import services.scalaexport.inject.InjectIcons
 
 object ExportModel {
   case class Reference(name: String, srcTable: String, srcCol: String, tgt: String, notNull: Boolean) {
@@ -22,6 +23,8 @@ case class ExportModel(
     foreignKeys: List[ForeignKey],
     references: List[ExportModel.Reference],
     extendsClass: Option[String] = None,
+    icon: Option[String] = None,
+    scalaJs: Boolean = false,
     ignored: Boolean = false,
     provided: Boolean = false
 ) {

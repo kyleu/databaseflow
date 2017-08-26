@@ -10,7 +10,7 @@ object TwirlFormFile {
     val interpArgs = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
     val viewArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
 
-    file.add(s"@(user: models.user.User, model: ${model.modelClass}, title: String, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
+    file.add(s"@(user: models.user.User, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     file.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", title) {""", 1)
 
@@ -19,6 +19,7 @@ object TwirlFormFile {
 
     file.add("<div class=\"collection-header\">", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
+    file.add(s"""<div class="right"><a href="@cancel" class="theme-text cancel-link">Cancel</a></div>""")
     file.add(s"""<h5><i class="fa @models.template.Icons.${model.propertyName}"></i> @title</h5>""")
     file.add("</div>", -1)
 

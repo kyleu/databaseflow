@@ -1,1 +1,85 @@
-@()
+@(table: models.schema.Table, model: services.scalaexport.config.ExportModel)
+<li>
+  <div class="collapsible-header">
+    <div class="right">
+      @model.pkgString @if(model.provided) { <em>Provided</em> }@if(model.ignored) { <em>Ignored</em> }
+    </div>
+    <i class="fa @models.template.Icons.table"></i> @model.tableName
+  </div>
+  <div class="collapsible-body with-padding">
+    <table class="">
+      <tbody>
+        <tr>
+          <th>Package</th>
+          <td><input name="model.@{model.tableName}.pkg" class="validate" value="@model.pkgString" /></td>
+        </tr>
+        <tr>
+          <th>Property Name</th>
+          <td><input name="model.@{model.tableName}.propertyName" class="validate" value="@model.propertyName" /></td>
+        </tr>
+        <tr>
+          <th>Class Name</th>
+          <td><input name="model.@{model.tableName}.className" class="validate" value="@model.className" /></td>
+        </tr>
+        <tr>
+          <th>Title</th>
+          <td><input name="model.@{model.tableName}.title" class="validate" value="@model.title" /></td>
+        </tr>
+        <tr>
+          <th>Plural</th>
+          <td><input name="model.@{model.tableName}.plural" class="validate" value="@model.plural" /></td>
+        </tr>
+        <tr>
+          <th>Extends Class</th>
+          <td><input name="model.@{model.tableName}.extendsClass" class="validate" value="@model.extendsClass" /></td>
+        </tr>
+        <tr>
+          <th>Icon</th>
+          <td><input name="model.@{model.tableName}.icon" class="validate" value="@model.icon" /></td>
+        </tr>
+        <tr>
+          <th>Scala.js</th>
+          <td>
+            <input name="model.@{model.tableName}.scalaJs" id="model.@{model.tableName}.scalaJs" type="checkbox" @if(model.scalaJs) { checked="checked" } value="true" />
+            <label for="model.@{model.tableName}.scalaJs"></label>
+          </td>
+        </tr>
+        <tr>
+          <th>Ignored</th>
+          <td>
+            <input name="model.@{model.tableName}.ignored" id="model.@{model.tableName}.ignored" type="checkbox" @if(model.ignored) { checked="checked" } value="true" />
+            <label for="model.@{model.tableName}.ignored"></label>
+          </td>
+        </tr>
+        <tr>
+          <th>Provided</th>
+          <td>
+            <input name="model.@{model.tableName}.provided" id="model.@{model.tableName}.provided" type="checkbox" @if(model.provided) { checked="checked" } value="true" />
+            <label for="model.@{model.tableName}.provided"></label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <div>
+      <table class="">
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Property</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Search</th>
+            <th>View</th>
+            <th>Ignored</th>
+          </tr>
+        </thead>
+        <tbody>
+        @model.fields.map { field =>
+          @fieldForm(model, field)
+        }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</li>

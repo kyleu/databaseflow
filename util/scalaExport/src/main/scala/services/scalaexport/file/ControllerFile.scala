@@ -18,13 +18,20 @@ object ControllerFile {
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport(model.modelPackage.mkString("."), model.className + "Result")
     file.add("@javax.inject.Singleton")
-    val extend = s"""BaseController("${model.propertyName}")"""
-    val args = s"override val app: Application, svc: ${model.className}Service${ControllerReferences.refServiceArgs(config, model, file)}"
-    file.add(s"class ${model.className}Controller @javax.inject.Inject() ($args) extends $extend {", 1)
+    file.add(s"class ${model.className}Controller @javax.inject.Inject() (", 2)
+    ControllerReferences.refServiceArgs(config, model, file) match {
+      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service")
+      case ref =>
+        file.add(s"override val app: Application, svc: ${model.className}Service,")
+        file.add(ref)
+    }
+    file.add(s""") extends BaseController("${model.propertyName}") {""", -2)
+    file.indent(1)
     file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"val cancel = ${model.routesClass}.list()")
     file.add(s"val call = ${model.routesClass}.create()")
     file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    file.add(s"""request.identity, ${model.modelClass}.empty, "New ${model.title}", call, isNew = true, debug = app.config.debug""")
+    file.add(s"""request.identity, ${model.modelClass}.empty, "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
     file.add(")))", -1)
     file.add("}", -1)
     file.add()

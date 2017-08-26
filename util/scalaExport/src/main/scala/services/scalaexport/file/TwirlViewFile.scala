@@ -6,11 +6,6 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 object TwirlViewFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
-    val href = model.pkFields match {
-      case Nil => ""
-      case fields => s"""@${model.routesClass}.editForm($args)"""
-    }
-
     val file = TwirlFile(model.viewPackage, model.propertyName + "View")
     file.add(s"@(user: models.user.User, model: ${model.modelClass}, debug: Boolean)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
@@ -19,8 +14,11 @@ object TwirlViewFile {
 
     file.add("""<div class="collection with-header">""", 1)
     file.add("<div class=\"collection-header\">", 1)
-
-    file.add(s"""<div class="right"><a class="theme-text" href="$href">Edit</a></div>""")
+    if (model.pkFields.nonEmpty) {
+      val onClick = s"""onclick="return confirm('Are you sure you want to remove this ${model.title}?')""""
+      file.add(s"""<div class="right"><a class="theme-text" href="@${model.routesClass}.editForm($args)">Edit</a></div>""")
+      file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@${model.routesClass}.remove($args)">Remove</a></div>""")
+    }
     file.add("<h5>", 1)
     file.add(s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>""")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")

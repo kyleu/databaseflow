@@ -6,7 +6,8 @@ import services.scalaexport.config.ExportModel
 
 object ModelFile {
   def export(model: ExportModel) = {
-    val file = ScalaFile(model.modelPackage, model.className)
+    val root = if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None }
+    val file = ScalaFile(model.modelPackage, model.className, root = root)
 
     file.addImport("models.result.data", "DataField")
     file.add(s"object ${model.className} {", 1)
@@ -49,8 +50,13 @@ object ModelFile {
     file.add()
 
     model.description.foreach(d => file.add(s"/** $d */"))
+
+    if (model.scalaJs) {
+      //file.add(s"""@scala.scalajs.js.annotation.JSExportTopLevel("${model.className}")""")
+    }
     file.add(s"case class ${model.className}(", 1)
     addFields(model, file)
+
     model.extendsClass match {
       case Some(x) => file.add(") extends " + x + " {", -1)
       case None => file.add(") {", -1)
