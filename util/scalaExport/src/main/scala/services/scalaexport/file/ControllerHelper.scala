@@ -69,6 +69,7 @@ object ControllerHelper {
         file.add(s"""request.identity, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
         file.add("))", -1)
         file.add(s"case Accepts.Json() => Ok(models.asJson.spaces2).as(JSON)")
+        file.add(s"""case acceptsCsv() => Ok(svc.csvFor("${model.className} by $propId", 0, models)).as("text/csv")""")
         file.add("})", -1)
         file.add("}", -1)
         file.add("}", -1)

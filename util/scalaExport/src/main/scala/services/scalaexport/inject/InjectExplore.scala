@@ -35,7 +35,7 @@ object InjectExplore {
           val icon = s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>"""
           Some(
             s"""    <li class="collection-item">
-                |      <a class="theme-text" href="@${model.routesClass}.list()">$icon ${model.title} Management</a>
+                |      <a class="theme-text" href="@${model.routesClass}.list()">$icon ${model.plural}</a>
                 |      <div><em>Manage the ${model.plural} of the system.</em></div>
                 |    </li>""".stripMargin
           )

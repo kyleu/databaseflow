@@ -82,13 +82,13 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.2.2"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.3.0"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.3"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.0"
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.1"
+    val scapegoatVersion = "1.3.2"
     val enumeratumVersion = "1.5.11"
     val enumeratumCirceVersion = "1.5.14"
 
@@ -96,7 +96,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
     val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.4"
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.0.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.1.0"
     val guava = "com.google.guava" % "guava" % "23.0"
 
     val scribeVersion = "1.4.5"

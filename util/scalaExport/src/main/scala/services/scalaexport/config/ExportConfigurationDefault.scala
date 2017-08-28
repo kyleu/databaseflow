@@ -21,8 +21,16 @@ object ExportConfigurationDefault {
       case _ => false
     }
 
+    val pkg = cn match {
+      case "Ddl" => List("ddl")
+      case "Users" => List("user")
+      case "LoginInfo" | "PasswordInfo" => List("auth")
+      case _ => Nil
+    }
+
     ExportModel(
       tableName = t.name,
+      pkg = pkg,
       propertyName = toIdentifier(t.name),
       className = cn,
       title = toDefaultTitle(cn),

@@ -8,7 +8,7 @@ import models.user.User
 import util.FutureUtils.defaultContext
 import io.circe.Json
 import io.circe.parser._
-import sangria.execution.{Executor, HandledException, QueryReducer}
+import sangria.execution.{ExceptionHandler, Executor, HandledException, QueryReducer}
 import sangria.marshalling.circe._
 import sangria.parser.QueryParser
 import services.connection.ConnectionSettingsService
@@ -19,7 +19,7 @@ import sangria.validation.QueryValidator
 import scala.util.{Failure, Success}
 
 object GraphQLService extends Logging {
-  protected val exceptionHandler: Executor.ExceptionHandler = {
+  protected val exceptionHandler = ExceptionHandler {
     case (_, e: IllegalStateException) =>
       log.warn("Error encountered while running GraphQL query.", e)
       HandledException(message = e.getMessage, additionalFields = Map.empty)

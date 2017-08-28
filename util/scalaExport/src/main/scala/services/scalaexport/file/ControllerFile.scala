@@ -15,8 +15,10 @@ object ControllerFile {
     file.addImport("io.circe.generic.auto", "_")
     file.addImport("io.circe.syntax", "_")
     file.addImport("io.circe.java8.time", "_")
+    file.addImport("util.web.ControllerUtils", "acceptsCsv")
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport(model.modelPackage.mkString("."), model.className + "Result")
+
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (", 2)
     ControllerReferences.refServiceArgs(config, model, file) match {
@@ -56,6 +58,7 @@ object ControllerFile {
     file.add("request.identity, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
     file.add("))", -1)
     file.add(s"case Accepts.Json() => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson.spaces2).as(JSON)")
+    file.add(s"""case acceptsCsv() => Ok(svc.csvFor("${model.className}", r._1, r._2)).as("text/csv")""")
     file.add("}", -1)
     file.add("}", -1)
     file.add("}", -1)

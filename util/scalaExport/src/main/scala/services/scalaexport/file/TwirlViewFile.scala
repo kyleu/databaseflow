@@ -70,15 +70,16 @@ object TwirlViewFile {
     file.add()
     file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
     model.references.foreach { r =>
-      val tgt = config.getModel(r.srcTable)
+      val src = config.getModel(r.srcTable)
+      val srcField = src.getField(r.srcCol)
       val tgtField = model.getField(r.tgt)
-      val relArgs = s"""data-table="${tgt.propertyName}" data-field="${tgtField.propertyName}" data-singular="${tgt.title}" data-plural="${tgt.plural}""""
-      val relAttrs = "id=\"relation-" + tgt.propertyName + "\" " + relArgs
-      val relUrl = tgt.routesClass + s".by${tgt.getField(r.srcCol).className}(model.${tgtField.propertyName}, limit = Some(5))"
+      val relArgs = s"""data-table="${src.propertyName}" data-field="${srcField.propertyName}" data-singular="${src.title}" data-plural="${src.plural}""""
+      val relAttrs = s"""id="relation-${src.propertyName}-${srcField.propertyName}" $relArgs"""
+      val relUrl = src.routesClass + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
-      file.add(s"""<i class="fa @models.template.Icons.${tgt.propertyName}"></i>""")
-      file.add(s"""<div class="title">${tgt.plural}</div>""")
+      file.add(s"""<i class="fa @models.template.Icons.${src.propertyName}"></i>""")
+      file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add("</div>", -1)
       file.add(s"""<div class="collapsible-body"><span>Loading...</span></div>""")
       file.add("</li>", -1)

@@ -6,6 +6,7 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 object ControllerReferences {
   def write(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     if (model.references.nonEmpty) {
+      file.addImport("models.result", "RelationCount")
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
       val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.t.asScalaFull}").mkString(", ")
       val refServices = model.references.map(ref => (ref, config.getModel(ref.srcTable), config.getModel(ref.srcTable).getField(ref.srcCol)))
@@ -18,8 +19,12 @@ object ControllerReferences {
       val forArgs = refServices.map(r => s"${r._2.propertyName}C <- ${r._2.propertyName}By${r._3.className}F").mkString("; ")
       file.add(s"for ($forArgs) yield {", 1)
 
-      val mapArgs = refServices.map(r => s""""${r._2.propertyName}" -> ${r._2.propertyName}C""").mkString(", ")
-      file.add(s"Ok(Map($mapArgs).asJson.spaces2).as(JSON)")
+      file.add(s"Ok(Seq(", 1)
+      refServices.foreach { r =>
+        val comma = if (refServices.lastOption.contains(r)) { "" } else { "," }
+        file.add(s"""RelationCount(model = "${r._2.propertyName}", field = "${r._3.propertyName}", count = ${r._2.propertyName}C)$comma""")
+      }
+      file.add(").asJson.spaces2).as(JSON)", -1)
       file.add("}", -1)
       file.add("}", -1)
     }
