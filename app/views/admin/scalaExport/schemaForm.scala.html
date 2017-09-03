@@ -60,7 +60,7 @@
           @schema.tables.map { table =>
             @views.html.admin.scalaExport.modelForm(
               table = table,
-              model = cfg.getModelOpt(table.name).getOrElse(services.scalaexport.config.ExportConfigurationDefault.loadModel(schema, table))
+              model = cfg.getModelOptWithIgnored(table.name).getOrElse(services.scalaexport.config.ExportConfigurationDefault.loadModel(schema, table))
             )
           }
         </ul>

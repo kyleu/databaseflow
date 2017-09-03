@@ -6,7 +6,8 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 object ReferencesHelper {
   def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val hasFk = model.foreignKeys.exists(_.references.size == 1)
-    model.references.foreach { ref =>
+    val references = model.validReferences(config)
+    references.foreach { ref =>
       val srcModel = config.getModel(ref.srcTable)
       val srcField = srcModel.getField(ref.srcCol)
       val tgtField = model.getField(ref.tgt)
@@ -29,7 +30,7 @@ object ReferencesHelper {
         file.add(s"${relationRef}Relation, $v")
         file.add(")", -1)
       }
-      val comma = if (model.references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
+      val comma = if (references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
       file.add(")" + comma, -1)
     }
   }

@@ -2,7 +2,6 @@ package services.scalaexport.config
 
 import models.schema.{Column, ForeignKey}
 import services.scalaexport.ExportHelper
-import services.scalaexport.inject.InjectIcons
 
 object ExportModel {
   case class Reference(name: String, srcTable: String, srcCol: String, tgt: String, notNull: Boolean) {
@@ -63,6 +62,8 @@ case class ExportModel(
 
   val routesPackage = controllerPackage :+ "routes"
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
+
+  def validReferences(config: ExportConfiguration) = references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
 
   def getField(k: String) = getFieldOpt(k).getOrElse(throw new IllegalStateException(s"No field for model [$className] with name [$k]."))
   def getFieldOpt(k: String) = fields.find(f => f.columnName == k || f.propertyName == k)

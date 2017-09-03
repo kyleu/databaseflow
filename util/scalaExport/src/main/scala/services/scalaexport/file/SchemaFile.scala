@@ -29,24 +29,25 @@ object SchemaFile {
 
   private[this] def addObjectType(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
-    if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && model.references.isEmpty) {
+    val references = model.validReferences(config)
+    if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && references.isEmpty) {
       file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
     } else {
       file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
       model.description.foreach {
-        case d if columnsDescriptions.isEmpty && model.references.isEmpty && model.foreignKeys.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
+        case d if columnsDescriptions.isEmpty && references.isEmpty && model.foreignKeys.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
         case d => file.add(s"""ObjectTypeDescription("$d"),""")
       }
       columnsDescriptions.foreach {
-        case d if columnsDescriptions.lastOption.contains(d) && model.references.isEmpty => file.add(d)
+        case d if columnsDescriptions.lastOption.contains(d) && references.isEmpty => file.add(d)
         case d => file.add(d + ",")
       }
-      if (model.foreignKeys.nonEmpty || model.references.nonEmpty) {
+      if (model.foreignKeys.nonEmpty || references.nonEmpty) {
         file.add("AddFields(", 1)
       }
       ReferencesHelper.writeFields(config, model, file)
       SchemaForeignKey.writeFields(config, model, file)
-      if (model.foreignKeys.nonEmpty || model.references.nonEmpty) {
+      if (model.foreignKeys.nonEmpty || references.nonEmpty) {
         file.add(")", -1)
       }
       file.add(")", -1)

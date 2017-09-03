@@ -1,14 +1,14 @@
 package services.scalaexport.file
 
 import models.scalaexport.RoutesFile
-import services.scalaexport.config.ExportModel
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object RoutesFiles {
   val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " +
     "limit: Option[Int] ?= None, offset: Option[Int] ?= None"
   val relationArgs = "orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None"
 
-  def routesContentFor(model: ExportModel, solo: Boolean = false) = {
+  def routesContentFor(config: ExportConfiguration, model: ExportModel, solo: Boolean = false) = {
     if (model.provided) {
       Nil
     } else {
@@ -41,7 +41,7 @@ object RoutesFiles {
           val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
 
           val view = s"GET         $detailUrl $detailWs ${model.controllerClass}.view($args)"
-          val counts = if (model.references.isEmpty) {
+          val counts = if (model.validReferences(config).isEmpty) {
             Nil
           } else {
             Seq(s"GET         $detailUrl/counts ${detailWs.drop(7)} ${model.controllerClass}.relationCounts($args)")
@@ -57,13 +57,13 @@ object RoutesFiles {
     }
   }
 
-  def files(models: Seq[ExportModel]) = {
+  def files(config: ExportConfiguration, models: Seq[ExportModel]) = {
     val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)
     val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
     val routesContent = packages.map {
-      case p if p._2.size == 1 => p._1 -> routesContentFor(p._2.head, solo = true)
-      case p => p._1 -> p._2.flatMap(m => routesContentFor(m))
+      case p if p._2.size == 1 => p._1 -> routesContentFor(config, p._2.head, solo = true)
+      case p => p._1 -> p._2.flatMap(m => routesContentFor(config, m))
     }
 
     routesContent.map { p =>

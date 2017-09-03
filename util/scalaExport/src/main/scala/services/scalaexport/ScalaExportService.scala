@@ -27,8 +27,9 @@ case class ScalaExportService(config: ExportConfiguration) {
   }
 
   def exportFiles(config: ExportConfiguration) = {
-    val modelFiles = config.models.map(model => ExportFiles.exportModel(config, model))
-    val rootFiles = RoutesFiles.files(config.models) ++ ServiceRegistryFiles.files(config.models)
+    val models = config.models.filterNot(_.ignored)
+    val modelFiles = models.map(model => ExportFiles.exportModel(config, model))
+    val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models)
     Future.successful(ExportResult(config, modelFiles.map(_._1), modelFiles.flatMap(_._2), rootFiles))
   }
 }

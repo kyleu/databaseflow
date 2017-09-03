@@ -6,7 +6,7 @@ import models.connection.ConnectionSettings
 import models.user.User
 import services.config.{ConfigFileService, DatabaseConfig}
 import services.database.{DatabaseConnection, DatabaseRegistry}
-import util.{Logging, PasswordEncryptUtils, SlugUtils}
+import util.{Logging, PasswordEncryptUtils}
 
 import scala.util.control.NonFatal
 

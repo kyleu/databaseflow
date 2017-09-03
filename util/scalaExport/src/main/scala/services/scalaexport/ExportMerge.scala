@@ -71,7 +71,8 @@ object ExportMerge {
     result.rootFiles.foreach { rf =>
       val f = rootDir / rf.packageDir / rf.filename
       f.delete(swallowIOExceptions = true)
-      f.overwrite(rf.rendered)
+      f.createIfNotExists()
+      f.writeText(rf.rendered)
     }
 
     result.log("Merge complete.")

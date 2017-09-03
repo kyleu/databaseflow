@@ -65,11 +65,11 @@ object TwirlViewFile {
     file
   }
 
-  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.references.nonEmpty) {
+  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.validReferences(config).nonEmpty) {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     file.add()
     file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
-    model.references.foreach { r =>
+    model.validReferences(config).foreach { r =>
       val src = config.getModel(r.srcTable)
       val srcField = src.getField(r.srcCol)
       val tgtField = model.getField(r.tgt)
