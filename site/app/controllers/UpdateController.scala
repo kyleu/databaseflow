@@ -7,6 +7,7 @@ import play.twirl.api.Html
 import services.audit.{InstallService, StartupService}
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 object UpdateController {
   val version = "1.0.0"
@@ -14,8 +15,13 @@ object UpdateController {
 
 @javax.inject.Singleton
 class UpdateController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  def version(license: Option[UUID]) = act("version.request") { implicit request =>
-    StartupService.add(request.remoteAddress, license)
+  private[this] val invalid = UUID.fromString("00000000-0000-0000-0000-000000000000")
+
+  def version(inst: Option[String]) = act("version.request") { implicit request =>
+    val installId = inst.flatMap { x =>
+      try { Some(UUID.fromString(x)) } catch { case NonFatal(_) => None }
+    }.getOrElse(invalid)
+    StartupService.add(installId, request.remoteAddress)
     Future.successful(Ok(UpdateController.version))
   }
 

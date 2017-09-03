@@ -15,7 +15,7 @@ index.download.link = Download
 index.github.link = Github
 index.admin.link = Admin
 
-index.hero.title = Query and report on your data with a modern SQL/GraphQL web interface.
+index.hero.title = Query your database using a modern web interface for SQL and GraphQL.
 index.hero.subtitle1 = {0} is an open source self-hosted SQL client, GraphQL server, and charting application that works with your database.
 index.hero.subtitle2 = Visualize schemas, query plans, charts, and results. You can run {0} locally for your own use, or install to a shared server for the whole team.
 
@@ -66,8 +66,16 @@ technology.hero.subtitle1 = Here''s a few of them.
 
 # Database
 database.supported.databases = Supported Databases
-database.hero.title = {0} is the best SQL client for working with {1}
+database.hero.title = {0} is a self-hosted SQL client and GraphQL sever for working with {1}.
+
+database.db2.subtitle = We''ve tested basic functionality for {0}. You're kind of on your own.
+database.h2.subtitle = Query and visualize your {0} databases using SQL or GraphQL.
+database.informix.subtitle = We''ve tested basic functionality for {0}. You're kind of on your own.
+database.mysql.subtitle = Query and visualize your {0} databases and query plans, using SQL or GraphQL.
+database.oracle.subtitle = We''ve tested basic functionality for {0}. You're kind of on your own.
 database.postgresql.subtitle = {0} is our primary supported database, we support normal installations, Amazon RDS or Redshift, and Greenplum.
+database.sqlite.subtitle = Query and visualize your {0} databases and query plans, using SQL or GraphQL.
+database.sqlserver.subtitle = We've tested basic functionality for {0}. You're kind of on your own.
 
 # Footer
 footer.newsletter = Newsletter

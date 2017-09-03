@@ -1,6 +1,6 @@
 package util
 
-import java.util.TimeZone
+import java.util.{TimeZone, UUID}
 
 import akka.actor.{ActorSystem, Props}
 import com.codahale.metrics.SharedMetricRegistries
@@ -69,6 +69,7 @@ class ApplicationContext @javax.inject.Inject() (
     MasterDatabase.open()
     MasterDdl.update(MasterDatabase.conn)
     SettingsService.load()
+    SettingsService.getOrSet(SettingKey.InstallId, UUID.randomUUID.toString)
     SettingsService.getOrSet(SettingKey.InstallDate, {
       ws.url(util.Config.projectUrl + "/install").get()
       new LocalDateTime().toString

@@ -37,12 +37,7 @@ class SiteController @javax.inject.Inject() (
 
   def index() = act("index") { implicit request =>
     val isAdmin = isAdminUser(request).isDefined
-    val isEnabled = request.session.data.get("preview").contains("true")
-    if (isEnabled) {
-      Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
-    } else {
-      Future.successful(Ok(views.html.splash()).withHeaders(SiteController.cors: _*))
-    }
+    Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
   }
 
   def language(lang: String) = act("language") { implicit request =>
@@ -53,9 +48,5 @@ class SiteController @javax.inject.Inject() (
     } else {
       result.flashing("lang" -> lang)
     })
-  }
-
-  def enable() = act("enable") { implicit request =>
-    Future.successful(Redirect(controllers.routes.SiteController.index()).withSession("preview" -> "true"))
   }
 }

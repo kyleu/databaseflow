@@ -18,7 +18,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case mr: MalformedRequest => timeReceive(mr) { log.error(s"MalformedRequest:  [${mr.reason}]: [${mr.content}].") }
 
     case p: Ping => timeReceive(p) { out ! Pong(p.timestamp) }
-    case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.version) }
+    case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.projectId, Config.projectName, Config.projectVersion) }
     case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
 
     case RefreshSchema => timeReceive(RefreshSchema) { refreshSchema(true) }

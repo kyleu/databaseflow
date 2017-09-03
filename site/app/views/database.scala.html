@@ -3,7 +3,7 @@
 )@layout.simple(title = util.Config.projectName, section = "features", isAdmin = isAdmin) {
   @views.html.layout.hero(
     title = messages("database.hero.title", util.Config.projectName, e.title),
-    subtitle = messages(s"database.${e.title.toLowerCase}.subtitle", util.Config.projectName, e.title)
+    subtitle = messages(s"database.${e.title.toLowerCase}.subtitle", e.title)
   )
   <div class="container">
     @views.html.content.features()

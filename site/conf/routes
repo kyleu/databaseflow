@@ -1,5 +1,4 @@
 GET            /                                        controllers.SiteController.index
-GET            /enable                                  controllers.SiteController.enable
 GET            /lang/:id                                controllers.SiteController.language(id)
 
 # Content
@@ -12,7 +11,7 @@ GET            /robots.txt                              controllers.ContentContr
 
 # Updates
 GET            /install                                 controllers.UpdateController.install
-GET            /version                                 controllers.UpdateController.version(license: Option[java.util.UUID])
+GET            /version                                 controllers.UpdateController.version(id: Option[String])
 
 # Feedback
 GET            /feedback                                controllers.FeedbackController.feedbackForm

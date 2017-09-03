@@ -49,6 +49,13 @@ object SettingKey extends Enum[SettingKey] {
     default = ""
   )
 
+  case object InstallId extends SettingKey(
+    id = "install-id",
+    title = "Install ID",
+    description = "The id of this installation. Please don't mess with this.",
+    default = ""
+  )
+
   case object InstallDate extends SettingKey(
     id = "install-date",
     title = "Install Date",
