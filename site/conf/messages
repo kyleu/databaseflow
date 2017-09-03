@@ -57,7 +57,7 @@ feedback.email = Email Address
 feedback.submit = Send Feedback
 
 # Features
-features.hero.title = {0} is a modern web-based SQL client.
+features.hero.title = {0} is a modern web-based SQL client and GraphQL server.
 features.hero.subtitle1 = Using streaming web technology, {0} helps you access your data from any device.
 
 # Technology
