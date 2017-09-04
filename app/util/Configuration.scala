@@ -11,8 +11,14 @@ class Configuration @javax.inject.Inject() (val cnf: play.api.Configuration, env
   val metrics: MetricsConfig = MetricsConfig(
     jmxEnabled = cnf.get[Option[Boolean]]("metrics.jmx.enabled").getOrElse(true),
     graphiteEnabled = cnf.get[Option[Boolean]]("metrics.graphite.enabled").getOrElse(false),
-    graphiteServer = cnf.get[Option[String]]("metrics.graphite.server").getOrElse("127.0.0.1"),
-    graphitePort = cnf.get[Option[Int]]("metrics.graphite.port").getOrElse(2003),
+    graphiteServer = Option(System.getenv("CARBON_RELAY_SERVICE_HOST")) match {
+      case Some(host) => host
+      case _ => cnf.get[String]("metrics.graphite.server")
+    },
+    graphitePort = Option(System.getenv("CARBON_RELAY_SERVICE_PORT")) match {
+      case Some(port) => port.toInt
+      case _ => cnf.get[Int]("metrics.graphite.port")
+    },
     servletEnabled = cnf.get[Option[Boolean]]("metrics.servlet.enabled").getOrElse(true),
     servletPort = cnf.get[Option[Int]]("metrics.servlet.port").getOrElse(9001)
   )
