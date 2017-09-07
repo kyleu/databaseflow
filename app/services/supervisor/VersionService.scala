@@ -9,8 +9,8 @@ import util.Logging
 import scala.concurrent.Future
 
 object VersionService extends Logging {
-  //private[this] val domain = "databaseflow.com"
-  private[this] val domain = "localhost:10000"
+  private[this] val domain = "databaseflow.com"
+  //private[this] val domain = "localhost:10000"
   private[this] def queryString = s"?id=${SettingsService(SettingKey.InstallId)}"
   private[this] def url = s"https://$domain/version" + queryString
   private[this] def insecureUrl = s"http://$domain/version" + queryString
