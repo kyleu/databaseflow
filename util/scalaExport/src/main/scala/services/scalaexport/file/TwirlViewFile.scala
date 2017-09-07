@@ -69,10 +69,10 @@ object TwirlViewFile {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     file.add()
     file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
-    model.validReferences(config).foreach { r =>
-      val src = config.getModel(r.srcTable)
-      val srcField = src.getField(r.srcCol)
-      val tgtField = model.getField(r.tgt)
+    model.transformedReferences(config).foreach { r =>
+      val src = r._3
+      val srcField = r._4
+      val tgtField = r._2
       val relArgs = s"""data-table="${src.propertyName}" data-field="${srcField.propertyName}" data-singular="${src.title}" data-plural="${src.plural}""""
       val relAttrs = s"""id="relation-${src.propertyName}-${srcField.propertyName}" $relArgs"""
       val relUrl = src.routesClass + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"

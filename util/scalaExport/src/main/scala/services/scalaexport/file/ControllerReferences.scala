@@ -5,12 +5,12 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object ControllerReferences {
   def write(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
-    val references = model.validReferences(config)
+    val references = model.transformedReferences(config)
     if (references.nonEmpty) {
       file.addImport("models.result", "RelationCount")
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
       val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.t.asScalaFull}").mkString(", ")
-      val refServices = references.map(ref => (ref, config.getModel(ref.srcTable), config.getModel(ref.srcTable).getField(ref.srcCol)))
+      val refServices = references.map(ref => (ref._2, ref._3, ref._4))
 
       file.add()
       file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", admin = true) { implicit request => implicit td =>""", 1)

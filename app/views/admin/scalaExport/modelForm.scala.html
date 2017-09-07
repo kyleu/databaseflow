@@ -1,4 +1,4 @@
-@(table: models.schema.Table, model: services.scalaexport.config.ExportModel)
+@(table: models.schema.Table, config: services.scalaexport.config.ExportConfiguration, model: services.scalaexport.config.ExportModel)
 <li>
   <div class="collapsible-header">
     <div class="right">
@@ -60,8 +60,11 @@
         </tr>
       </tbody>
     </table>
+
     <hr />
+
     <div>
+      <h5>Fields</h5>
       <table class="">
         <thead>
           <tr>
@@ -77,6 +80,30 @@
         <tbody>
         @model.fields.map { field =>
           @fieldForm(model, field)
+        }
+        </tbody>
+      </table>
+    </div>
+
+    <hr />
+
+    <div>
+      <h5>References</h5>
+      <table class="">
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Property</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Search</th>
+            <th>View</th>
+            <th>Ignored</th>
+          </tr>
+        </thead>
+        <tbody>
+        @model.transformedReferences(config).map { ref =>
+          @referenceForm(model, ref._1, ref._2, ref._3, ref._4)
         }
         </tbody>
       </table>

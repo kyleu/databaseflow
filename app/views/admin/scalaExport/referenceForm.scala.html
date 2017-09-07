@@ -1,0 +1,16 @@
+@(
+    model: services.scalaexport.config.ExportModel,
+    ref: services.scalaexport.config.ExportModel.Reference,
+    tgt: services.scalaexport.config.ExportField,
+    srcModel: services.scalaexport.config.ExportModel,
+    srcField: services.scalaexport.config.ExportField
+)
+
+@chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
+@baseName = {@{s"model.${model.tableName}.ref.${ref.name}"}}
+
+<!-- Field form for [@model.className::@tgt.propertyName] -->
+<tr>
+  <td>@tgt.columnName</td>
+  <td><input name="@{baseName}.propertyName" class="validate" value="@ref.propertyName" /></td>
+</tr>

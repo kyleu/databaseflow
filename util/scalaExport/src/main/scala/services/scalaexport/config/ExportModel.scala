@@ -64,6 +64,10 @@ case class ExportModel(
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
 
   def validReferences(config: ExportConfiguration) = references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
+  def transformedReferences(config: ExportConfiguration) = validReferences(config).map { r =>
+    val src = config.getModel(r.srcTable)
+    (r, getField(r.tgt), src, src.getField(r.srcCol))
+  }
 
   def getField(k: String) = getFieldOpt(k).getOrElse(throw new IllegalStateException(s"No field for model [$className] with name [$k]."))
   def getFieldOpt(k: String) = fields.find(f => f.columnName == k || f.propertyName == k)
