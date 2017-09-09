@@ -1,10 +1,4 @@
 @(section: String, isAdmin: Boolean)(implicit messages: Messages)<header>
-  <ul id="language" class="dropdown-content">
-    @util.Language.values.map { l =>
-      <li><a class="theme-text" href="@controllers.routes.SiteController.language(l.code)">@l.toString</a></li>
-    }
-  </ul>
-
   <nav id="topnav" class="theme">
     <div class="container">
       @if(section != "splash") {<ul class="right hide-on-small-only">
@@ -25,10 +19,6 @@
             <li><a href="@controllers.admin.routes.AdminController.index()">@messages("index.admin.link")</a></li>
           }
         }
-        <li><a class="dropdown-button" href="#" data-activates="language">
-          @util.Language.values.find(_.code == messages.lang.code).getOrElse(util.Language.English)
-          <i class="fa fa-angle-down" style="height: auto;"></i>
-        </a></li>
       </ul>}
       <a href="@controllers.routes.SiteController.index()" class="brand-title"><i class="fa fa-database logo-icon"></i> @util.Config.projectName</a>
       <div class="clear"></div>

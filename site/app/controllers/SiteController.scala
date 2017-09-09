@@ -39,14 +39,4 @@ class SiteController @javax.inject.Inject() (
     val isAdmin = isAdminUser(request).isDefined
     Future.successful(Ok(views.html.index(isAdmin)).withHeaders(SiteController.cors: _*))
   }
-
-  def language(lang: String) = act("language") { implicit request =>
-    val l = Lang(lang)
-    val result = Redirect(controllers.routes.SiteController.index()).withLang(l)
-    Future.successful(if (lang == "en") {
-      result
-    } else {
-      result.flashing("lang" -> lang)
-    })
-  }
 }

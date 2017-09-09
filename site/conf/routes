@@ -1,5 +1,4 @@
 GET            /                                        controllers.SiteController.index
-GET            /lang/:id                                controllers.SiteController.language(id)
 
 # Content
 GET            /features                                controllers.ContentController.features

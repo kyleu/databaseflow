@@ -31,13 +31,11 @@ class ProfileController @javax.inject.Inject() (
       _ => Future.successful(BadRequest(views.html.profile.view(request.identity))),
       profileData => {
         val newPrefs = request.identity.preferences.copy(
-          language = profileData.language,
           theme = profileData.theme
         )
         val newUser = request.identity.copy(username = profileData.username, preferences = newPrefs)
         userService.save(newUser, update = true)
-        val l = profileData.language.code
-        Future.successful(Redirect(controllers.routes.HomeController.home()).withLang(Lang(l)).flashing("lang" -> l))
+        Future.successful(Redirect(controllers.routes.HomeController.home()))
       }
     )
   }

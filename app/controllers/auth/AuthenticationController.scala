@@ -46,7 +46,7 @@ class AuthenticationController @javax.inject.Inject() (
                   ctx.silhouette.env.eventBus.publish(LoginEvent(user, request))
                   ctx.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
                     AuditRecordService.create(AuditType.SignIn, user.id, None)
-                    ctx.silhouette.env.authenticatorService.embed(v, result.withLang(Lang(user.preferences.language.code)))
+                    ctx.silhouette.env.authenticatorService.embed(v, result)
                   }
                 }
               }
