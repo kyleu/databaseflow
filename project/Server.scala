@@ -19,7 +19,6 @@ import play.sbt.PlayImport.PlayKeys
 import play.sbt.PlayImport.PlayKeys._
 import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
-import sbt.Project.projectToRef
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
 import webscalajs.WebScalaJS.autoImport._
@@ -74,7 +73,7 @@ object Server {
     ).enablePlugins(
       SbtWeb, play.sbt.PlayScala, JavaAppPackaging,
       UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin
-    ).settings(serverSettings: _*).aggregate(projectToRef(Client.client)).settings(Packaging.settings: _*)
+    ).settings(serverSettings: _*).settings(Packaging.settings: _*)
 
     Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.scalaExport))
   }

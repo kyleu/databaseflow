@@ -11,5 +11,5 @@ object CodeGen {
   lazy val codegen = Project(
     id = "codegen",
     base = file("codegen")
-  ).settings(codegenSettings: _*).aggregate(Database.dblibs).dependsOn(Database.dblibs).aggregate(Shared.sharedJvm).dependsOn(Shared.sharedJvm)
+  ).settings(codegenSettings: _*).dependsOn(Database.dblibs).dependsOn(Shared.sharedJvm)
 }
