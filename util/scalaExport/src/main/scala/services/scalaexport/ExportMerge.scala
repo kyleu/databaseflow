@@ -44,7 +44,7 @@ object ExportMerge {
         case ExportEngine.MySQL =>
           val dir = "./tmp/boilerplay.mysql".toFile
           if (!dir.exists) {
-            "git clone -b mysqlasync https://github.com/KyleU/boilerplay.git ./tmp/boilerplay.mysql".!!
+            "git clone -b mysql https://github.com/KyleU/boilerplay.git ./tmp/boilerplay.mysql".!!
             (dir / ".git").delete()
           }
           dir

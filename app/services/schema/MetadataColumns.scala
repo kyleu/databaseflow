@@ -41,10 +41,10 @@ object MetadataColumns {
       } catch {
         case NonFatal(_) => false
       },
-      columnType = QueryTranslations.forType(colType, colTypeName),
+      columnType = QueryTranslations.forType(colType, colTypeName, colSize),
       sqlTypeCode = colType,
       sqlTypeName = colTypeName,
-      size = row.asOpt[Any]("COLUMN_SIZE").fold("?")(_.toString),
+      size = colSize.map(_.toString).getOrElse("?"),
       sizeAsInt = colSize.getOrElse(0), // ?
       scale = 0, // BUFFER_LENGTH? DECIMAL_DIGITS? NUM_PREC_RADIX?
       defaultValue = row.asOpt[String]("COLUMN_DEF")

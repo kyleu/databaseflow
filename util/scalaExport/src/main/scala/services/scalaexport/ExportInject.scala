@@ -9,6 +9,7 @@ object ExportInject {
     val s = InjectSchema.inject(result, rootDir)
     val i = InjectIcons.inject(result, rootDir)
     val svc = InjectServiceRegistry.inject(result, rootDir)
+    val aud = InjectAuditLookup.inject(result, rootDir)
     val ro = InjectRoutes.inject(result, rootDir)
     val sro = InjectSystemRoutes.inject(result, rootDir)
     val xm = InjectExplore.injectMenu(result, rootDir)
@@ -16,6 +17,6 @@ object ExportInject {
     val sr = InjectSearch.inject(result, rootDir)
 
     result.log("Injection complete.")
-    Seq(s, i, svc, ro, sro, xm, xh, sr)
+    Seq(s, i, svc, aud, ro, sro, xm, xh, sr)
   }
 }

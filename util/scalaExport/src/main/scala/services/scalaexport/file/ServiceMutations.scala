@@ -29,7 +29,7 @@ object ServiceMutations {
         case f if f.notNull => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
         case f => s"""DataField("${f.propertyName}", ${f.propertyName}.map(_.toString))"""
       }.mkString(", ")
-      file.add(s"""services.notification.NotificationService.onUpdate("${model.className}", Seq($ids), current.toDataFields, fields)""")
+      file.add(s"""services.audit.AuditService.onUpdate("${model.className}", Seq($ids), current.toDataFields, fields)""")
       file.add("newModel")
       file.indent(-1)
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")

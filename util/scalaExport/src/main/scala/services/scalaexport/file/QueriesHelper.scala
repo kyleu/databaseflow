@@ -8,9 +8,6 @@ object QueriesHelper {
     file.add(s"override protected def fromRow(row: Row) = ${model.className}(", 1)
     model.fields.foreach { field =>
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-      field.t.requiredImport.foreach { p =>
-        file.addImport(p, field.t.asScala)
-      }
       if (field.notNull) {
         file.add(s"""${field.propertyName} = ${field.t.className}(row, "${field.columnName}")$comma""")
       } else {

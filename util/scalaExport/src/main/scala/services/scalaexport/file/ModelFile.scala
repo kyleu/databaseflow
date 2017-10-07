@@ -10,6 +10,7 @@ object ModelFile {
     val file = ScalaFile(model.modelPackage, model.className, root = root)
 
     file.addImport("models.result.data", "DataField")
+    file.addImport("models.result.data", "DataFieldModel")
     file.add(s"object ${model.className} {", 1)
     file.add(s"val empty = ${model.className}(", 1)
 
@@ -54,15 +55,14 @@ object ModelFile {
     if (model.scalaJs) {
       //file.add(s"""@scala.scalajs.js.annotation.JSExportTopLevel("${model.className}")""")
     }
-    file.add(s"case class ${model.className}(", 1)
+    file.add(s"case class ${model.className}(", 2)
     addFields(model, file)
-
     model.extendsClass match {
-      case Some(x) => file.add(") extends " + x + " {", -1)
-      case None => file.add(") {", -1)
+      case Some(x) => file.add(") extends " + x + " {", -2)
+      case None => file.add(") extends DataFieldModel {", -2)
     }
     file.indent(1)
-    file.add("def toDataFields = Seq(", 1)
+    file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
       val x = if (field.notNull) {
         s"""DataField("${field.propertyName}", Some(${field.propertyName}.toString))"""

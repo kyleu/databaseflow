@@ -43,25 +43,7 @@ object QueriesFile {
     file.add("val searchExact = SearchExact")
     file.add()
 
-    model.pkFields match {
-      case Nil => // noop
-      case pkField :: Nil =>
-        val name = pkField.propertyName
-        pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala))
-        file.add(s"def getByPrimaryKey($name: ${model.pkType}) = GetByPrimaryKey(Seq($name))")
-        file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery(column = "${pkField.columnName}", values = ${name}Seq)""")
-      case pkFields =>
-        pkFields.foreach(pkField => pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala)))
-        val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScala}").mkString(", ")
-        val seqArgs = pkFields.map(_.propertyName).mkString(", ")
-        file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
-        file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
-        val pkWhere = pkFields.map(f => s"""${engine.lQuoteEscaped}${f.columnName}${engine.rQuoteEscaped} = ?""").mkString(" and ")
-        file.add(s"""whereClause = Some(idSeq.map(_ => "($pkWhere)").mkString(" or ")),""")
-        file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
-        file.add(")", -1)
-    }
-    file.add()
+    writePkFields(file, model, engine)
 
     QueriesHelper.writeForeignKeys(engine, model, file)
 
@@ -84,5 +66,26 @@ object QueriesFile {
 
     file.add("}", -1)
     file
+  }
+
+  private[this] def writePkFields(file: ScalaFile, model: ExportModel, engine: ExportEngine) = model.pkFields match {
+    case Nil => // noop
+    case pkField :: Nil =>
+      val name = pkField.propertyName
+      pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala))
+      file.add(s"def getByPrimaryKey($name: ${model.pkType}) = GetByPrimaryKey(Seq($name))")
+      file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery(column = "${pkField.columnName}", values = ${name}Seq)""")
+      file.add()
+    case pkFields =>
+      pkFields.foreach(pkField => pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala)))
+      val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScala}").mkString(", ")
+      val seqArgs = pkFields.map(_.propertyName).mkString(", ")
+      file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
+      file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
+      val pkWhere = pkFields.map(f => s"""${engine.lQuoteEscaped}${f.columnName}${engine.rQuoteEscaped} = ?""").mkString(" and ")
+      file.add(s"""whereClause = Some(idSeq.map(_ => "($pkWhere)").mkString(" or ")),""")
+      file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
+      file.add(")", -1)
+      file.add()
   }
 }

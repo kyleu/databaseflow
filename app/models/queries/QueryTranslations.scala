@@ -6,13 +6,16 @@ import models.schema.ColumnType._
 import util.Logging
 
 object QueryTranslations extends Logging {
-  def forType(i: Int, n: String) = i match {
+  def forType(i: Int, n: String, colSize: Option[Int] = None) = i match {
     case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => StringType
     case NUMERIC | DECIMAL => BigDecimalType
     case BIT | BOOLEAN => BooleanType
     case TINYINT => ByteType
     case SMALLINT => ShortType
-    case INTEGER | DISTINCT | ROWID => IntegerType
+    case INTEGER | DISTINCT | ROWID => colSize match {
+      case Some(x) if x >= 10 => LongType
+      case _ => IntegerType
+    }
     case BIGINT => LongType
     case REAL | FLOAT => FloatType
     case DOUBLE => DoubleType
