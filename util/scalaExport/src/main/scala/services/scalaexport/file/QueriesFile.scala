@@ -48,6 +48,7 @@ object QueriesFile {
     QueriesHelper.writeForeignKeys(engine, model, file)
 
     file.add(s"def insert(model: ${model.className}) = Insert(model)")
+    file.add(s"def insertBatch(models: Seq[${model.className}]) = InsertBatch(models)")
 
     file.addImport("models.result.data", "DataField")
     file.add("def create(dataFields: Seq[DataField]) = CreateFields(dataFields)")

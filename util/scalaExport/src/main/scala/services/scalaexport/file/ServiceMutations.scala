@@ -16,7 +16,7 @@ object ServiceMutations {
       file.add(s"def remove($sig)$trace = {", 1)
       file.add(s"""traceF("remove")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td).flatMap {""", 1)
       file.add(s"case Some(current) => ApplicationDatabase.execute(${model.className}Queries.removeByPrimaryKey($call))(td).map(_ => current)")
-      file.add(s"""case None => throw new IllegalStateException(s"Cannot find Note matching [$interp].")""")
+      file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")
       file.add("})", -1)
       file.add("}", -1)
       file.add()

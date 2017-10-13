@@ -68,6 +68,10 @@ object ServiceFile {
     file.add("})", -1)
     file.add("}", -1)
 
+    file.add(s"def insertBatch(models: Seq[${model.className}])$trace = {", 1)
+    file.add(s"""traceF("insertBatch")(td => ApplicationDatabase.execute($queriesFile.insertBatch(models))(td))""")
+    file.add("}", -1)
+
     file.add(s"def create(fields: Seq[DataField])$trace = {", 1)
     file.add(s"""traceF("create")(td => ApplicationDatabase.execute($queriesFile.create(fields))(td)).map { _ =>""", 1)
     file.add(s"None: Option[${model.className}]")

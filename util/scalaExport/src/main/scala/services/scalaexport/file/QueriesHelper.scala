@@ -27,7 +27,7 @@ object QueriesHelper {
         file.add(s"""case class CountBy$propCls($propId: ${field.t.asScala}) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
         val searchArgs = "orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]"
         file.add(s"""case class GetBy$propCls($propId: ${field.t.asScala}, $searchArgs) extends SeqQuery(""", 1)
-        file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),""")
+        file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, engine, orderBys: _*),""")
         file.add(s"limit = limit, offset = offset, values = Seq($propId)")
         file.add(")", -1)
         file.add(s"""case class GetBy${propCls}Seq(${propId}Seq: Seq[${field.t.asScala}]) extends ColSeqQuery(column = "${field.columnName}", values = ${propId}Seq)""")
