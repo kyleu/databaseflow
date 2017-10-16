@@ -17,7 +17,7 @@ object ExportConfigurationDefault {
     val cn = toClassName(t.name)
 
     val provided = cn match {
-      case "Ddl" | "Users" | "LoginInfo" | "PasswordInfo" | "SettingValues" => true
+      case "Ddl" | "Audit" | "AuditRecord" | "Users" | "LoginInfo" | "PasswordInfo" | "SettingValues" => true
       case _ => false
     }
 

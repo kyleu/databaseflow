@@ -12,7 +12,7 @@ object TwirlFormFile {
 
     file.add(s"@(user: models.user.User, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
-    file.add(s""")@traceData.logViewClass(getClass)@layout.admin(user, "explore", title) {""", 1)
+    file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", title) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     file.add("""<div class="collection with-header">""", 1)

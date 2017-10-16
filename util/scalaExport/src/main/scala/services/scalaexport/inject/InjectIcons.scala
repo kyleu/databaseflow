@@ -15,7 +15,7 @@ object InjectIcons {
     "lock", "low-vision", "magic", "magnet", "male", "map", "map-marker", "map-o", "map-pin", "map-signs"
   )
 
-  private[this] def randomIcon = icons(Random.nextInt(icons.size))
+  private[this] def randomIcon(s: String) = icons(Math.abs(s.hashCode) % icons.size)
 
   def inject(result: ExportResult, rootDir: File) = {
     def iconFieldsFor(s: String) = {
@@ -24,7 +24,7 @@ object InjectIcons {
       val newContent = result.models.flatMap { m =>
         s.indexOf("val " + m.propertyName + " = ") match {
           case x if x > -1 && x < startIndex => None
-          case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon)}"""")
+          case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
         }
       }.sorted.mkString("\n")
       InjectHelper.replaceBetween(original = s, start = startString, end = "  // End model icons", newContent = newContent)

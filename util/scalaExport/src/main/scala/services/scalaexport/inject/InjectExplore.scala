@@ -19,7 +19,7 @@ object InjectExplore {
       )
     }
 
-    val schemaSourceFile = rootDir / "app" / "views" / "layout" / "adminMenu.scala.html"
+    val schemaSourceFile = rootDir / "app" / "views" / "admin" / "layout" / "menu.scala.html"
     val newContent = queryFieldsFor(schemaSourceFile.contentAsString)
     schemaSourceFile.overwrite(newContent)
 
