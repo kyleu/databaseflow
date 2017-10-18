@@ -18,12 +18,12 @@ object InjectSearch {
         s
       } else {
         val uuidFields = uuidModels.map { m =>
-          s"    val ${m.model.propertyName}F = ${m.model.serviceReference}.getByPrimaryKey(id).map { modelOpt =>\n" +
-            s"      modelOpt.map(model => ${m.viewClass}(model, ${m.message})).toSeq\n" +
-            "    }"
+          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(id).map { model =>\n" +
+            s"      ${m.viewClass}(model, ${m.message})\n" +
+            "    }.toSeq"
         }
-        val uuidFutures = uuidModels.map(_.model.propertyName + "F")
-        val newContent = uuidFields.sorted.mkString("\n") + s"\n\n    val uuidSearches = Seq[Future[Seq[Html]]](${uuidFutures.mkString(", ")})"
+        val uuidFutures = uuidModels.map(_.model.propertyName).mkString(", ")
+        val newContent = uuidFields.sorted.mkString("\n") + s"\n\n    val uuidSearches = Seq[Seq[Html]]($uuidFutures)"
         InjectHelper.replaceBetween(original = s, start = "    // Start uuid searches", end = "    // End uuid searches", newContent = newContent)
       }
     }
@@ -35,12 +35,12 @@ object InjectSearch {
         s
       } else {
         val intFields = intModels.map { m =>
-          s"    val ${m.model.propertyName}F = ${m.model.serviceReference}.getByPrimaryKey(id).map { modelOpt =>\n" ++
-            s"      modelOpt.map(model => ${m.viewClass}(model, ${m.message})).toSeq\n" +
-            "    }"
+          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(id).map { model =>\n" ++
+            s"      ${m.viewClass}(model, ${m.message})\n" +
+            "    }.toSeq"
         }
-        val intFutures = intModels.map(_.model.propertyName + "F").mkString(", ")
-        val newContent = intFields.sorted.mkString("\n") + s"\n\n    val intSearches = Seq[Future[Seq[Html]]]($intFutures)"
+        val intFutures = intModels.map(_.model.propertyName).mkString(", ")
+        val newContent = intFields.sorted.mkString("\n") + s"\n\n    val intSearches = Seq[Seq[Html]]($intFutures)"
         InjectHelper.replaceBetween(original = s, start = "    // Start int searches", end = "    // End int searches", newContent = newContent)
       }
     }
@@ -52,12 +52,12 @@ object InjectSearch {
         s
       } else {
         val stringFields = stringModels.map { m =>
-          s"    val ${m.model.propertyName}F = ${m.model.serviceReference}.searchExact(q = q, limit = Some(5)).map { models =>\n" ++
-            s"      models.map(model => ${m.viewClass}(model, ${m.message}))\n" +
+          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.searchExact(q = q, limit = Some(5)).map { model =>\n" ++
+            s"      ${m.viewClass}(model, ${m.message})\n" +
             "    }"
         }
-        val stringFutures = stringModels.map(_.model.propertyName + "F").mkString(", ")
-        val newContent = stringFields.sorted.mkString("\n") + s"\n\n    val stringSearches = Seq[Future[Seq[Html]]]($stringFutures)"
+        val stringFutures = stringModels.map(_.model.propertyName).mkString(", ")
+        val newContent = stringFields.sorted.mkString("\n") + s"\n\n    val stringSearches = Seq[Seq[Html]]($stringFutures)"
         InjectHelper.replaceBetween(original = s, start = "    // Start string searches", end = "    // End string searches", newContent = newContent)
       }
     }

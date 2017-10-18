@@ -15,11 +15,11 @@ object ServiceHelper {
       case field :: Nil =>
         val colProp = field.propertyName
         file.add(s"def getByPrimaryKey($colProp: ${field.t.asScala})$td = {", 1)
-        file.add(s"""traceF("get.by.primary.key")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($colProp))(td))""")
+        file.add(s"""traceB("get.by.primary.key")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($colProp))(td))""")
         file.add("}", -1)
         val seqArgs = s"${colProp}Seq: Seq[${field.t.asScala}]"
         file.add(s"def getByPrimaryKeySeq($seqArgs)$td = {", 1)
-        file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
+        file.add(s"""traceB("get.by.primary.key.seq")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
         file.add("}", -1)
         field.t match {
           case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
@@ -32,11 +32,11 @@ object ServiceHelper {
         val queryArgs = fields.map(_.propertyName).mkString(", ")
 
         file.add(s"def getByPrimaryKey($colArgs)$td = {", 1)
-        file.add(s"""traceF("get.by.primary.key")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($queryArgs))(td))""")
+        file.add(s"""traceB("get.by.primary.key")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($queryArgs))(td))""")
         file.add("}", -1)
 
         file.add(s"def getByPrimaryKeySeq(pkSeq: Seq[$tupleTyp])$td = {", 1)
-        file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKeySeq(pkSeq))(td))""")
+        file.add(s"""traceB("get.by.primary.key.seq")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKeySeq(pkSeq))(td))""")
         file.add("}", -1)
     }
     file.add()
@@ -51,13 +51,13 @@ object ServiceHelper {
         val propId = col.propertyName
         val propCls = col.className
 
-        file.add(s"""def countBy$propCls($propId: ${col.t.asScala})(implicit trace: TraceData) = traceF("count.by.$propId") { td =>""", 1)
+        file.add(s"""def countBy$propCls($propId: ${col.t.asScala})(implicit trace: TraceData) = traceB("count.by.$propId") { td =>""", 1)
         file.add(s"ApplicationDatabase.query(${model.className}Queries.CountBy$propCls($propId))(td)")
         file.add("}", -1)
         file.add(s"def getBy$propCls($propId: ${col.t.asScala}, $searchArgs)(implicit trace: TraceData) = {", 1)
-        file.add(s"""traceF("get.by.$propId")(td => ApplicationDatabase.query(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td))""")
+        file.add(s"""traceB("get.by.$propId")(td => ApplicationDatabase.query(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td))""")
         file.add("}", -1)
-        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.t.asScala}])(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
+        file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.t.asScala}])(implicit trace: TraceData) = traceB("get.by.$propId.seq") { td =>""", 1)
         file.add(s"ApplicationDatabase.query(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
         file.add("}", -1)
 

@@ -13,7 +13,6 @@ object ServiceFile {
     val file = ScalaFile(model.servicePackage, model.className + "Service")
     val queriesFile = model.className + "Queries"
 
-    file.addImport("util.FutureUtils", "databaseContext")
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")
     file.addImport("services.database", "ApplicationDatabase")
@@ -35,22 +34,22 @@ object ServiceFile {
     file.addMarker("string-search", InjectSearchParams(model).toString)
 
     file.add(s"override def countAll(filters: Seq[Filter] = Nil)$trace = {", 1)
-    file.add(s"""traceF("get.all.count")(td => ApplicationDatabase.query($queriesFile.countAll(filters))(td))""")
+    file.add(s"""traceB("get.all.count")(td => ApplicationDatabase.query($queriesFile.countAll(filters))(td))""")
     file.add("}", -1)
     file.add(s"override def getAll($searchArgs)$trace = {", 1)
-    file.add(s"""traceF("get.all")(td => ApplicationDatabase.query($queriesFile.getAll(filters, orderBys, limit, offset))(td))""")
+    file.add(s"""traceB("get.all")(td => ApplicationDatabase.query($queriesFile.getAll(filters, orderBys, limit, offset))(td))""")
     file.add("}", -1)
     file.add()
     file.add("// Search")
     file.add(s"override def searchCount(q: String, filters: Seq[Filter])$trace = {", 1)
-    file.add(s"""traceF("search.count")(td => ApplicationDatabase.query($queriesFile.searchCount(q, filters))(td))""")
+    file.add(s"""traceB("search.count")(td => ApplicationDatabase.query($queriesFile.searchCount(q, filters))(td))""")
     file.add("}", -1)
     file.add(s"override def search(q: String, $searchArgs)$trace = {", 1)
-    file.add(s"""traceF("search")(td => ApplicationDatabase.query($queriesFile.search(q, filters, orderBys, limit, offset))(td))""")
+    file.add(s"""traceB("search")(td => ApplicationDatabase.query($queriesFile.search(q, filters, orderBys, limit, offset))(td))""")
     file.add("}", -1)
     file.add()
     file.add(s"def searchExact(q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)$trace = {", 1)
-    file.add(s"""traceF("search.exact")(td => ApplicationDatabase.query($queriesFile.searchExact(q, orderBys, limit, offset))(td))""")
+    file.add(s"""traceB("search.exact")(td => ApplicationDatabase.query($queriesFile.searchExact(q, orderBys, limit, offset))(td))""")
     file.add("}", -1)
     file.add()
 
@@ -58,7 +57,7 @@ object ServiceFile {
 
     file.add("// Mutations")
     file.add(s"def insert(model: ${model.className})$trace = {", 1)
-    file.add(s"""traceF("insert")(td => ApplicationDatabase.execute($queriesFile.insert(model))(td).flatMap {""", 1)
+    file.add(s"""traceB("insert")(td => ApplicationDatabase.execute($queriesFile.insert(model))(td) match {""", 1)
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
@@ -69,13 +68,12 @@ object ServiceFile {
     file.add("}", -1)
 
     file.add(s"def insertBatch(models: Seq[${model.className}])$trace = {", 1)
-    file.add(s"""traceF("insertBatch")(td => ApplicationDatabase.execute($queriesFile.insertBatch(models))(td))""")
+    file.add(s"""traceB("insertBatch")(td => ApplicationDatabase.execute($queriesFile.insertBatch(models))(td))""")
     file.add("}", -1)
 
     file.add(s"def create(fields: Seq[DataField])$trace = {", 1)
-    file.add(s"""traceF("create")(td => ApplicationDatabase.execute($queriesFile.create(fields))(td)).map { _ =>""", 1)
+    file.add(s"""traceB("create")(td => ApplicationDatabase.execute($queriesFile.create(fields))(td))""")
     file.add(s"None: Option[${model.className}]")
-    file.add("}", -1)
     file.add("}", -1)
 
     ServiceMutations.mutations(model, file)

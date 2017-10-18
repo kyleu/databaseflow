@@ -32,7 +32,7 @@ object SchemaForeignKey {
             file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
             file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType}](", 1)
             val rels = if (srcCol.notNull) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
-            file.add(s"getByPrimaryKeySeq, (c, rels) => c.${src.serviceReference}.getBy${srcCol.className}Seq($rels)(c.trace)")
+            file.add(s"getByPrimaryKeySeq, (c, rels) => Future.successful(c.${src.serviceReference}.getBy${srcCol.className}Seq($rels)(c.trace))")
             file.add(")", -1)
 
             file.add()
