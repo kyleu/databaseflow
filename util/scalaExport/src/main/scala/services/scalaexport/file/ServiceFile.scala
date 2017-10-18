@@ -33,26 +33,7 @@ object ServiceFile {
     ServiceHelper.addGetters(model, file)
     file.addMarker("string-search", InjectSearchParams(model).toString)
 
-    file.add(s"override def countAll(filters: Seq[Filter] = Nil)$trace = {", 1)
-    file.add(s"""traceB("get.all.count")(td => ApplicationDatabase.query($queriesFile.countAll(filters))(td))""")
-    file.add("}", -1)
-    file.add(s"override def getAll($searchArgs)$trace = {", 1)
-    file.add(s"""traceB("get.all")(td => ApplicationDatabase.query($queriesFile.getAll(filters, orderBys, limit, offset))(td))""")
-    file.add("}", -1)
-    file.add()
-    file.add("// Search")
-    file.add(s"override def searchCount(q: String, filters: Seq[Filter])$trace = {", 1)
-    file.add(s"""traceB("search.count")(td => ApplicationDatabase.query($queriesFile.searchCount(q, filters))(td))""")
-    file.add("}", -1)
-    file.add(s"override def search(q: String, $searchArgs)$trace = {", 1)
-    file.add(s"""traceB("search")(td => ApplicationDatabase.query($queriesFile.search(q, filters, orderBys, limit, offset))(td))""")
-    file.add("}", -1)
-    file.add()
-    file.add(s"def searchExact(q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)$trace = {", 1)
-    file.add(s"""traceB("search.exact")(td => ApplicationDatabase.query($queriesFile.searchExact(q, orderBys, limit, offset))(td))""")
-    file.add("}", -1)
-    file.add()
-
+    ServiceHelper.writeSearchFields(model, file, queriesFile, trace, searchArgs)
     ServiceHelper.writeForeignKeys(model, file)
 
     file.add("// Mutations")
@@ -61,8 +42,12 @@ object ServiceFile {
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
-      file.add(s"case 1 => getByPrimaryKey(${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td)")
-      file.add(s"""case x => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
+      file.add(s"case 1 => getByPrimaryKey(${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map { model =>", 1)
+      val audit = model.pkFields.map(f => "model." + f.propertyName + ".toString").mkString(", ")
+      file.add(s"""services.audit.AuditService.onInsert("${model.className}", Seq($audit), model.toDataFields)""")
+      file.add("model")
+      file.add("}", -1)
+      file.add(s"""case _ => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
     }
     file.add("})", -1)
     file.add("}", -1)
@@ -71,9 +56,15 @@ object ServiceFile {
     file.add(s"""traceB("insertBatch")(td => ApplicationDatabase.execute($queriesFile.insertBatch(models))(td))""")
     file.add("}", -1)
 
-    file.add(s"def create(fields: Seq[DataField])$trace = {", 1)
-    file.add(s"""traceB("create")(td => ApplicationDatabase.execute($queriesFile.create(fields))(td))""")
-    file.add(s"None: Option[${model.className}]")
+    file.add(s"""def create(fields: Seq[DataField])$trace = traceB("create") { td =>""", 1)
+    file.add(s"""ApplicationDatabase.execute($queriesFile.create(fields))(td)""")
+    model.pkFields match {
+      case Nil => file.add(s"None: Option[${model.className}]")
+      case pk =>
+        val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
+        file.add(s"""services.audit.AuditService.onInsert("${model.className}", Seq($audit), fields)""")
+        file.add(s"None: Option[${model.className}] // TODO: getByPrimaryKey")
+    }
     file.add("}", -1)
 
     ServiceMutations.mutations(model, file)

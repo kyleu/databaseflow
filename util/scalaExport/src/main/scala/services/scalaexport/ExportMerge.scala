@@ -10,6 +10,7 @@ object ExportMerge {
   private[this] def projectNameReplacements(prop: String, cls: String, root: File) = {
     def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", prop).replaceAllLiterally("Boilerplay", cls))
 
+    fix(root / "deploy.yaml")
     fix(root / "app" / "util" / "web" / "LoggingFilter.scala")
     fix(root / "app" / "views" / "index.scala.html")
     fix(root / "app" / "views" / "layout" / "simple.scala.html")

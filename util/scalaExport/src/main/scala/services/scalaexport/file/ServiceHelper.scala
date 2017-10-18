@@ -6,6 +6,28 @@ import services.scalaexport.config.ExportModel
 import services.scalaexport.inject.InjectSearchParams
 
 object ServiceHelper {
+  def writeSearchFields(model: ExportModel, file: ScalaFile, queriesFile: String, trace: String, searchArgs: String) = {
+    file.add(s"override def countAll(filters: Seq[Filter] = Nil)$trace = {", 1)
+    file.add(s"""traceB("get.all.count")(td => ApplicationDatabase.query($queriesFile.countAll(filters))(td))""")
+    file.add("}", -1)
+    file.add(s"override def getAll($searchArgs)$trace = {", 1)
+    file.add(s"""traceB("get.all")(td => ApplicationDatabase.query($queriesFile.getAll(filters, orderBys, limit, offset))(td))""")
+    file.add("}", -1)
+    file.add()
+    file.add("// Search")
+    file.add(s"override def searchCount(q: String, filters: Seq[Filter])$trace = {", 1)
+    file.add(s"""traceB("search.count")(td => ApplicationDatabase.query($queriesFile.searchCount(q, filters))(td))""")
+    file.add("}", -1)
+    file.add(s"override def search(q: String, $searchArgs)$trace = {", 1)
+    file.add(s"""traceB("search")(td => ApplicationDatabase.query($queriesFile.search(q, filters, orderBys, limit, offset))(td))""")
+    file.add("}", -1)
+    file.add()
+    file.add(s"def searchExact(q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)$trace = {", 1)
+    file.add(s"""traceB("search.exact")(td => ApplicationDatabase.query($queriesFile.searchExact(q, orderBys, limit, offset))(td))""")
+    file.add("}", -1)
+    file.add()
+  }
+
   private[this] val td = "(implicit trace: TraceData)"
 
   def addGetters(model: ExportModel, file: ScalaFile) = {
