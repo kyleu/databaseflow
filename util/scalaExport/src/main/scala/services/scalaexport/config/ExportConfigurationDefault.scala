@@ -17,13 +17,14 @@ object ExportConfigurationDefault {
     val cn = toClassName(t.name)
 
     val provided = cn match {
-      case "Ddl" | "Audit" | "AuditRecord" | "Users" | "LoginInfo" | "PasswordInfo" | "SettingValues" => true
+      case "Ddl" | "Audit" | "AuditRecord" | "Note" | "Users" | "LoginInfo" | "PasswordInfo" | "SettingValues" => true
       case _ => false
     }
 
     val pkg = cn match {
       case "Ddl" => List("ddl")
       case "Users" => List("user")
+      case "Note" => List("note")
       case "LoginInfo" | "PasswordInfo" => List("auth")
       case _ => Nil
     }
