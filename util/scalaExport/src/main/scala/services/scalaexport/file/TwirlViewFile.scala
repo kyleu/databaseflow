@@ -36,9 +36,7 @@ object TwirlViewFile {
         case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
           file.add("<td>", 1)
           val tgt = config.getModel(fk.targetTable)
-          if (tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.columnName))) {
-
-          } else {
+          if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.columnName))) {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.columnName).mkString(", ")}]...")
           }
 

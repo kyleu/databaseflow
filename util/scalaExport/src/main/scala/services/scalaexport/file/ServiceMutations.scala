@@ -17,7 +17,7 @@ object ServiceMutations {
       file.add(s"def remove($sig)$trace = {", 1)
       file.add(s"""traceB("remove")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td) match {""", 1)
       file.add(s"case Some(current) =>", 1)
-      file.add(s"""services.audit.AuditService.onRemove("${model.className}", Seq($audit), current.toDataFields)""")
+      file.add(s"""services.audit.AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields)""")
       file.add(s"ApplicationDatabase.execute(${model.className}Queries.removeByPrimaryKey($call))(td)")
       file.add("current")
       file.indent(-1)
@@ -35,11 +35,12 @@ object ServiceMutations {
         case f if f.notNull => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
         case f => s"""DataField("${f.propertyName}", ${f.propertyName}.map(_.toString))"""
       }.mkString(", ")
-      file.add(s"""services.audit.AuditService.onUpdate("${model.className}", Seq($ids), current.toDataFields, fields)""")
+      file.add(s"""services.audit.AuditHelper.onUpdate("${model.className}", Seq($ids), current.toDataFields, fields)""")
       file.add("newModel")
       file.indent(-1)
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")
       file.add("}", -1)
+      file.indent(-1)
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp].")""")
       file.add("})", -1)
       file.add("}", -1)

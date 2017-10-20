@@ -35,7 +35,7 @@ object ExportFiles {
       val sch = SchemaFile.export(config, model)
       val cntr = ControllerFile.export(config, model)
 
-      val tdr = TwirlDataRowFile.export(model)
+      val tdr = TwirlDataRowFile.export(config, model)
       val tl = TwirlListFile.export(model)
       val tv = TwirlViewFile.export(config, model)
       val tf = TwirlFormFile.export(model)

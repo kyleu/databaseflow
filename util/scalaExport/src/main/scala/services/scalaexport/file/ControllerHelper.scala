@@ -66,7 +66,7 @@ object ControllerHelper {
         file.add(s"""withSession("get.by.$propId", admin = true) { implicit request => implicit td =>""", 1)
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
         file.add(s"val models = svc.getBy$propCls($propId, orderBys, limit, offset)")
-        file.add("Future.successful(render {")
+        file.add("Future.successful(render {", 1)
         file.add(s"case Accepts.Html() => Ok(${model.viewHtmlPackage.mkString(".")}.${model.propertyName}By$propCls(", 1)
         file.add(s"""request.identity, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
         file.add("))", -1)

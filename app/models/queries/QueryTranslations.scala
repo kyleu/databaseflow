@@ -28,6 +28,13 @@ object QueryTranslations extends Logging {
     case OTHER => n match {
       case "uuid" => UuidType
       case "json" => StringType
+      case "jsonb" => StringType
+      case "hstore" => StringType
+      case "ghstore" => StringType
+      case "internal" => StringType
+      case "cstring" => StringType
+      case "anyelement" => StringType
+      case "record" => StringType
       case x =>
         log.warn(s"Encountered unknown field type [$x]. ")
         UnknownType

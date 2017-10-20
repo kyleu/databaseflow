@@ -44,7 +44,7 @@ object ServiceFile {
     } else {
       file.add(s"case 1 => getByPrimaryKey(${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map { model =>", 1)
       val audit = model.pkFields.map(f => "model." + f.propertyName + ".toString").mkString(", ")
-      file.add(s"""services.audit.AuditService.onInsert("${model.className}", Seq($audit), model.toDataFields)""")
+      file.add(s"""services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), model.toDataFields)""")
       file.add("model")
       file.add("}", -1)
       file.add(s"""case _ => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
@@ -62,7 +62,7 @@ object ServiceFile {
       case Nil => file.add(s"None: Option[${model.className}]")
       case pk =>
         val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
-        file.add(s"""services.audit.AuditService.onInsert("${model.className}", Seq($audit), fields)""")
+        file.add(s"""services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), fields)""")
         file.add(s"None: Option[${model.className}] // TODO: getByPrimaryKey")
     }
     file.add("}", -1)
