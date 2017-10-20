@@ -15,6 +15,7 @@ case class ExportField(
     notNull: Boolean = false,
     inSearch: Boolean = false,
     inView: Boolean = true,
+    inSummary: Boolean = false,
     ignored: Boolean = false
 ) {
   val className = ExportHelper.toClassName(propertyName)

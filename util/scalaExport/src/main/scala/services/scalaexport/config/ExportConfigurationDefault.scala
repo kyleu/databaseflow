@@ -60,7 +60,8 @@ object ExportConfigurationDefault {
       t = col.columnType,
       sqlTypeName = col.sqlTypeName,
       defaultValue = col.defaultValue,
-      inSearch = inSearch
+      inSearch = inSearch,
+      inSummary = inSearch
     )
   }
 }

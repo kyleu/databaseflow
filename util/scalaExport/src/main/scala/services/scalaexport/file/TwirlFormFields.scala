@@ -5,7 +5,7 @@ import models.schema.ColumnType
 import services.scalaexport.config.ExportField
 
 object TwirlFormFields {
-  def inputFor(field: ExportField, file: OutputFile) = {
+  def inputFor(field: ExportField, file: OutputFile, autocomplete: Boolean = false) = {
     val prop = field.propertyName
     field.t match {
       case ColumnType.BooleanType =>
@@ -24,8 +24,11 @@ object TwirlFormFields {
           file.add(s"""<label for="input-$prop-null">Null</label>""")
         }
         file.add("</div>", -1)
-      case _ =>
+      case _ => if (autocomplete) {
+        file.add(s"""<input id="input-$prop" class="autocomplete" type="text" name="$prop" value="@model.$prop" />""")
+      } else {
         file.add(s"""<input id="input-$prop" type="text" name="$prop" value="@model.$prop" />""")
+      }
     }
   }
 }

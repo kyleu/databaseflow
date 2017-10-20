@@ -95,6 +95,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     notNull = form.get(col.name + ".notNull").map(_ == "true").getOrElse(col.notNull),
     inSearch = form.get(col.name + ".inSearch").contains("true"),
     inView = form.get(col.name + ".inView").contains("true"),
+    inSummary = form.get(col.name + ".inSummary").contains("true"),
     ignored = form.get(col.name + ".ignored").contains("true")
   )
 }
