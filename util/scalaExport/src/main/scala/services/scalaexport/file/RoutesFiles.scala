@@ -6,6 +6,7 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 object RoutesFiles {
   val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " +
     "limit: Option[Int] ?= None, offset: Option[Int] ?= None"
+  val autocompleteArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None"
   val relationArgs = "orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None"
 
   def routesContentFor(config: ExportConfiguration, model: ExportModel, solo: Boolean = false) = {
@@ -18,6 +19,7 @@ object RoutesFiles {
       val comment = s"# ${model.title} Routes"
       val listWs = (0 until (56 - root.length)).map(_ => " ").mkString
       val list = s"GET         $root $listWs ${model.controllerClass}.list($listArgs)"
+      val autocomplete = s"GET         $prefix/autocomplete ${listWs.drop(13)} ${model.controllerClass}.autocomplete($autocompleteArgs)"
       val createForm = s"GET         $prefix/form ${listWs.drop(5)} ${model.controllerClass}.createForm"
       val createAct = s"POST        $root $listWs ${model.controllerClass}.create"
       val fks = model.foreignKeys.flatMap { fk =>
@@ -53,7 +55,7 @@ object RoutesFiles {
           )
           view +: (counts ++ extras)
       }
-      comment +: list +: createForm +: createAct +: (fks ++ detail) :+ ""
+      comment +: list +: autocomplete +: createForm +: createAct +: (fks ++ detail) :+ ""
     }
   }
 

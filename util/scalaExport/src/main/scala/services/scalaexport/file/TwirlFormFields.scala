@@ -1,11 +1,11 @@
 package services.scalaexport.file
 
 import models.scalaexport.OutputFile
-import models.schema.ColumnType
-import services.scalaexport.config.ExportField
+import models.schema.{ColumnType, ForeignKey}
+import services.scalaexport.config.{ExportField, ExportModel}
 
 object TwirlFormFields {
-  def inputFor(field: ExportField, file: OutputFile, autocomplete: Boolean = false) = {
+  def inputFor(model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
     val prop = field.propertyName
     field.t match {
       case ColumnType.BooleanType =>
@@ -24,10 +24,18 @@ object TwirlFormFields {
           file.add(s"""<label for="input-$prop-null">Null</label>""")
         }
         file.add("</div>", -1)
-      case _ => if (autocomplete) {
-        file.add(s"""<input id="input-$prop" class="autocomplete" type="text" name="$prop" value="@model.$prop" />""")
-      } else {
-        file.add(s"""<input id="input-$prop" type="text" name="$prop" value="@model.$prop" />""")
+      case _ => autocomplete match {
+        case Some(ac) =>
+          file.add(s"""<div class="autocomplete" id="autocomplete-$prop">""", 1)
+          file.add("""<div class="ac-input">""", 1)
+          val url = s"@${ac._2.routesClass}.autocomplete()"
+          val dataFields = s"""data-model="${ac._2.propertyName}" data-url="$url" data-activates="dropdown-$prop" data-beloworigin="true""""
+          file.add(s"""<input id="input-$prop" class="lookup" $dataFields autocomplete="off" type="text" name="author" value="@model.$prop" />""")
+          file.add("</div>", -1)
+          file.add(s"""<ul id="dropdown-$prop" class="dropdown-content ac-dropdown"></ul>""")
+          file.add("</div>", -1)
+        case None =>
+          file.add(s"""<input id="input-$prop" type="text" name="$prop" value="@model.$prop" />""")
       }
     }
   }

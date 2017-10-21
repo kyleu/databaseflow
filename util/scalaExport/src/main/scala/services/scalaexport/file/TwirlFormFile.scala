@@ -1,10 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.TwirlFile
-import services.scalaexport.config.ExportModel
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object TwirlFormFile {
-  def export(model: ExportModel) = {
+  def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage, model.propertyName + "Form")
 
     val interpArgs = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
@@ -41,7 +41,8 @@ object TwirlFormFile {
       file.add("</td>", -1)
 
       file.add("<td>", 1)
-      TwirlFormFields.inputFor(field, file)
+      val ac = model.foreignKeys.find(_.references.forall(_.source == field.propertyName)).map(x => x -> config.getModel(x.targetTable))
+      TwirlFormFields.inputFor(model, field, file, ac)
       file.add(s"</td>", -1)
       file.add("</tr>", -1)
     }
@@ -56,6 +57,7 @@ object TwirlFormFile {
     file.add("}", -1)
 
     file.add("@views.html.components.includeScalaJs(debug)")
+    file.add("@views.html.components.includeAutocomplete(debug)")
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
 
     file

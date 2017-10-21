@@ -10,6 +10,7 @@ object ModelFile {
     val file = ScalaFile(model.modelPackage, model.className, root = root)
 
     file.addImport("models.result.data", "DataField")
+    file.addImport("models.result.data", "DataSummary")
     file.addImport("models.result.data", "DataFieldModel")
     file.add(s"object ${model.className} {", 1)
     file.add(s"val empty = ${model.className}(", 1)
@@ -73,6 +74,11 @@ object ModelFile {
       file.add(x + comma)
     }
     file.add(")", -1)
+    file.add()
+    val title = "?"
+    val pk = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
+    file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = Seq($pk), title = "$title")""")
+
     file.add("}", -1)
     file
   }
