@@ -78,7 +78,7 @@ object ModelFile {
     val title = if (model.summaryFields.isEmpty) {
       model.pkFields.map(f => "${" + f.propertyName + "}").mkString(", ")
     } else {
-      model.summaryFields.map(f => "${" + f.propertyName + "}").mkString(", ") +
+      model.summaryFields.map(f => "${" + f.propertyName + "}").mkString(" / ") +
         " (" + model.pkFields.map(f => "${" + f.propertyName + "}").mkString(", ") + ")"
     }
     val pk = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")

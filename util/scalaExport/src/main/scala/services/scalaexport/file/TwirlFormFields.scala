@@ -28,9 +28,12 @@ object TwirlFormFields {
         case Some(ac) =>
           file.add(s"""<div class="autocomplete" id="autocomplete-$prop">""", 1)
           file.add("""<div class="ac-input">""", 1)
+          file.add("""<div class="input-field">""", 1)
           val url = s"@${ac._2.routesClass}.autocomplete()"
           val dataFields = s"""data-model="${ac._2.propertyName}" data-url="$url" data-activates="dropdown-$prop" data-beloworigin="true""""
+          file.add(s"""<i class="fa @models.template.Icons.${ac._2.propertyName} prefix" title="${ac._2.title}"></i>""")
           file.add(s"""<input id="input-$prop" class="lookup" $dataFields autocomplete="off" type="text" name="author" value="@model.$prop" />""")
+          file.add("</div>", -1)
           file.add("</div>", -1)
           file.add(s"""<ul id="dropdown-$prop" class="dropdown-content ac-dropdown"></ul>""")
           file.add("</div>", -1)
