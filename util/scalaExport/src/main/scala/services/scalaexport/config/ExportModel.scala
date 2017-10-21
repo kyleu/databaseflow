@@ -36,6 +36,7 @@ case class ExportModel(
   }
 
   val pkgString = pkg.mkString(".")
+  val summaryFields = fields.filter(_.inSummary)
 
   val viewPackage = "views" +: "admin" +: pkg
   val viewHtmlPackage = "views" +: "html" +: "admin" +: pkg

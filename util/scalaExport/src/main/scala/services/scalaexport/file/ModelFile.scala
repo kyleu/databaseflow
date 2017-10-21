@@ -75,9 +75,14 @@ object ModelFile {
     }
     file.add(")", -1)
     file.add()
-    val title = "?"
+    val title = if (model.summaryFields.isEmpty) {
+      model.pkFields.map(f => "${" + f.propertyName + "}").mkString(", ")
+    } else {
+      model.summaryFields.map(f => "${" + f.propertyName + "}").mkString(", ") +
+        " (" + model.pkFields.map(f => "${" + f.propertyName + "}").mkString(", ") + ")"
+    }
     val pk = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
-    file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = Seq($pk), title = "$title")""")
+    file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = Seq($pk), title = s"$title")""")
 
     file.add("}", -1)
     file
