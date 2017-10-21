@@ -56,7 +56,7 @@ object Dependencies {
   }
 
   object Ui {
-    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.0"
+    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.1"
   }
 
   object Serialization {
@@ -65,13 +65,13 @@ object Dependencies {
   }
 
   object Metrics {
-    val version = "3.2.4"
+    val version = "3.2.5"
     val metrics = "nl.grons" %% "metrics-scala" % "3.5.9"
     val jvm = "io.dropwizard.metrics" % "metrics-jvm" % version
     val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % version intransitive()
     val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % version intransitive()
     val json = "io.dropwizard.metrics" % "metrics-json" % version exclude("com.fasterxml.jackson.core", "jackson-databind")
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.6.v20170531"
+    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.7.v20170914"
     val servlets = "io.dropwizard.metrics" % "metrics-servlets" % version intransitive()
     val graphite = "io.dropwizard.metrics" % "metrics-graphite" % version intransitive()
   }
@@ -92,11 +92,11 @@ object Dependencies {
     val enumeratumVersion = "1.5.11"
     val enumeratumCirceVersion = "1.5.14"
 
-    val commonsIo = "commons-io" % "commons-io" % "2.5"
+    val commonsIo = "commons-io" % "commons-io" % "2.6"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.0"
-    val fastparse = "com.lihaoyi" %% "fastparse" % "0.4.4"
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.1.0"
+    val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.2.0"
     val guava = "com.google.guava" % "guava" % "23.0"
 
     val scribeVersion = "1.4.5"

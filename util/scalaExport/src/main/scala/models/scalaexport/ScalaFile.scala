@@ -13,8 +13,6 @@ case class ScalaFile(
   def addImport(p: String, c: String) = imports += (p -> c)
 
   override def prefix = {
-    val packageString = s"package ${pkg.mkString(".")}\n\n"
-
     val importString = if (imports.isEmpty) {
       ""
     } else {
@@ -26,6 +24,6 @@ case class ScalaFile(
       }.mkString("\n") + "\n\n"
     }
 
-    packageString + importString
+    s"/* Generated File */\npackage ${pkg.mkString(".")}\n\n$importString"
   }
 }
