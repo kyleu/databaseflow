@@ -62,8 +62,9 @@ object ServiceFile {
       case Nil => file.add(s"None: Option[${model.className}]")
       case pk =>
         val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
+        val lookup = pk.map(k => k.fromString(s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
         file.add(s"""services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), fields)""")
-        file.add(s"None: Option[${model.className}] // TODO: getByPrimaryKey")
+        file.add(s"getByPrimaryKey($lookup)")
     }
     file.add("}", -1)
 

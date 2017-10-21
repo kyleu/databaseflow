@@ -16,31 +16,10 @@ object ModelFile {
     file.add(s"val empty = ${model.className}(", 1)
 
     model.fields.foreach { field =>
-      val value = field.t match {
-        case ColumnType.BooleanType => field.defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
-
-        case ColumnType.ByteType => field.defaultValue.getOrElse("0")
-
-        case ColumnType.IntegerType => field.defaultValue.getOrElse("0")
-        case ColumnType.LongType => field.defaultValue.getOrElse("0") + "L"
-        case ColumnType.ShortType => field.defaultValue.getOrElse("0") + ".toShort"
-        case ColumnType.FloatType => field.defaultValue.getOrElse("0.0") + "f"
-        case ColumnType.DoubleType => field.defaultValue.getOrElse("0.0")
-        case ColumnType.BigDecimalType => s"BigDecimal(${field.defaultValue.getOrElse("0")})"
-
-        case ColumnType.UuidType => field.defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
-
-        case ColumnType.TimestampType => "util.DateUtils.now"
-        case ColumnType.DateType => "util.DateUtils.today"
-        case ColumnType.TimeType => "util.DateUtils.currentTime"
-
-        case _ => "\"" + field.defaultValue.getOrElse("") + "\""
-      }
-
       val withOption = if (field.notNull) {
-        value
+        field.defaultString
       } else {
-        s"Some($value)"
+        s"Some(${field.defaultString})"
       }
 
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }

@@ -18,7 +18,10 @@ object DateUtils {
   def toMillis(ldt: LocalDateTime) = ldt.toDateTime(DateTimeZone.UTC).getMillis
   def fromMillis(millis: Long) = new LocalDateTime(millis, DateTimeZone.UTC)
 
-  def toIsoString(ldt: LocalDateTime) = fmt.print(ldt.toDateTime)
+  def toIsoString(ldt: LocalDateTime) = fmt.print(ldt)
+  def fromIsoString(s: String) = fmt.parseLocalDateTime(s)
+  def fromDateString(s: String) = fmt.parseLocalDate(s)
+  def fromTimeString(s: String) = fmt.parseLocalTime(s)
 
   def niceDate(d: LocalDate) = d.toString("EEEE, MMM dd, yyyy")
   def niceTime(d: LocalTime) = d.toString("HH:mm:ss")

@@ -20,6 +20,24 @@ case class ExportField(
 ) {
   val className = ExportHelper.toClassName(propertyName)
 
+  lazy val defaultString = t match {
+    case ColumnType.BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
+    case ColumnType.ByteType => defaultValue.getOrElse("0")
+    case ColumnType.IntegerType => defaultValue.getOrElse("0")
+    case ColumnType.LongType => defaultValue.getOrElse("0") + "L"
+    case ColumnType.ShortType => defaultValue.getOrElse("0") + ".toShort"
+    case ColumnType.FloatType => defaultValue.getOrElse("0.0") + "f"
+    case ColumnType.DoubleType => defaultValue.getOrElse("0.0")
+    case ColumnType.BigDecimalType => s"BigDecimal(${defaultValue.getOrElse("0")})"
+    case ColumnType.UuidType => defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
+    case ColumnType.TimestampType => "util.DateUtils.now"
+    case ColumnType.DateType => "util.DateUtils.today"
+    case ColumnType.TimeType => "util.DateUtils.currentTime"
+    case _ => "\"" + defaultValue.getOrElse("") + "\""
+  }
+
+  def fromString(s: String) = t.fromString.replaceAllLiterally("xxx", s)
+
   private[this] val graphQLType = t match {
     case StringType => "StringType"
     case BigDecimalType => "BigDecimalType"
