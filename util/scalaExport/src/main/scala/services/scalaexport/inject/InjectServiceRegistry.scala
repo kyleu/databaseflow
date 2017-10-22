@@ -8,7 +8,7 @@ object InjectServiceRegistry {
   def inject(result: ExportResult, rootDir: File) = {
     def serviceFieldsFor(s: String) = {
       val newContent = {
-        val withPackages = result.models.filter(_.pkg.nonEmpty).filter(!_.provided).map(_.pkg.head).distinct.sorted.map { p =>
+        val withPackages = result.models.filter(_.pkg.nonEmpty).filterNot(_.provided).map(_.pkg.head).distinct.sorted.map { p =>
           s"""  val ${p}Services: services.$p.${ExportHelper.toClassName(p)}ServiceRegistry,"""
         }.sorted.mkString("\n")
 

@@ -43,10 +43,12 @@ object ServiceHelper {
         file.add(s"def getByPrimaryKeySeq($seqArgs)$td = {", 1)
         file.add(s"""traceB("get.by.primary.key.seq")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
         file.add("}", -1)
-        field.t match {
-          case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
-          case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)
-          case _ => // noop
+        if (model.propertyName != "audit") {
+          field.t match {
+            case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
+            case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)
+            case _ => // noop
+          }
         }
       case fields => // multiple columns
         val tupleTyp = "(" + fields.map(_.t.asScala).mkString(", ") + ")"

@@ -31,7 +31,9 @@ object ServiceFile {
     file.add("@javax.inject.Singleton")
     file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}") {""", 1)
     ServiceHelper.addGetters(model, file)
-    file.addMarker("string-search", InjectSearchParams(model).toString)
+    if (model.propertyName != "audit") {
+      file.addMarker("string-search", InjectSearchParams(model).toString)
+    }
 
     ServiceHelper.writeSearchFields(model, file, queriesFile, trace, searchArgs)
     ServiceHelper.writeForeignKeys(model, file)
