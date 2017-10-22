@@ -35,7 +35,7 @@ object SchemaMutationHelper {
     file.add(s"fieldType = ${model.propertyName}Type,")
     file.add(s"resolve = c => {", 1)
     file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
-    file.add(s"""traceB(c.ctx, "update")(tn => c.ctx.${model.serviceReference}.update($argProps, dataFields)(tn))""")
+    file.add(s"""traceB(c.ctx, "update")(tn => c.ctx.${model.serviceReference}.update($argProps, dataFields)(tn)._1)""")
     file.add("}", -1)
     file.add("),", -1)
 
