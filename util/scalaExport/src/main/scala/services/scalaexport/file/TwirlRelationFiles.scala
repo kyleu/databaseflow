@@ -38,7 +38,7 @@ object TwirlRelationFiles {
     listFile.add("limit = limit,")
     listFile.add("offset = offset,")
     listFile.add("q = None,")
-    listFile.add("fullUI = false,")
+    listFile.add("fullUI = false")
     listFile.add(")", -1)
 
   }

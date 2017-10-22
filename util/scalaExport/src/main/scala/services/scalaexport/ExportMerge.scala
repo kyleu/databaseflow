@@ -67,13 +67,27 @@ object ExportMerge {
       projectNameReplacements(result.config.projectId, result.config.projectTitle, rootDir)
     }
 
-    "./tmp/scalaexport".toFile.copyTo(rootDir)(CopyOptions(true))
+    val src = "./tmp/scalaexport".toFile
+    src.listRecursively.filter(_.isRegularFile).foreach { c =>
+      val p = c.pathAsString.substring(c.pathAsString.indexOf("scalaexport") + 12)
+      val tgt = rootDir / p
+      if (tgt.exists && !tgt.contentAsString.contains(" Generated File")) {
+        result.log(s"Skipping modified file [${tgt.pathAsString}].")
+      } else {
+        c.copyTo(tgt, overwrite = true)
+      }
+    }
+    //src.copyTo(rootDir)(CopyOptions(true))
 
     result.rootFiles.foreach { rf =>
       val f = rootDir / rf.packageDir / rf.filename
-      f.delete(swallowIOExceptions = true)
-      f.createIfNotExists()
-      f.writeText(rf.rendered)
+      if (f.exists && f.contentAsString.indexOf(" Generated File") == -1) {
+        result.log(s"Skipping modified file [${f.pathAsString}].")
+      } else {
+        f.delete(swallowIOExceptions = true)
+        f.createIfNotExists()
+        f.writeText(rf.rendered)
+      }
     }
 
     result.log("Merge complete.")

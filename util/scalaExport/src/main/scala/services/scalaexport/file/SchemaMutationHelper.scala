@@ -41,7 +41,7 @@ object SchemaMutationHelper {
 
     file.add("Field(", 1)
     file.add("name = \"remove\",")
-    file.add(s"""description = Some("Removes the Note with the provided id."),""")
+    file.add(s"""description = Some("Removes the ${model.title} with the provided id."),""")
     file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: Nil,")
     file.add(s"fieldType = ${model.propertyName}Type,")
     file.add(s"""resolve = c => traceB(c.ctx, "remove")(tn => c.ctx.${model.serviceReference}.remove($argProps)(tn))""")

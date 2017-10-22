@@ -17,12 +17,8 @@ object ExportFiles {
       } else {
         rootDir / file.packageDir / file.filename
       }
-      if (f.exists && f.contentAsString.indexOf("Generated File") == -1) {
-        result.log(s"Skipping modified file [${f.pathAsString}].")
-      } else {
-        f.createIfNotExists(createParents = true)
-        f.writeText(file.rendered)
-      }
+      f.createIfNotExists(createParents = true)
+      f.writeText(file.rendered)
     }
 
     result.log("File write complete.")

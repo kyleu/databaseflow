@@ -15,7 +15,7 @@ object ServiceMutations {
       val interp = model.pkFields.map("$" + _.propertyName).mkString(", ")
       file.add()
       file.add(s"def remove($sig)$trace = {", 1)
-      file.add(s"""traceB("remove")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td) match {""", 1)
+      file.add(s"""traceB("remove")(td => getByPrimaryKey($call)(td) match {""", 1)
       file.add(s"case Some(current) =>", 1)
       file.add(s"""services.audit.AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields)""")
       file.add(s"ApplicationDatabase.execute(${model.className}Queries.removeByPrimaryKey($call))(td)")
@@ -26,11 +26,11 @@ object ServiceMutations {
       file.add("}", -1)
       file.add()
       file.add(s"def update($sig, fields: Seq[DataField])$trace = {", 1)
-      file.add(s"""traceB("update")(td => ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td) match {""", 1)
+      file.add(s"""traceB("update")(td => getByPrimaryKey($call)(td) match {""", 1)
       file.add(s"""case Some(current) if fields.isEmpty => current -> s"No changes required for ${model.title} [$interp]."""")
       file.add(s"case Some(current) =>", 1)
       file.add(s"ApplicationDatabase.execute(${model.className}Queries.update($call, fields))(td)")
-      file.add(s"ApplicationDatabase.query(${model.className}Queries.getByPrimaryKey($call))(td) match {", 1)
+      file.add(s"getByPrimaryKey($call)(td) match {", 1)
       file.add("case Some(newModel) =>", 1)
       val ids = model.pkFields.map {
         case f if f.notNull => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
