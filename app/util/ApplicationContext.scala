@@ -7,7 +7,6 @@ import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
 import models.auth.AuthEnv
 import models.settings.SettingKey
-import models.ui.TopFrame
 import org.joda.time.{DateTimeZone, LocalDateTime}
 import play.api.Environment
 import play.api.i18n.MessagesApi
@@ -53,10 +52,6 @@ class ApplicationContext @javax.inject.Inject() (
 
     DateTimeZone.setDefault(DateTimeZone.UTC)
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-
-    if ((!config.debug) && java.awt.Desktop.isDesktopSupported && (System.getProperty("show.gui", "false") == "true")) {
-      TopFrame.open()
-    }
 
     SharedMetricRegistries.remove("default")
     SharedMetricRegistries.add("default", Instrumented.metricRegistry)

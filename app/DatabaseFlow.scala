@@ -1,34 +1,9 @@
-import models.ui.TopFrame
 import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
 import util.Logging
 
-import scala.util.control.NonFatal
-
 object DatabaseFlow extends Logging {
-  def main(args: Array[String]): Unit = {
-    run(args)
-  }
-
-  def run(args: Array[String]) = {
-    val newArgs = if (args.headOption.contains("gui")) {
-      System.setProperty("show.gui", "true")
-      args.tail
-    } else {
-      args
-    }
-
-    val process = new RealServerProcess(newArgs)
-
-    try {
-      startServer(process)
-    } catch {
-      case NonFatal(x) => TopFrame.frame match {
-        case Some(frame) => frame.error(x.getMessage)
-        case None => process.exit(x.getMessage, Some(x))
-      }
-    }
-  }
+  def main(args: Array[String]): Unit = startServer(new RealServerProcess(args))
 
   def startServer(process: RealServerProcess) = {
     val config: ServerConfig = ProdServerStart.readServerConfigSettings(process)

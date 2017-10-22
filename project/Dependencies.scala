@@ -55,10 +55,6 @@ object Dependencies {
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
   }
 
-  object Ui {
-    val swing = "org.scala-lang.modules" %% "scala-swing" % "2.0.1"
-  }
-
   object Serialization {
     val circeVersion = "0.8.0"
     val uPickleVersion = "0.4.4"

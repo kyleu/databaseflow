@@ -29,7 +29,7 @@ object Server {
     Seq(
       Akka.actor, Akka.logging, Play.filters, Play.guice, Play.ws, Play.cache, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
-      Export.csv, Ui.swing, Utils.scalaGuice, Utils.commonsIo, Utils.fastparse, Utils.betterFiles,
+      Export.csv, Utils.scalaGuice, Utils.commonsIo, Utils.fastparse, Utils.betterFiles,
       Akka.testkit, Play.test, Testing.scalaTest
     )
   }
