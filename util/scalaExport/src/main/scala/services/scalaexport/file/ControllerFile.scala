@@ -63,7 +63,6 @@ object ControllerFile {
     file.add("}", -1)
     file.add("}", -1)
     file.add()
-    file.add("// ...")
     file.add(s"""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
     file.add("""withSession("autocomplete", admin = true) { implicit request => implicit td =>""", 1)
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")

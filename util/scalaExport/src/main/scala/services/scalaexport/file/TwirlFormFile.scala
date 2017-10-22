@@ -24,7 +24,7 @@ object TwirlFormFile {
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)
-    file.add("<table class=\"highlight\">", 1)
+    file.add("<table class=\"highlight responsive-table\">", 1)
     file.add("<tbody>", 1)
 
     model.fields.foreach { field =>
