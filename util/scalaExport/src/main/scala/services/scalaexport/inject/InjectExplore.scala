@@ -4,15 +4,20 @@ import better.files.File
 import models.scalaexport.ExportResult
 
 object InjectExplore {
+  private[this] def modelsFor(result: ExportResult) = {
+    val filtered = result.models.filterNot(_.provided)
+    val roots = filtered.filter(_.pkg.isEmpty).sortBy(_.title)
+    val pkgGroups = filtered.filterNot(_.pkg.isEmpty).groupBy(_.pkg.head).mapValues(_.sortBy(_.title)).toSeq.sortBy(_._1)
+    roots -> pkgGroups
+  }
+
   def injectMenu(result: ExportResult, rootDir: File) = {
     def queryFieldsFor(s: String) = {
-      val newContent = result.models.flatMap { model =>
-        if (model.provided) {
-          None
-        } else {
-          Some(s"""  <li><a href="@${model.routesClass}.list()">${model.iconHtml} ${model.title}</a></li>""")
-        }
-      }.sorted.mkString("\n")
+      val (roots, pkgGroups) = modelsFor(result)
+
+      val newContent = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
+        s"""  <li><a href="@${model.routesClass}.list()">${model.iconHtml} ${model.title}</a></li>"""
+      }.mkString("\n")
       InjectHelper.replaceBetween(
         original = s, start = "  <!-- Start model list routes -->", end = "  <!-- End model list routes -->", newContent = newContent
       )
@@ -27,18 +32,14 @@ object InjectExplore {
 
   def injectHtml(result: ExportResult, rootDir: File) = {
     def queryFieldsFor(s: String) = {
-      val newContent = result.models.flatMap { model =>
-        if (model.provided) {
-          None
-        } else {
-          Some(
-            s"""    <li class="collection-item">
-                |      <a class="theme-text" href="@${model.routesClass}.list()">${model.iconHtml} ${model.plural}</a>
-                |      <div><em>Manage the ${model.plural} of the system.</em></div>
-                |    </li>""".stripMargin
-          )
-        }
-      }.sorted.mkString("\n")
+      val (roots, pkgGroups) = modelsFor(result)
+
+      val newContent = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
+        s"""    <li class="collection-item">
+          |      <a class="theme-text" href="@${model.routesClass}.list()">${model.iconHtml} ${model.plural}</a>
+          |      <div><em>Manage the ${model.plural} of the system.</em></div>
+          |    </li>""".stripMargin
+      }.mkString("\n")
 
       InjectHelper.replaceBetween(
         original = s, start = "    <!-- Start model list routes -->", end = "    <!-- End model list routes -->", newContent = newContent
