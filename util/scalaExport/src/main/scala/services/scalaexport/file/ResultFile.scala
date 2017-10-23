@@ -16,6 +16,11 @@ object ResultFile {
     file.addImport("models.result.orderBy", "OrderBy")
     file.addImport("models.result.paging", "PagingOptions")
 
+    file.addImport("io.circe", "Encoder")
+    file.addImport("io.circe", "Decoder")
+    file.addImport("io.circe.generic.semiauto", "_")
+    file.addImport("io.circe.java8.time", "_")
+
     file.add(s"case class ${model.className}Result(", 1)
     file.add("override val filters: Seq[Filter] = Nil,")
     file.add("override val orderBys: Seq[OrderBy] = Nil,")
@@ -28,6 +33,10 @@ object ResultFile {
 
     file.add()
     file.add(s"object ${model.className}Result {", 1)
+    file.add(s"implicit val jsonEncoder: Encoder[${model.className}Result] = deriveEncoder")
+    file.add(s"implicit val jsonDecoder: Decoder[${model.className}Result] = deriveDecoder")
+    file.add()
+
     file.add("def fromRecords(")
     file.add("  q: Option[String], filters: Seq[Filter], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int],")
     file.add(s"  startMs: Long, totalCount: Int, results: Seq[${model.className}]")

@@ -12,7 +12,16 @@ object ModelFile {
     file.addImport("models.result.data", "DataField")
     file.addImport("models.result.data", "DataSummary")
     file.addImport("models.result.data", "DataFieldModel")
+    file.addImport("io.circe", "Encoder")
+    file.addImport("io.circe", "Decoder")
+    file.addImport("io.circe.generic.semiauto", "_")
+    if (model.fields.exists(_.t == ColumnType.TimestampType)) {
+      file.addImport("io.circe.java8.time", "_")
+    }
     file.add(s"object ${model.className} {", 1)
+    file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+    file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
+    file.add()
     file.add(s"val empty = ${model.className}(", 1)
 
     model.fields.foreach { field =>
