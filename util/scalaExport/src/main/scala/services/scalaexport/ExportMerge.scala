@@ -74,10 +74,10 @@ object ExportMerge {
       if (tgt.exists && !tgt.contentAsString.contains(" Generated File")) {
         result.log(s"Skipping modified file [${tgt.pathAsString}].")
       } else {
+        tgt.createIfNotExists(createParents = true)
         c.copyTo(tgt, overwrite = true)
       }
     }
-    //src.copyTo(rootDir)(CopyOptions(true))
 
     result.rootFiles.foreach { rf =>
       val f = rootDir / rf.packageDir / rf.filename

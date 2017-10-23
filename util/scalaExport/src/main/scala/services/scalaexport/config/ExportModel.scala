@@ -63,6 +63,7 @@ case class ExportModel(
 
   val routesPackage = controllerPackage :+ "routes"
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
+  val iconHtml = s"""<i class="fa @models.template.Icons.$propertyName"></i>"""
 
   val pkArgs = pkFields.zipWithIndex.map(pkf => s"${pkf._1.t.key}Arg(arg(${pkf._2}))").mkString(", ")
 

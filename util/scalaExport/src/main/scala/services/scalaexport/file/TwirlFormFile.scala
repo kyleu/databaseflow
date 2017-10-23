@@ -20,7 +20,7 @@ object TwirlFormFile {
     file.add("<div class=\"collection-header\">", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add(s"""<div class="right"><a href="@cancel" class="theme-text cancel-link">Cancel</a></div>""")
-    file.add(s"""<h5><i class="fa @models.template.Icons.${model.propertyName}"></i> @title</h5>""")
+    file.add(s"""<h5>${model.iconHtml} @title</h5>""")
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)

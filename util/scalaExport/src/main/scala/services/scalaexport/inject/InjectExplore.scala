@@ -10,8 +10,7 @@ object InjectExplore {
         if (model.provided) {
           None
         } else {
-          val icon = s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>"""
-          Some(s"""  <li><a href="@${model.routesClass}.list()">$icon ${model.title}</a></li>""")
+          Some(s"""  <li><a href="@${model.routesClass}.list()">${model.iconHtml} ${model.title}</a></li>""")
         }
       }.sorted.mkString("\n")
       InjectHelper.replaceBetween(
@@ -32,10 +31,9 @@ object InjectExplore {
         if (model.provided) {
           None
         } else {
-          val icon = s"""<i class="fa @models.template.Icons.${model.propertyName}"></i>"""
           Some(
             s"""    <li class="collection-item">
-                |      <a class="theme-text" href="@${model.routesClass}.list()">$icon ${model.plural}</a>
+                |      <a class="theme-text" href="@${model.routesClass}.list()">${model.iconHtml} ${model.plural}</a>
                 |      <div><em>Manage the ${model.plural} of the system.</em></div>
                 |    </li>""".stripMargin
           )
