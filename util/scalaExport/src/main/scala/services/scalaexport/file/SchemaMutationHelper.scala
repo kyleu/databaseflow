@@ -24,7 +24,7 @@ object SchemaMutationHelper {
     file.add(s"fieldType = OptionType(${model.propertyName}Type),")
     file.add(s"resolve = c => {", 1)
     file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
-    file.add(s"""traceB(c.ctx, "create")(tn => c.ctx.${model.serviceReference}.create(dataFields)(tn))""")
+    file.add(s"""traceB(c.ctx, "create")(tn => c.ctx.${model.serviceReference}.create(c.ctx.user, dataFields)(tn))""")
     file.add("}", -1)
     file.add("),", -1)
 
@@ -35,7 +35,7 @@ object SchemaMutationHelper {
     file.add(s"fieldType = ${model.propertyName}Type,")
     file.add(s"resolve = c => {", 1)
     file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
-    file.add(s"""traceB(c.ctx, "update")(tn => c.ctx.${model.serviceReference}.update($argProps, dataFields)(tn)._1)""")
+    file.add(s"""traceB(c.ctx, "update")(tn => c.ctx.${model.serviceReference}.update(c.ctx.user, $argProps, dataFields)(tn)._1)""")
     file.add("}", -1)
     file.add("),", -1)
 
@@ -44,7 +44,7 @@ object SchemaMutationHelper {
     file.add(s"""description = Some("Removes the ${model.title} with the provided id."),""")
     file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: Nil,")
     file.add(s"fieldType = ${model.propertyName}Type,")
-    file.add(s"""resolve = c => traceB(c.ctx, "remove")(tn => c.ctx.${model.serviceReference}.remove($argProps)(tn))""")
+    file.add(s"""resolve = c => traceB(c.ctx, "remove")(tn => c.ctx.${model.serviceReference}.remove(c.ctx.user, $argProps)(tn))""")
     file.add(")", -1)
 
     file.add(")", -1)

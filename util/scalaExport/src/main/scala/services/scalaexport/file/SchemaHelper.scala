@@ -29,7 +29,7 @@ object SchemaHelper {
     }
     file.add(s"implicit val ${model.propertyName}PrimaryKeyId = HasId[${model.className}, ${model.pkType}]($method)")
     file.add(s"private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[${model.pkType}]) = {", 1)
-    file.add(s"Future.successful(c.${model.serviceReference}.getByPrimaryKeySeq(idSeq)(c.trace))")
+    file.add(s"Future.successful(c.${model.serviceReference}.getByPrimaryKeySeq(c.user, idSeq)(c.trace))")
     file.add("}", -1)
     file.addImport("sangria.execution.deferred", "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
