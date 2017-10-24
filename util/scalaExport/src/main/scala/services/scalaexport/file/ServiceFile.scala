@@ -17,7 +17,7 @@ object ServiceFile {
     file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")
     file.addImport("services.database", "ApplicationDatabase")
     file.addImport("models.result.data", "DataField")
-    file.addImport("models.user", "User")
+    file.addImport("models.auth", "Credentials")
     file.addImport("models.result.filter", "Filter")
     file.addImport("models.result.orderBy", "OrderBy")
 
@@ -39,12 +39,12 @@ object ServiceFile {
     ServiceHelper.writeForeignKeys(model, file)
 
     file.add("// Mutations")
-    file.add(s"def insert(user: User, model: ${model.className})$trace = {", 1)
+    file.add(s"def insert(creds: Credentials, model: ${model.className})$trace = {", 1)
     file.add(s"""traceB("insert")(td => ApplicationDatabase.execute($queriesFile.insert(model))(td) match {""", 1)
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
-      file.add(s"case 1 => getByPrimaryKey(user, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map { model =>", 1)
+      file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map { model =>", 1)
       val audit = model.pkFields.map(f => "model." + f.propertyName + ".toString").mkString(", ")
       file.add(s"""services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), model.toDataFields)""")
       file.add("model")
@@ -54,11 +54,11 @@ object ServiceFile {
     file.add("})", -1)
     file.add("}", -1)
 
-    file.add(s"def insertBatch(user: User, models: Seq[${model.className}])$trace = {", 1)
+    file.add(s"def insertBatch(creds: Credentials, models: Seq[${model.className}])$trace = {", 1)
     file.add(s"""traceB("insertBatch")(td => ApplicationDatabase.execute($queriesFile.insertBatch(models))(td))""")
     file.add("}", -1)
 
-    file.add(s"""def create(user: User, fields: Seq[DataField])$trace = traceB("create") { td =>""", 1)
+    file.add(s"""def create(creds: Credentials, fields: Seq[DataField])$trace = traceB("create") { td =>""", 1)
     file.add(s"""ApplicationDatabase.execute($queriesFile.create(fields))(td)""")
     model.pkFields match {
       case Nil => file.add(s"None: Option[${model.className}]")
@@ -66,7 +66,7 @@ object ServiceFile {
         val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
         val lookup = pk.map(k => k.fromString(s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
         file.add(s"""services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), fields)""")
-        file.add(s"getByPrimaryKey(user, $lookup)")
+        file.add(s"getByPrimaryKey(creds, $lookup)")
     }
     file.add("}", -1)
 

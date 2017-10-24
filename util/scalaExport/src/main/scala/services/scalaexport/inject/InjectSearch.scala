@@ -18,7 +18,7 @@ object InjectSearch {
         s
       } else {
         val uuidFields = uuidModels.map { m =>
-          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(u, id).map { model =>\n" +
+          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map { model =>\n" +
             s"      ${m.viewClass}(model, ${m.message})\n" +
             "    }.toSeq"
         }
@@ -35,7 +35,7 @@ object InjectSearch {
         s
       } else {
         val intFields = intModels.map { m =>
-          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(u, id).map { model =>\n" ++
+          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map { model =>\n" ++
             s"      ${m.viewClass}(model, ${m.message})\n" +
             "    }.toSeq"
         }
@@ -52,7 +52,7 @@ object InjectSearch {
         s
       } else {
         val stringFields = stringModels.map { m =>
-          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.searchExact(u, q = q, limit = Some(5)).map { model =>\n" ++
+          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.searchExact(creds, q = q, limit = Some(5)).map { model =>\n" ++
             s"      ${m.viewClass}(model, ${m.message})\n" +
             "    }"
         }

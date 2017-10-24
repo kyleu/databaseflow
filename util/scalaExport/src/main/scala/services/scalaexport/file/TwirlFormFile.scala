@@ -41,7 +41,7 @@ object TwirlFormFile {
       file.add("</td>", -1)
 
       file.add("<td>", 1)
-      val ac = model.foreignKeys.find(_.references.forall(_.source == field.propertyName)).map(x => x -> config.getModel(x.targetTable))
+      val ac = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
       TwirlFormFields.inputFor(model, field, file, ac)
       file.add(s"</td>", -1)
       file.add("</tr>", -1)
