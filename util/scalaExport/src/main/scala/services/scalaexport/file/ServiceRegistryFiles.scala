@@ -1,6 +1,6 @@
 package services.scalaexport.file
 
-import models.scalaexport.{RoutesFile, ScalaFile}
+import models.scalaexport.ScalaFile
 import services.scalaexport.ExportHelper
 import services.scalaexport.config.ExportModel
 
@@ -10,7 +10,7 @@ object ServiceRegistryFiles {
     val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
     val routesContent = packages.map(m => m._1 -> m._2.map { m =>
-      s"""  val ${m.propertyName}Service: ${m.serviceClass}"""
+      s"""    val ${m.propertyName}Service: ${m.serviceClass}"""
     }.sorted)
 
     routesContent.map { p =>

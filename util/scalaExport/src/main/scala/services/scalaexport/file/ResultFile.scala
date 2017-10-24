@@ -21,7 +21,7 @@ object ResultFile {
     file.addImport("io.circe.generic.semiauto", "_")
     file.addImport("io.circe.java8.time", "_")
 
-    file.add(s"case class ${model.className}Result(", 1)
+    file.add(s"case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")
     file.add("override val orderBys: Seq[OrderBy] = Nil,")
     file.add("override val totalCount: Int = 0,")
@@ -29,7 +29,7 @@ object ResultFile {
     file.add(s"override val results: Seq[${model.className}] = Nil,")
     file.add("override val durationMs: Int = 0,")
     file.add("override val occurred: LocalDateTime = util.DateUtils.now")
-    file.add(s") extends BaseResult[${model.className}]", -1)
+    file.add(s") extends BaseResult[${model.className}]", -2)
 
     file.add()
     file.add(s"object ${model.className}Result {", 1)

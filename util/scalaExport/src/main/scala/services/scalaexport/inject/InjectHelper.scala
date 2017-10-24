@@ -11,6 +11,6 @@ object InjectHelper {
       throw new IllegalStateException(s"Cannot inject. No end key matching [$end].")
     }
 
-    original.substring(0, startIndex + start.length) + "\n\n" + newContent + "\n\n" + original.substring(endIndex)
+    original.substring(0, startIndex + start.length) + "\n" + newContent + "\n" + original.substring(endIndex)
   }
 }
