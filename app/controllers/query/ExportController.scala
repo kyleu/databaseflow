@@ -55,7 +55,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
           case Right(x) => x
           case Left(x) => throw x
         }
-        case None => throw new IllegalStateException("TODO")
+        case None => throw new IllegalStateException("Unable to provide export without a logged-in user.")
       }
     }
 

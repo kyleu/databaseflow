@@ -26,9 +26,11 @@ object QueryExecutionService extends Logging {
   def handleRunQuery(db: Queryable, qId: UUID, sql: String, params: Seq[SavedQuery.Param], rId: UUID, connectionId: UUID, owner: UUID, out: ActorRef) = {
     val merged = ParameterService.merge(sql, params)
     val statements = SqlParser.split(merged)
-    val first = statements.headOption.getOrElse(throw new IllegalStateException("Missing statement"))._1
-    val remaining = statements.tail.map(_._1)
-    handleRunStatements(db, qId, first -> 0, rId, connectionId, owner, out, remaining)
+    if (statements.nonEmpty) {
+      val first = statements.headOption.getOrElse(throw new IllegalStateException("Missing statement"))._1
+      val remaining = statements.tail.map(_._1)
+      handleRunStatements(db, qId, first -> 0, rId, connectionId, owner, out, remaining)
+    }
   }
 
   def handleRunStatements(

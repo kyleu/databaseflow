@@ -20,10 +20,12 @@ object QueryManager {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
     def wire(q: JQuery, action: String, sql: () => (String, Seq[SavedQuery.Param])) = TemplateUtils.clickHandler(q, _ => {
-      val resultId = UUID.randomUUID
-      ProgressManager.startProgress(queryId, resultId, title)
       val r = sql()
-      NetworkMessage.sendMessage(SubmitQuery(queryId, r._1, r._2, Some(action), resultId))
+      if (r._1.trim.nonEmpty) {
+        val resultId = UUID.randomUUID
+        ProgressManager.startProgress(queryId, resultId, title)
+        NetworkMessage.sendMessage(SubmitQuery(queryId, r._1, r._2, Some(action), resultId))
+      }
     })
 
     val runQueryLink = $(".run-query-link", queryPanel)

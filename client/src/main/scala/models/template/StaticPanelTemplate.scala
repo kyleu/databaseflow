@@ -19,22 +19,22 @@ object StaticPanelTemplate {
     }
 
     val titleEl = iconAndTitle.map { it =>
-      div(cls := "card-title")(
+      div(cls := "panel-card-title")(
         i(cls := s"title-icon fa ${it._1} theme-text"),
         span(cls := "title")(it._2)
       )
     }
 
-    val cardContent = div(cls := "card-content")(Seq(
+    val cardContent = div(cls := "panel-card-content")(Seq(
       closeEl,
       titleEl,
       Some(div(cls := "content")(content))
     ).flatten: _*)
 
-    div(cls := "card")(if (actions.isEmpty) {
+    div(cls := "panel-card")(if (actions.isEmpty) {
       Seq(cardContent)
     } else {
-      Seq(cardContent, div(cls := "card-action")(actions))
+      Seq(cardContent, div(cls := "panel-card-action")(actions))
     })
   }
 

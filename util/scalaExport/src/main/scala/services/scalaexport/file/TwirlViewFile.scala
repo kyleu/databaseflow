@@ -20,7 +20,7 @@ object TwirlViewFile {
       file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@${model.routesClass}.remove($args)">Remove</a></div>""")
     }
     file.add("<h5>", 1)
-    file.add(model.iconHtml)
+    file.add(s"""<a class="theme-text" href="@${model.routesClass}.list()">""" + model.iconHtml + "</a>")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
     file.add(s"""${model.title} [$toTwirl]""")
     file.add("</h5>", -1)
