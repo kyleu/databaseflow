@@ -61,6 +61,10 @@ object ColumnNullableGraphQL {
       name = cleanName, fieldType = OptionType(StringType), description = description,
       resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(name)
     )
+    case ColumnType.TagsType => Field(
+      name = cleanName, fieldType = OptionType(StringType), description = description,
+      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(name)
+    )
     case ColumnType.UnknownType => Field(
       name = cleanName, fieldType = OptionType(StringType), description = description,
       resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getCell(name)

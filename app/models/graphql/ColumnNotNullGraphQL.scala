@@ -61,6 +61,10 @@ object ColumnNotNullGraphQL {
       name = cleanName, fieldType = StringType, description = description,
       resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
     )
+    case ColumnType.TagsType => Field(
+      name = cleanName, fieldType = StringType, description = description,
+      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
+    )
     case ColumnType.UnknownType => Field(
       name = cleanName, fieldType = StringType, description = description,
       resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)

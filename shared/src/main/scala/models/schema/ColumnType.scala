@@ -40,6 +40,7 @@ object ColumnType extends Enum[ColumnType] {
 
   case object ObjectType extends ColumnType("object", "String", "xxx")
   case object StructType extends ColumnType("struct", "String", "xxx")
+  case object TagsType extends ColumnType("hstore", "Seq[models.tag.Tag]", "models.tag.Tag.seqFromString(xxx)")
   case object ArrayType extends ColumnType("array", "Array[Any]", "xxx.split(\",\")") {
     def forSqlType(s: String) = s match {
       case _ if s.startsWith("_int") => "Seq[Long]"

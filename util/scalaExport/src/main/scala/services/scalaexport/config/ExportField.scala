@@ -33,6 +33,7 @@ case class ExportField(
     case ColumnType.TimestampType => "util.DateUtils.now"
     case ColumnType.DateType => "util.DateUtils.today"
     case ColumnType.TimeType => "util.DateUtils.currentTime"
+    case ColumnType.TagsType => "Seq.empty[models.tag.Tag]"
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
 
@@ -60,6 +61,7 @@ case class ExportField(
     case ObjectType => "StringType"
     case StructType => "StringType"
     case ArrayType => "ArrayType(StringType)"
+    case TagsType => "TagsType"
 
     case UnknownType => "UnknownType"
   }
