@@ -81,6 +81,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     icon = form.get("icon").filter(_.nonEmpty),
     scalaJs = form.get("scalaJs").contains("true"),
     ignored = form.get("ignored").contains("true"),
+    audited = form.get("audited").contains("true"),
     provided = form.get("provided").contains("true")
   )
 

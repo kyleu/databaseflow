@@ -45,6 +45,13 @@
           </td>
         </tr>
         <tr>
+          <th>Audited</th>
+          <td>
+            <input name="model.@{model.tableName}.audited" id="model.@{model.tableName}.audited" type="checkbox" @if(model.audited) { checked="checked" } value="true" />
+            <label for="model.@{model.tableName}.audited"></label>
+          </td>
+        </tr>
+        <tr>
           <th>Ignored</th>
           <td>
             <input name="model.@{model.tableName}.ignored" id="model.@{model.tableName}.ignored" type="checkbox" @if(model.ignored) { checked="checked" } value="true" />

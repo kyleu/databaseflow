@@ -25,6 +25,7 @@ case class ExportModel(
     icon: Option[String] = None,
     scalaJs: Boolean = false,
     ignored: Boolean = false,
+    audited: Boolean = false,
     provided: Boolean = false
 ) {
   val fullClassName = (pkg :+ className).mkString(".")
