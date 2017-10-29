@@ -9,9 +9,9 @@ object QueriesHelper {
     model.fields.foreach { field =>
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       if (field.notNull) {
-        file.add(s"""${field.propertyName} = ${field.t.className}(row, "${field.columnName}")$comma""")
+        file.add(s"""${field.propertyName} = ${field.classNameForSqlType}(row, "${field.columnName}")$comma""")
       } else {
-        file.add(s"""${field.propertyName} = ${field.t.className}.opt(row, "${field.columnName}")$comma""")
+        file.add(s"""${field.propertyName} = ${field.classNameForSqlType}.opt(row, "${field.columnName}")$comma""")
       }
     }
     file.add(")", -1)

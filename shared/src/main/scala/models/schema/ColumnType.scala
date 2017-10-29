@@ -16,6 +16,8 @@ sealed abstract class ColumnType(
 
   val className = getClass.getSimpleName.stripSuffix("$")
 
+  def classNameForSqlType(s: String) = className
+
   override def toString = key
 }
 
@@ -29,7 +31,6 @@ object ColumnType extends Enum[ColumnType] {
   case object LongType extends ColumnType("long", "Long", "xxx.toLong", isNumeric = true)
   case object FloatType extends ColumnType("float", "Float", "xxx.toFloat", isNumeric = true)
   case object DoubleType extends ColumnType("double", "Double", "xxx.toDouble", isNumeric = true)
-  case object ByteArrayType extends ColumnType("bytearray", "xxx.split(\",\").map(_.toInt.toByte)", "Array[Byte]")
   case object DateType extends ColumnType("date", "LocalDate", "util.DateUtils.fromDateString(xxx)", requiredImport = Some("java.time"))
   case object TimeType extends ColumnType("time", "LocalTime", "util.DateUtils.fromTimeString(xxx)", requiredImport = Some("java.time"))
   case object TimestampType extends ColumnType("timestamp", "LocalDateTime", "util.DateUtils.fromIsoString(xxx)", requiredImport = Some("java.time"))
@@ -41,10 +42,18 @@ object ColumnType extends Enum[ColumnType] {
   case object ObjectType extends ColumnType("object", "String", "xxx")
   case object StructType extends ColumnType("struct", "String", "xxx")
   case object TagsType extends ColumnType("hstore", "Seq[models.tag.Tag]", "models.tag.Tag.seqFromString(xxx)")
+
+  case object ByteArrayType extends ColumnType("byteArray", "xxx.split(\",\").map(_.toInt.toByte)", "Array[Byte]")
   case object ArrayType extends ColumnType("array", "Array[Any]", "xxx.split(\",\")") {
-    def forSqlType(s: String) = s match {
+    def valForSqlType(s: String) = s match {
       case _ if s.startsWith("_int") => "Seq[Long]"
+      case _ if s.startsWith("_uuid") => "Seq[UUID]"
       case _ => "Seq[String]"
+    }
+    def typForSqlType(s: String) = s match {
+      case _ if s.startsWith("_int") => "IntArrayType"
+      case _ if s.startsWith("_uuid") => "UuidArrayType"
+      case _ => "StringArrayType"
     }
   }
 

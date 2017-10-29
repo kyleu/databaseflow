@@ -19,6 +19,10 @@ case class ExportField(
     ignored: Boolean = false
 ) {
   val className = ExportHelper.toClassName(propertyName)
+  def classNameForSqlType = t match {
+    case ArrayType => ArrayType.typForSqlType(sqlTypeName)
+    case _ => t.className
+  }
 
   lazy val defaultString = t match {
     case ColumnType.BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
@@ -33,6 +37,7 @@ case class ExportField(
     case ColumnType.TimestampType => "util.DateUtils.now"
     case ColumnType.DateType => "util.DateUtils.today"
     case ColumnType.TimeType => "util.DateUtils.currentTime"
+    case ColumnType.ArrayType => "Seq.empty"
     case ColumnType.TagsType => "Seq.empty[models.tag.Tag]"
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
@@ -60,7 +65,11 @@ case class ExportField(
 
     case ObjectType => "StringType"
     case StructType => "StringType"
-    case ArrayType => "ArrayType(StringType)"
+    case ArrayType => sqlTypeName match {
+      case x if x.startsWith("_int") => "ArrayType(IntType)"
+      case x if x.startsWith("_uuid") => "ArrayType(uuidType)"
+      case _ => "ArrayType(StringType)"
+    }
     case TagsType => "TagsType"
 
     case UnknownType => "UnknownType"

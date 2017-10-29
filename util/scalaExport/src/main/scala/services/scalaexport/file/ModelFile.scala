@@ -79,7 +79,7 @@ object ModelFile {
     field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
 
     val colScala = field.t match {
-      case ColumnType.ArrayType => ColumnType.ArrayType.forSqlType(field.sqlTypeName)
+      case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case x => x.asScala
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }

@@ -46,7 +46,7 @@ object QueryTranslations extends Logging {
     case ARRAY => ArrayType
 
     case _ =>
-      log.warn(s"Encountered unknown columm type [$i].")
+      log.warn(s"Encountered unknown column type [$i].")
       UnknownType
   }
 }
