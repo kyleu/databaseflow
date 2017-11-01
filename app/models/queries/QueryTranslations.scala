@@ -29,8 +29,8 @@ object QueryTranslations extends Logging {
       case "uuid" => UuidType
       case "json" => StringType
       case "jsonb" => StringType
-      case "hstore" => StringType
-      case "ghstore" => StringType
+      case "hstore" => TagsType
+      case "ghstore" => TagsType
       case "internal" => StringType
       case "cstring" => StringType
       case "anyelement" => StringType

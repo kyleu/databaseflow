@@ -31,7 +31,7 @@ object ControllerFile {
     file.add(s"val cancel = ${model.routesClass}.list()")
     file.add(s"val call = ${model.routesClass}.create()")
     file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    file.add(s"""request.identity, ${model.modelClass}.empty, "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
+    file.add(s"""request.identity, ${model.modelClass}(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
     file.add(")))", -1)
     file.add("}", -1)
     file.add()

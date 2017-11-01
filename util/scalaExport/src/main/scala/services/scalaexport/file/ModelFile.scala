@@ -21,21 +21,6 @@ object ModelFile {
     file.add(s"object ${model.className} {", 1)
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-    file.add()
-    file.add(s"val empty = ${model.className}(", 1)
-
-    model.fields.foreach { field =>
-      val withOption = if (field.notNull) {
-        field.defaultString
-      } else {
-        s"Some(${field.defaultString})"
-      }
-
-      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-
-      file.add(s"${field.propertyName} = $withOption$comma")
-    }
-    file.add(")", -1)
     file.add("}", -1)
     file.add()
 
@@ -83,14 +68,10 @@ object ModelFile {
       case x => x.asScala
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
-    val propDefault = if (field.t == ColumnType.StringType) {
-      if (field.notNull) {
-        field.defaultValue.map(v => " = \"" + v + "\"").getOrElse("")
-      } else {
-        field.defaultValue.map(v => " = Some(\"" + v + "\")").getOrElse("")
-      }
+    val propDefault = if (field.notNull) {
+      " = " + field.defaultString
     } else {
-      ""
+      " = None"
     }
     val propDecl = s"${field.propertyName}: $propType$propDefault"
     val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
