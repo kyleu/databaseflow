@@ -1,7 +1,5 @@
 package models.result
 
-import models.schema.{Column, ColumnType}
-
 case class QueryResultRow(columns: Seq[String], data: Seq[Option[String]]) {
   private[this] val columnIndexes = columns.zipWithIndex.toMap
   private[this] def colIndex(col: String) = columnIndexes.getOrElse(col, throw new IllegalStateException(s"Invalid column [$col]."))

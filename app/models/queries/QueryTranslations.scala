@@ -27,8 +27,8 @@ object QueryTranslations extends Logging {
     case SQLXML => XmlType
     case OTHER => n match {
       case "uuid" => UuidType
-      case "json" => StringType
-      case "jsonb" => StringType
+      case "json" => JsonType
+      case "jsonb" => JsonType
       case "hstore" => TagsType
       case "ghstore" => TagsType
       case "internal" => StringType

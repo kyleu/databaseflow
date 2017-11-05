@@ -39,9 +39,11 @@ object ModelFile {
     file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
       val x = if (field.notNull) {
-        s"""DataField("${field.propertyName}", Some(${field.propertyName}.toString))"""
+        val method = if (field.t == ColumnType.StringType) { "" } else { ".toString" }
+        s"""DataField("${field.propertyName}", Some(${field.propertyName}$method))"""
       } else {
-        s"""DataField("${field.propertyName}", ${field.propertyName}.map(_.toString))"""
+        val method = if (field.t == ColumnType.StringType) { "" } else { ".map(_.toString)" }
+        s"""DataField("${field.propertyName}", ${field.propertyName}$method)"""
       }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(x + comma)

@@ -11,8 +11,6 @@ object QueriesFile {
     file.addImport("models.database", "Row")
     file.addImport("models.database", "DatabaseField")
     file.addImport("models.database.DatabaseFieldType", "_")
-    file.addImport("models.result", "ResultFieldHelper")
-    file.addImport("models.result.orderBy", "OrderBy")
 
     if (model.pkg.nonEmpty) {
       file.addImport("models.queries", "BaseQueries")

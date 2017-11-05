@@ -7,67 +7,33 @@ import models.schema.ColumnType
 import sangria.schema._
 
 object ColumnNotNullGraphQL {
+  private[this] def getDefaultField(name: String, description: Option[String], cleanName: String) = Field(
+    name = cleanName, fieldType = StringType, description = description,
+    resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
+  )
+
+  private[this] def getTypedField[T](name: String, description: Option[String], cleanName: String, t: ScalarType[T], f: String => T) = Field(
+    name = cleanName, fieldType = t, description = description,
+    resolve = (x: Context[GraphQLContext, QueryResultRow]) => f(x.value.getRequiredCell(name))
+  )
+
   def getColumnField(name: String, description: Option[String], columnType: ColumnType, cleanName: String, sqlTypeName: String) = columnType match {
-    case ColumnType.StringType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
-    case ColumnType.BigDecimalType | ColumnType.DoubleType => Field(
-      name = cleanName, fieldType = BigDecimalType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => BigDecimal(x.value.getRequiredCell(name))
-    )
-    case ColumnType.BooleanType => Field(
-      name = cleanName, fieldType = BooleanType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name) == "true"
-    )
-    case ColumnType.ByteType => Field(
-      name = cleanName, fieldType = CommonGraphQL.byteType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name).toByte
-    )
-    case ColumnType.ShortType => Field(
-      name = cleanName, fieldType = CommonGraphQL.shortType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name).toShort
-    )
-    case ColumnType.IntegerType => Field(
-      name = cleanName, fieldType = IntType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name).toInt
-    )
-    case ColumnType.LongType => Field(
-      name = cleanName, fieldType = LongType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name).toLong
-    )
-    case ColumnType.FloatType => Field(
-      name = cleanName, fieldType = FloatType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name).toDouble
-    )
-    case ColumnType.ByteArrayType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
-    case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
-    case ColumnType.UuidType => Field(
-      name = cleanName, fieldType = CommonGraphQL.uuidType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => UUID.fromString(x.value.getRequiredCell(name))
-    )
+    case ColumnType.StringType => getDefaultField(name, description, cleanName)
+    case ColumnType.BigDecimalType | ColumnType.DoubleType => getTypedField[BigDecimal](name, description, cleanName, BigDecimalType, BigDecimal.apply)
+    case ColumnType.BooleanType => getTypedField[Boolean](name, description, cleanName, BooleanType, _ == "true")
+    case ColumnType.ByteType => getTypedField[Byte](name, description, cleanName, CommonGraphQL.byteType, _.toByte)
+    case ColumnType.ShortType => getTypedField[Short](name, description, cleanName, CommonGraphQL.shortType, _.toShort)
+    case ColumnType.IntegerType => getTypedField[Int](name, description, cleanName, IntType, _.toInt)
+    case ColumnType.LongType => getTypedField[Long](name, description, cleanName, LongType, _.toLong)
+    case ColumnType.FloatType => getTypedField[Double](name, description, cleanName, FloatType, _.toDouble)
+    case ColumnType.ByteArrayType => getDefaultField(name, description, cleanName)
+    case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => getDefaultField(name, description, cleanName)
+    case ColumnType.UuidType => getTypedField[UUID](name, description, cleanName, CommonGraphQL.uuidType, UUID.fromString)
     case ColumnType.ArrayType => ArrayGraphQL.getArrayField(name, description, cleanName, sqlTypeName)
-    case ColumnType.RefType | ColumnType.XmlType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
-    case ColumnType.ObjectType | ColumnType.StructType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
-    case ColumnType.TagsType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
-    case ColumnType.UnknownType => Field(
-      name = cleanName, fieldType = StringType, description = description,
-      resolve = (x: Context[GraphQLContext, QueryResultRow]) => x.value.getRequiredCell(name)
-    )
+    case ColumnType.RefType | ColumnType.XmlType => getDefaultField(name, description, cleanName)
+    case ColumnType.ObjectType | ColumnType.StructType => getDefaultField(name, description, cleanName)
+    case ColumnType.TagsType => getDefaultField(name, description, cleanName)
+    case ColumnType.JsonType => getDefaultField(name, description, cleanName)
+    case ColumnType.UnknownType => getDefaultField(name, description, cleanName)
   }
 }

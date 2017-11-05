@@ -14,7 +14,10 @@ object ExportConfigurationDefault {
   )
 
   def loadModel(schema: Schema, t: Table) = {
-    val cn = toClassName(t.name)
+    val cn = t.name match {
+      case "users" => "User"
+      case x => toClassName(x)
+    }
 
     val provided = cn match {
       case "Ddl" | "LoginInfo" | "PasswordInfo" | "SettingValues" => true
@@ -25,7 +28,7 @@ object ExportConfigurationDefault {
       case "Ddl" => List("ddl")
       case "Audit" => List("audit")
       case "AuditRecord" => List("audit")
-      case "Users" => List("user")
+      case "User" => List("user")
       case "Note" => List("note")
       case "LoginInfo" | "PasswordInfo" => List("auth")
       case _ => Nil
@@ -34,7 +37,7 @@ object ExportConfigurationDefault {
     ExportModel(
       tableName = t.name,
       pkg = pkg,
-      propertyName = toIdentifier(t.name),
+      propertyName = toIdentifier(cn),
       className = cn,
       title = toDefaultTitle(cn),
       description = t.description,

@@ -41,6 +41,7 @@ object ColumnType extends Enum[ColumnType] {
 
   case object ObjectType extends ColumnType("object", "String", "xxx")
   case object StructType extends ColumnType("struct", "String", "xxx")
+  case object JsonType extends ColumnType("json", "Json", "util.JsonSerializers.toJson(xxx)", requiredImport = Some("io.circe"))
   case object TagsType extends ColumnType("hstore", "Seq[models.tag.Tag]", "models.tag.Tag.seqFromString(xxx)")
 
   case object ByteArrayType extends ColumnType("byteArray", "xxx.split(\",\").map(_.toInt.toByte)", "Array[Byte]")
