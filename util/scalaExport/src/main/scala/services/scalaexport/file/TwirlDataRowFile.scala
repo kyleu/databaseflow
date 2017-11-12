@@ -1,6 +1,7 @@
 package services.scalaexport.file
 
 import models.scalaexport.TwirlFile
+import models.schema.ColumnType
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object TwirlDataRowFile {
@@ -40,6 +41,7 @@ object TwirlDataRowFile {
               file.add("}", -1)
             }
             file.add("</td>", -1)
+          case _ if c.t == ColumnType.CodeType => file.add(s"<td><pre>@model.${c.propertyName}</pre></td>")
           case _ => file.add(s"<td>@model.${c.propertyName}</td>")
         }
       }

@@ -1,6 +1,7 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
+import models.schema.ColumnType
 import services.scalaexport.config.ExportModel
 
 object ServiceMutations {

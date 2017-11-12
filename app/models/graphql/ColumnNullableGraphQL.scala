@@ -19,21 +19,29 @@ object ColumnNullableGraphQL {
 
   def getColumnField(name: String, description: Option[String], columnType: ColumnType, cleanName: String, sqlTypeName: String) = columnType match {
     case ColumnType.StringType => getDefaultField(name, description, cleanName)
-    case ColumnType.BigDecimalType | ColumnType.DoubleType => getTypedField[BigDecimal](name, description, cleanName, BigDecimalType, BigDecimal.apply)
+
     case ColumnType.BooleanType => getTypedField[Boolean](name, description, cleanName, BooleanType, _ == "true")
     case ColumnType.ByteType => getTypedField[Byte](name, description, cleanName, CommonGraphQL.byteType, _.toByte)
     case ColumnType.ShortType => getTypedField[Short](name, description, cleanName, CommonGraphQL.shortType, _.toShort)
     case ColumnType.IntegerType => getTypedField[Int](name, description, cleanName, IntType, _.toInt)
     case ColumnType.LongType => getTypedField[Long](name, description, cleanName, LongType, _.toLong)
     case ColumnType.FloatType => getTypedField[Double](name, description, cleanName, FloatType, _.toDouble)
-    case ColumnType.ByteArrayType => getDefaultField(name, description, cleanName)
+    case ColumnType.BigDecimalType | ColumnType.DoubleType => getTypedField[BigDecimal](name, description, cleanName, BigDecimalType, BigDecimal.apply)
+
     case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => getDefaultField(name, description, cleanName)
-    case ColumnType.UuidType => getTypedField[UUID](name, description, cleanName, CommonGraphQL.uuidType, UUID.fromString)
-    case ColumnType.ArrayType => ArrayGraphQL.getArrayField(name, description, cleanName, sqlTypeName)
+
     case ColumnType.RefType | ColumnType.XmlType => getDefaultField(name, description, cleanName)
+    case ColumnType.UuidType => getTypedField[UUID](name, description, cleanName, CommonGraphQL.uuidType, UUID.fromString)
+
     case ColumnType.ObjectType | ColumnType.StructType => getDefaultField(name, description, cleanName)
-    case ColumnType.TagsType => getDefaultField(name, description, cleanName)
     case ColumnType.JsonType => getDefaultField(name, description, cleanName)
+
+    case ColumnType.TagsType => getDefaultField(name, description, cleanName)
+    case ColumnType.CodeType => getDefaultField(name, description, cleanName)
+
+    case ColumnType.ArrayType => ArrayGraphQL.getArrayField(name, description, cleanName, sqlTypeName)
+    case ColumnType.ByteArrayType => getDefaultField(name, description, cleanName)
+
     case ColumnType.UnknownType => getDefaultField(name, description, cleanName)
   }
 }

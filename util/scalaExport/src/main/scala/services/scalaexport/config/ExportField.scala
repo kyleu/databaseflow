@@ -25,21 +25,25 @@ case class ExportField(
   }
 
   lazy val defaultString = t match {
-    case ColumnType.BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
-    case ColumnType.ByteType => defaultValue.getOrElse("0")
-    case ColumnType.IntegerType => defaultValue.getOrElse("0")
-    case ColumnType.LongType => defaultValue.getOrElse("0") + "L"
-    case ColumnType.ShortType => defaultValue.getOrElse("0") + ".toShort"
-    case ColumnType.FloatType => defaultValue.getOrElse("0.0") + "f"
-    case ColumnType.DoubleType => defaultValue.getOrElse("0.0")
-    case ColumnType.BigDecimalType => s"BigDecimal(${defaultValue.getOrElse("0")})"
-    case ColumnType.UuidType => defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
-    case ColumnType.TimestampType => "util.DateUtils.now"
-    case ColumnType.DateType => "util.DateUtils.today"
-    case ColumnType.TimeType => "util.DateUtils.currentTime"
+    case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
+    case ByteType => defaultValue.getOrElse("0")
+    case IntegerType => defaultValue.getOrElse("0")
+    case LongType => defaultValue.getOrElse("0") + "L"
+    case ShortType => defaultValue.getOrElse("0") + ".toShort"
+    case FloatType => defaultValue.getOrElse("0.0") + "f"
+    case DoubleType => defaultValue.getOrElse("0.0")
+    case BigDecimalType => s"BigDecimal(${defaultValue.getOrElse("0")})"
+
+    case DateType => "util.DateUtils.today"
+    case TimeType => "util.DateUtils.currentTime"
+    case TimestampType => "util.DateUtils.now"
+
+    case UuidType => defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
+
     case JsonType => "util.JsonSerializers.emptyObject"
-    case ColumnType.ArrayType => "Seq.empty"
-    case ColumnType.TagsType => "Seq.empty[models.tag.Tag]"
+    case ArrayType => "Seq.empty"
+    case TagsType => "Seq.empty[models.tag.Tag]"
+
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
 
@@ -47,7 +51,7 @@ case class ExportField(
 
   private[this] val graphQLType = t match {
     case StringType => "StringType"
-    case BigDecimalType => "BigDecimalType"
+
     case BooleanType => "BooleanType"
     case ByteType => "byteType"
     case ShortType => "IntType"
@@ -55,7 +59,8 @@ case class ExportField(
     case LongType => "LongType"
     case FloatType => "FloatType"
     case DoubleType => "DoubleType"
-    case ByteArrayType => "ArrayType(StringType)"
+    case BigDecimalType => "BigDecimalType"
+
     case DateType => "localDateType"
     case TimeType => "localTimeType"
     case TimestampType => "localDateTimeType"
@@ -67,12 +72,16 @@ case class ExportField(
     case ObjectType => "StringType"
     case StructType => "StringType"
     case JsonType => "JsonType"
+
+    case CodeType => "StringType"
+    case TagsType => "TagsType"
+
+    case ByteArrayType => "ArrayType(StringType)"
     case ArrayType => sqlTypeName match {
       case x if x.startsWith("_int") => "ArrayType(IntType)"
       case x if x.startsWith("_uuid") => "ArrayType(uuidType)"
       case _ => "ArrayType(StringType)"
     }
-    case TagsType => "TagsType"
 
     case UnknownType => "UnknownType"
   }

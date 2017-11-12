@@ -7,8 +7,9 @@ sealed abstract class ColumnType(
   val asScala: String,
   val fromString: String,
   val requiredImport: Option[String] = None,
-  val isNumeric: Boolean = false
+  val isNumeric: Boolean = false,
 ) extends EnumEntry {
+
   val asScalaFull = requiredImport match {
     case Some(pkg) => pkg + "." + asScala
     case None => asScala
@@ -23,7 +24,7 @@ sealed abstract class ColumnType(
 
 object ColumnType extends Enum[ColumnType] {
   case object StringType extends ColumnType("string", "String", "xxx")
-  case object BigDecimalType extends ColumnType("decimal", "BigDecimal", "BigDecimal(xxx)", isNumeric = true)
+
   case object BooleanType extends ColumnType("boolean", "Boolean", "xxx == \"true\"")
   case object ByteType extends ColumnType("byte", "Byte", "xxx.toInt.toByte")
   case object ShortType extends ColumnType("short", "Short", "xxx.toInt.toShort", isNumeric = true)
@@ -31,6 +32,8 @@ object ColumnType extends Enum[ColumnType] {
   case object LongType extends ColumnType("long", "Long", "xxx.toLong", isNumeric = true)
   case object FloatType extends ColumnType("float", "Float", "xxx.toFloat", isNumeric = true)
   case object DoubleType extends ColumnType("double", "Double", "xxx.toDouble", isNumeric = true)
+  case object BigDecimalType extends ColumnType("decimal", "BigDecimal", "BigDecimal(xxx)", isNumeric = true)
+
   case object DateType extends ColumnType("date", "LocalDate", "util.DateUtils.fromDateString(xxx)", requiredImport = Some("java.time"))
   case object TimeType extends ColumnType("time", "LocalTime", "util.DateUtils.fromTimeString(xxx)", requiredImport = Some("java.time"))
   case object TimestampType extends ColumnType("timestamp", "LocalDateTime", "util.DateUtils.fromIsoString(xxx)", requiredImport = Some("java.time"))
@@ -42,6 +45,8 @@ object ColumnType extends Enum[ColumnType] {
   case object ObjectType extends ColumnType("object", "String", "xxx")
   case object StructType extends ColumnType("struct", "String", "xxx")
   case object JsonType extends ColumnType("json", "Json", "util.JsonSerializers.toJson(xxx)", requiredImport = Some("io.circe"))
+
+  case object CodeType extends ColumnType("code", "String", "xxx")
   case object TagsType extends ColumnType("hstore", "Seq[models.tag.Tag]", "models.tag.Tag.seqFromString(xxx)")
 
   case object ByteArrayType extends ColumnType("byteArray", "xxx.split(\",\").map(_.toInt.toByte)", "Array[Byte]")
