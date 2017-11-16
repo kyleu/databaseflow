@@ -15,7 +15,9 @@ object ServiceFile {
 
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")
+    file.addImport("scala.concurrent", "Future")
     file.addImport("services.database", "ApplicationDatabase")
+    file.addImport("util.FutureUtils", "serviceContext")
     file.addImport("models.result.data", "DataField")
     file.addImport("models.auth", "Credentials")
     file.addImport("models.result.filter", "Filter")
@@ -39,31 +41,33 @@ object ServiceFile {
     ServiceHelper.writeForeignKeys(model, file)
 
     file.add("// Mutations")
-    file.add(s"def insert(creds: Credentials, model: ${model.className})$trace = {", 1)
-    file.add(s"""traceB("insert")(td => ApplicationDatabase.execute($queriesFile.insert(model))(td) match {""", 1)
+    file.add(s"""def insert(creds: Credentials, model: ${model.className})$trace = traceF("insert") { td =>""", 1)
+    file.add(s"""ApplicationDatabase.executeF($queriesFile.insert(model))(td).flatMap {""", 1)
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
       if (model.audited) {
-        file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map { model =>", 1)
-        val audit = model.pkFields.map(f => "model." + f.propertyName + ".toString").mkString(", ")
-        file.add(s"""services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), model.toDataFields, creds)""")
-        file.add("model")
+        file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map {", 1)
+        val audit = model.pkFields.map(f => "n." + f.propertyName + ".toString").mkString(", ")
+        file.add("case Some(n) =>")
+        file.add(s"""  services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), n.toDataFields, creds)""")
+        file.add("  model")
+        file.add(s"""case None => throw new IllegalStateException("Unable to find ${model.title}.")""")
         file.add("}", -1)
       } else {
         file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td)")
       }
       file.add(s"""case _ => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
     }
-    file.add("})", -1)
+    file.add("}", -1)
     file.add("}", -1)
 
     file.add(s"def insertBatch(creds: Credentials, models: Seq[${model.className}])$trace = {", 1)
-    file.add(s"""traceB("insertBatch")(td => ApplicationDatabase.execute($queriesFile.insertBatch(models))(td))""")
+    file.add(s"""traceF("insertBatch")(td => ApplicationDatabase.executeF($queriesFile.insertBatch(models))(td))""")
     file.add("}", -1)
 
-    file.add(s"""def create(creds: Credentials, fields: Seq[DataField])$trace = traceB("create") { td =>""", 1)
-    file.add(s"""ApplicationDatabase.execute($queriesFile.create(fields))(td)""")
+    file.add(s"""def create(creds: Credentials, fields: Seq[DataField])$trace = traceF("create") { td =>""", 1)
+    file.add(s"""ApplicationDatabase.executeF($queriesFile.create(fields))(td).flatMap { _ =>""", 1)
     model.pkFields match {
       case Nil => file.add(s"None: Option[${model.className}]")
       case pk =>
@@ -74,6 +78,7 @@ object ServiceFile {
         }
         file.add(s"getByPrimaryKey(creds, $lookup)")
     }
+    file.add("}", -1)
     file.add("}", -1)
 
     ServiceMutations.mutations(model, file)

@@ -20,7 +20,6 @@ object SchemaHelper {
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
     model.pkFields.foreach(pkField => pkField.t.requiredImport.foreach(pkg => file.addImport(pkg, pkField.t.asScala)))
-    file.addImport("scala.concurrent", "Future")
     file.addImport("sangria.execution.deferred", "HasId")
     val method = if (model.pkFields.size == 1) {
       model.pkFields.headOption.map(f => "_." + f.propertyName).getOrElse(throw new IllegalStateException())
@@ -29,7 +28,7 @@ object SchemaHelper {
     }
     file.add(s"implicit val ${model.propertyName}PrimaryKeyId = HasId[${model.className}, ${model.pkType}]($method)")
     file.add(s"private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[${model.pkType}]) = {", 1)
-    file.add(s"Future.successful(c.${model.serviceReference}.getByPrimaryKeySeq(c.creds, idSeq)(c.trace))")
+    file.add(s"c.${model.serviceReference}.getByPrimaryKeySeq(c.creds, idSeq)(c.trace)")
     file.add("}", -1)
     file.addImport("sangria.execution.deferred", "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
