@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+<title>Database Flow</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content='doc'/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="js/page.js"></script>
+<script type="text/javascript" src="js/groups.js"></script>
+<link rel="stylesheet" type="text/css" href="lib/normalize.css/normalize.css"/>
+<link rel="stylesheet" type="text/css" href="lib/foundation/dist/foundation.min.css"/>
+<link rel="stylesheet" type="text/css" href="css/page.css"/>
+
+<!--
+<link rel="shortcut icon" href="images/favicon.ico" />
+-->
+</head>
+
+<body>
+<div class="off-canvas-wrapper">
+<div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+
+<div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
+<nav class="off-canvas-nav">
+<div class="nav-home">
+<a href="index.html" class="active">
+<span class="home-icon">⌂</span>Database Flow
+</a>
+<div class="version-number">
+1.1.0
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="off-canvas-content" data-off-canvas-content>
+
+<header class="site-header expanded row">
+<div class="small-12 column">
+<a href="#" class="off-canvas-toggle hide-for-medium" data-toggle="off-canvas-menu"><svg class="svg-icon svg-icon-menu" version="1.1" id="Menu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"> <path class="svg-icon-menu-path" fill="#53CDEC" d="M16.4,9H3.6C3.048,9,3,9.447,3,10c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,9.447,16.952,9,16.4,9z M16.4,13
+H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
+C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
+</a>
+<div class="title"><a href="index.html" class="active">Database Flow</a></div>
+
+<!--
+<a href="https://www.example.com" class="logo show-for-medium">logo</a>
+-->
+</div>
+</header>
+
+<div class="expanded row">
+
+<div class="medium-3 large-2 show-for-medium column">
+<nav class="site-nav">
+<div class="nav-home">
+<a href="index.html" class="active">
+<span class="home-icon">⌂</span>Database Flow
+</a>
+<div class="version-number">
+1.1.0
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="small-12 medium-9 large-10 column">
+<section class="site-content">
+
+<div class="page-header row">
+<div class="medium-12 show-for-medium column">
+</div>
+</div>
+
+<div class="page-content row">
+<div class="small-12 large-9 column" id="docs">
+<h1><a href="#database-flow" name="database-flow" class="anchor"><span class="anchor-link"></span></a>Database Flow</h1>
+<p><a href="https://databaseflow.com">https://databaseflow.com</a></p>
+<p>An opinionated modern database interface.</p>
+<p>Running locally or on a shared server, Database Flow helps you discover and search your database using SQL or GraphQL.</p>
+<h2><a href="#features" name="features" class="anchor"><span class="anchor-link"></span></a>Features</h2>
+<ul>
+  <li>Supports MySQL, PostgreSQL, SQLite, Oracle, SQL Server, H2, DB2, and Informix.</li>
+  <li>Rich SQL editor with auto-complete and live syntax checking based on your schema.</li>
+  <li>Explore tables, views and stored procedures and share saved results or sql queries.</li>
+  <li>A sophisticated GraphQL server, providing a detailed efficient graph for your schema and data.</li>
+  <li>Supports local single-user app installations, as well as a server mode to run for your whole team.</li>
+</ul>
+<h2><a href="#installation" name="installation" class="anchor"><span class="anchor-link"></span></a>Installation</h2>
+<ul>
+  <li>If you&rsquo;ve installed the universal jar, you&rsquo;ll need Java 8 installed. Then run &ldquo;java -jar DatabaseFlow.jar&rdquo;.</li>
+  <li>For macOS users, open the .dmg file and drag the app to your Applications folder.</li>
+  <li>For Windows users, unzip the downloaded file and run &ldquo;Database Flow.exe&rdquo; in the extracted folder.</li>
+</ul>
+<h2><a href="#configuration" name="configuration" class="anchor"><span class="anchor-link"></span></a>Configuration</h2>
+<ul>
+  <li>If you&rsquo;re on Windows, config files are stored in <code>%APPDATA%\Database Flow</code>. For macOS and Linux, the configuration folder may be found in <code>~/.databaseflow</code>/</li>
+  <li>The main configuation file is named <code>databaseflow.conf</code>.</li>
+  <li>You may change the configration for file path, mail setup, and storage locations.</li>
+</ul>
+<h2><a href="#license" name="license" class="anchor"><span class="anchor-link"></span></a>License</h2>
+<p>This project is owned by Kyle Unverferth. All rights reserved for now.</p>
+<div class="source-github">
+The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/main/paradox/index.md">here</a>.
+</div>
+
+</div>
+<div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="index.html#database-flow" class="header">Database Flow</a>
+  <ul>
+    <li><a href="index.html#features" class="header">Features</a></li>
+    <li><a href="index.html#installation" class="header">Installation</a></li>
+    <li><a href="index.html#configuration" class="header">Configuration</a></li>
+    <li><a href="index.html#license" class="header">License</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
+</div>
+</div>
+
+</section>
+</div>
+
+</div>
+
+<footer class="site-footer">
+
+<section class="site-footer-nav">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 medium-4 large-3 text-center column">
+<div class="nav-links">
+<ul>
+<!-- <li><a href="https://www.example.com/products/">Products</a> -->
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+
+<section class="site-footer-base">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 text-center large-9 column">
+
+<!--
+<div class="copyright">
+<span class="text">&copy; 2017</span>
+<a href="https://www.example.com" class="logo">logo</a>
+</div>
+-->
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</footer>
+
+</div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript" src="lib/foundation/dist/foundation.min.js"></script>
+<script type="text/javascript">jQuery(document).foundation();</script>
+<script type="text/javascript" src="js/magellan.js"></script>
+
+<style type="text/css">@import "lib/prettify/prettify.css";</style>
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+
+</html>
