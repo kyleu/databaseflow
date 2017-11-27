@@ -1,6 +1,6 @@
 package services.scalaexport.config
 
-import enumeratum._
+import enumeratum.{Enum, EnumEntry}
 
 sealed trait ExportEngine extends EnumEntry {
   def key: String

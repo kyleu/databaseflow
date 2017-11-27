@@ -1,6 +1,7 @@
 package controllers.admin
 
 import controllers.BaseController
+import services.connection.ConnectionSettingsService
 import util.ApplicationContext
 
 import scala.concurrent.Future
@@ -13,5 +14,10 @@ class AdminController @javax.inject.Inject() (override val ctx: ApplicationConte
 
   def status = withAdminSession("admin-status") { implicit request =>
     Future.successful(Ok(views.html.admin.status(request.identity)))
+  }
+
+  def projects() = withAdminSession("projects.list") { implicit request =>
+    val conns = ConnectionSettingsService.getVisible(request.identity)
+    Future.successful(Ok(views.html.admin.projectList(request.identity, conns)))
   }
 }

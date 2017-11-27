@@ -1,0 +1,33 @@
+@(user: models.user.User, conns: Seq[models.connection.ConnectionSettings])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
+)@layout.admin(user = user, title = s"Project Admin", activeSection = "status") {
+  <div class="row">
+    <div class="col s12">
+      <h5>Project Admin</h5>
+    </div>
+    <div class="col s12">
+      <table class="bordered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Engine</th>
+            <th>Host</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @conns.map { conn =>
+            <tr>
+              <td><a href="@controllers.query.routes.QueryController.main(conn.slug)" class="theme-text">@conn.name</a></td>
+              <td>@conn.engine.name</td>
+              <td>@conn.host</td>
+              <td>
+                <a href="@controllers.admin.routes.ScalaExportController.exportForm(conn.slug)" class="btn theme">Create Scala Project</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

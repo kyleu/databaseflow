@@ -15,13 +15,11 @@ th.columns = Cols
 th.connection = Connection
 th.created = Created
 th.duration = Dur
-th.edition = Edition
 th.elapsed = Elapsed
 th.email = Email
 th.export = Export
 th.first = 1st
 th.import = Import
-th.issued = Issued
 th.last.accessed = Last Accessed
 th.name = Name
 th.occurred = Occurred
@@ -160,7 +158,6 @@ schema.title = Schema
 # Socket Service
 socket.connect.error = Error attempting to connect to database.
 socket.connect.failed = Connection Failed
-socket.too.many.users = Personal Edition allows only one user to connect at a time, and [{0}] is already connected.
 socket.duplicate.transaction = Already in a transaction.
 socket.no.transaction = Not currently in a transaction.
 
@@ -170,7 +167,6 @@ modal.export.action = Export
 modal.export.text = This will export all rows from your query result in the format you choose.
 modal.export.csv = Comma Separated Values
 modal.export.sql = SQL Insert Statements
-modal.export.excel = Microsoft Excel
 modal.reconnect.prompt = Connection error. Would you like to retry?
 modal.reconnect.action = Reconnect
 modal.save.query.name = Query Name
@@ -198,6 +194,7 @@ admin.status.link = Status
 admin.status.title = {0} Status
 admin.status.description = View system status.
 admin.status.metrics.title = System Metrics
+admin.status.connections = View statistics and perform maintenance on your database connections.
 admin.status.file.loaded = Loaded from {0}
 admin.status.db.loaded = {0} database, loaded from {1}
 

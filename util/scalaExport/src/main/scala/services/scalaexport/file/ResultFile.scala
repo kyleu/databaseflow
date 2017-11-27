@@ -18,7 +18,8 @@ object ResultFile {
 
     file.addImport("io.circe", "Encoder")
     file.addImport("io.circe", "Decoder")
-    file.addImport("io.circe.generic.semiauto", "_")
+    file.addImport("io.circe.generic.semiauto", "deriveDecoder")
+    file.addImport("io.circe.generic.semiauto", "deriveEncoder")
     file.addImport("io.circe.java8.time", "_")
 
     file.add(s"case class ${model.className}Result(", 2)
