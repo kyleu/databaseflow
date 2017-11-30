@@ -1,11 +1,11 @@
 @(user: models.user.User, connection: models.connection.ConnectionSettings)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
 )@layout.materialize(Some(user), connection.name + " Schema", scripts = Seq(
-  routes.Assets.versioned("lib/graphql/react.min.js").url,
-  routes.Assets.versioned("lib/graphql/react-dom.min.js").url,
-  routes.Assets.versioned("lib/graphql/voyager.min.js").url
+  routes.Assets.versioned("vendor/graphql/react.min.js").url,
+  routes.Assets.versioned("vendor/graphql/react-dom.min.js").url,
+  routes.Assets.versioned("vendor/graphql/voyager.min.js").url
 ), stylesheets = Seq(
-  routes.Assets.versioned("lib/graphql/voyager.css").url
+  routes.Assets.versioned("vendor/graphql/voyager.css").url
 )) {
   @views.html.layout.themeStyles(user.preferences.theme)
 

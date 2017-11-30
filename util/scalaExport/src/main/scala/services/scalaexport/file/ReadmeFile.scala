@@ -4,8 +4,8 @@ object ReadmeFile {
   def content(projectName: String) = {
     s"""# $projectName
     |
-    |Using the latest technology in the Scala ecosystem, $projectName is a pure Scala reactive web application built on Play 2.6,
-    |ScalaJS, Silhouette 5, Akka, Sangria, and postgres-async.
+    |$projectName is a pure Scala reactive web application built on Play 2.6,
+    |Scala.js, Silhouette 5, Akka, Sangria, and postgres-async. It extends some of the work found in [Boilerplay](https://)
     |
     |## Running the app
     |

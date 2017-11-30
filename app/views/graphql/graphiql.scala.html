@@ -1,13 +1,13 @@
 @(user: models.user.User, connection: models.connection.ConnectionSettings)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.basic(Some(user), connection.name + " GraphQL", scripts = Seq(
-  routes.Assets.versioned("lib/graphql/fetch.min.js").url,
-  routes.Assets.versioned("lib/graphql/react.min.js").url,
-  routes.Assets.versioned("lib/graphql/react-dom.min.js").url,
-  routes.Assets.versioned("lib/jquery/jquery.min.js").url,
-  routes.Assets.versioned("lib/graphql/graphiql.min.js").url
+  routes.Assets.versioned("vendor/graphql/fetch.min.js").url,
+  routes.Assets.versioned("vendor/graphql/react.min.js").url,
+  routes.Assets.versioned("vendor/graphql/react-dom.min.js").url,
+  routes.Assets.versioned("vendor/jquery/jquery.min.js").url,
+  routes.Assets.versioned("vendor/graphql/graphiql.min.js").url
 ), stylesheets = Seq(
-  routes.Assets.versioned("lib/graphql/graphiql.css").url,
+  routes.Assets.versioned("vendor/graphql/graphiql.css").url,
   routes.Assets.versioned("stylesheets/graphiql.min.css").url
 )) {
   <script>

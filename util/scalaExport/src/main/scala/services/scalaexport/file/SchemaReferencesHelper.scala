@@ -3,7 +3,7 @@ package services.scalaexport.file
 import models.scalaexport.ScalaFile
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
-object ReferencesHelper {
+object SchemaReferencesHelper {
   def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val hasFk = model.foreignKeys.exists(_.references.size == 1)
     val references = model.transformedReferences(config)

@@ -1,6 +1,5 @@
 package services.scalaexport
 
-import better.files.File.CopyOptions
 import better.files._
 import models.scalaexport.ExportResult
 import services.scalaexport.config.ExportEngine

@@ -4,8 +4,8 @@
   user = Some(user),
   title = dbName + " - " + util.Config.projectName,
   scripts = Seq(
-    routes.Assets.versioned("lib/momentjs/moment.min.js").url,
-    routes.Assets.versioned("lib/mousetrap/mousetrap.min.js").url
+    routes.Assets.versioned("vendor/momentjs/moment.min.js").url,
+    routes.Assets.versioned("vendor/mousetrap/mousetrap.min.js").url
   )
 ) {
   @views.html.layout.themeStyles(user.preferences.theme)
@@ -49,7 +49,7 @@
     @views.html.modal.columnModal()
   </main>
 
-  <script src="@controllers.routes.Assets.versioned("lib/ace/ace-concat.min.js")" type="text/javascript" charset="utf-8" defer="defer"></script>
+  <script src="@controllers.routes.Assets.versioned("vendor/ace/ace-concat.min.js")" type="text/javascript" charset="utf-8" defer="defer"></script>
   <script src="@controllers.routes.MessagesController.strings()" type="text/javascript" defer="defer"></script>
   @if(debug) {
     <script src="@controllers.routes.Assets.versioned("client-fastopt.js")" type="text/javascript" defer="defer"></script>
@@ -66,7 +66,7 @@
     $(function() {
       window.scriptRoutes = {
         'charting': '@charting',
-        'plotly': '@routes.Assets.versioned("lib/plotly/plotly.min.js")'
+        'plotly': '@routes.Assets.versioned("vendor/plotly/plotly.min.js")'
       };
       window.connectionId = '@connectionId';
       window.dbf = new DatabaseFlow();
