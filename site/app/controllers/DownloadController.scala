@@ -8,7 +8,7 @@ import services.audit.DownloadService
 import scala.concurrent.Future
 
 object DownloadController {
-  val version = "1.0.0"
+  val version = "1.1.1"
 }
 
 @javax.inject.Singleton
