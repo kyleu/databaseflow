@@ -4,7 +4,7 @@ import better.files._
 
 object FileCacheService {
   val cacheDir = {
-    val prod = "/home/ubuntu/cache"
+    val prod = "/home/kyle/cache/databaseflow.com"
     val local = "./cache"
 
     if (prod.toFile.isDirectory) {
