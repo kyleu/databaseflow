@@ -11,4 +11,4 @@ unzip ./target/universal/databaseflow-1.1.1.zip -d ./target/universal/databasefl
 mv ./target/universal/databaseflow ./tmp/
 mv ./tmp/databaseflow/ ./tmp/databaseflow-demo
 
-rsync -zrv --delete ./tmp/databaseflow-demo/* kyle@databaseflow.com:~/apps/databaseflow-demo/deploy
+rsync -zrv --delete ./tmp/databaseflow-demo/* kyle@databaseflow.com:~/apps/demo.databaseflow.com

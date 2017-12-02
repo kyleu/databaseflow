@@ -4,16 +4,14 @@ import better.files._
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 
-import scala.io.Source
-
 object LogService {
   var enabled = true
 
   private[this] val logStartPhrases = LogLevel.values.map(_.startPhrase)
 
-  val logDir = "logs".toFile
+  val logDir = Option(System.getenv("DBLOGDIR")).getOrElse("logs").toFile
   if (!logDir.exists) {
-    throw new IllegalStateException("Log directory does not exist.")
+    throw new IllegalStateException(s"Log directory [$logDir] does not exist.")
   }
 
   def listFiles() = logDir.children.filter(_.name.endsWith(".log")).toSeq.sortBy(_.name).map { f =>
