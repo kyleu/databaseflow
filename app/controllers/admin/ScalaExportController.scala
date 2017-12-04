@@ -20,13 +20,28 @@ object ScalaExportController {
 
 @javax.inject.Singleton
 class ScalaExportController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
+
+  private[this] def merge(schema: Schema, config: ExportConfiguration) = {
+    val models = schema.tables.map { t =>
+      config.getModelOpt(t.name) match {
+        case Some(m) =>
+          val fields = t.columns.map { c =>
+            m.fields.find(_.columnName == c.name).getOrElse(ExportConfigurationDefault.loadField(c))
+          }
+          m.copy(fields = fields.toList)
+        case None => ExportConfigurationDefault.loadModel(schema, t)
+      }
+    }
+    config.copy(models = models)
+  }
+
   def exportForm(conn: String) = withAdminSession("export.form") { implicit request =>
     ConnectionSettingsService.connFor(conn) match {
       case Some(cs) => SchemaService.getSchemaWithDetails(cs).map { schema =>
         val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
         val f = s"./tmp/$schemaId.txt".toFile
         val config = if (f.exists) {
-          read[ExportConfiguration](f.contentAsString)
+          merge(schema, read[ExportConfiguration](f.contentAsString))
         } else {
           ExportConfigurationDefault.forSchema(schemaId, schema)
         }

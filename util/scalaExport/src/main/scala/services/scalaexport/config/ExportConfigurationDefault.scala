@@ -1,6 +1,6 @@
 package services.scalaexport.config
 
-import models.schema.{Schema, Table}
+import models.schema.{Column, Schema, Table}
 import services.scalaexport.ExportHelper
 import services.scalaexport.ExportHelper._
 
@@ -57,16 +57,18 @@ object ExportConfigurationDefault {
 
   private[this] def loadFields(t: Table) = t.columns.toList.map { col =>
     val inSearch = t.primaryKey.exists(_.name == col.name) || t.indexes.exists(i => i.columns.exists(_.name == col.name))
-    ExportField(
-      columnName = col.name,
-      propertyName = clean(toIdentifier(col.name)),
-      title = toDefaultTitle(col.name),
-      description = col.description,
-      t = col.columnType,
-      sqlTypeName = col.sqlTypeName,
-      defaultValue = col.defaultValue,
-      inSearch = inSearch,
-      inSummary = inSearch
-    )
+    loadField(col, inSearch)
   }
+
+  def loadField(col: Column, inSearch: Boolean = false) = ExportField(
+    columnName = col.name,
+    propertyName = clean(toIdentifier(col.name)),
+    title = toDefaultTitle(col.name),
+    description = col.description,
+    t = col.columnType,
+    sqlTypeName = col.sqlTypeName,
+    defaultValue = col.defaultValue,
+    inSearch = inSearch,
+    inSummary = inSearch
+  )
 }
