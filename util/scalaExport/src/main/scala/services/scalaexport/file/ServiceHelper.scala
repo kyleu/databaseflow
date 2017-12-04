@@ -83,7 +83,7 @@ object ServiceHelper {
         file.add(s"ApplicationDatabase.queryF(${model.className}Queries.CountBy$propCls($propId))(td)")
         file.add("}", -1)
         val fkArgs = s"creds: Credentials, $propId: ${col.t.asScala}, $searchArgs"
-        file.add(s"""def getBy$propCls($fkArgs)(implicit trace: TraceData) = traceF("get.by.$propId") { td => """, 1)
+        file.add(s"""def getBy$propCls($fkArgs)(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
         file.add(s"""ApplicationDatabase.queryF(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td)""")
         file.add("}", -1)
         val fkSeqArgs = s"creds: Credentials, ${propId}Seq: Seq[${col.t.asScala}]"
