@@ -41,6 +41,7 @@ object CreateResultTable {
       case XmlType => "text"
       case UuidType => "uuid"
 
+      case JsonType => "text"
       case ObjectType => "text"
       case StructType => "text"
       case ArrayType => "text"
