@@ -59,7 +59,7 @@ object DatabaseRegistry extends Logging {
   def connect(c: ConnectionSettings, maxConnections: Int) = {
     val cs = PoolSettings(
       connectionId = c.id,
-      name = Some(c.id.toString),
+      name = Some(util.Config.projectId + "." + c.id.toString),
       engine = c.engine,
       url = c.url,
       username = c.username,

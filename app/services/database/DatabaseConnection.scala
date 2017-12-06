@@ -13,9 +13,11 @@ import util.metrics.Instrumented
 
 import scala.util.control.NonFatal
 
-case class DatabaseConnection(connectionId: UUID, name: String, source: DataSource, engine: DatabaseEngine, url: String, username: String) extends Queryable {
-  private[this] def time[A](klass: java.lang.Class[_])(f: => A) = {
-    val ctx = Instrumented.metricRegistry.timer(MetricRegistry.name(klass)).time()
+case class DatabaseConnection(
+    connectionId: UUID, name: String, source: DataSource, engine: DatabaseEngine, url: String, username: String
+) extends Queryable {
+  private[this] def time[A](c: java.lang.Class[_])(f: => A) = {
+    val ctx = Instrumented.metricRegistry.timer(util.Config.projectId + "." + MetricRegistry.name(c)).time()
     try { f } finally { ctx.stop }
   }
 
