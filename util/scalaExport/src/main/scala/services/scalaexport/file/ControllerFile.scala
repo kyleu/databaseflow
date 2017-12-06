@@ -10,6 +10,7 @@ object ControllerFile {
     file.addImport("models", "Application")
     file.addImport("util.FutureUtils", "defaultContext")
     file.addImport("controllers", "BaseController")
+    file.addImport("services.audit", "AuditRecordService")
     file.addImport("scala.concurrent", "Future")
     file.addImport("models.result.orderBy", "OrderBy")
     file.addImport("io.circe.syntax", "_")
@@ -20,9 +21,9 @@ object ControllerFile {
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (", 2)
     ControllerReferences.refServiceArgs(config, model, file) match {
-      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service")
+      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordService")
       case ref =>
-        file.add(s"override val app: Application, svc: ${model.className}Service,")
+        file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordService,")
         file.add(ref)
     }
     file.add(s""") extends BaseController("${model.propertyName}") {""", -2)
