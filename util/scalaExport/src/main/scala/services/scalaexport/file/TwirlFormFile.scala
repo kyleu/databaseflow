@@ -24,25 +24,25 @@ object TwirlFormFile {
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)
-    file.add("<table class=\"highlight\">", 1)
+    file.add("<table>", 1)
     file.add("<tbody>", 1)
 
     model.fields.foreach { field =>
       file.add("<tr>", 1)
       file.add("<td>", 1)
       val inputProps = s"""type="checkbox" name="${field.propertyName}.include" id="${field.propertyName}.include" value="true""""
-      val dataProps = s"""class="data-input" data-type="${field.t}" data-name="${field.propertyName}""""
-      if (field.notNull) {
-        file.add(s"""<input $inputProps @if(isNew) { checked="checked" } $dataProps />""")
+      val dataProps = if (field.notNull) {
+        s"""class="data-input" data-type="${field.t}" data-name="${field.propertyName}""""
       } else {
-        file.add(s"""<input $inputProps $dataProps />""")
+        s"""class="data-input nullable" data-type="${field.t}" data-name="${field.propertyName}""""
       }
+      file.add(s"""<input $inputProps @if(isNew) { checked="checked" } $dataProps />""")
       file.add(s"""<label for="${field.propertyName}.include">${field.title}</label>""")
       file.add("</td>", -1)
 
       file.add("<td>", 1)
-      val ac = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
-      TwirlFormFields.inputFor(model, field, file, ac)
+      val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
+      TwirlFormFields.inputFor(model, field, file, autocomplete)
       file.add(s"</td>", -1)
       file.add("</tr>", -1)
     }

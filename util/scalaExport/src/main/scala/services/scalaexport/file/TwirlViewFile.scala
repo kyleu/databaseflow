@@ -40,8 +40,11 @@ object TwirlViewFile {
           if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.columnName))) {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.columnName).mkString(", ")}]...")
           }
-
-          file.add(s"@model.${field.propertyName}")
+          if (field.notNull) {
+            file.add(s"@model.${field.propertyName}")
+          } else {
+            file.add(s"@model.${field.propertyName}.getOrElse(util.NullUtils.str)")
+          }
           if (field.notNull) {
             file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${field.propertyName})">${tgt.iconHtml}</a>""")
           } else {
