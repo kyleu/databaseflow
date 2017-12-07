@@ -13,15 +13,14 @@ object ExportMerge {
     fix(root / "app" / "util" / "web" / "LoggingFilter.scala")
     fix(root / "app" / "views" / "index.scala.html")
     fix(root / "app" / "views" / "layout" / "simple.scala.html")
+    fix(root / "app" / "util" / "Logging.scala")
+    fix(root / "app" / "util" / "metrics" / "Instrumented.scala")
     fix(root / "conf" / "application.conf")
     fix(root / "conf" / "logback.xml")
     fix(root / "public" / "manifest.json")
     fix(root / "project" / "Server.scala")
     fix(root / "project" / "Shared.scala")
     fix(root / "shared" / "src" / "main" / "scala" / "util" / "Config.scala")
-    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "Logging.scala")
-    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "metrics" / "Checked.scala")
-    fix(root / "util" / "metrics" / "src" / "main" / "scala" / "util" / "metrics" / "Instrumented.scala")
 
     val cssFile = root / "app" / "assets" / "stylesheets" / "boilerplay.less"
     cssFile.moveTo(cssFile.parent / (prop + ".less"))
