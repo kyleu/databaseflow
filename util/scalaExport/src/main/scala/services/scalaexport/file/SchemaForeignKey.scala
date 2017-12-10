@@ -6,11 +6,11 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 object SchemaForeignKey {
   def writeSchema(config: ExportConfiguration, src: ExportModel, file: ScalaFile) = if (src.foreignKeys.nonEmpty) {
     file.addImport("sangria.execution.deferred", "Fetcher")
-    val fks = src.foreignKeys.filter(_.references.size == 1)
+    val fks = src.foreignKeys.filter(_.references.lengthCompare(1) == 0)
     fks.foreach { fk =>
       fk.references.toList match {
         case Nil => // noop
-        case h :: Nil => config.getModelOpt(fk.targetTable).foreach(tgt => {
+        case h :: Nil => config.getModelOpt(fk.targetTable).foreach(_ => {
           val srcCol = src.getField(h.source)
           if (src.pkColumns.isEmpty) {
             val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
@@ -44,7 +44,7 @@ object SchemaForeignKey {
   }
 
   def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
-    val fks = model.foreignKeys.filter(_.references.size == 1)
+    val fks = model.foreignKeys.filter(_.references.lengthCompare(1) == 0)
     fks.foreach { fk =>
       config.getModelOpt(fk.targetTable).foreach { targetTable =>
         val fkCols = fk.references

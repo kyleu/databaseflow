@@ -26,7 +26,8 @@ object SchemaHelper {
     } else {
       "x => (" + model.pkFields.map(f => "x." + f.propertyName).mkString(", ") + ")"
     }
-    file.add(s"implicit val ${model.propertyName}PrimaryKeyId = HasId[${model.className}, ${model.pkType}]($method)")
+    val hasId = s"HasId[${model.className}, ${model.pkType}]"
+    file.add(s"implicit val ${model.propertyName}PrimaryKeyId: $hasId = $hasId($method)")
     file.add(s"private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[${model.pkType}]) = {", 1)
     file.add(s"c.${model.serviceReference}.getByPrimaryKeySeq(c.creds, idSeq)(c.trace)")
     file.add("}", -1)
