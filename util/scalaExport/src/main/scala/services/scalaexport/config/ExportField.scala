@@ -26,19 +26,19 @@ case class ExportField(
 
   lazy val defaultString = t match {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
-    case ByteType => defaultValue.getOrElse("0")
-    case IntegerType => defaultValue.getOrElse("0")
-    case LongType => defaultValue.getOrElse("0") + "L"
-    case ShortType => defaultValue.getOrElse("0") + ".toShort"
-    case FloatType => defaultValue.getOrElse("0.0") + "f"
-    case DoubleType => defaultValue.getOrElse("0.0")
-    case BigDecimalType => s"BigDecimal(${defaultValue.getOrElse("0")})"
+    case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
+    case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
+    case LongType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + "L"
+    case ShortType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + ".toShort"
+    case FloatType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0") + "f"
+    case DoubleType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0")
+    case BigDecimalType => s"BigDecimal(${defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0")})"
 
     case DateType => "util.DateUtils.today"
     case TimeType => "util.DateUtils.currentTime"
     case TimestampType => "util.DateUtils.now"
 
-    case UuidType => defaultValue.map(d => s"UUID.fromString($d)").getOrElse("UUID.randomUUID")
+    case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
 
     case JsonType => "util.JsonSerializers.emptyObject"
     case ArrayType => "Seq.empty"

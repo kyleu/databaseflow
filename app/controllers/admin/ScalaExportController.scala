@@ -13,6 +13,8 @@ import util.FutureUtils.defaultContext
 import util.web.FormUtils
 import upickle.default._
 
+import scala.util.control.NonFatal
+
 object ScalaExportController {
   def readConfiguration(json: Js.Value) = readJs[ExportConfiguration](json)
   def writeConfiguration(c: ExportConfiguration) = writeJs[ExportConfiguration](c)
@@ -80,25 +82,29 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     }
   }
 
-  private[this] def modelForTable(schema: Schema, t: Table, form: Map[String, String]) = ExportModel(
-    tableName = t.name,
-    pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
-    propertyName = form("propertyName"),
-    className = form("className"),
-    title = form("title"),
-    description = form.get("description").filter(_.nonEmpty),
-    plural = form("plural"),
-    fields = t.columns.map(col => fieldForColumn(col, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2))).toList,
-    pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
-    foreignKeys = t.foreignKeys.toList,
-    references = ExportConfigurationHelper.references(schema, t),
-    extendsClass = form.get("extendsClass").filter(_.nonEmpty),
-    icon = form.get("icon").filter(_.nonEmpty),
-    scalaJs = form.get("scalaJs").contains("true"),
-    ignored = form.get("ignored").contains("true"),
-    audited = form.get("audited").contains("true"),
-    provided = form.get("provided").contains("true")
-  )
+  private[this] def modelForTable(schema: Schema, t: Table, form: Map[String, String]) = try {
+    ExportModel(
+      tableName = t.name,
+      pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
+      propertyName = form("propertyName"),
+      className = form("className"),
+      title = form("title"),
+      description = form.get("description").filter(_.nonEmpty),
+      plural = form("plural"),
+      fields = t.columns.map(col => fieldForColumn(col, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2))).toList,
+      pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
+      foreignKeys = t.foreignKeys.toList,
+      references = ExportConfigurationHelper.references(schema, t),
+      extendsClass = form.get("extendsClass").filter(_.nonEmpty),
+      icon = form.get("icon").filter(_.nonEmpty),
+      scalaJs = form.get("scalaJs").contains("true"),
+      ignored = form.get("ignored").contains("true"),
+      audited = form.get("audited").contains("true"),
+      provided = form.get("provided").contains("true")
+    )
+  } catch {
+    case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for table [${t.name}].", x)
+  }
 
   private[this] def fieldForColumn(col: Column, form: Map[String, String]) = ExportField(
     columnName = col.name,

@@ -7,7 +7,13 @@ import services.scalaexport.file.ReadmeFile
 
 object ExportMerge {
   private[this] def projectNameReplacements(prop: String, cls: String, root: File) = {
-    def fix(f: File) = f.overwrite(f.contentAsString.replaceAllLiterally("boilerplay", prop).replaceAllLiterally("Boilerplay", cls))
+    def fix(f: File) = {
+      val c = f.contentAsString
+        .replaceAllLiterally("boilerplay", prop)
+        .replaceAllLiterally("boilerplay", prop)
+        .replaceAllLiterally("Boilerplay", cls)
+      f.overwrite(c)
+    }
 
     fix(root / "deploy.yaml")
     fix(root / "app" / "util" / "web" / "LoggingFilter.scala")

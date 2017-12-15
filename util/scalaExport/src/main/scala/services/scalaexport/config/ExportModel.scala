@@ -69,9 +69,13 @@ case class ExportModel(
   val pkArgs = pkFields.zipWithIndex.map(pkf => s"${pkf._1.t.key}Arg(arg(${pkf._2}))").mkString(", ")
 
   def validReferences(config: ExportConfiguration) = references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
-  def transformedReferences(config: ExportConfiguration) = validReferences(config).map { r =>
+  def transformedReferences(config: ExportConfiguration) = validReferences(config).flatMap { r =>
     val src = config.getModel(r.srcTable)
-    (r, getField(r.tgt), src, src.getField(r.srcCol))
+    getFieldOpt(r.tgt).flatMap { f =>
+      src.getFieldOpt(r.srcCol).map { tf =>
+        (r, f, src, tf)
+      }
+    }
   }
 
   def getField(k: String) = getFieldOpt(k).getOrElse(throw new IllegalStateException(s"No field for model [$className] with name [$k]."))

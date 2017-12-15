@@ -29,7 +29,7 @@ object DateTimeSchema {
       case _ => Left(LocalDateTimeCoercionViolation)
     },
     coerceInput = {
-      case sangria.ast.StringValue(s, _, _) => parseLocalDateTime(s)
+      case sangria.ast.StringValue(s, _, _, _, _) => parseLocalDateTime(s)
       case _ => Left(LocalDateTimeCoercionViolation)
     }
   )
@@ -50,7 +50,7 @@ object DateTimeSchema {
       case _ => Left(LocalDateCoercionViolation)
     },
     coerceInput = {
-      case sangria.ast.StringValue(s, _, _) => parseLocalDate(s)
+      case sangria.ast.StringValue(s, _, _, _, _) => parseLocalDate(s)
       case _ => Left(LocalDateCoercionViolation)
     }
   )
@@ -71,7 +71,7 @@ object DateTimeSchema {
       case _ => Left(LocalDateCoercionViolation)
     },
     coerceInput = {
-      case sangria.ast.StringValue(s, _, _) => parseLocalTime(s)
+      case sangria.ast.StringValue(s, _, _, _, _) => parseLocalTime(s)
       case _ => Left(LocalDateCoercionViolation)
     }
   )

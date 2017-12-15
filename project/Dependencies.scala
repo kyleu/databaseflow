@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.7"
+    private[this] val version = "2.6.9"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.5.7"
+    private[this] val version = "2.5.8"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -78,7 +78,7 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.3.2"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.3.3"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.0"
   }
@@ -92,7 +92,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.1"
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.2.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val guava = "com.google.guava" % "guava" % "23.0"
 
     val scribeVersion = "1.4.5"

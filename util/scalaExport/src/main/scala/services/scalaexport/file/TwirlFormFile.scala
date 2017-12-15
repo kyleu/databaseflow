@@ -10,7 +10,7 @@ object TwirlFormFile {
     val interpArgs = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
     val viewArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
 
-    file.add(s"@(user: models.user.User, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
+    file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", title) {""", 1)
 

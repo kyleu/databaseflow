@@ -12,7 +12,7 @@ object TwirlRelationFiles {
     val refProps = refFields.map(_.propertyName).mkString(", ")
     val refArgs = refFields.map(r => r.propertyName + ": " + r.t.asScalaFull).mkString(", ")
 
-    listFile.add(s"@(user: models.user.User, $refArgs, modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
+    listFile.add(s"@(user: models.user.SystemUser, $refArgs, modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
     listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     listFile.add(s")@traceData.logViewClass(getClass)", -2)
 

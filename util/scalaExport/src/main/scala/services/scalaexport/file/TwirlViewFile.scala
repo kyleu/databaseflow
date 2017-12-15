@@ -8,7 +8,7 @@ object TwirlViewFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     val file = TwirlFile(model.viewPackage, model.propertyName + "View")
-    file.add(s"@(user: models.user.User, model: ${model.modelClass}, notes: Seq[models.note.Note], auditRecords: Seq[models.audit.AuditRecord], debug: Boolean)(")
+    file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, notes: Seq[models.note.Note], auditRecords: Seq[models.audit.AuditRecord], debug: Boolean)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
     file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)

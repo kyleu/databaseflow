@@ -45,7 +45,7 @@ object CommonGraphQL {
       case _ => Left(UuidCoercionViolation)
     },
     coerceInput = {
-      case sangria.ast.StringValue(s, _, _) => parseUuid(s)
+      case sangria.ast.StringValue(s, _, _, _, _) => parseUuid(s)
       case _ => Left(UuidCoercionViolation)
     }
   )

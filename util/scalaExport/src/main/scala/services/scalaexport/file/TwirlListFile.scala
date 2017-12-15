@@ -10,7 +10,7 @@ object TwirlListFile {
     val listFile = TwirlFile(model.viewPackage, model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
 
-    listFile.add(s"@(user: models.user.User, totalCount: Option[Int], modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
+    listFile.add(s"@(user: models.user.SystemUser, totalCount: Option[Int], modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
     listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     listFile.add(s")@traceData.logViewClass(getClass)", -2)
     listFile.add("@views.html.admin.explore.list(", 1)
