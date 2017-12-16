@@ -18,6 +18,11 @@ object ModelFile {
     if (model.fields.exists(_.t == ColumnType.TimestampType)) {
       file.addImport("io.circe.java8.time", "_")
     }
+    if (model.scalaJs) {
+      file.addImport("scala.scalajs.js.annotation", "JSExport")
+      file.addImport("scala.scalajs.js.annotation", "JSExportTopLevel")
+    }
+
     file.add(s"object ${model.className} {", 1)
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
@@ -27,7 +32,7 @@ object ModelFile {
     model.description.foreach(d => file.add(s"/** $d */"))
 
     if (model.scalaJs) {
-      //file.add(s"""@scala.scalajs.js.annotation.JSExportTopLevel("${model.className}")""")
+      file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
     file.add(s"case class ${model.className}(", 2)
     addFields(model, file)
@@ -65,6 +70,8 @@ object ModelFile {
   private[this] def addFields(model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
 
+    val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
+
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case x => x.asScala
@@ -75,7 +82,7 @@ object ModelFile {
     } else {
       " = None"
     }
-    val propDecl = s"${field.propertyName}: $propType$propDefault"
+    val propDecl = s"$scalaJsPrefix${field.propertyName}: $propType$propDefault"
     val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
     field.description.foreach(d => file.add("/** " + d + " */"))
     file.add(propDecl + comma)
