@@ -10,6 +10,7 @@ object SchemaFile {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
     file.addImport("util.FutureUtils", "graphQlContext")
+    if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport("models.note", "NoteSchema") }
     SchemaHelper.addImports(file)
 
     file.add(s"""object ${model.className}Schema extends SchemaHelper("${model.propertyName}") {""", 1)
@@ -42,12 +43,20 @@ object SchemaFile {
         case d if columnsDescriptions.lastOption.contains(d) && references.isEmpty => file.add(d)
         case d => file.add(d + ",")
       }
-      if (model.foreignKeys.nonEmpty || references.nonEmpty) {
+      if (model.pkColumns.nonEmpty || model.foreignKeys.nonEmpty || references.nonEmpty) {
         file.add("AddFields(", 1)
       }
       SchemaReferencesHelper.writeFields(config, model, file)
       SchemaForeignKey.writeFields(config, model, file)
-      if (model.foreignKeys.nonEmpty || references.nonEmpty) {
+      if (model.pkColumns.nonEmpty) {
+        file.add("Field(", 1)
+        file.add("""name = "relatedNotes",""")
+        file.add("""fieldType = ListType(NoteSchema.noteType),""")
+        val pkArgs = model.pkFields.map(f => "c.value." + f.propertyName).mkString(", ")
+        file.add(s"""resolve = c => c.ctx.app.coreServices.notes.getFor(c.ctx.creds, "${model.propertyName}", $pkArgs)(c.ctx.trace)""")
+        file.add(")", -1)
+      }
+      if (model.pkColumns.nonEmpty || model.foreignKeys.nonEmpty || references.nonEmpty) {
         file.add(")", -1)
       }
       file.add(")", -1)

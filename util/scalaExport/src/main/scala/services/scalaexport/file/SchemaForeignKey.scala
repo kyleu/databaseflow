@@ -78,7 +78,7 @@ object SchemaForeignKey {
             } else {
               file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.${field.propertyName})")
             }
-            val comma = if (fks.lastOption.contains(fk)) { "" } else { "," }
+            val comma = if (model.pkColumns.isEmpty && fks.lastOption.contains(fk)) { "" } else { "," }
             file.add(")" + comma, -1)
           case _ => throw new IllegalStateException(s"Unhandled foreign key references [${fields.map(_.propertyName).mkString(", ")}].")
         }

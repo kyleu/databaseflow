@@ -30,7 +30,7 @@ object SchemaReferencesHelper {
         file.add(s"${relationRef}Relation, $v")
         file.add(")", -1)
       }
-      val comma = if (references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
+      val comma = if (model.pkColumns.isEmpty && references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
       file.add(")" + comma, -1)
     }
   }

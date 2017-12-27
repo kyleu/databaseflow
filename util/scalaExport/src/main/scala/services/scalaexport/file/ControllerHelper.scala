@@ -15,7 +15,7 @@ object ControllerHelper {
     file.add()
     file.add(s"""def view($viewArgs) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
-    file.add(s"""val notesF = app.coreServices.notes.getFor("${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+    file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     file.add()
 
