@@ -28,6 +28,7 @@ object Site {
     libraryDependencies ++= Seq(Dependencies.Utils.enumeratum),
 
     routesGenerator := InjectedRoutesGenerator,
+    PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,

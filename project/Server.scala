@@ -16,7 +16,6 @@ import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
 import play.sbt.PlayImport.PlayKeys
-import play.sbt.PlayImport.PlayKeys._
 import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
 import sbt._
@@ -47,7 +46,8 @@ object Server {
 
     scalaJSProjects := Seq(Client.client, Client.charting),
     routesGenerator := InjectedRoutesGenerator,
-    externalizeResources := false,
+    PlayKeys.externalizeResources := false,
+    PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,

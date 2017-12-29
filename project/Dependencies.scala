@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.9"
+    private[this] val version = "2.6.10"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -56,7 +56,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val circeVersion = "0.8.0"
+    val circeVersion = "0.9.0-M3"
     val uPickleVersion = "0.4.4"
   }
 
@@ -80,7 +80,7 @@ object Dependencies {
   object GraphQL {
     val sangria = "org.sangria-graphql" %% "sangria" % "1.3.3"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
-    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.0"
+    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.1"
   }
 
   object Utils {
