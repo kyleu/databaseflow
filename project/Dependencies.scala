@@ -56,7 +56,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val circeVersion = "0.9.0-M3"
+    val circeVersion = "0.8.0"
     val uPickleVersion = "0.4.4"
   }
 
@@ -80,7 +80,7 @@ object Dependencies {
   object GraphQL {
     val sangria = "org.sangria-graphql" %% "sangria" % "1.3.3"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
-    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.1"
+    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.0"
   }
 
   object Utils {
