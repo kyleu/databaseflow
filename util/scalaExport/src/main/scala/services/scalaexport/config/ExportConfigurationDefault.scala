@@ -9,8 +9,7 @@ object ExportConfigurationDefault {
     key = key,
     projectId = key,
     projectTitle = ExportHelper.toClassName(key),
-    models = schema.tables.map(t => loadModel(schema, t)),
-    engine = ExportEngine.withNameInsensitive(schema.engine)
+    models = schema.tables.map(t => loadModel(schema, t))
   )
 
   def loadModel(schema: Schema, t: Table) = {

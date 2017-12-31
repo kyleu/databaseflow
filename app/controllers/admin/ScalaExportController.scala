@@ -67,7 +67,6 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
             modelForTable(schema, t, form.filter(_._1.startsWith("model." + t.name)).map(x => x._1.stripPrefix("model." + t.name + ".") -> x._2))
           },
           source = form("project.source"),
-          engine = ExportEngine.withNameInsensitive(form("engine")),
           projectLocation = form.get("project.location").filter(_.nonEmpty)
         )
 

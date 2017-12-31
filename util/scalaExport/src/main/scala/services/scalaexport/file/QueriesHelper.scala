@@ -1,10 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.{ExportEngine, ExportModel}
+import services.scalaexport.config.ExportModel
 
 object QueriesHelper {
-  def fromRow(engine: ExportEngine, model: ExportModel, file: ScalaFile) = {
+  def fromRow(model: ExportModel, file: ScalaFile) = {
     file.add(s"override def fromRow(row: Row) = ${model.className}(", 1)
     model.fields.foreach { field =>
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
@@ -17,7 +17,7 @@ object QueriesHelper {
     file.add(")", -1)
   }
 
-  def writeForeignKeys(engine: ExportEngine, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+  def writeForeignKeys(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
     fk.references.toList match {
       case h :: Nil =>
         file.addImport("models.result", "ResultFieldHelper")
@@ -30,7 +30,7 @@ object QueriesHelper {
         file.add(s"""case class CountBy$propCls($propId: ${field.t.asScala}) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
         val searchArgs = "orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]"
         file.add(s"""case class GetBy$propCls($propId: ${field.t.asScala}, $searchArgs) extends SeqQuery(""", 1)
-        file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, engine, orderBys: _*),""")
+        file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),""")
         file.add(s"limit = limit, offset = offset, values = Seq($propId)")
         file.add(")", -1)
         val sig = s"GetBy${propCls}Seq(${propId}Seq: Seq[${field.t.asScala}])"

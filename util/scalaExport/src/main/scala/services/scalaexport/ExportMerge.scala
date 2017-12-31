@@ -2,7 +2,6 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.ExportResult
-import services.scalaexport.config.ExportEngine
 import services.scalaexport.file.ReadmeFile
 
 object ExportMerge {
@@ -35,25 +34,15 @@ object ExportMerge {
   private[this] def getSrcDir(result: ExportResult) = {
     import scala.sys.process._
 
-    result.log(s"Cloning boilerplay [${result.config.engine}].")
+    result.log(s"Cloning boilerplay.")
 
     if (result.config.source == "boilerplay") {
-      result.config.engine match {
-        case ExportEngine.PostgreSQL =>
-          val dir = "./tmp/boilerplay".toFile
-          if (!dir.exists) {
-            "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
-            (dir / ".git").delete()
-          }
-          dir
-        case ExportEngine.MySQL =>
-          val dir = "./tmp/boilerplay.mysql".toFile
-          if (!dir.exists) {
-            "git clone -b mysql https://github.com/KyleU/boilerplay.git ./tmp/boilerplay.mysql".!!
-            (dir / ".git").delete()
-          }
-          dir
+      val dir = "./tmp/boilerplay".toFile
+      if (!dir.exists) {
+        "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
+        (dir / ".git").delete()
       }
+      dir
     } else {
       throw new IllegalStateException(s"Unsupported export source [${result.config.source}].")
     }

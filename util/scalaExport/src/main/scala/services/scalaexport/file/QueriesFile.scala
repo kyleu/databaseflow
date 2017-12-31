@@ -1,10 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.{ExportEngine, ExportModel}
+import services.scalaexport.config.ExportModel
 
 object QueriesFile {
-  def export(engine: ExportEngine, model: ExportModel) = {
+  def export(model: ExportModel) = {
     val file = ScalaFile(model.queriesPackage, model.className + "Queries")
 
     file.addImport(model.modelPackage.mkString("."), model.className)
@@ -41,9 +41,9 @@ object QueriesFile {
     file.add("val searchExact = SearchExact")
     file.add()
 
-    writePkFields(file, model, engine)
+    writePkFields(file, model)
 
-    QueriesHelper.writeForeignKeys(engine, model, file)
+    QueriesHelper.writeForeignKeys(model, file)
 
     file.add(s"def insert(model: ${model.className}) = Insert(model)")
     file.add(s"def insertBatch(models: Seq[${model.className}]) = InsertBatch(models)")
@@ -61,13 +61,13 @@ object QueriesFile {
     }
 
     file.add()
-    QueriesHelper.fromRow(engine, model, file)
+    QueriesHelper.fromRow(model, file)
 
     file.add("}", -1)
     file
   }
 
-  private[this] def writePkFields(file: ScalaFile, model: ExportModel, engine: ExportEngine) = model.pkFields match {
+  private[this] def writePkFields(file: ScalaFile, model: ExportModel) = model.pkFields match {
     case Nil => // noop
     case pkField :: Nil =>
       val name = pkField.propertyName
@@ -81,7 +81,7 @@ object QueriesFile {
       val seqArgs = pkFields.map(_.propertyName).mkString(", ")
       file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
       file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
-      val pkWhere = pkFields.map(f => s"""${engine.lQuoteEscaped}${f.columnName}${engine.rQuoteEscaped} = ?""").mkString(" and ")
+      val pkWhere = pkFields.map(f => "\\\"" + f.columnName + "\\\" = ?").mkString(" and ")
       file.add(s"""whereClause = Some(idSeq.map(_ => "($pkWhere)").mkString(" or ")),""")
       file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
       file.add(")", -1)

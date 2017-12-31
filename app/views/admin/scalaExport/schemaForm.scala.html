@@ -38,21 +38,6 @@
                       }
                     </select></td>
                   </tr>
-                  <tr>
-                    <th>Database Engine</th>
-                    <td><select name="engine">
-                      @if(cfg.engine == services.scalaexport.config.ExportEngine.PostgreSQL) {
-                        <option value="postgres" selected="selected">PostgreSQL</option>
-                      } else {
-                        <option value="postgres">PostgreSQL</option>
-                      }
-                      @if(cfg.engine == services.scalaexport.config.ExportEngine.MySQL) {
-                        <option value="mysql" selected="selected">MySQL</option>
-                      } else {
-                        <option value="mysql">MySQL</option>
-                      }
-                    </select></td>
-                  </tr>
                 </tbody>
               </table>
             </div>

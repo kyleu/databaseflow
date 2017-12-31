@@ -6,7 +6,6 @@ case class ExportConfiguration(
     projectTitle: String,
     models: Seq[ExportModel],
     source: String = "boilerplay",
-    engine: ExportEngine = ExportEngine.PostgreSQL,
     projectLocation: Option[String] = None
 ) {
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with name [$k]."))
