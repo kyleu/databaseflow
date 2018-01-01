@@ -16,16 +16,21 @@ object ControllerHelper {
     file.add(s"""def view($viewArgs) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
     file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
-    file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
-    file.add()
 
-    file.add(s"""notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {""", 1)
+    if (model.audited) {
+      file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+    }
+
+    file.add()
+    file.add(s"""notesF.flatMap(notes => ${if (model.audited) { "auditsF.flatMap(audits => " } else { "" }}modelF.map {""", 1)
+
     file.add("case Some(model) => render {", 1)
-    file.add(s"case Accepts.Html() => Ok($viewPkg.${model.propertyName}View(request.identity, model, notes, audits, app.config.debug))")
+    val auditHelp = if (model.audited) { "audits, " } else { "" }
+    file.add(s"case Accepts.Html() => Ok($viewPkg.${model.propertyName}View(request.identity, model, notes, ${auditHelp}app.config.debug))")
     file.add("case Accepts.Json() => Ok(model.asJson.spaces2).as(JSON)")
     file.add("}", -1)
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
-    file.add("}))", -1)
+    file.add(s"}${if (model.audited) { ")" } else { "" }})", -1)
     file.add("}", -1)
     file.add()
     file.add(s"""def editForm($viewArgs) = withSession("edit.form", admin = true) { implicit request => implicit td =>""", 1)

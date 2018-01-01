@@ -46,11 +46,13 @@ object TwirlRelationFiles {
   }
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    model.foreignKeys.map { ref =>
-      val refFields = ref.references.map(r => model.getField(r.source))
-      val listFile = TwirlFile(model.viewPackage, model.propertyName + "By" + refFields.map(_.className).mkString)
-      writeTable(model, refFields, listFile)
-      listFile
+    model.foreignKeys.flatMap {
+      case fk if fk.references.lengthCompare(1) == 0 =>
+        val refFields = fk.references.map(r => model.getField(r.source))
+        val listFile = TwirlFile(model.viewPackage, model.propertyName + "By" + refFields.map(_.className).mkString)
+        writeTable(model, refFields, listFile)
+        Some(listFile)
+      case _ => None
     }
   }
 }

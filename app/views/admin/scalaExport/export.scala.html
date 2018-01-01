@@ -5,8 +5,12 @@
     <div class="col s12">
       <ul class="collection with-header">
         <li class="collection-header">
-          <h4>@result.config.projectTitle</h4>
-          <em>@util.NumberUtils.withCommas(result.fileCount) files containing @util.NumberUtils.withCommas(result.fileSizes) characters of Scala.</em>
+          <h4>@result.config.projectTitle Export Complete</h4>
+          <em>
+            @util.NumberUtils.withCommas(result.models.size) models using
+            @util.NumberUtils.withCommas(result.fileCount) files containing
+            @util.NumberUtils.withCommas(result.fileSizes) characters.
+          </em>
         </li>
         <li class="collection-item">
           <ul>

@@ -8,7 +8,8 @@ object TwirlViewFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     val file = TwirlFile(model.viewPackage, model.propertyName + "View")
-    file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, notes: Seq[models.note.Note], auditRecords: Seq[models.audit.AuditRecord], debug: Boolean)(")
+    val audits = if (model.audited) { ", auditRecords: Seq[models.audit.AuditRecord]" } else { "" }
+    file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, notes: Seq[models.note.Note]$audits, debug: Boolean)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
     file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
@@ -63,7 +64,9 @@ object TwirlViewFile {
     file.add("</div>", -1)
     val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
     file.add(s"""@views.html.admin.note.notes(notes, "${model.propertyName}", $modelPks)""")
-    file.add(s"""@views.html.admin.audit.auditRecords(auditRecords, "${model.propertyName}", $modelPks)""")
+    if (model.audited) {
+      file.add(s"""@views.html.admin.audit.auditRecords(auditRecords, "${model.propertyName}", $modelPks)""")
+    }
     file.add("</div>", -1)
     addReferences(config, model, file)
     file.add("}", -1)
