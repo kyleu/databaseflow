@@ -17,9 +17,9 @@ object InjectServiceRegistry {
         }.sorted.mkString("\n")
 
         val ws = if (withPackages.nonEmpty && withoutPackages.nonEmpty) { "\n\n" } else { "" }
-        withPackages + ws + withoutPackages
+        (withPackages + ws + withoutPackages).dropRight(1)
       }
-      InjectHelper.replaceBetween(original = s, start = "    /* Start model service files */", end = "    /* End model service files */", newContent = newContent)
+      InjectHelper.replaceBetween(original = s, start = "    /* Start model service files */", end = "/* End model service files */", newContent = newContent)
     }
 
     val srSourceFile = rootDir / "app" / "services" / "ServiceRegistry.scala"

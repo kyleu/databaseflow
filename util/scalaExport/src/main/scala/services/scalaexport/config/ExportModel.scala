@@ -41,14 +41,13 @@ case class ExportModel(
 
   val viewPackage = "views" +: "admin" +: pkg
   val viewHtmlPackage = "views" +: "html" +: "admin" +: pkg
-  val viewDirectory = "app"
 
   val modelPackage = "models" +: pkg
-  val modelDirectory = "app"
   val modelClass = (modelPackage :+ className).mkString(".")
 
   val queriesPackage = "models" +: "queries" +: pkg
-  val queriesDirectory = "app"
+
+  val tablePackage = "models" +: "table" +: pkg
 
   val servicePackage = "services" +: pkg
   val serviceDirectory = "app"
