@@ -35,6 +35,8 @@ object QueryTranslations extends Logging {
       case "cstring" => StringType
       case "anyelement" => StringType
       case "record" => StringType
+      case "citext" => StringType
+      case "inet" => StringType
       case x =>
         log.warn(s"Encountered unknown field type [$x]. ")
         UnknownType
