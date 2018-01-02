@@ -31,7 +31,6 @@ object TableFile {
       file.add()
     }
 
-    file.add()
     val propSeq = model.fields.map(_.propertyName).mkString(", ")
     file.add(s"override val * = ($propSeq) <> (", 1)
     file.add(s"(${model.modelClass}.apply _).tupled,")
