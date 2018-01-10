@@ -69,6 +69,7 @@ object Icons {
   val table = "fa-folder-open-o"
   val view = "fa-bar-chart"
 
+  val enum = "fa-sort-alpha-asc"
   val definition = "fa-at"
   val columns = "fa-sign-in"
   val foreignKeys = "fa-sign-out"

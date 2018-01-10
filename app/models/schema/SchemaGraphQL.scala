@@ -8,8 +8,20 @@ import sangria.schema._
 import models.schema.SchemaModelGraphQL._
 
 object SchemaGraphQL {
+  implicit val enumType = deriveObjectType[GraphQLContext, EnumType]()
+
   implicit val schemaType = deriveObjectType[GraphQLContext, Schema](
     ObjectTypeDescription("The database schema describing this connection."),
+    ReplaceField("enums", Field(
+      name = "enums",
+      description = Some("The database enumerations available to this connection."),
+      fieldType = ListType(enumType),
+      arguments = ConnectionGraphQL.nameArg :: Nil,
+      resolve = c => c.arg(ConnectionGraphQL.nameArg) match {
+        case Some(filter) => c.value.enums.filter(e => e.key.equalsIgnoreCase(filter))
+        case None => c.value.enums
+      }
+    )),
     ReplaceField("tables", Field(
       name = "tables",
       description = Some("The database tables that are part of this connection."),

@@ -2,7 +2,7 @@ package controllers.admin
 
 import better.files._
 import controllers.BaseController
-import models.schema.{Column, ColumnType, Schema, Table}
+import models.schema._
 import services.connection.ConnectionSettingsService
 import services.scalaexport.{ExportHelper, ScalaExportService}
 import services.scalaexport.config._
@@ -63,6 +63,9 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           key = schemaId,
           projectId = form("project.id"),
           projectTitle = form("project.title"),
+          enums = schema.enums.map { e =>
+            enumFor(e, form.filter(_._1.startsWith("enum." + e.key)).map(x => x._1.stripPrefix("enum." + e.key + ".") -> x._2))
+          },
           models = schema.tables.map { t =>
             modelForTable(schema, t, form.filter(_._1.startsWith("model." + t.name)).map(x => x._1.stripPrefix("model." + t.name + ".") -> x._2))
           },
@@ -79,6 +82,18 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")
     }
+  }
+
+  private[this] def enumFor(e: EnumType, form: Map[String, String]) = try {
+    ExportEnum(
+      pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
+      name = e.key,
+      className = form("className"),
+      values = e.values,
+      ignored = form.get("ignored").contains("true")
+    )
+  } catch {
+    case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for enum [${e.key}].", x)
   }
 
   private[this] def modelForTable(schema: Schema, t: Table, form: Map[String, String]) = try {

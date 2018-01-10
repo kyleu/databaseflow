@@ -27,10 +27,11 @@ case class ScalaExportService(config: ExportConfiguration) {
   }
 
   def exportFiles(config: ExportConfiguration) = {
+    val enumFiles = ExportFiles.exportEnums(config.enums)
     val models = config.models.filterNot(_.ignored)
     val modelFiles = models.map(model => ExportFiles.exportModel(config, model))
     val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models)
-    Future.successful(ExportResult(config, modelFiles.map(_._1), modelFiles.flatMap(_._2), rootFiles))
+    Future.successful(ExportResult(config, modelFiles.map(_._1), enumFiles, modelFiles.flatMap(_._2), rootFiles))
   }
 }
 

@@ -2,7 +2,7 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
-import services.scalaexport.config.{ExportConfiguration, ExportModel}
+import services.scalaexport.config.{ExportConfiguration, ExportEnum, ExportModel}
 import services.scalaexport.file._
 
 object ExportFiles {
@@ -10,6 +10,16 @@ object ExportFiles {
     val rootDir = "./tmp/scalaexport".toFile
     if (rootDir.exists) { rootDir.delete() }
     rootDir.createDirectory()
+
+    result.enumFiles.map { file =>
+      val f = if (file.pkg.isEmpty) {
+        rootDir / file.dir / file.filename
+      } else {
+        rootDir / file.packageDir / file.filename
+      }
+      f.createIfNotExists(createParents = true)
+      f.writeText(file.rendered)
+    }
 
     result.sourceFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
@@ -22,6 +32,10 @@ object ExportFiles {
     }
 
     result.log("File write complete.")
+  }
+
+  def exportEnums(enums: Seq[ExportEnum]) = enums.map { e =>
+    EnumFile.export(e)
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {

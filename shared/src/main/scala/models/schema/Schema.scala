@@ -17,6 +17,7 @@ case class Schema(
   catalogTerm: String,
   maxSqlLength: Int,
   timezone: Double,
+  enums: Seq[EnumType],
   tables: Seq[Table],
   views: Seq[View],
   procedures: Seq[Procedure],

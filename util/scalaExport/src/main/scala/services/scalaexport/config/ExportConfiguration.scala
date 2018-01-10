@@ -4,6 +4,7 @@ case class ExportConfiguration(
     key: String,
     projectId: String,
     projectTitle: String,
+    enums: Seq[ExportEnum],
     models: Seq[ExportModel],
     source: String = "boilerplay",
     projectLocation: Option[String] = None

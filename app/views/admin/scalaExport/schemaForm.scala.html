@@ -1,6 +1,8 @@
 @(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: services.scalaexport.config.ExportConfiguration, schema: models.schema.Schema)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
-)@layout.admin(user = user, title = s"${cfg.projectTitle} Scala Export", activeSection = "") {
+)
+@chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
+@layout.admin(user = user, title = s"${cfg.projectTitle} Scala Export", activeSection = "") {
 <form method="post" action="@controllers.admin.routes.ScalaExportController.export(cs.slug)">
   <div class="row">
     <div class="col s12">
@@ -42,6 +44,7 @@
               </table>
             </div>
           </li>
+          @views.html.admin.scalaExport.enumForm(cfg.enums, schema.enums)
           @schema.tables.map { table =>
             @views.html.admin.scalaExport.modelForm(
               table = table,

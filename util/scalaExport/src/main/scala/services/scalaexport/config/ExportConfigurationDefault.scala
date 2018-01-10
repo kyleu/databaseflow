@@ -9,6 +9,7 @@ object ExportConfigurationDefault {
     key = key,
     projectId = key,
     projectTitle = ExportHelper.toClassName(key),
+    enums = schema.enums.map(e => ExportEnum(Nil, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), e.values)),
     models = schema.tables.map(t => loadModel(schema, t))
   )
 

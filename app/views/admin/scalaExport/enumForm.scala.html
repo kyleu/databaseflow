@@ -1,0 +1,34 @@
+@(configEnums: Seq[services.scalaexport.config.ExportEnum], schemaEnums: Seq[models.schema.EnumType])
+@chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
+@toId(key: String) = {@services.scalaexport.ExportHelper.toClassName(services.scalaexport.ExportHelper.toIdentifier(key))}
+@if(schemaEnums.nonEmpty) {
+  <li>
+    <div class="collapsible-header">
+      <div class="right"> @schemaEnums.size</div>
+      <i class="fa @models.template.Icons.enum"></i> Enumerations
+    </div>
+    <div class="collapsible-body with-padding">
+      <table class="">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <th>Package</th>
+            <th>Class</th>
+            <th>Ignored</th>
+          </tr>
+          @schemaEnums.map { enum =>
+            <tr>
+              <td>@enum.key</td>
+              <td><input name="enum.@{enum.key}.pkg" class="validate" value="@configEnums.find(_.name == enum.key).map(_.pkg.mkString("."))" /></td>
+              <td><input name="enum.@{enum.key}.className" class="validate" value="@configEnums.find(_.name == enum.key).map(_.className).getOrElse(toId(enum.key))" /></td>
+              <td>
+                <input name="enum.@{enum.key}.ignored" id="enum.@{enum.key}.ignored" @chk(configEnums.find(_.name == enum.key).exists(_.ignored)) type="checkbox" value="true" />
+                <label for="enum.@{enum.key}.ignored"></label>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </li>
+}
