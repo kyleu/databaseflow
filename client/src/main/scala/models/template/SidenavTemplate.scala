@@ -29,5 +29,5 @@ object SidenavTemplate {
   def procedures(procedures: Seq[Procedure]) = procedures.map(procedure)
 
   private[this] def enum(e: EnumType) = tag("enum", TemplateUtils.cleanForId(e.key), e.key, Icons.enum)
-  def enums(enums: Seq[EnumType]) = enums.map(enum)
+  def enums(enums: Seq[EnumType]) = enums.sortBy(_.key).map(enum)
 }

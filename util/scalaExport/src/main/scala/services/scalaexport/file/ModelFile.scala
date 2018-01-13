@@ -73,6 +73,11 @@ object ModelFile {
 
   private[this] def addFields(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
     field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
+    if (field.t == ColumnType.EnumType) {
+      enums.find(_.name == field.sqlTypeName).foreach(e => if (model.pkg != e.pkg) {
+        file.addImport(e.modelPackage.mkString("."), e.className)
+      })
+    }
 
     val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
 

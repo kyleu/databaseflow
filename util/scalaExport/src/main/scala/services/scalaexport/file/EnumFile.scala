@@ -6,13 +6,13 @@ import services.scalaexport.config.ExportEnum
 
 object EnumFile {
   def export(model: ExportEnum) = {
-    val file = ScalaFile(model.modelPackage, model.className, Some(ScalaFile.sharedSrc))
+    val file = ScalaFile(model.modelPackage, model.className + "Enum", Some(ScalaFile.sharedSrc))
 
     file.addImport("enumeratum.values", "StringEnumEntry")
     file.addImport("enumeratum.values", "StringEnum")
     file.addImport("enumeratum.values", "StringCirceEnum")
 
-    file.add(s"sealed abstract class ${model.className}(override val value: String) extends StringEnumEntry")
+    file.add(s"sealed abstract class ${model.className}Enum(override val value: String) extends StringEnumEntry")
     file.add()
 
     file.add(s"object ${model.className} extends StringEnum[${model.className}] with StringCirceEnum[${model.className}] {", 1)
