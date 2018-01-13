@@ -11,7 +11,7 @@ object EnumSchemaFile {
     file.addImport("sangria.schema", "EnumType")
 
     file.add(s"object ${enum.className}Schema {", 1)
-    file.add(s"implicit val enumType: EnumType[GameResult] = CommonSchema.deriveStringEnumeratumType(", 1)
+    file.add(s"implicit val enumType: EnumType[${enum.className}] = CommonSchema.deriveStringEnumeratumType(", 1)
     file.add(s"""name = "${enum.className}",""")
     file.add(s"""description = "An enumeration of ${enum.className} values.",""")
     file.add(s"values = ${enum.className}.values.map(t => t -> t.value).toList")

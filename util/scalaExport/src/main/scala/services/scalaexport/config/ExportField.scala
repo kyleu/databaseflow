@@ -29,7 +29,7 @@ case class ExportField(
     case _ => t.className
   }
 
-  lazy val defaultString = t match {
+  def defaultString(enums: Seq[ExportEnum]) = t match {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
     case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
     case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
@@ -48,8 +48,12 @@ case class ExportField(
     case JsonType => "util.JsonSerializers.emptyObject"
     case ArrayType => "Seq.empty"
     case TagsType => "Seq.empty[models.tag.Tag]"
-    case EnumType => "\"" + defaultValue.getOrElse("") + "\""
-
+    case EnumType => enums.find(_.name == sqlTypeName) match {
+      case Some(enum) => enum.className + "." + ExportHelper.toClassName(ExportHelper.toIdentifier(defaultValue.flatMap { d =>
+        enum.values.find(_ == d)
+      }.getOrElse(enum.values.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.name}].")))))
+      case None => "\"" + defaultValue.getOrElse("") + "\""
+    }
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
 

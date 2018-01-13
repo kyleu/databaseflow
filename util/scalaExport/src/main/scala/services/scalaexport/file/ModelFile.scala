@@ -86,7 +86,7 @@ object ModelFile {
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     val propDefault = if (field.notNull) {
-      " = " + field.defaultString
+      " = " + field.defaultString(enums)
     } else {
       " = None"
     }
