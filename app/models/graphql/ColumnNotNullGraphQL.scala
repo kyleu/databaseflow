@@ -36,6 +36,7 @@ object ColumnNotNullGraphQL {
     case ColumnType.ObjectType | ColumnType.StructType => getDefaultField(name, description, cleanName)
     case ColumnType.JsonType => getDefaultField(name, description, cleanName)
 
+    case ColumnType.EnumType => getDefaultField(name, description, cleanName)
     case ColumnType.CodeType => getDefaultField(name, description, cleanName)
     case ColumnType.TagsType => getDefaultField(name, description, cleanName)
 

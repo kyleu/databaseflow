@@ -4,27 +4,27 @@ import java.sql.DatabaseMetaData
 
 import models.database.Row
 import models.queries.QueryTranslations
-import models.schema.Column
+import models.schema.{Column, EnumType}
 import util.NullUtils
 
 import scala.util.control.NonFatal
 
 object MetadataColumns {
-  def getAllColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String]) = {
+  def getAllColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], enums: Seq[EnumType]) = {
     val rs = metadata.getColumns(catalog.orNull, schema.orNull, NullUtils.inst, NullUtils.inst)
     val columns = new Row.Iter(rs).map { row =>
-      row.as[String]("TABLE_NAME") -> fromRow(row)
+      row.as[String]("TABLE_NAME") -> fromRow(row, enums)
     }.toList
     columns.sortBy(_._1).map(_._2)
   }
 
-  def getColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], name: String) = {
+  def getColumns(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], name: String, enums: Seq[EnumType]) = {
     val rs = metadata.getColumns(catalog.orNull, schema.orNull, name, NullUtils.inst)
-    val columns = new Row.Iter(rs).map(fromRow).toList
+    val columns = new Row.Iter(rs).map(row => fromRow(row, enums)).toList
     columns.sortBy(_._1).map(_._2)
   }
 
-  private[this] def fromRow(row: Row) = {
+  private[this] def fromRow(row: Row, enums: Seq[EnumType]) = {
     val nullable = JdbcHelper.intVal(row.as[Any]("NULLABLE"))
     val colType = JdbcHelper.intVal(row.as[Any]("DATA_TYPE"))
     val colTypeName = row.asOpt[Any]("TYPE_NAME").map(x => JdbcHelper.stringVal(x)).getOrElse("")
@@ -41,7 +41,7 @@ object MetadataColumns {
       } catch {
         case NonFatal(_) => false
       },
-      columnType = QueryTranslations.forType(colType, colTypeName, colSize),
+      columnType = QueryTranslations.forType(colType, colTypeName, colSize, enums),
       sqlTypeCode = colType,
       sqlTypeName = colTypeName,
       size = colSize.map(_.toString).getOrElse("?"),

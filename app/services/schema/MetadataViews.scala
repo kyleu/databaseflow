@@ -5,7 +5,7 @@ import java.util.UUID
 
 import models.database.{Query, Row}
 import models.engine.DatabaseEngine.MySQL
-import models.schema.View
+import models.schema.{EnumType, View}
 import services.database.DatabaseConnection
 import util.{Logging, NullUtils}
 
@@ -17,11 +17,11 @@ object MetadataViews extends Logging {
     new Row.Iter(rs).map(row => fromRow(connectionId, row)).toList.sortBy(_.name)
   }
 
-  def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[View]) = views.map { view =>
-    getViewDetails(db, conn, metadata, view)
+  def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[View], enums: Seq[EnumType]) = views.map { view =>
+    getViewDetails(db, conn, metadata, view, enums)
   }
 
-  private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: View) = try {
+  private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: View, enums: Seq[EnumType]) = try {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override val sql = "show create view " + view.name
@@ -34,7 +34,7 @@ object MetadataViews extends Logging {
 
     view.copy(
       definition = definition,
-      columns = MetadataColumns.getColumns(metadata, view.catalog, view.schema, view.name)
+      columns = MetadataColumns.getColumns(metadata, view.catalog, view.schema, view.name, enums)
     )
   } catch {
     case NonFatal(x) =>

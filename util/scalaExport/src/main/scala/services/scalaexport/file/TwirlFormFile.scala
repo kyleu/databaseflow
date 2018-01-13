@@ -42,7 +42,7 @@ object TwirlFormFile {
 
       file.add("<td>", 1)
       val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
-      TwirlFormFields.inputFor(model, field, file, autocomplete)
+      TwirlFormFields.inputFor(model, field, file, config.enums, autocomplete)
       file.add(s"</td>", -1)
       file.add("</tr>", -1)
     }

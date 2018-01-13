@@ -1,6 +1,7 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
+import models.schema.ColumnType
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object SchemaFile {
@@ -10,6 +11,14 @@ object SchemaFile {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
     file.addImport("util.FutureUtils", "graphQlContext")
+
+    model.fields.foreach(field => field.t match {
+      case ColumnType.EnumType => config.enums.find(_.name == field.sqlTypeName).foreach { enum =>
+        file.addImport(s"${enum.modelPackage.mkString(".")}.${enum.className}Schema", "enumType")
+      }
+      case _ => // noop
+    })
+
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport("models.note", "NoteSchema") }
     SchemaHelper.addImports(file)
 

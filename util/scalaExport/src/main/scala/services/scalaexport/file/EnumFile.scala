@@ -6,7 +6,7 @@ import services.scalaexport.config.ExportEnum
 
 object EnumFile {
   def export(model: ExportEnum) = {
-    val file = ScalaFile(model.pkg, model.className, Some(ScalaFile.sharedSrc))
+    val file = ScalaFile(model.modelPackage, model.className, Some(ScalaFile.sharedSrc))
 
     file.addImport("enumeratum.values", "StringEnumEntry")
     file.addImport("enumeratum.values", "StringEnum")

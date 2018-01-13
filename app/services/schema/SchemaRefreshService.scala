@@ -29,11 +29,13 @@ object SchemaRefreshService extends Logging {
         def work() = db.withConnection { conn =>
           refreshCount = refreshCount + 1
           log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}]: $refreshCount.")
+          val enums = MetadataEnums.getEnums(db)
           val metadata = conn.getMetaData
           schema.copy(
-            tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables),
-            views = MetadataViews.withViewDetails(db, conn, metadata, schema.views),
-            procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures),
+            enums = enums,
+            tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables, enums),
+            views = MetadataViews.withViewDetails(db, conn, metadata, schema.views, enums),
+            procedures = MetadataProcedures.withProcedureDetails(metadata, schema.catalog, schema.schemaName, schema.procedures, enums),
             detailsLoadedAt = Some(System.currentTimeMillis)
           )
         }

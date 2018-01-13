@@ -6,8 +6,11 @@ import models.schema.ColumnType._
 import util.Logging
 
 object QueryTranslations extends Logging {
-  def forType(i: Int, n: String, colSize: Option[Int] = None) = i match {
-    case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => StringType
+  def forType(i: Int, n: String, colSize: Option[Int] = None, enums: Seq[models.schema.EnumType]) = i match {
+    case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => enums.find(_.key == n) match {
+      case Some(_) => EnumType
+      case _ => StringType
+    }
     case NUMERIC | DECIMAL => BigDecimalType
     case BIT | BOOLEAN => BooleanType
     case TINYINT => ByteType

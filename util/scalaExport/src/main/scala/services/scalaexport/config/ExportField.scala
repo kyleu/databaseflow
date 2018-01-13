@@ -18,8 +18,13 @@ case class ExportField(
     inSummary: Boolean = false,
     ignored: Boolean = false
 ) {
+  val nullable = !notNull
+
   val className = ExportHelper.toClassName(propertyName)
-  def classNameForSqlType = t match {
+  def classNameForSqlType(enums: Seq[ExportEnum]) = t match {
+    case EnumType => enums.find(_.name == sqlTypeName).map { e =>
+      s"EnumType(${e.className})"
+    }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$sqlTypeName]."))
     case ArrayType => ArrayType.typForSqlType(sqlTypeName)
     case _ => t.className
   }
@@ -43,6 +48,7 @@ case class ExportField(
     case JsonType => "util.JsonSerializers.emptyObject"
     case ArrayType => "Seq.empty"
     case TagsType => "Seq.empty[models.tag.Tag]"
+    case EnumType => "\"" + defaultValue.getOrElse("") + "\""
 
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
@@ -73,6 +79,7 @@ case class ExportField(
     case StructType => "StringType"
     case JsonType => "JsonType"
 
+    case EnumType => "StringType"
     case CodeType => "StringType"
     case TagsType => "TagsType"
 

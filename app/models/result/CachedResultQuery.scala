@@ -2,6 +2,7 @@ package models.result
 
 import akka.actor.ActorRef
 import models.database.{Query, Row}
+import models.schema.EnumType
 import models.{QueryResultRowCount, ResponseMessage}
 import services.result.CachedResultService
 import util.DateUtils
@@ -10,7 +11,7 @@ object CachedResultQuery {
   val maxRows = 50000
 }
 
-case class CachedResultQuery(index: Int, result: CachedResult, out: Option[ActorRef]) extends Query[ResponseMessage] {
+case class CachedResultQuery(index: Int, result: CachedResult, enums: Seq[EnumType], out: Option[ActorRef]) extends Query[ResponseMessage] {
   val startMs = DateUtils.nowMillis
   override val sql = result.sql
 
@@ -19,7 +20,7 @@ case class CachedResultQuery(index: Int, result: CachedResult, out: Option[Actor
       val firstRow = rows.next()
       val md = firstRow.rs.getMetaData
 
-      val columns = ResultQueryHelper.getColumns(md)
+      val columns = ResultQueryHelper.getColumns(md, enums)
 
       val columnsWithIndex = columns.zipWithIndex
 

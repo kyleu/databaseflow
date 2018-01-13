@@ -6,10 +6,10 @@ import models.database.{Query, Row}
 import models.engine.DatabaseEngine
 import models.queries.dynamic.DynamicQuery
 import models.query.QueryResult
-import models.schema.ColumnType
+import models.schema.{ColumnType, EnumType}
 
 case class SqlExportQuery(
-    override val sql: String, override val values: Seq[Any], source: QueryResult.Source, engine: DatabaseEngine, out: OutputStream
+    override val sql: String, override val values: Seq[Any], source: QueryResult.Source, engine: DatabaseEngine, enums: Seq[EnumType], out: OutputStream
 ) extends Query[Unit] {
   private[this] val tableName = engine.cap.leftQuote + (source.t match {
     case QueryResult.SourceType.Table => source.name
@@ -32,7 +32,7 @@ case class SqlExportQuery(
       val firstRow = rows.next()
       val md = firstRow.rs.getMetaData
       val cc = md.getColumnCount
-      val columns = (1 to cc).map(i => md.getColumnLabel(i) -> DynamicQuery.getColumnMetadata(md, i)._1)
+      val columns = (1 to cc).map(i => md.getColumnLabel(i) -> DynamicQuery.getColumnMetadata(md, i, enums)._1)
       val columnsStr = columns.map(c => engine.cap.leftQuote + c._1 + engine.cap.rightQuote).mkString(", ")
       val firstRowData = (1 to cc).map(i => firstRow.asOpt[Any](i).map(_.toString))
       writer.print(sqlFor(firstRowData, columns, columnsStr) + "\n")

@@ -1,10 +1,11 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.ExportModel
+import models.schema.ColumnType
+import services.scalaexport.config.{ExportEnum, ExportModel}
 
 object QueriesFile {
-  def export(model: ExportModel) = {
+  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
     val file = ScalaFile(model.queriesPackage, model.className + "Queries")
 
     file.addImport(model.modelPackage.mkString("."), model.className)
@@ -19,7 +20,11 @@ object QueriesFile {
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.tableName}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = ${f.classNameForSqlType})"""
+      f.t match {
+        case ColumnType.EnumType => enums.find(_.name == f.sqlTypeName).foreach(e => file.addImport(e.modelPackage.mkString("."), e.className))
+        case _ => // noop
+      }
+      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = ${f.classNameForSqlType(enums)})"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
       file.add(field + comma)
     }
@@ -61,7 +66,7 @@ object QueriesFile {
     }
 
     file.add()
-    QueriesHelper.fromRow(model, file)
+    QueriesHelper.fromRow(model, file, enums)
 
     file.add("}", -1)
     file

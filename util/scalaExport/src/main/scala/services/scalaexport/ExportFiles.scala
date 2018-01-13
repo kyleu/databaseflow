@@ -34,18 +34,18 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportEnums(enums: Seq[ExportEnum]) = enums.map { e =>
-    EnumFile.export(e)
+  def exportEnums(enums: Seq[ExportEnum]) = enums.flatMap { e =>
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e))
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
     if (model.provided) {
       model -> Seq.empty
     } else {
-      val cls = ModelFile.export(model)
+      val cls = ModelFile.export(model, config.enums)
       val res = ResultFile.export(model)
-      val queries = QueriesFile.export(model)
-      val table = TableFile.export(model)
+      val queries = QueriesFile.export(model, config.enums)
+      val table = TableFile.export(model, config.enums)
       val svc = ServiceFile.export(model)
       val sch = SchemaFile.export(config, model)
       val cntr = ControllerFile.export(config, model)

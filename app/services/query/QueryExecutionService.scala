@@ -16,6 +16,7 @@ import services.audit.AuditRecordService
 import services.database.DatabaseWorkerPool
 import services.database.core.MasterDatabase
 import services.result.CachedResultService
+import services.schema.SchemaService
 import util.{DateUtils, ExceptionUtils, JdbcUtils, Logging}
 
 import scala.concurrent.Future
@@ -41,6 +42,8 @@ object QueryExecutionService extends Logging {
 
     def work() = {
       log.info(s"Performing query action [run] with resultId [$resultId] for query [$queryId] with sql [$sql].")
+      val enums = SchemaService.get(connId).map(_.enums).getOrElse(Nil)
+
       val startMs = DateUtils.nowMillis
       JdbcUtils.sqlCatch(queryId, sql._1, startMs, resultId, sql._2) { () =>
         val model = CachedResult(resultId, queryId, connId, owner, source = StatementParser.sourceFor(sql._1), sql = sql._1)
@@ -52,7 +55,7 @@ object QueryExecutionService extends Logging {
 
         Future(AuditRecordService.start(auditId, AuditType.Query, owner, Some(connId), Some(sql._1)))
 
-        val result = db.executeUnknown(CachedResultQuery(sql._2, model, Some(out)), Some(resultId))
+        val result = db.executeUnknown(CachedResultQuery(sql._2, model, enums, Some(out)), Some(resultId))
 
         val elapsedMs = (DateUtils.nowMillis - startMs).toInt
         result match {

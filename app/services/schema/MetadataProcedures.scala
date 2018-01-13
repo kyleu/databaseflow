@@ -4,7 +4,7 @@ import java.sql.DatabaseMetaData
 
 import models.database.Row
 import models.queries.QueryTranslations
-import models.schema.{Procedure, ProcedureParam}
+import models.schema.{EnumType, Procedure, ProcedureParam}
 import util.{Logging, NullUtils}
 
 import scala.util.control.NonFatal
@@ -15,13 +15,13 @@ object MetadataProcedures extends Logging {
     new Row.Iter(rs).map(procedureFromRow).toList.sortBy(_.name)
   }
 
-  def withProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedures: Seq[Procedure]) = procedures.map { p =>
-    getProcedureDetails(metadata, catalog, schema, p)
+  def withProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedures: Seq[Procedure], enums: Seq[EnumType]) = {
+    procedures.map(p => getProcedureDetails(metadata, catalog, schema, p, enums))
   }
 
-  def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedure: Procedure) = try {
+  def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedure: Procedure, enums: Seq[EnumType]) = try {
     val rs2 = metadata.getProcedureColumns(catalog.orNull, schema.orNull, procedure.name, NullUtils.inst)
-    val columns = new Row.Iter(rs2).map(columnFromRow).toList.sortBy(_._1).map(_._2)
+    val columns = new Row.Iter(rs2).map(row => columnFromRow(row, enums)).toList.sortBy(_._1).map(_._2)
     procedure.copy(params = columns)
   } catch {
     case NonFatal(x) =>
@@ -44,7 +44,7 @@ object MetadataProcedures extends Logging {
     )
   }
 
-  private[this] def columnFromRow(row: Row) = {
+  private[this] def columnFromRow(row: Row, enums: Seq[EnumType]) = {
     val paramType = JdbcHelper.intVal(row.as[Any]("COLUMN_TYPE"))
     val colType = JdbcHelper.intVal(row.as[Any]("DATA_TYPE"))
     val colTypeName = row.asOpt[Any]("TYPE_NAME").map(x => JdbcHelper.stringVal(x)).getOrElse("")
@@ -61,7 +61,7 @@ object MetadataProcedures extends Logging {
         case DatabaseMetaData.procedureColumnResult => "result"
         case _ => "?"
       },
-      columnType = QueryTranslations.forType(colType, colTypeName),
+      columnType = QueryTranslations.forType(colType, colTypeName, None, enums),
       sqlTypeCode = colType, // SQL_DATA_TYPE? SOURCE_DATA_TYPE?
       sqlTypeName = colTypeName,
       nullable = row.as[String]("IS_NULLABLE") == "YES"

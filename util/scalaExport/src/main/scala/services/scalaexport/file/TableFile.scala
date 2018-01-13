@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.config.ExportModel
+import services.scalaexport.config.{ExportEnum, ExportModel}
 
 object TableFile {
-  def export(model: ExportModel) = {
+  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
     val file = ScalaFile(model.tablePackage, model.className + "Table")
 
     file.addImport("services.database.SlickQueryService.imports", "_")
@@ -19,7 +19,7 @@ object TableFile {
 
     file.add(s"""class ${model.className}Table(tag: Tag) extends Table[${model.modelClass}](tag, "${model.tableName}") {""", 1)
 
-    addFields(model, file)
+    addFields(model, file, enums)
     file.add()
 
     if (model.pkFields.nonEmpty) {
@@ -42,10 +42,16 @@ object TableFile {
     file
   }
 
-  private[this] def addFields(model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
+  private[this] def addFields(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
     field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
 
     val colScala = field.t match {
+      case ColumnType.EnumType => enums.find(_.name == field.sqlTypeName).map { enum =>
+        file.addImport(enum.modelPackage.mkString("."), enum.className)
+        file.addImport((enum.tablePackage :+ (enum.className + "ColumnType")).mkString("."), "columnType")
+        enum.className
+      }.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
+
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case x => x.asScala
     }

@@ -8,9 +8,9 @@ import services.schema.{MetadataProcedures, MetadataTables, MetadataViews, Schem
 import util.ExceptionUtils
 
 trait DetailHelper { this: SocketService =>
-  protected[this] def handleGetTableDetail(name: String) = SchemaService.getTable(connectionId, name).foreach { t =>
+  protected[this] def handleGetTableDetail(name: String, enums: Seq[EnumType]) = SchemaService.getTable(connectionId, name).foreach { t =>
     def work() = db.withConnection { conn =>
-      MetadataTables.withTableDetails(db, conn, conn.getMetaData, Seq(t))
+      MetadataTables.withTableDetails(db, conn, conn.getMetaData, Seq(t), enums)
     }
     def onSuccess(tables: Seq[Table]) = {
       out ! TableResponse(tables)
@@ -21,9 +21,9 @@ trait DetailHelper { this: SocketService =>
     DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
-  protected[this] def handleGetProcedureDetail(name: String) = SchemaService.getProcedure(connectionId, name).foreach { p =>
+  protected[this] def handleGetProcedureDetail(name: String, enums: Seq[EnumType]) = SchemaService.getProcedure(connectionId, name).foreach { p =>
     def work() = db.withConnection { conn =>
-      MetadataProcedures.withProcedureDetails(conn.getMetaData, Option(conn.getCatalog), Option(conn.getSchema), Seq(p))
+      MetadataProcedures.withProcedureDetails(conn.getMetaData, Option(conn.getCatalog), Option(conn.getSchema), Seq(p), enums)
     }
     def onSuccess(procedures: Seq[Procedure]) = {
       out ! ProcedureResponse(procedures)
@@ -34,9 +34,9 @@ trait DetailHelper { this: SocketService =>
     DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
-  protected[this] def handleGetViewDetail(name: String) = SchemaService.getView(connectionId, name).foreach { v =>
+  protected[this] def handleGetViewDetail(name: String, enums: Seq[EnumType]) = SchemaService.getView(connectionId, name).foreach { v =>
     def work() = db.withConnection { conn =>
-      MetadataViews.withViewDetails(db, conn, conn.getMetaData, Seq(v))
+      MetadataViews.withViewDetails(db, conn, conn.getMetaData, Seq(v), enums)
     }
     def onSuccess(views: Seq[View]) = {
       out ! ViewResponse(views)

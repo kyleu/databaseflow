@@ -12,6 +12,7 @@ import play.api.i18n.Lang
 import services.database.DatabaseRegistry
 import services.database.core.ResultCacheDatabase
 import services.query.SharedResultService
+import services.schema.SchemaService
 import upickle.default._
 import util.web.FormUtils
 import util.{ApplicationContext, DateUtils}
@@ -64,9 +65,10 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
 
     val os = new ByteArrayOutputStream()
     val (sql, values: Seq[Any]) = EngineQueries.selectFrom(source.name, Nil, source.asRowDataOptions(None))(db.engine)
+    val enums = SchemaService.get(connectionId).map(_.enums).getOrElse(Nil)
     val (mimeType, query) = format match {
       case "csv" => "text/csv" -> CsvExportQuery(sql, values, os)
-      case "sql" => "application/octet-stream" -> SqlExportQuery(sql, values, source, db.engine, os)
+      case "sql" => "application/octet-stream" -> SqlExportQuery(sql, values, source, db.engine, enums, os)
       case _ => throw new IllegalArgumentException(messagesApi("error.unknown.format", format)(lang))
     }
     try {

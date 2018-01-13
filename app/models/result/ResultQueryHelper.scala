@@ -10,6 +10,7 @@ import models.queries.dynamic.DynamicQuery
 import models.queries.result.{CreateResultTable, InsertResultRow}
 import models.query.QueryResult
 import models.schema.ColumnType.{ArrayType, UnknownType}
+import models.schema.EnumType
 import services.database.core.ResultCacheDatabase
 import util.Logging
 
@@ -21,10 +22,10 @@ object ResultQueryHelper extends Logging {
     ResultCacheDatabase.conn.executeUpdate(q)
   }
 
-  def getColumns(md: ResultSetMetaData) = {
+  def getColumns(md: ResultSetMetaData, enums: Seq[EnumType]) = {
     val cc = md.getColumnCount
     val columns = (1 to cc).map { i =>
-      val (columnType, precision, scale) = DynamicQuery.getColumnMetadata(md, i)
+      val (columnType, precision, scale) = DynamicQuery.getColumnMetadata(md, i, enums)
       val label = md.getColumnLabel(i)
       val name = badChars.foldLeft(label)((x, y) => x.replaceAllLiterally(y, "_"))
       QueryResult.Col(name, columnType, precision, scale)

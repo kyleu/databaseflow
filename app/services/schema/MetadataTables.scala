@@ -5,7 +5,7 @@ import java.util.UUID
 
 import models.database.{Query, Row}
 import models.engine.DatabaseEngine.{MySQL, PostgreSQL}
-import models.schema.Table
+import models.schema.{EnumType, Table}
 import services.database.DatabaseConnection
 import util.{Logging, NullUtils}
 
@@ -17,11 +17,11 @@ object MetadataTables extends Logging {
     new Row.Iter(rs).map(row => fromRow(connectionId, row)).toList.sortBy(_.name)
   }
 
-  def withTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table]) = tables.map { table =>
-    getTableDetails(db, conn, metadata, table)
+  def withTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table], enums: Seq[EnumType]) = {
+    tables.map(table => getTableDetails(db, conn, metadata, table, enums))
   }
 
-  private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table) = try {
+  private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table, enums: Seq[EnumType]) = try {
     val definition = db.engine match {
       case MySQL => Some(db(conn, new Query[String] {
         override val sql = "show create table " + db.engine.cap.leftQuote + table.name + db.engine.cap.rightQuote
@@ -68,7 +68,7 @@ object MetadataTables extends Logging {
       rowCountEstimate = rowStats.map(_._3),
       averageRowLength = rowStats.flatMap(_._4),
       dataLength = rowStats.flatMap(_._5),
-      columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name),
+      columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name, enums),
       rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),

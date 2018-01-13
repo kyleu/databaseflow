@@ -41,14 +41,14 @@ object CreateResultTable {
       case XmlType => "text"
       case UuidType => "uuid"
 
+      case EnumType => "text"
+      case CodeType => "text"
       case JsonType => "text"
       case ObjectType => "text"
       case StructType => "text"
       case ArrayType => "text"
 
       case UnknownType => "text"
-
-      case _ => throw new IllegalStateException(s"Unhandled column type [${col.t}].")
     }
     s"${engine.cap.leftQuote}${col.name}${engine.cap.rightQuote} $colDeclaration"
   }

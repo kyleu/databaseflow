@@ -1,17 +1,17 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import services.scalaexport.config.ExportModel
+import services.scalaexport.config.{ExportEnum, ExportModel}
 
 object QueriesHelper {
-  def fromRow(model: ExportModel, file: ScalaFile) = {
+  def fromRow(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = {
     file.add(s"override def fromRow(row: Row) = ${model.className}(", 1)
     model.fields.foreach { field =>
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       if (field.notNull) {
-        file.add(s"""${field.propertyName} = ${field.classNameForSqlType}(row, "${field.columnName}")$comma""")
+        file.add(s"""${field.propertyName} = ${field.classNameForSqlType(enums)}(row, "${field.columnName}")$comma""")
       } else {
-        file.add(s"""${field.propertyName} = ${field.classNameForSqlType}.opt(row, "${field.columnName}")$comma""")
+        file.add(s"""${field.propertyName} = ${field.classNameForSqlType(enums)}.opt(row, "${field.columnName}")$comma""")
       }
     }
     file.add(")", -1)
