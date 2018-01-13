@@ -3,7 +3,7 @@ package models.template
 import java.util.UUID
 
 import models.query.{SavedQuery, SharedResult}
-import models.schema.{Procedure, Table, View}
+import models.schema.{EnumType, Procedure, Table, View}
 import util.{Messages, NumberUtils}
 
 import scalatags.Text.TypedTag
@@ -78,6 +78,15 @@ object ModelListTemplate {
       td(p.returnsResult.getOrElse(false).toString())
     ))
     forModels(queryId, Messages("list.procedures"), tableFor(cols, rows))
+  }
+
+  def forEnums(queryId: UUID, enums: Seq[EnumType]) = {
+    val cols = messagesHeaders("name", "values")
+    val rows = enums.map(e => tr(
+      td(a(cls := "list-link theme-text", data("name") := e.key, href := s"#enum-${e.key}")(e.key)),
+      td(e.values.mkString(", "))
+    ))
+    forModels(queryId, Messages("list.enums"), tableFor(cols, rows))
   }
 
   private[this] def tableFor(cols: Seq[String], rows: Seq[TypedTag[String]]) = table(cls := "bordered highlight responsive-table")(

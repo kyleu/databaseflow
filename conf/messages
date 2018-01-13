@@ -20,6 +20,7 @@ th.email = Email
 th.export = Export
 th.first = 1st
 th.import = Import
+th.key = Key
 th.last.accessed = Last Accessed
 th.name = Name
 th.occurred = Occurred
@@ -31,6 +32,7 @@ th.table = Table
 th.theme = Theme
 th.type = Type
 th.username = Username
+th.values = Values
 
 # Index Page
 index.no.connections = Add your first connection by clicking the link below.
@@ -133,6 +135,7 @@ query.sidenav.shared.results = Shared Results
 query.sidenav.tables = Tables
 query.sidenav.views = Views
 query.sidenav.procedures = Stored Procedures
+query.sidenav.enums = Enum Types
 query.sidenav.graphql = GraphQL
 query.sidenav.help = Help
 query.sidenav.feedback = Feedback

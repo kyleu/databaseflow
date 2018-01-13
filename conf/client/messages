@@ -97,6 +97,7 @@ list.shared.results = Shared Results
 list.tables = Tables
 list.views = Views
 list.procedures = Procedures
+list.enums = Enum Types
 list.this.connection = This Connection
 list.unknown.connection = Unknown Connection
 list.all.connections = All Connections

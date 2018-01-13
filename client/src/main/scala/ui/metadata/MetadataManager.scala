@@ -80,6 +80,9 @@ object MetadataManager {
     ProcedureUpdates.updateProcedures(sch.procedures, fullSchema)
     sch.procedures.foreach(ProcedureManager.addProcedure)
 
+    EnumUpdates.updateEnums(sch.enums, fullSchema)
+    sch.enums.foreach(EnumManager.addEnum)
+
     schema = Some(sch)
     engine = Some(DatabaseEngine.withName(sch.engine))
 

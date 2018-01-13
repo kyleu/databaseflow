@@ -1,7 +1,7 @@
 package models.template
 
 import models.query.{SavedQuery, SharedResult}
-import models.schema.{Procedure, Table, View}
+import models.schema.{EnumType, Procedure, Table, View}
 import util.TemplateUtils
 
 import scalatags.Text.all._
@@ -11,20 +11,23 @@ object SidenavTemplate {
     id := tagId, cls := "sidenav-link waves-effect waves-light", data("key") := key, href := link, title := name, data("name") := name
   )(em(cls := s"fa $icon theme-text"), span(name)))
 
-  private[this] def sharedResult(sr: SharedResult) = tagFor(
-    "shared-result-link-" + sr.id, sr.id.toString, "#shared-result-" + sr.id, sr.title, Icons.sharedResult
-  )
+  private[this] def tag(t: String, id: String, name: String, icon: String) = tagFor(t + "-link-" + id, id, "#" + t + "-" + id, name, icon)
+
+  private[this] def sharedResult(sr: SharedResult) = tag("shared-result", sr.id.toString, sr.title, Icons.sharedResult)
   def sharedResults(srs: Seq[SharedResult]) = srs.map(sharedResult)
 
-  private[this] def savedQuery(sq: SavedQuery) = tagFor("saved-query-link-" + sq.id, sq.id.toString, "#saved-query-" + sq.id, sq.name, Icons.savedQuery)
+  private[this] def savedQuery(sq: SavedQuery) = tag("saved-query", sq.id.toString, sq.name, Icons.savedQuery)
   def savedQueries(sqs: Seq[SavedQuery]) = sqs.map(savedQuery)
 
-  private[this] def table(t: Table) = tagFor("table-link-" + TemplateUtils.cleanForId(t.name), t.name, "#table-" + t.name, t.name, Icons.tableClosed)
+  private[this] def table(t: Table) = tag("table-link", TemplateUtils.cleanForId(t.name), t.name, Icons.tableClosed)
   def tables(tables: Seq[Table]) = tables.map(table)
 
-  private[this] def view(v: View) = tagFor("view-link-" + TemplateUtils.cleanForId(v.name), v.name, "#view-" + v.name, v.name, Icons.view)
+  private[this] def view(v: View) = tag("view", TemplateUtils.cleanForId(v.name), v.name, Icons.view)
   def views(views: Seq[View]) = views.map(view)
 
-  private[this] def procedure(p: Procedure) = tagFor("procedure-link-" + TemplateUtils.cleanForId(p.name), p.name, "#view-" + p.name, p.name, Icons.procedure)
+  private[this] def procedure(p: Procedure) = tag("procedure", TemplateUtils.cleanForId(p.name), p.name, Icons.procedure)
   def procedures(procedures: Seq[Procedure]) = procedures.map(procedure)
+
+  private[this] def enum(e: EnumType) = tag("enum", TemplateUtils.cleanForId(e.key), e.key, Icons.enum)
+  def enums(enums: Seq[EnumType]) = enums.map(enum)
 }

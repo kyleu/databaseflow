@@ -25,6 +25,7 @@ object ModelListManager {
       case "table" => TableManager.tableDetail(name, RowDataOptions.empty)
       case "view" => ViewManager.viewDetail(name)
       case "procedure" => ProcedureManager.procedureDetail(name)
+      case "enum" => EnumManager.enumDetail(name)
       case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
     }
   })
@@ -90,6 +91,7 @@ object ModelListManager {
     case "table" => ModelListTemplate.forTables(queryId, schema.tables.sortBy(_.name))
     case "view" => ModelListTemplate.forViews(queryId, schema.views.sortBy(_.name))
     case "procedure" => ModelListTemplate.forProcedures(queryId, schema.procedures.sortBy(_.name))
+    case "enum" => ModelListTemplate.forEnums(queryId, schema.enums.sortBy(_.key))
     case _ => throw new IllegalArgumentException(s"Invalid key [$key].")
   }
 }
