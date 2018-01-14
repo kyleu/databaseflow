@@ -77,7 +77,7 @@ case class ExportField(
     s"${enum.className}.withValue($s)"
   }.getOrElse(t.fromString.replaceAllLiterally("xxx", s))
 
-  private[this] val graphQLType = t match {
+  private[this] def graphQLType = t match {
     case StringType => "StringType"
 
     case BooleanType => "BooleanType"
@@ -118,5 +118,5 @@ case class ExportField(
     case UnknownType => "UnknownType"
   }
 
-  val graphQlArgType = if (notNull) { graphQLType } else { "OptionInputType(" + graphQLType + ")" }
+  def graphQlArgType = if (notNull) { graphQLType } else { "OptionInputType(" + graphQLType + ")" }
 }
