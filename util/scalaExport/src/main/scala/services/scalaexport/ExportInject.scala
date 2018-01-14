@@ -16,8 +16,9 @@ object ExportInject {
     val xm = InjectExplore.injectMenu(result, rootDir)
     val xh = InjectExplore.injectHtml(result, rootDir)
     val sr = InjectSearch.inject(result, rootDir)
+    val b = InjectBindables.inject(result, rootDir)
 
     result.log("Injection complete.")
-    Seq(s, i, svc, al, ar, ro, sro, xm, xh, sr)
+    Seq(s, i, svc, al, ar, ro, sro, xm, xh, sr, b)
   }
 }

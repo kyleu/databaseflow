@@ -1,11 +1,10 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import models.schema.ColumnType
-import services.scalaexport.config.{ExportEnum, ExportModel}
+import services.scalaexport.config.ExportModel
 
 object QueriesFile {
-  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
+  def export(model: ExportModel) = {
     val file = ScalaFile(model.queriesPackage, model.className + "Queries")
 
     file.addImport(model.modelPackage.mkString("."), model.className)
@@ -20,11 +19,8 @@ object QueriesFile {
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.tableName}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      f.t match {
-        case ColumnType.EnumType => enums.find(_.name == f.sqlTypeName).foreach(e => file.addImport(e.modelPackage.mkString("."), e.className))
-        case _ => // noop
-      }
-      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = ${f.classNameForSqlType(enums)})"""
+      f.addImport(file)
+      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = ${f.classNameForSqlType})"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
       file.add(field + comma)
     }
@@ -57,7 +53,7 @@ object QueriesFile {
     file.add("def create(dataFields: Seq[DataField]) = CreateFields(dataFields)")
 
     if (model.pkFields.nonEmpty) {
-      val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+      val sig = model.pkFields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
       val call = model.pkFields.map(_.propertyName).mkString(", ")
       file.add()
       file.add(s"def removeByPrimaryKey($sig) = RemoveByPrimaryKey(Seq[Any]($call))")
@@ -66,7 +62,7 @@ object QueriesFile {
     }
 
     file.add()
-    QueriesHelper.fromRow(model, file, enums)
+    QueriesHelper.fromRow(model, file)
 
     file.add("}", -1)
     file
@@ -76,13 +72,13 @@ object QueriesFile {
     case Nil => // noop
     case pkField :: Nil =>
       val name = pkField.propertyName
-      pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala))
+      pkField.addImport(file)
       file.add(s"def getByPrimaryKey($name: ${model.pkType}) = GetByPrimaryKey(Seq($name))")
       file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery(column = "${pkField.columnName}", values = ${name}Seq)""")
       file.add()
     case pkFields =>
-      pkFields.foreach(pkField => pkField.t.requiredImport.foreach(x => file.addImport(x, pkField.t.asScala)))
-      val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScala}").mkString(", ")
+      pkFields.foreach(_.addImport(file))
+      val args = pkFields.map(x => s"${x.propertyName}: ${x.scalaType}").mkString(", ")
       val seqArgs = pkFields.map(_.propertyName).mkString(", ")
       file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
       file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)

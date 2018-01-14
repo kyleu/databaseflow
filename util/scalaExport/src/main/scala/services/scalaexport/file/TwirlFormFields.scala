@@ -2,13 +2,13 @@ package services.scalaexport.file
 
 import models.scalaexport.OutputFile
 import models.schema.{ColumnType, ForeignKey}
-import services.scalaexport.config.{ExportEnum, ExportField, ExportModel}
+import services.scalaexport.config.{ExportField, ExportModel}
 
 object TwirlFormFields {
-  def inputFor(model: ExportModel, field: ExportField, file: OutputFile, enums: Seq[ExportEnum], autocomplete: Option[(ForeignKey, ExportModel)]) = {
+  def inputFor(model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
     field.t match {
       case ColumnType.EnumType =>
-        val enum = enums.find(_.name == field.sqlTypeName).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
+        val enum = field.enumOpt.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
         TwirlFormEnumFields.enumField(field, enum, file)
       case ColumnType.CodeType => codeField(field, file)
       case ColumnType.BooleanType => booleanField(field, file)

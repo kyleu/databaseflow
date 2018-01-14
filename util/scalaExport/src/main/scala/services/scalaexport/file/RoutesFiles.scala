@@ -29,14 +29,14 @@ object RoutesFiles {
             val urlArgs = s"by${col.className}/:${col.propertyName}"
             val detailUrl = prefix + "/" + urlArgs
             val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
-            Some(s"GET         $detailUrl $detailWs ${model.controllerClass}.by${col.className}(${col.propertyName}: ${col.t.asScalaFull}, $relationArgs)")
+            Some(s"GET         $detailUrl $detailWs ${model.controllerClass}.by${col.className}(${col.propertyName}: ${col.scalaTypeFull}, $relationArgs)")
           case _ => None
         }
       }
       val detail = model.pkFields match {
         case Nil => Nil
         case pkFields =>
-          val args = pkFields.map(x => s"${x.propertyName}: ${x.t.asScalaFull}").mkString(", ")
+          val args = pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
           val urlArgs = pkFields.map(x => ":" + x.propertyName).mkString("/")
 
           val detailUrl = prefix + "/" + urlArgs
@@ -64,7 +64,7 @@ object RoutesFiles {
     val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
     val routesContent = packages.map {
-      case p if p._2.size == 1 => p._1 -> routesContentFor(config, p._2.head, solo = true)
+      case p if p._2.lengthCompare(1) == 0 => p._1 -> routesContentFor(config, p._2.head, solo = true)
       case p => p._1 -> p._2.flatMap(m => routesContentFor(config, m))
     }
 

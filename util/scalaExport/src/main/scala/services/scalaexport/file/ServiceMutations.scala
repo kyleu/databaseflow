@@ -1,7 +1,6 @@
 package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
-import models.schema.ColumnType
 import services.scalaexport.config.ExportModel
 
 object ServiceMutations {
@@ -9,8 +8,8 @@ object ServiceMutations {
 
   def mutations(model: ExportModel, file: ScalaFile) = {
     if (model.pkFields.nonEmpty) {
-      model.pkFields.foreach(f => f.t.requiredImport.foreach(x => file.addImport(x, f.t.asScala)))
-      val sig = model.pkFields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+      model.pkFields.foreach(_.addImport(file))
+      val sig = model.pkFields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
       val call = model.pkFields.map(_.propertyName).mkString(", ")
       val interp = model.pkFields.map("$" + _.propertyName).mkString(", ")
       file.addImport("scala.concurrent", "Future")

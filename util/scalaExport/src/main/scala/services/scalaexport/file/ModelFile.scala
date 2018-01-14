@@ -2,10 +2,10 @@ package services.scalaexport.file
 
 import models.scalaexport.ScalaFile
 import models.schema.ColumnType
-import services.scalaexport.config.{ExportEnum, ExportModel}
+import services.scalaexport.config.ExportModel
 
 object ModelFile {
-  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
+  def export(model: ExportModel) = {
     val root = if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None }
     val file = ScalaFile(model.modelPackage, model.className, root = root)
 
@@ -35,7 +35,7 @@ object ModelFile {
       file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
     file.add(s"case class ${model.className}(", 2)
-    addFields(model, file, enums)
+    addFields(model, file)
     model.extendsClass match {
       case Some(x) => file.add(") extends " + x + " {", -2)
       case None => file.add(") extends DataFieldModel {", -2)
@@ -71,27 +71,18 @@ object ModelFile {
     file
   }
 
-  private[this] def addFields(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
-    field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
-    if (field.t == ColumnType.EnumType) {
-      enums.find(_.name == field.sqlTypeName).foreach(e => if (model.pkg != e.pkg) {
-        file.addImport(e.modelPackage.mkString("."), e.className)
-      })
-    }
+  private[this] def addFields(model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
+    field.addImport(file, model.modelPackage)
 
     val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
 
     val colScala = field.t match {
-      case ColumnType.EnumType => enums.find(_.name == field.sqlTypeName).map { enum =>
-        field.t.requiredImport.foreach(p => file.addImport(enum.modelPackage.mkString("."), enum.className))
-        enum.className
-      }.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
-      case x => x.asScala
+      case _ => field.scalaType
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     val propDefault = if (field.notNull) {
-      " = " + field.defaultString(enums)
+      " = " + field.defaultString
     } else {
       " = None"
     }

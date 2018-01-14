@@ -10,7 +10,7 @@ object TwirlRelationFiles {
     val searchColumns = model.fields.filter(_.inSearch)
     val viewCall = model.routesClass + ".by" + refFields.map(_.className).mkString
     val refProps = refFields.map(_.propertyName).mkString(", ")
-    val refArgs = refFields.map(r => r.propertyName + ": " + r.t.asScalaFull).mkString(", ")
+    val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull).mkString(", ")
 
     listFile.add(s"@(user: models.user.SystemUser, $refArgs, modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
     listFile.add("implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")

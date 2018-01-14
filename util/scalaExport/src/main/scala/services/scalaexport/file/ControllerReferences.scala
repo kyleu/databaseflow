@@ -9,7 +9,7 @@ object ControllerReferences {
     if (references.nonEmpty) {
       file.addImport("models.result", "RelationCount")
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
-      val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.t.asScalaFull}").mkString(", ")
+      val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
       val refServices = references.map(ref => (ref._2, ref._3, ref._4))
 
       file.add()

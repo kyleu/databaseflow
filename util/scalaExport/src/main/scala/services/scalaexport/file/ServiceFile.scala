@@ -11,7 +11,7 @@ object ServiceFile {
 
   def export(model: ExportModel) = {
     val file = ScalaFile(model.servicePackage, model.className + "Service")
-    val queriesFile = model.className + "Queries"
+    val queriesFilename = model.className + "Queries"
 
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")
@@ -37,12 +37,25 @@ object ServiceFile {
       file.addMarker("string-search", InjectSearchParams(model).toString)
     }
 
-    ServiceHelper.writeSearchFields(model, file, queriesFile, trace, searchArgs)
+    ServiceHelper.writeSearchFields(model, file, queriesFilename, trace, searchArgs)
     ServiceHelper.writeForeignKeys(model, file)
 
+    insertsFor(model, queriesFilename, file)
+    ServiceMutations.mutations(model, file)
+
+    file.add()
+    file.add(s"def csvFor(operation: String, totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
+    file.add(s"""traceB("export.csv")(td => util.CsvUtils.csvFor(Some(key), totalCount, rows, $queriesFilename.fields)(td))""")
+    file.add("}", -1)
+
+    file.add("}", -1)
+    file
+  }
+
+  private[this] def insertsFor(model: ExportModel, queriesFilename: String, file: ScalaFile) = {
     file.add("// Mutations")
     file.add(s"""def insert(creds: Credentials, model: ${model.className})$trace = traceF("insert") { td =>""", 1)
-    file.add(s"""ApplicationDatabase.executeF($queriesFile.insert(model))(td).flatMap {""", 1)
+    file.add(s"""ApplicationDatabase.executeF($queriesFilename.insert(model))(td).flatMap {""", 1)
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
@@ -63,11 +76,11 @@ object ServiceFile {
     file.add("}", -1)
 
     file.add(s"def insertBatch(creds: Credentials, models: Seq[${model.className}])$trace = {", 1)
-    file.add(s"""traceF("insertBatch")(td => ApplicationDatabase.executeF($queriesFile.insertBatch(models))(td))""")
+    file.add(s"""traceF("insertBatch")(td => ApplicationDatabase.executeF($queriesFilename.insertBatch(models))(td))""")
     file.add("}", -1)
 
     file.add(s"""def create(creds: Credentials, fields: Seq[DataField])$trace = traceF("create") { td =>""", 1)
-    file.add(s"""ApplicationDatabase.executeF($queriesFile.create(fields))(td).flatMap { _ =>""", 1)
+    file.add(s"""ApplicationDatabase.executeF($queriesFilename.create(fields))(td).flatMap { _ =>""", 1)
     model.pkFields match {
       case Nil => file.add(s"None: Option[${model.className}]")
       case pk =>
@@ -80,15 +93,5 @@ object ServiceFile {
     }
     file.add("}", -1)
     file.add("}", -1)
-
-    ServiceMutations.mutations(model, file)
-
-    file.add()
-    file.add(s"def csvFor(operation: String, totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
-    file.add(s"""traceB("export.csv")(td => util.CsvUtils.csvFor(Some(key), totalCount, rows, $queriesFile.fields)(td))""")
-    file.add("}", -1)
-
-    file.add("}", -1)
-    file
   }
 }

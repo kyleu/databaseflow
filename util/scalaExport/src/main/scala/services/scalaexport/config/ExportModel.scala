@@ -1,6 +1,6 @@
 package services.scalaexport.config
 
-import models.schema.{Column, ForeignKey}
+import models.schema.{Column, ColumnType, ForeignKey}
 import services.scalaexport.ExportHelper
 
 object ExportModel {
@@ -32,8 +32,8 @@ case class ExportModel(
   val pkFields = pkColumns.map(c => getField(c.name))
   val pkType = pkFields match {
     case Nil => "???"
-    case h :: Nil => h.t.asScala
-    case cols => "(" + cols.map(_.t.asScala).mkString(", ") + ")"
+    case h :: Nil => h.scalaType
+    case cols => "(" + cols.map(_.scalaType).mkString(", ") + ")"
   }
 
   val pkgString = pkg.mkString(".")
@@ -65,7 +65,12 @@ case class ExportModel(
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
   val iconHtml = s"""<i class="fa @models.template.Icons.$propertyName"></i>"""
 
-  val pkArgs = pkFields.zipWithIndex.map(pkf => s"${pkf._1.t.key}Arg(arg(${pkf._2}))").mkString(", ")
+  val pkArgs = pkFields.zipWithIndex.map { pkf =>
+    pkf._1.t match {
+      case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"
+      case _ => s"${pkf._1.t.key}Arg(arg(${pkf._2}))"
+    }
+  }.mkString(", ")
 
   def validReferences(config: ExportConfiguration) = references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
   def transformedReferences(config: ExportConfiguration) = validReferences(config).flatMap { r =>

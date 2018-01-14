@@ -17,15 +17,17 @@
             <th>Ignored</th>
           </tr>
           @schemaEnums.map { enum =>
-            <tr>
-              <td>@enum.key</td>
-              <td><input name="enum.@{enum.key}.pkg" class="validate" value="@configEnums.find(_.name == enum.key).map(_.pkg.mkString("."))" /></td>
-              <td><input name="enum.@{enum.key}.className" class="validate" value="@configEnums.find(_.name == enum.key).map(_.className).getOrElse(toId(enum.key))" /></td>
-              <td>
-                <input name="enum.@{enum.key}.ignored" id="enum.@{enum.key}.ignored" @chk(configEnums.find(_.name == enum.key).exists(_.ignored)) type="checkbox" value="true" />
-                <label for="enum.@{enum.key}.ignored"></label>
-              </td>
-            </tr>
+            @defining(configEnums.find(_.name == enum.key)) { configEnum =>
+              <tr>
+                <td>@enum.key</td>
+                <td><input name="enum.@{enum.key}.pkg" class="validate" value="@configEnum.map(_.pkg.mkString("."))" /></td>
+                <td><input name="enum.@{enum.key}.className" class="validate" value="@configEnum.map(_.className).getOrElse(toId(enum.key) + "Enum")" /></td>
+                <td>
+                  <input name="enum.@{enum.key}.ignored" id="enum.@{enum.key}.ignored" @chk(configEnum.exists(_.ignored)) type="checkbox" value="true" />
+                  <label for="enum.@{enum.key}.ignored"></label>
+                </td>
+              </tr>
+            }
           }
         </tbody>
       </table>

@@ -19,9 +19,9 @@ object SchemaHelper {
   }
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    model.pkFields.foreach(pkField => pkField.t.requiredImport.foreach(pkg => file.addImport(pkg, pkField.t.asScala)))
+    model.pkFields.foreach(_.addImport(file))
     file.addImport("sangria.execution.deferred", "HasId")
-    val method = if (model.pkFields.size == 1) {
+    val method = if (model.pkFields.lengthCompare(1) == 0) {
       model.pkFields.headOption.map(f => "_." + f.propertyName).getOrElse(throw new IllegalStateException())
     } else {
       "x => (" + model.pkFields.map(f => "x." + f.propertyName).mkString(", ") + ")"

@@ -10,6 +10,8 @@ object TableFile {
 
     file.addImport("services.database.SlickQueryService.imports", "_")
 
+    model.fields.foreach(_.enumOpt.foreach(e => file.addImport(s"${e.tablePackage.mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")))
+
     file.add(s"object ${model.className}Table {", 1)
     file.add(s"val query = TableQuery[${model.className}Table]")
     addQueries(file, model)
@@ -43,17 +45,10 @@ object TableFile {
   }
 
   private[this] def addFields(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
-    field.t.requiredImport.foreach(p => file.addImport(p, field.t.asScala))
-
+    field.addImport(file)
     val colScala = field.t match {
-      case ColumnType.EnumType => enums.find(_.name == field.sqlTypeName).map { enum =>
-        file.addImport(enum.modelPackage.mkString("."), enum.className)
-        file.addImport((enum.tablePackage :+ (enum.className + "ColumnType")).mkString("."), "columnType")
-        enum.className
-      }.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
-
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
-      case x => x.asScala
+      case _ => field.scalaType
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
@@ -61,18 +56,18 @@ object TableFile {
   }
 
   private[this] def addQueries(file: ScalaFile, model: ExportModel) = {
-    model.pkFields.foreach(field => field.t.requiredImport.foreach(pkg => file.addImport(pkg, field.t.asScala)))
+    model.pkFields.foreach(_.addImport(file))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
         file.add()
         val colProp = field.propertyName
-        file.add(s"def getByPrimaryKey($colProp: ${field.t.asScala}) = query.filter(_.$colProp === $colProp).result.headOption")
-        val seqArgs = s"${colProp}Seq: Seq[${field.t.asScala}]"
+        file.add(s"def getByPrimaryKey($colProp: ${field.scalaType}) = query.filter(_.$colProp === $colProp).result.headOption")
+        val seqArgs = s"${colProp}Seq: Seq[${field.scalaType}]"
         file.add(s"def getByPrimaryKeySeq($seqArgs) = query.filter(_.$colProp.inSet(${colProp}Seq)).result")
       case fields => // multiple columns
         file.add()
-        val colArgs = fields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+        val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
         val queryArgs = fields.map(f => "o." + f.propertyName + " === " + f.propertyName).mkString(" && ")
         file.add(s"def getByPrimaryKey($colArgs) = query.filter(o => $queryArgs).result.headOption")
     }
@@ -83,13 +78,13 @@ object TableFile {
       fk.references.toList match {
         case h :: Nil =>
           val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-          col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
+          col.addImport(file)
           val propId = col.propertyName
           val propCls = col.className
 
           file.add()
-          file.add(s"""def getBy$propCls($propId: ${col.t.asScala}) = query.filter(_.$propId === $propId).result""")
-          file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.t.asScala}]) = query.filter(_.$propId.inSet(${propId}Seq)).result""")
+          file.add(s"""def getBy$propCls($propId: ${col.scalaType}) = query.filter(_.$propId === $propId).result""")
+          file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.scalaType}]) = query.filter(_.$propId.inSet(${propId}Seq)).result""")
         case _ => // noop
       }
     }

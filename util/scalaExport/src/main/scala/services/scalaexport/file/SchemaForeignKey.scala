@@ -13,8 +13,8 @@ object SchemaForeignKey {
         case h :: Nil => config.getModelOpt(fk.targetTable).foreach(_ => {
           val srcCol = src.getField(h.source)
           if (src.pkColumns.isEmpty) {
-            val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
-            srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
+            val idType = if (srcCol.notNull) { srcCol.scalaType } else { "Option[" + srcCol.scalaType + "]" }
+            srcCol.addImport(file)
             file.addImport("sangria.execution.deferred", "HasId")
             val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
             file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
@@ -24,11 +24,11 @@ object SchemaForeignKey {
             file.add()
           } else {
             val relName = s"${src.propertyName}By${srcCol.className}"
-            val idType = if (srcCol.notNull) { srcCol.t.asScala } else { "Option[" + srcCol.t.asScala + "]" }
+            val idType = if (srcCol.notNull) { srcCol.scalaType } else { "Option[" + srcCol.scalaType + "]" }
 
             file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
             file.addImport("sangria.execution.deferred", "Relation")
-            srcCol.t.requiredImport.foreach(pkg => file.addImport(pkg, srcCol.t.asScala))
+            srcCol.addImport(file)
             file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
             file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType}](", 1)
             val rels = if (srcCol.notNull) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
@@ -54,7 +54,7 @@ object SchemaForeignKey {
         val targets = fkCols.map(h => targetTable.fields.find(_.columnName == h.target).getOrElse {
           throw new IllegalStateException(s"Missing target column [${h.target}].")
         })
-        fields.foreach(f => f.t.requiredImport.foreach(pkg => file.addImport(pkg, f.t.asScala)))
+        fields.foreach(f => f.addImport(file))
         if (targetTable.pkg != model.pkg) { file.addImport(targetTable.modelPackage.mkString("."), targetTable.className + "Schema") }
 
         file.add("Field(", 1)

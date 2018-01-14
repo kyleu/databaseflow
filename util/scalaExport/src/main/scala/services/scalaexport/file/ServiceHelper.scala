@@ -35,15 +35,15 @@ object ServiceHelper {
   private[this] val td = "(implicit trace: TraceData)"
 
   def addGetters(model: ExportModel, file: ScalaFile) = {
-    model.pkFields.foreach(field => field.t.requiredImport.foreach(pkg => file.addImport(pkg, field.t.asScala)))
+    model.pkFields.foreach(_.addImport(file))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
         val colProp = field.propertyName
-        file.add(s"def getByPrimaryKey(creds: Credentials, $colProp: ${field.t.asScala})$td = {", 1)
+        file.add(s"def getByPrimaryKey(creds: Credentials, $colProp: ${field.scalaType})$td = {", 1)
         file.add(s"""traceF("get.by.primary.key")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKey($colProp))(td))""")
         file.add("}", -1)
-        val seqArgs = s"${colProp}Seq: Seq[${field.t.asScala}]"
+        val seqArgs = s"${colProp}Seq: Seq[${field.scalaType}]"
         file.add(s"def getByPrimaryKeySeq(creds: Credentials, $seqArgs)$td = {", 1)
         file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
         file.add("}", -1)
@@ -55,8 +55,8 @@ object ServiceHelper {
           }
         }
       case fields => // multiple columns
-        val tupleTyp = "(" + fields.map(_.t.asScala).mkString(", ") + ")"
-        val colArgs = fields.map(f => f.propertyName + ": " + f.t.asScala).mkString(", ")
+        val tupleTyp = "(" + fields.map(_.scalaType).mkString(", ") + ")"
+        val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
         val queryArgs = fields.map(_.propertyName).mkString(", ")
 
         file.add(s"def getByPrimaryKey(creds: Credentials, $colArgs)$td = {", 1)
@@ -75,18 +75,18 @@ object ServiceHelper {
     fk.references.toList match {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-        col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
+        col.addImport(file)
         val propId = col.propertyName
         val propCls = col.className
 
-        file.add(s"""def countBy$propCls(creds: Credentials, $propId: ${col.t.asScala})(implicit trace: TraceData) = traceF("count.by.$propId") { td =>""", 1)
+        file.add(s"""def countBy$propCls(creds: Credentials, $propId: ${col.scalaType})(implicit trace: TraceData) = traceF("count.by.$propId") { td =>""", 1)
         file.add(s"ApplicationDatabase.queryF(${model.className}Queries.CountBy$propCls($propId))(td)")
         file.add("}", -1)
-        val fkArgs = s"creds: Credentials, $propId: ${col.t.asScala}, $searchArgs"
+        val fkArgs = s"creds: Credentials, $propId: ${col.scalaType}, $searchArgs"
         file.add(s"""def getBy$propCls($fkArgs)(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
         file.add(s"""ApplicationDatabase.queryF(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td)""")
         file.add("}", -1)
-        val fkSeqArgs = s"creds: Credentials, ${propId}Seq: Seq[${col.t.asScala}]"
+        val fkSeqArgs = s"creds: Credentials, ${propId}Seq: Seq[${col.scalaType}]"
         file.add(s"""def getBy${propCls}Seq($fkSeqArgs)(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
         file.add(s"ApplicationDatabase.queryF(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
         file.add("}", -1)

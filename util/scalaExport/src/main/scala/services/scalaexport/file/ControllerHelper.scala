@@ -7,7 +7,7 @@ object ControllerHelper {
   private[this] val relArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int]"
 
   def writePks(model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkFields.nonEmpty) {
-    val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.t.asScalaFull}").mkString(", ")
+    val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
     val callArgs = model.pkFields.map(x => s"${x.propertyName} = ${x.propertyName}").mkString(", ")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
     val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
@@ -64,12 +64,12 @@ object ControllerHelper {
     fk.references.toList match {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-        col.t.requiredImport.foreach(pkg => file.addImport(pkg, col.t.asScala))
+        col.addImport(file, Nil)
         val propId = col.propertyName
         val propCls = col.className
 
         file.add()
-        file.add(s"""def by$propCls($propId: ${col.t.asScala}, $relArgs) = {""", 1)
+        file.add(s"""def by$propCls($propId: ${col.scalaType}, $relArgs) = {""", 1)
         file.add(s"""withSession("get.by.$propId", admin = true) { implicit request => implicit td =>""", 1)
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
         file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => render {", 1)

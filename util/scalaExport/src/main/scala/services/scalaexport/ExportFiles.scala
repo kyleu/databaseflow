@@ -2,7 +2,7 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
-import services.scalaexport.config.{ExportConfiguration, ExportEnum, ExportModel}
+import services.scalaexport.config.{ExportConfiguration, ExportModel}
 import services.scalaexport.file._
 
 object ExportFiles {
@@ -34,7 +34,10 @@ object ExportFiles {
     result.log("File write complete.")
   }
 
-  def exportEnums(enums: Seq[ExportEnum]) = enums.flatMap { e =>
+  def exportEnums(config: ExportConfiguration) = config.enums.flatMap { e =>
+    if (config.models.exists(_.className == e.className)) {
+      throw new IllegalStateException(s"Please rename the class of enum [${e.name}], the class name is already in use.")
+    }
     Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e))
   }
 
@@ -42,9 +45,9 @@ object ExportFiles {
     if (model.provided) {
       model -> Seq.empty
     } else {
-      val cls = ModelFile.export(model, config.enums)
+      val cls = ModelFile.export(model)
       val res = ResultFile.export(model)
-      val queries = QueriesFile.export(model, config.enums)
+      val queries = QueriesFile.export(model)
       val table = TableFile.export(model, config.enums)
       val svc = ServiceFile.export(model)
       val sch = SchemaFile.export(config, model)

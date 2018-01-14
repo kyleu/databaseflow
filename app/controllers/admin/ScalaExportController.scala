@@ -28,10 +28,10 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
       config.getModelOpt(t.name) match {
         case Some(m) =>
           val fields = t.columns.map { c =>
-            m.fields.find(_.columnName == c.name).getOrElse(ExportConfigurationDefault.loadField(c))
+            m.fields.find(_.columnName == c.name).getOrElse(ExportConfigurationDefault.loadField(c, enums = config.enums))
           }
           m.copy(fields = fields.toList)
-        case None => ExportConfigurationDefault.loadModel(schema, t)
+        case None => ExportConfigurationDefault.loadModel(schema, t, config.enums)
       }
     }
     config.copy(models = models)
@@ -122,18 +122,21 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for table [${t.name}].", x)
   }
 
-  private[this] def fieldForColumn(col: Column, form: Map[String, String], enums: Seq[ExportEnum]) = ExportField(
-    columnName = col.name,
-    propertyName = form(col.name + ".propertyName"),
-    title = form(col.name + ".title"),
-    description = form.get(col.name + ".description").filter(_.nonEmpty),
-    t = enums.find(_.name == col.sqlTypeName).map(e => ColumnType.EnumType).getOrElse(ColumnType.withNameInsensitive(form(col.name + ".t"))),
-    sqlTypeName = col.sqlTypeName,
-    defaultValue = form.get(col.name + ".defaultValue").orElse(col.defaultValue),
-    notNull = form.get(col.name + ".notNull").map(_ == "true").getOrElse(col.notNull),
-    inSearch = form.get(col.name + ".inSearch").contains("true"),
-    inView = form.get(col.name + ".inView").contains("true"),
-    inSummary = form.get(col.name + ".inSummary").contains("true"),
-    ignored = form.get(col.name + ".ignored").contains("true")
-  )
+  private[this] def fieldForColumn(col: Column, form: Map[String, String], enums: Seq[ExportEnum]) = {
+    ExportField(
+      columnName = col.name,
+      propertyName = form(col.name + ".propertyName"),
+      title = form(col.name + ".title"),
+      description = form.get(col.name + ".description").filter(_.nonEmpty),
+      t = enums.find(_.name == col.sqlTypeName).map(_ => ColumnType.EnumType).getOrElse(ColumnType.withNameInsensitive(form(col.name + ".t"))),
+      sqlTypeName = col.sqlTypeName,
+      enumOpt = enums.find(_.name == col.sqlTypeName),
+      defaultValue = form.get(col.name + ".defaultValue").orElse(col.defaultValue),
+      notNull = form.get(col.name + ".notNull").map(_ == "true").getOrElse(col.notNull),
+      inSearch = form.get(col.name + ".inSearch").contains("true"),
+      inView = form.get(col.name + ".inView").contains("true"),
+      inSummary = form.get(col.name + ".inSummary").contains("true"),
+      ignored = form.get(col.name + ".ignored").contains("true")
+    )
+  }
 }
