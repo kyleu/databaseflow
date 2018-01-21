@@ -32,16 +32,25 @@ object TableFile {
       file.add(s"""val pk = primaryKey("pk_${model.tableName}", $pkProps)""")
       file.add()
     }
+    if (model.fields.lengthCompare(22) > 0) {
+      file.addImport("shapeless", "HNil")
+      file.addImport("shapeless", "Generic")
+      file.addImport("slickless", "_")
 
-    val propSeq = model.fields.map(_.propertyName).mkString(", ")
-    file.add(s"override val * = ($propSeq) <> (", 1)
-    file.add(s"(${model.modelClass}.apply _).tupled,")
-    file.add(s"${model.modelClass}.unapply")
-    file.add(")", -1)
+      val fieldStr = model.fields.map(_.propertyName).mkString(" :: ")
+      file.add(s"override val * = ($fieldStr :: HNil).mappedWith(Generic[models.${model.fullClassName}])")
+    } else {
+      val propSeq = model.fields.map(_.propertyName).mkString(", ")
+      file.add(s"override val * = ($propSeq) <> (", 1)
+      file.add(s"(${model.modelClass}.apply _).tupled,")
+      file.add(s"${model.modelClass}.unapply")
+      file.add(")", -1)
+    }
 
     file.add("}", -1)
     file.add()
     file
+
   }
 
   private[this] def addFields(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
