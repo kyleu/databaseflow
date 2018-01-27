@@ -58,16 +58,17 @@ object ExportConfigurationDefault {
     case _ => str
   }
 
-  private[this] def loadFields(t: Table, enums: Seq[ExportEnum]) = t.columns.toList.map { col =>
-    val inSearch = t.primaryKey.exists(_.name == col.name) || t.indexes.exists(i => i.columns.exists(_.name == col.name))
-    loadField(col, inSearch, enums)
+  private[this] def loadFields(t: Table, enums: Seq[ExportEnum]) = t.columns.zipWithIndex.toList.map { col =>
+    val inSearch = t.primaryKey.exists(_.name == col._1.name) || t.indexes.exists(i => i.columns.exists(_.name == col._1.name))
+    loadField(col._1, col._2, inSearch, enums)
   }
 
-  def loadField(col: Column, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
+  def loadField(col: Column, idx: Int, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
     columnName = col.name,
     propertyName = clean(toIdentifier(col.name)),
     title = toDefaultTitle(col.name),
     description = col.description,
+    idx = idx,
     t = col.columnType,
     sqlTypeName = col.sqlTypeName,
     enumOpt = col.columnType match {

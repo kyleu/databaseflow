@@ -7,7 +7,7 @@ import services.scalaexport.inject.InjectSearchParams
 object ServiceFile {
   private[this] val trace = "(implicit trace: TraceData)"
   private[this] val inject = "@javax.inject.Inject() (override val tracing: TracingService)"
-  private[this] val searchArgs = "filters: Seq[Filter], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int] = None"
+  private[this] val searchArgs = "filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
 
   def export(model: ExportModel) = {
     val file = ScalaFile(model.servicePackage, model.className + "Service")

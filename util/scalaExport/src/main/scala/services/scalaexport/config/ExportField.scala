@@ -10,6 +10,7 @@ case class ExportField(
     propertyName: String,
     title: String,
     description: Option[String],
+    idx: Int = 0,
     t: ColumnType,
     sqlTypeName: String,
     enumOpt: Option[ExportEnum] = None,
@@ -36,6 +37,11 @@ case class ExportField(
     case Nil => e.className
     case pkg => pkg.mkString(".") + "." + e.className
   }).getOrElse(t.asScalaFull)
+
+  val graphQlArgType = ExportFieldGraphQL.argType(this)
+
+  val thriftType = ExportFieldThrift.thriftType(t, sqlTypeName, enumOpt)
+  val thriftVisibility = if (notNull) { "required" } else { "optional" }
 
   def addImport(file: ScalaFile, pkg: Seq[String] = Nil) = {
     enumOpt match {
@@ -76,47 +82,4 @@ case class ExportField(
   def fromString(s: String) = enumOpt.map { enum =>
     s"${enum.className}.withValue($s)"
   }.getOrElse(t.fromString.replaceAllLiterally("xxx", s))
-
-  private[this] def graphQLType = t match {
-    case StringType => "StringType"
-
-    case BooleanType => "BooleanType"
-    case ByteType => "byteType"
-    case ShortType => "IntType"
-    case IntegerType => "IntType"
-    case LongType => "LongType"
-    case FloatType => "FloatType"
-    case DoubleType => "DoubleType"
-    case BigDecimalType => "BigDecimalType"
-
-    case DateType => "localDateType"
-    case TimeType => "localTimeType"
-    case TimestampType => "localDateTimeType"
-
-    case RefType => "StringType"
-    case XmlType => "StringType"
-    case UuidType => "uuidType"
-
-    case ObjectType => "StringType"
-    case StructType => "StringType"
-    case JsonType => "JsonType"
-
-    case EnumType => enumOpt match {
-      case Some(enum) => enum.propertyName + "EnumType"
-      case None => throw new IllegalStateException(s"Cannot load enum.")
-    }
-    case CodeType => "StringType"
-    case TagsType => "TagsType"
-
-    case ByteArrayType => "ArrayType(StringType)"
-    case ArrayType => sqlTypeName match {
-      case x if x.startsWith("_int") => "ArrayType(IntType)"
-      case x if x.startsWith("_uuid") => "ArrayType(uuidType)"
-      case _ => "ArrayType(StringType)"
-    }
-
-    case UnknownType => "UnknownType"
-  }
-
-  def graphQlArgType = if (notNull) { graphQLType } else { "OptionInputType(" + graphQLType + ")" }
 }

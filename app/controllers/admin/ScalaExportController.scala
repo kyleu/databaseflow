@@ -27,8 +27,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     val models = schema.tables.map { t =>
       config.getModelOpt(t.name) match {
         case Some(m) =>
-          val fields = t.columns.map { c =>
-            m.fields.find(_.columnName == c.name).getOrElse(ExportConfigurationDefault.loadField(c, enums = config.enums))
+          val fields = t.columns.zipWithIndex.map { c =>
+            m.fields.find(_.columnName == c._1.name).getOrElse(ExportConfigurationDefault.loadField(c._1, c._2, enums = config.enums))
           }
           m.copy(fields = fields.toList)
         case None => ExportConfigurationDefault.loadModel(schema, t, config.enums)
@@ -107,7 +107,9 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
       title = form("title"),
       description = form.get("description").filter(_.nonEmpty),
       plural = form("plural"),
-      fields = t.columns.map(col => fieldForColumn(col, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2), enums)).toList,
+      fields = t.columns.zipWithIndex.map { col =>
+        fieldForColumn(col._1, col._2, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2), enums)
+      }.toList,
       pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
       foreignKeys = t.foreignKeys.toList,
       references = ExportConfigurationHelper.references(schema, t),
@@ -122,12 +124,13 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for table [${t.name}].", x)
   }
 
-  private[this] def fieldForColumn(col: Column, form: Map[String, String], enums: Seq[ExportEnum]) = {
+  private[this] def fieldForColumn(col: Column, idx: Int, form: Map[String, String], enums: Seq[ExportEnum]) = {
     ExportField(
       columnName = col.name,
       propertyName = form(col.name + ".propertyName"),
       title = form(col.name + ".title"),
       description = form.get(col.name + ".description").filter(_.nonEmpty),
+      idx = idx,
       t = enums.find(_.name == col.sqlTypeName).map(_ => ColumnType.EnumType).getOrElse(ColumnType.withNameInsensitive(form(col.name + ".t"))),
       sqlTypeName = col.sqlTypeName,
       enumOpt = enums.find(_.name == col.sqlTypeName),

@@ -48,10 +48,13 @@ object ExportFiles {
       val cls = ModelFile.export(model)
       val res = ResultFile.export(model)
       val queries = QueriesFile.export(model)
-      val table = TableFile.export(model, config.enums)
       val svc = ServiceFile.export(model)
-      val sch = SchemaFile.export(config, model)
       val cntr = ControllerFile.export(config, model)
+      val sch = SchemaFile.export(config, model)
+      val table = TableFile.export(model, config.enums)
+
+      val tm = ThriftModelFile.export(model, config.enums)
+      val ts = ThriftServiceFile.export(model, config.enums)
 
       val tdr = TwirlDataRowFile.export(config, model)
       val tl = TwirlListFile.export(model)
@@ -61,7 +64,7 @@ object ExportFiles {
 
       val trs = TwirlRelationFiles.export(config, model)
 
-      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tdr, tl, tv, tf, tsr) ++ trs)
+      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ trs)
     }
   }
 }

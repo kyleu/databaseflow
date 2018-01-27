@@ -15,7 +15,7 @@ object ServiceHelper {
     file.add("}", -1)
     file.add()
     file.add("// Search")
-    file.add(s"override def searchCount(creds: Credentials, q: String, filters: Seq[Filter])$trace = {", 1)
+    file.add(s"override def searchCount(creds: Credentials, q: String, filters: Seq[Filter] = Nil)$trace = {", 1)
     file.add(s"""traceF("search.count")(td => ApplicationDatabase.queryF($queriesFile.searchCount(q, filters))(td))""")
     file.add("}", -1)
     file.add(s"override def search(")
@@ -71,7 +71,7 @@ object ServiceHelper {
   }
 
   def writeForeignKeys(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
-    val searchArgs = "orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]"
+    val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
     fk.references.toList match {
       case h :: Nil =>
         val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
