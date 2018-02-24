@@ -64,11 +64,18 @@ object ExportMerge {
     src.listRecursively.filter(_.isRegularFile).foreach { c =>
       val p = c.pathAsString.substring(c.pathAsString.indexOf("scalaexport") + 12)
       val tgt = rootDir / p
-      if (tgt.exists && !tgt.contentAsString.contains(" Generated File")) {
-        result.log(s"Skipping modified file [${tgt.pathAsString}].")
+      if (tgt.exists) {
+        val tgtContent = tgt.contentAsString
+        if (!tgtContent.contains(" Generated File")) {
+          result.log(s"Skipping modified file [${tgt.pathAsString}].")
+        } else if (tgtContent == c.contentAsString) {
+          // noop
+          // result.log(s"Skipping unchanged file [${tgt.pathAsString}].")
+        } else {
+          c.copyTo(tgt, overwrite = true)
+        }
       } else {
-        tgt.createIfNotExists(createParents = true)
-        c.copyTo(tgt, overwrite = true)
+        c.copyTo(tgt)
       }
     }
 

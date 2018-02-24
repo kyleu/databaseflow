@@ -43,7 +43,7 @@ object ResultFile {
     file.add(s"  startMs: Long, totalCount: Int, results: Seq[${model.className}]")
     file.add(") = {", 1)
     file.add("val paging = PagingOptions.from(totalCount, limit, offset)")
-    file.add("val durationMs = (System.currentTimeMillis - startMs).toInt")
+    file.add("val durationMs = (util.DateUtils.nowMillis - startMs).toInt")
     file.add(s"${model.className}Result($resultArgs)")
     file.add("}", -1)
     file.add("}", -1)
