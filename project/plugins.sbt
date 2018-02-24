@@ -3,7 +3,7 @@ scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 resolvers += Resolver.url("jetbrains-bintray", url("http://dl.bintray.com/jetbrains/sbt-plugins/"))(Resolver.ivyStylePatterns)
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.10")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.11")
 
 // SBT-Web plugins
 addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.0.0")
@@ -59,7 +59,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0") // scalariformFor
 
 addSbtPlugin("com.github.xuwei-k" % "sbt-class-diagram" % "0.2.1")
 
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.4.2")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.10")
 
 // IDE Integration
 addSbtPlugin("org.jetbrains" % "sbt-ide-settings" % "0.1.2")

@@ -40,7 +40,7 @@ object QueryManager {
     val runSelectionLink = $(".run-query-selection-link", queryPanel)
     wire(runSelectionLink, "run", () => ParameterManager.getParams(sqlEditor.getSelectedText().toString.trim, queryId))
 
-    def showRunSelection() = {
+    val showRunSelection = () => {
       val txt = sqlEditor.getSelectedText().toString.trim
       if (txt.isEmpty) {
         runQueryLink.css("display", "inline")
@@ -52,7 +52,7 @@ object QueryManager {
     }
 
     sqlEditor.selection.moveCursorFileEnd()
-    sqlEditor.selection.on("changeSelection", showRunSelection _)
+    sqlEditor.selection.on("changeSelection", showRunSelection)
     sqlEditor.focus()
 
     activeQueries = activeQueries :+ queryId

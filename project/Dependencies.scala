@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.10"
+    private[this] val version = "2.6.11"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.5.8"
+    private[this] val version = "2.5.10"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -27,7 +27,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "5.0.2"
+    private[this] val version = "5.0.3"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -78,13 +78,13 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.3.3"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.0"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
-    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.1.0"
+    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.3"
+    val scapegoatVersion = "1.3.4"
     val enumeratumVersion = "1.5.11"
     val enumeratumCirceVersion = "1.5.14"
 
@@ -100,7 +100,7 @@ object Dependencies {
 
   object Testing {
     val gatlingVersion = "2.2.3"
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % "test"
     val gatlingCore = "io.gatling" % "gatling-test-framework" % gatlingVersion % "test"
     val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % "test"
   }

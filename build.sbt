@@ -1,3 +1,5 @@
+// Database Flow build file. See `./project` for definitions.
+
 lazy val doc = Documentation.doc
 
 lazy val sharedJs = Shared.sharedJs
