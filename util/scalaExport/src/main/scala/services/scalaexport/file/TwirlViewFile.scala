@@ -54,7 +54,7 @@ object TwirlViewFile {
             file.add("}", -1)
           }
           file.add("</td>", -1)
-        case _ if field.t == ColumnType.CodeType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
+        case _ if field.t == ColumnType.CodeType || field.t == ColumnType.JsonType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
         case _ => file.add(s"<td>@model.${field.propertyName}</td>")
       }
       file.add("</tr>", -1)

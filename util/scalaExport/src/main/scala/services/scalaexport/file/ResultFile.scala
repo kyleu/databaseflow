@@ -39,7 +39,7 @@ object ResultFile {
     file.add()
 
     file.add("def fromRecords(")
-    file.add("  q: Option[String], filters: Seq[Filter], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int],")
+    file.add("  q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None,")
     file.add(s"  startMs: Long, totalCount: Int, results: Seq[${model.className}]")
     file.add(") = {", 1)
     file.add("val paging = PagingOptions.from(totalCount, limit, offset)")

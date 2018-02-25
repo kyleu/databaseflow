@@ -28,7 +28,7 @@ object QueriesHelper {
         val propId = field.propertyName
         val propCls = field.className
         file.add(s"""case class CountBy$propCls($propId: ${field.scalaType}) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
-        val searchArgs = "orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]"
+        val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
         file.add(s"""case class GetBy$propCls($propId: ${field.scalaType}, $searchArgs) extends SeqQuery(""", 1)
         file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),""")
         file.add(s"limit = limit, offset = offset, values = Seq($propId)")
