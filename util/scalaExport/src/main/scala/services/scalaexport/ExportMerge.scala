@@ -75,7 +75,8 @@ object ExportMerge {
           c.copyTo(tgt, overwrite = true)
         }
       } else {
-        c.copyTo(tgt)
+        tgt.createIfNotExists(createParents = true)
+        c.copyTo(tgt, overwrite = true)
       }
     }
 
