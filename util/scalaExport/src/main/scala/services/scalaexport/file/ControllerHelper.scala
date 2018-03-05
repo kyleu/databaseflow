@@ -6,13 +6,11 @@ import services.scalaexport.config.ExportModel
 object ControllerHelper {
   private[this] val relArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int]"
 
-  def writePks(model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkFields.nonEmpty) {
+  def writeView(file: ScalaFile, model: ExportModel, viewPkg: String) = {
     val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
-    val callArgs = model.pkFields.map(x => s"${x.propertyName} = ${x.propertyName}").mkString(", ")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
     val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
-    val redirArgs = model.pkFields.map(x => "res._1." + x.propertyName).mkString(", ")
-    file.add()
+
     file.add(s"""def view($viewArgs) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
     file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
@@ -32,6 +30,16 @@ object ControllerHelper {
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
     file.add(s"}${if (model.audited) { ")" } else { "" }})", -1)
     file.add("}", -1)
+  }
+
+  def writePks(model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkFields.nonEmpty) {
+    val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
+    val callArgs = model.pkFields.map(x => s"${x.propertyName} = ${x.propertyName}").mkString(", ")
+    val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
+    val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
+    val redirArgs = model.pkFields.map(x => "res._1." + x.propertyName).mkString(", ")
+    file.add()
+    writeView(file, model, viewPkg)
     file.add()
     file.add(s"""def editForm($viewArgs) = withSession("edit.form", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"val cancel = ${model.routesClass}.view($getArgs)")

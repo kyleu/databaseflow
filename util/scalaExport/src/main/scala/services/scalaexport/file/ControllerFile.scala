@@ -4,7 +4,9 @@ import models.scalaexport.ScalaFile
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object ControllerFile {
-  def export(config: ExportConfiguration, model: ExportModel) = {
+  def export(config: ExportConfiguration, model: ExportModel) = if (model.truncatedController) {
+    ControllerTruncated.export(config, model)
+  } else {
     val file = ScalaFile(model.controllerPackage, model.className + "Controller")
     val viewHtmlPackage = model.viewHtmlPackage.mkString(".")
     file.addImport("models", "Application")

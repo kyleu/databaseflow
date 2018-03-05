@@ -60,6 +60,7 @@ case class ExportModel(
   val controllerPackage = "controllers" +: "admin" +: (if (pkg.isEmpty) { List("system") } else { pkg })
   val controllerDirectory = "app"
   val controllerClass = (controllerPackage :+ (className + "Controller")).mkString(".")
+  val truncatedController = tableName == "system_users"
 
   val routesPackage = controllerPackage :+ "routes"
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
