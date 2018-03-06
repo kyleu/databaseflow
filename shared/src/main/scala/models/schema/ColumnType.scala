@@ -17,8 +17,6 @@ sealed abstract class ColumnType(
 
   val className = getClass.getSimpleName.stripSuffix("$")
 
-  def classNameForSqlType(s: String) = className
-
   override def toString = key
 }
 
@@ -58,7 +56,8 @@ object ColumnType extends Enum[ColumnType] {
       case _ => "Seq[String]"
     }
     def typForSqlType(s: String) = s match {
-      case _ if s.startsWith("_int") => "IntArrayType"
+      case _ if s.startsWith("_int4") => "IntArrayType"
+      case _ if s.startsWith("_int") => "LongArrayType"
       case _ if s.startsWith("_uuid") => "UuidArrayType"
       case _ => "StringArrayType"
     }

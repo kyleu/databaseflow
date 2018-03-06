@@ -23,7 +23,7 @@ object RoutesFiles {
       val createForm = s"GET         $prefix/form ${listWs.drop(5)} ${model.controllerClass}.createForm"
       val createAct = s"POST        $root $listWs ${model.controllerClass}.create"
       val fks = model.foreignKeys.flatMap { fk =>
-        fk.references.toList match {
+        fk.references match {
           case h :: Nil =>
             val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
             val urlArgs = s"by${col.className}/:${col.propertyName}"

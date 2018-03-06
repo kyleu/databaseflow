@@ -11,14 +11,12 @@ object TableColumnDetailTemplate {
   }
 
   def getRows(col: Column) = {
-    val pk = col.primaryKey.toString
-    val nn = col.notNull.toString
     val defaultVal = col.defaultValue.getOrElse("")
     Seq(tr(
       td(ColumnTemplate.linkFor(col)),
-      td(pk),
-      td(nn),
-      td(col.columnType.toString),
+      td(col.primaryKey.toString),
+      td(col.notNull.toString),
+      td(title := col.sqlTypeName)(col.columnType.toString),
       td(defaultVal)
     )) ++ col.description.flatMap {
       case d if d.trim.nonEmpty => Some(tr(td(colspan := 5)(d)))

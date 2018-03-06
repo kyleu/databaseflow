@@ -36,6 +36,8 @@ case class ExportModel(
     case cols => "(" + cols.map(_.scalaType).mkString(", ") + ")"
   }
 
+  val searchFields = fields.filter(_.inSearch)
+
   val pkgString = pkg.mkString(".")
   val summaryFields = fields.filter(_.inSummary)
 
@@ -87,5 +89,4 @@ case class ExportModel(
     throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}].")
   }
   def getFieldOpt(k: String) = fields.find(f => f.columnName == k || f.propertyName == k)
-
 }

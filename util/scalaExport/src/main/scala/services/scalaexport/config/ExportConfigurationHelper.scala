@@ -14,7 +14,7 @@ object ExportConfigurationHelper {
 
     referencingTables.toList.flatMap { refTable =>
       refTable.foreignKeys.filter(_.targetTable == t.name).flatMap { fk =>
-        fk.references.toList match {
+        fk.references match {
           case Nil => Nil // noop
           case ref :: Nil =>
             val name = fk.name match {

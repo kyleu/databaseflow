@@ -8,7 +8,7 @@ object SchemaForeignKey {
     file.addImport("sangria.execution.deferred", "Fetcher")
     val fks = src.foreignKeys.filter(_.references.lengthCompare(1) == 0)
     fks.foreach { fk =>
-      fk.references.toList match {
+      fk.references match {
         case Nil => // noop
         case h :: Nil => config.getModelOpt(fk.targetTable).foreach(_ => {
           val srcCol = src.getField(h.source)
@@ -60,7 +60,7 @@ object SchemaForeignKey {
         file.add("Field(", 1)
         file.add(s"""name = "${fields.map(_.propertyName).mkString}Rel",""")
 
-        fields.toList match {
+        fields match {
           case field :: Nil =>
             if (field.notNull) {
               file.add(s"""fieldType = ${targetTable.className}Schema.${targetTable.propertyName}Type,""")

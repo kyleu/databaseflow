@@ -5,8 +5,6 @@ import services.scalaexport.config.ExportModel
 
 object TwirlListFile {
   def export(model: ExportModel) = {
-    val searchColumns = model.fields.filter(_.inSearch)
-
     val listFile = TwirlFile(model.viewPackage, model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
 
@@ -19,8 +17,8 @@ object TwirlListFile {
     listFile.add(s"""modelPlural = "${model.plural}",""")
     listFile.add(s"icon = models.template.Icons.${model.propertyName},")
     listFile.add("cols = Seq(", 1)
-    searchColumns.foreach {
-      case c if searchColumns.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
+    model.searchFields.foreach {
+      case c if model.searchFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
       case c => listFile.add(s""""${c.propertyName}" -> "${c.title}",""")
     }
     listFile.add("),", -1)

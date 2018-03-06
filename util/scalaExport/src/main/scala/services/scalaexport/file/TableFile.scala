@@ -84,7 +84,7 @@ object TableFile {
 
   private[this] def addReferences(file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
     model.foreignKeys.foreach { fk =>
-      fk.references.toList match {
+      fk.references match {
         case h :: Nil =>
           val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           col.addImport(file)

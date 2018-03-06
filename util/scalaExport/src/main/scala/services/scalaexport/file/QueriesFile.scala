@@ -28,8 +28,7 @@ object QueriesFile {
 
     if (model.pkFields.nonEmpty) {
       file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.columnName + "\"").mkString(", ") + ")")
-      val searchColumns = model.fields.filter(_.inSearch)
-      file.add(s"override protected val searchColumns = Seq(${searchColumns.map("\"" + _.columnName + "\"").mkString(", ")})")
+      file.add(s"override protected val searchColumns = Seq(${model.searchFields.map("\"" + _.columnName + "\"").mkString(", ")})")
     }
     file.add()
 

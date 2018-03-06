@@ -6,11 +6,9 @@ import services.scalaexport.config.{ExportConfiguration, ExportModel}
 
 object TwirlDataRowFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val searchColumns = model.fields.filter(_.inSearch)
-
     val file = TwirlFile(model.viewPackage, model.propertyName + "DataRow")
     file.add(s"@(model: ${model.modelClass})<tr>", 1)
-    searchColumns.foreach { c =>
+    model.searchFields.foreach { c =>
       val href = model.pkFields match {
         case Nil => ""
         case fields =>

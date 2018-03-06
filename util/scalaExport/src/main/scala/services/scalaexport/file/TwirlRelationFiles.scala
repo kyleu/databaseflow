@@ -7,7 +7,6 @@ object TwirlRelationFiles {
   private[this] val viewArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
 
   private[this] def writeTable(model: ExportModel, refFields: Seq[ExportField], listFile: TwirlFile) = {
-    val searchColumns = model.fields.filter(_.inSearch)
     val viewCall = model.routesClass + ".by" + refFields.map(_.className).mkString
     val refProps = refFields.map(_.propertyName).mkString(", ")
     val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull).mkString(", ")
@@ -22,8 +21,8 @@ object TwirlRelationFiles {
     listFile.add(s"""modelPlural = "${model.plural}",""")
     listFile.add(s"icon = models.template.Icons.${model.propertyName},")
     listFile.add("cols = Seq(", 1)
-    searchColumns.foreach {
-      case c if searchColumns.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
+    model.searchFields.foreach {
+      case c if model.searchFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
       case c => listFile.add(s""""${c.propertyName}" -> "${c.title}",""")
     }
     listFile.add("),", -1)

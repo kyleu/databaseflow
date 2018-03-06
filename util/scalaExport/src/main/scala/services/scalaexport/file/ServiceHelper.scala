@@ -70,29 +70,36 @@ object ServiceHelper {
     file.add()
   }
 
-  def writeForeignKeys(model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
-    val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
-    fk.references.toList match {
-      case h :: Nil =>
-        val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-        col.addImport(file)
-        val propId = col.propertyName
-        val propCls = col.className
-
-        file.add(s"""def countBy$propCls(creds: Credentials, $propId: ${col.scalaType})(implicit trace: TraceData) = traceF("count.by.$propId") { td =>""", 1)
-        file.add(s"ApplicationDatabase.queryF(${model.className}Queries.CountBy$propCls($propId))(td)")
-        file.add("}", -1)
-        val fkArgs = s"creds: Credentials, $propId: ${col.scalaType}, $searchArgs"
-        file.add(s"""def getBy$propCls($fkArgs)(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
-        file.add(s"""ApplicationDatabase.queryF(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td)""")
-        file.add("}", -1)
-        val fkSeqArgs = s"creds: Credentials, ${propId}Seq: Seq[${col.scalaType}]"
-        file.add(s"""def getBy${propCls}Seq($fkSeqArgs)(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
-        file.add(s"ApplicationDatabase.queryF(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
-        file.add("}", -1)
-
-        file.add()
-      case _ => // noop
+  def writeForeignKeys(model: ExportModel, file: ScalaFile) = {
+    val fkCols = model.foreignKeys.flatMap { fk =>
+      fk.references match {
+        case ref :: Nil => Some(ref.source)
+        case _ => None
+      }
     }
+    val cols = (fkCols ++ model.searchFields.map(_.columnName)).distinct.sorted
+    cols.foreach(col => addRelationMethodsToFile(model, file, col))
+  }
+
+  private[this] def addRelationMethodsToFile(model: ExportModel, file: ScalaFile, col: String) = {
+    val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
+    val field = model.fields.find(_.columnName == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]."))
+    field.addImport(file)
+    val propId = field.propertyName
+    val propCls = field.className
+
+    file.add(s"""def countBy$propCls(creds: Credentials, $propId: ${field.scalaType})(implicit trace: TraceData) = traceF("count.by.$propId") { td =>""", 1)
+    file.add(s"ApplicationDatabase.queryF(${model.className}Queries.CountBy$propCls($propId))(td)")
+    file.add("}", -1)
+    val fkArgs = s"creds: Credentials, $propId: ${field.scalaType}, $searchArgs"
+    file.add(s"""def getBy$propCls($fkArgs)(implicit trace: TraceData) = traceF("get.by.$propId") { td =>""", 1)
+    file.add(s"""ApplicationDatabase.queryF(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td)""")
+    file.add("}", -1)
+    val fkSeqArgs = s"creds: Credentials, ${propId}Seq: Seq[${field.scalaType}]"
+    file.add(s"""def getBy${propCls}Seq($fkSeqArgs)(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
+    file.add(s"ApplicationDatabase.queryF(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
+    file.add("}", -1)
+
+    file.add()
   }
 }
