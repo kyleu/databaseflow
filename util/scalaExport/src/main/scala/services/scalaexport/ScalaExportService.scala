@@ -7,6 +7,10 @@ import services.scalaexport.file.{RoutesFiles, ServiceRegistryFiles}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+object ScalaExportService {
+  case class Result(er: ExportResult, files: Map[String, Int], out: Seq[(String, String)])
+}
+
 case class ScalaExportService(config: ExportConfiguration) {
   def export(persist: Boolean = false)(implicit ec: ExecutionContext) = exportFiles(config).map { result =>
     val injected = if (persist) {
@@ -17,13 +21,13 @@ case class ScalaExportService(config: ExportConfiguration) {
         case None => s"./tmp/${result.config.key}".toFile
       }
 
-      ExportMerge.merge(result, rootDir)
-      ExportInject.inject(result, rootDir)
+      val mergeResults = ExportMerge.merge(result, rootDir)
+      mergeResults -> ExportInject.inject(result, rootDir)
     } else {
       result.log("Test run completed.")
-      Nil
+      Map.empty[String, Int] -> Nil
     }
-    result -> injected
+    ScalaExportService.Result(result, injected._1, injected._2)
   }
 
   def exportFiles(config: ExportConfiguration) = {

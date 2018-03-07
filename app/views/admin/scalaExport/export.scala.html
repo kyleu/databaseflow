@@ -1,4 +1,4 @@
-@(result: models.scalaexport.ExportResult, injected: Seq[(String, String)])(
+@(result: models.scalaexport.ExportResult, files: Map[String, Int], injected: Seq[(String, String)])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )@layout.simple(user = None, title = s"Scala Export Result") {
   <div class="row">
@@ -14,9 +14,16 @@
         </li>
         <li class="collection-item">
           <ul>
-            @result.models.map { model =>
-              <li>@model.fullClassName</li>
-            }
+          @files.toSeq.sortBy(_._1).map { file =>
+            <li>@file._1: @file._2</li>
+          }
+          </ul>
+        </li>
+        <li class="collection-item">
+          <ul>
+          @result.models.map { model =>
+            <li>@model.fullClassName</li>
+          }
           </ul>
         </li>
         <li class="collection-item">

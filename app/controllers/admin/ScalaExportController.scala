@@ -79,7 +79,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         s"./tmp/$schemaId.txt".toFile.overwrite(x)
 
         ScalaExportService(result).export(persist = true).map { result =>
-          Ok(views.html.admin.scalaExport.export(result._1, result._2))
+          Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
         }
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")

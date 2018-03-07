@@ -61,36 +61,51 @@ object ExportMerge {
     }
 
     val src = "./tmp/scalaexport".toFile
-    src.listRecursively.filter(_.isRegularFile).foreach { c =>
+    val srcResults = src.listRecursively.filter(_.isRegularFile).map { c =>
       val p = c.pathAsString.substring(c.pathAsString.indexOf("scalaexport") + 12)
       val tgt = rootDir / p
       if (tgt.exists) {
         val tgtContent = tgt.contentAsString
         if (!tgtContent.contains(" Generated File")) {
           result.log(s"Skipping modified file [${tgt.pathAsString}].")
+          "modified"
         } else if (tgtContent == c.contentAsString) {
-          // noop
           // result.log(s"Skipping unchanged file [${tgt.pathAsString}].")
+          "same-content"
         } else {
           c.copyTo(tgt, overwrite = true)
+          "overwrite"
         }
       } else {
         tgt.createIfNotExists(createParents = true)
         c.copyTo(tgt, overwrite = true)
+        "create"
       }
     }
 
-    result.rootFiles.foreach { rf =>
+    val rootResults = result.rootFiles.map { rf =>
       val f = rootDir / rf.packageDir / rf.filename
-      if (f.exists && f.contentAsString.indexOf(" Generated File") == -1) {
-        result.log(s"Skipping modified file [${f.pathAsString}].")
+      val tgtContent = f.contentAsString
+      if (f.exists) {
+        if (!tgtContent.contains(" Generated File")) {
+          result.log(s"Skipping modified root file [${f.pathAsString}].")
+          "modified-root"
+        } else if (tgtContent == rf.rendered) {
+          // result.log(s"Skipping unchanged root file [${tgt.pathAsString}].")
+          "same-content-root"
+        } else {
+          f.delete(swallowIOExceptions = true)
+          f.createIfNotExists()
+          f.writeText(rf.rendered)
+          "overwrite-root"
+        }
       } else {
-        f.delete(swallowIOExceptions = true)
-        f.createIfNotExists()
-        f.writeText(rf.rendered)
+        "create-root"
       }
     }
 
     result.log("Merge complete.")
+
+    (srcResults.toSeq ++ rootResults).groupBy(x => x).map(x => x._1 -> x._2.size)
   }
 }
