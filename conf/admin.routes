@@ -28,3 +28,5 @@ GET         /sandbox/:key               controllers.admin.SandboxController.sand
 
 GET         /export/:conn               controllers.admin.ScalaExportController.exportForm(conn)
 POST        /export/:conn               controllers.admin.ScalaExportController.export(conn)
+GET         /export/:conn/thrift        controllers.admin.ScalaExportController.exportThriftForm(conn)
+POST        /export/:conn/thrift        controllers.admin.ScalaExportController.exportThrift(conn)

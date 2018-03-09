@@ -1,6 +1,7 @@
 package models.sandbox
 
 import enumeratum._
+import services.scalaexport.thrift.ThriftParseService
 import util.FutureUtils.defaultContext
 import util.{ApplicationContext, Logging}
 
@@ -35,6 +36,12 @@ object SandboxTask extends Enum[SandboxTask] {
 
   case object Testbed extends SandboxTask("Testbed", "A simple sandbox for messin' around.") {
     override def call(ctx: ApplicationContext) = Future.successful("Hello!")
+  }
+
+  case object TempParseTask extends SandboxTask("Temp Parse Task", "TODO Remove") {
+    override def call(ctx: ApplicationContext) = Future.successful {
+      ThriftParseService.parse(better.files.File("./tmp/thrift/integration.thrift")).toString
+    }
   }
 
   case object MaintenanceToggle extends SandboxTask("Maintenance Mode", "Toggles the running state of the application.") {

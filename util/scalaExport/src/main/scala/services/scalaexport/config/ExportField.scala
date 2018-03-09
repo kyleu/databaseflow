@@ -5,6 +5,36 @@ import models.schema.ColumnType
 import models.schema.ColumnType._
 import services.scalaexport.ExportHelper
 
+object ExportField {
+  def getDefaultString(t: ColumnType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
+    case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
+    case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
+    case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
+    case LongType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + "L"
+    case ShortType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + ".toShort"
+    case FloatType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0") + "f"
+    case DoubleType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0")
+    case BigDecimalType => s"BigDecimal(${defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0")})"
+
+    case DateType => "util.DateUtils.today"
+    case TimeType => "util.DateUtils.currentTime"
+    case TimestampType => "util.DateUtils.now"
+
+    case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
+
+    case JsonType => "util.JsonSerializers.emptyObject"
+    case ArrayType => "Seq.empty"
+    case TagsType => "Seq.empty[models.tag.Tag]"
+    case EnumType => enumOpt match {
+      case Some(enum) => enum.className + "." + ExportHelper.toClassName(ExportHelper.toIdentifier(defaultValue.flatMap { d =>
+        enum.values.find(_ == d)
+      }.getOrElse(enum.values.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.name}].")))))
+      case None => "\"" + defaultValue.getOrElse("") + "\""
+    }
+    case _ => "\"" + defaultValue.getOrElse("") + "\""
+  }
+}
+
 case class ExportField(
     columnName: String,
     propertyName: String,
@@ -51,33 +81,7 @@ case class ExportField(
     }
   }
 
-  val defaultString = t match {
-    case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
-    case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
-    case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
-    case LongType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + "L"
-    case ShortType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + ".toShort"
-    case FloatType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0") + "f"
-    case DoubleType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0")
-    case BigDecimalType => s"BigDecimal(${defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0")})"
-
-    case DateType => "util.DateUtils.today"
-    case TimeType => "util.DateUtils.currentTime"
-    case TimestampType => "util.DateUtils.now"
-
-    case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
-
-    case JsonType => "util.JsonSerializers.emptyObject"
-    case ArrayType => "Seq.empty"
-    case TagsType => "Seq.empty[models.tag.Tag]"
-    case EnumType => enumOpt match {
-      case Some(enum) => enum.className + "." + ExportHelper.toClassName(ExportHelper.toIdentifier(defaultValue.flatMap { d =>
-        enum.values.find(_ == d)
-      }.getOrElse(enum.values.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.name}].")))))
-      case None => "\"" + defaultValue.getOrElse("") + "\""
-    }
-    case _ => "\"" + defaultValue.getOrElse("") + "\""
-  }
+  val defaultString = ExportField.getDefaultString(t, enumOpt, defaultValue)
 
   def fromString(s: String) = enumOpt.map { enum =>
     s"${enum.className}.withValue($s)"

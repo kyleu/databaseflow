@@ -4,13 +4,22 @@ import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 import services.scalaexport.file._
+import services.scalaexport.thrift.ThriftParseService
 
 object ExportFiles {
-  def persist(result: ExportResult) = {
-    val rootDir = "./tmp/scalaexport".toFile
-    if (rootDir.exists) { rootDir.delete() }
-    rootDir.createDirectory()
+  def persistThrift(result: ThriftParseService.Result) = {
+    result.files.map { file =>
+      val f = if (file.pkg.isEmpty) {
+        rootDir / file.dir / file.filename
+      } else {
+        rootDir / file.packageDir / file.filename
+      }
+      f.createIfNotExists(createParents = true)
+      f.writeText(file.rendered)
+    }
+  }
 
+  def persist(result: ExportResult) = {
     result.enumFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
         rootDir / file.dir / file.filename
@@ -32,6 +41,13 @@ object ExportFiles {
     }
 
     result.log("File write complete.")
+  }
+
+  private[this] lazy val rootDir = {
+    val rootDir = "./tmp/scalaexport".toFile
+    if (rootDir.exists) { rootDir.delete() }
+    rootDir.createDirectory()
+    rootDir
   }
 
   def exportEnums(config: ExportConfiguration) = config.enums.flatMap { e =>

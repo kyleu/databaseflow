@@ -14,7 +14,8 @@ object ModelFile {
     file.addImport("models.result.data", "DataFieldModel")
     file.addImport("io.circe", "Encoder")
     file.addImport("io.circe", "Decoder")
-    file.addImport("io.circe.generic.semiauto", "_")
+    file.addImport("io.circe.generic.semiauto", "deriveDecoder")
+    file.addImport("io.circe.generic.semiauto", "deriveEncoder")
     if (model.fields.exists(_.t == ColumnType.TimestampType)) {
       file.addImport("io.circe.java8.time", "_")
     }

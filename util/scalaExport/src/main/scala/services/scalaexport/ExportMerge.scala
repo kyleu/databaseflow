@@ -1,7 +1,7 @@
 package services.scalaexport
 
 import better.files._
-import models.scalaexport.ExportResult
+import models.scalaexport.OutputFile
 import services.scalaexport.file.ReadmeFile
 
 object ExportMerge {
@@ -31,12 +31,12 @@ object ExportMerge {
     cssFile.moveTo(cssFile.parent / (prop + ".less"))
   }
 
-  private[this] def getSrcDir(result: ExportResult) = {
+  private[this] def getSrcDir(source: String, log: String => Unit) = {
     import scala.sys.process._
 
-    result.log(s"Cloning boilerplay.")
+    log(s"Cloning boilerplay.")
 
-    if (result.config.source == "boilerplay") {
+    if (source == "boilerplay") {
       val dir = "./tmp/boilerplay".toFile
       if (!dir.exists) {
         "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
@@ -44,20 +44,20 @@ object ExportMerge {
       }
       dir
     } else {
-      throw new IllegalStateException(s"Unsupported export source [${result.config.source}].")
+      throw new IllegalStateException(s"Unsupported export source [$source].")
     }
   }
 
-  def merge(result: ExportResult, rootDir: File) = {
+  def merge(projectId: String, projectTitle: String, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay") = {
     if (rootDir.exists) {
-      result.log("Overwriting existing project.")
+      log("Overwriting existing project.")
     } else {
-      result.log("Creating initial project.")
+      log("Creating initial project.")
       rootDir.createDirectory()
-      getSrcDir(result).copyTo(rootDir)
+      getSrcDir(source, log).copyTo(rootDir)
       (rootDir / "license").delete(swallowIOExceptions = true)
-      (rootDir / "readme.md").overwrite(ReadmeFile.content(result.config.projectTitle))
-      projectNameReplacements(result.config.projectId, result.config.projectTitle, rootDir)
+      (rootDir / "readme.md").overwrite(ReadmeFile.content(projectTitle))
+      projectNameReplacements(projectId, projectTitle, rootDir)
     }
 
     val src = "./tmp/scalaexport".toFile
@@ -67,7 +67,7 @@ object ExportMerge {
       if (tgt.exists) {
         val tgtContent = tgt.contentAsString
         if (!tgtContent.contains(" Generated File")) {
-          result.log(s"Skipping modified file [${tgt.pathAsString}].")
+          log(s"Skipping modified file [${tgt.pathAsString}].")
           "modified"
         } else if (tgtContent == c.contentAsString) {
           // result.log(s"Skipping unchanged file [${tgt.pathAsString}].")
@@ -83,12 +83,12 @@ object ExportMerge {
       }
     }
 
-    val rootResults = result.rootFiles.map { rf =>
+    val rootResults = rootFiles.map { rf =>
       val f = rootDir / rf.packageDir / rf.filename
       val tgtContent = f.contentAsString
       if (f.exists) {
         if (!tgtContent.contains(" Generated File")) {
-          result.log(s"Skipping modified root file [${f.pathAsString}].")
+          log(s"Skipping modified root file [${f.pathAsString}].")
           "modified-root"
         } else if (tgtContent == rf.rendered) {
           // result.log(s"Skipping unchanged root file [${tgt.pathAsString}].")
@@ -104,7 +104,7 @@ object ExportMerge {
       }
     }
 
-    result.log("Merge complete.")
+    log("Merge complete.")
 
     (srcResults.toSeq ++ rootResults).groupBy(x => x).map(x => x._1 -> x._2.size)
   }

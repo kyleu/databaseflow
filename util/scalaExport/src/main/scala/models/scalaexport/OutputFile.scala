@@ -31,6 +31,8 @@ abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String
     case _ => dir + "/" + pkg.mkString("/")
   }
 
+  val path = packageDir + "/" + filename
+
   def prefix: String = ""
   def suffix: String = ""
 

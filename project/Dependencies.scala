@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.11"
+    private[this] val version = "2.6.12"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -73,7 +73,7 @@ object Dependencies {
   }
 
   object ScalaJS {
-    val scalaTagsVersion = "0.6.5"
+    val scalaTagsVersion = "0.6.7"
     val jQueryVersion = "0.9.2"
   }
 
@@ -94,6 +94,7 @@ object Dependencies {
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val guava = "com.google.guava" % "guava" % "23.0"
+    val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
 
     val scribeVersion = "1.4.5"
   }
