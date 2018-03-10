@@ -3,7 +3,7 @@ package services.scalaexport.file.thrift
 import models.scalaexport.thrift.ThriftStructField
 
 object ThriftFieldScalaHelper {
-  def getValFor(field: ThriftStructField, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
+  def getFromThrift(field: ThriftStructField, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
     val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, typedefs = typedefs, pkgMap)
     parse("t", field.name, t, pkg, field.required)
   }

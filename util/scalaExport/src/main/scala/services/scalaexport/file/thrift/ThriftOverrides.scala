@@ -51,7 +51,6 @@ object ThriftOverrides {
         case line => ret(current) = ret.getOrElseUpdate(current, Nil) :+ (line.substring(0, line.lastIndexOf(".")) -> line.substring(line.lastIndexOf(".") + 1))
       }
       println(s"[${ret.size}] imports available.")
-      println(ret)
       ret.toMap
     } else {
       println("No imports available.")

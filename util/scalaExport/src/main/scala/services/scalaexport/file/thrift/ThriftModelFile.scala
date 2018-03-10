@@ -32,7 +32,7 @@ object ThriftModelFile {
     model.fields.foreach { field =>
       val out = ThriftOverrides.overrideFor(model.name, field.name) match {
         case Some(over) => over.fromThrift
-        case None => ThriftFieldScalaHelper.getValFor(field, typedefs, pkgMap)
+        case None => ThriftFieldScalaHelper.getFromThrift(field, typedefs, pkgMap)
       }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(field.name + " = " + out + comma)
@@ -49,7 +49,7 @@ object ThriftModelFile {
     model.fields.foreach { field =>
       val out = ThriftOverrides.overrideFor(model.name, field.name) match {
         case Some(over) => over.asThrift
-        case None => ThriftFieldThriftHelper.getValFor(field, typedefs, pkgMap).stripSuffix(".toMap")
+        case None => ThriftFieldThriftHelper.getAsThrift(field, typedefs, pkgMap).stripSuffix(".toMap")
       }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(field.name + " = " + out + comma)

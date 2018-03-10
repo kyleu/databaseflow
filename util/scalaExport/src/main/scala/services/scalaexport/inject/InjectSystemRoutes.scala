@@ -2,7 +2,7 @@ package services.scalaexport.inject
 
 import better.files.File
 import models.scalaexport.ExportResult
-import services.scalaexport.file.RoutesFiles
+import services.scalaexport.file.db.RoutesFiles
 
 object InjectSystemRoutes {
   def inject(result: ExportResult, rootDir: File) = {

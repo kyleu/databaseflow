@@ -1,14 +1,13 @@
 package services.scalaexport.file.thrift
 
 import models.scalaexport.ScalaFile
-import models.scalaexport.thrift.{ThriftService, ThriftStruct}
+import models.scalaexport.thrift.ThriftService
 
 object ThriftServiceFile {
   def export(
     srcPkg: Seq[String],
     tgtPkg: Seq[String],
     svc: ThriftService,
-    structs: Seq[ThriftStruct],
     typedefs: Map[String, String],
     enums: Map[String, String],
     pkgMap: Map[String, Seq[String]]
@@ -25,7 +24,7 @@ object ThriftServiceFile {
 
     file.add(s"class ${svc.name}(tracing: TracingService, svc: MethodPerEndpoint) {", 1)
     file.add(s"""private[this] def trace[A](key: String)(f: TraceData => Future[A])(implicit td: TraceData) = tracing.trace("thrift.${svc.name}." + key)(f)""")
-    addMethods(svc, typedefs, enums, structs, pkgMap, file)
+    addMethods(svc, typedefs, enums, pkgMap, file)
     file.add("}", -1)
 
     file
@@ -35,7 +34,6 @@ object ThriftServiceFile {
     svc: ThriftService,
     typedefs: Map[String, String],
     enums: Map[String, String],
-    structs: Seq[ThriftStruct],
     pkgMap: Map[String, Seq[String]],
     file: ScalaFile
   ) = {
@@ -51,7 +49,7 @@ object ThriftServiceFile {
       val retType = ThriftFileHelper.columnTypeFor(method.returnValue, typedefs = typedefs, pkgMap)._1
       file.add()
       file.add(s"""def ${method.name}($args)(implicit td: TraceData): Future[$retType] = trace("${method.name}") { _ =>""", 1)
-      val argsMapped = method.arguments.map(arg => ThriftMethodHelper.getValFor(arg, typedefs, pkgMap)).mkString(", ")
+      val argsMapped = method.arguments.map(arg => ThriftMethodHelper.getArgCall(arg, typedefs, pkgMap)).mkString(", ")
       file.add(s"svc.${method.name}($argsMapped)${ThriftMethodHelper.getReturnMapping(retType)}")
       file.add("}", -1)
     }

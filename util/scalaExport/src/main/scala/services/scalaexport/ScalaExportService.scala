@@ -3,7 +3,7 @@ package services.scalaexport
 import better.files._
 import models.scalaexport.ExportResult
 import services.scalaexport.config.ExportConfiguration
-import services.scalaexport.file.{RoutesFiles, ServiceRegistryFiles}
+import services.scalaexport.file.db.{RoutesFiles, ServiceRegistryFiles}
 import services.scalaexport.thrift.ThriftParseService
 
 import scala.concurrent.{ExecutionContext, Future}

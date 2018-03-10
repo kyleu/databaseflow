@@ -37,7 +37,7 @@ object ThriftMethodHelper {
     case x => s"$x.fromThrift"
   }
 
-  def getValFor(field: ThriftStructField, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
+  def getArgCall(field: ThriftStructField, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
     val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, typedefs = typedefs, pkgMap)
     parse(field.name, t, pkg, field.required)
   }

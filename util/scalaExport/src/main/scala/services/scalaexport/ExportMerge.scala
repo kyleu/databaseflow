@@ -70,7 +70,6 @@ object ExportMerge {
           log(s"Skipping modified file [${tgt.pathAsString}].")
           "modified"
         } else if (tgtContent == c.contentAsString) {
-          // result.log(s"Skipping unchanged file [${tgt.pathAsString}].")
           "same-content"
         } else {
           c.copyTo(tgt, overwrite = true)

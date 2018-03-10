@@ -5,8 +5,9 @@ import com.facebook.swift.parser.ThriftIdlParser
 import com.facebook.swift.parser.model._
 import com.google.common.base.Charsets
 import com.google.common.io.Files
+import models.scalaexport.OutputFile
 import models.scalaexport.thrift.{ThriftIntegerEnum, ThriftService, ThriftStringEnum, ThriftStruct}
-import services.scalaexport.file.thrift.{ThriftEnumFile, ThriftModelFile, ThriftServiceFile}
+import services.scalaexport.file.thrift._
 
 object ThriftParseService {
   case class Result(filename: String, srcPkg: Seq[String], decls: Seq[Definition], includes: Seq[Result]) {
@@ -39,12 +40,19 @@ object ThriftParseService {
     lazy val structFiles = structs.flatMap(struct => Seq(ThriftModelFile.export(srcPkg, tgtPkg, struct, typedefs, enumDefaults, pkgMap)))
 
     lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.apply)
+    lazy val allServices = includes.flatMap(_.services) ++ services
     lazy val serviceNames = services.map(_.name)
-    lazy val serviceFiles = services.flatMap(service => Seq(ThriftServiceFile.export(srcPkg, tgtPkg, service, structs, typedefs, enumDefaults, pkgMap)))
+    lazy val serviceFiles = services.flatMap(service => Seq(
+      ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
+      ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, enumDefaults, pkgMap),
+      ThriftControllerFile.export(tgtPkg, service),
+      ThriftRoutesFile.export(service),
+      ThriftControllerFile.export(tgtPkg, service),
+    ))
     lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
 
     lazy val files = intEnumFiles ++ stringEnumFiles ++ structFiles ++ serviceFiles
-    lazy val allFiles = includes.flatMap(_.files) ++ files
+    lazy val allFiles: Seq[OutputFile] = includes.flatMap(_.allFiles) ++ files
 
     lazy val summaryString = s"""
       |[[[$filename]]]
