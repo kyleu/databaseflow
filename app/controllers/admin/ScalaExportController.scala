@@ -22,20 +22,15 @@ object ScalaExportController {
 
 @javax.inject.Singleton
 class ScalaExportController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
-  def exportThriftForm(conn: String) = withAdminSession("export.form") { implicit request =>
+  def exportThrift(conn: String, filename: Option[String]) = withAdminSession("export.form") { implicit request =>
     ConnectionSettingsService.connFor(conn) match {
-      case Some(cs) => Future.successful(Ok(views.html.admin.scalaExport.thriftForm(request.identity, cs)))
-      case None => throw new IllegalStateException(s"Invalid connection [$conn].")
-    }
-  }
-
-  def exportThrift(conn: String) = withAdminSession("export.project") { implicit request =>
-    val form = FormUtils.getForm(request)
-    ConnectionSettingsService.connFor(conn) match {
-      case Some(cs) => SchemaService.getSchemaWithDetails(cs).map { schema =>
-        val config = getConfig(schema)
-        val result = ScalaExportService(config).exportThrift(key = config.projectId, filename = form("filename"), persist = true)
-        Ok(views.html.admin.scalaExport.exportThrift(request.identity, result._1, result._2))
+      case Some(cs) => filename match {
+        case Some(fn) => SchemaService.getSchemaWithDetails(cs).map { schema =>
+          val config = getConfig(schema)
+          val result = ScalaExportService(config).exportThrift(key = config.projectId, filename = fn, persist = true)
+          Ok(views.html.admin.scalaExport.exportThrift(request.identity, fn.substring(fn.lastIndexOf('/') + 1), result._1, result._2))
+        }
+        case None => Future.successful(Ok(views.html.admin.scalaExport.thriftForm(request.identity, cs, File("./tmp/thrift"))))
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")
     }

@@ -8,13 +8,14 @@ object ThriftFieldHelper {
     parse("t", field.name, t, pkg, field.required)
   }
 
+  def mapKeyValFor(x: String) = x.drop(4).dropRight(1).split(',').toList match {
+    case key :: rest => key.trim -> rest.mkString(",").trim
+    case other => throw new IllegalStateException(s"TODO: $other")
+  }
+
   private[this] def parse(root: String, name: String, t: String, pkg: Seq[String], required: Boolean): String = t match {
     case x if x.startsWith("Map[") =>
-      val (_, v) = t.drop(4).dropRight(1).split(',').map(_.trim).toList match {
-        case key :: value :: Nil => key -> value
-        case other => throw new IllegalStateException(s"TODO: $other")
-      }
-      val valuesMapped = parseMapped(v, "map").replaceAllLiterally(".map", ".mapValues(")
+      val valuesMapped = parseMapped(mapKeyValFor(x)._2, "map").replaceAllLiterally(".map", ".mapValues(")
       if (required) {
         s"$root.$name$valuesMapped.toMap"
       } else {
@@ -48,5 +49,4 @@ object ThriftFieldHelper {
     case "Boolean" | "String" | "Int" | "Long" | "Double" => ""
     case x => s".map($x.fromThrift)"
   }
-
 }

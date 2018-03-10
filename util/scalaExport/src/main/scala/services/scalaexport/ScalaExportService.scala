@@ -39,21 +39,39 @@ case class ScalaExportService(config: ExportConfiguration) {
     Future.successful(ExportResult(config, modelFiles.map(_._1), enumFiles, modelFiles.flatMap(_._2), rootFiles))
   }
 
-  def exportThrift(key: String, filename: String, persist: Boolean = false)(implicit ec: ExecutionContext) = {
-    val result = ThriftParseService.parse(better.files.File(filename))
-    val injected = if (persist) {
-      ExportFiles.persistThrift(result)
-
-      val rootDir = config.projectLocation match {
-        case Some(l) => l.toFile
-        case None => s"./tmp/$key".toFile
+  def exportThrift(key: String, filename: String, persist: Boolean = false)(implicit ec: ExecutionContext): (Map[String, Int], Seq[(String, String)]) = {
+    if (filename == "all") {
+      val root = File("./tmp/thrift")
+      if (!root.exists) {
+        throw new IllegalStateException(s"Cannot read [${root.pathAsString}].")
       }
+      val results = root.children.flatMap {
+        case f if f.isDirectory => f.children.flatMap {
+          case c if c.name.endsWith(".thrift") => Some(exportThrift(key, c.pathAsString, persist))
+          case _ => None
+        }
+        case f if f.name.endsWith(".thrift") => Seq(exportThrift(key, f.pathAsString, persist))
+        case _ => Nil
+      }.toSeq
 
-      ExportMerge.merge(key, "N/A", rootDir, Nil, s => println(s)) -> result.files.map(f => f.path -> f.rendered)
+      val map = results.map(_._1).foldLeft(Map.empty[String, Int])((l, r) => l ++ r)
+      val seq = results.map(_._2).foldLeft(Seq.empty[(String, String)])((l, r) => l ++ r)
+      map -> seq
     } else {
-      Map.empty[String, Int] -> Nil
+      val result = ThriftParseService.parse(better.files.File(filename))
+      val injected = if (persist) {
+        ExportFiles.persistThrift(result)
+
+        val rootDir = config.projectLocation match {
+          case Some(l) => l.toFile
+          case None => s"./tmp/$key".toFile
+        }
+
+        ExportMerge.merge(key, "N/A", rootDir, Nil, s => println(s)) -> result.allFiles.map(f => f.path -> f.rendered)
+      } else {
+        Map.empty[String, Int] -> Nil
+      }
+      injected
     }
-    injected
   }
 }
-

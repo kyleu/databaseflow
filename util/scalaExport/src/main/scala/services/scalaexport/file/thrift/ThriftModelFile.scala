@@ -22,14 +22,20 @@ object ThriftModelFile {
     file.addImport("models.result.data", "DataField")
     file.addImport("models.result.data", "DataFieldModel")
 
+    ThriftOverrides.imports.get(model.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
+
     file.add(s"object ${model.name} {", 1)
     file.add(s"implicit val jsonEncoder: Encoder[${model.name}] = deriveEncoder")
     file.add(s"implicit val jsonDecoder: Decoder[${model.name}] = deriveDecoder")
     file.add()
     file.add(s"def fromThrift(t: ${srcPkg.mkString(".")}.${model.name}) = ${model.name}(", 1)
     model.fields.foreach { field =>
+      val out = ThriftOverrides.overrideFor(model.name, field.name) match {
+        case Some(over) => over.fromThrift
+        case None => ThriftFieldScalaHelper.getValFor(field, typedefs, pkgMap)
+      }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-      file.add(field.name + " = " + ThriftFieldScalaHelper.getValFor(field, typedefs, pkgMap) + comma)
+      file.add(field.name + " = " + out + comma)
     }
     file.add(")", -1)
     file.add("}", -1)
@@ -41,8 +47,12 @@ object ThriftModelFile {
     file.indent(1)
     file.add(s"lazy val asThrift = ${srcPkg.mkString(".")}.${model.name}(", 1)
     model.fields.foreach { field =>
+      val out = ThriftOverrides.overrideFor(model.name, field.name) match {
+        case Some(over) => over.asThrift
+        case None => ThriftFieldThriftHelper.getValFor(field, typedefs, pkgMap).stripSuffix(".toMap")
+      }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-      file.add(field.name + " = " + ThriftFieldThriftHelper.getValFor(field, typedefs, pkgMap) + comma)
+      file.add(field.name + " = " + out + comma)
     }
     file.add(")", -1)
     file.add()
@@ -51,7 +61,7 @@ object ThriftModelFile {
       val ct = ThriftFileHelper.columnTypeFor(field.t, typedefs = typedefs, pkgMap)
       val x = if (field.required) {
         val method = if (ct._1 == "String") { "" } else { ".toString" }
-        s"""DataField("${field.name}", Some(${field.name}$method))"""
+        s"""DataField("${field.name.replaceAllLiterally("`", "")}", Some(${field.name}$method))"""
       } else {
         val method = ct match {
           case ("String", _) => ""

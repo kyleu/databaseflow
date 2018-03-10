@@ -8,7 +8,7 @@ import services.scalaexport.thrift.ThriftParseService
 
 object ExportFiles {
   def persistThrift(result: ThriftParseService.Result) = {
-    result.files.map { file =>
+    result.allFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
         rootDir / file.dir / file.filename
       } else {

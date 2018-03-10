@@ -13,7 +13,10 @@ object ThriftParseService {
     lazy val tgtPkg = if (srcPkg.lastOption.contains("thrift")) { srcPkg.dropRight(1) } else { srcPkg }
 
     lazy val typedefs = decls.filter(_.isInstanceOf[Typedef]).map(_.asInstanceOf[Typedef]).map { t =>
-      t.getName -> t.getType.asInstanceOf[BaseType].getType.toString
+      t.getName -> (t.getType match {
+        case i: IdentifierType => i.getName
+        case b: BaseType => b.getType.toString
+      })
     }.toMap
 
     lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
@@ -41,6 +44,7 @@ object ThriftParseService {
     lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
 
     lazy val files = intEnumFiles ++ stringEnumFiles ++ structFiles ++ serviceFiles
+    lazy val allFiles = includes.flatMap(_.files) ++ files
 
     lazy val summaryString = s"""
       |[[[$filename]]]
@@ -54,14 +58,13 @@ object ThriftParseService {
       |$serviceString
     """.stripMargin.trim
 
-    lazy val filesString = s"\n\nFiles:" + files.map { file =>
+    lazy val filesString = s"\n\nFiles:" + allFiles.map { file =>
       "\n\n[" + file.filename + "]\n" + file.rendered
     }.mkString
 
     override lazy val toString = {
       val incSummary = if (includes.isEmpty) { "" } else { includes.map(_.summaryString).mkString("\n\n") + "\n\n" }
-      val incFile = if (includes.isEmpty) { "" } else { includes.map(_.filesString).mkString("\n\n") + "\n\n" }
-      incSummary + summaryString + incFile + filesString
+      incSummary + summaryString + filesString
     }
   }
 

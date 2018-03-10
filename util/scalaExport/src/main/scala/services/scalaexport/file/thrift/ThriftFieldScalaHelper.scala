@@ -10,11 +10,7 @@ object ThriftFieldScalaHelper {
 
   private[this] def parse(root: String, name: String, t: String, pkg: Seq[String], required: Boolean): String = t match {
     case x if x.startsWith("Map[") =>
-      val (_, v) = t.drop(4).dropRight(1).split(',').map(_.trim).toList match {
-        case key :: value :: Nil => key -> value
-        case other => throw new IllegalStateException(s"TODO: $other")
-      }
-      val valuesMapped = parseMapped(v, "map").replaceAllLiterally(".map", ".mapValues(")
+      val valuesMapped = parseMapped(ThriftFieldHelper.mapKeyValFor(x)._2, "map").replaceAllLiterally(".map", ".mapValues(")
       if (required) {
         s"$root.$name$valuesMapped.toMap"
       } else {
@@ -43,10 +39,9 @@ object ThriftFieldScalaHelper {
 
   private[this] def parseMapped(t: String, ctx: String): String = t match {
     case x if x.startsWith("Map[") => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
-    case x if x.startsWith("Seq[") => throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
+    case x if x.startsWith("Seq[") => "" // throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
     case x if x.startsWith("Set[") => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
     case "Boolean" | "String" | "Int" | "Long" | "Double" => ""
     case x => s".map($x.fromThrift)"
   }
-
 }

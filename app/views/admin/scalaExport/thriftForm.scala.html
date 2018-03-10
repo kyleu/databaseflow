@@ -1,7 +1,7 @@
-@(user: models.user.User, cs: models.connection.ConnectionSettings)(
+@(user: models.user.User, cs: models.connection.ConnectionSettings, root: better.files.File)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )@layout.admin(user = user, title = "Thrift Export", activeSection = "") {
-<form method="post" action="@controllers.admin.routes.ScalaExportController.exportThrift(cs.slug)">
+<form method="get" action="@controllers.admin.routes.ScalaExportController.exportThrift(cs.slug, None)">
   <div class="row">
     <div class="col s12">
       <div class="right"><button class="btn theme" type="submit">Run Thrift Export</button></div>
@@ -9,6 +9,21 @@
     </div>
     <div class="col s12">
       <input title="Filename" name="filename" class="validate" value="./tmp/thrift/integration.thrift" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <div>
+        <h5><a class="theme-text" href="@controllers.admin.routes.ScalaExportController.exportThrift(cs.slug, Some("all"))">Export All</a></h5>
+      </div>
+      @root.children.toSeq.sortBy(_.name).map { dir =>
+        <div>
+          <h5>@dir.name</h5>
+          @dir.children.map { f =>
+            <div><a class="theme-text" href="@controllers.admin.routes.ScalaExportController.exportThrift(cs.slug, Some(f.path.toString))">@f.name</a></div>
+          }
+        </div>
+      }
     </div>
   </div>
 </form>

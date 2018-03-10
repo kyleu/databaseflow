@@ -6,7 +6,7 @@ import models.schema.ColumnType
 object ThriftFileHelper {
   def columnTypeFor(t: ThriftType, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]): (String, Seq[String]) = t match {
     case _: VoidType => "Unit" -> Nil
-    case i: IdentifierType => colTypeForIdentifier(typedefs.getOrElse(i.getName, i.getName), pkgMap)
+    case i: IdentifierType => colTypeForIdentifier(typedefs.getOrElse(i.getName, i.getName), typedefs, pkgMap)
     case b: BaseType => colTypeForBase(b.getType) -> Nil
     case l: ListType =>
       val v = columnTypeFor(l.getElementType, typedefs, pkgMap)
@@ -54,14 +54,14 @@ object ThriftFileHelper {
     case None => " = None"
   }
 
-  private[this] def colTypeForIdentifier(name: String, pkgMap: Map[String, Seq[String]]): (String, Seq[String]) = name match {
+  private[this] def colTypeForIdentifier(name: String, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]): (String, Seq[String]) = name match {
     case "I64" => ColumnType.LongType.asScala -> Nil
     case "I32" => ColumnType.IntegerType.asScala -> Nil
     case x if x.contains('.') => x.split('.').toList match {
       case pkg :: cls :: Nil => cls -> pkgMap(pkg)
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
     }
-    case x => x -> Nil
+    case x => typedefs.get(x).map(td => colTypeForIdentifier(td, typedefs, pkgMap)._1).getOrElse(x) -> Nil
   }
 
   private[this] def colTypeForBase(t: BaseType.Type) = t match {
