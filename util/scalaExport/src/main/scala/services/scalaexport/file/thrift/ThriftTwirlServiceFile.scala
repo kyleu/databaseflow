@@ -20,10 +20,11 @@ object ThriftTwirlServiceFile {
 
     file.add("""<div class="collection-header">""", 1)
     file.add(s"<h4>${svc.name}</h4>")
-    file.add(s"<em>${pkg.mkString(".")}</h4>")
+    file.add(s"<em>${pkg.mkString(".")}</em>")
     file.add("</div>", -1)
 
-    svc.methods.foreach(m => methodLink(file, m, typedefs, pkgMap))
+    val routesRef = s"controllers.admin.thrift.${svc.identifier}.routes.${svc.name}Controller"
+    svc.methods.foreach(m => methodLink(file, m, routesRef, typedefs, pkgMap))
 
     file.add("</div>", -1)
     file.add("</div>", -1)
@@ -32,10 +33,7 @@ object ThriftTwirlServiceFile {
     file
   }
 
-  private[this] def methodLink(file: TwirlFile, m: ThriftServiceMethod, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
-    val retVal = ThriftFileHelper.columnTypeFor(m.returnValue, typedefs = typedefs, pkgMap)._1
-    val argVals = m.arguments.map(arg => arg.name + ": " + ThriftFileHelper.columnTypeFor(arg.t, typedefs = typedefs, pkgMap)._1)
-    val sig = s"${m.name}(${argVals.mkString(", ")}): $retVal"
-    file.add(s"""<a class="theme-text collection-item" href="...">$sig</a>""")
+  private[this] def methodLink(file: TwirlFile, m: ThriftServiceMethod, ref: String, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
+    file.add(s"""<a class="theme-text collection-item" href="@$ref.${m.name}">${m.sig(typedefs, pkgMap)}</a>""")
   }
 }

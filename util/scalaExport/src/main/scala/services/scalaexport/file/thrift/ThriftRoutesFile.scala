@@ -11,16 +11,15 @@ object ThriftRoutesFile {
     val controllerRef = s"controllers.admin.thrift.${service.identifier}.${service.name}Controller"
 
     file.add(s"# ${service.name} Routes")
-    file.add(s"GET ${ws("/")} $controllerRef.list()")
+    file.add(s"GET  /${ws("")} $controllerRef.list()")
     file.add()
-    service.methods.map(m => routeForMethod(m, file)))
+    service.methods.foreach(m => routeForMethod(m, controllerRef, file))
     file
   }
 
-  def routeForMethod(m: ThriftServiceMethod, file: RoutesFile) = {
-    file.add(s"# ${m.name}")
-    file.add(s"# GET  /${m.name}")
-    file.add(s"# POST /${m.name}")
+  def routeForMethod(m: ThriftServiceMethod, controllerRef: String, file: RoutesFile) = {
+    file.add(s"GET  /${ws(m.name)} $controllerRef.${m.name}")
+    file.add(s"POST /${ws(m.name)} $controllerRef.${m.name}Call")
     file.add()
   }
 }

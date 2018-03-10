@@ -12,6 +12,7 @@ import services.scalaexport.file.thrift._
 object ThriftParseService {
   case class Result(filename: String, srcPkg: Seq[String], decls: Seq[Definition], includes: Seq[Result]) {
     lazy val tgtPkg = if (srcPkg.lastOption.contains("thrift")) { srcPkg.dropRight(1) } else { srcPkg }
+    lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
 
     lazy val typedefs = decls.filter(_.isInstanceOf[Typedef]).map(_.asInstanceOf[Typedef]).map { t =>
       t.getName -> (t.getType match {
@@ -19,8 +20,6 @@ object ThriftParseService {
         case b: BaseType => b.getType.toString
       })
     }.toMap
-
-    lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
 
     lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.apply)
     lazy val stringEnumNames = stringEnums.map(_.name)
@@ -42,13 +41,8 @@ object ThriftParseService {
     lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.apply)
     lazy val allServices = includes.flatMap(_.services) ++ services
     lazy val serviceNames = services.map(_.name)
-    lazy val serviceFiles = services.flatMap(service => Seq(
-      ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
-      ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
-      ThriftControllerFile.export(tgtPkg, service),
-      ThriftRoutesFile.export(service),
-      ThriftControllerFile.export(tgtPkg, service),
-    ))
+
+    lazy val serviceFiles = services.flatMap(serviceMethodFiles)
     lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
 
     lazy val files = intEnumFiles ++ stringEnumFiles ++ structFiles ++ serviceFiles
@@ -66,13 +60,23 @@ object ThriftParseService {
       |$serviceString
     """.stripMargin.trim
 
-    lazy val filesString = s"\n\nFiles:" + allFiles.map { file =>
-      "\n\n[" + file.filename + "]\n" + file.rendered
-    }.mkString
-
     override lazy val toString = {
       val incSummary = if (includes.isEmpty) { "" } else { includes.map(_.summaryString).mkString("\n\n") + "\n\n" }
-      incSummary + summaryString + filesString
+      incSummary + summaryString + s"\n\nFiles:" + allFiles.map(file => "\n\n[" + file.filename + "]\n" + file.rendered).mkString
+    }
+
+    private[this] def serviceMethodFiles(service: ThriftService) = {
+      val baseFiles = Seq(
+        ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
+        ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
+        ThriftControllerFile.export(tgtPkg, service),
+        ThriftRoutesFile.export(service),
+        ThriftControllerFile.export(tgtPkg, service)
+      )
+      val methodFiles = service.methods.map { m =>
+        ThriftTwirlServiceMethodFile.export(tgtPkg, service, m, typedefs, pkgMap)
+      }
+      baseFiles ++ methodFiles
     }
   }
 
@@ -81,7 +85,6 @@ object ThriftParseService {
 
     val src = Files.asByteSource(file.toJava).asCharSource(Charsets.UTF_8)
     val doc = ThriftIdlParser.parseThriftIdl(src)
-
     val h = doc.getHeader
     val d = doc.getDefinitions.asScala
 
@@ -90,9 +93,7 @@ object ThriftParseService {
     }
 
     val includes = h.getIncludes.asScala
-
     val included = includes.map(inc => parse(file.parent / inc))
-
     Result(filename = file.name, srcPkg = pkg.split('.'), decls = d, includes = included)
   }
 }
