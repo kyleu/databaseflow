@@ -44,7 +44,7 @@ object ThriftParseService {
     lazy val serviceNames = services.map(_.name)
     lazy val serviceFiles = services.flatMap(service => Seq(
       ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
-      ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, enumDefaults, pkgMap),
+      ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
       ThriftControllerFile.export(tgtPkg, service),
       ThriftRoutesFile.export(service),
       ThriftControllerFile.export(tgtPkg, service),

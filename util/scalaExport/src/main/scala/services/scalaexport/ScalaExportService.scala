@@ -54,7 +54,10 @@ case class ScalaExportService(config: ExportConfiguration) {
         case _ => Nil
       }.toSeq
 
-      val map = results.map(_._1).foldLeft(Map.empty[String, Int])((l, r) => l ++ r)
+      val map = results.map(_._1).foldLeft(Map.empty[String, Int])((l, r) => (l.keys ++ r.keys).map {
+        case k if k == "same-content" => k -> l.getOrElse(k, r(k))
+        case k => k -> (l.getOrElse(k, 0) + r.getOrElse(k, 0))
+      }.toMap)
       val seq = results.map(_._2).foldLeft(Seq.empty[(String, String)])((l, r) => l ++ r)
       map -> seq
     } else {

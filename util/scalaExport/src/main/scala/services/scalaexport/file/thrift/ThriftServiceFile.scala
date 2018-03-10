@@ -22,7 +22,13 @@ object ThriftServiceFile {
 
     ThriftOverrides.imports.get(svc.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
 
-    file.add(s"class ${svc.name}(tracing: TracingService, svc: MethodPerEndpoint) {", 1)
+    file.add(s"object ${svc.name} extends models.thrift.ThriftService(", 1)
+    file.add(s"""key = "${svc.name}",""")
+    file.add(s"route = controllers.admin.thrift.${svc.identifier}.routes.${svc.name}Controller.list()")
+    file.add(")", -1)
+    file.add()
+    file.add("@javax.inject.Singleton")
+    file.add(s"class ${svc.name} @javax.inject.Inject() (tracing: TracingService, svc: MethodPerEndpoint) {", 1)
     file.add(s"""private[this] def trace[A](key: String)(f: TraceData => Future[A])(implicit td: TraceData) = tracing.trace("thrift.${svc.name}." + key)(f)""")
     addMethods(svc, typedefs, enums, pkgMap, file)
     file.add("}", -1)

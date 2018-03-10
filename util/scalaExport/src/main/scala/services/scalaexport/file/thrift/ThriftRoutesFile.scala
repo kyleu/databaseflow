@@ -13,11 +13,14 @@ object ThriftRoutesFile {
     file.add(s"# ${service.name} Routes")
     file.add(s"GET ${ws("/")} $controllerRef.list()")
     file.add()
-    service.methods.map(routeForMethod).foreach(file.add(_))
+    service.methods.map(m => routeForMethod(m, file)))
     file
   }
 
-  def routeForMethod(m: ThriftServiceMethod) = {
-    s"# ${m.name}"
+  def routeForMethod(m: ThriftServiceMethod, file: RoutesFile) = {
+    file.add(s"# ${m.name}")
+    file.add(s"# GET  /${m.name}")
+    file.add(s"# POST /${m.name}")
+    file.add()
   }
 }
