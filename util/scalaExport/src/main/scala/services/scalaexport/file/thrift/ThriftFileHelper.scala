@@ -69,8 +69,7 @@ object ThriftFileHelper {
     case BaseType.Type.BOOL => ColumnType.BooleanType.asScala
     case BaseType.Type.BYTE => ColumnType.ByteType.asScala
     case BaseType.Type.DOUBLE => ColumnType.DoubleType.asScala
-    case BaseType.Type.I16 => ColumnType.IntegerType.asScala
-    case BaseType.Type.I32 => ColumnType.IntegerType.asScala
+    case BaseType.Type.I16 | BaseType.Type.I32 => ColumnType.IntegerType.asScala
     case BaseType.Type.I64 => ColumnType.LongType.asScala
     case BaseType.Type.STRING => ColumnType.StringType.asScala
     case x => throw new IllegalStateException(s"Unhandled base type [$x]")

@@ -16,7 +16,7 @@
       <div>
         <h5><a class="theme-text" href="@controllers.admin.routes.ScalaExportController.exportThrift(cs.slug, Some("all"))">Export All</a></h5>
       </div>
-      @root.children.toSeq.sortBy(_.name).map { dir =>
+      @root.children.toSeq.filter(_.isDirectory).sortBy(_.name).map { dir =>
         <div>
           <h5>@dir.name</h5>
           @dir.children.map { f =>

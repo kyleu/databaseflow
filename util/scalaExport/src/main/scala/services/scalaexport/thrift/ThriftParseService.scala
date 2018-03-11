@@ -41,9 +41,8 @@ object ThriftParseService {
     lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.apply)
     lazy val allServices = includes.flatMap(_.services) ++ services
     lazy val serviceNames = services.map(_.name)
-
-    lazy val serviceFiles = services.flatMap(serviceMethodFiles)
     lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
+    lazy val serviceFiles = services.flatMap(serviceMethodFiles)
 
     lazy val files = intEnumFiles ++ stringEnumFiles ++ structFiles ++ serviceFiles
     lazy val allFiles: Seq[OutputFile] = includes.flatMap(_.allFiles) ++ files
@@ -69,13 +68,10 @@ object ThriftParseService {
       val baseFiles = Seq(
         ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
         ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
-        ThriftControllerFile.export(tgtPkg, service),
-        ThriftRoutesFile.export(service),
-        ThriftControllerFile.export(tgtPkg, service)
+        ThriftControllerFile.export(tgtPkg, service, enumDefaults, typedefs, pkgMap),
+        ThriftRoutesFile.export(service)
       )
-      val methodFiles = service.methods.map { m =>
-        ThriftTwirlServiceMethodFile.export(tgtPkg, service, m, typedefs, pkgMap)
-      }
+      val methodFiles = Nil // service.methods.map(m => ThriftTwirlServiceMethodFile.export(tgtPkg, service, m, typedefs, pkgMap))
       baseFiles ++ methodFiles
     }
   }
