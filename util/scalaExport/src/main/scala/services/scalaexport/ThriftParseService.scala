@@ -1,4 +1,4 @@
-package services.scalaexport.thrift
+package services.scalaexport
 
 import better.files.File
 import com.facebook.swift.parser.ThriftIdlParser
@@ -24,25 +24,40 @@ object ThriftParseService {
     lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.apply)
     lazy val stringEnumNames = stringEnums.map(_.name)
     lazy val stringEnumString = stringEnums.map(e => s"  ${e.name} (${e.values.size} values)").mkString("\n")
-    lazy val stringEnumFiles = stringEnums.flatMap(e => Seq(ThriftEnumFile.exportString(srcPkg, tgtPkg, e)))
+    lazy val stringEnumFiles = stringEnums.flatMap(e => Seq(
+      ThriftEnumFile.exportString(srcPkg, tgtPkg, e),
+      ThriftEnumSchemaFile.exportString(tgtPkg, e)
+    ))
 
     lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntegerEnum.apply)
     lazy val intEnumNames = intEnums.map(_.name)
     lazy val intEnumString = intEnums.map(e => s"  ${e.name} (${e.fields.size} values)").mkString("\n")
-    lazy val intEnumFiles = intEnums.flatMap(e => Seq(ThriftEnumFile.exportInt(srcPkg, tgtPkg, e)))
+    lazy val intEnumFiles = intEnums.flatMap(e => Seq(
+      ThriftEnumFile.exportInt(srcPkg, tgtPkg, e),
+      ThriftEnumSchemaFile.exportInt(tgtPkg, e)
+    ))
 
     lazy val enumDefaults = (stringEnums.map(e => e.name -> e.values.head) ++ intEnums.map(e => e.name -> e.fields.head._1)).toMap
 
     lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.apply)
     lazy val structNames = structs.map(_.name)
     lazy val structString = structs.map(struct => s"  ${struct.name} (${struct.fields.size} fields)").mkString("\n")
-    lazy val structFiles = structs.flatMap(struct => Seq(ThriftModelFile.export(srcPkg, tgtPkg, struct, typedefs, enumDefaults, pkgMap)))
+    lazy val structFiles = structs.flatMap(struct => Seq(
+      ThriftModelFile.export(srcPkg, tgtPkg, struct, typedefs, enumDefaults, pkgMap),
+      ThriftModelSchemaFile.export(srcPkg, tgtPkg, struct, typedefs, enumDefaults, pkgMap)
+    ))
 
     lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.apply)
     lazy val allServices = includes.flatMap(_.services) ++ services
     lazy val serviceNames = services.map(_.name)
     lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
-    lazy val serviceFiles = services.flatMap(serviceMethodFiles)
+    lazy val serviceFiles = services.flatMap(service => Seq(
+      ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
+      ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
+      ThriftControllerFile.export(tgtPkg, service, enumDefaults, typedefs, pkgMap),
+      ThriftRoutesFile.export(service),
+      ThriftServiceSchemaFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap)
+    ))
 
     lazy val files = intEnumFiles ++ stringEnumFiles ++ structFiles ++ serviceFiles
     lazy val allFiles: Seq[OutputFile] = includes.flatMap(_.allFiles) ++ files
@@ -62,17 +77,6 @@ object ThriftParseService {
     override lazy val toString = {
       val incSummary = if (includes.isEmpty) { "" } else { includes.map(_.summaryString).mkString("\n\n") + "\n\n" }
       incSummary + summaryString + s"\n\nFiles:" + allFiles.map(file => "\n\n[" + file.filename + "]\n" + file.rendered).mkString
-    }
-
-    private[this] def serviceMethodFiles(service: ThriftService) = {
-      val baseFiles = Seq(
-        ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
-        ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
-        ThriftControllerFile.export(tgtPkg, service, enumDefaults, typedefs, pkgMap),
-        ThriftRoutesFile.export(service)
-      )
-      val methodFiles = Nil // service.methods.map(m => ThriftTwirlServiceMethodFile.export(tgtPkg, service, m, typedefs, pkgMap))
-      baseFiles ++ methodFiles
     }
   }
 

@@ -80,10 +80,11 @@ object ThriftControllerFile {
         file.add(s"""${arg.name} = args("${arg.name}").as[$argType].getOrElse($ex)$comma""")
       }
       file.add(s").map(result => render {", -1)
-      file.indent(1)
+      file.indent(2)
       file.add(s"case Accepts.Html() => ${viewCall("Json.obj(args.toSeq: _*)", "Some(result.asJson)")}")
       file.add("case Accepts.Json() => Ok(result.asJson).as(JSON)")
       file.add("})", -1)
+      file.indent(-1)
     }
 
     file.add("}", -1)

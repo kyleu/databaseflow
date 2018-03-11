@@ -4,7 +4,6 @@ import better.files._
 import models.scalaexport.ExportResult
 import services.scalaexport.config.ExportConfiguration
 import services.scalaexport.file.db.{RoutesFiles, ServiceRegistryFiles}
-import services.scalaexport.thrift.ThriftParseService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,7 +54,7 @@ case class ScalaExportService(config: ExportConfiguration) {
       }.toSeq
 
       val map = results.map(_._1).foldLeft(Map.empty[String, Int])((l, r) => (l.keys ++ r.keys).map {
-        case k if k == "same-content" => k -> l.getOrElse(k, r(k))
+        case k if k == "same-content" => k -> Math.max(l.getOrElse(k, 0), r.getOrElse(k, 0))
         case k => k -> (l.getOrElse(k, 0) + r.getOrElse(k, 0))
       }.toMap)
       val seq = results.map(_._2).foldLeft(Seq.empty[(String, String)])((l, r) => l ++ r)

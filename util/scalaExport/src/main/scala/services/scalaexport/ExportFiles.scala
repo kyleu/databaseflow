@@ -4,7 +4,6 @@ import better.files._
 import models.scalaexport.{ExportResult, OutputFile}
 import services.scalaexport.config.{ExportConfiguration, ExportModel}
 import services.scalaexport.file.db._
-import services.scalaexport.thrift.ThriftParseService
 
 object ExportFiles {
   def persistThrift(result: ThriftParseService.Result) = {

@@ -4,8 +4,6 @@ import models.scalaexport.ScalaFile
 import services.scalaexport.config.ExportModel
 
 object SchemaHelper {
-  val shittyFetchers = false
-
   def addImports(file: ScalaFile) = {
     file.addImport("models.graphql", "GraphQLContext")
     file.addImport("models.graphql", "SchemaHelper")

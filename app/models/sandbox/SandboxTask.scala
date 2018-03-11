@@ -1,7 +1,7 @@
 package models.sandbox
 
 import enumeratum._
-import services.scalaexport.thrift.ThriftParseService
+import services.scalaexport.ThriftParseService
 import util.FutureUtils.defaultContext
 import util.{ApplicationContext, Logging}
 
