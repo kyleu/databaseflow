@@ -11,9 +11,9 @@ case class ThriftServiceMethod(f: ThriftMethod) {
   val arguments = f.getArguments.asScala.map(ThriftStructField.apply)
   val returnValue = f.getReturnType
 
-  def sig(typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
-    val retVal = ThriftFileHelper.columnTypeFor(returnValue, typedefs = typedefs, pkgMap)._1
-    val argVals = arguments.map(arg => arg.name + ": " + ThriftFileHelper.columnTypeFor(arg.t, typedefs = typedefs, pkgMap)._1)
+  def sig(metadata: ThriftMetadata) = {
+    val retVal = ThriftFileHelper.columnTypeFor(returnValue, metadata)._1
+    val argVals = arguments.map(arg => arg.name + ": " + ThriftFileHelper.columnTypeFor(arg.t, metadata)._1)
     s"$name(${argVals.mkString(", ")}): $retVal"
   }
 }

@@ -1,17 +1,10 @@
 package services.scalaexport.file.thrift
 
 import models.scalaexport.ScalaFile
-import models.scalaexport.thrift.{ThriftStruct, ThriftStructField}
+import models.scalaexport.thrift.{ThriftMetadata, ThriftStruct, ThriftStructField}
 
 object ThriftModelFile {
-  def export(
-    srcPkg: Seq[String],
-    tgtPkg: Seq[String],
-    model: ThriftStruct,
-    typedefs: Map[String, String],
-    enums: Map[String, String],
-    pkgMap: Map[String, Seq[String]]
-  ) = {
+  def export(srcPkg: Seq[String], tgtPkg: Seq[String], model: ThriftStruct, metadata: ThriftMetadata) = {
     val file = ScalaFile(tgtPkg, model.name)
 
     file.addImport("io.circe", "Encoder")
@@ -32,7 +25,7 @@ object ThriftModelFile {
     model.fields.foreach { field =>
       val out = ThriftOverrides.overrideFor(model.name, field.name) match {
         case Some(over) => over.fromThrift
-        case None => ThriftFieldScalaHelper.getFromThrift(field, typedefs, pkgMap)
+        case None => ThriftFieldScalaHelper.getFromThrift(field, metadata)
       }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(field.name + " = " + out + comma)
@@ -42,14 +35,14 @@ object ThriftModelFile {
     file.add()
 
     file.add(s"case class ${model.name}(", 2)
-    addFields(tgtPkg, model.fields, typedefs, enums, pkgMap, file)
+    addFields(tgtPkg, model.fields, metadata, file)
     file.add(") extends DataFieldModel {", -2)
     file.indent(1)
     file.add(s"lazy val asThrift = ${srcPkg.mkString(".")}.${model.name}(", 1)
     model.fields.foreach { field =>
       val out = ThriftOverrides.overrideFor(model.name, field.name) match {
         case Some(over) => over.asThrift
-        case None => ThriftFieldThriftHelper.getAsThrift(field, typedefs, pkgMap).stripSuffix(".toMap")
+        case None => ThriftFieldThriftHelper.getAsThrift(field, metadata).stripSuffix(".toMap")
       }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(field.name + " = " + out + comma)
@@ -58,7 +51,7 @@ object ThriftModelFile {
     file.add()
     file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
-      val ct = ThriftFileHelper.columnTypeFor(field.t, typedefs = typedefs, pkgMap)
+      val ct = ThriftFileHelper.columnTypeFor(field.t, metadata)
       val x = if (field.required) {
         val method = if (ct._1 == "String") { "" } else { ".toString" }
         s"""DataField("${field.name.replaceAllLiterally("`", "")}", Some(${field.name}$method))"""
@@ -78,21 +71,14 @@ object ThriftModelFile {
     file
   }
 
-  private[this] def addFields(
-    pkg: Seq[String],
-    fields: Seq[ThriftStructField],
-    typedefs: Map[String, String],
-    enums: Map[String, String],
-    pkgMap: Map[String, Seq[String]],
-    file: ScalaFile
-  ) = fields.foreach { field =>
+  private[this] def addFields(pkg: Seq[String], fields: Seq[ThriftStructField], metadata: ThriftMetadata, file: ScalaFile) = fields.foreach { field =>
     //field.addImport(file, model.modelPackage)
     val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
-    val colType = ThriftFileHelper.columnTypeFor(field.t, typedefs, pkgMap)
+    val colType = ThriftFileHelper.columnTypeFor(field.t, metadata)
     if (colType._2.nonEmpty && colType._2 != pkg) {
       file.addImport(colType._2.mkString("."), colType._1)
     }
-    val decl = ThriftFileHelper.declarationFor(field.required, field.name, field.value, enums, pkgMap, colType._1)
+    val decl = ThriftFileHelper.declarationFor(field.required, field.name, field.value, metadata, colType._1)
     file.add(decl + comma)
   }
 }

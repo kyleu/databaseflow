@@ -1,15 +1,10 @@
 package services.scalaexport.file.thrift
 
 import models.scalaexport.TwirlFile
-import models.scalaexport.thrift.{ThriftService, ThriftServiceMethod}
+import models.scalaexport.thrift.{ThriftMetadata, ThriftService, ThriftServiceMethod}
 
 object ThriftTwirlServiceFile {
-  def export(
-    pkg: Seq[String],
-    svc: ThriftService,
-    typedefs: Map[String, String],
-    pkgMap: Map[String, Seq[String]]
-  ) = {
+  def export(pkg: Seq[String], svc: ThriftService, metadata: ThriftMetadata) = {
     val file = TwirlFile(Seq("views", "admin", "thrift"), svc.identifier)
     file.add(s"@(user: models.user.SystemUser, debug: Boolean = false)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
@@ -24,7 +19,7 @@ object ThriftTwirlServiceFile {
     file.add("</div>", -1)
 
     val routesRef = s"controllers.admin.thrift.${svc.identifier}.routes.${svc.name}Controller"
-    svc.methods.foreach(m => methodLink(file, m, routesRef, typedefs, pkgMap))
+    svc.methods.foreach(m => methodLink(file, m, routesRef, metadata))
 
     file.add("</div>", -1)
     file.add("</div>", -1)
@@ -33,7 +28,7 @@ object ThriftTwirlServiceFile {
     file
   }
 
-  private[this] def methodLink(file: TwirlFile, m: ThriftServiceMethod, ref: String, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
-    file.add(s"""<a class="theme-text collection-item" href="@$ref.${m.name}">${m.sig(typedefs, pkgMap)}</a>""")
+  private[this] def methodLink(file: TwirlFile, m: ThriftServiceMethod, ref: String, metadata: ThriftMetadata) = {
+    file.add(s"""<a class="theme-text collection-item" href="@$ref.${m.name}">${m.sig(metadata)}</a>""")
   }
 }

@@ -1,6 +1,6 @@
 package services.scalaexport.file.thrift
 
-import models.scalaexport.thrift.ThriftStructField
+import models.scalaexport.thrift.{ThriftMetadata, ThriftStructField}
 
 object ThriftMethodHelper {
   def getReturnMapping(t: String): String = t match {
@@ -37,8 +37,8 @@ object ThriftMethodHelper {
     case x => s"$x.fromThrift"
   }
 
-  def getArgCall(field: ThriftStructField, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
-    val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, typedefs = typedefs, pkgMap)
+  def getArgCall(field: ThriftStructField, metadata: ThriftMetadata) = {
+    val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, metadata)
     parse(field.name, t, pkg, field.required)
   }
 
@@ -67,9 +67,8 @@ object ThriftMethodHelper {
         s"$name.map(_$mapped)"
       }
     case "Boolean" | "String" | "Int" | "Long" | "Double" => s"$name"
-    case x if required =>
-      s"$name.asThrift"
-    case x => s"$name.map(_.asThrift)"
+    case _ if required => s"$name.asThrift"
+    case _ => s"$name.map(_.asThrift)"
   }
 
   private[this] def parseMapped(t: String, ctx: String): String = t match {
@@ -77,6 +76,6 @@ object ThriftMethodHelper {
     case x if x.startsWith("Seq[") => throw new IllegalStateException(s"Unhandled [$ctx] child Seq") // ""?
     case x if x.startsWith("Set[") => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
     case "Boolean" | "String" | "Int" | "Long" | "Double" => ""
-    case x => s".asThrift"
+    case _ => s".asThrift"
   }
 }

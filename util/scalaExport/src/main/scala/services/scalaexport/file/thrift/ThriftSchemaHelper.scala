@@ -2,42 +2,37 @@ package services.scalaexport.file.thrift
 
 import com.facebook.swift.parser.model.ThriftType
 import models.scalaexport.ScalaFile
+import models.scalaexport.thrift.ThriftMetadata
 import services.scalaexport.ExportHelper
 
 object ThriftSchemaHelper {
-  private[this] def countSubstring(str: String, sub: String): Int = str.sliding(sub.length).count(_ == sub)
-
-  case class ReplacedField(name: String, t: String, pkg: Seq[String], req: Boolean = true) {
-    lazy val fieldType: String = t match {
-      case _ if !req => s"OptionType(${ReplacedField(name, t, pkg).fieldType})"
-      case "Long" => "LongType"
-      case "String" => "StringType"
-      case x if x.startsWith("Seq[") => s"ListType(${ReplacedField(name, t.drop(4).dropRight(1), pkg).fieldType})"
-      case x if x.startsWith("Set[") => s"ListType(${ReplacedField(name, t.drop(4).dropRight(1), pkg).fieldType})"
-      case x if x.startsWith("Map[") => s"StringType"
-      case x => ExportHelper.toIdentifier(x) + "Type"
-    }
-
-    lazy val maps: String = t match {
-      case _ if !req => s".map(some => some${ReplacedField(name, t, pkg).maps})"
-      case _ if t.startsWith("Seq[") => s".map(el => el${ReplacedField(name, t.drop(4).dropRight(1), pkg).maps})"
-      case _ if t.startsWith("Set[") => s".map(el => el${ReplacedField(name, t.drop(4).dropRight(1), pkg).maps}).toSeq"
-      case x if x.startsWith("Map[") => s".toString"
-      case _ => ""
-    }
-
-    lazy val fullFieldDecl: String = {
-      s"""ReplaceField("$name", Field("$name", $fieldType, resolve = _.value.$name$maps))"""
-    }
+  def graphQlTypeFor(t: String, req: Boolean = true): String = t match {
+    case _ if !req => s"OptionType(${graphQlTypeFor(t)})"
+    case "Long" => "LongType"
+    case "Int" => "IntType"
+    case "String" => "StringType"
+    case "Boolean" => "BooleanType"
+    case "Unit" => "BooleanType"
+    case x if x.startsWith("Seq[") => s"ListType(${graphQlTypeFor(t.drop(4).dropRight(1))})"
+    case x if x.startsWith("Set[") => s"ListType(${graphQlTypeFor(t.drop(4).dropRight(1))})"
+    case x if x.startsWith("Map[") => s"StringType"
+    case x => ExportHelper.toIdentifier(x) + "Type"
   }
 
-  def getReplaceFields(
-    pkg: Seq[String],
-    types: Seq[(String, Boolean, ThriftType)],
-    typedefs: Map[String, String],
-    pkgMap: Map[String, Seq[String]]
-  ): Seq[ReplacedField] = types.flatMap {
-    case (n, r, t) => ThriftFileHelper.columnTypeFor(t, typedefs, pkgMap) match {
+  def mapsFor(t: String, req: Boolean = true): String = t match {
+    case _ if !req => s".map(some => some${mapsFor(t)})"
+    case _ if t.startsWith("Seq[") => s".map(el => el${mapsFor(t.drop(4).dropRight(1))})"
+    case _ if t.startsWith("Set[") => s".map(el => el${mapsFor(t.drop(4).dropRight(1))}).toSeq"
+    case x if x.startsWith("Map[") => s".toString"
+    case _ => ""
+  }
+
+  case class ReplacedField(name: String, t: String, pkg: Seq[String], req: Boolean = true) {
+    lazy val fullFieldDecl: String = s"""ReplaceField("$name", Field("$name", ${graphQlTypeFor(t, req)}, resolve = _.value.$name${mapsFor(t, req)}))"""
+  }
+
+  def getReplaceFields(pkg: Seq[String], types: Seq[(String, Boolean, ThriftType)], metadata: ThriftMetadata): Seq[ReplacedField] = types.flatMap {
+    case (n, r, t) => ThriftFileHelper.columnTypeFor(t, metadata) match {
       case (x, p) if x.contains("Set[") || x.contains("Seq[") || x.contains("Map[") =>
         Some(ReplacedField(name = n, t = x, pkg = if (p.isEmpty) { pkg } else { p }, req = r))
       case _ => None
@@ -52,14 +47,8 @@ object ThriftSchemaHelper {
     case x => Some(x)
   }
 
-  def addImports(
-    pkg: Seq[String],
-    types: Seq[ThriftType],
-    typedefs: Map[String, String],
-    pkgMap: Map[String, Seq[String]],
-    file: ScalaFile
-  ) = types.foreach { t =>
-    val colType = ThriftFileHelper.columnTypeFor(t, typedefs, pkgMap)
+  def addImports(pkg: Seq[String], types: Seq[ThriftType], metadata: ThriftMetadata, file: ScalaFile) = types.foreach { t =>
+    val colType = ThriftFileHelper.columnTypeFor(t, metadata)
     getImportType(colType._1).foreach { impType =>
       val impPkg = if (colType._2.isEmpty) {
         (pkg :+ "graphql").mkString(".")

@@ -1,22 +1,23 @@
 package services.scalaexport.file.thrift
 
 import com.facebook.swift.parser.model._
+import models.scalaexport.thrift.ThriftMetadata
 import models.schema.ColumnType
 
 object ThriftFileHelper {
-  def columnTypeFor(t: ThriftType, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]): (String, Seq[String]) = t match {
+  def columnTypeFor(t: ThriftType, metadata: ThriftMetadata): (String, Seq[String]) = t match {
     case _: VoidType => "Unit" -> Nil
-    case i: IdentifierType => colTypeForIdentifier(typedefs.getOrElse(i.getName, i.getName), typedefs, pkgMap)
+    case i: IdentifierType => colTypeForIdentifier(metadata.typedefs.getOrElse(i.getName, i.getName), metadata)
     case b: BaseType => colTypeForBase(b.getType) -> Nil
     case l: ListType =>
-      val v = columnTypeFor(l.getElementType, typedefs, pkgMap)
+      val v = columnTypeFor(l.getElementType, metadata)
       s"Seq[${v._1}]" -> v._2
     case m: MapType =>
-      val k = columnTypeFor(m.getKeyType, typedefs, pkgMap)
-      val v = columnTypeFor(m.getValueType, typedefs, pkgMap)
+      val k = columnTypeFor(m.getKeyType, metadata)
+      val v = columnTypeFor(m.getValueType, metadata)
       s"Map[${k._1}, ${v._1}]" -> (k._2 ++ v._2)
     case s: SetType =>
-      val v = columnTypeFor(s.getElementType, typedefs, pkgMap)
+      val v = columnTypeFor(s.getElementType, metadata)
       s"Set[${v._1}]" -> v._2
     case x => throw new IllegalStateException(s"Unhandled field type [$x]")
   }
@@ -25,12 +26,11 @@ object ThriftFileHelper {
     required: Boolean,
     name: String,
     value: Option[ConstValue],
-    enums: Map[String, String],
-    pkgMap: Map[String, Seq[String]],
+    metadata: ThriftMetadata,
     colType: String
   ) = {
     val propType = if (required) { colType } else { "Option[" + colType + "]" }
-    s"$name: $propType${propDefault(colType, required, value.map(_.value), enums)}"
+    s"$name: $propType${propDefault(colType, required, value.map(_.value), metadata.enums)}"
   }
 
   private[this] def defaultForType(colType: String, enums: Map[String, String]) = colType match {
@@ -54,14 +54,14 @@ object ThriftFileHelper {
     case None => " = None"
   }
 
-  private[this] def colTypeForIdentifier(name: String, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]): (String, Seq[String]) = name match {
+  private[this] def colTypeForIdentifier(name: String, metadata: ThriftMetadata): (String, Seq[String]) = name match {
     case "I64" => ColumnType.LongType.asScala -> Nil
     case "I32" => ColumnType.IntegerType.asScala -> Nil
     case x if x.contains('.') => x.split('.').toList match {
-      case pkg :: cls :: Nil => cls -> pkgMap(pkg)
+      case pkg :: cls :: Nil => cls -> metadata.pkgMap(pkg)
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
     }
-    case x => typedefs.get(x).map(td => colTypeForIdentifier(td, typedefs, pkgMap)._1).getOrElse(x) -> Nil
+    case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)._1).getOrElse(x) -> Nil
   }
 
   private[this] def colTypeForBase(t: BaseType.Type) = t match {

@@ -6,7 +6,7 @@ import com.facebook.swift.parser.model._
 import com.google.common.base.Charsets
 import com.google.common.io.Files
 import models.scalaexport.OutputFile
-import models.scalaexport.thrift.{ThriftIntegerEnum, ThriftService, ThriftStringEnum, ThriftStruct}
+import models.scalaexport.thrift._
 import services.scalaexport.file.thrift._
 
 object ThriftParseService {
@@ -39,12 +39,14 @@ object ThriftParseService {
 
     lazy val enumDefaults = (stringEnums.map(e => e.name -> e.values.head) ++ intEnums.map(e => e.name -> e.fields.head._1)).toMap
 
+    lazy val metadata = ThriftMetadata(typedefs, enumDefaults, pkgMap)
+
     lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.apply)
     lazy val structNames = structs.map(_.name)
     lazy val structString = structs.map(struct => s"  ${struct.name} (${struct.fields.size} fields)").mkString("\n")
     lazy val structFiles = structs.flatMap(struct => Seq(
-      ThriftModelFile.export(srcPkg, tgtPkg, struct, typedefs, enumDefaults, pkgMap),
-      ThriftModelSchemaFile.export(srcPkg, tgtPkg, struct, typedefs, enumDefaults, pkgMap)
+      ThriftModelFile.export(srcPkg, tgtPkg, struct, metadata),
+      ThriftModelSchemaFile.export(srcPkg, tgtPkg, struct, metadata)
     ))
 
     lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.apply)
@@ -52,11 +54,11 @@ object ThriftParseService {
     lazy val serviceNames = services.map(_.name)
     lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
     lazy val serviceFiles = services.flatMap(service => Seq(
-      ThriftServiceFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap),
-      ThriftTwirlServiceFile.export(tgtPkg, service, typedefs, pkgMap),
-      ThriftControllerFile.export(tgtPkg, service, enumDefaults, typedefs, pkgMap),
+      ThriftServiceFile.export(srcPkg, tgtPkg, service, metadata),
+      ThriftTwirlServiceFile.export(tgtPkg, service, metadata),
+      ThriftControllerFile.export(tgtPkg, service, metadata),
       ThriftRoutesFile.export(service),
-      ThriftServiceSchemaFile.export(srcPkg, tgtPkg, service, typedefs, enumDefaults, pkgMap)
+      ThriftServiceSchemaFile.export(srcPkg, tgtPkg, service, metadata)
     ))
 
     lazy val files = intEnumFiles ++ stringEnumFiles ++ structFiles ++ serviceFiles

@@ -1,10 +1,10 @@
 package services.scalaexport.file.thrift
 
-import models.scalaexport.thrift.ThriftStructField
+import models.scalaexport.thrift.{ThriftMetadata, ThriftStructField}
 
 object ThriftFieldScalaHelper {
-  def getFromThrift(field: ThriftStructField, typedefs: Map[String, String], pkgMap: Map[String, Seq[String]]) = {
-    val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, typedefs = typedefs, pkgMap)
+  def getFromThrift(field: ThriftStructField, metadata: ThriftMetadata) = {
+    val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, metadata)
     parse("t", field.name, t, pkg, field.required)
   }
 
