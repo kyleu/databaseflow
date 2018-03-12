@@ -44,10 +44,6 @@ object ThriftServiceSchemaFile {
     val retType = ThriftFileHelper.columnTypeFor(m.returnValue, metadata)._1
     val retGraphQlType = ThriftSchemaHelper.graphQlTypeFor(retType)
 
-    file.add("Field(", 1)
-    file.add(s"""name = "${m.name}",""")
-    file.add(s"fieldType = $retGraphQlType,")
-
     val retMaps = ThriftSchemaHelper.mapsFor(retType) match {
       case _ if retType == "Unit" => ".map(_ => true)"
       case x if x.nonEmpty => s".map(_$x)"
@@ -55,16 +51,33 @@ object ThriftServiceSchemaFile {
     }
 
     if (m.arguments.isEmpty) {
+      file.add("Field(", 1)
+      file.add(s"""name = "${m.name}",""")
+      file.add(s"fieldType = $retGraphQlType,")
       file.add(s"""resolve = c => traceF(c.ctx, "${m.name}")(td => c.value.${m.name}()(td)$retMaps)""")
+      file.add("),", -1)
     } else {
-      val args = Seq.empty[String]
-      file.add(s"arguments = ${args.map(a => a + " :: ").mkString}Nil,")
+      file.add("{", 1)
+      m.arguments.foreach { arg =>
+        val argType = ThriftFileHelper.columnTypeFor(arg.t, metadata)._1
+        val argInputType = ThriftSchemaInputHelper.graphQlInputTypeFor(Some(pkg -> file), argType, metadata.enums, arg.required)
+        file.add(s"""val ${arg.name}Arg = Argument(name = "${arg.name}", argumentType = $argInputType)""")
+      }
+      file.add("Field(", 1)
+      file.add(s"""name = "${m.name}",""")
+      file.add(s"fieldType = $retGraphQlType,")
+      file.add(s"arguments = ${m.arguments.map(arg => arg.name + "Arg :: ").mkString}Nil,")
 
       file.add(s"""resolve = c => traceF(c.ctx, "${m.name}") { td =>""", 1)
-      val argsRefs = args.map(_.toString)
+      val argsRefs = m.arguments.map { arg =>
+        val argType = ThriftFileHelper.columnTypeFor(arg.t, metadata)._1
+        val mapped = ThriftSchemaInputHelper.mapsFor(argType, arg.required)
+        s"${arg.name} = c.arg(${arg.name}Arg)$mapped"
+      }
       file.add(s"c.value.${m.name}(${argsRefs.mkString(", ")})(td)$retMaps")
       file.add("}", -1)
+      file.add(")", -1)
+      file.add("},", -1)
     }
-    file.add("),", -1)
   }
 }

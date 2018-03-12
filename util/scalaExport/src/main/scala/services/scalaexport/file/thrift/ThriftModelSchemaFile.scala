@@ -24,7 +24,7 @@ object ThriftModelSchemaFile {
 
     file.add(s"""object ${model.name}Schema {""", 1)
 
-    val replacedInputFields = ThriftSchemaInputHelper.getReplaceInputFields(tgtPkg, model.fields.map(x => (x.name, x.required, x.t)), metadata)
+    val replacedInputFields = ThriftSchemaInputHelper.getReplaceInputFields(file, tgtPkg, model.fields.map(x => (x.name, x.required, x.t)), metadata)
     file.add(s"implicit lazy val ${model.identifier}InputType: InputType[${model.name}] = deriveInputObjectType[${model.name}](", 1)
     ThriftSchemaInputHelper.addInputImports(pkg = tgtPkg, types = model.fields.map(_.t), metadata = metadata, file = file)
     if (replacedInputFields.nonEmpty) {
