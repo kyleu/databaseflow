@@ -17,6 +17,7 @@ object ThriftServiceSchemaFile {
     file.addImport("models.graphql", "SchemaHelper")
     file.addImport("sangria.schema", "_")
     file.addImport("util.FutureUtils", "graphQlContext")
+    file.addImport("sangria.marshalling.circe", "_")
 
     file.add(s"""object ${service.name}Schema extends SchemaHelper("${service.name}") {""", 1)
 
@@ -37,7 +38,8 @@ object ThriftServiceSchemaFile {
   }
 
   private[this] def addMethodField(pkg: Seq[String], m: ThriftServiceMethod, metadata: ThriftMetadata, file: ScalaFile) = {
-    ThriftSchemaHelper.addImports(pkg = pkg, types = m.returnValue +: m.arguments.map(_.t), metadata = metadata, file = file)
+    ThriftSchemaHelper.addImports(pkg = pkg, types = Seq(m.returnValue), metadata = metadata, file = file)
+    ThriftSchemaInputHelper.addInputImports(pkg = pkg, types = m.arguments.map(_.t), metadata = metadata, file = file)
 
     val retType = ThriftFileHelper.columnTypeFor(m.returnValue, metadata)._1
     val retGraphQlType = ThriftSchemaHelper.graphQlTypeFor(retType)

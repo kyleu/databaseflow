@@ -9,6 +9,8 @@ object ThriftSchemaHelper {
   def graphQlTypeFor(t: String, req: Boolean = true): String = t match {
     case _ if !req => s"OptionType(${graphQlTypeFor(t)})"
     case "Long" => "LongType"
+    case "Double" => "FloatType"
+    case "Float" => "FloatType"
     case "Int" => "IntType"
     case "String" => "StringType"
     case "Boolean" => "BooleanType"
@@ -28,7 +30,7 @@ object ThriftSchemaHelper {
   }
 
   case class ReplacedField(name: String, t: String, pkg: Seq[String], req: Boolean = true) {
-    lazy val fullFieldDecl: String = s"""ReplaceField("$name", Field("$name", ${graphQlTypeFor(t, req)}, resolve = _.value.$name${mapsFor(t, req)}))"""
+    lazy val fullFieldDecl = s"""ReplaceField("$name", Field("$name", ${graphQlTypeFor(t, req)}, resolve = _.value.$name${mapsFor(t, req)}))"""
   }
 
   def getReplaceFields(pkg: Seq[String], types: Seq[(String, Boolean, ThriftType)], metadata: ThriftMetadata): Seq[ReplacedField] = types.flatMap {
@@ -47,15 +49,13 @@ object ThriftSchemaHelper {
     case x => Some(x)
   }
 
-  def addImports(pkg: Seq[String], types: Seq[ThriftType], metadata: ThriftMetadata, file: ScalaFile) = types.foreach { t =>
-    val colType = ThriftFileHelper.columnTypeFor(t, metadata)
-    getImportType(colType._1).foreach { impType =>
-      val impPkg = if (colType._2.isEmpty) {
-        (pkg :+ "graphql").mkString(".")
-      } else {
-        (colType._2 :+ "graphql").mkString(".")
+  def addImports(pkg: Seq[String], types: Seq[ThriftType], metadata: ThriftMetadata, file: ScalaFile) = {
+    types.foreach { t =>
+      val colType = ThriftFileHelper.columnTypeFor(t, metadata)
+      getImportType(colType._1).foreach { impType =>
+        val impPkg = if (colType._2.isEmpty) { (pkg :+ "graphql").mkString(".") } else { (colType._2 :+ "graphql").mkString(".") }
+        file.addImport(s"$impPkg.${impType}Schema", s"${ExportHelper.toIdentifier(impType)}Type")
       }
-      file.addImport(s"$impPkg.${impType}Schema", s"${ExportHelper.toIdentifier(impType)}Type")
     }
   }
 }
