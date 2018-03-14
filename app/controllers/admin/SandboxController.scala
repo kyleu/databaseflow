@@ -3,9 +3,6 @@ package controllers.admin
 import akka.util.Timeout
 import controllers.BaseController
 import models.sandbox.SandboxTask
-import services.connection.ConnectionSettingsService
-import services.scalaexport.ScalaExportService
-import services.schema.SchemaService
 import util.FutureUtils.defaultContext
 import util.ApplicationContext
 

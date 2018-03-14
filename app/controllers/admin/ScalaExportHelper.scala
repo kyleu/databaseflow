@@ -1,7 +1,8 @@
 package controllers.admin
 
 import models.schema._
-import services.scalaexport.config._
+import models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
+import models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportConfigurationHelper}
 
 import scala.util.control.NonFatal
 

@@ -1,4 +1,4 @@
-@(result: models.scalaexport.ExportResult, files: Map[String, Int], injected: Seq[(String, String)])(
+@(result: models.scalaexport.db.ExportResult, files: Map[String, Int], injected: Seq[(String, String)])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )@layout.simple(user = None, title = s"Scala Export Result") {
   <div class="row">

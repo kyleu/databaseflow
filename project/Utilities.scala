@@ -24,7 +24,7 @@ object Utilities {
   lazy val scalaExport = (project in file("util/scalaExport"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
     .settings(Shared.commonSettings: _*)
-    .settings(libraryDependencies ++= Seq(Utils.enumeratum, Utils.betterFiles, Utils.guava, Utils.thriftParser))
+    .settings(libraryDependencies ++= Seq(Utils.enumeratum, Utils.betterFiles, Utils.guava, Utils.thriftParser, Utils.scopts))
     .dependsOn(Shared.sharedJvm)
 
   lazy val translation = (project in file("util/translation"))

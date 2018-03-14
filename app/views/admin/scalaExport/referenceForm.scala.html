@@ -1,9 +1,9 @@
 @(
-    model: services.scalaexport.config.ExportModel,
-    ref: services.scalaexport.config.ExportModel.Reference,
-    tgt: services.scalaexport.config.ExportField,
-    srcModel: services.scalaexport.config.ExportModel,
-    srcField: services.scalaexport.config.ExportField
+    model: models.scalaexport.db.ExportModel,
+    ref: models.scalaexport.db.ExportModel.Reference,
+    tgt: models.scalaexport.db.ExportField,
+    srcModel: models.scalaexport.db.ExportModel,
+    srcField: models.scalaexport.db.ExportField
 )
 
 @chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}

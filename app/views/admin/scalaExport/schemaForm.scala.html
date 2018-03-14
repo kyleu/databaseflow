@@ -1,4 +1,4 @@
-@(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: services.scalaexport.config.ExportConfiguration, schema: models.schema.Schema)(
+@(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: models.scalaexport.db.config.ExportConfiguration, schema: models.schema.Schema)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )
 @chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
@@ -31,6 +31,14 @@
                     <td><input name="project.location" class="validate" value="@cfg.projectLocation" /></td>
                   </tr>
                   <tr>
+                    <th>Model Location Override</th>
+                    <td><input name="model.location" class="validate" value="@cfg.modelLocationOverride" /></td>
+                  </tr>
+                  <tr>
+                    <th>Thrift Location Override</th>
+                    <td><input name="thrift.location" class="validate" value="@cfg.thriftLocationOverride" /></td>
+                  </tr>
+                  <tr>
                     <th>Project Source</th>
                     <td><select name="project.source">
                       @if(cfg.source == "boilerplay") {
@@ -49,7 +57,7 @@
             @views.html.admin.scalaExport.modelForm(
               table = table,
               config = cfg,
-              model = cfg.getModelOptWithIgnored(table.name).getOrElse(services.scalaexport.config.ExportConfigurationDefault.loadModel(schema, table, cfg.enums))
+              model = cfg.getModelOptWithIgnored(table.name).getOrElse(models.scalaexport.db.config.ExportConfigurationDefault.loadModel(schema, table, cfg.enums))
             )
           }
         </ul>

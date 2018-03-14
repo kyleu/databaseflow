@@ -95,6 +95,7 @@ object Dependencies {
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val guava = "com.google.guava" % "guava" % "23.0"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
+    val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
 
     val scribeVersion = "1.4.5"
   }

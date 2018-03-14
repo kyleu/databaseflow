@@ -4,8 +4,8 @@ import better.files._
 import controllers.BaseController
 import models.schema.Schema
 import services.connection.ConnectionSettingsService
-import services.scalaexport.{ExportHelper, ScalaExportService}
-import services.scalaexport.config._
+import models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault}
+import services.scalaexport.db.{ExportHelper, ScalaExportService}
 import services.schema.SchemaService
 import upickle.Js
 import util.ApplicationContext
@@ -64,7 +64,9 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
             ScalaExportHelper.modelForTable(schema, t, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums)
           },
           source = form("project.source"),
-          projectLocation = form.get("project.location").filter(_.nonEmpty)
+          projectLocation = form.get("project.location").filter(_.nonEmpty),
+          modelLocationOverride = form.get("model.location").filter(_.nonEmpty),
+          thriftLocationOverride = form.get("thrift.location").filter(_.nonEmpty)
         )
 
         val x = write(config, indent = 2)

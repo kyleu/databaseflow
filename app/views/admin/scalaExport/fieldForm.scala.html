@@ -1,4 +1,4 @@
-@(model: services.scalaexport.config.ExportModel, field: services.scalaexport.config.ExportField)
+@(model: models.scalaexport.db.ExportModel, field: models.scalaexport.db.ExportField)
 
 @chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
 @baseName = {@{s"model.${model.tableName}.field.${field.columnName}"}}

@@ -1,8 +1,8 @@
 package models.scalaexport.thrift
 
 import com.facebook.swift.parser.model.ThriftMethod
-import services.scalaexport.ExportHelper
-import services.scalaexport.file.thrift.ThriftFileHelper
+import services.scalaexport.db.ExportHelper
+import services.scalaexport.thrift.file.ThriftFileHelper
 
 import scala.collection.JavaConverters._
 
