@@ -5,41 +5,55 @@ import models.scalaexport.file.OutputFile
 import models.schema.{ColumnType, ForeignKey}
 
 object TwirlFormFields {
-  def inputFor(model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
+
+  def fieldFor(model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
     field.t match {
-      case ColumnType.EnumType =>
-        val enum = field.enumOpt.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
-        TwirlFormEnumFields.enumField(field, enum, file)
-      case ColumnType.CodeType => codeField(field, file)
-      case ColumnType.BooleanType => booleanField(field, file)
-      case ColumnType.DateType => TwirlFormDateFields.dateField(field, file)
-      case ColumnType.TimeType => TwirlFormDateFields.timeField(field, file)
-      case ColumnType.TimestampType => TwirlFormDateFields.timestampField(field, file)
-      case _ => TwirlFormDefaultFields.defaultField(field, autocomplete, file)
+      case ColumnType.EnumType => file.add(s"@views.html.components.form.selectField(${enumArgsFor(field)})")
+      case ColumnType.CodeType => file.add(s"@views.html.components.form.codeField(${argsFor(field)})")
+      case ColumnType.BooleanType => file.add(s"@views.html.components.form.booleanField(${boolArgsFor(field)})")
+      case ColumnType.DateType => timeField(field, file, "Date")
+      case ColumnType.TimeType => timeField(field, file, "Time")
+      case ColumnType.TimestampType => timeField(field, file, "DateTime")
+      case _ if autocomplete.isDefined => autocompleteField(field, autocomplete.get, file)
+      case _ => file.add(s"@views.html.components.form.textField(${argsFor(field)})")
     }
   }
 
-  private[this] def codeField(field: ExportField, file: OutputFile) = {
+  private[this] def argsFor(field: ExportField) = {
     val prop = field.propertyName
-    file.add("""<div class="input-field">""", 1)
-    file.add(s"""<textarea id="input-$prop" name="$prop" class="materialize-textarea" style="font-family: monospace, monospace;">@model.$prop</textarea>""")
-    file.add("</div>", -1)
+    val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
+    val dataTypeString = if (field.t == ColumnType.StringType) { "" } else { s""", dataType = "${field.t}"""" }
+    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}$dataTypeString"""
   }
 
-  private[this] def booleanField(field: ExportField, file: OutputFile) = {
+  private[this] def boolArgsFor(field: ExportField) = {
     val prop = field.propertyName
-    if (field.notNull) {
-      file.add(s"""<input id="input-$prop-true" type="radio" name="$prop" value="true" @if(model.$prop) { checked="checked" } />""")
-      file.add(s"""<label class="bool-radio-label" for="input-$prop-true">True</label>""")
-      file.add(s"""<input id="input-$prop-false" type="radio" name="$prop" value="false" @if(!model.$prop) { checked="checked" } />""")
-      file.add(s"""<label class="bool-radio-label" for="input-$prop-false">False</label>""")
-    } else {
-      file.add(s"""<input id="input-$prop-true" type="radio" name="$prop" value="true" @if(model.$prop.contains(true)) { checked="checked" } />""")
-      file.add(s"""<label class="bool-radio-label" for="input-$prop-true">True</label>""")
-      file.add(s"""<input id="input-$prop-false" type="radio" name="$prop" value="false" @if(model.$prop.contains(false)) { checked="checked" } />""")
-      file.add(s"""<label class="bool-radio-label" for="input-$prop-false">False</label>""")
-      file.add(s"""<input id="input-$prop-null" type="radio" name="$prop" value="null" @if(model.$prop.isEmpty) { checked="checked" } />""")
-      file.add(s"""<label class="bool-radio-label" for="input-$prop-null">Null</label>""")
-    }
+    val valString = if (field.notNull) { s"Some(model.$prop)" } else { s"""model.$prop""" }
+    val dataTypeString = if (field.t == ColumnType.StringType) { "" } else { s""", dataType = "${field.t}"""" }
+    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}$dataTypeString"""
+  }
+
+  private[this] def enumArgsFor(field: ExportField) = {
+    val enum = field.enumOpt.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
+    val prop = field.propertyName
+    val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
+    val opts = "Seq(" + enum.values.map(v => s"""("$v" -> "$v")""").mkString(", ") + ")"
+    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, options = $opts, nullable = ${field.nullable}, dataType = "${enum.name}""""
+  }
+
+  private[this] def timeField(field: ExportField, file: OutputFile, t: String) = {
+    val prop = field.propertyName
+    val valString = if (field.notNull) { s"Some(model.$prop)" } else { s"""model.$prop""" }
+    val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}"""
+    file.add(s"@views.html.components.form.local${t}Field($args)")
+  }
+
+  private[this] def autocompleteField(field: ExportField, autocomplete: (ForeignKey, ExportModel), file: OutputFile) = {
+    file.add(s"@views.html.components.form.autocompleteField(", 1)
+    file.add(argsFor(field) + ",")
+    val url = s"${autocomplete._2.routesClass}.autocomplete()"
+    val icon = s"models.template.Icons.${autocomplete._2.propertyName}"
+    file.add(s"""call = $url, acType = ("${autocomplete._2.propertyName}", "${autocomplete._2.title}"), icon = $icon""")
+    file.add(")", -1)
   }
 }

@@ -29,23 +29,8 @@ object TwirlFormFile {
     file.add("<tbody>", 1)
 
     model.fields.foreach { field =>
-      file.add("<tr>", 1)
-      file.add("<td>", 1)
-      val inputProps = s"""type="checkbox" name="${field.propertyName}.include" id="${field.propertyName}.include" value="true""""
-      val dataProps = if (field.notNull) {
-        s"""class="data-input" data-type="${field.t}" data-name="${field.propertyName}""""
-      } else {
-        s"""class="data-input nullable" data-type="${field.t}" data-name="${field.propertyName}""""
-      }
-      file.add(s"""<input $inputProps @if(isNew) { checked="checked" } $dataProps />""")
-      file.add(s"""<label for="${field.propertyName}.include">${field.title}</label>""")
-      file.add("</td>", -1)
-
-      file.add("<td>", 1)
       val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
-      TwirlFormFields.inputFor(model, field, file, autocomplete)
-      file.add(s"</td>", -1)
-      file.add("</tr>", -1)
+      TwirlFormFields.fieldFor(model, field, file, autocomplete)
     }
 
     file.add("</tbody>", -1)

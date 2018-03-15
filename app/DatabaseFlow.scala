@@ -1,10 +1,14 @@
 import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
+import services.scalaexport.ScalaExport
 import util.Logging
 
 object DatabaseFlow extends Logging {
-  // TODO scopts
-  def main(args: Array[String]): Unit = startServer(new RealServerProcess(args))
+  def main(args: Array[String]): Unit = if (args.headOption.contains("export")) {
+    ScalaExport.main(args.tail)
+  } else {
+    startServer(new RealServerProcess(args))
+  }
 
   def startServer(process: RealServerProcess) = {
     val config: ServerConfig = ProdServerStart.readServerConfigSettings(process)

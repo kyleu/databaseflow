@@ -48,7 +48,7 @@ object ExportMerge {
     }
   }
 
-  def merge(projectId: String, projectTitle: String, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay") = {
+  def merge(projectId: Option[String], projectTitle: String, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay") = {
     if (rootDir.exists) {
       log("Overwriting existing project.")
     } else {
@@ -57,7 +57,7 @@ object ExportMerge {
       getSrcDir(source, log).copyTo(rootDir)
       (rootDir / "license").delete(swallowIOExceptions = true)
       (rootDir / "readme.md").overwrite(ReadmeFile.content(projectTitle))
-      projectNameReplacements(projectId, projectTitle, rootDir)
+      projectId.foreach(id => projectNameReplacements(id, projectTitle, rootDir))
     }
 
     val src = "./tmp/scalaexport".toFile
@@ -84,8 +84,8 @@ object ExportMerge {
 
     val rootResults = rootFiles.map { rf =>
       val f = rootDir / rf.packageDir / rf.filename
-      val tgtContent = f.contentAsString
       if (f.exists) {
+        val tgtContent = f.contentAsString
         if (!tgtContent.contains(" Generated File")) {
           log(s"Skipping modified root file [${f.pathAsString}].")
           "modified-root"
