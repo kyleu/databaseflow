@@ -8,21 +8,21 @@ object ThriftServiceFile {
     val file = ScalaFile(pkg = tgtPkg, key = svc.name, root = exportModelRoot)
 
     file.addImport("scala.concurrent", "Future")
-    file.addImport("services.thrift", "ThriftServiceHelper")
     file.addImport("_root_.util.tracing", "TraceData")
     file.addImport("_root_.util.FutureUtils", "toScalaFuture")
+
     file.addImport(s"${srcPkg.mkString(".")}.${svc.name}", "MethodPerEndpoint")
 
     ThriftOverrides.imports.get(svc.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
 
-    file.add(s"object ${svc.name} extends models.thrift.ThriftService(", 1)
+    file.add(s"object ${svc.name} extends _root_.util.thrift.ThriftService(", 2)
     file.add(s"""key = "${svc.name}",""")
     file.add(s"""pkg = "${tgtPkg.mkString(".")}",""")
     file.add(s"""route = "/admin/thrift/${svc.identifier.stripSuffix("Service")}"""")
-    file.add(")", -1)
+    file.add(")", -2)
     file.add()
     file.add("@javax.inject.Singleton")
-    file.add(s"""class ${svc.name} @javax.inject.Inject() (svc: MethodPerEndpoint) extends ThriftServiceHelper("${svc.name}") {""", 1)
+    file.add(s"""class ${svc.name} @javax.inject.Inject() (svc: MethodPerEndpoint) extends _root_.util.thrift.ThriftServiceHelper("${svc.name}") {""", 1)
     addMethods(svc, metadata, file)
     file.add("}", -1)
 

@@ -5,7 +5,8 @@ import controllers.BaseController
 import models.schema.Schema
 import services.connection.ConnectionSettingsService
 import models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault}
-import services.scalaexport.db.{ExportHelper, ScalaExportService}
+import services.scalaexport.{ExportFiles, ExportHelper}
+import services.scalaexport.db.ScalaExportService
 import services.scalaexport.thrift.ThriftParseService
 import services.schema.SchemaService
 import upickle.Js
@@ -28,7 +29,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
       case Some(cs) => filename match {
         case Some(fn) => SchemaService.getSchemaWithDetails(cs).map { schema =>
           val config = getConfig(schema)
-          val result = ThriftParseService.exportThrift(filename = fn, persist = true)
+          ExportFiles.prepareRoot()
+          val result = ThriftParseService.exportThrift(filename = fn, persist = true, projectLocation = config.projectLocation)
           Ok(views.html.admin.scalaExport.exportThrift(request.identity, fn.substring(fn.lastIndexOf('/') + 1), result._1, result._2))
         }
         case None => Future.successful(Ok(views.html.admin.scalaExport.thriftForm(request.identity, cs, File("./tmp/thrift"))))

@@ -2,7 +2,7 @@ package services.scalaexport.thrift.file
 
 import models.scalaexport.file.ScalaFile
 import models.scalaexport.thrift.{ThriftIntegerEnum, ThriftStringEnum}
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object ThriftEnumSchemaFile {
   def exportString(pkg: Seq[String], e: ThriftStringEnum) = {

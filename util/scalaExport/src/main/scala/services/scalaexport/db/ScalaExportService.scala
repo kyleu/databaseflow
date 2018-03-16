@@ -4,6 +4,7 @@ import better.files._
 import models.scalaexport.db
 import models.scalaexport.db.ExportResult
 import models.scalaexport.db.config.ExportConfiguration
+import services.scalaexport.ExportFiles
 import services.scalaexport.db.file.{RoutesFiles, ServiceRegistryFiles}
 
 import scala.concurrent.{ExecutionContext, Future}

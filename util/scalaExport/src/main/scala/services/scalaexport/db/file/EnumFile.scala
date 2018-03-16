@@ -2,7 +2,7 @@ package services.scalaexport.db.file
 
 import models.scalaexport.db.ExportEnum
 import models.scalaexport.file.ScalaFile
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object EnumFile {
   def export(enum: ExportEnum) = {

@@ -50,9 +50,9 @@ object ExportMerge {
 
   def merge(projectId: Option[String], projectTitle: String, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay") = {
     if (rootDir.exists) {
-      log("Overwriting existing project.")
+      log(s"Overwriting existing project at [${rootDir.path}].")
     } else {
-      log("Creating initial project.")
+      log(s"Creating initial project at [${rootDir.path}].")
       rootDir.createDirectory()
       getSrcDir(source, log).copyTo(rootDir)
       (rootDir / "license").delete(swallowIOExceptions = true)

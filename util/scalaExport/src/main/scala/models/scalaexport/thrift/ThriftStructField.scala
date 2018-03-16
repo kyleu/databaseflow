@@ -2,7 +2,7 @@ package models.scalaexport.thrift
 
 import com.facebook.swift.parser.model.ThriftField
 import com.facebook.swift.parser.model.ThriftField.Requiredness
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object ThriftStructField {
   protected val renames = Map("type" -> "`type`")

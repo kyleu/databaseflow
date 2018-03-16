@@ -1,6 +1,6 @@
 package models.scalaexport.db
 
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 case class ExportEnum(
     pkg: List[String] = Nil,

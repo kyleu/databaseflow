@@ -2,7 +2,7 @@ package services.scalaexport.db.inject
 
 import better.files.File
 import models.scalaexport.db.ExportResult
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object InjectServiceRegistry {
   def inject(result: ExportResult, rootDir: File) = {

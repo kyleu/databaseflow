@@ -2,7 +2,7 @@ package models.scalaexport.db
 
 import models.scalaexport.db.config.ExportConfiguration
 import models.schema.{Column, ColumnType, ForeignKey}
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object ExportModel {
   case class Reference(name: String, srcTable: String, srcCol: String, tgt: String, notNull: Boolean) {

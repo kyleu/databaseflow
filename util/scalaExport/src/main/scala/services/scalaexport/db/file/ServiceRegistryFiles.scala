@@ -2,7 +2,7 @@ package services.scalaexport.db.file
 
 import models.scalaexport.db.ExportModel
 import models.scalaexport.file.ScalaFile
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object ServiceRegistryFiles {
   def files(models: Seq[ExportModel]) = {

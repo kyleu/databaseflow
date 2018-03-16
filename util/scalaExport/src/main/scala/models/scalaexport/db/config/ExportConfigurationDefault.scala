@@ -2,8 +2,8 @@ package models.scalaexport.db.config
 
 import models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
 import models.schema.{Column, ColumnType, Schema, Table}
-import services.scalaexport.db.ExportHelper
-import services.scalaexport.db.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
+import services.scalaexport.ExportHelper
+import services.scalaexport.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 
 object ExportConfigurationDefault {
   def forSchema(key: String, schema: Schema) = {

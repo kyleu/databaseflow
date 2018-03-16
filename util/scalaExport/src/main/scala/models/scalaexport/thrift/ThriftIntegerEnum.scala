@@ -1,7 +1,7 @@
 package models.scalaexport.thrift
 
 import com.facebook.swift.parser.model.IntegerEnum
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 import scala.collection.JavaConverters._
 

@@ -1,4 +1,4 @@
-package services.scalaexport.db
+package services.scalaexport
 
 import com.google.common.base.{CaseFormat, Converter}
 

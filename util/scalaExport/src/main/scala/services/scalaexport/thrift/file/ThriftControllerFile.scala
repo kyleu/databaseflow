@@ -77,7 +77,7 @@ object ThriftControllerFile {
     file.add("val args = jsonArguments(request.body, argNames: _*)")
     file.add(s"""def ren(res: Option[Json] = None, err: Option[(String, String)] = None) = render {""", 1)
     file.add(s"""case Accepts.Html() => Ok(views.html.admin.layout.methodCall(""", 1)
-    file.add(s"""user = request.identity, title = name, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err, debug = app.config.debug""")
+    file.add(s"""user = request.identity, title = title, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err, debug = app.config.debug""")
     file.add("""))""", -1)
     file.add(s"""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson))).as(JSON)""")
     file.add("}", -1)

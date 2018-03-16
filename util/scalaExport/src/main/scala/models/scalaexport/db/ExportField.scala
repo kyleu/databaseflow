@@ -3,7 +3,7 @@ package models.scalaexport.db
 import models.scalaexport.file.ScalaFile
 import models.schema.ColumnType
 import models.schema.ColumnType._
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object ExportField {
   def getDefaultString(t: ColumnType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {

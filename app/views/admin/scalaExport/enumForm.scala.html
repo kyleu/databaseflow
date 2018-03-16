@@ -1,6 +1,6 @@
 @(configEnums: Seq[models.scalaexport.db.ExportEnum], schemaEnums: Seq[models.schema.EnumType])
 @chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
-@toId(key: String) = {@services.scalaexport.db.ExportHelper.toClassName(services.scalaexport.db.ExportHelper.toIdentifier(key))}
+@toId(key: String) = {@services.scalaexport.ExportHelper.toClassName(services.scalaexport.ExportHelper.toIdentifier(key))}
 @if(schemaEnums.nonEmpty) {
   <li>
     <div class="collapsible-header">

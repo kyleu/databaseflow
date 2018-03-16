@@ -1,13 +1,15 @@
-package services.scalaexport.db
+package services.scalaexport
 
 import better.files._
-import models.scalaexport.db.{ExportModel, ExportResult}
 import models.scalaexport.db.config.ExportConfiguration
+import models.scalaexport.db.{ExportModel, ExportResult}
 import models.scalaexport.file.OutputFile
 import models.scalaexport.thrift.ThriftParseResult
 import services.scalaexport.db.file._
 
 object ExportFiles {
+  val rootDir = "./tmp/scalaexport".toFile
+
   def prepareRoot() = {
     val rootDir = "./tmp/scalaexport".toFile
     if (rootDir.exists) { rootDir.delete() }

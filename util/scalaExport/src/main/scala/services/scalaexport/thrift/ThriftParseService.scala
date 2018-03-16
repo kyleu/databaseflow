@@ -6,7 +6,8 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.thrift._
-import services.scalaexport.db.{ExportFiles, ExportMerge}
+import services.scalaexport.ExportFiles
+import services.scalaexport.db.ExportMerge
 
 import scala.concurrent.ExecutionContext
 
@@ -34,10 +35,9 @@ object ThriftParseService {
     )
   }
 
-  def exportThrift(filename: String, persist: Boolean = false, projectLocation: Option[String] = None)(
-    implicit
-    ec: ExecutionContext
-  ): (Map[String, Int], Seq[(String, String)]) = {
+  def exportThrift(
+    filename: String, persist: Boolean = false, projectLocation: Option[String] = None
+  )(implicit ec: ExecutionContext): (Map[String, Int], Seq[(String, String)]) = {
     if (filename == "all") {
       val root = File("./tmp/thrift")
       if (!root.exists) {
@@ -52,9 +52,8 @@ object ThriftParseService {
         case _ => Nil
       }.toSeq
 
-      val map = results.map(_._1).foldLeft(Map.empty[String, Int])((l, r) => (l.keys ++ r.keys).map {
-        case k if k == "same-content" => k -> Math.max(l.getOrElse(k, 0), r.getOrElse(k, 0))
-        case k => k -> (l.getOrElse(k, 0) + r.getOrElse(k, 0))
+      val map = results.map(_._1).foldLeft(Map.empty[String, Int])((l, r) => (l.keys ++ r.keys).map { k =>
+        k -> (l.getOrElse(k, 0) + r.getOrElse(k, 0))
       }.toMap)
       val seq = results.map(_._2).foldLeft(Seq.empty[(String, String)])((l, r) => l ++ r)
       map -> seq

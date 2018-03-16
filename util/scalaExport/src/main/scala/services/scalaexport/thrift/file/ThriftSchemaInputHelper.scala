@@ -3,7 +3,7 @@ package services.scalaexport.thrift.file
 import com.facebook.swift.parser.model.ThriftType
 import models.scalaexport.file.ScalaFile
 import models.scalaexport.thrift.ThriftMetadata
-import services.scalaexport.db.ExportHelper
+import services.scalaexport.ExportHelper
 
 object ThriftSchemaInputHelper {
   def graphQlInputTypeFor(src: Option[(Seq[String], ScalaFile)], t: String, enums: Map[String, String], req: Boolean = true): String = t match {
