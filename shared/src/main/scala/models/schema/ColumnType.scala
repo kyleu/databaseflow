@@ -22,6 +22,7 @@ sealed abstract class ColumnType(
 
 object ColumnType extends Enum[ColumnType] {
   case object StringType extends ColumnType("string", "String", "xxx")
+  case object EncryptedStringType extends ColumnType("encrypted", "String", "xxx")
 
   case object BooleanType extends ColumnType("boolean", "Boolean", "xxx == \"true\"")
   case object ByteType extends ColumnType("byte", "Byte", "xxx.toInt.toByte")

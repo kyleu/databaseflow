@@ -6,6 +6,7 @@ import models.schema.ColumnType._
 object ExportFieldThrift {
   def thriftType(t: ColumnType, sqlTypeName: String, enumOpt: Option[ExportEnum]) = t match {
     case StringType => "string"
+    case EncryptedStringType => "string"
 
     case BooleanType => "bool"
     case ByteType => "byte"

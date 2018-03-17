@@ -45,7 +45,7 @@ object ModelFile {
     file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
       val x = if (field.notNull) {
-        val method = if (field.t == ColumnType.StringType) { "" } else { ".toString" }
+        val method = if (field.t.asScala == "String") { "" } else { ".toString" }
         s"""DataField("${field.propertyName}", Some(${field.propertyName}$method))"""
       } else {
         val method = field.t match {

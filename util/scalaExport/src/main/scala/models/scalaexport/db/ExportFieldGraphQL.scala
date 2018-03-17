@@ -5,6 +5,7 @@ import models.schema.ColumnType._
 object ExportFieldGraphQL {
   private[this] def graphQLType(field: ExportField) = field.t match {
     case StringType => "StringType"
+    case EncryptedStringType => "StringType"
 
     case BooleanType => "BooleanType"
     case ByteType => "byteType"

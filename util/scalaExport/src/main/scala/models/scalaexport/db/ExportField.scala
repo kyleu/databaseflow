@@ -59,7 +59,6 @@ case class ExportField(
       s"EnumType(${e.className})"
     }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$sqlTypeName]."))
     case ArrayType => ArrayType.typForSqlType(sqlTypeName)
-    case StringType if sqlTypeName == "encrypted" => "EncryptedStringType"
     case _ => t.className
   }
 

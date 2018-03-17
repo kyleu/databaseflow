@@ -19,6 +19,7 @@ object ColumnNotNullGraphQL {
 
   def getColumnField(name: String, description: Option[String], columnType: ColumnType, cleanName: String, sqlTypeName: String) = columnType match {
     case ColumnType.StringType => getDefaultField(name, description, cleanName)
+    case ColumnType.EncryptedStringType => getDefaultField(name, description, cleanName)
 
     case ColumnType.BooleanType => getTypedField[Boolean](name, description, cleanName, BooleanType, _ == "true")
     case ColumnType.ByteType => getTypedField[Byte](name, description, cleanName, CommonGraphQL.byteType, _.toByte)
