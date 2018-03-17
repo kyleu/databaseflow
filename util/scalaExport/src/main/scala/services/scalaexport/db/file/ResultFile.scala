@@ -16,11 +16,7 @@ object ResultFile {
     file.addImport("models.result.orderBy", "OrderBy")
     file.addImport("models.result.paging", "PagingOptions")
 
-    file.addImport("io.circe", "Encoder")
-    file.addImport("io.circe", "Decoder")
-    file.addImport("io.circe.generic.semiauto", "deriveDecoder")
-    file.addImport("io.circe.generic.semiauto", "deriveEncoder")
-    file.addImport("io.circe.java8.time", "_")
+    file.addImport("_root_.util.JsonSerializers", "_")
 
     file.add(s"case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")

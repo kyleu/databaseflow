@@ -9,10 +9,7 @@ object ThriftModelFile {
   def export(srcPkg: Seq[String], tgtPkg: Seq[String], model: ThriftStruct, metadata: ThriftMetadata, exportModelRoot: Option[String]) = {
     val file = ScalaFile(pkg = tgtPkg, key = model.name, root = exportModelRoot)
 
-    file.addImport("io.circe", "Encoder")
-    file.addImport("io.circe", "Decoder")
-    file.addImport("io.circe.generic.semiauto", "deriveDecoder")
-    file.addImport("io.circe.generic.semiauto", "deriveEncoder")
+    file.addImport("_root_.util.JsonSerializers", "_")
 
     if (includeDataFields) {
       file.addImport("models.result.data", "DataField")

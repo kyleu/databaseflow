@@ -12,13 +12,7 @@ object ModelFile {
     file.addImport("models.result.data", "DataField")
     file.addImport("models.result.data", "DataSummary")
     file.addImport("models.result.data", "DataFieldModel")
-    file.addImport("io.circe", "Encoder")
-    file.addImport("io.circe", "Decoder")
-    file.addImport("io.circe.generic.semiauto", "deriveDecoder")
-    file.addImport("io.circe.generic.semiauto", "deriveEncoder")
-    if (model.fields.exists(_.t == ColumnType.TimestampType)) {
-      file.addImport("io.circe.java8.time", "_")
-    }
+    file.addImport("_root_.util.JsonSerializers", "_")
     if (model.scalaJs) {
       file.addImport("scala.scalajs.js.annotation", "JSExport")
       file.addImport("scala.scalajs.js.annotation", "JSExportTopLevel")
@@ -45,7 +39,7 @@ object ModelFile {
     file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
       val x = if (field.notNull) {
-        val method = if (field.t.asScala == "String") { "" } else { ".toString" }
+        val method = if (field.t == ColumnType.StringType || field.t == ColumnType.EncryptedStringType) { "" } else { ".toString" }
         s"""DataField("${field.propertyName}", Some(${field.propertyName}$method))"""
       } else {
         val method = field.t match {

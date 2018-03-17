@@ -22,7 +22,7 @@ object ExportField {
 
     case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
 
-    case JsonType => "util.JsonSerializers.emptyObject"
+    case JsonType => "Json.obj()"
     case ArrayType => "Seq.empty"
     case TagsType => "Seq.empty[models.tag.Tag]"
     case EnumType => enumOpt match {
