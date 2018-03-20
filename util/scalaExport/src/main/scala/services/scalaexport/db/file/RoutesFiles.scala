@@ -1,6 +1,6 @@
 package services.scalaexport.db.file
 
-import models.scalaexport.db.ExportModel
+import models.scalaexport.db.{ExportEnum, ExportModel}
 import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.file.RoutesFile
 
@@ -60,13 +60,30 @@ object RoutesFiles {
     }
   }
 
+  def enumRoutesContentFor(e: ExportEnum) = {
+    val detailWs = (0 until (55 - e.propertyName.length)).map(_ => " ").mkString
+    Seq(s"GET         /${e.propertyName} $detailWs ${e.controllerClass}.list()", "")
+  }
+
   def files(config: ExportConfiguration, models: Seq[ExportModel]) = {
     val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)
-    val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
+    val modelPackages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
-    val routesContent = packages.map {
-      case p if p._2.lengthCompare(1) == 0 => p._1 -> routesContentFor(config, p._2.head, solo = true)
-      case p => p._1 -> p._2.flatMap(m => routesContentFor(config, m))
+    val packageEnums = config.enums.filter(_.pkg.nonEmpty)
+    val enumPackages = packageEnums.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
+
+    val packages = (enumPackages.map(_._1) ++ modelPackages.map(_._1)).distinct
+
+    val routesContent = packages.map { p =>
+      val ms = modelPackages.filter(_._1 == p).flatMap(_._2)
+      val es = enumPackages.filter(_._1 == p).flatMap(_._2)
+
+      val solo = ms.size == 1 && es.isEmpty
+      if (solo) {
+        p -> routesContentFor(config, ms.head, solo = true)
+      } else {
+        p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(e)))
+      }
     }
 
     routesContent.map { p =>

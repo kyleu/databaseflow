@@ -12,6 +12,7 @@ object ExportConfigurationDefault {
       key = key,
       projectId = key,
       projectTitle = ExportHelper.toClassName(key),
+      flags = Set("rest", "graphql"),
       enums = enums,
       models = schema.tables.map(t => loadModel(schema, t, enums))
     )

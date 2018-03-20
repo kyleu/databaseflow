@@ -29,11 +29,11 @@ object ScalaExport {
 
   def run(config: ScalaExportOptions) = config.cmd match {
     case "help" => ScalaExportOptions.parser.showUsage()
-    case "thrift" => exportThrift(config.input, config.output)
+    case "thrift" => exportThrift(config.input, config.output, Set("rest", "graphql"))
     case cmd => throw new IllegalStateException(s"Unhandled command [$cmd].")
   }
 
-  def exportThrift(input: Option[String], output: Option[String]) = {
+  def exportThrift(input: Option[String], output: Option[String], flags: Set[String]) = {
     val in = input.getOrElse("./tmp/thrift/test.thrift")
     if (!in.toFile.isRegularFile) {
       throw new IllegalStateException(s"Cannot read input file [$in].")
@@ -42,6 +42,6 @@ object ScalaExport {
     if (!out.toFile.isDirectory) {
       throw new IllegalStateException(s"Cannot read output directory [$in].")
     }
-    ThriftParseService.exportThrift(in, projectLocation = Some(out), persist = true)
+    ThriftParseService.exportThrift(filename = in, persist = true, projectLocation = Some(out), flags = flags)
   }
 }

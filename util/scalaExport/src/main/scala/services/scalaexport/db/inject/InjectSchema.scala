@@ -7,7 +7,12 @@ object InjectSchema {
   def inject(result: ExportResult, rootDir: File) = {
     val models = result.models.filterNot(_.provided)
 
-    def queryFieldsFor(s: String) = {
+    def enumQueryFieldsFor(s: String) = {
+      val newContent = result.config.enums.map(e => s"    ${e.fullClassName}Schema.queryFields").sorted.mkString(" ++\n  ")
+      InjectHelper.replaceBetween(original = s, start = "    // Start enum query fields", end = s"    // End enum query fields", newContent = newContent)
+    }
+
+    def modelQueryFieldsFor(s: String) = {
       val newContent = models.map(m => s"    ${m.modelClass}Schema.queryFields").sorted.mkString(" ++\n  ")
       InjectHelper.replaceBetween(original = s, start = "    // Start model query fields", end = s"    // End model query fields", newContent = newContent)
     }
@@ -32,7 +37,7 @@ object InjectSchema {
     }
 
     val schemaSourceFile = rootDir / "app" / "models" / "graphql" / "Schema.scala"
-    val newContent = fetcherFieldsFor(queryFieldsFor(mutationFieldsFor(schemaSourceFile.contentAsString)))
+    val newContent = fetcherFieldsFor(enumQueryFieldsFor(modelQueryFieldsFor(mutationFieldsFor(schemaSourceFile.contentAsString))))
     schemaSourceFile.overwrite(newContent)
 
     "Schema.scala" -> newContent

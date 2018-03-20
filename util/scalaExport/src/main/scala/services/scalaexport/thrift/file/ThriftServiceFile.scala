@@ -9,7 +9,7 @@ object ThriftServiceFile {
 
     file.addImport("scala.concurrent", "Future")
     file.addImport("_root_.util.tracing", "TraceData")
-    file.addImport("_root_.util.FutureUtils", "toScalaFuture")
+    file.addImport("_root_.util.ThriftFutureUtils", "toScalaFuture")
 
     file.addImport(s"${srcPkg.mkString(".")}.${svc.name}", "MethodPerEndpoint")
 

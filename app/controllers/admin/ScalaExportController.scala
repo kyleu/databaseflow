@@ -30,7 +30,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         case Some(fn) => SchemaService.getSchemaWithDetails(cs).map { schema =>
           val config = getConfig(schema)
           ExportFiles.prepareRoot()
-          val result = ThriftParseService.exportThrift(filename = fn, persist = true, projectLocation = config.projectLocation)
+          val flags = Set("rest", "graphql")
+          val result = ThriftParseService.exportThrift(filename = fn, persist = true, projectLocation = config.projectLocation, flags)
           Ok(views.html.admin.scalaExport.exportThrift(request.identity, fn.substring(fn.lastIndexOf('/') + 1), result._1, result._2))
         }
         case None => Future.successful(Ok(views.html.admin.scalaExport.thriftForm(request.identity, cs, File("./tmp/thrift"))))
@@ -61,6 +62,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           key = schemaId,
           projectId = form("project.id"),
           projectTitle = form("project.title"),
+          flags = form.getOrElse("project.flags", "").split(',').map(_.trim).filterNot(_.isEmpty).toSet,
           enums = enums,
           models = schema.tables.map { t =>
             val prefix = s"model.${t.name}."

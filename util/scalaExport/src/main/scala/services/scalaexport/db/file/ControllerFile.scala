@@ -11,7 +11,6 @@ object ControllerFile {
     val file = ScalaFile(model.controllerPackage, model.className + "Controller")
     val viewHtmlPackage = model.viewHtmlPackage.mkString(".")
     file.addImport("models", "Application")
-    file.addImport("util.FutureUtils", "defaultContext")
     file.addImport("controllers.admin", "ServiceController")
     file.addImport("services.audit", "AuditRecordService")
     file.addImport("scala.concurrent", "Future")
@@ -31,6 +30,8 @@ object ControllerFile {
     }
     file.add(s") extends ServiceController(svc) {", -2)
     file.indent(1)
+    file.add("import app.contexts.webContext")
+    file.add()
     file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"val cancel = ${model.routesClass}.list()")
     file.add(s"val call = ${model.routesClass}.create()")

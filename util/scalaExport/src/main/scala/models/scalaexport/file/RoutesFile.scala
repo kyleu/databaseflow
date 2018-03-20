@@ -1,5 +1,5 @@
 package models.scalaexport.file
 
-case class RoutesFile(override val key: String) extends OutputFile("conf", Nil, key, key + ".routes") {
+case class RoutesFile(override val key: String) extends OutputFile(dir = "conf", pkg = Nil, key = key, filename = key + ".routes") {
   override def prefix = "# Generated File\n"
 }

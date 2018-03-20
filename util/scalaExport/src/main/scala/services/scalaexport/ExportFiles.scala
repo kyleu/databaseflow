@@ -57,7 +57,11 @@ object ExportFiles {
     if (config.models.exists(_.className == e.className)) {
       throw new IllegalStateException(s"Please rename the class of enum [${e.name}], the class name is already in use.")
     }
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e))
+    val queries = Seq(
+      if (config.flags("graphql")) { Some(EnumGraphQLQueryFile.export(e)) } else { None },
+      if (config.flags("rest")) { Some(EnumRestQueryFile.export(e)) } else { None }
+    ).flatten
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ queries
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {

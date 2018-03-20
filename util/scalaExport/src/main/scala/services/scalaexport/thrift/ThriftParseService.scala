@@ -4,7 +4,6 @@ import better.files._
 import com.facebook.swift.parser.ThriftIdlParser
 import com.google.common.base.Charsets
 import com.google.common.io.Files
-import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.thrift._
 import services.scalaexport.ExportFiles
 import services.scalaexport.db.ExportMerge
@@ -36,7 +35,7 @@ object ThriftParseService {
   }
 
   def exportThrift(
-    filename: String, persist: Boolean = false, projectLocation: Option[String] = None
+    filename: String, persist: Boolean = false, projectLocation: Option[String] = None, flags: Set[String] = Set.empty
   )(implicit ec: ExecutionContext): (Map[String, Int], Seq[(String, String)]) = {
     if (filename == "all") {
       val root = File("./tmp/thrift")
@@ -45,10 +44,10 @@ object ThriftParseService {
       }
       val results = root.children.flatMap {
         case f if f.isDirectory => f.children.flatMap {
-          case c if c.name.endsWith(".thrift") => Some(exportThrift(c.pathAsString, persist, projectLocation))
+          case c if c.name.endsWith(".thrift") => Some(exportThrift(c.pathAsString, persist, projectLocation, flags))
           case _ => None
         }
-        case f if f.name.endsWith(".thrift") => Seq(exportThrift(f.pathAsString, persist, projectLocation))
+        case f if f.name.endsWith(".thrift") => Seq(exportThrift(f.pathAsString, persist, projectLocation, flags))
         case _ => Nil
       }.toSeq
 

@@ -39,6 +39,10 @@
                     <td><input name="thrift.location" class="validate" value="@cfg.thriftLocationOverride" /></td>
                   </tr>
                   <tr>
+                    <th>Flags</th>
+                    <td><input name="project.flags" class="validate" value="@cfg.flags.toSeq.sorted.mkString(",")" /></td>
+                  </tr>
+                  <tr>
                     <th>Project Source</th>
                     <td><select name="project.source">
                       @if(cfg.source == "boilerplay") {
