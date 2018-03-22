@@ -13,7 +13,7 @@ object SchemaMutationHelper {
 
     file.add()
     file.add(s"val ${model.propertyName}MutationType = ObjectType(", 1)
-    file.add(s"""name = "${model.propertyName}",""")
+    file.add(s"""name = "${model.className}Mutations",""")
     file.add(s"""description = "Mutations for ${model.plural}.",""")
     file.add("fields = fields[GraphQLContext, Unit](", 1)
 

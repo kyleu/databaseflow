@@ -42,7 +42,7 @@ object ThriftModelFile {
     } else {
       file.add(") {", -2)
     }
-    file.indent(1)
+    file.indent()
     file.add(s"lazy val asThrift = ${srcPkg.mkString(".")}.${model.name}(", 1)
     model.fields.foreach { field =>
       val out = ThriftOverrides.overrideFor(model.name, field.name) match {

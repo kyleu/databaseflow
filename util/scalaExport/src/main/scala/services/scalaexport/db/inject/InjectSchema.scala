@@ -8,7 +8,11 @@ object InjectSchema {
     val models = result.models.filterNot(_.provided)
 
     def enumQueryFieldsFor(s: String) = {
-      val newContent = result.config.enums.map(e => s"    ${e.fullClassName}Schema.queryFields").sorted.mkString(" ++\n  ")
+      val newContent = if (result.config.enums.isEmpty) {
+        "    Seq.empty[Field[GraphQLContext, Unit]]"
+      } else {
+        result.config.enums.map(e => s"    ${e.fullClassName}Schema.queryFields").sorted.mkString(" ++\n  ")
+      }
       InjectHelper.replaceBetween(original = s, start = "    // Start enum query fields", end = s"    // End enum query fields", newContent = newContent)
     }
 

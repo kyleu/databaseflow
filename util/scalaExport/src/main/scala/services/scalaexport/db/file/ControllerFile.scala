@@ -29,7 +29,7 @@ object ControllerFile {
         file.add(ref)
     }
     file.add(s") extends ServiceController(svc) {", -2)
-    file.indent(1)
+    file.indent()
     file.add("import app.contexts.webContext")
     file.add()
     file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)

@@ -37,7 +37,7 @@ object ControllerTruncated {
         file.add(ref)
     }
     file.add(s") extends ServiceController(svc) with UserEditHelper with UserSearchHelper {", -2)
-    file.indent(1)
+    file.indent()
     ControllerHelper.writeView(file, model, viewHtmlPackage)
     ControllerReferences.write(config, model, file)
     file.add("}", -1)

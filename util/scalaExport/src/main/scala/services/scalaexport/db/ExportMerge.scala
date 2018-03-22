@@ -66,7 +66,7 @@ object ExportMerge {
       val tgt = rootDir / p
       if (tgt.exists) {
         val tgtContent = tgt.contentAsString
-        if (!tgtContent.contains(" Generated File")) {
+        if (!tgtContent.contains("Generated File")) {
           log(s"Skipping modified file [${tgt.pathAsString}].")
           "modified"
         } else if (tgtContent == c.contentAsString) {
@@ -86,7 +86,7 @@ object ExportMerge {
       val f = rootDir / rf.packageDir / rf.filename
       if (f.exists) {
         val tgtContent = f.contentAsString
-        if (!tgtContent.contains(" Generated File")) {
+        if (!tgtContent.contains("Generated File")) {
           log(s"Skipping modified root file [${f.pathAsString}].")
           "modified-root"
         } else if (tgtContent == rf.rendered) {

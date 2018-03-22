@@ -35,7 +35,7 @@ object ModelFile {
       case Some(x) => file.add(") extends " + x + " {", -2)
       case None => file.add(") extends DataFieldModel {", -2)
     }
-    file.indent(1)
+    file.indent()
     file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
       val x = if (field.notNull) {

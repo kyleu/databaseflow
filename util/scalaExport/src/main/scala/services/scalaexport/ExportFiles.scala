@@ -57,11 +57,9 @@ object ExportFiles {
     if (config.models.exists(_.className == e.className)) {
       throw new IllegalStateException(s"Please rename the class of enum [${e.name}], the class name is already in use.")
     }
-    val queries = Seq(
-      if (config.flags("graphql")) { Some(EnumGraphQLQueryFile.export(e)) } else { None },
-      if (config.flags("rest")) { Some(EnumRestQueryFile.export(e)) } else { None }
-    ).flatten
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ queries
+    val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
+    val rq = if (config.flags("rest")) { Seq(EnumRestQueryFile.export(e)) } else { Nil }
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ gq ++ rq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
@@ -87,7 +85,10 @@ object ExportFiles {
 
       val trs = TwirlRelationFiles.export(config, model)
 
-      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ trs)
+      val gq = if (config.flags("graphql")) { Seq(ModelGraphQLQueryFile.export(config, model)) } else { Nil }
+      val rq = if (config.flags("rest")) { Seq(ModelRestQueryFile.export(model)) } else { Nil }
+
+      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ rq ++ trs)
     }
   }
 }

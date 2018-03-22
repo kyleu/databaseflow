@@ -22,7 +22,7 @@ object ThriftControllerFile {
     file.add(s"class ${svc.name}Controller @javax.inject.Inject() (", 2)
     file.add(s"override val app: Application, svc: ${svc.name}")
     file.add(s""") extends BaseController("${svc.name}") {""", -2)
-    file.indent(1)
+    file.indent()
     file.add(s"""private[this] val rc = controllers.admin.thrift.${svc.identifier}.routes.${svc.name}Controller""")
     file.add()
 

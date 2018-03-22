@@ -5,10 +5,12 @@ import models.scalaexport.file.RestQueryFile
 
 object EnumRestQueryFile {
   def export(enum: ExportEnum) = {
-    val key = enum.className + "GetAll"
-    val file = RestQueryFile(enum.modelPackage, key)
+    val file = RestQueryFile(enum.pkg, enum.className)
 
-    file.add(s"/* TODO */")
+    file.add("{", 1)
+    file.add(s""""title": "${enum.propertyName}",""")
+    file.add(s""""description": "Retrieves the list of possible ${enum.className} values. [Generated File]"""")
+    file.add("}", -1)
 
     file
   }

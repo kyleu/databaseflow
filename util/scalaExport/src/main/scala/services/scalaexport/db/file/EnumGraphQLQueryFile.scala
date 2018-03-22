@@ -5,10 +5,10 @@ import models.scalaexport.file.GraphQLQueryFile
 
 object EnumGraphQLQueryFile {
   def export(enum: ExportEnum) = {
-    val key = enum.className + "GetAll"
-    val file = GraphQLQueryFile(enum.modelPackage, key)
+    val file = GraphQLQueryFile(enum.pkg, enum.className)
 
-    file.add(s"query $key {", 1)
+    file.add(s"# Retrieves the list of possible ${enum.className} values.")
+    file.add(s"query ${enum.className} {", 1)
     file.add(enum.propertyName)
     file.add("}", -1)
 
