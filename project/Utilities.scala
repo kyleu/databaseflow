@@ -7,14 +7,12 @@ import io.gatling.sbt.GatlingPlugin
 import pl.project13.scala.sbt.JmhPlugin
 
 object Utilities {
-  private[this] val metricsLibs = Seq(
-    Play.lib, Akka.actor,
-    Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite
-  )
-
   lazy val metrics = (project in file("util/metrics"))
     .settings(ScalariformKeys.preferences := ScalariformKeys.preferences.value)
-    .settings(libraryDependencies ++= metricsLibs)
+    .settings(libraryDependencies ++= Seq(
+      Play.lib, Akka.actor,
+      Metrics.metrics, Metrics.healthChecks, Metrics.json, Metrics.jvm, Metrics.ehcache, Metrics.jettyServlet, Metrics.servlets, Metrics.graphite
+    ))
     .settings(Shared.commonSettings: _*)
 
   lazy val iconCreator = (project in file("util/iconCreator"))

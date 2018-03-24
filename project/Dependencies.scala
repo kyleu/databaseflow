@@ -88,14 +88,14 @@ object Dependencies {
     val enumeratumVersion = "1.5.11"
     val enumeratumCirceVersion = "1.5.14"
 
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.1"
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val guava = "com.google.guava" % "guava" % "23.0"
-    val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.1"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
+    val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
 
     val scribeVersion = "1.4.5"
   }
