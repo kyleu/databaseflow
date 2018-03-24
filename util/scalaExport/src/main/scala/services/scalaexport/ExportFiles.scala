@@ -86,7 +86,7 @@ object ExportFiles {
 
       val trs = TwirlRelationFiles.export(config, model)
 
-      val gq = if (config.flags("graphql")) { Seq(GraphQLQueryFile.export(config, model)) } else { Nil }
+      val gq = if (config.flags("graphql")) { GraphQLQueryFiles.export(config, model) } else { Nil }
       val rq = if (config.flags("rest")) { Seq(RestQueryFile.export(model)) } else { Nil }
       val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [$model]."))
       val oq = if (config.flags("openapi")) {
