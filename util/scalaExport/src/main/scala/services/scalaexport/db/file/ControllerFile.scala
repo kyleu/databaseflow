@@ -41,7 +41,7 @@ object ControllerFile {
     file.add("}", -1)
     file.add()
     file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
-    file.add("svc.create(request, modelForm(request.body.asFormUrlEncoded)).map {", 1)
+    file.add("svc.create(request, modelForm(request.body)).map {", 1)
     val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
     file.add(s"case Some(model) => Redirect(${model.routesClass}.view($viewArgs))")
     file.add(s"case None => Redirect(${model.routesClass}.list())")

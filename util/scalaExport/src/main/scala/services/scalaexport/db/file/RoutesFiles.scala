@@ -66,20 +66,8 @@ object RoutesFiles {
   }
 
   def files(config: ExportConfiguration, models: Seq[ExportModel]) = {
-    val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)
-    val modelPackages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
-
-    val packageEnums = config.enums.filter(_.pkg.nonEmpty)
-    val enumPackages = packageEnums.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
-
-    val packages = (enumPackages.map(_._1) ++ modelPackages.map(_._1)).distinct
-
-    val routesContent = packages.map { p =>
-      val ms = modelPackages.filter(_._1 == p).flatMap(_._2)
-      val es = enumPackages.filter(_._1 == p).flatMap(_._2)
-
-      val solo = ms.size == 1 && es.isEmpty
-      if (solo) {
+    val routesContent = config.packages.map {
+      case (p, ms, es, solo) => if (solo) {
         p -> routesContentFor(config, ms.head, solo = true)
       } else {
         p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(e)))

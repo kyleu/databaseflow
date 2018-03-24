@@ -59,7 +59,8 @@ object ExportFiles {
     }
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
     val rq = if (config.flags("rest")) { Seq(EnumRestQueryFile.export(e)) } else { Nil }
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ gq ++ rq
+    val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ gq ++ rq ++ oq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
@@ -85,10 +86,12 @@ object ExportFiles {
 
       val trs = TwirlRelationFiles.export(config, model)
 
-      val gq = if (config.flags("graphql")) { Seq(ModelGraphQLQueryFile.export(config, model)) } else { Nil }
-      val rq = if (config.flags("rest")) { Seq(ModelRestQueryFile.export(model)) } else { Nil }
+      val gq = if (config.flags("graphql")) { Seq(GraphQLQueryFile.export(config, model)) } else { Nil }
+      val rq = if (config.flags("rest")) { Seq(RestQueryFile.export(model)) } else { Nil }
+      val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [$model]."))
+      val oq = if (config.flags("openapi")) { Seq(OpenApiSchemaFile.export(model), OpenApiPathsFile.export(model, solo)) } else { Nil }
 
-      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ rq ++ trs)
+      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ rq ++ oq ++ trs)
     }
   }
 }

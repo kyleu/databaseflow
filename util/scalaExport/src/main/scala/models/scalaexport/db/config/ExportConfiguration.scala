@@ -17,4 +17,23 @@ case class ExportConfiguration(
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with name [$k]."))
   def getModelOpt(k: String) = getModelOptWithIgnored(k).filterNot(_.ignored)
   def getModelOptWithIgnored(k: String) = models.find(m => m.tableName == k || m.propertyName == k || m.className == k)
+
+  lazy val packages = {
+    val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)
+    val modelPackages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
+
+    val packageEnums = enums.filter(_.pkg.nonEmpty).filterNot(_.ignored)
+    val enumPackages = packageEnums.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
+
+    val packages = (enumPackages.map(_._1) ++ modelPackages.map(_._1)).distinct
+
+    packages.map { p =>
+      val ms = modelPackages.filter(_._1 == p).flatMap(_._2)
+      val es = enumPackages.filter(_._1 == p).flatMap(_._2)
+
+      val solo = ms.size == 1 && es.isEmpty
+      (p, ms, es, solo)
+    }
+  }
+
 }

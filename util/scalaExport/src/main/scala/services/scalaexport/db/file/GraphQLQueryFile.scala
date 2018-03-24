@@ -2,11 +2,11 @@ package services.scalaexport.db.file
 
 import models.scalaexport.db.ExportModel
 import models.scalaexport.db.config.ExportConfiguration
-import models.scalaexport.file.GraphQLQueryFile
+import models.scalaexport.file.GraphQLFile
 
-object ModelGraphQLQueryFile {
+object GraphQLQueryFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = GraphQLQueryFile(model.pkg, model.className)
+    val file = GraphQLFile(model.pkg, model.className)
 
     file.add(s"# Queries the system for ${model.plural}.")
     file.add(s"query ${model.className} {", 1)
