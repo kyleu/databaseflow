@@ -5,7 +5,7 @@ import models.scalaexport.db.ExportResult
 
 object InjectRoutes {
   def inject(result: ExportResult, rootDir: File) = {
-    val packages = result.models.filter(_.pkg.nonEmpty).filter(!_.provided).map(_.pkg.head).distinct.sorted
+    val packages = result.config.packages.map(_._1)
 
     def routeFor(pkg: String) = {
       val detailUrl = s"/admin/$pkg"

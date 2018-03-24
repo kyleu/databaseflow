@@ -21,7 +21,13 @@ object ExportInject {
 
     val thrift = InjectThrift.inject(result, rootDir)
 
+    val openapi = if (result.config.flags("openapi")) {
+      Seq(InjectOpenApiSchema.inject(result, rootDir), InjectOpenApiPaths.inject(result, rootDir))
+    } else {
+      Nil
+    }
+
     result.log("Injection complete.")
-    Seq(s, i, svc, al, ar, ro, sro, xm, xh, sr, b) ++ thrift
+    Seq(s, i, svc, al, ar, ro, sro, xm, xh, sr, b) ++ thrift ++ openapi
   }
 }

@@ -1,10 +1,10 @@
 package services.scalaexport.db.file
 
-import models.scalaexport.db.ExportModel
+import models.scalaexport.db.{ExportEnum, ExportModel}
 import models.scalaexport.file.JsonFile
 
 object OpenApiSchemaFile {
-  def export(model: ExportModel) = {
+  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
     val file = JsonFile("components" +: "schema" +: model.pkg, model.propertyName)
     file.add("{", 1)
 
@@ -22,7 +22,7 @@ object OpenApiSchemaFile {
     }
 
     file.add("\"properties\": {", 1)
-    model.fields.foreach(f => OpenApiPropertyHelper.propertyFor(f, file, model.fields.lastOption.contains(f)))
+    model.fields.foreach(f => OpenApiPropertyHelper.propertyFor(f, file, model.fields.lastOption.contains(f), enums))
     file.add("}", -1)
 
     file.add("},", -1)

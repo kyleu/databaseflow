@@ -89,7 +89,11 @@ object ExportFiles {
       val gq = if (config.flags("graphql")) { Seq(GraphQLQueryFile.export(config, model)) } else { Nil }
       val rq = if (config.flags("rest")) { Seq(RestQueryFile.export(model)) } else { Nil }
       val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [$model]."))
-      val oq = if (config.flags("openapi")) { Seq(OpenApiSchemaFile.export(model), OpenApiPathsFile.export(model, solo)) } else { Nil }
+      val oq = if (config.flags("openapi")) {
+        Seq(OpenApiSchemaFile.export(model, config.enums), OpenApiPathsFile.export(model, config.enums, solo))
+      } else {
+        Nil
+      }
 
       model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ rq ++ oq ++ trs)
     }

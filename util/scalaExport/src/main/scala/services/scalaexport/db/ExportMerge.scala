@@ -99,6 +99,7 @@ object ExportMerge {
           "overwrite-root"
         }
       } else {
+        f.writeText(rf.rendered)
         "create-root"
       }
     }
