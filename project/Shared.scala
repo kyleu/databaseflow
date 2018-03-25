@@ -27,6 +27,7 @@ object Shared {
   )
 
   lazy val commonSettings = Seq(
+    organization := "com.databaseflow",
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
 
@@ -69,11 +70,12 @@ object Shared {
   def withProjects(p: Project, includes: Seq[Project]) = includes.foldLeft(p)((proj, inc) => proj.dependsOn(inc))
 
   lazy val shared = (crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Pure) in file("shared")).settings(commonSettings: _*).settings(
+    name := "databaseflow-shared",
     libraryDependencies ++= Seq(
       "com.outr" %%% "scribe" % Utils.scribeVersion,
 
       "com.lihaoyi" %%% "upickle" % Serialization.uPickleVersion,
-      "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumVersion,
+      "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumUPickleVersion,
 
       "io.circe" %%% "circe-core" % Dependencies.Serialization.circeVersion,
       "io.circe" %%% "circe-generic" % Dependencies.Serialization.circeVersion,

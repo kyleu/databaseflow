@@ -43,7 +43,7 @@ object EngineQueries {
       }
     }
 
-    lazy val filterClauses = if(options.filters.isEmpty) {
+    lazy val filterClauses = if (options.filters.isEmpty) {
       Nil
     } else {
       options.filters.map { filter =>
@@ -65,11 +65,11 @@ object EngineQueries {
 
     val whereClauseOverride = options.whereClause.map(_.trim).getOrElse("")
 
-    val (whereClause, values) = if(whereClauseOverride.nonEmpty && options.filters.nonEmpty) {
+    val (whereClause, values) = if (whereClauseOverride.nonEmpty && options.filters.nonEmpty) {
       throw new IllegalStateException("You may specify either \"whereClause\" or \"filterCol\", not both.")
-    } else if(whereClauseOverride.nonEmpty) {
+    } else if (whereClauseOverride.nonEmpty) {
       " where " + whereClauseOverride + whereClauseAdditions.map(" and " + _).getOrElse("") -> Nil
-    } else if(options.filters.isEmpty) {
+    } else if (options.filters.isEmpty) {
       whereClauseAdditions.map(" where " + _).getOrElse("") -> Nil
     } else {
       val additions = whereClauseAdditions.map(" and " + _).getOrElse("")
@@ -82,7 +82,6 @@ object EngineQueries {
 
     selectFromSql(preColumnsClause, columns, name, whereClause + orderByClause + postQueryClauses, values)
   }
-
 
   def selectFromSql(preCols: String, columns: Seq[String], name: String, clauses: String, values: Seq[Any])(implicit engine: DatabaseEngine) = {
     val quotedName = engine.cap.leftQuote + name + engine.cap.rightQuote

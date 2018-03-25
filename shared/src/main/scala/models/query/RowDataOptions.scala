@@ -5,12 +5,12 @@ object RowDataOptions {
 }
 
 case class RowDataOptions(
-    orderByCol: Option[String] = None,
-    orderByAsc: Option[Boolean] = None,
-    filters: Seq[QueryFilter] = Nil,
-    whereClause: Option[String] = None,
-    limit: Option[Int] = None,
-    offset: Option[Int] = None
+  orderByCol: Option[String] = None,
+  orderByAsc: Option[Boolean] = None,
+  filters: Seq[QueryFilter] = Nil,
+  whereClause: Option[String] = None,
+  limit: Option[Int] = None,
+  offset: Option[Int] = None
 ) {
   def merge(rdo: RowDataOptions) = {
     val (oc, oa) = rdo.orderByCol match {
@@ -42,7 +42,7 @@ case class RowDataOptions(
   override def toString = Seq(
     orderByCol.map("Order By: " + _),
     orderByAsc.map("Asc: " + _),
-    if(filters.isEmpty) {
+    if (filters.isEmpty) {
       None
     } else {
       Some(filters.map("Filter: " + _).mkString(", "))

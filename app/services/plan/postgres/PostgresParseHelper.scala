@@ -13,9 +13,9 @@ object PostgresParseHelper {
 
   def getCosts(params: Map[String, Value]) = PlanNode.Costs(
     estimatedRows = params.get(keyPlanRows) match {
-    case Some(n: Js.Num) => n.value.toInt
-    case _ => 0
-  },
+      case Some(n: Js.Num) => n.value.toInt
+      case _ => 0
+    },
     actualRows = params.get(keyActualRows).map {
       case n: Js.Num => n.value.toInt
       case _ => 0

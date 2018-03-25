@@ -12,10 +12,10 @@ object ExploreTableHelper {
     name = "empty",
     description = "Empty table used as a placeholder when things go wrong",
     fieldsFn = () => fields[GraphQLContext, QueryResultRow](Field(
-    name = "unavailable",
-    fieldType = StringType,
-    resolve = (_: Context[GraphQLContext, QueryResultRow]) => "unavailable"
-  ))
+      name = "unavailable",
+      fieldType = StringType,
+      resolve = (_: Context[GraphQLContext, QueryResultRow]) => "unavailable"
+    ))
   )
 
   def getTables(schema: models.schema.Schema) = {

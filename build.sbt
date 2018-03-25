@@ -1,5 +1,7 @@
 // Database Flow build file. See `./project` for definitions.
 
+scapegoatVersion in ThisBuild := Dependencies.Utils.scapegoatVersion
+
 lazy val doc = Documentation.doc
 
 lazy val sharedJs = Shared.sharedJs
@@ -18,12 +20,14 @@ lazy val server = Server.server
 
 lazy val site = Site.site
 
-lazy val metrics = Utilities.metrics
+lazy val benchmarking = Utilities.benchmarking
+
+lazy val ebenezer = Utilities.ebenezer
 
 lazy val iconCreator = Utilities.iconCreator
+
+lazy val metrics = Utilities.metrics
 
 lazy val scalaExport = Utilities.scalaExport
 
 lazy val translation = Utilities.translation
-
-lazy val benchmarking = Utilities.benchmarking

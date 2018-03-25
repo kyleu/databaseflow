@@ -85,12 +85,13 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.3.4"
-    val enumeratumVersion = "1.5.11"
-    val enumeratumCirceVersion = "1.5.14"
+    val enumeratumVersion = "1.5.13"
+    val enumeratumUPickleVersion = "1.5.12"
+    val enumeratumCirceVersion = "1.5.16"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
-    val enumeratum = "com.beachape" %% "enumeratum-upickle" % enumeratumVersion
+    val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.1"

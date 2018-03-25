@@ -28,13 +28,13 @@ object QueryResult {
   }
 
   case class Source(
-      t: SourceType,
-      name: String,
-      sortable: Boolean = true,
-      sortedColumn: Option[String] = None,
-      sortedAscending: Option[Boolean] = None,
-      filters: Seq[QueryFilter] = Nil,
-      dataOffset: Int = 0
+    t: SourceType,
+    name: String,
+    sortable: Boolean = true,
+    sortedColumn: Option[String] = None,
+    sortedAscending: Option[Boolean] = None,
+    filters: Seq[QueryFilter] = Nil,
+    dataOffset: Int = 0
   ) {
     def filterOpt = filters.headOption
 
