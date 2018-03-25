@@ -12,9 +12,9 @@ object Utilities {
 
   lazy val ebenezer = (project in file("util/ebenezer")).settings(Shared.commonSettings: _*).settings(
     name := "sbt-ebenezer",
-    sbtPlugin := true
-    // resolvers += "twttr" at "https://maven.twttr.com/",
-    // addSbtPlugin("com.twitter" %% "scrooge-sbt-plugin" % "18.3.0")
+    sbtPlugin := true,
+    resolvers += "twttr" at "https://maven.twttr.com/",
+    addSbtPlugin("com.twitter" %% "scrooge-sbt-plugin" % "18.3.0")
   ).dependsOn(scalaExport)
 
   lazy val iconCreator = (project in file("util/iconCreator")).settings(Shared.commonSettings: _*)

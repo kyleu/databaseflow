@@ -2,6 +2,7 @@ package services.scalaexport.db
 
 import better.files._
 import models.scalaexport.file.OutputFile
+import services.scalaexport.ExportFiles
 import services.scalaexport.db.file.ReadmeFile
 
 object ExportMerge {
@@ -60,7 +61,7 @@ object ExportMerge {
       projectId.foreach(id => projectNameReplacements(id, projectTitle, rootDir))
     }
 
-    val src = "./tmp/scalaexport".toFile
+    val src = ExportFiles.rootLocation.toFile
     val srcResults = src.listRecursively.filter(_.isRegularFile).map { c =>
       val p = c.pathAsString.substring(c.pathAsString.indexOf("scalaexport") + 12)
       val tgt = rootDir / p

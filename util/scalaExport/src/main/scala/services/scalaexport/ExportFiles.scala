@@ -8,10 +8,10 @@ import models.scalaexport.thrift.ThriftParseResult
 import services.scalaexport.db.file._
 
 object ExportFiles {
-  val rootDir = "./tmp/scalaexport".toFile
+  var rootLocation = "./tmp/scalaexport"
 
   def prepareRoot() = {
-    val rootDir = "./tmp/scalaexport".toFile
+    val rootDir = rootLocation.toFile
     if (rootDir.exists) { rootDir.delete() }
     rootDir.createDirectory()
     rootDir
