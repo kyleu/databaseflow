@@ -28,7 +28,7 @@ object ControllerReferences {
         val comma = if (refServices.lastOption.contains(r)) { "" } else { "," }
         file.add(s"""RelationCount(model = "${r._2.propertyName}", field = "${r._3.propertyName}", count = ${r._2.propertyName}C)$comma""")
       }
-      file.add(").asJson.spaces2).as(JSON)", -1)
+      file.add(").asJson)", -1)
       file.add("}", -1)
       file.add("}", -1)
     }

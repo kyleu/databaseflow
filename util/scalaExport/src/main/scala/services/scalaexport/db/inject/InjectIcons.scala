@@ -31,7 +31,7 @@ object InjectIcons {
       InjectHelper.replaceBetween(original = s, start = startString, end = "  // End model icons", newContent = newContent)
     }
 
-    val iconSourceFile = rootDir / "shared" / "src" / "main" / "scala" / "models" / "template" / "Icons.scala"
+    val iconSourceFile = rootDir / "app" / "models" / "template" / "Icons.scala"
     val newContent = iconFieldsFor(iconSourceFile.contentAsString)
     iconSourceFile.overwrite(newContent)
 

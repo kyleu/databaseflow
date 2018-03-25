@@ -68,7 +68,7 @@ object ThriftControllerFile {
     file.add("case Accepts.Html() => Ok(views.html.admin.layout.methodCall(", 1)
     file.add(s"user = request.identity, title = title, svc = listCall, args = args, act = act, result = None, error = None, debug = app.config.debug")
     file.add("))", -1)
-    file.add("""case Accepts.Json() => Ok(Json.obj("name" -> title.asJson, "arguments" -> args.asJson)).as(JSON)""")
+    file.add("""case Accepts.Json() => Ok(Json.obj("name" -> title.asJson, "arguments" -> args.asJson))""")
     file.add("})", -1)
     file.add("}", -1)
 
@@ -79,7 +79,7 @@ object ThriftControllerFile {
     file.add(s"""case Accepts.Html() => Ok(views.html.admin.layout.methodCall(""", 1)
     file.add(s"""user = request.identity, title = title, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err, debug = app.config.debug""")
     file.add("""))""", -1)
-    file.add(s"""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson))).as(JSON)""")
+    file.add(s"""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson)))""")
     file.add("}", -1)
     val err = "Some((x.getClass.getSimpleName, x.getMessage))"
     file.add(s"""result(args, td).map(res => ren(res = Some(res))).recover { case scala.util.control.NonFatal(x) => ren(err = $err) }""")
