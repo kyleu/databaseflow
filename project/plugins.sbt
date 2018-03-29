@@ -9,7 +9,6 @@ resolvers += Resolver.url("jetbrains-bintray", url("http://dl.bintray.com/jetbra
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.12")
 
-
 // SBT-Web plugins
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.3")
 
@@ -32,6 +31,11 @@ addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.6" exclude("org.scala-js",
 
 // Source Control
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
+
+// Publishing
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1") // show */*:pgpSecretRing
+
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.0")
 
 // Benchmarking
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.2.27")

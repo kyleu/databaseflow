@@ -24,7 +24,7 @@ object SbtEbenezer extends AutoPlugin {
       val streamValue = streams.value
       def log(s: String) = streamValue.log.info(s)
 
-      val outputFolder = (sourceManaged in Compile).value
+      val outputFolder = (sourceManaged in Compile).value / "dbf"
       val thriftSources = scroogeThriftSources.value
       val thriftIncludes = scroogeThriftIncludes.value
       val thriftNamespaceMap = scroogeThriftNamespaceMap.value
@@ -33,7 +33,7 @@ object SbtEbenezer extends AutoPlugin {
         log(s"Database Flow code generation is running for [${thriftSources.size}] thrift sources, saving result to [${outputFolder.getPath}]...")
         log(s"Processing [${thriftSources.mkString(", ")}]")
         val loc = IO.createTemporaryDirectory
-        ExportFiles.rootLocation = loc.getAbsolutePath
+        ExportFiles.rootLocation = outputFolder.getAbsolutePath
         val result = compile(streamValue.log, outputFolder, thriftSources.toSet, thriftIncludes.toSet, thriftNamespaceMap)
         log(s"Code generation completed in [${System.currentTimeMillis - startMs}ms]")
         log(s"Exported:")
@@ -52,13 +52,12 @@ object SbtEbenezer extends AutoPlugin {
     outputDir.mkdirs()
 
     val result = thriftFiles.toIndexedSeq.map { f =>
-      services.scalaexport.ScalaExport.exportThrift(Some(f.getAbsolutePath), Some(outputDir.getAbsolutePath), Set.empty)
+      services.scalaexport.ScalaExport.exportThrift(Some(f.getAbsolutePath), Some(outputDir.getAbsolutePath), Set("inplace", "simple"))
     }
 
-    println(result.toString)
+    log.info("!!!!!!!!!!!!!!!")
+    log.info(result.toString)
 
-    val file = outputDir / "Foo.scala"
-    IO.write(file, """object Test extends App { println("Hi") }""")
-    Seq(file)
+    result.flatMap(_._2.map(_._1)).map(outputDir / _)
   }
 }

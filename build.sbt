@@ -2,6 +2,10 @@
 
 scapegoatVersion in ThisBuild := Dependencies.Utils.scapegoatVersion
 
+useGpg := true
+
+pgpSecretRing := file("/Users/kyle/.gnupg/pubring.kbx")
+
 lazy val doc = Documentation.doc
 
 lazy val sharedJs = Shared.sharedJs

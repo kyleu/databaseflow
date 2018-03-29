@@ -69,17 +69,7 @@ object OpenApiPathsFile {
     addParam("limit")
     addParam("offset", last = true)
     file.add("],", -1)
-    file.add("\"responses\": {", 1)
-    file.add("\"200\": {", 1)
-    file.add("\"content\": {", 1)
-    file.add("\"application/json\": {", 1)
-    file.add("\"schema\": {", 1)
-    file.add("\"$ref\": \"#/components/schemas/" + model.fullClassName + "Result\"")
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
+    addResponses(file, model.fullClassName + "Result")
   }
 
   private[this] def addCreate(model: ExportModel, file: JsonFile) = {
@@ -98,17 +88,7 @@ object OpenApiPathsFile {
     file.add("}", -1)
     file.add("}", -1)
     file.add("},", -1)
-    file.add("\"responses\": {", 1)
-    file.add("\"200\": {", 1)
-    file.add("\"content\": {", 1)
-    file.add("\"application/json\": {", 1)
-    file.add("\"schema\": {", 1)
-    file.add("\"$ref\": \"#/components/schemas/" + model.fullClassName + "\"")
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
+    addResponses(file, model.fullClassName)
   }
 
   private[this] def pkString(model: ExportModel) = model.pkFields.map(_.propertyName).mkString(", ")
@@ -131,17 +111,7 @@ object OpenApiPathsFile {
     file.add("\"operationId\": \"" + model.fullClassName + ".view\",")
     file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
     addParams(model.pkFields, enums, file)
-    file.add("\"responses\": {", 1)
-    file.add("\"200\": {", 1)
-    file.add("\"content\": {", 1)
-    file.add("\"application/json\": {", 1)
-    file.add("\"schema\": {", 1)
-    file.add("\"$ref\": \"#/components/schemas/" + model.fullClassName + "\"")
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
+    addResponses(file, model.fullClassName)
   }
 
   private[this] def addEdit(model: ExportModel, enums: Seq[ExportEnum], file: JsonFile) = {
@@ -161,17 +131,7 @@ object OpenApiPathsFile {
     file.add("}", -1)
     file.add("}", -1)
     file.add("},", -1)
-    file.add("\"responses\": {", 1)
-    file.add("\"200\": {", 1)
-    file.add("\"content\": {", 1)
-    file.add("\"application/json\": {", 1)
-    file.add("\"schema\": {", 1)
-    file.add("\"$ref\": \"#/components/schemas/" + model.fullClassName + "\"")
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add("}", -1)
+    addResponses(file, model.fullClassName)
   }
 
   private[this] def addForeignKey(model: ExportModel, fk: ForeignKey, enums: Seq[ExportEnum], file: JsonFile, route: String) = fk.references match {
@@ -183,22 +143,7 @@ object OpenApiPathsFile {
       file.add("\"operationId\": \"" + model.fullClassName + ".by" + field.className + "\",")
       file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
       addParams(Seq(field), enums, file)
-
-      file.add("\"responses\": {", 1)
-      file.add("\"200\": {", 1)
-      file.add("\"content\": {", 1)
-      file.add("\"application/json\": {", 1)
-      file.add("\"schema\": {", 1)
-      file.add("\"type\": \"array\",")
-      file.add("\"items\": {", 1)
-      file.add("\"$ref\": \"#/components/schemas/" + model.fullClassName + "\"")
-      file.add("}", -1)
-      file.add("}", -1)
-      file.add("}", -1)
-      file.add("}", -1)
-      file.add("}", -1)
-      file.add("}", -1)
-
+      addResponses(file, model.fullClassName, isArray = true)
       file.add("}", -1)
       file.add(if (model.pkFields.isEmpty && model.foreignKeys.lastOption.contains(fk)) { "}" } else { "}," }, -1)
     case _ => //no op
@@ -209,16 +154,49 @@ object OpenApiPathsFile {
     file.add("\"operationId\": \"" + model.fullClassName + ".remove\",")
     file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
     addParams(model.pkFields, enums, file)
+    addResponses(file, model.fullClassName)
+  }
+
+  private[this] def addResponses(file: JsonFile, schemaName: String, isArray: Boolean = false) = {
     file.add("\"responses\": {", 1)
+
     file.add("\"200\": {", 1)
     file.add("\"content\": {", 1)
     file.add("\"application/json\": {", 1)
     file.add("\"schema\": {", 1)
-    file.add("\"$ref\": \"#/components/schemas/" + model.fullClassName + "\"")
+    if (isArray) {
+      file.add("\"type\": \"array\",")
+      file.add("\"items\": {", 1)
+      file.add("\"$ref\": \"#/components/schemas/" + schemaName + "\"")
+      file.add("}", -1)
+    } else {
+      file.add("\"$ref\": \"#/components/schemas/" + schemaName + "\"")
+    }
+    file.add("}", -1)
+    file.add("}", -1)
+    file.add("}", -1)
+    file.add("},", -1)
+
+    file.add("\"4XX\": {", 1)
+    file.add("\"content\": {", 1)
+    file.add("\"application/json\": {", 1)
+    file.add("\"schema\": {", 1)
+    file.add("\"$ref\": \"#/components/schemas/common.NotFound\"")
+    file.add("}", -1)
+    file.add("}", -1)
+    file.add("}", -1)
+    file.add("},", -1)
+
+    file.add("\"5XX\": {", 1)
+    file.add("\"content\": {", 1)
+    file.add("\"application/json\": {", 1)
+    file.add("\"schema\": {", 1)
+    file.add("\"$ref\": \"#/components/schemas/common.Error\"")
     file.add("}", -1)
     file.add("}", -1)
     file.add("}", -1)
     file.add("}", -1)
+
     file.add("}", -1)
   }
 }

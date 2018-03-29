@@ -29,7 +29,7 @@ object ScalaExport {
 
   def run(config: ScalaExportOptions) = config.cmd match {
     case "help" => ScalaExportOptions.parser.showUsage()
-    case "thrift" => exportThrift(config.input, config.output, Set("rest", "graphql"))
+    case "thrift" => exportThrift(config.input, config.output, Set("rest", "graphql", "simple"))
     case cmd => throw new IllegalStateException(s"Unhandled command [$cmd].")
   }
 
@@ -42,6 +42,6 @@ object ScalaExport {
     if (!out.toFile.isDirectory) {
       throw new IllegalStateException(s"Cannot read output directory [$in].")
     }
-    ThriftParseService.exportThrift(filename = in, persist = true, projectLocation = Some(out), flags = flags)
+    ThriftParseService.exportThrift(filename = in, persist = !flags("inplace"), projectLocation = Some(out), flags = flags)
   }
 }

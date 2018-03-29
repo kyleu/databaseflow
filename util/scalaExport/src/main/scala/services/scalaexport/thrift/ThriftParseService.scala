@@ -11,7 +11,7 @@ import services.scalaexport.db.ExportMerge
 import scala.concurrent.ExecutionContext
 
 object ThriftParseService {
-  private[this] def parse(file: File): ThriftParseResult = {
+  private[this] def parse(file: File, flags: Set[String]): ThriftParseResult = {
     import scala.collection.JavaConverters._
 
     val src = Files.asByteSource(file.toJava).asCharSource(Charsets.UTF_8)
@@ -24,13 +24,14 @@ object ThriftParseService {
     }
 
     val includes = h.getIncludes.asScala
-    val included = includes.map(inc => parse(file.parent / inc))
+    val included = includes.map(inc => parse(file.parent / inc, flags))
     ThriftParseResult(
       filename = file.name,
       srcPkg = pkg.split('.'),
       decls = d,
       includes = included,
-      lines = file.lines.toSeq
+      lines = file.lines.toSeq,
+      flags = flags
     )
   }
 
@@ -57,20 +58,18 @@ object ThriftParseService {
       val seq = results.map(_._2).foldLeft(Seq.empty[(String, String)])((l, r) => l ++ r)
       map -> seq
     } else {
-      val result = parse(better.files.File(filename))
-      val injected = if (persist) {
-        ExportFiles.persistThrift(result, ExportFiles.prepareRoot())
+      val result = parse(better.files.File(filename), flags)
+      ExportFiles.persistThrift(result, ExportFiles.prepareRoot())
 
+      if (persist) {
         val rootDir = projectLocation match {
           case Some(l) => l.toFile
           case None => s"./tmp/tempoutput".toFile
         }
-
         ExportMerge.merge(None, "N/A", rootDir, Nil, s => println(s)) -> result.allFiles.map(f => f.path -> f.rendered)
       } else {
-        Map.empty[String, Int] -> Nil
+        Map.empty[String, Int] -> result.allFiles.map(f => f.path -> f.rendered)
       }
-      injected
     }
   }
 }

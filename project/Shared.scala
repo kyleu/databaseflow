@@ -1,15 +1,14 @@
 import Dependencies._
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.SbtScalariform.{ ScalariformKeys, scalariformSettings }
+import com.typesafe.sbt.SbtScalariform.autoImport.scalariformAutoformat
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import webscalajs.ScalaJSWeb
 import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
-
 import sbtcrossproject.CrossPlugin.autoImport._
-import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{ JSCrossProjectOps, JSPlatform}
-import sbtcrossproject.{crossProject, CrossType}
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{JSCrossProjectOps, JSPlatform}
+import sbtcrossproject.{CrossType, crossProject}
 
 object Shared {
   val projectId = "databaseflow"
@@ -28,6 +27,12 @@ object Shared {
 
   lazy val commonSettings = Seq(
     organization := "com.databaseflow",
+
+    licenses := Seq("MIT" -> url("http://www.opensource.org/licenses/mit-license.php")),
+    homepage := Some(url("https://databaseflow.com")),
+    scmInfo := Some(ScmInfo(url("https://github.com/KyleU/databaseflow"), "scm:git@github.com:KyleU/databaseflow.git")),
+    developers := List(Developer(id = "kyleu", name = "Kyle Unverferth", email = "opensource@kyleu.com", url = url("http://kyleu.com"))),
+
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
 
@@ -55,17 +60,20 @@ object Shared {
       case x => (assemblyMergeStrategy in assembly).value(x)
     },
 
-    // Prevent Scaladoc
-    publishArtifact in (Compile, packageDoc) := false,
-    publishArtifact in packageDoc := false,
-    sources in (Compile,doc) := Seq.empty,
+    scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
+
+    // Publish Settings
+    publishMavenStyle := true,
+    publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
+    pomIncludeRepository := { _ => false },
+    publishArtifact in Test := false,
 
     // Code Quality
     scapegoatVersion := Utils.scapegoatVersion,
     scapegoatDisabledInspections := Seq("MethodNames", "MethodReturningAny", "DuplicateImport"),
     scapegoatIgnoredFiles := Seq(".*/JsonSerializers.scala"),
-    ScalariformKeys.preferences := ScalariformKeys.preferences.value
-  ) ++ graphSettings ++ scalariformSettings
+    scalariformAutoformat := true
+  ) ++ graphSettings
 
   def withProjects(p: Project, includes: Seq[Project]) = includes.foldLeft(p)((proj, inc) => proj.dependsOn(inc))
 
