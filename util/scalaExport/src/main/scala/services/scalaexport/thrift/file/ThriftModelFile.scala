@@ -6,7 +6,10 @@ import models.scalaexport.thrift.{ThriftMetadata, ThriftStruct, ThriftStructFiel
 object ThriftModelFile {
   private[this] val includeDataFields = false
 
-  def export(srcPkg: Seq[String], tgtPkg: Seq[String], model: ThriftStruct, metadata: ThriftMetadata, exportModelRoot: Option[String]) = {
+  def export(
+    srcPkg: Seq[String], tgtPkg: Seq[String], model: ThriftStruct, metadata: ThriftMetadata,
+    exportModelRoot: Option[String], overrides: ThriftOverrides
+  ) = {
     val file = ScalaFile(pkg = tgtPkg, key = model.name, root = exportModelRoot)
 
     file.addImport("_root_.util.JsonSerializers", "_")
@@ -16,7 +19,7 @@ object ThriftModelFile {
       file.addImport("models.result.data", "DataFieldModel")
     }
 
-    ThriftOverrides.imports.get(model.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
+    overrides.imports.get(model.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
 
     file.add(s"object ${model.name} {", 1)
     file.add(s"implicit val jsonEncoder: Encoder[${model.name}] = deriveEncoder")
@@ -24,7 +27,7 @@ object ThriftModelFile {
     file.add()
     file.add(s"def fromThrift(t: ${srcPkg.mkString(".")}.${model.name}) = ${model.name}(", 1)
     model.fields.foreach { field =>
-      val out = ThriftOverrides.overrideFor(model.name, field.name) match {
+      val out = overrides.overrideFor(model.name, field.name) match {
         case Some(over) => over.fromThrift
         case None => ThriftFieldScalaHelper.getFromThrift(field, metadata)
       }
@@ -45,7 +48,7 @@ object ThriftModelFile {
     file.indent()
     file.add(s"lazy val asThrift = ${srcPkg.mkString(".")}.${model.name}(", 1)
     model.fields.foreach { field =>
-      val out = ThriftOverrides.overrideFor(model.name, field.name) match {
+      val out = overrides.overrideFor(model.name, field.name) match {
         case Some(over) => over.asThrift
         case None => ThriftFieldThriftHelper.getAsThrift(field, metadata).stripSuffix(".toMap")
       }
@@ -58,7 +61,7 @@ object ThriftModelFile {
       file.add("override def toDataFields = Seq(", 1)
       model.fields.foreach { field =>
         val ct = ThriftFileHelper.columnTypeFor(field.t, metadata)
-        val x = if (field.required) {
+        val x = if (field.required || field.value.isDefined) {
           val method = if (ct._1 == "String") { "" } else { ".toString" }
           s"""DataField("${field.name.replaceAllLiterally("`", "")}", Some(${field.name}$method))"""
         } else {
@@ -85,7 +88,7 @@ object ThriftModelFile {
     if (colType._2.nonEmpty && colType._2 != pkg) {
       file.addImport(colType._2.mkString("."), colType._1)
     }
-    val decl = ThriftFileHelper.declarationFor(field.required, field.name, field.value, metadata, colType._1)
+    val decl = ThriftFileHelper.declarationFor(field.required || field.value.isDefined, field.name, field.value, metadata, colType._1)
     file.add(decl + comma)
   }
 }

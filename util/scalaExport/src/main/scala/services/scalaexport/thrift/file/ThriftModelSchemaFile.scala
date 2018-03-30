@@ -25,7 +25,9 @@ object ThriftModelSchemaFile {
 
     file.add(s"""object ${model.name}Schema {""", 1)
 
-    val replacedInputFields = ThriftSchemaInputHelper.getReplaceInputFields(file, tgtPkg, model.fields.map(x => (x.name, x.required, x.t)), metadata)
+    val replacedInputFields = ThriftSchemaInputHelper.getReplaceInputFields(
+      file, tgtPkg, model.fields.map(x => (x.name, x.required || x.value.isDefined, x.t)), metadata
+    )
     file.add(s"implicit lazy val ${model.identifier}InputType: InputType[${model.name}] = deriveInputObjectType[${model.name}](", 1)
     ThriftSchemaInputHelper.addInputImports(pkg = tgtPkg, types = model.fields.map(_.t), metadata = metadata, file = file)
     if (replacedInputFields.nonEmpty) {
@@ -38,7 +40,7 @@ object ThriftModelSchemaFile {
 
     file.add(s"implicit lazy val ${model.identifier}Type: ObjectType[GraphQLContext, ${model.name}] = deriveObjectType(", 1)
     file.add(s"""ObjectTypeName("Thrift${model.name}"),""")
-    val replacedFields = ThriftSchemaHelper.getReplaceFields(tgtPkg, model.fields.map(x => (x.name, x.required, x.t)), metadata)
+    val replacedFields = ThriftSchemaHelper.getReplaceFields(tgtPkg, model.fields.map(x => (x.name, x.required || x.value.isDefined, x.t)), metadata)
     if (replacedFields.nonEmpty) {
       file.addImport("sangria.macros.derive", "ReplaceField")
       replacedFields.foreach(f => file.add(f.fullFieldDecl + ","))

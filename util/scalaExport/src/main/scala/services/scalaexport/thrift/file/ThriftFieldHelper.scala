@@ -5,7 +5,7 @@ import models.scalaexport.thrift.{ThriftMetadata, ThriftStructField}
 object ThriftFieldHelper {
   def getScalaValFor(field: ThriftStructField, metadata: ThriftMetadata) = {
     val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, metadata)
-    parse("t", field.name, t, pkg, field.required)
+    parse("t", field.name, t, pkg, field.required || field.value.isDefined)
   }
 
   def mapKeyValFor(x: String) = x.drop(4).dropRight(1).split(',').toList match {

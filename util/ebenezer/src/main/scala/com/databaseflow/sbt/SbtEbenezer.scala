@@ -52,12 +52,14 @@ object SbtEbenezer extends AutoPlugin {
     outputDir.mkdirs()
 
     val result = thriftFiles.toIndexedSeq.map { f =>
-      services.scalaexport.ScalaExport.exportThrift(Some(f.getAbsolutePath), Some(outputDir.getAbsolutePath), Set("inplace", "simple"))
+      services.scalaexport.ScalaExport.exportThrift(
+        input = Some(f.getAbsolutePath),
+        output = Some(outputDir.getAbsolutePath),
+        flags = Set("inplace", "simple"),
+        configLocation = if (new java.io.File("core/src/main/thrift").exists) { "core/src/main/thrift" } else { "src/main/thrift" }
+      )
     }
 
-    log.info("!!!!!!!!!!!!!!!")
-    log.info(result.toString)
-
-    result.flatMap(_._2.map(_._1)).map(outputDir / _)
+    result.flatMap(_._2.map(_._1)).map(outputDir / _).distinct
   }
 }

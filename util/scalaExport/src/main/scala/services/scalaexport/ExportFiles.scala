@@ -10,10 +10,14 @@ import services.scalaexport.db.file._
 object ExportFiles {
   var rootLocation = "./tmp/scalaexport"
 
-  def prepareRoot() = {
+  def prepareRoot(remove: Boolean = true) = {
     val rootDir = rootLocation.toFile
-    if (rootDir.exists) { rootDir.delete() }
-    rootDir.createDirectory()
+    if (rootDir.exists && remove) {
+      rootDir.delete()
+    }
+    if (!rootDir.exists) {
+      rootDir.createDirectory()
+    }
     rootDir
   }
 

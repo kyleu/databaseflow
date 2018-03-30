@@ -13,6 +13,8 @@ object ControllerTruncated {
     file.addImport("controllers.admin", "ServiceController")
     file.addImport("services.audit", "AuditRecordService")
     file.addImport("io.circe.syntax", "_")
+    file.addImport("util.ReftreeUtils", "_")
+    file.addImport("play.api.http", "MimeTypes")
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
 
     val extraImports = model.tableName match {

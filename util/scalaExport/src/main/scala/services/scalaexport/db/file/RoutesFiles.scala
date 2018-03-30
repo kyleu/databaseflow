@@ -5,10 +5,10 @@ import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.file.RoutesFile
 
 object RoutesFiles {
-  val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " +
-    "limit: Option[Int] ?= None, offset: Option[Int] ?= None"
+  val limitArgs = "limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None"
+  val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " + limitArgs
   val autocompleteArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None"
-  val relationArgs = "orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None"
+  val relationArgs = "orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " + limitArgs
 
   def routesContentFor(config: ExportConfiguration, model: ExportModel, solo: Boolean = false) = {
     if (model.provided) {
@@ -43,7 +43,7 @@ object RoutesFiles {
           val detailUrl = prefix + "/" + urlArgs
           val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
 
-          val view = s"GET         $detailUrl $detailWs ${model.controllerClass}.view($args)"
+          val view = s"GET         $detailUrl $detailWs ${model.controllerClass}.view($args, t: Option[String] ?= None)"
           val counts = if (model.validReferences(config).isEmpty) {
             Nil
           } else {

@@ -2,13 +2,13 @@ package services.scalaexport.thrift.file
 
 import better.files._
 
-object ThriftOverrides {
+class ThriftOverrides(root: String = "tmp/thrift") {
   def overrideFor(cls: String, field: String) = overrides.find(o => o.cls == cls && o.field == field)
 
   case class ThriftOverride(cls: String, field: String, fromThrift: String = "", asThrift: String = "")
 
   lazy val overrides = {
-    val f = File("./tmp/thrift/overrides.txt")
+    val f = File(s"$root/overrides.txt")
     if (f.exists) {
       val ret = collection.mutable.ArrayBuffer.empty[ThriftOverride]
       var current: Option[ThriftOverride] = None
@@ -41,7 +41,7 @@ object ThriftOverrides {
   }
 
   lazy val imports = {
-    val f = File("./tmp/thrift/imports.txt")
+    val f = File(s"$root/imports.txt")
     if (f.exists) {
       val ret = collection.mutable.HashMap.empty[String, Seq[(String, String)]]
       var current = ""

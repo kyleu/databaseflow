@@ -11,7 +11,7 @@ object EnumControllerFile {
     file.addImport("controllers", "BaseController")
     file.addImport("scala.concurrent", "Future")
     file.addImport("io.circe.syntax", "_")
-    file.addImport("util.web.ControllerUtils", "acceptsCsv")
+    file.addImport("controllers.admin", "ServiceController")
     file.addImport("play.twirl.api", "Html")
 
     file.add("@javax.inject.Singleton")
@@ -24,7 +24,7 @@ object EnumControllerFile {
     val listArgs = s"""request.identity, "${enum.className}", "explore""""
     file.add(s"case Accepts.Html() => Ok(views.html.admin.layout.listPage($listArgs, ${enum.className}.values.map(x => Html(x.toString))))")
     file.add(s"""case Accepts.Json() => Ok(${enum.className}.values.asJson)""")
-    file.add(s"""case acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")
+    file.add(s"""case ServiceController.acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")
     file.add(s"})", -1)
     file.add("}", -1)
     file.add("}", -1)

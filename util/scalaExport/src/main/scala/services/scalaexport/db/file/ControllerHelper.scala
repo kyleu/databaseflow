@@ -4,14 +4,14 @@ import models.scalaexport.db.ExportModel
 import models.scalaexport.file.ScalaFile
 
 object ControllerHelper {
-  private[this] val relArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int]"
+  private[this] val relArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
 
   def writeView(file: ScalaFile, model: ExportModel, viewPkg: String) = {
     val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
     val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
 
-    file.add(s"""def view($viewArgs) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
     file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
 
@@ -22,10 +22,14 @@ object ControllerHelper {
     file.add()
     file.add(s"""notesF.flatMap(notes => ${if (model.audited) { "auditsF.flatMap(audits => " } else { "" }}modelF.map {""", 1)
 
-    file.add("case Some(model) => render {", 1)
+    file.add("case Some(model) => renderChoice(t) {", 1)
     val auditHelp = if (model.audited) { "audits, " } else { "" }
-    file.add(s"case Accepts.Html() => Ok($viewPkg.${model.propertyName}View(request.identity, model, notes, ${auditHelp}app.config.debug))")
-    file.add("case Accepts.Json() => Ok(model.asJson)")
+
+    file.add(s"case MimeTypes.HTML => Ok($viewPkg.${model.propertyName}View(request.identity, model, notes, ${auditHelp}app.config.debug))")
+    file.add(s"case MimeTypes.JSON => Ok(model.asJson)")
+    file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)")
+    file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)")
+
     file.add("}", -1)
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
     file.add(s"}${if (model.audited) { ")" } else { "" }})", -1)
@@ -79,12 +83,16 @@ object ControllerHelper {
         file.add(s"""def by$propCls($propId: ${col.scalaType}, $relArgs) = {""", 1)
         file.add(s"""withSession("get.by.$propId", admin = true) { implicit request => implicit td =>""", 1)
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
-        file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => render {", 1)
-        file.add(s"case Accepts.Html() => Ok(${model.viewHtmlPackage.mkString(".")}.${model.propertyName}By$propCls(", 1)
+        file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
+
+        file.add(s"""case ServiceController.MimeTypes.csv => Ok(svc.csvFor("${model.className} by $propId", 0, models)).as("text/csv")""")
+        file.add(s"case MimeTypes.HTML => Ok(${model.viewHtmlPackage.mkString(".")}.${model.propertyName}By$propCls(", 1)
         file.add(s"""request.identity, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
         file.add("))", -1)
-        file.add(s"case Accepts.Json() => Ok(models.asJson)")
-        file.add(s"""case acceptsCsv() => Ok(svc.csvFor("${model.className} by $propId", 0, models)).as("text/csv")""")
+        file.add(s"case MimeTypes.JSON => Ok(models.asJson)")
+        file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = models)).as(ServiceController.MimeTypes.png)")
+        file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(ServiceController.MimeTypes.svg)")
+
         file.add("})", -1)
         file.add("}", -1)
         file.add("}", -1)

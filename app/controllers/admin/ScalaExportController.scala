@@ -30,8 +30,10 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         case Some(fn) => SchemaService.getSchemaWithDetails(cs).map { schema =>
           val config = getConfig(schema)
           ExportFiles.prepareRoot()
-          val flags = Set("rest", "graphql")
-          val result = ThriftParseService.exportThrift(filename = fn, persist = true, projectLocation = config.projectLocation, flags)
+          val flags = Set("rest", "graphql", "extras")
+          val result = ThriftParseService.exportThrift(
+            filename = fn, persist = true, projectLocation = config.projectLocation, flags = flags, configLocation = "./tmp/thrift"
+          )
           Ok(views.html.admin.scalaExport.exportThrift(request.identity, fn.substring(fn.lastIndexOf('/') + 1), result._1, result._2))
         }
         case None => Future.successful(Ok(views.html.admin.scalaExport.thriftForm(request.identity, cs, File("./tmp/thrift"))))

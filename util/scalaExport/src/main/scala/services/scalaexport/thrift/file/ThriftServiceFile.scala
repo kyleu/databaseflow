@@ -4,7 +4,10 @@ import models.scalaexport.file.ScalaFile
 import models.scalaexport.thrift.{ThriftMetadata, ThriftService}
 
 object ThriftServiceFile {
-  def export(srcPkg: Seq[String], tgtPkg: Seq[String], svc: ThriftService, metadata: ThriftMetadata, exportModelRoot: Option[String]) = {
+  def export(
+    srcPkg: Seq[String], tgtPkg: Seq[String], svc: ThriftService, metadata: ThriftMetadata,
+    exportModelRoot: Option[String], overrides: ThriftOverrides
+  ) = {
     val file = ScalaFile(pkg = tgtPkg, key = svc.name, root = exportModelRoot)
 
     file.addImport("scala.concurrent", "Future")
@@ -13,7 +16,7 @@ object ThriftServiceFile {
 
     file.addImport(s"${srcPkg.mkString(".")}.${svc.name}", "MethodPerEndpoint")
 
-    ThriftOverrides.imports.get(svc.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
+    overrides.imports.get(svc.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
 
     file.add(s"object ${svc.name} extends _root_.util.thrift.ThriftService(", 1)
     file.add(s"""key = "${svc.name}",""")
@@ -33,7 +36,7 @@ object ThriftServiceFile {
     svc.methods.foreach { method =>
       val args = method.arguments.map { a =>
         val colType = ThriftFileHelper.columnTypeFor(a.t, metadata)._1
-        ThriftFileHelper.declarationFor(required = a.required, name = a.name, value = a.value, metadata = metadata, colType = colType)
+        ThriftFileHelper.declarationFor(required = a.required || a.value.isDefined, name = a.name, value = a.value, metadata = metadata, colType = colType)
       }.mkString(", ")
       val retType = ThriftFileHelper.columnTypeFor(method.returnValue, metadata)._1
       file.add()

@@ -10,7 +10,8 @@ case class ThriftParseResult(
   decls: Seq[Definition],
   includes: Seq[ThriftParseResult],
   lines: Seq[String],
-  flags: Set[String]
+  flags: Set[String],
+  configLocation: String = "./tmp/thrift"
 ) {
   lazy val tgtPkg = srcPkg.dropRight(1)
   lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
@@ -18,10 +19,13 @@ case class ThriftParseResult(
   lazy val comments = lines.filter(_.trim.startsWith("#")).map(_.trim.stripPrefix("#").trim)
   lazy val exportModelRoot = comments.find(_.startsWith("exportModelRoot")).map(_.stripPrefix("exportModelRoot").trim.stripPrefix("=").trim)
 
+  lazy val overrides = new ThriftOverrides(configLocation)
+
   lazy val typedefs = decls.filter(_.isInstanceOf[Typedef]).map(_.asInstanceOf[Typedef]).map { t =>
     t.getName -> (t.getType match {
       case i: IdentifierType => i.getName
       case b: BaseType => b.getType.toString
+      case x => throw new IllegalStateException("Cannot handle complex typedefs: " + t)
     })
   }.toMap
 
@@ -30,11 +34,10 @@ case class ThriftParseResult(
   lazy val stringEnumString = stringEnums.map(e => s"  ${e.name} (${e.values.size} values)").mkString("\n")
   lazy val stringEnumFiles = stringEnums.flatMap(e => if (flags("simple")) {
     Seq(ThriftEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot))
+  } else if (flags("extras")) {
+    Seq(ThriftEnumSchemaFile.exportString(tgtPkg, e))
   } else {
-    Seq(
-      ThriftEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot),
-      ThriftEnumSchemaFile.exportString(tgtPkg, e)
-    )
+    Seq(ThriftEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot), ThriftEnumSchemaFile.exportString(tgtPkg, e))
   })
 
   lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntegerEnum.apply)
@@ -42,11 +45,10 @@ case class ThriftParseResult(
   lazy val intEnumString = intEnums.map(e => s"  ${e.name} (${e.fields.size} values)").mkString("\n")
   lazy val intEnumFiles = intEnums.flatMap(e => if (flags("simple")) {
     Seq(ThriftEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot))
+  } else if (flags("extras")) {
+    Seq(ThriftEnumSchemaFile.exportInt(tgtPkg, e))
   } else {
-    Seq(
-      ThriftEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot),
-      ThriftEnumSchemaFile.exportInt(tgtPkg, e)
-    )
+    Seq(ThriftEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot), ThriftEnumSchemaFile.exportInt(tgtPkg, e))
   })
 
   lazy val enumDefaults = (stringEnums.map(e => e.name -> e.values.head) ++ intEnums.map(e => e.name -> e.fields.head._1)).toMap
@@ -57,22 +59,28 @@ case class ThriftParseResult(
   lazy val structNames = structs.map(_.name)
   lazy val structString = structs.map(struct => s"  ${struct.name} (${struct.fields.size} fields)").mkString("\n")
   lazy val structFiles = structs.flatMap(struct => if (flags("simple")) {
-    Seq(ThriftModelFile.export(srcPkg, tgtPkg, struct, metadata, exportModelRoot))
+    Seq(ThriftModelFile.export(srcPkg, tgtPkg, struct, metadata, exportModelRoot, overrides))
+  } else if (flags("extras")) {
+    Seq(ThriftModelSchemaFile.export(srcPkg, tgtPkg, struct, metadata))
   } else {
-    Seq(
-      ThriftModelFile.export(srcPkg, tgtPkg, struct, metadata, exportModelRoot),
-      ThriftModelSchemaFile.export(srcPkg, tgtPkg, struct, metadata)
-    )
+    Seq(ThriftModelFile.export(srcPkg, tgtPkg, struct, metadata, exportModelRoot, overrides), ThriftModelSchemaFile.export(srcPkg, tgtPkg, struct, metadata))
   })
 
   lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.apply)
   lazy val serviceNames = services.map(_.name)
   lazy val serviceString = services.map(struct => s"  ${struct.name} (${struct.methods.size} methods)").mkString("\n")
   lazy val serviceFiles = services.flatMap(service => if (flags("simple")) {
-    Seq(ThriftServiceFile.export(srcPkg, tgtPkg, service, metadata, exportModelRoot))
+    Seq(ThriftServiceFile.export(srcPkg, tgtPkg, service, metadata, exportModelRoot, overrides))
+  } else if (flags("extras")) {
+    Seq(
+      ThriftTwirlServiceFile.export(tgtPkg, service, metadata),
+      ThriftControllerFile.export(tgtPkg, service, metadata),
+      ThriftRoutesFile.export(service),
+      ThriftServiceSchemaFile.export(srcPkg, tgtPkg, service, metadata)
+    )
   } else {
     Seq(
-      ThriftServiceFile.export(srcPkg, tgtPkg, service, metadata, exportModelRoot),
+      ThriftServiceFile.export(srcPkg, tgtPkg, service, metadata, exportModelRoot, overrides),
       ThriftTwirlServiceFile.export(tgtPkg, service, metadata),
       ThriftControllerFile.export(tgtPkg, service, metadata),
       ThriftRoutesFile.export(service),
@@ -93,6 +101,6 @@ case class ThriftParseResult(
 
   override lazy val toString = {
     val incSummary = if (includes.isEmpty) { "" } else { includes.map(_.summaryString).mkString("\n\n") + "\n\n" }
-    incSummary + summaryString + s"\n\nFiles:" + allFiles.map(file => "\n\n[" + file.filename + "]\n" + file.rendered).mkString
+    incSummary + summaryString + s"\n\nFiles:" + files.map(file => "\n\n[" + file.filename + "]\n" + file.rendered).mkString
   }
 }

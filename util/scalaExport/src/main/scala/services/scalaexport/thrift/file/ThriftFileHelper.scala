@@ -58,7 +58,7 @@ object ThriftFileHelper {
     case "I64" => ColumnType.LongType.asScala -> Nil
     case "I32" => ColumnType.IntegerType.asScala -> Nil
     case x if x.contains('.') => x.split('.').toList match {
-      case pkg :: cls :: Nil => cls -> metadata.pkgMap(pkg)
+      case pkg :: cls :: Nil => cls -> metadata.pkgMap.getOrElse(pkg, Nil)
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
     }
     case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)._1).getOrElse(x) -> Nil

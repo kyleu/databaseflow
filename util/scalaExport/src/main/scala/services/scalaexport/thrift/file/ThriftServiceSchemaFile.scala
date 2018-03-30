@@ -60,7 +60,7 @@ object ThriftServiceSchemaFile {
       file.add("{", 1)
       m.arguments.foreach { arg =>
         val argType = ThriftFileHelper.columnTypeFor(arg.t, metadata)._1
-        val argInputType = ThriftSchemaInputHelper.graphQlInputTypeFor(Some(pkg -> file), argType, metadata.enums, arg.required)
+        val argInputType = ThriftSchemaInputHelper.graphQlInputTypeFor(Some(pkg -> file), argType, metadata.enums, arg.required || arg.value.isDefined)
         file.add(s"""val ${arg.name}Arg = Argument(name = "${arg.name}", argumentType = $argInputType)""")
       }
       file.add("Field(", 1)
@@ -71,7 +71,7 @@ object ThriftServiceSchemaFile {
       file.add(s"""resolve = c => traceF(c.ctx, "${m.name}") { td =>""", 1)
       val argsRefs = m.arguments.map { arg =>
         val argType = ThriftFileHelper.columnTypeFor(arg.t, metadata)._1
-        val mapped = ThriftSchemaInputHelper.mapsFor(argType, arg.required)
+        val mapped = ThriftSchemaInputHelper.mapsFor(argType, arg.required || arg.value.isDefined)
         s"${arg.name} = c.arg(${arg.name}Arg)$mapped"
       }
       file.add(s"c.value.${m.name}(${argsRefs.mkString(", ")})(td)$retMaps")

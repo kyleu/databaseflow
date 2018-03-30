@@ -5,7 +5,7 @@ import models.scalaexport.thrift.{ThriftMetadata, ThriftStructField}
 object ThriftFieldScalaHelper {
   def getFromThrift(field: ThriftStructField, metadata: ThriftMetadata) = {
     val (t, pkg) = ThriftFileHelper.columnTypeFor(field.t, metadata)
-    parse("t", field.name, t, pkg, field.required)
+    parse("t", field.name, t, pkg, field.required || field.value.isDefined)
   }
 
   private[this] def parse(root: String, name: String, t: String, pkg: Seq[String], required: Boolean): String = t match {

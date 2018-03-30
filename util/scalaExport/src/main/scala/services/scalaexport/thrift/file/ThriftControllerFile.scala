@@ -50,7 +50,7 @@ object ThriftControllerFile {
       file.add(postCall, 1)
       m.arguments.foreach { arg =>
         val argRootType = ThriftFileHelper.columnTypeFor(arg.t, metadata)._1
-        val argType = if (arg.required) { argRootType } else { s"Option[$argRootType]" }
+        val argType = if (arg.required || arg.value.isDefined) { argRootType } else { s"Option[$argRootType]" }
         val ex = s"""throw new IllegalStateException(s"[${arg.name}] json [$${args("${arg.name}")}] is not a valid [$argType].")"""
         val comma = if (m.arguments.lastOption.contains(arg)) { "" } else { "," }
         file.add(s"""${arg.name} = args("${arg.name}").as[$argType].getOrElse($ex)$comma""")
