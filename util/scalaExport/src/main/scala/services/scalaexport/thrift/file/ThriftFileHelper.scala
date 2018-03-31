@@ -3,6 +3,7 @@ package services.scalaexport.thrift.file
 import com.facebook.swift.parser.model._
 import models.scalaexport.thrift.ThriftMetadata
 import models.schema.ColumnType
+import services.scalaexport.ExportHelper
 
 object ThriftFileHelper {
   def columnTypeFor(t: ThriftType, metadata: ThriftMetadata): (String, Seq[String]) = t match {
@@ -48,7 +49,9 @@ object ThriftFileHelper {
   }
 
   private[this] def propDefault(colType: String, required: Boolean, value: Option[Any], enums: Map[String, String]) = value match {
+    case Some(v) if required && enums.contains(colType) => " = " + defaultForType(colType, enums)
     case Some(v) if required => " = " + v
+    case Some(v) if enums.contains(colType) => " = Some(" + defaultForType(colType, enums) + ")"
     case Some(v) => " = Some(" + v + ")"
     case None if required => " = " + defaultForType(colType, enums)
     case None => " = None"

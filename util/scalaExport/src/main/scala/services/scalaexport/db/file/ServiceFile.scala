@@ -43,7 +43,7 @@ object ServiceFile {
     ServiceMutations.mutations(model, file)
 
     file.add()
-    file.add(s"def csvFor(operation: String, totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
+    file.add(s"def csvFor(totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
     file.add(s"""traceB("export.csv")(td => util.CsvUtils.csvFor(Some(key), totalCount, rows, $queriesFilename.fields)(td))""")
     file.add("}", -1)
 

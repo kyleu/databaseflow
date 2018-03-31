@@ -15,9 +15,9 @@ object ControllerFile {
     file.addImport("services.audit", "AuditRecordService")
     file.addImport("scala.concurrent", "Future")
     file.addImport("models.result.orderBy", "OrderBy")
-    file.addImport("io.circe.syntax", "_")
+    file.addImport("_root_.util.JsonSerializers", "_")
     file.addImport("play.api.http", "MimeTypes")
-    file.addImport("util.ReftreeUtils", "_")
+    file.addImport("_root_.util.ReftreeUtils", "_")
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport(model.modelPackage.mkString("."), model.className + "Result")
 
@@ -56,7 +56,7 @@ object ControllerFile {
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
-    file.add(s"""case ServiceController.MimeTypes.csv => Ok(svc.csvFor("${model.className}", r._1, r._2)).as("text/csv")""")
+    file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}List(", 1)
     file.add("request.identity, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
     file.add("))", -1)

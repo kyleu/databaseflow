@@ -40,6 +40,7 @@ object SbtEbenezer extends AutoPlugin {
         result.foreach(f => log("  - " + f))
         result
       } else {
+        log("Database Flow code generation up to date.")
         Nil
       }
     },

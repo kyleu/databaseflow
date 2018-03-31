@@ -10,7 +10,7 @@ object EnumControllerFile {
 
     file.addImport("controllers", "BaseController")
     file.addImport("scala.concurrent", "Future")
-    file.addImport("io.circe.syntax", "_")
+    file.addImport("_root_.util.JsonSerializers", "_")
     file.addImport("controllers.admin", "ServiceController")
     file.addImport("play.twirl.api", "Html")
 

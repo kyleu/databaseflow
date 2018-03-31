@@ -2,6 +2,7 @@ package models.scalaexport.thrift
 
 import com.facebook.swift.parser.model._
 import models.scalaexport.file.OutputFile
+import services.scalaexport.ExportHelper
 import services.scalaexport.thrift.file._
 
 case class ThriftParseResult(
@@ -51,7 +52,8 @@ case class ThriftParseResult(
     Seq(ThriftEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot), ThriftEnumSchemaFile.exportInt(tgtPkg, e))
   })
 
-  lazy val enumDefaults = (stringEnums.map(e => e.name -> e.values.head) ++ intEnums.map(e => e.name -> e.fields.head._1)).toMap
+  lazy val enumDefaults = (stringEnums.map(e => e.name -> ExportHelper.toClassName(e.values.head)) ++
+    intEnums.map(e => e.name -> ExportHelper.toClassName(e.fields.head._1))).toMap
 
   lazy val metadata = ThriftMetadata(typedefs, enumDefaults, pkgMap)
 

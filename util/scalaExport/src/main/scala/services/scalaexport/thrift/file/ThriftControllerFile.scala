@@ -8,7 +8,7 @@ object ThriftControllerFile {
     val file = ScalaFile(Seq("controllers", "admin", "thrift", svc.identifier), svc.name + "Controller")
 
     file.addImport("controllers", "BaseController")
-    file.addImport("io.circe.syntax", "_")
+    file.addImport("_root_.util.JsonSerializers", "_")
     file.addImport("io.circe", "Json")
     file.addImport("models", "Application")
     file.addImport("scala.concurrent", "Future")
