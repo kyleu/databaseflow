@@ -49,7 +49,13 @@ object SbtEbenezer extends AutoPlugin {
 
   override lazy val projectSettings = inConfig(Test)(ebenezerSettings) ++ inConfig(Compile)(ebenezerSettings)
 
-  private[this] def compile(log: Logger, outputDir: File, thriftFiles: Set[File], thriftIncludes: Set[File], namespaceMappings: Map[String, String]) = {
+  private[this] def compile(
+    log: Logger,
+    outputDir: File,
+    thriftFiles: Set[File],
+    thriftIncludes: Set[File],
+    namespaceMappings: Map[String, String]
+  ) = {
     outputDir.mkdirs()
 
     val result = thriftFiles.toIndexedSeq.map { f =>
@@ -57,7 +63,7 @@ object SbtEbenezer extends AutoPlugin {
         input = Some(f.getAbsolutePath),
         output = Some(outputDir.getAbsolutePath),
         flags = Set("inplace", "simple"),
-        configLocation = if (new java.io.File("core/src/main/thrift").exists) { "core/src/main/thrift" } else { "src/main/thrift" }
+        configLocation = f.getParentFile.getPath
       )
     }
 

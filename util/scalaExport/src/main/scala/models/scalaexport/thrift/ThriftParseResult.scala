@@ -12,7 +12,7 @@ case class ThriftParseResult(
   includes: Seq[ThriftParseResult],
   lines: Seq[String],
   flags: Set[String],
-  configLocation: String = "./tmp/thrift"
+  configLocation: String
 ) {
   lazy val tgtPkg = srcPkg.dropRight(1)
   lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
