@@ -12,7 +12,7 @@ object ThriftModelFile {
   ) = {
     val file = ScalaFile(pkg = tgtPkg, key = model.name, root = exportModelRoot)
 
-    file.addImport("_root_.util.JsonSerializers", "_")
+    file.addImport("util.JsonSerializers", "_")
 
     if (includeDataFields) {
       file.addImport("models.result.data", "DataField")

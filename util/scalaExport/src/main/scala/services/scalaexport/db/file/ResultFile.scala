@@ -16,7 +16,7 @@ object ResultFile {
     file.addImport("models.result.orderBy", "OrderBy")
     file.addImport("models.result.paging", "PagingOptions")
 
-    file.addImport("_root_.util.JsonSerializers", "_")
+    file.addImport("util.JsonSerializers", "_")
 
     file.add(s"case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")

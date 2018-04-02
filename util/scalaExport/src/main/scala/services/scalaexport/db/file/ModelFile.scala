@@ -12,7 +12,7 @@ object ModelFile {
     file.addImport("models.result.data", "DataField")
     file.addImport("models.result.data", "DataSummary")
     file.addImport("models.result.data", "DataFieldModel")
-    file.addImport("_root_.util.JsonSerializers", "_")
+    file.addImport("util.JsonSerializers", "_")
     if (model.scalaJs) {
       file.addImport("scala.scalajs.js.annotation", "JSExport")
       file.addImport("scala.scalajs.js.annotation", "JSExportTopLevel")

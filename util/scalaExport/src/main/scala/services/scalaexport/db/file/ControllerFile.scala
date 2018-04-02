@@ -15,9 +15,9 @@ object ControllerFile {
     file.addImport("services.audit", "AuditRecordService")
     file.addImport("scala.concurrent", "Future")
     file.addImport("models.result.orderBy", "OrderBy")
-    file.addImport("_root_.util.JsonSerializers", "_")
+    file.addImport("util.JsonSerializers", "_")
     file.addImport("play.api.http", "MimeTypes")
-    file.addImport("_root_.util.ReftreeUtils", "_")
+    file.addImport("util.ReftreeUtils", "_")
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport(model.modelPackage.mkString("."), model.className + "Result")
 

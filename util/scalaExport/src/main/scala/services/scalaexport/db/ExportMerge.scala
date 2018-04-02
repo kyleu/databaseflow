@@ -100,6 +100,7 @@ object ExportMerge {
           "overwrite-root"
         }
       } else {
+        f.parent.createDirectories()
         f.writeText(rf.rendered)
         "create-root"
       }
