@@ -13,6 +13,7 @@ object ThriftServiceFile {
     file.addImport("scala.concurrent", "Future")
     file.addImport("util.tracing", "TraceData")
     file.addImport("util.ThriftFutureUtils", "toScalaFuture")
+    file.addImport("util.thrift", "ThriftServiceHelper")
 
     file.addImport(s"${srcPkg.mkString(".")}.${svc.name}", "MethodPerEndpoint")
 
@@ -25,7 +26,7 @@ object ThriftServiceFile {
     file.add(")", -1)
     file.add()
     file.add("@javax.inject.Singleton")
-    file.add(s"""class ${svc.name} @javax.inject.Inject() (svc: MethodPerEndpoint) extends thrift.ThriftServiceHelper("${svc.name}") {""", 1)
+    file.add(s"""class ${svc.name} @javax.inject.Inject() (svc: MethodPerEndpoint) extends ThriftServiceHelper("${svc.name}") {""", 1)
     addMethods(svc, metadata, file)
     file.add("}", -1)
 

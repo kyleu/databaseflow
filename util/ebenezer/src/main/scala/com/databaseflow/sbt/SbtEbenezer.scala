@@ -22,7 +22,7 @@ object SbtEbenezer extends AutoPlugin {
       val startMs = System.currentTimeMillis
 
       val streamValue = streams.value
-      def log(s: String) = streamValue.log.info(s)
+      def log(s: String) = streamValue.log.debug(s)
 
       val outputFolder = (sourceManaged in Compile).value / "dbf"
       val thriftSources = scroogeThriftSources.value

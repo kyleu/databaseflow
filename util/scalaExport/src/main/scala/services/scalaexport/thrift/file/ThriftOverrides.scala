@@ -32,10 +32,10 @@ class ThriftOverrides(root: String = "tmp/thrift") {
         case c if c.fromThrift.nonEmpty && c.asThrift.nonEmpty => ret += c
         case c => throw new IllegalStateException(s"Incomplete override [$c].")
       }
-      println(s"[${ret.size}] overrides available.")
+      //println(s"[${ret.size}] overrides available.")
       ret.toIndexedSeq
     } else {
-      println("No overrides available.")
+      //println("No overrides available.")
       Nil
     }
   }
@@ -50,10 +50,10 @@ class ThriftOverrides(root: String = "tmp/thrift") {
         case line if line.startsWith("[") => current = line.drop(1).dropRight(1)
         case line => ret(current) = ret.getOrElseUpdate(current, Nil) :+ (line.substring(0, line.lastIndexOf(".")) -> line.substring(line.lastIndexOf(".") + 1))
       }
-      println(s"[${ret.size}] imports available.")
+      //println(s"[${ret.size}] imports available.")
       ret.toMap
     } else {
-      println("No imports available.")
+      //println("No imports available.")
       Map.empty[String, Seq[(String, String)]]
     }
   }
