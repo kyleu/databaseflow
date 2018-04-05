@@ -6,7 +6,7 @@ import models.scalaexport.file.ScalaFile
 
 object ControllerReferences {
   def write(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
-    val references = model.transformedReferences(config)
+    val references = model.transformedReferencesDistinct(config)
     if (references.nonEmpty) {
       file.addImport("models.result", "RelationCount")
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")

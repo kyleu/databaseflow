@@ -3,11 +3,16 @@ package controllers.admin
 import models.schema._
 import models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
 import models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportConfigurationHelper}
+import services.scalaexport.ExportHelper
 
 import scala.util.control.NonFatal
 
 object ScalaExportHelper {
   def merge(schema: Schema, config: ExportConfiguration) = {
+    val enums = {
+      val schEnums = schema.enums.map(e => ExportEnum(Nil, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), e.values))
+      (config.enums ++ schEnums).groupBy(_.className).map(_._2.head).toSeq
+    }
     val models = schema.tables.map { t =>
       config.getModelOpt(t.name) match {
         case Some(m) =>
@@ -15,7 +20,7 @@ object ScalaExportHelper {
             m.fields.find(_.columnName == c._1.name).getOrElse(ExportConfigurationDefault.loadField(c._1, c._2, enums = config.enums))
           }
           m.copy(fields = fields.toList)
-        case None => ExportConfigurationDefault.loadModel(schema, t, config.enums)
+        case None => ExportConfigurationDefault.loadModel(schema, t, enums)
       }
     }
     config.copy(models = models)
@@ -46,7 +51,7 @@ object ScalaExportHelper {
         fieldForColumn(col._1, col._2, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2), enums)
       }.toList,
       pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
-      foreignKeys = t.foreignKeys.toList,
+      foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
       references = ExportConfigurationHelper.references(schema, t),
       extendsClass = form.get("extendsClass").filter(_.nonEmpty),
       icon = form.get("icon").filter(_.nonEmpty),

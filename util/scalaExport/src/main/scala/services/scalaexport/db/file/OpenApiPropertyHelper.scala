@@ -34,6 +34,7 @@ object OpenApiPropertyHelper {
           file.add("}", -1)
       }
     case ColumnType.StringType | ColumnType.EncryptedStringType | ColumnType.UnknownType => file.add("\"type\": \"string\"")
+    case ColumnType.ByteArrayType => file.add("\"type\": \"string\"")
     case x => throw new IllegalStateException(s"Unhandled openapi property for type [$x].")
   }
 

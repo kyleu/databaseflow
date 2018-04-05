@@ -11,23 +11,23 @@ object ExportModel {
 }
 
 case class ExportModel(
-    tableName: String,
-    pkg: List[String] = Nil,
-    propertyName: String,
-    className: String,
-    title: String,
-    description: Option[String],
-    plural: String,
-    fields: List[ExportField],
-    pkColumns: List[Column],
-    foreignKeys: List[ForeignKey],
-    references: List[ExportModel.Reference],
-    extendsClass: Option[String] = None,
-    icon: Option[String] = None,
-    scalaJs: Boolean = false,
-    ignored: Boolean = false,
-    audited: Boolean = false,
-    provided: Boolean = false
+  tableName: String,
+  pkg: List[String] = Nil,
+  propertyName: String,
+  className: String,
+  title: String,
+  description: Option[String],
+  plural: String,
+  fields: List[ExportField],
+  pkColumns: List[Column],
+  foreignKeys: List[ForeignKey],
+  references: List[ExportModel.Reference],
+  extendsClass: Option[String] = None,
+  icon: Option[String] = None,
+  scalaJs: Boolean = false,
+  ignored: Boolean = false,
+  audited: Boolean = false,
+  provided: Boolean = false
 ) {
   val fullClassName = (pkg :+ className).mkString(".")
   val pkFields = pkColumns.map(c => getField(c.name))
@@ -76,7 +76,9 @@ case class ExportModel(
     }
   }.mkString(", ")
 
-  def validReferences(config: ExportConfiguration) = references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
+  def validReferences(config: ExportConfiguration) = {
+    references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
+  }
   def transformedReferences(config: ExportConfiguration) = validReferences(config).flatMap { r =>
     val src = config.getModel(r.srcTable)
     getFieldOpt(r.tgt).flatMap { f =>
@@ -85,6 +87,8 @@ case class ExportModel(
       }
     }
   }
+
+  def transformedReferencesDistinct(config: ExportConfiguration) = transformedReferences(config).groupBy(x => x._2 -> x._3).map(_._2.head)
 
   def getField(k: String) = getFieldOpt(k).getOrElse {
     throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}].")

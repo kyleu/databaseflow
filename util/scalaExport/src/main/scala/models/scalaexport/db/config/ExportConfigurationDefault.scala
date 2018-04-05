@@ -49,7 +49,7 @@ object ExportConfigurationDefault {
       plural = toDefaultTitle(cn) + "s",
       fields = loadFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
-      foreignKeys = t.foreignKeys.toList,
+      foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
       references = ExportConfigurationHelper.references(schema, t),
       provided = provided
     )
