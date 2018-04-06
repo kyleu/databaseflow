@@ -38,7 +38,7 @@ object ThriftModelFile {
     file.add("}", -1)
     file.add()
 
-    file.add(s"case class ${model.name}(", 2)
+    file.add(s"final case class ${model.name}(", 2)
     addFields(tgtPkg, model.fields, metadata, file)
     if (includeDataFields) {
       file.add(") extends DataFieldModel {", -2)

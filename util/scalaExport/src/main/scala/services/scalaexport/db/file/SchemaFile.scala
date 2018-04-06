@@ -26,7 +26,7 @@ object SchemaFile {
     addQueryFields(model, file)
     SchemaMutationHelper.addMutationFields(model, file)
     file.add()
-    file.add(s"private[this] def toResult(r: SearchResult[${model.className}]) = {", 1)
+    file.add(s"private[this] def toResult(r: SchemaHelper.SearchResult[${model.className}]) = {", 1)
     file.add(s"${model.className}Result($resultArgs)")
     file.add("}", -1)
     file.add("}", -1)

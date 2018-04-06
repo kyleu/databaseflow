@@ -34,30 +34,36 @@ object QueriesFile {
 
     file.addImport("models.result.filter", "Filter")
     file.add("def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)")
-    file.add("def getAll = GetAll")
+
+    file.add("def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
+    file.add("new GetAll(filters, orderBys, limit, offset)")
+    file.add("}", -1)
     file.add()
-    file.add("val search = Search")
-    file.add("val searchCount = SearchCount")
-    file.add("val searchExact = SearchExact")
+
+    file.add("def search(q: String, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
+    file.add("new Search(q, filters, orderBys, limit, offset)")
+    file.add("}", -1)
+    file.add("def searchCount(q: String, filters: Seq[Filter] = Nil) = new SearchCount(q, filters)")
+    file.add("def searchExact(q: String, orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]) = new SearchExact(q, orderBys, limit, offset)")
     file.add()
 
     writePkFields(file, model)
 
     QueriesHelper.writeForeignKeys(model, file)
 
-    file.add(s"def insert(model: ${model.className}) = Insert(model)")
-    file.add(s"def insertBatch(models: Seq[${model.className}]) = InsertBatch(models)")
+    file.add(s"def insert(model: ${model.className}) = new Insert(model)")
+    file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
 
     file.addImport("models.result.data", "DataField")
-    file.add("def create(dataFields: Seq[DataField]) = CreateFields(dataFields)")
+    file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
 
     if (model.pkFields.nonEmpty) {
       val sig = model.pkFields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
       val call = model.pkFields.map(_.propertyName).mkString(", ")
       file.add()
-      file.add(s"def removeByPrimaryKey($sig) = RemoveByPrimaryKey(Seq[Any]($call))")
+      file.add(s"def removeByPrimaryKey($sig) = new RemoveByPrimaryKey(Seq[Any]($call))")
       file.add()
-      file.add(s"def update($sig, fields: Seq[DataField]) = UpdateFields(Seq[Any]($call), fields)")
+      file.add(s"def update($sig, fields: Seq[DataField]) = new UpdateFields(Seq[Any]($call), fields)")
     }
 
     file.add()
@@ -72,14 +78,14 @@ object QueriesFile {
     case pkField :: Nil =>
       val name = pkField.propertyName
       pkField.addImport(file)
-      file.add(s"def getByPrimaryKey($name: ${model.pkType}) = GetByPrimaryKey(Seq($name))")
+      file.add(s"def getByPrimaryKey($name: ${model.pkType}) = new GetByPrimaryKey(Seq($name))")
       file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType}]) = new ColSeqQuery(column = "${pkField.columnName}", values = ${name}Seq)""")
       file.add()
     case pkFields =>
       pkFields.foreach(_.addImport(file))
       val args = pkFields.map(x => s"${x.propertyName}: ${x.scalaType}").mkString(", ")
       val seqArgs = pkFields.map(_.propertyName).mkString(", ")
-      file.add(s"def getByPrimaryKey($args) = GetByPrimaryKey(Seq[Any]($seqArgs))")
+      file.add(s"def getByPrimaryKey($args) = new GetByPrimaryKey(Seq[Any]($seqArgs))")
       file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType}]) = new SeqQuery(", 1)
       val pkWhere = pkFields.map(f => "\\\"" + f.columnName + "\\\" = ?").mkString(" and ")
       file.add(s"""whereClause = Some(idSeq.map(_ => "($pkWhere)").mkString(" or ")),""")

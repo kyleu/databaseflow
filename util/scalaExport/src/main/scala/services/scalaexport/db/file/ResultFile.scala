@@ -18,7 +18,7 @@ object ResultFile {
 
     file.addImport("util.JsonSerializers", "_")
 
-    file.add(s"case class ${model.className}Result(", 2)
+    file.add(s"final case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")
     file.add("override val orderBys: Seq[OrderBy] = Nil,")
     file.add("override val totalCount: Int = 0,")

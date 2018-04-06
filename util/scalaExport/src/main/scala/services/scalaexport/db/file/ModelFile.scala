@@ -29,7 +29,7 @@ object ModelFile {
     if (model.scalaJs) {
       file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
-    file.add(s"case class ${model.className}(", 2)
+    file.add(s"final case class ${model.className}(", 2)
     addFields(model, file)
     model.extendsClass match {
       case Some(x) => file.add(") extends " + x + " {", -2)
