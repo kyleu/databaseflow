@@ -29,7 +29,7 @@ object TableFile {
         case h :: Nil => h.propertyName
         case x => "(" + x.map(_.propertyName).mkString(", ") + ")"
       }
-      file.add(s"""val pk = primaryKey("pk_${model.tableName}", $pkProps)""")
+      file.add(s"""val modelPrimaryKey = primaryKey("pk_${model.tableName}", $pkProps)""")
       file.add()
     }
     if (model.fields.lengthCompare(22) > 0) {

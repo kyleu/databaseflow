@@ -25,7 +25,7 @@ object EnumSchemaFile {
     file.add("val queryFields = fields[GraphQLContext, Unit](Field(", 1)
     file.add(s"""name = "${enum.propertyName}",""")
     file.add(s"fieldType = ListType(${enum.propertyName}EnumType),")
-    file.add(s"""resolve = c => traceB(c.ctx, "list")(td => ${enum.className}.values)""")
+    file.add(s"""resolve = c => traceB(c.ctx, "list")(_ => ${enum.className}.values)""")
     file.add("))", -1)
     file.add("}", -1)
 
