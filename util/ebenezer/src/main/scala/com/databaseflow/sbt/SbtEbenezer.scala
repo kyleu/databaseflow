@@ -62,7 +62,7 @@ object SbtEbenezer extends AutoPlugin {
       services.scalaexport.ScalaExport.exportThrift(
         input = Some(f.getAbsolutePath),
         output = Some(outputDir.getAbsolutePath),
-        flags = Set("inplace", "simple"),
+        flags = Set("inplace", "simple", "enumObj"),
         configLocation = f.getParentFile.getPath
       )
     }

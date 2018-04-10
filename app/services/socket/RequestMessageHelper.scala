@@ -45,6 +45,7 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
     case srsr: SharedResultSaveRequest => timeReceive(srsr) { SharedResultService.save(user.id, srsr.result, Some(out)) }
 
     case cp: CallProcedure => timeReceive(cp) { ProcedureService.callProcedure(connectionId, user.id, cp.queryId, cp.name, cp.params, cp.resultId) }
+    case rd: RowDelete => timeReceive(rd) { RowUpdateService.delete(connectionId, user, rd.name, rd.pk, rd.resultId, out) }
     case ru: RowUpdate => timeReceive(ru) { RowUpdateService.process(connectionId, user, ru.name, ru.pk, ru.params, ru.resultId, out) }
 
     case gqh: GetQueryHistory => timeReceive(gqh) { AuditRecordService.handleGetQueryHistory(db.connectionId, user.id, gqh, out) }

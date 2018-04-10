@@ -143,6 +143,7 @@ query.sidenav.about = About {0}
 query.share = Share
 query.insert = Insert Row
 query.edit = Edit
+query.delete = Delete Row
 
 # Query Results
 result.remove.confirm = Removed result [{0}].

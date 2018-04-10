@@ -86,7 +86,7 @@ object ThriftModelFile {
     val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
     val colType = ThriftFileHelper.columnTypeFor(field.t, metadata)
     if (colType._2.nonEmpty && colType._2 != pkg) {
-      file.addImport(colType._2.mkString("."), colType._1)
+      file.addImport(colType._2.mkString("."), colType._1.stripPrefix("Seq[").stripPrefix("Set[").stripSuffix("]").stripSuffix("]"))
     }
     val decl = ThriftFileHelper.declarationFor(field.required || field.value.isDefined, field.name, field.value, metadata, colType._1)
     file.add(decl + comma)

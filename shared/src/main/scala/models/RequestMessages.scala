@@ -37,6 +37,7 @@ case class QueryDeleteRequest(id: UUID) extends RequestMessage
 case class SharedResultSaveRequest(result: SharedResult) extends RequestMessage
 
 case class CallProcedure(queryId: UUID, name: String, params: Map[String, String], resultId: UUID) extends RequestMessage
+case class RowDelete(name: String, pk: Seq[(String, String)], resultId: UUID) extends RequestMessage
 case class RowUpdate(name: String, pk: Seq[(String, String)], params: Map[String, String], resultId: UUID) extends RequestMessage
 
 case class GetQueryHistory(limit: Int = 100, offset: Int = 0) extends RequestMessage

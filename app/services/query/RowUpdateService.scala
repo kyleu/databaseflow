@@ -3,7 +3,7 @@ package services.query
 import java.util.UUID
 
 import akka.actor.ActorRef
-import models.queries.dynamic.{InsertRowStatement, UpdateRowStatement}
+import models.queries.dynamic.{DeleteRowStatement, InsertRowStatement, UpdateRowStatement}
 import models.user.User
 import models.{ResponseMessage, RowUpdateResponse}
 import services.database.{DatabaseRegistry, DatabaseWorkerPool}
@@ -17,6 +17,22 @@ object RowUpdateService extends Logging {
     } else {
       update(connectionId, user, name, pk, params, resultId, out)
     }
+  }
+
+  def delete(connectionId: UUID, user: User, name: String, pk: Seq[(String, String)], resultId: UUID, out: ActorRef) = {
+    if (pk.isEmpty) {
+      throw new IllegalStateException("Cannot delete row without primary key.")
+    }
+    def work() = {
+      val t = SchemaService.getTable(connectionId, name).getOrElse(throw new IllegalStateException(s"Missing definition for table [$name]."))
+      val db = DatabaseRegistry.db(user, connectionId)
+      val statement = DeleteRowStatement(name, pk, t.columns, db.engine)
+      val rowsAffected = db.executeUpdate(statement)
+      RowUpdateResponse(resultId, Nil, rowsAffected)
+    }
+    def onSuccess(rm: ResponseMessage) = out ! rm
+    def onFailure(t: Throwable) = out ! RowUpdateResponse(resultId, Nil, 0, Map("general" -> t.getMessage))
+    DatabaseWorkerPool.submitWork(work _, onSuccess, onFailure)
   }
 
   def insert(connectionId: UUID, user: User, name: String, params: Map[String, String], resultId: UUID, out: ActorRef) = {

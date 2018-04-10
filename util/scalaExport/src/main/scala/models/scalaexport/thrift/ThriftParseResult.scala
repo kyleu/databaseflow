@@ -34,22 +34,22 @@ case class ThriftParseResult(
   lazy val stringEnumNames = stringEnums.map(_.name)
   lazy val stringEnumString = stringEnums.map(e => s"  ${e.name} (${e.values.size} values)").mkString("\n")
   lazy val stringEnumFiles = stringEnums.flatMap(e => if (flags("simple")) {
-    Seq(ThriftEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot))
+    Seq(ThriftStringEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot))
   } else if (flags("extras")) {
     Seq(ThriftEnumSchemaFile.exportString(tgtPkg, e))
   } else {
-    Seq(ThriftEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot), ThriftEnumSchemaFile.exportString(tgtPkg, e))
+    Seq(ThriftStringEnumFile.exportString(srcPkg, tgtPkg, e, exportModelRoot), ThriftEnumSchemaFile.exportString(tgtPkg, e))
   })
 
   lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntegerEnum.apply)
   lazy val intEnumNames = intEnums.map(_.name)
   lazy val intEnumString = intEnums.map(e => s"  ${e.name} (${e.fields.size} values)").mkString("\n")
   lazy val intEnumFiles = intEnums.flatMap(e => if (flags("simple")) {
-    Seq(ThriftEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot))
+    Seq(ThriftIntEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot, flags))
   } else if (flags("extras")) {
     Seq(ThriftEnumSchemaFile.exportInt(tgtPkg, e))
   } else {
-    Seq(ThriftEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot), ThriftEnumSchemaFile.exportInt(tgtPkg, e))
+    Seq(ThriftIntEnumFile.exportInt(srcPkg, tgtPkg, e, exportModelRoot, flags), ThriftEnumSchemaFile.exportInt(tgtPkg, e))
   })
 
   lazy val enumDefaults = (stringEnums.map(e => e.name -> ExportHelper.toClassName(e.values.head)) ++
