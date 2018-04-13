@@ -15,7 +15,7 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.1.4"
+    val app = "1.1.5"
     val scala = "2.12.4"
   }
 
@@ -48,6 +48,8 @@ object Shared {
       case PathList("javax", "xml", _ @ _*) => MergeStrategy.first
       case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
       case PathList("org", "apache", "commons", "logging", _ @ _*) => MergeStrategy.first
+      case PathList("javax", "annotation", _ @ _*) => MergeStrategy.first
+      case PathList("net", "jcip", "annotations", _ @ _*) => MergeStrategy.first
       case PathList("play", "api", "libs", "ws", _ @ _*) => MergeStrategy.first
       case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
       case PathList("sqlj", _ @ _*) => MergeStrategy.first
@@ -81,16 +83,8 @@ object Shared {
     name := "databaseflow-shared",
     libraryDependencies ++= Seq(
       "com.outr" %%% "scribe" % Utils.scribeVersion,
-
-      "com.lihaoyi" %%% "upickle" % Serialization.uPickleVersion,
-      "com.beachape" %%% "enumeratum-upickle" % Utils.enumeratumUPickleVersion,
-
-      "io.circe" %%% "circe-core" % Dependencies.Serialization.circeVersion,
-      "io.circe" %%% "circe-generic" % Dependencies.Serialization.circeVersion,
-      "io.circe" %%% "circe-generic-extras" % Dependencies.Serialization.circeVersion,
-      "io.circe" %%% "circe-parser" % Dependencies.Serialization.circeVersion,
       "com.beachape" %%% "enumeratum-circe" % Dependencies.Utils.enumeratumCirceVersion
-    )
+    ) ++ Serialization.circeProjects.map(c => "io.circe" %%% c % Dependencies.Serialization.circeVersion)
   )
 
   lazy val sharedJs = shared.js.enablePlugins(ScalaJSWeb)

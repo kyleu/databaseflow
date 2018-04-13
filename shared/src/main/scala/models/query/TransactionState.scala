@@ -4,7 +4,7 @@ import enumeratum._
 
 sealed trait TransactionState extends EnumEntry
 
-object TransactionState extends Enum[TransactionState] {
+object TransactionState extends Enum[TransactionState] with CirceEnum[TransactionState] {
   case object NotStarted extends TransactionState
   case object Started extends TransactionState
   case object RolledBack extends TransactionState

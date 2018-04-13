@@ -16,7 +16,9 @@ import sbtassembly.AssemblyPlugin.autoImport._
 object Site {
   private[this] val dependencies = {
     import Dependencies._
-    Seq(Akka.actor, Akka.logging, Akka.testkit, Play.filters, Play.ws, Play.cache, Play.guice, Play.mailer, Play.mailerGuice, Play.test, Utils.betterFiles)
+    Seq(
+      Akka.actor, Akka.logging, Akka.testkit, Play.filters, Play.ws, Play.cache, Play.guice, Play.mailer, Play.mailerGuice, Play.test, Utils.betterFiles
+    ) ++ Serialization.circeProjects.map(c => "io.circe" %% c % Dependencies.Serialization.circeVersion)
   }
 
   private[this] lazy val siteSettings = Shared.commonSettings ++ Seq(

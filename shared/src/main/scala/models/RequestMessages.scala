@@ -3,6 +3,7 @@ package models
 import java.util.UUID
 
 import models.query.{QueryResult, RowDataOptions, SavedQuery, SharedResult}
+import util.JsonSerializers._
 
 sealed trait RequestMessage
 
@@ -43,3 +44,8 @@ case class RowUpdate(name: String, pk: Seq[(String, String)], params: Map[String
 case class GetQueryHistory(limit: Int = 100, offset: Int = 0) extends RequestMessage
 case class InsertAuditHistory(id: UUID) extends RequestMessage
 case class RemoveAuditHistory(id: Option[UUID]) extends RequestMessage
+
+object RequestMessage {
+  implicit val jsonEncoder: Encoder[RequestMessage] = deriveEncoder
+  implicit val jsonDecoder: Decoder[RequestMessage] = deriveDecoder
+}

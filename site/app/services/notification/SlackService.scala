@@ -2,7 +2,7 @@ package services.notification
 
 import util.FutureUtils.defaultContext
 import play.api.libs.ws.WSClient
-import upickle.Js
+import io.circe.Json
 import util.Logging
 
 import scala.concurrent.Future
@@ -14,15 +14,15 @@ class SlackService @javax.inject.Inject() (ws: WSClient) extends Logging {
   private[this] val defaultIcon = "http://databaseflow.com/assets/images/ui/favicon/favicon.png"
 
   def alert(msg: String, channel: String = "#general", username: String = util.Config.projectName, iconUrl: String = defaultIcon) = if (enabled) {
-    val body = Js.Obj(
-      "channel" -> Js.Str(channel),
-      "username" -> Js.Str(username),
-      "icon_url" -> Js.Str(iconUrl),
-      "text" -> Js.Str(msg)
+    val body = Json.obj(
+      "channel" -> Json.fromString(channel),
+      "username" -> Json.fromString(username),
+      "icon_url" -> Json.fromString(iconUrl),
+      "text" -> Json.fromString(msg)
     )
 
     val call = ws.url(url).withHttpHeaders("Accept" -> "application/json")
-    val f = call.post(upickle.json.write(body))
+    val f = call.post(body.spaces2)
     val ret = f.map { x =>
       if (x.status == 200) {
         "OK"

@@ -5,9 +5,9 @@ cd ../../
 sbt-nodebug "dist"
 
 rm -rf ./tmp/databaseflow-demo
-rm -rf ./tmp/databaseflow-1.1.1
+rm -rf ./tmp/databaseflow-1.1.5
 
-unzip ./target/universal/databaseflow-1.1.1.zip -d ./target/universal/databaseflow
+unzip ./target/universal/databaseflow-1.1.5.zip -d ./target/universal/databaseflow
 mv ./target/universal/databaseflow ./tmp/
 mv ./tmp/databaseflow/ ./tmp/databaseflow-demo
 

@@ -6,7 +6,7 @@ sealed abstract class SettingKey(val id: String, val title: String, val descript
   override def toString = id
 }
 
-object SettingKey extends Enum[SettingKey] {
+object SettingKey extends Enum[SettingKey] with CirceEnum[SettingKey] {
   case object AllowRegistration extends SettingKey(
     id = "allow-registration",
     title = "Allow Registration",

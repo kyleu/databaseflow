@@ -1,72 +1,35 @@
 package util
 
-import java.util.UUID
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import enumeratum.UPickler
-import models.plan.PlanNode
-import models.schema.ColumnType
-import models.template.Theme
-import models.{RequestMessage, ResponseMessage}
-import upickle.Js
-import upickle.default._
+import io.circe.generic.extras.Configuration
+import io.circe.generic.extras.decoding.ConfiguredDecoder
+import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
+import io.circe.java8.time._
+import shapeless.Lazy
+
+import scala.language.implicitConversions
 
 object JsonSerializers {
-  // Enumerations
-  private[this] implicit val columnTypeReader = UPickler.reader(ColumnType)
-  private[this] implicit val columnTypeWriter = UPickler.writer(ColumnType)
+  type Decoder[A] = io.circe.Decoder[A]
+  type Encoder[A] = io.circe.Encoder[A]
 
-  implicit val themeReader = UPickler.reader(Theme)
-  implicit val themeWriter = UPickler.writer(Theme)
+  type Json = io.circe.Json
 
-  // Recursive structures
-  private[this] def readPlanNode(x: Js.Value): PlanNode = PlanNode(
-    id = readJs[UUID](x("id")),
-    title = readJs[String](x("title")),
-    nodeType = readJs[String](x("nodeType")),
-    relation = readJs[Option[String]](x("relation")),
-    output = readJs[Option[Seq[String]]](x("output")),
-    costs = readJs[PlanNode.Costs](x("costs")),
-    properties = readJs[Map[String, String]](x("properties")),
-    children = x("children") match {
-      case a: Js.Arr => a.value.map(n => readPlanNode(n match {
-        case o: Js.Obj => o
-        case ex => throw new IllegalStateException(ex.toString)
-      }))
-      case other => throw new IllegalArgumentException(other.toString)
-    }
-  )
-  implicit val planNodeReader = Reader[PlanNode] {
-    case x: Js.Obj => readPlanNode(x)
-    case other => throw new IllegalArgumentException(s"Invalid Plan Node [${other.getClass.getSimpleName}].")
-  }
+  implicit def encodeLocalDateTime: Encoder[LocalDateTime] = io.circe.java8.time.encodeLocalDateTimeDefault
+  implicit def encodeLocalDate: Encoder[LocalDate] = io.circe.java8.time.encodeLocalDateDefault
+  implicit def encodeLocalTime: Encoder[LocalTime] = io.circe.java8.time.encodeLocalTimeDefault
+  implicit def decodeLocalDateTime: Decoder[LocalDateTime] = io.circe.java8.time.decodeLocalDateTimeDefault
+  implicit def decodeLocalDate: Decoder[LocalDate] = io.circe.java8.time.decodeLocalDateDefault
+  implicit def decodeLocalTime: Decoder[LocalTime] = io.circe.java8.time.decodeLocalTimeDefault
 
-  private[this] def writePlanNode(node: PlanNode): Js.Value = Js.Obj(
-    "id" -> writeJs(node.id),
-    "title" -> writeJs(node.title),
-    "nodeType" -> writeJs(node.nodeType),
-    "relation" -> writeJs(node.relation),
-    "output" -> writeJs(node.output),
-    "costs" -> writeJs(node.costs),
-    "properties" -> writeJs(node.properties),
-    "children" -> Js.Arr(node.children.map(writePlanNode): _*)
-  )
-  implicit val planNodeWriter = Writer[PlanNode](x => writePlanNode(x))
+  implicit val circeConfiguration: Configuration = Configuration.default.withDefaults
 
-  // Wire messages
-  def readRequestMessage(json: Js.Value) = readJs[RequestMessage](json)
-  def writeRequestMessage(rm: RequestMessage, debug: Boolean = false) = if (debug) {
-    write(rm, indent = 2)
-  } else {
-    write(rm)
-  }
+  def deriveDecoder[A](implicit decode: Lazy[ConfiguredDecoder[A]]) = io.circe.generic.extras.semiauto.deriveDecoder[A]
+  def deriveEncoder[A](implicit decode: Lazy[ConfiguredObjectEncoder[A]]) = io.circe.generic.extras.semiauto.deriveEncoder[A]
+  def deriveFor[A](implicit decode: Lazy[ConfiguredDecoder[A]]) = io.circe.generic.extras.semiauto.deriveFor[A]
 
-  def readResponseMessage(json: String) = read[ResponseMessage](json)
-  def writeResponseMessageJs(rm: ResponseMessage) = {
-    writeJs(rm)
-  }
-  def writeResponseMessage(rm: ResponseMessage, debug: Boolean = false) = if (debug) {
-    write(rm, indent = 2)
-  } else {
-    write(rm)
-  }
+  implicit def encoderOps[A](a: A): io.circe.syntax.EncoderOps[A] = io.circe.syntax.EncoderOps[A](a)
+  def parseJson(s: String) = io.circe.parser.parse(s)
+  def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
 }

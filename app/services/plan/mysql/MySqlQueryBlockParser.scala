@@ -1,13 +1,12 @@
 package services.plan.mysql
 
+import io.circe.Json
 import models.plan.PlanNode
-import upickle.Js
-import upickle.Js.Value
 import util.JsonUtils
 
 object MySqlQueryBlockParser {
-  def parseQueryBlock(json: Js.Value): PlanNode = {
-    val params = json.obj
+  def parseQueryBlock(json: Json): PlanNode = {
+    val params = json.asObject.get.toMap
 
     val potentialNodeType = params.filterNot(_._1 == "select_id")
     val nodeType = if (potentialNodeType.size == 1) {
@@ -25,19 +24,19 @@ object MySqlQueryBlockParser {
     }
   }
 
-  private[this] def parseNestedLoop(el: Js.Value) = {
-    val children = el.arr.map(v => parseTable(v.obj(MySqlParseKeys.keyTable)))
+  private[this] def parseNestedLoop(el: Json) = {
+    val children = el.asArray.get.map(v => parseTable(v.asObject.get.toMap(MySqlParseKeys.keyTable)))
     val rows = children.map(c => c.costs.actualRows.getOrElse(c.costs.estimatedRows)).product
     val costs = PlanNode.Costs(actualRows = if (rows != 0) { Some(rows) } else { None })
     PlanNode(title = "Nested Loop", nodeType = "Nested Loop", costs = costs, children = children)
   }
 
-  def parseQuerySpecifications(v: Value) = {
-    v.arr.map(_.obj(MySqlParseKeys.keyQueryBlock)).map(parseQueryBlock)
+  def parseQuerySpecifications(v: Json) = {
+    v.asArray.get.map(_.asObject.get.toMap(MySqlParseKeys.keyQueryBlock)).map(parseQueryBlock)
   }
 
-  private[this] def parseUnionResult(el: Js.Value) = {
-    val obj = el.obj
+  private[this] def parseUnionResult(el: Json) = {
+    val obj = el.asObject.get.toMap
 
     val children = obj.get(MySqlParseKeys.keyQuerySpecifications).map(parseQuerySpecifications).getOrElse(Nil)
 
@@ -46,12 +45,12 @@ object MySqlQueryBlockParser {
     PlanNode(title = "Union Result", nodeType = "Union Result", relation = Some(relation), properties = props, children = children)
   }
 
-  private[this] def parseTable(el: Js.Value) = {
-    val obj = el.obj
+  private[this] def parseTable(el: Json) = {
+    val obj = el.asObject.get.toMap
     val props = JsonUtils.toStringMap(obj)
 
     val subview = obj.get(MySqlParseKeys.keyMaterializedFromSubquery).map { s =>
-      val v = s.obj.getOrElse(MySqlParseKeys.keyQueryBlock, throw new IllegalStateException("Missing query block."))
+      val v = s.asObject.get.toMap.getOrElse(MySqlParseKeys.keyQueryBlock, throw new IllegalStateException("Missing query block."))
       parseQueryBlock(v)
     }
 
@@ -63,7 +62,7 @@ object MySqlQueryBlockParser {
     }
     val relation = props.get(MySqlParseKeys.keyAttachedCondition)
     val nodeType = props.get(MySqlParseKeys.keyAccessType).orElse(message).getOrElse("Table")
-    val rows = obj.get("rows").map(_.num.toInt)
+    val rows = obj.get("rows").map(_.asNumber.get.toInt.get)
 
     val children = subview.toSeq
 
@@ -71,8 +70,8 @@ object MySqlQueryBlockParser {
     PlanNode(title = title, nodeType = nodeType, relation = relation, costs = costs, properties = props, children = children)
   }
 
-  private[this] def parseGroupingOperation(el: Js.Value) = {
-    val obj = el.obj
+  private[this] def parseGroupingOperation(el: Json) = {
+    val obj = el.asObject.get.toMap
     PlanNode(
       title = "Grouping Operation",
       nodeType = "Grouping Operation",

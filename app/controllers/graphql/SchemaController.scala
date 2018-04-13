@@ -1,12 +1,13 @@
 package controllers.graphql
 
 import controllers.BaseController
-import models.SchemaResponse
+import models.{ResponseMessage, SchemaResponse}
 import services.connection.ConnectionSettingsService
 import services.graphql.GraphQLService
 import services.schema.SchemaService
 import util.FutureUtils.defaultContext
-import util.{ApplicationContext, JsonSerializers}
+import util.ApplicationContext
+import util.JsonSerializers._
 
 import scala.concurrent.Future
 
@@ -29,7 +30,7 @@ class SchemaController @javax.inject.Inject() (override val ctx: ApplicationCont
   def json(connection: String) = withSession("schema.json") { implicit request =>
     ConnectionSettingsService.connFor(connection) match {
       case Some(c) => SchemaService.getSchemaWithDetails(c).map { s =>
-        val jsVal = JsonSerializers.writeResponseMessage(SchemaResponse(s), debug = true)
+        val jsVal = SchemaResponse(s).asInstanceOf[ResponseMessage].asJson.spaces2
         Ok(jsVal).as("application/json")
       }
       case None => Future.successful(Redirect(controllers.routes.HomeController.home()))

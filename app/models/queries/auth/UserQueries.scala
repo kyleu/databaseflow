@@ -6,9 +6,8 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import models.database._
 import models.queries.BaseQueries
 import models.user.{Role, User, UserPreferences}
-import upickle.default._
 import util.JdbcUtils
-import util.JsonSerializers.{themeReader, themeWriter}
+import util.JsonSerializers._
 
 object UserQueries extends BaseQueries[User] {
   override protected val tableName = "dbf_users"
@@ -43,12 +42,12 @@ object UserQueries extends BaseQueries[User] {
 
   case class UpdateUser(u: User) extends Statement {
     override val sql = updateSql(Seq("username", "prefs", "email", "role"))
-    override val values = Seq(u.username, write(u.preferences), u.profile.providerKey, u.role.toString, u.id)
+    override val values = Seq(u.username, u.preferences.asJson.spaces2, u.profile.providerKey, u.role.toString, u.id)
   }
 
   case class SetPreferences(userId: UUID, userPreferences: UserPreferences) extends Statement {
     override val sql = updateSql(Seq("prefs"))
-    override val values = Seq(write(userPreferences), userId)
+    override val values = Seq(userPreferences.asJson.spaces2, userId)
   }
 
   case class SetRole(id: UUID, role: Role) extends Statement {
@@ -77,7 +76,7 @@ object UserQueries extends BaseQueries[User] {
     val id = row.as[UUID]("id")
     val username = row.as[String]("username")
     val prefsString = row.as[String]("prefs")
-    val preferences = read[UserPreferences](prefsString)
+    val preferences = UserPreferences.readFrom(prefsString)
     val profile = LoginInfo("credentials", row.as[String]("email"))
     val role = Role.withName(row.as[String]("role").trim)
     val created = JdbcUtils.toLocalDateTime(row, "created")
@@ -85,7 +84,7 @@ object UserQueries extends BaseQueries[User] {
   }
 
   override protected def toDataSeq(u: User) = {
-    Seq(u.id, u.username, write(u.preferences), u.profile.providerKey, u.role.toString, u.created)
+    Seq(u.id, u.username, u.preferences.asJson.spaces2, u.profile.providerKey, u.role.toString, u.created)
   }
 
   case class UpdateFields(id: UUID, username: String, email: String, role: Role) extends Statement {

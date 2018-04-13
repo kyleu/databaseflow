@@ -3,7 +3,7 @@ package models.audit
 import enumeratum._
 import models.template.Icons
 
-object AuditType extends Enum[AuditType] {
+object AuditType extends Enum[AuditType] with CirceEnum[AuditType] {
   case object SignIn extends AuditType("Sign In", Icons.signIn)
   case object SignOut extends AuditType("Sign Out", Icons.signOut)
 

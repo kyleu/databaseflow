@@ -1,5 +1,12 @@
 package models.schema
 
+import util.JsonSerializers._
+
+object Procedure {
+  implicit val jsonEncoder: Encoder[Procedure] = deriveEncoder
+  implicit val jsonDecoder: Decoder[Procedure] = deriveDecoder
+}
+
 case class Procedure(
     name: String,
     description: Option[String],

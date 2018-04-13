@@ -7,7 +7,7 @@ import models.queries.BaseQueries
 import models.query.SavedQuery
 import models.user.Permission
 import util.{DateUtils, JdbcUtils}
-import upickle.default._
+import util.JsonSerializers._
 
 import scala.util.control.NonFatal
 
@@ -43,7 +43,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   case class UpdateSavedQuery(sq: SavedQuery) extends Statement {
     override val sql = updateSql(Seq("name", "description", "sql", "params", "owner", "connection", "read", "edit", "updated"))
     override val values = Seq[Any](
-      sq.name, sq.description, sq.sql, write(sq.params), sq.owner, sq.connection, sq.read.toString, sq.edit.toString, DateUtils.now, sq.id
+      sq.name, sq.description, sq.sql, sq.params.asJson, sq.owner, sq.connection, sq.read.toString, sq.edit.toString, DateUtils.now, sq.id
     )
   }
 
@@ -54,7 +54,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
     description = row.asOpt[Any]("description").map(JdbcUtils.extractString),
     sql = JdbcUtils.extractString(row.as[Any]("sql")),
     params = row.asOpt[Any]("params").map(JdbcUtils.extractString).map(x => try {
-      read[Seq[SavedQuery.Param]](x)
+      decodeJson[Seq[SavedQuery.Param]](x).right.get
     } catch {
       case NonFatal(_) => Seq.empty
     }).getOrElse(Seq.empty),
@@ -70,7 +70,7 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
   )
 
   override protected def toDataSeq(q: SavedQuery) = Seq[Any](
-    q.id, q.name, q.description, q.sql, write(q.params), q.owner, q.connection, q.read.toString, q.edit.toString,
+    q.id, q.name, q.description, q.sql, q.params.asJson.spaces2, q.owner, q.connection, q.read.toString, q.edit.toString,
     q.lastRan, new java.sql.Timestamp(q.created), new java.sql.Timestamp(q.updated)
   )
 }

@@ -1,16 +1,21 @@
 package models.query
 
+import util.JsonSerializers._
+
 object RowDataOptions {
   val empty = RowDataOptions()
+
+  implicit val jsonEncoder: Encoder[RowDataOptions] = deriveEncoder
+  implicit val jsonDecoder: Decoder[RowDataOptions] = deriveDecoder
 }
 
 case class RowDataOptions(
-  orderByCol: Option[String] = None,
-  orderByAsc: Option[Boolean] = None,
-  filters: Seq[QueryFilter] = Nil,
-  whereClause: Option[String] = None,
-  limit: Option[Int] = None,
-  offset: Option[Int] = None
+    orderByCol: Option[String] = None,
+    orderByAsc: Option[Boolean] = None,
+    filters: Seq[QueryFilter] = Nil,
+    whereClause: Option[String] = None,
+    limit: Option[Int] = None,
+    offset: Option[Int] = None
 ) {
   def merge(rdo: RowDataOptions) = {
     val (oc, oa) = rdo.orderByCol match {

@@ -3,31 +3,40 @@ package models.scalaexport.db
 import models.scalaexport.db.config.ExportConfiguration
 import models.schema.{Column, ColumnType, ForeignKey}
 import services.scalaexport.ExportHelper
+import util.JsonSerializers._
 
 object ExportModel {
+  object Reference {
+    implicit val jsonEncoder: Encoder[Reference] = deriveEncoder
+    implicit val jsonDecoder: Decoder[Reference] = deriveDecoder
+  }
+
   case class Reference(name: String, srcTable: String, srcCol: String, tgt: String, notNull: Boolean) {
     val propertyName = ExportHelper.toIdentifier(name)
   }
+
+  implicit val jsonEncoder: Encoder[ExportModel] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ExportModel] = deriveDecoder
 }
 
 case class ExportModel(
-  tableName: String,
-  pkg: List[String] = Nil,
-  propertyName: String,
-  className: String,
-  title: String,
-  description: Option[String],
-  plural: String,
-  fields: List[ExportField],
-  pkColumns: List[Column],
-  foreignKeys: List[ForeignKey],
-  references: List[ExportModel.Reference],
-  extendsClass: Option[String] = None,
-  icon: Option[String] = None,
-  scalaJs: Boolean = false,
-  ignored: Boolean = false,
-  audited: Boolean = false,
-  provided: Boolean = false
+    tableName: String,
+    pkg: List[String] = Nil,
+    propertyName: String,
+    className: String,
+    title: String,
+    description: Option[String],
+    plural: String,
+    fields: List[ExportField],
+    pkColumns: List[Column],
+    foreignKeys: List[ForeignKey],
+    references: List[ExportModel.Reference],
+    extendsClass: Option[String] = None,
+    icon: Option[String] = None,
+    scalaJs: Boolean = false,
+    ignored: Boolean = false,
+    audited: Boolean = false,
+    provided: Boolean = false
 ) {
   val fullClassName = (pkg :+ className).mkString(".")
   val pkFields = pkColumns.map(c => getField(c.name))

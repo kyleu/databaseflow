@@ -1,7 +1,8 @@
-import models.{Ping, RequestMessage}
+import models.{Ping, RequestMessage, ResponseMessage}
 import services.{NavigationService, NotificationService}
 import ui.modal.ReconnectManager
-import util.{JsonSerializers, NetworkMessage, NetworkSocket}
+import util.{NetworkMessage, NetworkSocket}
+import util.JsonSerializers._
 
 import scala.scalajs.js.timers._
 
@@ -44,15 +45,15 @@ trait NetworkHelper { this: DatabaseFlow =>
 
   def sendMessage(rm: RequestMessage): Unit = {
     if (socket.isConnected) {
-      val json = JsonSerializers.writeRequestMessage(rm, debug)
-      socket.send(json)
+      val json = rm.asJson
+      socket.send(if (debug) { json.spaces2 } else { json.toString })
     } else {
       throw new IllegalStateException("Not connected.")
     }
   }
 
   protected[this] def onSocketMessage(json: String): Unit = {
-    val msg = JsonSerializers.readResponseMessage(json)
+    val msg = decodeJson[ResponseMessage](json).right.get
     handleMessage(msg)
   }
 }

@@ -13,9 +13,9 @@ import services.database.DatabaseRegistry
 import services.database.core.ResultCacheDatabase
 import services.query.SharedResultService
 import services.schema.SchemaService
-import upickle.default._
 import util.web.FormUtils
 import util.{ApplicationContext, DateUtils}
+import util.JsonSerializers._
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
@@ -28,7 +28,7 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val sourceJson = form.getOrElse("source", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "resultId")(
       request.lang(ctx.messagesApi)
     )))
-    val source = read[QueryResult.Source](sourceJson)
+    val source = parseJson(sourceJson).right.get.as[QueryResult.Source].right.get
     val format = form.getOrElse("format", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "format")(request.lang(ctx.messagesApi))))
 
     send(Some(request.identity), connectionId, source, format, request.lang(ctx.messagesApi))

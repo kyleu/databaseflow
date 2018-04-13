@@ -7,8 +7,7 @@ import org.scalajs.jquery.{jQuery => $}
 import util.TemplateUtils
 
 import scala.scalajs.js
-
-import upickle.default._
+import util.JsonSerializers._
 
 object QueryExportFormManager {
   private[this] val modal = js.Dynamic.global.$("#export-modal")
@@ -20,7 +19,7 @@ object QueryExportFormManager {
 
   def show(queryId: UUID, source: QueryResult.Source) = {
     inputQueryId.value(queryId.toString)
-    inputSource.value(write(source))
+    inputSource.value(source.asJson.spaces2)
     modal.openModal()
   }
 }

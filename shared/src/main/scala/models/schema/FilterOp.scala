@@ -6,7 +6,7 @@ sealed abstract class FilterOp(val key: String, val symbol: String, val title: S
   override def toString = key
 }
 
-object FilterOp extends Enum[FilterOp] {
+object FilterOp extends Enum[FilterOp] with CirceEnum[FilterOp] {
   case object Equal extends FilterOp("eq", "=", "Equal", "=")
   case object NotEqual extends FilterOp("neq", "≠", "Not Equal", "!=")
   case object LessThan extends FilterOp("lt", "<", "Less Than", "<")

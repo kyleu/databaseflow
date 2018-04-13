@@ -7,6 +7,7 @@ import models.plan.{PlanError, PlanResult}
 import models.query._
 import models.schema._
 import models.user.UserPreferences
+import util.JsonSerializers._
 
 sealed trait ResponseMessage
 
@@ -52,3 +53,8 @@ case class SharedResultSaveResponse(result: SharedResult, error: Option[String] 
 case class RowUpdateResponse(resultId: UUID, pk: Seq[(String, String)], rowsAffected: Int, errors: Map[String, String] = Map.empty) extends ResponseMessage
 
 case class ColumnDetailResponse(owner: String, name: String, details: ColumnDetails) extends ResponseMessage
+
+object ResponseMessage {
+  implicit val jsonEncoder: Encoder[ResponseMessage] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ResponseMessage] = deriveDecoder
+}

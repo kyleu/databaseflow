@@ -24,7 +24,7 @@ class QueryController @javax.inject.Inject() (
     implicit val materializer: Materializer
 ) extends BaseController {
 
-  private[this] implicit val t = new MessageFrameFormatter(ctx.config.debug).transformer
+  private[this] implicit val t = new MessageFrameFormatter(ctx.config.debug).transformer(ctx.config.debug)
 
   def main(connection: String) = withSession(s"connection-$connection") { implicit request =>
     val connOpt = ConnectionSettingsService.connFor(connection)

@@ -2,7 +2,14 @@ package models.plan
 
 import java.util.UUID
 
+import util.JsonSerializers._
+
 object PlanNode {
+  object Costs {
+    implicit val jsonEncoder: Encoder[Costs] = deriveEncoder
+    implicit val jsonDecoder: Decoder[Costs] = deriveDecoder
+  }
+
   case class Costs(
       estimatedRows: Int = 0,
       actualRows: Option[Int] = None,
@@ -11,6 +18,9 @@ object PlanNode {
   ) {
     lazy val estimatedRowsFactor = actualRows.map(estimatedRows / _)
   }
+
+  implicit val jsonEncoder: Encoder[PlanNode] = deriveEncoder
+  implicit val jsonDecoder: Decoder[PlanNode] = deriveDecoder
 }
 
 case class PlanNode(

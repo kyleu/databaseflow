@@ -20,7 +20,7 @@ sealed abstract class ColumnType(
   override def toString = key
 }
 
-object ColumnType extends Enum[ColumnType] {
+object ColumnType extends Enum[ColumnType] with CirceEnum[ColumnType] {
   case object StringType extends ColumnType("string", "String", "xxx")
   case object EncryptedStringType extends ColumnType("encrypted", "String", "xxx")
 

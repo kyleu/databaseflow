@@ -4,8 +4,12 @@ import models.scalaexport.file.ScalaFile
 import models.schema.ColumnType
 import models.schema.ColumnType._
 import services.scalaexport.ExportHelper
+import util.JsonSerializers._
 
 object ExportField {
+  implicit val jsonEncoder: Encoder[ExportField] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ExportField] = deriveDecoder
+
   def getDefaultString(t: ColumnType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
     case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")

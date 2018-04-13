@@ -6,6 +6,7 @@ import models.schema._
 import services.database.DatabaseWorkerPool
 import services.schema.{MetadataProcedures, MetadataTables, MetadataViews, SchemaService}
 import util.ExceptionUtils
+import util.JsonSerializers._
 
 trait DetailHelper { this: SocketService =>
   protected[this] def handleGetTableDetail(name: String, enums: Seq[EnumType]) = SchemaService.getTable(connectionId, name).foreach { t =>
@@ -76,7 +77,7 @@ trait DetailHelper { this: SocketService =>
 
   protected[this] def handleDebugInfo(data: String) = pendingDebugChannel match {
     case Some(dc) =>
-      val json = upickle.json.read(data)
+      val json = parseJson(data).right.get
       dc ! ClientTraceResponse(id, json)
     case None => log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active connection.")
   }

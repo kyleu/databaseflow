@@ -20,7 +20,7 @@ sealed abstract class SandboxTask(val name: String, val description: String) ext
   def call(app: ApplicationContext): Future[String]
 }
 
-object SandboxTask extends Enum[SandboxTask] {
+object SandboxTask extends Enum[SandboxTask] with CirceEnum[SandboxTask] {
   case class Result(task: SandboxTask, status: String = "OK", result: String, elapsed: Int)
 
   case object Metrics extends SandboxTask("Metrics Dump", "Lists all of the metrics for the running server.") {

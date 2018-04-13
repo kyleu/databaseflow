@@ -9,18 +9,12 @@ import services.scalaexport.{ExportFiles, ExportHelper}
 import services.scalaexport.db.ScalaExportService
 import services.scalaexport.thrift.ThriftParseService
 import services.schema.SchemaService
-import upickle.Js
 import util.ApplicationContext
 import util.FutureUtils.defaultContext
 import util.web.FormUtils
-import upickle.default._
+import util.JsonSerializers._
 
 import scala.concurrent.Future
-
-object ScalaExportController {
-  def readConfiguration(json: Js.Value) = readJs[ExportConfiguration](json)
-  def writeConfiguration(c: ExportConfiguration) = writeJs[ExportConfiguration](c)
-}
 
 @javax.inject.Singleton
 class ScalaExportController @javax.inject.Inject() (override val ctx: ApplicationContext) extends BaseController {
@@ -76,7 +70,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           thriftLocationOverride = form.get("thrift.location").filter(_.nonEmpty)
         )
 
-        val x = write(config, indent = 2)
+        val x = config.asJson.spaces2
         s"./tmp/$schemaId.txt".toFile.overwrite(x)
 
         ScalaExportService(config).export(persist = true).map { result =>
@@ -91,7 +85,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
     val f = s"./tmp/$schemaId.txt".toFile
     if (f.exists) {
-      ScalaExportHelper.merge(schema, read[ExportConfiguration](f.contentAsString))
+      ScalaExportHelper.merge(schema, decodeJson[ExportConfiguration](f.contentAsString).right.get)
     } else {
       ExportConfigurationDefault.forSchema(schemaId, schema)
     }

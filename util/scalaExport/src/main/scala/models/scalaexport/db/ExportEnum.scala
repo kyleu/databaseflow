@@ -1,6 +1,12 @@
 package models.scalaexport.db
 
 import services.scalaexport.ExportHelper
+import util.JsonSerializers._
+
+object ExportEnum {
+  implicit val jsonEncoder: Encoder[ExportEnum] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ExportEnum] = deriveDecoder
+}
 
 case class ExportEnum(
     pkg: List[String] = Nil,

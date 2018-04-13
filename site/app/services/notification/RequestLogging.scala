@@ -8,16 +8,16 @@ import play.api.mvc.RequestHeader
 
 object RequestLogging {
   case class RequestLog(
-    id: UUID,
-    version: String,
-    remoteAddress: String,
-    secure: Boolean,
-    host: String,
-    method: String,
-    path: String,
-    queryString: String,
-    headers: Map[String, String],
-    occurred: String
+      id: UUID,
+      version: String,
+      remoteAddress: String,
+      secure: Boolean,
+      host: String,
+      method: String,
+      path: String,
+      queryString: String,
+      headers: Map[String, String],
+      occurred: String
   )
 
   implicit val jsonFmt = Json.format[RequestLog]

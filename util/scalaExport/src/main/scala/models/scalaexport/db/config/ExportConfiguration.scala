@@ -1,6 +1,12 @@
 package models.scalaexport.db.config
 
 import models.scalaexport.db.{ExportEnum, ExportModel}
+import util.JsonSerializers._
+
+object ExportConfiguration {
+  implicit val jsonEncoder: Encoder[ExportConfiguration] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ExportConfiguration] = deriveDecoder
+}
 
 case class ExportConfiguration(
     key: String,

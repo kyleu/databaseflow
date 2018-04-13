@@ -1,42 +1,16 @@
 package util.web
 
-import models.{MalformedRequest, RequestMessage, ResponseMessage}
+import models.{RequestMessage, ResponseMessage}
 import play.api.mvc.WebSocket.MessageFlowTransformer
-import upickle.{Js, json}
-import util.{JsonSerializers, Logging}
+import util.Logging
 
-import scala.util.control.NonFatal
+import util.JsonSerializers._
 
 class MessageFrameFormatter(debug: Boolean) extends Logging {
-  private[this] def requestFromJsValue(json: Js.Value): RequestMessage = try {
-    JsonSerializers.readRequestMessage(json)
-  } catch {
-    case NonFatal(x) => MalformedRequest(s"Invalid Request [${x.getClass.getSimpleName}]", json.toString)
-  }
+  val stringTransformer = MessageFlowTransformer.stringMessageFlowTransformer.map(s => decodeJson[RequestMessage](s) match {
+    case Right(x) => x
+    case Left(err) => throw err
+  }).contramap { rm: ResponseMessage => rm.asJson.spaces2 }
 
-  private[this] def responseToJsValue(r: ResponseMessage): Js.Value = JsonSerializers.writeResponseMessageJs(r)
-
-  private[this] def jsValueToString(v: Js.Value) =
-    if (debug) {
-      json.write(v, indent = 2)
-    } else {
-      json.write(v)
-    }
-
-  private[this] def jsValueFromString(s: String) = {
-    try {
-      json.read(s)
-    } catch {
-      case NonFatal(_) => Js.Arr(Js.Str("models.MalformedRequest"), Js.Obj(
-        "reason" -> Js.Str("Invalid JSON"),
-        "content" -> Js.Str(s)
-      ))
-    }
-  }
-
-  val transformer = MessageFlowTransformer.stringMessageFlowTransformer.map { s =>
-    requestFromJsValue(jsValueFromString(s))
-  }.contramap { m: ResponseMessage =>
-    jsValueToString(responseToJsValue(m))
-  }
+  def transformer(binary: Boolean) = stringTransformer
 }

@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.12"
+    private[this] val version = "2.6.13"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -56,8 +56,8 @@ object Dependencies {
   }
 
   object Serialization {
-    val circeVersion = "0.8.0"
-    val uPickleVersion = "0.4.4"
+    val circeVersion = "0.9.3"
+    val circeProjects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
   }
 
   object Metrics {
@@ -86,7 +86,6 @@ object Dependencies {
   object Utils {
     val scapegoatVersion = "1.3.4"
     val enumeratumVersion = "1.5.13"
-    val enumeratumUPickleVersion = "1.5.12"
     val enumeratumCirceVersion = "1.5.16"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
@@ -94,11 +93,11 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.1.1"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.0"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
 
-    val scribeVersion = "1.4.5"
+    val scribeVersion = "1.4.6"
   }
 
   object Testing {

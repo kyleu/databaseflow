@@ -3,7 +3,7 @@ package models.engine
 import models.engine.capabilities._
 import enumeratum._
 
-object DatabaseEngine extends Enum[DatabaseEngine] {
+object DatabaseEngine extends Enum[DatabaseEngine] with CirceEnum[DatabaseEngine] {
   case object DB2 extends DatabaseEngine("db2", "DB2", "com.ibm.db2.jcc.DB2Driver", Some(50000), DB2Capabilities) {
     override def url(host: Option[String], port: Option[Int], dbName: Option[String], extra: Option[String]) = {
       s"jdbc:db2://${host.getOrElse("localhost")}:${port.getOrElse(50000)}/${dbName.getOrElse("db")}"
