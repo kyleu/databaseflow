@@ -62,9 +62,8 @@ object ExportFiles {
       throw new IllegalStateException(s"Please rename the class of enum [${e.name}], the class name is already in use.")
     }
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
-    val rq = if (config.flags("rest")) { Seq(EnumRestQueryFile.export(e)) } else { Nil }
     val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ gq ++ rq ++ oq
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ gq ++ oq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
@@ -91,7 +90,6 @@ object ExportFiles {
       val trs = TwirlRelationFiles.export(config, model)
 
       val gq = if (config.flags("graphql")) { GraphQLQueryFiles.export(config, model) } else { Nil }
-      val rq = if (config.flags("rest")) { Seq(RestQueryFile.export(model)) } else { Nil }
       val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [$model]."))
       val oq = if (config.flags("openapi")) {
         Seq(OpenApiSchemaFile.export(model, config.enums), OpenApiPathsFile.export(model, config.enums, solo))
@@ -99,7 +97,7 @@ object ExportFiles {
         Nil
       }
 
-      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ rq ++ oq ++ trs)
+      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ trs)
     }
   }
 }

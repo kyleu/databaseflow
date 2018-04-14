@@ -71,7 +71,7 @@ object ScalaExportHelper {
       title = form(col.name + ".title"),
       description = form.get(col.name + ".description").filter(_.nonEmpty),
       idx = idx,
-      t = enums.find(_.name == col.sqlTypeName).map(_ => ColumnType.EnumType).getOrElse(ColumnType.withNameInsensitive(form(col.name + ".t"))),
+      t = enums.find(_.name == col.sqlTypeName).map(_ => ColumnType.EnumType).getOrElse(ColumnType.withValue(form(col.name + ".t"))),
       sqlTypeName = col.sqlTypeName,
       enumOpt = enums.find(_.name == col.sqlTypeName),
       defaultValue = form.get(col.name + ".defaultValue").orElse(col.defaultValue),

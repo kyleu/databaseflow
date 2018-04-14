@@ -27,7 +27,7 @@ object SharedResultRow {
         case Some(col) => Seq(QueryFilter(
           col = col,
           op = FilterOp.withName(row.as[String]("filter_op")),
-          t = ColumnType.withName(row.as[String]("filter_type")),
+          t = ColumnType.withValue(row.as[String]("filter_type")),
           v = row.asOpt[String]("filter_value").getOrElse("")
         ))
         case None => Nil

@@ -50,7 +50,7 @@ trait DetailHelper { this: SocketService =>
 
   protected[this] def handleGetColumnDetail(owner: String, name: String, t: String) = {
     import models.schema.ColumnType._
-    val colType = withNameInsensitive(t)
+    val colType = withValue(t)
     def work() = if (colType.isNumeric) {
       db.query(ColumnDetailQueries.NumberColumnDetail(db.engine, owner, name))
     } else {
@@ -77,7 +77,10 @@ trait DetailHelper { this: SocketService =>
 
   protected[this] def handleDebugInfo(data: String) = pendingDebugChannel match {
     case Some(dc) =>
-      val json = parseJson(data).right.get
+      val json = parseJson(data) match {
+        case Right(x) => x
+        case Left(x) => throw x
+      }
       dc ! ClientTraceResponse(id, json)
     case None => log.warn(s"Received unsolicited DebugInfo [$data] from [$id] with no active connection.")
   }

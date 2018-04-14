@@ -28,7 +28,10 @@ object GraphQLService extends Logging {
   def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
     Json.obj()
   } else {
-    parse(variables).right.get
+    parse(variables) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
   }
 }
 
@@ -84,6 +87,9 @@ case class GraphQLService @javax.inject.Inject() (app: ApplicationContext) {
   def parseVariables(variables: String) = if (variables.trim == "" || variables.trim == "null") {
     Json.obj()
   } else {
-    parse(variables).right.get
+    parse(variables) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
   }
 }

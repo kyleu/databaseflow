@@ -54,7 +54,10 @@ object SavedQueryQueries extends BaseQueries[SavedQuery] {
     description = row.asOpt[Any]("description").map(JdbcUtils.extractString),
     sql = JdbcUtils.extractString(row.as[Any]("sql")),
     params = row.asOpt[Any]("params").map(JdbcUtils.extractString).map(x => try {
-      decodeJson[Seq[SavedQuery.Param]](x).right.get
+      decodeJson[Seq[SavedQuery.Param]](x) match {
+        case Right(p) => p
+        case Left(ex) => throw ex
+      }
     } catch {
       case NonFatal(_) => Seq.empty
     }).getOrElse(Seq.empty),

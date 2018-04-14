@@ -29,7 +29,10 @@ class GraphQLController @javax.inject.Inject() (override val ctx: ApplicationCon
 
   def graphqlQuery(connection: String, q: String) = withSession("graphql.query") { implicit request =>
     ConnectionSettingsService.connFor(connection) match {
-      case Some(c) => execute(parser.parse(q).right.get, request.identity, c.id)
+      case Some(c) => execute(parser.parse(q) match {
+        case Right(x) => x
+        case Left(x) => throw x
+      }, request.identity, c.id)
       case None => Future.successful(Redirect(controllers.routes.HomeController.home()))
     }
   }

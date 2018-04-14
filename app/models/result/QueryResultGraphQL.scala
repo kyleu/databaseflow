@@ -12,10 +12,10 @@ import sangria.schema.{Argument, BooleanType, Field, IntType, ObjectType, Option
 import services.query.SharedResultService
 
 object QueryResultGraphQL {
-  implicit val columnTypeEnum = CommonGraphQL.deriveEnumeratumType(
+  implicit val columnTypeEnum = CommonGraphQL.deriveStringEnumeratumType(
     name = "ColumnType",
     description = "The datatype of the column.",
-    values = ColumnType.values.map(t => t -> t.entryName).toList
+    values = ColumnType.values.map(t => t -> t.value).toList
   )
 
   implicit val filterOpEnum = CommonGraphQL.deriveEnumeratumType(

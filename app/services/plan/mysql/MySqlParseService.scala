@@ -10,7 +10,10 @@ import scala.util.control.NonFatal
 
 object MySqlParseService extends PlanParseService("mysql") {
   override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {
-    val json = parseJson(plan).right.get
+    val json = parseJson(plan) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
     json match {
       case o if o.isObject => parsePlan(sql, queryId, o, startMs)
       case _ => throw new IllegalStateException("Not a Json object.")

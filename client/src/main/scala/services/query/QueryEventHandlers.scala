@@ -45,7 +45,7 @@ object QueryEventHandlers {
     TemplateUtils.clickHandler($(".query-rel-link", e), jq => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
-      val t = ColumnType.withName(jq.data("rel-type").toString)
+      val t = ColumnType.withValue(jq.data("rel-type").toString)
       val v = jq.data("rel-val").toString
       TableManager.tableDetail(table, RowDataOptions(filters = Seq(QueryFilter(col = col, op = FilterOp.Equal, t = t, v = v))))
     })

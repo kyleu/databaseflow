@@ -27,7 +27,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "5.0.3"
+    private[this] val version = "5.0.4"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -86,7 +86,7 @@ object Dependencies {
   object Utils {
     val scapegoatVersion = "1.3.4"
     val enumeratumVersion = "1.5.13"
-    val enumeratumCirceVersion = "1.5.16"
+    val enumeratumCirceVersion = "1.5.17"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"

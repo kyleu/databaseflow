@@ -53,7 +53,10 @@ trait NetworkHelper { this: DatabaseFlow =>
   }
 
   protected[this] def onSocketMessage(json: String): Unit = {
-    val msg = decodeJson[ResponseMessage](json).right.get
+    val msg = decodeJson[ResponseMessage](json) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
     handleMessage(msg)
   }
 }

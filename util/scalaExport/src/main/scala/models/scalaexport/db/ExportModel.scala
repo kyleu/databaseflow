@@ -58,7 +58,6 @@ case class ExportModel(
   val modelClass = (modelPackage :+ className).mkString(".")
 
   val queriesPackage = "models" +: "queries" +: pkg
-
   val tablePackage = "models" +: "table" +: pkg
 
   val servicePackage = "services" +: pkg
@@ -78,26 +77,22 @@ case class ExportModel(
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
   val iconHtml = s"""<i class="fa @models.template.Icons.$propertyName"></i>"""
 
-  val pkArgs = pkFields.zipWithIndex.map { pkf =>
-    pkf._1.t match {
-      case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"
-      case _ => s"${pkf._1.t.key}Arg(arg(${pkf._2}))"
-    }
-  }.mkString(", ")
+  val pkArgs = pkFields.zipWithIndex.map(pkf => pkf._1.t match {
+    case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"
+    case _ => s"${pkf._1.t.value}Arg(arg(${pkf._2}))"
+  }).mkString(", ")
 
   def validReferences(config: ExportConfiguration) = {
     references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
   }
   def transformedReferences(config: ExportConfiguration) = validReferences(config).flatMap { r =>
     val src = config.getModel(r.srcTable)
-    getFieldOpt(r.tgt).flatMap { f =>
-      src.getFieldOpt(r.srcCol).map { tf =>
-        (r, f, src, tf)
-      }
-    }
+    getFieldOpt(r.tgt).flatMap(f => src.getFieldOpt(r.srcCol).map(tf => (r, f, src, tf)))
   }
 
-  def transformedReferencesDistinct(config: ExportConfiguration) = transformedReferences(config).groupBy(x => x._2 -> x._3).map(_._2.head)
+  def transformedReferencesDistinct(config: ExportConfiguration) = {
+    transformedReferences(config).groupBy(x => x._2 -> x._3).toSeq.sortBy(_._1._2.className).map(_._2.head)
+  }
 
   def getField(k: String) = getFieldOpt(k).getOrElse {
     throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}].")

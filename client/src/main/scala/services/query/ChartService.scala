@@ -47,7 +47,7 @@ object ChartService extends Logging {
         )
 
         val cols = js.Array(columns.map { col =>
-          js.Dynamic.literal("t" -> col.t.key, "name" -> col.name)
+          js.Dynamic.literal("t" -> col.t.value, "name" -> col.name)
         }: _*)
 
         c.addChart(chartId.toString, chart, cols, js.Array())

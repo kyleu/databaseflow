@@ -1,14 +1,14 @@
 package models.schema
 
-import enumeratum._
+import enumeratum.values._
 
 sealed abstract class ColumnType(
-  val key: String,
-  val asScala: String,
-  val fromString: String,
-  val requiredImport: Option[String] = None,
-  val isNumeric: Boolean = false,
-) extends EnumEntry {
+    override val value: String,
+    val asScala: String,
+    val fromString: String,
+    val requiredImport: Option[String] = None,
+    val isNumeric: Boolean = false
+) extends StringEnumEntry {
 
   val asScalaFull = requiredImport match {
     case Some(pkg) => pkg + "." + asScala
@@ -17,10 +17,10 @@ sealed abstract class ColumnType(
 
   val className = getClass.getSimpleName.stripSuffix("$")
 
-  override def toString = key
+  override def toString = value
 }
 
-object ColumnType extends Enum[ColumnType] with CirceEnum[ColumnType] {
+object ColumnType extends StringEnum[ColumnType] with StringCirceEnum[ColumnType] {
   case object StringType extends ColumnType("string", "String", "xxx")
   case object EncryptedStringType extends ColumnType("encrypted", "String", "xxx")
 
@@ -66,5 +66,5 @@ object ColumnType extends Enum[ColumnType] with CirceEnum[ColumnType] {
 
   case object UnknownType extends ColumnType("unknown", "Any", "xxx")
 
-  override val values = findValues
+  override def values = findValues
 }

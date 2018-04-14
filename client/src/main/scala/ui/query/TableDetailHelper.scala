@@ -72,7 +72,7 @@ trait TableDetailHelper extends Logging {
         val (t, v) = if (remaining.size == 1) {
           ColumnType.StringType -> first
         } else {
-          ColumnType.withName(first) -> remaining.tail.mkString(":")
+          ColumnType.withValue(first) -> remaining.tail.mkString(":")
         }
         RowDataOptions(filters = Seq(QueryFilter(col = filter.head, op = FilterOp.Equal, t = t, v = v)))
       } else {

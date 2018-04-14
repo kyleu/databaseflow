@@ -10,7 +10,10 @@ import scala.util.control.NonFatal
 
 object PostgresParseService extends PlanParseService("postgres") {
   override def parse(sql: String, queryId: UUID, plan: String, startMs: Long) = {
-    val json = parseJson(plan).right.get
+    val json = parseJson(plan) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
     val ret = json match {
       case a if a.isArray => if (a.asArray.get.length == 1) {
         a.asArray.get.headOption match {

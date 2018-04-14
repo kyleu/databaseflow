@@ -28,7 +28,10 @@ class ExportController @javax.inject.Inject() (override val ctx: ApplicationCont
     val sourceJson = form.getOrElse("source", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "resultId")(
       request.lang(ctx.messagesApi)
     )))
-    val source = parseJson(sourceJson).right.get.as[QueryResult.Source].right.get
+    val source = decodeJson[QueryResult.Source](sourceJson) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
     val format = form.getOrElse("format", throw new IllegalArgumentException(messagesApi("error.missing.parameter", "format")(request.lang(ctx.messagesApi))))
 
     send(Some(request.identity), connectionId, source, format, request.lang(ctx.messagesApi))

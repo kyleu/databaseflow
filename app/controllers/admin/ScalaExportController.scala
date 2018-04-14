@@ -71,7 +71,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         )
 
         val x = config.asJson.spaces2
-        s"./tmp/$schemaId.txt".toFile.overwrite(x)
+        s"./tmp/$schemaId.json".toFile.overwrite(x)
 
         ScalaExportService(config).export(persist = true).map { result =>
           Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
@@ -83,9 +83,12 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
   private[this] def getConfig(schema: Schema) = {
     val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
-    val f = s"./tmp/$schemaId.txt".toFile
+    val f = s"./tmp/$schemaId.json".toFile
     if (f.exists) {
-      ScalaExportHelper.merge(schema, decodeJson[ExportConfiguration](f.contentAsString).right.get)
+      ScalaExportHelper.merge(schema, decodeJson[ExportConfiguration](f.contentAsString) match {
+        case Right(x) => x
+        case Left(x) => throw x
+      })
     } else {
       ExportConfigurationDefault.forSchema(schemaId, schema)
     }
