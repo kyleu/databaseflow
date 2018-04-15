@@ -22,8 +22,12 @@ object OpenApiPathsFile {
     file.add("\"post\": {", 1)
     addCreate(model, file)
     file.add("}", -1)
-    file.add("},", -1)
 
+    if(model.pkFields.isEmpty && model.foreignKeys.isEmpty) {
+      file.add("}", -1)
+    } else {
+      file.add("},", -1)
+    }
     if (model.pkFields.nonEmpty) {
       val pkPath = model.pkFields.map("{" + _.propertyName + "}").mkString("/")
       file.add(s""""$route/$pkPath": {""", 1)
