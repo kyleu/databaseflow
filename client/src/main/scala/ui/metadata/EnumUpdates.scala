@@ -4,7 +4,7 @@ import models.schema.{EnumType, Procedure}
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.{EnumManager, ProcedureManager}
-import util.TemplateUtils
+import util.{StringKeyUtils, TemplateUtils}
 
 object EnumUpdates {
   var enums: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -30,7 +30,7 @@ object EnumUpdates {
       $("#enum-list-toggle").css("display", "none")
     }
     enums = Some(es.map { x =>
-      val el = $("#enum-link-" + TemplateUtils.cleanForId(x.key))
+      val el = $("#enum-link-" + StringKeyUtils.cleanName(x.key))
       (x.key, el, $("span", el))
     })
 

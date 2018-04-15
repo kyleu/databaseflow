@@ -29,8 +29,7 @@ object ViewManager extends ViewDetailHelper {
       queryId
     case None =>
       val queryId = UUID.randomUUID
-      val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-      WorkspaceManager.append(ViewDetailTemplate.forView(engine, queryId, name).toString)
+      WorkspaceManager.append(ViewDetailTemplate.forView(MetadataManager.getEngine, queryId, name).toString)
 
       MetadataManager.schema.flatMap(_.views.find(_.name == name)) match {
         case Some(view) if view.columns.nonEmpty => setViewDetails(queryId, view)
@@ -59,7 +58,7 @@ object ViewManager extends ViewDetailHelper {
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, title)
 
-        val sql = EngineQueries.selectFrom(name, Nil, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))._1
+        val sql = EngineQueries.selectFrom(name, Nil, RowDataOptions.empty)(MetadataManager.getEngine)._1
         NetworkMessage.sendMessage(SubmitQuery(queryId = queryId, sql = sql, params = Seq.empty, action = Some(action), resultId = resultId))
       })
 

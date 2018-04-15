@@ -5,7 +5,7 @@ import models.schema.Table
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.TableManager
-import util.TemplateUtils
+import util.{StringKeyUtils, TemplateUtils}
 
 object TableUpdates {
   var tables: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -31,7 +31,7 @@ object TableUpdates {
       $("#table-list-toggle").css("display", "none")
     }
     tables = Some(ts.map { x =>
-      val el = $("#table-link-" + TemplateUtils.cleanForId(x.name))
+      val el = $("#table-link-" + StringKeyUtils.cleanName(x.name))
       (x.name, el, $("span", el))
     })
 

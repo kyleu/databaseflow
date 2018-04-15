@@ -6,13 +6,14 @@ import models.schema.{ColumnType, FilterOp, ForeignKey, Table}
 import sangria.schema.{Context, Field, ObjectType, OptionType, Projector}
 import services.query.QueryResultRowService
 import util.FutureUtils.defaultContext
+import util.StringKeyUtils
 
 object ForeignKeyGraphQL {
   def getForeignKeyField(schema: models.schema.Schema, src: Table, tgt: ObjectType[GraphQLContext, QueryResultRow], notNull: Boolean, fk: ForeignKey) = {
     val fkName = if (src.columns.exists(_.name == fk.name)) {
-      "fk_" + CommonGraphQL.cleanName(fk.name)
+      "fk_" + StringKeyUtils.cleanName(fk.name)
     } else {
-      CommonGraphQL.cleanName(fk.name)
+      StringKeyUtils.cleanName(fk.name)
     }
 
     def getFilters(ctx: Context[GraphQLContext, QueryResultRow]) = fk.references.map(r => QueryFilter(

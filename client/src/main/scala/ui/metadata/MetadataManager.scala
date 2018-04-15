@@ -13,7 +13,8 @@ import ui.query._
 import util.{NetworkMessage, TemplateUtils}
 
 object MetadataManager {
-  var engine: Option[DatabaseEngine] = None
+  private[this] var engine: Option[DatabaseEngine] = None
+  def getEngine = engine.getOrElse(throw new IllegalStateException("No engine."))
   var schema: Option[Schema] = None
   var pendingRefresh = false
 
@@ -83,8 +84,8 @@ object MetadataManager {
     EnumUpdates.updateEnums(sch.enums, fullSchema)
     sch.enums.foreach(EnumManager.addEnum)
 
-    schema = Some(sch)
     engine = Some(DatabaseEngine.withName(sch.engine))
+    schema = Some(sch)
 
     if (sch.tables.isEmpty) {
       NotificationService.error("No Content", "There are no tables or views.")

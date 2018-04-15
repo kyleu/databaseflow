@@ -34,8 +34,6 @@ object TemplateUtils {
     el.text(moment.fromNow().toString)
   }
 
-  def cleanForId(s: String) = s.replaceAllLiterally("$", "")
-
   def toIsoString(l: Long) = new scalajs.js.Date(l.toDouble).toISOString
 
   def toTimeago(dt: String) = time(cls := "timeago", title := dt, attr("datetime") := dt)(dt)

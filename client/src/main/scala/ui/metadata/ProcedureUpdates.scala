@@ -4,7 +4,7 @@ import models.schema.Procedure
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ProcedureManager
-import util.TemplateUtils
+import util.{StringKeyUtils, TemplateUtils}
 
 object ProcedureUpdates {
   var procedures: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -30,7 +30,7 @@ object ProcedureUpdates {
       $("#procedure-list-toggle").css("display", "none")
     }
     procedures = Some(ps.map { x =>
-      val el = $("#procedure-link-" + TemplateUtils.cleanForId(x.name))
+      val el = $("#procedure-link-" + StringKeyUtils.cleanName(x.name))
       (x.name, el, $("span", el))
     })
 

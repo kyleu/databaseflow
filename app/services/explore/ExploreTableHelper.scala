@@ -6,6 +6,7 @@ import models.schema.{SchemaModelGraphQL, Table}
 import sangria.execution.deferred.HasId
 import sangria.schema._
 import services.query.QueryResultRowService
+import util.StringKeyUtils
 
 object ExploreTableHelper {
   val emptyObjectType = ObjectType(
@@ -40,7 +41,7 @@ object ExploreTableHelper {
 
       tableTypes = Some(schemaTables.map { table =>
         table -> ObjectType(
-          name = CommonGraphQL.cleanName(table.name),
+          name = StringKeyUtils.cleanName(table.name),
           description = table.description.getOrElse(s"Table [${table.name}]"),
           fieldsFn = () => tableFieldset(table)
         )
@@ -50,7 +51,7 @@ object ExploreTableHelper {
         val types = tableTypes.getOrElse(throw new IllegalStateException("No available table types."))
         fields[GraphQLContext, Unit](types.map { t =>
           Field(
-            name = CommonGraphQL.cleanName(t._1.name),
+            name = StringKeyUtils.cleanName(t._1.name),
             fieldType = ListType(t._2),
             description = t._1.description,
             arguments = QueryResultGraphQL.resultArgs,

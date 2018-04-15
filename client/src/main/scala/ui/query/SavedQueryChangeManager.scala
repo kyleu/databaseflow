@@ -20,9 +20,8 @@ trait SavedQueryChangeManager {
   var usernameMap = Map.empty[UUID, String]
 
   protected[this] def addSavedQuery(savedQuery: SavedQuery) = {
-    val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
     val userId = UserManager.userId.getOrElse(throw new IllegalStateException("Missing user details."))
-    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(engine, savedQuery, userId).toString)
+    QueryManager.workspace.append(QueryEditorTemplate.forSavedQuery(MetadataManager.getEngine, savedQuery, userId).toString)
 
     def close() = if (QueryManager.activeQueries.contains(savedQuery.id)) {
       if (QueryManager.closeQuery(savedQuery.id)) {

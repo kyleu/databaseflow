@@ -33,7 +33,7 @@ object AdHocQueryManager {
           ""
         } else {
           val t = s.tables(Random.nextInt(s.tables.size)).name
-          EngineQueries.selectFrom(t, Nil, RowDataOptions.empty)(MetadataManager.engine.getOrElse(throw new IllegalStateException("No engine.")))._1
+          EngineQueries.selectFrom(t, Nil, RowDataOptions.empty)(MetadataManager.getEngine)._1
         }
       }.getOrElse("")
     }
@@ -42,8 +42,7 @@ object AdHocQueryManager {
   }
 
   def addAdHocQuery(queryId: UUID, queryName: String, sql: String): Unit = {
-    val engine = MetadataManager.engine.getOrElse(throw new IllegalStateException("No Engine"))
-    val html = QueryEditorTemplate.forAdHocQuery(engine, queryId, queryName, sql)
+    val html = QueryEditorTemplate.forAdHocQuery(MetadataManager.getEngine, queryId, queryName, sql)
     QueryManager.workspace.append(html.render)
 
     def close() = if (QueryManager.activeQueries.contains(queryId)) {

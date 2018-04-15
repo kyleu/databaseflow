@@ -4,7 +4,7 @@ import models.schema.View
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ViewManager
-import util.TemplateUtils
+import util.{StringKeyUtils, TemplateUtils}
 
 object ViewUpdates {
   var views: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -30,7 +30,7 @@ object ViewUpdates {
       $("#view-list-toggle").css("display", "none")
     }
     views = Some(vs.map { x =>
-      val el = $("#view-link-" + TemplateUtils.cleanForId(x.name))
+      val el = $("#view-link-" + StringKeyUtils.cleanName(x.name))
       (x.name, el, $("span", el))
     })
 

@@ -8,13 +8,6 @@ import sangria.validation.ValueCoercionViolation
 import scala.util.{Failure, Success, Try}
 
 object CommonGraphQL {
-  private[this] def badChars = Seq(" " -> "_", "." -> "_", "(" -> "", ")" -> "", "#" -> "", "!" -> "")
-
-  def cleanName(s: String) = {
-    val swapped = badChars.foldLeft(s)((l, r) => l.replaceAllLiterally(r._1, r._2))
-    if (swapped.head.isLetter) { swapped } else { "_" + swapped }
-  }
-
   case object ShortCoercionViolation extends ValueCoercionViolation("Short value expected in the range of a 16-bit number.")
   case object UuidCoercionViolation extends ValueCoercionViolation("UUID value expected in format [00000000-0000-0000-0000-000000000000].")
   case object Base64CoercionViolation extends ValueCoercionViolation("Base64-encoded value expected.")

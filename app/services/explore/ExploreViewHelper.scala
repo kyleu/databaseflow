@@ -6,6 +6,7 @@ import models.result.QueryResultRow
 import models.schema.SchemaModelGraphQL
 import sangria.schema._
 import services.query.QueryResultRowService
+import util.StringKeyUtils
 
 object ExploreViewHelper {
   def getViews(schema: models.schema.Schema) = {
@@ -17,12 +18,12 @@ object ExploreViewHelper {
         val fieldset = fields[GraphQLContext, QueryResultRow](view.columns.map { col =>
           ColumnGraphQL.getColumnField(col.name, col.description, col.columnType, col.notNull, col.sqlTypeName)
         }: _*)
-        view -> ObjectType(name = CommonGraphQL.cleanName(view.name), description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
+        view -> ObjectType(name = StringKeyUtils.cleanName(view.name), description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
       }
 
       val viewFields = fields[GraphQLContext, Unit](viewTypes.map { v =>
         Field(
-          name = CommonGraphQL.cleanName(v._1.name),
+          name = StringKeyUtils.cleanName(v._1.name),
           fieldType = ListType(v._2),
           description = v._1.description,
           resolve = (x: Context[GraphQLContext, Unit]) => {
