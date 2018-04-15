@@ -43,8 +43,10 @@ object ControllerFile {
     file.add()
     file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
     file.add("svc.create(request, modelForm(request.body)).map {", 1)
-    val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
-    if (model.pkFields.nonEmpty) {
+    if (model.pkFields.isEmpty) {
+      file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
+    } else {
+      val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
       file.add(s"case Some(model) => Redirect(${model.routesClass}.view($viewArgs))")
     }
     file.add(s"case None => Redirect(${model.routesClass}.list())")
