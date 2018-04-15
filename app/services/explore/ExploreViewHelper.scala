@@ -15,14 +15,14 @@ object ExploreViewHelper {
     } else {
       val viewTypes = schemaViews.map { view =>
         val fieldset = fields[GraphQLContext, QueryResultRow](view.columns.map { col =>
-          ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull, col.sqlTypeName)
+          ColumnGraphQL.getColumnField(col.name, col.description, col.columnType, col.notNull, col.sqlTypeName)
         }: _*)
-        view -> ObjectType(name = view.name, description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
+        view -> ObjectType(name = CommonGraphQL.cleanName(view.name), description = view.description.getOrElse(s"View [${view.name}]"), fields = fieldset)
       }
 
       val viewFields = fields[GraphQLContext, Unit](viewTypes.map { v =>
         Field(
-          name = v._1.name,
+          name = CommonGraphQL.cleanName(v._1.name),
           fieldType = ListType(v._2),
           description = v._1.description,
           resolve = (x: Context[GraphQLContext, Unit]) => {

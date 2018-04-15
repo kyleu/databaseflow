@@ -23,7 +23,7 @@ object OpenApiPathsFile {
     addCreate(model, file)
     file.add("}", -1)
 
-    if(model.pkFields.isEmpty && model.foreignKeys.isEmpty) {
+    if (model.pkFields.isEmpty && model.foreignKeys.isEmpty) {
       file.add("}", -1)
     } else {
       file.add("},", -1)

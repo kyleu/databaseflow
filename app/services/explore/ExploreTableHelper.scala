@@ -27,7 +27,7 @@ object ExploreTableHelper {
 
       def tableFieldset(src: Table) = {
         val columnFields = src.columns.map { col =>
-          ColumnGraphQL.getColumnField(CommonGraphQL.cleanName(col.name), col.name, col.description, col.columnType, col.notNull, col.sqlTypeName)
+          ColumnGraphQL.getColumnField(col.name, col.description, col.columnType, col.notNull, col.sqlTypeName)
         }
         val fkFields = src.foreignKeys.map { fk =>
           val types = tableTypes.getOrElse(throw new IllegalStateException("No available table types."))
@@ -50,7 +50,7 @@ object ExploreTableHelper {
         val types = tableTypes.getOrElse(throw new IllegalStateException("No available table types."))
         fields[GraphQLContext, Unit](types.map { t =>
           Field(
-            name = t._1.name,
+            name = CommonGraphQL.cleanName(t._1.name),
             fieldType = ListType(t._2),
             description = t._1.description,
             arguments = QueryResultGraphQL.resultArgs,
