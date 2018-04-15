@@ -34,7 +34,7 @@ object ServiceInserts {
     file.add(s"""def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = traceF("create") { td =>""", 1)
     file.add(s"""ApplicationDatabase.executeF($queriesFilename.create(fields))(td).flatMap { _ =>""", 1)
     model.pkFields match {
-      case Nil => file.add(s"None: Option[${model.className}]")
+      case Nil => file.add(s"Future.successful(None: Option[${model.className}])")
       case pk =>
         val lookup = pk.map(k => k.fromString(s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
         if (model.audited) {

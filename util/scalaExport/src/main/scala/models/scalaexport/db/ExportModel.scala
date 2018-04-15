@@ -49,7 +49,7 @@ case class ExportModel(
   val searchFields = fields.filter(_.inSearch)
 
   val pkgString = pkg.mkString(".")
-  val summaryFields = fields.filter(_.inSummary)
+  val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
 
   val viewPackage = "views" +: "admin" +: pkg
   val viewHtmlPackage = "views" +: "html" +: "admin" +: pkg

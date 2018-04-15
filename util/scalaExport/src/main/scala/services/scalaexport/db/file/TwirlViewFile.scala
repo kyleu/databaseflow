@@ -63,10 +63,13 @@ object TwirlViewFile {
     file.add("</tbody>", -1)
     file.add("</table>", -1)
     file.add("</div>", -1)
-    val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
-    file.add(s"""@views.html.admin.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
-    if (model.audited) {
-      file.add(s"""@views.html.admin.audit.auditRecords(auditRecords, "${model.propertyName}", "${model.title}", $modelPks)""")
+
+    if (model.pkFields.nonEmpty) {
+      val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
+      file.add(s"""@views.html.admin.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
+      if (model.audited) {
+        file.add(s"""@views.html.admin.audit.auditRecords(auditRecords, "${model.propertyName}", "${model.title}", $modelPks)""")
+      }
     }
     file.add("</div>", -1)
     addReferences(config, model, file)
