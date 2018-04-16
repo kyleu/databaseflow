@@ -21,7 +21,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
   def exportThrift(conn: String, filename: Option[String]) = withAdminSession("export.form") { implicit request =>
     ConnectionSettingsService.connFor(conn) match {
       case Some(cs) => filename match {
-        case Some(fn) => SchemaService.getSchemaWithDetails(cs).map { schema =>
+        case Some(fn) => SchemaService.getSchemaWithDetails(None, cs).map { schema =>
           val config = getConfig(schema)
           ExportFiles.prepareRoot()
           val flags = Set("rest", "graphql", "extras")
@@ -38,7 +38,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
   def exportForm(conn: String) = withAdminSession("export.form") { implicit request =>
     ConnectionSettingsService.connFor(conn) match {
-      case Some(cs) => SchemaService.getSchemaWithDetails(cs).map { schema =>
+      case Some(cs) => SchemaService.getSchemaWithDetails(None, cs).map { schema =>
         Ok(views.html.admin.scalaExport.schemaForm(request.identity, cs, getConfig(schema), schema))
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")
@@ -49,7 +49,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     val form = FormUtils.getForm(request)
 
     ConnectionSettingsService.connFor(conn) match {
-      case Some(cs) => SchemaService.getSchemaWithDetails(cs).flatMap { schema =>
+      case Some(cs) => SchemaService.getSchemaWithDetails(None, cs).flatMap { schema =>
         val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
         val enums = schema.enums.map { e =>
           ScalaExportHelper.enumFor(e, form.filter(_._1.startsWith("enum." + e.key)).map(x => x._1.stripPrefix("enum." + e.key + ".") -> x._2))

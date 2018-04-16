@@ -10,7 +10,7 @@ import scala.concurrent.Await
 object ExploreService {
   def exploreType(cs: ConnectionSettings) = {
     import scala.concurrent.duration._
-    val f = SchemaService.getSchemaWithDetails(cs)
+    val f = SchemaService.getSchemaWithDetails(None, cs)
     val schema = Await.result(f, 600.seconds)
 
     val tables = ExploreTableHelper.getTables(schema)

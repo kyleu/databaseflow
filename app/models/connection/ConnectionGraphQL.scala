@@ -33,13 +33,13 @@ object ConnectionGraphQL {
       name = "explore",
       description = Some("Database objects in an easily-explored graph for this connection."),
       fieldType = ExploreService.exploreType(cs),
-      resolve = c => SchemaService.getSchemaWithDetailsFor(c.ctx.user, cs)
+      resolve = c => SchemaService.getSchemaWithDetails(Some(c.ctx.user), cs)
     ),
     Field(
       name = "schema",
       description = Some("Returns the database schema that defines this connection."),
       fieldType = SchemaGraphQL.schemaType,
-      resolve = c => SchemaService.getSchemaWithDetailsFor(c.ctx.user, cs)
+      resolve = c => SchemaService.getSchemaWithDetails(Some(c.ctx.user), cs)
     ),
     Field(
       name = "sharedResult",

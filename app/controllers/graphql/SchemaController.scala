@@ -29,7 +29,7 @@ class SchemaController @javax.inject.Inject() (override val ctx: ApplicationCont
 
   def json(connection: String) = withSession("schema.json") { implicit request =>
     ConnectionSettingsService.connFor(connection) match {
-      case Some(c) => SchemaService.getSchemaWithDetails(c).map { s =>
+      case Some(c) => SchemaService.getSchemaWithDetails(None, c).map { s =>
         val jsVal = SchemaResponse(s).asInstanceOf[ResponseMessage].asJson.spaces2
         Ok(jsVal).as("application/json")
       }

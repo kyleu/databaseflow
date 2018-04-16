@@ -43,33 +43,25 @@ object SchemaService extends Logging {
     }
   }
 
-  def getSchemaWithDetails(cs: ConnectionSettings) = {
-    val db = DatabaseRegistry.databaseFor(cs.id) match {
+  def getSchemaWithDetails(u: Option[User], cs: ConnectionSettings) = {
+    val db = (u match {
+      case Some(user) => DatabaseRegistry.databaseForUser(user, cs.id)
+      case None => DatabaseRegistry.databaseFor(cs.id)
+    }) match {
       case Left(ex) => throw ex
       case Right(x) => x
     }
-    getSchema(db) match {
+
+    (u match {
+      case Some(user) => Try(getSchemaFor(user, cs))
+      case None => getSchema(db)
+    }) match {
       case Success(schema) if schema.detailsLoadedAt.isDefined => Future.successful(schema)
       case Success(_) =>
         val promise = Promise[Schema]()
         def onSuccess(s: Schema): Unit = promise.complete(Success(s))
         def onFailure(t: Throwable): Unit = promise.complete(Failure(t))
         SchemaRefreshService.refreshSchema(db, onSuccess, onFailure)
-        promise.future
-    }
-  }
-
-  def getSchemaWithDetailsFor(user: User, cs: ConnectionSettings) = {
-    getSchemaFor(user, cs) match {
-      case schema if schema.detailsLoadedAt.isDefined => Future.successful(schema)
-      case _ =>
-        val promise = Promise[Schema]()
-        def onSuccess(s: Schema): Unit = promise.complete(Success(s))
-        def onFailure(t: Throwable): Unit = promise.complete(Failure(t))
-        DatabaseRegistry.databaseForUser(user, cs.id) match {
-          case Left(ex) => throw ex
-          case Right(db) => SchemaRefreshService.refreshSchema(db, onSuccess, onFailure)
-        }
         promise.future
     }
   }
