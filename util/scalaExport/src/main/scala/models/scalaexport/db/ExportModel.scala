@@ -11,9 +11,7 @@ object ExportModel {
     implicit val jsonDecoder: Decoder[Reference] = deriveDecoder
   }
 
-  case class Reference(name: String, srcTable: String, srcCol: String, tgt: String, notNull: Boolean) {
-    val propertyName = ExportHelper.toIdentifier(name)
-  }
+  case class Reference(name: String, propertyName: String = "", srcTable: String, srcCol: String, tgt: String, notNull: Boolean)
 
   implicit val jsonEncoder: Encoder[ExportModel] = deriveEncoder
   implicit val jsonDecoder: Decoder[ExportModel] = deriveDecoder

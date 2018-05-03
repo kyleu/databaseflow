@@ -16,7 +16,7 @@ object SchemaReferencesHelper {
         file.addImport(srcModel.modelPackage.mkString("."), srcModel.className + "Schema")
       }
       file.add("Field(", 1)
-      file.add(s"""name = "${ref._1.name}",""")
+      file.add(s"""name = "${ref._1.propertyName}",""")
       file.add(s"""fieldType = ListType(${srcModel.className}Schema.${srcModel.propertyName}Type),""")
 
       val relationRef = s"${srcModel.className}Schema.${srcModel.propertyName}By${srcField.className}"

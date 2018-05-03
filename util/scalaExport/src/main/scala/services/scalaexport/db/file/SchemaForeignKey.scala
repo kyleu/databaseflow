@@ -59,10 +59,10 @@ object SchemaForeignKey {
         if (targetTable.pkg != model.pkg) { file.addImport(targetTable.modelPackage.mkString("."), targetTable.className + "Schema") }
 
         file.add("Field(", 1)
-        file.add(s"""name = "${fields.map(_.propertyName).mkString}Rel",""")
 
         fields match {
           case field :: Nil =>
+            file.add(s"""name = "${if (field.fkNameOverride.isEmpty) { field.propertyName + "Rel" } else { field.fkNameOverride }}",""")
             if (field.notNull) {
               file.add(s"""fieldType = ${targetTable.className}Schema.${targetTable.propertyName}Type,""")
             } else {
