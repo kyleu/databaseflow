@@ -3,6 +3,7 @@ package services.scalaexport.db.file
 import models.scalaexport.db.ExportModel
 import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.file.ScalaFile
+import services.scalaexport.ExportHelper
 
 object SchemaFile {
   val resultArgs = "paging = r.paging, filters = r.args.filters, orderBys = r.args.orderBys, totalCount = r.count, results = r.results, durationMs = r.dur"
@@ -72,15 +73,26 @@ object SchemaFile {
   }
 
   private[this] def addQueryFields(model: ExportModel, file: ScalaFile) = {
-    file.add("val queryFields = fields[GraphQLContext, Unit](Field(", 1)
+    file.add("val queryFields = fields[GraphQLContext, Unit](", 1)
 
-    file.add(s"""name = "${model.propertyName}",""")
+    if (model.pkFields.nonEmpty) {
+      file.add("Field(", 1)
+      file.add(s"""name = "${model.propertyName}",""")
+      file.add(s"fieldType = OptionType(${model.propertyName}Type),")
+      val args = model.pkFields.map(pkField => s"${model.propertyName}${pkField.className}Arg")
+      file.add(s"arguments = ${args.map(_ + " :: ").mkString}Nil,")
+      file.add(s"""resolve = c => traceF(c.ctx, "getByPrimaryKey")(td => c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.args.arg($a)").mkString(", ")})(td))""")
+      file.add("),", -1)
+    }
+
+    file.add("Field(", 1)
+    file.add(s"""name = "${ExportHelper.toIdentifier(model.plural)}",""")
     file.add(s"fieldType = ${model.propertyName}ResultType,")
     file.add(s"arguments = queryArg :: reportFiltersArg :: orderBysArg :: limitArg :: offsetArg :: Nil,")
-
     val args = s"td => runSearch(c.ctx.${model.serviceReference}, c, td).map(toResult)"
     file.add(s"""resolve = c => traceF(c.ctx, "search")($args)""")
+    file.add(")", -1)
 
-    file.add("))", -1)
+    file.add(")", -1)
   }
 }

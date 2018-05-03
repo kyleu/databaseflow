@@ -76,7 +76,7 @@ object ExportConfigurationDefault {
       fields = loadFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
       foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
-      references = ExportConfigurationHelper.references(schema, t),
+      references = ExportConfigurationHelper.references(schema, t, Map.empty),
       audited = audited,
       provided = provided
     )

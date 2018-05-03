@@ -10,7 +10,7 @@ object ExportConfigurationHelper {
     })
   }
 
-  def references(schema: Schema, t: Table) = {
+  def references(schema: Schema, t: Table, form: Map[String, String]) = {
     val referencingTables = schema.tables.filter(tbl => tbl.name != t.name && tbl.foreignKeys.exists(_.targetTable == t.name))
 
     referencingTables.toList.flatMap { refTable =>
@@ -19,6 +19,7 @@ object ExportConfigurationHelper {
           case Nil => Nil // noop
           case ref :: Nil =>
             val name = fk.name match {
+              case x if form.get(s"ref.$x.propertyName").exists(_.trim.nonEmpty) => form(s"ref.$x.propertyName").trim
               case x if t.columns.exists(_.name == x) => x + "FK"
               case x => x
             }

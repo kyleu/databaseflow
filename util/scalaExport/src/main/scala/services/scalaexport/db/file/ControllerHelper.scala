@@ -85,11 +85,11 @@ object ControllerHelper {
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
         file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
 
-        file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")
         file.add(s"case MimeTypes.HTML => Ok(${model.viewHtmlPackage.mkString(".")}.${model.propertyName}By$propCls(", 1)
         file.add(s"""request.identity, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
         file.add("))", -1)
         file.add(s"case MimeTypes.JSON => Ok(models.asJson)")
+        file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")
         file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = models)).as(ServiceController.MimeTypes.png)")
         file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(ServiceController.MimeTypes.svg)")
 
