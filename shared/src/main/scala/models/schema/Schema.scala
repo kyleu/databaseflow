@@ -31,6 +31,8 @@ case class Schema(
 
     detailsLoadedAt: Option[Long] = None
 ) {
+  val id = catalog.orElse(schemaName).getOrElse(username)
+
   def getTable(name: String) = tables.find(_.name.equalsIgnoreCase(name))
   def getView(name: String) = views.find(_.name.equalsIgnoreCase(name))
   def getProcedure(name: String) = procedures.find(_.name.equalsIgnoreCase(name))

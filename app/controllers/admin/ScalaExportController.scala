@@ -50,12 +50,11 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
     ConnectionSettingsService.connFor(conn) match {
       case Some(cs) => SchemaService.getSchemaWithDetails(None, cs).flatMap { schema =>
-        val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
         val enums = schema.enums.map { e =>
           ScalaExportHelper.enumFor(e, form.filter(_._1.startsWith("enum." + e.key)).map(x => x._1.stripPrefix("enum." + e.key + ".") -> x._2))
         }
         val config = ExportConfiguration(
-          key = schemaId,
+          key = ExportHelper.toIdentifier(schema.id),
           projectId = form("project.id"),
           projectTitle = form("project.title"),
           flags = form.getOrElse("project.flags", "").split(',').map(_.trim).filterNot(_.isEmpty).toSet,
@@ -71,7 +70,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         )
 
         val x = config.asJson.spaces2
-        s"./tmp/$schemaId.json".toFile.overwrite(x)
+        val f = s"./tmp/${schema.id}.json".toFile
+        f.overwrite(x)
 
         ScalaExportService(config).export(persist = true).map { result =>
           Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
@@ -81,9 +81,18 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     }
   }
 
-  private[this] def getConfig(schema: Schema) = {
+  private[this] def getConfig(schema: Schema): ExportConfiguration = {
     val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
-    val f = s"./tmp/$schemaId.json".toFile
+
+    val overrides = "./tmp/locations.txt".toFile.lines.map { l =>
+      l.split('=').toList match {
+        case h :: t :: Nil => h.trim -> t.trim
+        case _ => throw new IllegalStateException(s"Unhandled line [$l].")
+      }
+    }.toMap
+
+    val f = (if (overrides.contains(schemaId)) { overrides(schemaId) + "/databaseflow.json" } else { s"./tmp/$schemaId.json" }).toFile
+
     if (f.exists) {
       ScalaExportHelper.merge(schema, decodeJson[ExportConfiguration](f.contentAsString) match {
         case Right(x) => x
