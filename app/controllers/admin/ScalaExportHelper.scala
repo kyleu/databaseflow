@@ -17,7 +17,7 @@ object ScalaExportHelper {
       config.getModelOpt(t.name) match {
         case Some(m) =>
           val fields = t.columns.zipWithIndex.map { c =>
-            m.fields.find(_.columnName == c._1.name).getOrElse(ExportConfigurationDefault.loadField(c._1, c._2, enums = config.enums))
+            m.fields.find(_.columnName == c._1.name).getOrElse(ExportConfigurationDefault.loadField(c._1, c._2, enums = enums))
           }
           m.copy(fields = fields.toList)
         case None => ExportConfigurationDefault.loadModel(schema, t, enums)

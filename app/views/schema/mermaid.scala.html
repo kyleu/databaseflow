@@ -1,0 +1,32 @@
+@(user: models.user.User, connectionId: String, connectionName: String, chartData: String)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, messages: Messages
+)@layout.simple(
+  user = Some(user),
+  title = connectionName + " Schema",
+  mainDivClass = "mermaid-container",
+  scripts = Seq(
+    routes.Assets.versioned("vendor/mermaid/mermaid.min.js").url,
+    routes.Assets.versioned("vendor/mermaid/svg-pan-zoom.min.js").url
+  ),
+  stylesheets = Seq(routes.Assets.versioned("stylesheets/mermaid.min.css").url)
+) {
+  <div class="mermaid">@Html(chartData)</div>
+  <script>
+    $(document).ready(function() {
+      mermaid.flowchartConfig = {
+        width: "100%"
+      };
+      mermaid.initialize({
+        theme: null,
+        themeCSS: "",
+        flowchart: {
+          //curve: 'basis'
+        }
+      });
+      setTimeout(function() {
+        svgPanZoom(".mermaid svg");
+      }, 2000)
+
+    });
+  </script>
+}

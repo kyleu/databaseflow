@@ -6,7 +6,8 @@ import services.scalaexport.ExportHelper
 import services.scalaexport.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 
 object ExportConfigurationDefault {
-  def forSchema(key: String, schema: Schema) = {
+  def forSchema(schema: Schema) = {
+    val key = ExportHelper.toIdentifier(schema.id)
     val enums = schema.enums.map { e =>
       val pkg = e.key match {
         case "setting_key" => List("settings")

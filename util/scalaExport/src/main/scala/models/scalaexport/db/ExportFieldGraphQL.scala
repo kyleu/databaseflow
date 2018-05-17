@@ -30,7 +30,7 @@ object ExportFieldGraphQL {
 
     case EnumType => field.enumOpt match {
       case Some(enum) => enum.propertyName + "EnumType"
-      case None => throw new IllegalStateException(s"Cannot load enum.")
+      case None => throw new IllegalStateException(s"Cannot load enum for field [${field.propertyName}].")
     }
     case CodeType => "StringType"
     case TagsType => "TagsType"

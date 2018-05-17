@@ -1,0 +1,174 @@
+// Variables
+@mainBkg: #fff;
+@secondBkg: #ddd;
+@lineColor: #333;
+@border1: #333;
+@border2: #aaa;
+@arrowheadColor: #333333;
+
+// Flowchart variables
+@nodeBkg: @mainBkg;
+@nodeBorder: #333;
+@clusterBkg: @secondBkg;
+@clusterBorder: @border2;
+@defaultLinkColor: @lineColor;
+@titleColor: #333;
+@edgeLabelBackground: #e8e8e8;
+
+
+// Flowchart
+.label {
+  font-family: "Roboto";
+  color: #333;
+}
+
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+  fill: @mainBkg;
+  stroke: @nodeBorder;
+  stroke-width: 1px;
+}
+
+.node.clickable {
+  cursor: pointer;
+}
+
+.arrowheadPath {
+  fill: @arrowheadColor;
+}
+
+.edgePath .path {
+  stroke: @lineColor;
+  stroke-width: 1.5px;
+}
+
+.edgeLabel {
+  background-color: @edgeLabelBackground;
+}
+
+.cluster rect {
+  fill: @secondBkg !important;
+  stroke: @clusterBorder !important;
+  stroke-width: 1px !important;
+}
+
+.cluster text {
+  fill: @titleColor;
+}
+
+div.mermaidTooltip {
+  position: absolute;
+  text-align: center;
+  max-width: 200px;
+  padding: 2px;
+  font-family: "Roboto";
+  font-size: 12px;
+  background: @secondBkg;
+  border: 1px solid @border2;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 100;
+}
+
+// Class
+g.classGroup text {
+  fill: @nodeBorder;
+  stroke: none;
+  font-family: "Roboto";
+  font-size: 10px;
+}
+
+g.classGroup rect {
+  fill: @nodeBkg;
+  stroke: @nodeBorder;
+}
+
+g.classGroup line {
+  stroke: @nodeBorder;
+  stroke-width: 1;
+}
+
+.classLabel .box {
+  stroke: none;
+  stroke-width: 0;
+  fill: @nodeBkg;
+  opacity: 0.5;
+}
+
+.classLabel .label {
+  fill: @nodeBorder;
+  font-size: 10px;
+}
+
+.relation {
+  stroke: @nodeBorder;
+  stroke-width: 1;
+  fill: none;
+}
+
+.composition {
+  fill: @nodeBorder;
+  stroke: @nodeBorder;
+  stroke-width: 1;
+}
+
+#compositionStart {
+  .composition;
+}
+
+#compositionEnd {
+  .composition;
+}
+
+.aggregation {
+  fill: @nodeBkg;
+  stroke: @nodeBorder;
+  stroke-width: 1;
+}
+
+#aggregationStart {
+  .aggregation;
+}
+
+#aggregationEnd {
+  .aggregation;
+}
+
+#dependencyStart {
+  .composition;
+}
+
+#dependencyEnd {
+  .composition;
+}
+
+#extensionStart {
+  .composition;
+}
+
+#extensionEnd {
+  .composition;
+}
+
+// Custom
+.mermaid-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.mermaid {
+  height: 100%;
+  svg {
+    height: 100%;
+  }
+  h6 {
+    font-size: 125%;
+    margin: 0 0 6px 0;
+  }
+  span {
+    float: right;
+    margin-left: 6px;
+  }
+}

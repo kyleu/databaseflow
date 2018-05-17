@@ -70,8 +70,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         )
 
         val x = config.asJson.spaces2
-        val f = s"./tmp/${schema.id}.json".toFile
-        f.overwrite(x)
+        configFileFor(schema).overwrite(x)
 
         ScalaExportService(config).export(persist = true).map { result =>
           Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
@@ -82,24 +81,25 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
   }
 
   private[this] def getConfig(schema: Schema): ExportConfiguration = {
-    val schemaId = ExportHelper.toIdentifier(schema.catalog.orElse(schema.schemaName).getOrElse(schema.username))
-
-    val overrides = "./tmp/locations.txt".toFile.lines.map { l =>
-      l.split('=').toList match {
-        case h :: t :: Nil => h.trim -> t.trim
-        case _ => throw new IllegalStateException(s"Unhandled line [$l].")
-      }
-    }.toMap
-
-    val f = (if (overrides.contains(schemaId)) { overrides(schemaId) + "/databaseflow.json" } else { s"./tmp/$schemaId.json" }).toFile
-
+    val f = configFileFor(schema)
     if (f.exists) {
       ScalaExportHelper.merge(schema, decodeJson[ExportConfiguration](f.contentAsString) match {
         case Right(x) => x
         case Left(x) => throw x
       })
     } else {
-      ExportConfigurationDefault.forSchema(schemaId, schema)
+      ExportConfigurationDefault.forSchema(schema)
     }
+  }
+
+  private[this] def configFileFor(schema: Schema) = {
+    val schemaId = ExportHelper.toIdentifier(schema.id)
+    val overrides = "./tmp/locations.txt".toFile.lines.map { l =>
+      l.split('=').toList match {
+        case h :: t :: Nil => h.trim -> t.trim
+        case _ => throw new IllegalStateException(s"Unhandled line [$l].")
+      }
+    }.toMap
+    (if (overrides.contains(schemaId)) { overrides(schemaId) + "/databaseflow.json" } else { s"./tmp/$schemaId.json" }).toFile
   }
 }

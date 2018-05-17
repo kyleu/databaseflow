@@ -12,6 +12,7 @@ GET         /c/:id                                   controllers.connection.Conn
 GET         /c/:id/delete                            controllers.connection.ConnectionSettingsController.delete(id: java.util.UUID)
 GET         /c/:id/cp                                controllers.connection.ConnectionSettingsController.copyConnection(id: java.util.UUID)
 POST        /c/:id/test                              controllers.connection.ConnectionTestController.test(id: java.util.UUID)
+GET         /c/:id/schema                            controllers.schema.SchemaController.chart(id)
 
 # Query Interface
 GET         /q/:conn                                 controllers.query.QueryController.main(conn)
