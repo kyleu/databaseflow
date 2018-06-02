@@ -73,25 +73,21 @@ object SchemaFile {
   }
 
   private[this] def addQueryFields(model: ExportModel, file: ScalaFile) = {
-    file.add("val queryFields = fields[GraphQLContext, Unit](", 1)
+    file.add("val queryFields = fields(", 1)
 
     if (model.pkFields.nonEmpty) {
-      file.add("Field(", 1)
-      file.add(s"""name = "${model.propertyName}",""")
-      file.add(s"fieldType = OptionType(${model.propertyName}Type),")
+      val idDesc = s"Retrieves a single ${model.title} using its primary key."
+      file.add(s"""unitField(name = "${model.propertyName}", desc = Some("$idDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
       val args = model.pkFields.map(pkField => s"${model.propertyName}${pkField.className}Arg")
-      file.add(s"arguments = ${args.map(_ + " :: ").mkString}Nil,")
-      file.add(s"""resolve = c => traceF(c.ctx, "getByPrimaryKey")(td => c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.args.arg($a)").mkString(", ")})(td))""")
-      file.add("),", -1)
+      file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.args.arg($a)").mkString(", ")})(td)""")
+      file.add(s"}, ${args.mkString(", ")}),", -1)
     }
 
-    file.add("Field(", 1)
-    file.add(s"""name = "${ExportHelper.toIdentifier(model.plural)}",""")
-    file.add(s"fieldType = ${model.propertyName}ResultType,")
-    file.add(s"arguments = queryArg :: reportFiltersArg :: orderBysArg :: limitArg :: offsetArg :: Nil,")
-    val args = s"td => runSearch(c.ctx.${model.serviceReference}, c, td).map(toResult)"
-    file.add(s"""resolve = c => traceF(c.ctx, "search")($args)""")
-    file.add(")", -1)
+    val sd = s"Searches for ${model.plural} using the provided arguments."
+    val sn = ExportHelper.toIdentifier(model.plural)
+    file.add(s"""unitField(name = "$sn", desc = Some("$sd"), t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
+    file.add(s"""runSearch(c.ctx.${model.serviceReference}, c, td).map(toResult)""")
+    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)", -1)
 
     file.add(")", -1)
   }

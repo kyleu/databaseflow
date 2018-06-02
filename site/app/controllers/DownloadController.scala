@@ -13,28 +13,13 @@ object DownloadController {
 
 @javax.inject.Singleton
 class DownloadController @javax.inject.Inject() (implicit override val messagesApi: MessagesApi) extends BaseSiteController {
-  private[this] val baseUrl = s"https://github.com/KyleU/databaseflow/releases/download/v${DownloadController.version}/"
+  private[this] val url = s"https://github.com/KyleU/databaseflow/releases"
 
   def index() = act("download-index") { implicit request =>
-    val isAdmin = isAdminUser(request).isDefined
-    Future.successful(Ok(views.html.downloads(isAdmin)))
+    Future.successful(Redirect(url))
   }
 
   def download(filename: String) = act(s"download-$filename") { implicit request =>
-    val (isOk, platform) = filename match {
-      case "databaseflow.dmg" => true -> "macos"
-      case "databaseflow.jar" => true -> "jar"
-      case "databaseflow.pkg" => true -> "appstore"
-      case "databaseflow.windows.zip" => true -> "windows"
-      case "databaseflow.docker.gz" => true -> "docker"
-      case "databaseflow.universal.zip" => true -> "universal"
-      case x => false -> s"unknown:$x"
-    }
-    Future(DownloadService.add(request.remoteAddress, platform))
-    if (isOk) {
-      Future.successful(Redirect(baseUrl + filename))
-    } else {
-      Future.successful(NotFound(Html(s"<body>We're sorry, we couldn't find that download.<!-- $filename --></body>")))
-    }
+    Future.successful(Redirect(url))
   }
 }

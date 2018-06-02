@@ -15,43 +15,29 @@ object SchemaMutationHelper {
     file.add(s"val ${model.propertyName}MutationType = ObjectType(", 1)
     file.add(s"""name = "${model.className}Mutations",""")
     file.add(s"""description = "Mutations for ${model.plural}.",""")
-    file.add("fields = fields[GraphQLContext, Unit](", 1)
+    file.add("fields = fields(", 1)
 
-    file.add("Field(", 1)
-    file.add("name = \"create\",")
-    file.add(s"""description = Some("Creates a new ${model.title} using the provided fields."),""")
-    file.add(s"arguments = DataFieldSchema.dataFieldsArg :: Nil,")
-    file.add(s"fieldType = OptionType(${model.propertyName}Type),")
-    file.add(s"resolve = c => {", 1)
-    file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
-    file.add(s"""traceF(c.ctx, "create")(tn => c.ctx.${model.serviceReference}.create(c.ctx.creds, dataFields)(tn))""")
-    file.add("}", -1)
-    file.add("),", -1)
+    val createDesc = s"Creates a new ${model.title} using the provided fields."
+    file.add(s"""unitField(name = "create", desc = Some("$createDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
+    file.add(s"""c.ctx.${model.serviceReference}.create(c.ctx.creds, c.args.arg(DataFieldSchema.dataFieldsArg))(td)""")
+    file.add("}, DataFieldSchema.dataFieldsArg),", -1)
 
-    file.add("Field(", 1)
-    file.add("name = \"update\",")
-    file.add(s"""description = Some("Updates the ${model.title} with the provided $pkNames."),""")
-    file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: DataFieldSchema.dataFieldsArg :: Nil,")
-    file.add(s"fieldType = ${model.propertyName}Type,")
-    file.add(s"resolve = c => {", 1)
-    file.add("val dataFields = c.args.arg(DataFieldSchema.dataFieldsArg)")
-    file.add(s"""traceF(c.ctx, "update")(tn => c.ctx.${model.serviceReference}.update(c.ctx.creds, $argProps, dataFields)(tn).map(_._1))""")
-    file.add("}", -1)
-    file.add("),", -1)
+    val updateDesc = s"Updates the ${model.title} with the provided $pkNames."
+    file.add(s"""unitField(name = "update", desc = Some("$updateDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
+    file.add(s"""c.ctx.${model.serviceReference}.update(c.ctx.creds, $argProps, c.args.arg(DataFieldSchema.dataFieldsArg))(td).map(_._1)""")
+    file.add(s"}, ${pkArgs.mkString(", ")}, DataFieldSchema.dataFieldsArg),", -1)
 
-    file.add("Field(", 1)
-    file.add("name = \"remove\",")
-    file.add(s"""description = Some("Removes the ${model.title} with the provided id."),""")
-    file.add(s"arguments = ${pkArgs.mkString(" :: ")} :: Nil,")
-    file.add(s"fieldType = ${model.propertyName}Type,")
-    file.add(s"""resolve = c => traceF(c.ctx, "remove")(tn => c.ctx.${model.serviceReference}.remove(c.ctx.creds, $argProps)(tn))""")
-    file.add(")", -1)
+    val removeDesc = s"Removes the ${model.title} with the provided id."
+    file.add(s"""unitField(name = "remove", desc = Some("$removeDesc"), t = ${model.propertyName}Type, f = (c, td) => {""", 1)
+    file.add(s"""c.ctx.${model.serviceReference}.remove(c.ctx.creds, $argProps)(td)""")
+    file.add(s"}, ${pkArgs.mkString(", ")})", -1)
 
     file.add(")", -1)
     file.add(")", -1)
 
     file.add()
-    val fields = "fields[GraphQLContext, Unit]"
-    file.add(s"""val mutationFields = $fields(Field(name = "${model.propertyName}", fieldType = ${model.propertyName}MutationType, resolve = _ => ()))""")
+    file.addImport("scala.concurrent", "Future")
+    val t = model.propertyName + "MutationType"
+    file.add(s"""val mutationFields = fields(unitField(name = "${model.propertyName}", desc = None, t = $t, f = (c, td) => Future.successful(())))""")
   }
 }
