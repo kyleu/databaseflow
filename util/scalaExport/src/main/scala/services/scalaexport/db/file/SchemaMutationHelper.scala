@@ -7,7 +7,7 @@ object SchemaMutationHelper {
   def addMutationFields(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
     val pkNames = model.pkFields.map(_.propertyName).mkString(", ")
     val pkArgs = model.pkFields.map(pk => model.propertyName + pk.className + "Arg")
-    val argProps = pkArgs.map(arg => s"c.args.arg($arg)").mkString(", ")
+    val argProps = pkArgs.map(arg => s"c.arg($arg)").mkString(", ")
 
     file.addImport("models.result.data", "DataFieldSchema")
 
@@ -19,12 +19,12 @@ object SchemaMutationHelper {
 
     val createDesc = s"Creates a new ${model.title} using the provided fields."
     file.add(s"""unitField(name = "create", desc = Some("$createDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
-    file.add(s"""c.ctx.${model.serviceReference}.create(c.ctx.creds, c.args.arg(DataFieldSchema.dataFieldsArg))(td)""")
+    file.add(s"""c.ctx.${model.serviceReference}.create(c.ctx.creds, c.arg(DataFieldSchema.dataFieldsArg))(td)""")
     file.add("}, DataFieldSchema.dataFieldsArg),", -1)
 
     val updateDesc = s"Updates the ${model.title} with the provided $pkNames."
     file.add(s"""unitField(name = "update", desc = Some("$updateDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
-    file.add(s"""c.ctx.${model.serviceReference}.update(c.ctx.creds, $argProps, c.args.arg(DataFieldSchema.dataFieldsArg))(td).map(_._1)""")
+    file.add(s"""c.ctx.${model.serviceReference}.update(c.ctx.creds, $argProps, c.arg(DataFieldSchema.dataFieldsArg))(td).map(_._1)""")
     file.add(s"}, ${pkArgs.mkString(", ")}, DataFieldSchema.dataFieldsArg),", -1)
 
     val removeDesc = s"Removes the ${model.title} with the provided id."

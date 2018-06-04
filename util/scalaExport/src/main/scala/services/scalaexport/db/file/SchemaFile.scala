@@ -79,7 +79,7 @@ object SchemaFile {
       val idDesc = s"Retrieves a single ${model.title} using its primary key."
       file.add(s"""unitField(name = "${model.propertyName}", desc = Some("$idDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
       val args = model.pkFields.map(pkField => s"${model.propertyName}${pkField.className}Arg")
-      file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.args.arg($a)").mkString(", ")})(td)""")
+      file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.arg($a)").mkString(", ")})(td)""")
       file.add(s"}, ${args.mkString(", ")}),", -1)
     }
 
