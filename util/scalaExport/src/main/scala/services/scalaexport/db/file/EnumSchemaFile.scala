@@ -17,8 +17,7 @@ object EnumSchemaFile {
     file.add(s"""object ${enum.className}Schema extends SchemaHelper("${enum.propertyName}") {""", 1)
     file.add(s"implicit val ${enum.propertyName}EnumType: EnumType[${enum.className}] = CommonSchema.deriveStringEnumeratumType(", 1)
     file.add(s"""name = "${enum.className}",""")
-    file.add(s"""description = "An enumeration of ${enum.className} values.",""")
-    file.add(s"values = ${enum.className}.values.map(t => t -> t.value).toList")
+    file.add(s"values = ${enum.className}.values")
     file.add(")", -1)
     file.add()
 

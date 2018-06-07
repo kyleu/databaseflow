@@ -30,7 +30,7 @@ object ThriftServiceSchemaFile {
     file.add(")", -1)
     file.add(")", -1)
     file.add()
-    val objType = s"""ObjectType(name = "${service.name}", description = "Thrift service", fields = ${service.identifier}Fields)"""
+    val objType = s"""ObjectType(name = "${service.name}", fields = ${service.identifier}Fields)"""
     file.add(s"lazy val ${service.identifier}Type = $objType")
     file.add("}", -1)
 

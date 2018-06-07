@@ -20,7 +20,7 @@ object ThriftEnumSchemaFile {
     file.addImport("models.graphql.CommonSchema", s"derive${t}EnumeratumType")
     file.addImport("sangria.schema", "EnumType")
     file.add(s"""object ${name}Schema {""", 1)
-    file.add(s"""implicit val ${ExportHelper.toIdentifier(name)}Type: EnumType[$name] = derive${t}EnumeratumType("$name", "", $name.values.map(x => x -> x.toString))""")
+    file.add(s"""implicit val ${ExportHelper.toIdentifier(name)}Type: EnumType[$name] = derive${t}EnumeratumType("$name", $name.values)""")
     file.add("}", -1)
 
     file

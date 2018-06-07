@@ -74,6 +74,7 @@ case class ExportField(
   }).getOrElse(t.asScalaFull)
 
   val graphQlArgType = ExportFieldGraphQL.argType(this)
+  val graphQlSeqArgType = ExportFieldGraphQL.listArgType(this)
 
   val thriftType = ExportFieldThrift.thriftType(t, sqlTypeName, enumOpt)
   val thriftVisibility = if (notNull) { "required" } else { "optional" }

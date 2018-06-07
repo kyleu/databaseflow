@@ -46,4 +46,5 @@ object ExportFieldGraphQL {
   }
 
   def argType(field: ExportField) = if (field.notNull) { graphQLType(field) } else { "OptionInputType(" + graphQLType(field) + ")" }
+  def listArgType(field: ExportField) = "ListInputType(" + graphQLType(field) + ")"
 }

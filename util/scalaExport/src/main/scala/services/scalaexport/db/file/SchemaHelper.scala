@@ -39,7 +39,14 @@ object SchemaHelper {
   def addPrimaryKeyArguments(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
     model.pkFields.foreach { pkField =>
       val desc = s"Returns the ${model.title} matching the provided ${pkField.title}."
-      file.add(s"""val ${model.propertyName}${pkField.className}Arg = Argument("${pkField.propertyName}", ${pkField.graphQlArgType}, description = "$desc")""")
+      file.add(s"""val ${model.propertyName}${pkField.className}Arg = Argument("${pkField.propertyName}", ${pkField.graphQlArgType})""")
+    }
+    model.pkFields match {
+      case pkField :: Nil =>
+        val desc = s"Returns the ${model.plural} matching the provided primary keys."
+        val arg = s"""Argument("${pkField.propertyName}s", ${pkField.graphQlSeqArgType})"""
+        file.add(s"""val ${model.propertyName}${pkField.className}SeqArg = $arg""")
+      case _ => // noop
     }
     file.add()
   }

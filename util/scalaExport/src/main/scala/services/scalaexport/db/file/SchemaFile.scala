@@ -41,10 +41,6 @@ object SchemaFile {
       file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
     } else {
       file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
-      model.description.foreach {
-        case d if columnsDescriptions.isEmpty && references.isEmpty && model.foreignKeys.isEmpty => file.add(s"""ObjectTypeDescription("$d")""")
-        case d => file.add(s"""ObjectTypeDescription("$d"),""")
-      }
       columnsDescriptions.foreach {
         case d if columnsDescriptions.lastOption.contains(d) && references.isEmpty => file.add(d)
         case d => file.add(d + ",")
@@ -76,16 +72,23 @@ object SchemaFile {
     file.add("val queryFields = fields(", 1)
 
     if (model.pkFields.nonEmpty) {
-      val idDesc = s"Retrieves a single ${model.title} using its primary key."
-      file.add(s"""unitField(name = "${model.propertyName}", desc = Some("$idDesc"), t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
+      file.add(s"""unitField(name = "${model.propertyName}", desc = None, t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
       val args = model.pkFields.map(pkField => s"${model.propertyName}${pkField.className}Arg")
       file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.arg($a)").mkString(", ")})(td)""")
       file.add(s"}, ${args.mkString(", ")}),", -1)
     }
 
-    val sd = s"Searches for ${model.plural} using the provided arguments."
+    model.pkFields match {
+      case pkField :: Nil =>
+        file.add(s"""unitField(name = "${model.propertyName}Seq", desc = None, t = ListType(${model.propertyName}Type), f = (c, td) => {""", 1)
+        val arg = s"${model.propertyName}${pkField.className}SeqArg"
+        file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKeySeq(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"}, $arg),", -1)
+      case _ => // noop
+    }
+
     val sn = ExportHelper.toIdentifier(model.plural)
-    file.add(s"""unitField(name = "$sn", desc = Some("$sd"), t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
+    file.add(s"""unitField(name = "$sn", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
     file.add(s"""runSearch(c.ctx.${model.serviceReference}, c, td).map(toResult)""")
     file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)", -1)
 
