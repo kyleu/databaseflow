@@ -4,18 +4,18 @@ import models.scalaexport.db.ExportEnum
 import models.scalaexport.file.ScalaFile
 
 object EnumControllerFile {
-  def export(enum: ExportEnum) = {
+  def export(rootPrefix: String, enum: ExportEnum) = {
     val file = ScalaFile(enum.controllerPackage, enum.className + "Controller")
     file.addImport(enum.modelPackage.mkString("."), enum.className)
 
     file.addImport("controllers", "BaseController")
     file.addImport("scala.concurrent", "Future")
-    file.addImport("util.JsonSerializers", "_")
+    file.addImport(rootPrefix + "util.JsonSerializers", "_")
     file.addImport("controllers.admin", "ServiceController")
     file.addImport("play.twirl.api", "Html")
 
     file.add("@javax.inject.Singleton")
-    val constructorArgs = "@javax.inject.Inject() (override val app: models.Application)"
+    val constructorArgs = s"@javax.inject.Inject() (override val app: ${rootPrefix}models.Application)"
     file.add(s"""class ${enum.className}Controller $constructorArgs extends BaseController("${enum.propertyName}") {""", 1)
     file.add("import app.contexts.webContext")
     file.add()

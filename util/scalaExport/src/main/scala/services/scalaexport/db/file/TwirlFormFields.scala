@@ -5,8 +5,7 @@ import models.scalaexport.file.OutputFile
 import models.schema.{ColumnType, ForeignKey}
 
 object TwirlFormFields {
-
-  def fieldFor(model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
+  def fieldFor(rootPrefix: String, model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
     field.t match {
       case ColumnType.EnumType => file.add(s"@views.html.components.form.selectField(${enumArgsFor(field)})")
       case ColumnType.CodeType => file.add(s"@views.html.components.form.codeField(${argsFor(field)})")
@@ -14,7 +13,7 @@ object TwirlFormFields {
       case ColumnType.DateType => timeField(field, file, "Date")
       case ColumnType.TimeType => timeField(field, file, "Time")
       case ColumnType.TimestampType => timeField(field, file, "DateTime")
-      case _ if autocomplete.isDefined => autocompleteField(field, autocomplete.get, file)
+      case _ if autocomplete.isDefined => autocompleteField(rootPrefix, field, autocomplete.get, file)
       case _ => file.add(s"@views.html.components.form.textField(${argsFor(field)})")
     }
   }
@@ -48,11 +47,11 @@ object TwirlFormFields {
     file.add(s"@views.html.components.form.local${t}Field($args)")
   }
 
-  private[this] def autocompleteField(field: ExportField, autocomplete: (ForeignKey, ExportModel), file: OutputFile) = {
+  private[this] def autocompleteField(rootPrefix: String, field: ExportField, autocomplete: (ForeignKey, ExportModel), file: OutputFile) = {
     file.add(s"@views.html.components.form.autocompleteField(", 1)
     file.add(argsFor(field) + ",")
     val url = s"${autocomplete._2.routesClass}.autocomplete()"
-    val icon = s"models.template.Icons.${autocomplete._2.propertyName}"
+    val icon = rootPrefix + s"models.template.Icons.${autocomplete._2.propertyName}"
     file.add(s"""call = $url, acType = ("${autocomplete._2.propertyName}", "${autocomplete._2.title}"), icon = $icon""")
     file.add(")", -1)
   }

@@ -2,17 +2,18 @@ package services.scalaexport.db.file
 
 import models.schema.ColumnType
 import models.scalaexport.db.ExportModel
+import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.file.ScalaFile
 
 object ModelFile {
-  def export(model: ExportModel, modelLocationOverride: Option[String]) = {
+  def export(config: ExportConfiguration, model: ExportModel, modelLocationOverride: Option[String]) = {
     val root = modelLocationOverride.orElse(if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None })
     val file = ScalaFile(model.modelPackage, model.className, root = root)
 
-    file.addImport("models.result.data", "DataField")
-    file.addImport("models.result.data", "DataSummary")
-    file.addImport("models.result.data", "DataFieldModel")
-    file.addImport("util.JsonSerializers", "_")
+    file.addImport(config.rootPrefix + "models.result.data", "DataField")
+    file.addImport(config.rootPrefix + "models.result.data", "DataSummary")
+    file.addImport(config.rootPrefix + "models.result.data", "DataFieldModel")
+    file.addImport(config.rootPrefix + "util.JsonSerializers", "_")
     if (model.scalaJs) {
       file.addImport("scala.scalajs.js.annotation", "JSExport")
       file.addImport("scala.scalajs.js.annotation", "JSExportTopLevel")
@@ -30,7 +31,7 @@ object ModelFile {
       file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
     file.add(s"final case class ${model.className}(", 2)
-    addFields(model, file)
+    addFields(config.rootPrefix, model, file)
     model.extendsClass match {
       case Some(x) => file.add(") extends " + x + " {", -2)
       case None => file.add(") extends DataFieldModel {", -2)
@@ -66,18 +67,18 @@ object ModelFile {
     file
   }
 
-  private[this] def addFields(model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
+  private[this] def addFields(rootPrefix: String, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.addImport(file, model.modelPackage)
 
     val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
 
-    val colScala = field.t match {
+    val colScala = (field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case _ => field.scalaType
-    }
+    }).replaceAllLiterally("util.", rootPrefix + "util.").replaceAllLiterally("Seq[models.tag", s"Seq[${rootPrefix}models.tag")
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     val propDefault = if (field.notNull) {
-      " = " + field.defaultString
+      " = " + field.defaultString(rootPrefix)
     } else {
       " = None"
     }

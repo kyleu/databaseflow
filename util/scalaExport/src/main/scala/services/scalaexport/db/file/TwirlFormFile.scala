@@ -12,7 +12,7 @@ object TwirlFormFile {
     val viewArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
 
     file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
-    file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.rootPrefix}util.tracing.TraceData")
     file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", title) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
@@ -21,7 +21,7 @@ object TwirlFormFile {
     file.add("<div class=\"collection-header\">", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add(s"""<div class="right"><a href="@cancel" class="theme-text cancel-link">Cancel</a></div>""")
-    file.add(s"""<h5>${model.iconHtml} @title</h5>""")
+    file.add(s"""<h5>${model.iconHtml(config.rootPrefix)} @title</h5>""")
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)
@@ -30,7 +30,7 @@ object TwirlFormFile {
 
     model.fields.foreach { field =>
       val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
-      TwirlFormFields.fieldFor(model, field, file, autocomplete)
+      TwirlFormFields.fieldFor(config.rootPrefix, model, field, file, autocomplete)
     }
 
     file.add("</tbody>", -1)

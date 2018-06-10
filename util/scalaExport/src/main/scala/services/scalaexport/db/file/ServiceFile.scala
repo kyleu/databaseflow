@@ -8,25 +8,25 @@ object ServiceFile {
   private[this] val inject = "@javax.inject.Inject() (override val tracing: TracingService)"
   private[this] val searchArgs = "filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
 
-  def export(model: ExportModel) = {
+  def export(rootPrefix: String, model: ExportModel) = {
     val file = ScalaFile(model.servicePackage, model.className + "Service")
     val queriesFilename = model.className + "Queries"
 
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport(model.queriesPackage.mkString("."), model.className + "Queries")
     file.addImport("scala.concurrent", "Future")
-    file.addImport("services.database", "ApplicationDatabase")
-    file.addImport("util.FutureUtils", "serviceContext")
-    file.addImport("models.result.data", "DataField")
-    file.addImport("models.auth", "Credentials")
-    file.addImport("models.result.filter", "Filter")
-    file.addImport("models.result.orderBy", "OrderBy")
+    file.addImport(rootPrefix + "services.database", "ApplicationDatabase")
+    file.addImport(rootPrefix + "util.FutureUtils", "serviceContext")
+    file.addImport(rootPrefix + "models.result.data", "DataField")
+    file.addImport(rootPrefix + "models.auth", "Credentials")
+    file.addImport(rootPrefix + "models.result.filter", "Filter")
+    file.addImport(rootPrefix + "models.result.orderBy", "OrderBy")
 
-    file.addImport("util.tracing", "TraceData")
-    file.addImport("util.tracing", "TracingService")
+    file.addImport(rootPrefix + "util.tracing", "TraceData")
+    file.addImport(rootPrefix + "util.tracing", "TracingService")
 
     if (model.pkg.nonEmpty) {
-      file.addImport("services", "ModelServiceHelper")
+      file.addImport(rootPrefix + "services", "ModelServiceHelper")
     }
 
     file.add("@javax.inject.Singleton")
@@ -39,12 +39,12 @@ object ServiceFile {
     ServiceHelper.writeSearchFields(model, file, queriesFilename, "(implicit trace: TraceData)", searchArgs)
     ServiceHelper.writeForeignKeys(model, file)
 
-    ServiceInserts.insertsFor(model, queriesFilename, file)
-    ServiceMutations.mutations(model, file)
+    ServiceInserts.insertsFor(rootPrefix, model, queriesFilename, file)
+    ServiceMutations.mutations(rootPrefix, model, file)
 
     file.add()
     file.add(s"def csvFor(totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
-    file.add(s"""traceB("export.csv")(td => util.CsvUtils.csvFor(Some(key), totalCount, rows, $queriesFilename.fields)(td))""")
+    file.add(s"""traceB("export.csv")(td => ${rootPrefix}util.CsvUtils.csvFor(Some(key), totalCount, rows, $queriesFilename.fields)(td))""")
     file.add("}", -1)
 
     file.add("}", -1)

@@ -12,7 +12,7 @@ object ThriftModelSchemaFile {
   ) = {
     val file = ScalaFile(tgtPkg :+ "graphql", model.name + "Schema")
 
-    file.addImport("models.graphql", "GraphQLContext")
+    file.addImport("graphql", "GraphQLContext")
     file.addImport("sangria.macros.derive", "AddFields")
     file.addImport("sangria.macros.derive", "ObjectTypeName")
     file.addImport("sangria.macros.derive", "InputObjectTypeName")

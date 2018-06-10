@@ -4,12 +4,12 @@ import models.scalaexport.db.ExportModel
 import models.scalaexport.file.ScalaFile
 
 object SchemaMutationHelper {
-  def addMutationFields(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
+  def addMutationFields(rootPrefix: String, model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
     val pkNames = model.pkFields.map(_.propertyName).mkString(", ")
     val pkArgs = model.pkFields.map(pk => model.propertyName + pk.className + "Arg")
     val argProps = pkArgs.map(arg => s"c.arg($arg)").mkString(", ")
 
-    file.addImport("models.result.data", "DataFieldSchema")
+    file.addImport(rootPrefix + "models.result.data", "DataFieldSchema")
 
     file.add()
     file.add(s"val ${model.propertyName}MutationType = ObjectType(", 1)

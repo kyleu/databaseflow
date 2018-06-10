@@ -4,13 +4,13 @@ import models.scalaexport.db.ExportModel
 import models.scalaexport.file.TwirlFile
 
 object TwirlSearchResultFile {
-  def export(model: ExportModel) = {
+  def export(rootPrefix: String, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage, model.propertyName + "SearchResult")
 
     file.add(s"""@(model: ${model.modelClass}, hit: String)<div class="search-result">""", 1)
     file.add(s"""<div class="right">${model.title}</div>""")
     file.add("<div>", 1)
-    file.add(model.iconHtml)
+    file.add(model.iconHtml(rootPrefix))
     if (model.pkFields.isEmpty) {
       file.add("@model")
     } else {

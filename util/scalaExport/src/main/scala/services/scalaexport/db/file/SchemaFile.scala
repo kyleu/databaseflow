@@ -11,23 +11,23 @@ object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
-    file.addImport("util.FutureUtils", "graphQlContext")
+    file.addImport(config.rootPrefix + "util.FutureUtils", "graphQlContext")
     model.fields.foreach(_.enumOpt.foreach { enum =>
       file.addImport(enum.modelPackage.mkString(".") + "." + enum.className + "Schema", s"${enum.propertyName}EnumType")
     })
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport("models.note", "NoteSchema") }
-    SchemaHelper.addImports(file)
+    SchemaHelper.addImports(config.rootPrefix, file)
 
-    file.add(s"""object ${model.className}Schema extends SchemaHelper("${model.propertyName}") {""", 1)
+    file.add(s"""object ${model.className}Schema extends GraphQLSchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(model, file)
     SchemaHelper.addPrimaryKeyArguments(model, file)
     SchemaForeignKey.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
-    SchemaMutationHelper.addMutationFields(model, file)
+    SchemaMutationHelper.addMutationFields(config.rootPrefix, model, file)
     file.add()
-    file.add(s"private[this] def toResult(r: SchemaHelper.SearchResult[${model.className}]) = {", 1)
+    file.add(s"private[this] def toResult(r: GraphQLSchemaHelper.SearchResult[${model.className}]) = {", 1)
     file.add(s"${model.className}Result($resultArgs)")
     file.add("}", -1)
     file.add("}", -1)

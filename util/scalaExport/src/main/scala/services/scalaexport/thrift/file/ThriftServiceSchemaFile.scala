@@ -13,13 +13,13 @@ object ThriftServiceSchemaFile {
     val file = ScalaFile(tgtPkg :+ "graphql", service.name + "Schema")
 
     file.addImport(tgtPkg.mkString("."), service.name)
-    file.addImport("models.graphql", "GraphQLContext")
-    file.addImport("models.graphql", "SchemaHelper")
+    file.addImport("graphql", "GraphQLContext")
+    file.addImport("graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.schema", "_")
     file.addImport("util.FutureUtils", "graphQlContext")
     file.addImport("sangria.marshalling.circe", "_")
 
-    file.add(s"""object ${service.name}Schema extends SchemaHelper("${service.name}") {""", 1)
+    file.add(s"""object ${service.name}Schema extends GraphQLSchemaHelper("${service.name}") {""", 1)
 
     file.add(s"private[this] val ${service.identifier}Fields = fields[GraphQLContext, ${service.name}](", 1)
     service.methods.foreach(m => addMethodField(tgtPkg, m, metadata, file))

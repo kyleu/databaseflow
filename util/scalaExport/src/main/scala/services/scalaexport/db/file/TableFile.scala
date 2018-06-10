@@ -5,10 +5,10 @@ import models.scalaexport.file.ScalaFile
 import models.schema.ColumnType
 
 object TableFile {
-  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
+  def export(rootPrefix: String, model: ExportModel, enums: Seq[ExportEnum]) = {
     val file = ScalaFile(model.tablePackage, model.className + "Table")
 
-    file.addImport("services.database.SlickQueryService.imports", "_")
+    file.addImport(rootPrefix + "services.database.SlickQueryService.imports", "_")
 
     model.fields.foreach(_.enumOpt.foreach(e => file.addImport(s"${e.tablePackage.mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")))
 
@@ -21,7 +21,7 @@ object TableFile {
 
     file.add(s"""class ${model.className}Table(tag: Tag) extends Table[${model.modelClass}](tag, "${model.tableName}") {""", 1)
 
-    addFields(model, file, enums)
+    addFields(rootPrefix, model, file, enums)
     file.add()
 
     if (model.pkFields.nonEmpty) {
@@ -53,7 +53,7 @@ object TableFile {
 
   }
 
-  private[this] def addFields(model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
+  private[this] def addFields(rootPrefix: String, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
     field.addImport(file)
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
@@ -61,7 +61,7 @@ object TableFile {
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
-    file.add(s"""val ${field.propertyName} = column[$propType]("${field.columnName}")""")
+    file.add(s"""val ${field.propertyName} = column[${propType.replaceAllLiterally("models.tag", rootPrefix + "models.tag")}]("${field.columnName}")""")
   }
 
   private[this] def addQueries(file: ScalaFile, model: ExportModel) = {

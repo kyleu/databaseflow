@@ -63,29 +63,30 @@ object ExportFiles {
     }
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
     val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(e), EnumSchemaFile.export(e), EnumControllerFile.export(e)) ++ gq ++ oq
+    val rp = config.rootPrefix
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(rp, e), EnumSchemaFile.export(rp, e), EnumControllerFile.export(rp, e)) ++ gq ++ oq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
     if (model.provided) {
       model -> Seq.empty
     } else {
-      val cls = ModelFile.export(model, config.modelLocationOverride)
-      val res = ResultFile.export(model, config.modelLocationOverride)
-      val queries = QueriesFile.export(model)
-      val svc = ServiceFile.export(model)
+      val cls = ModelFile.export(config, model, config.modelLocationOverride)
+      val res = ResultFile.export(config.rootPrefix, model, config.modelLocationOverride)
+      val queries = QueriesFile.export(config.rootPrefix, model)
+      val svc = ServiceFile.export(config.rootPrefix, model)
       val cntr = ControllerFile.export(config, model)
       val sch = SchemaFile.export(config, model)
-      val table = TableFile.export(model, config.enums)
+      val table = TableFile.export(config.rootPrefix, model, config.enums)
 
       val tm = ThriftModelFile.export(model, config.enums)
       val ts = ThriftServiceFile.export(model, config.enums)
 
       val tdr = TwirlDataRowFile.export(config, model)
-      val tl = TwirlListFile.export(model)
+      val tl = TwirlListFile.export(config.rootPrefix, model)
       val tv = TwirlViewFile.export(config, model)
       val tf = TwirlFormFile.export(config, model)
-      val tsr = TwirlSearchResultFile.export(model)
+      val tsr = TwirlSearchResultFile.export(config.rootPrefix, model)
 
       val trs = TwirlRelationFiles.export(config, model)
 

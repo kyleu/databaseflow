@@ -11,7 +11,7 @@ object TwirlViewFile {
     val file = TwirlFile(model.viewPackage, model.propertyName + "View")
     val audits = if (model.audited) { ", auditRecords: Seq[models.audit.AuditRecord]" } else { "" }
     file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, notes: Seq[models.note.Note]$audits, debug: Boolean)(")
-    file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.rootPrefix}util.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
     file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
@@ -23,7 +23,7 @@ object TwirlViewFile {
       file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@${model.routesClass}.remove($args)">Remove</a></div>""")
     }
     file.add("<h5>", 1)
-    file.add(s"""<a class="theme-text" href="@${model.routesClass}.list()">""" + model.iconHtml + "</a>")
+    file.add(s"""<a class="theme-text" href="@${model.routesClass}.list()">""" + model.iconHtml(config.rootPrefix) + "</a>")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
     file.add(s"""${model.title} [$toTwirl]""")
     file.add("</h5>", -1)
@@ -45,13 +45,13 @@ object TwirlViewFile {
           if (field.notNull) {
             file.add(s"@model.${field.propertyName}")
           } else {
-            file.add(s"@model.${field.propertyName}.getOrElse(util.NullUtils.str)")
+            file.add(s"@model.${field.propertyName}.getOrElse(${config.rootPrefix}util.NullUtils.str)")
           }
           if (field.notNull) {
-            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${field.propertyName})">${tgt.iconHtml}</a>""")
+            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${field.propertyName})">${tgt.iconHtml(config.rootPrefix)}</a>""")
           } else {
             file.add(s"@model.${field.propertyName}.map { v =>", 1)
-            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(v)">${tgt.iconHtml}</a>""")
+            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(v)">${tgt.iconHtml(config.rootPrefix)}</a>""")
             file.add("}", -1)
           }
           file.add("</td>", -1)
@@ -91,7 +91,7 @@ object TwirlViewFile {
       val relUrl = src.routesClass + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
-      file.add(src.iconHtml)
+      file.add(src.iconHtml(config.rootPrefix))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add("</div>", -1)
       file.add(s"""<div class="collapsible-body"><span>Loading...</span></div>""")

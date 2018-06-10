@@ -64,6 +64,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
             ScalaExportHelper.modelForTable(schema, t, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums)
           },
           source = form("project.source"),
+          defaultPackage = form.get("project.defaultPackage").filter(_.nonEmpty),
           projectLocation = form.get("project.location").filter(_.nonEmpty),
           modelLocationOverride = form.get("model.location").filter(_.nonEmpty),
           thriftLocationOverride = form.get("thrift.location").filter(_.nonEmpty)

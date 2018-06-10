@@ -8,14 +8,14 @@ object ControllerReferences {
   def write(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val references = model.transformedReferencesDistinct(config)
     if (references.nonEmpty) {
-      file.addImport("models.result", "RelationCount")
+      file.addImport(config.rootPrefix + "models.result", "RelationCount")
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
       val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull}").mkString(", ")
       val refServices = references.map(ref => (ref._2, ref._3, ref._4))
 
       file.add()
       file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", admin = true) { implicit request => implicit td =>""", 1)
-      file.add(s"val creds = models.auth.Credentials.fromRequest(request)")
+      file.add(s"val creds = ${config.rootPrefix}models.auth.Credentials.fromRequest(request)")
 
       refServices.foreach { r =>
         file.add(s"val ${r._2.propertyName}By${r._3.className}F = ${r._2.propertyName}S.countBy${r._3.className}(creds, $pkRefs)")

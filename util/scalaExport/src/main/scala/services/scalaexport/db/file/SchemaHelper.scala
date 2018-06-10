@@ -4,16 +4,16 @@ import models.scalaexport.db.ExportModel
 import models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
-  def addImports(file: ScalaFile) = {
-    file.addImport("models.graphql", "GraphQLContext")
-    file.addImport("models.graphql", "SchemaHelper")
+  def addImports(rootPrefix: String, file: ScalaFile) = {
+    file.addImport(rootPrefix + "graphql", "GraphQLContext")
+    file.addImport(rootPrefix + "graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
-    file.addImport("models.graphql.CommonSchema", "_")
-    file.addImport("models.graphql.DateTimeSchema", "_")
-    file.addImport("models.result.filter.FilterSchema", "_")
-    file.addImport("models.result.orderBy.OrderBySchema", "_")
-    file.addImport("models.result.paging.PagingSchema", "pagingOptionsType")
+    file.addImport(rootPrefix + "graphql.CommonSchema", "_")
+    file.addImport(rootPrefix + "graphql.DateTimeSchema", "_")
+    file.addImport(rootPrefix + "models.result.filter.FilterSchema", "_")
+    file.addImport(rootPrefix + "models.result.orderBy.OrderBySchema", "_")
+    file.addImport(rootPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
   }
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
