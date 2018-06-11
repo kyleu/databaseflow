@@ -17,7 +17,14 @@ object ScalaExportHelper {
       config.getModelOpt(t.name) match {
         case Some(m) =>
           val fields = t.columns.zipWithIndex.map { c =>
-            m.fields.find(_.columnName == c._1.name).getOrElse(ExportConfigurationDefault.loadField(c._1, c._2, enums = enums))
+            val indexes = t.indexes.filter(_.columns.exists(_.name == c._1.name))
+            m.fields.find(_.columnName == c._1.name).getOrElse(ExportConfigurationDefault.loadField(
+              col = c._1,
+              idx = c._2,
+              indexed = indexes.nonEmpty,
+              unique = indexes.exists(_.unique),
+              enums = enums
+            ))
           }
           m.copy(fields = fields.toList)
         case None => ExportConfigurationDefault.loadModel(schema, t, enums)
@@ -48,7 +55,7 @@ object ScalaExportHelper {
       description = form.get("description").filter(_.nonEmpty),
       plural = form("plural"),
       fields = t.columns.zipWithIndex.map { col =>
-        fieldForColumn(col._1, col._2, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2), enums)
+        fieldForColumn(col._1, col._2, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2), t.indexes, enums)
       }.toList,
       pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
       foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
@@ -64,7 +71,8 @@ object ScalaExportHelper {
     case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for table [${t.name}].", x)
   }
 
-  def fieldForColumn(col: Column, idx: Int, form: Map[String, String], enums: Seq[ExportEnum]) = {
+  def fieldForColumn(col: Column, idx: Int, form: Map[String, String], indexes: Seq[Index], enums: Seq[ExportEnum]) = {
+    val applicableIndexes = indexes.filter(i => i.columns.size == 1 && i.columns.exists(_.name == col.name))
     ExportField(
       columnName = col.name,
       propertyName = form(col.name + ".propertyName"),
@@ -77,6 +85,8 @@ object ScalaExportHelper {
       enumOpt = enums.find(_.name == col.sqlTypeName),
       defaultValue = form.get(col.name + ".defaultValue").orElse(col.defaultValue),
       notNull = form.get(col.name + ".notNull").map(_ == "true").getOrElse(col.notNull),
+      indexed = applicableIndexes.nonEmpty,
+      unique = applicableIndexes.exists(_.unique),
       inSearch = form.get(col.name + ".inSearch").contains("true"),
       inView = form.get(col.name + ".inView").contains("true"),
       inSummary = form.get(col.name + ".inSummary").contains("true"),

@@ -37,6 +37,7 @@ case class ExportModel(
     provided: Boolean = false
 ) {
   val fullClassName = (pkg :+ className).mkString(".")
+  val propertyPlural = ExportHelper.toIdentifier(plural)
   val pkFields = pkColumns.map(c => getField(c.name))
   val pkType = pkFields match {
     case Nil => "???"
@@ -44,6 +45,7 @@ case class ExportModel(
     case cols => "(" + cols.map(_.scalaType).mkString(", ") + ")"
   }
 
+  val indexedFields = fields.filter(_.indexed).filterNot(pkFields.contains).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
   val pkgString = pkg.mkString(".")

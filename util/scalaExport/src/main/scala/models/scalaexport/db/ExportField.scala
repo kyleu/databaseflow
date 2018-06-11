@@ -51,6 +51,8 @@ case class ExportField(
     enumOpt: Option[ExportEnum] = None,
     defaultValue: Option[String] = None,
     notNull: Boolean = false,
+    indexed: Boolean = false,
+    unique: Boolean = false,
     inSearch: Boolean = false,
     inView: Boolean = true,
     inSummary: Boolean = false,

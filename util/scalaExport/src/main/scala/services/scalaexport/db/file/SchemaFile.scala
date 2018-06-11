@@ -3,7 +3,6 @@ package services.scalaexport.db.file
 import models.scalaexport.db.ExportModel
 import models.scalaexport.db.config.ExportConfiguration
 import models.scalaexport.file.ScalaFile
-import services.scalaexport.ExportHelper
 
 object SchemaFile {
   val resultArgs = "paging = r.paging, filters = r.args.filters, orderBys = r.args.orderBys, totalCount = r.count, results = r.results, durationMs = r.dur"
@@ -22,6 +21,7 @@ object SchemaFile {
     file.add(s"""object ${model.className}Schema extends GraphQLSchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(model, file)
     SchemaHelper.addPrimaryKeyArguments(model, file)
+    SchemaHelper.addIndexArguments(model, file)
     SchemaForeignKey.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
@@ -87,10 +87,11 @@ object SchemaFile {
       case _ => // noop
     }
 
-    val sn = ExportHelper.toIdentifier(model.plural)
-    file.add(s"""unitField(name = "$sn", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
+    file.add(s"""unitField(name = "${model.propertyName}Search", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
     file.add(s"""runSearch(c.ctx.${model.serviceReference}, c, td).map(toResult)""")
-    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)", -1)
+    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (model.indexedFields.nonEmpty) { "," } else { "" }}", -1)
+
+    SchemaHelper.addIndexedFields(model, file)
 
     file.add(")", -1)
   }

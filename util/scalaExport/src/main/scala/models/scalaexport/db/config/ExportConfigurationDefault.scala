@@ -94,7 +94,9 @@ object ExportConfigurationDefault {
       case _ => false
     }
     val inPk = t.primaryKey.exists(_.name == col._1.name)
-    val inIndex = t.indexes.exists(i => i.columns.exists(_.name == col._1.name))
+    val idxs = t.indexes.filter(i => i.columns.exists(_.name == col._1.name)).map(i => i.name -> i.unique)
+    val inIndex = idxs.nonEmpty
+    val unique = idxs.exists(_._2)
     def extras = t.name match {
       case "audit_record" => Set("changes")
       case "note" => Set("rel_type", "rel_pk", "text", "author", "created")
@@ -103,10 +105,10 @@ object ExportConfigurationDefault {
       case _ => Set.empty[String]
     }
     val inSearch = (!banned) && (inPk || inIndex || extras(col._1.name))
-    loadField(col._1, col._2, inSearch, enums)
+    loadField(col._1, col._2, inIndex, unique, inSearch, enums)
   }
 
-  def loadField(col: Column, idx: Int, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
+  def loadField(col: Column, idx: Int, indexed: Boolean, unique: Boolean, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
     columnName = col.name,
     propertyName = clean(toIdentifier(col.name)),
     title = toDefaultTitle(col.name),
@@ -121,6 +123,9 @@ object ExportConfigurationDefault {
       case _ => None
     },
     defaultValue = col.defaultValue,
+    notNull = col.notNull,
+    indexed = indexed,
+    unique = unique,
     inSearch = inSearch,
     inSummary = inSearch
   )

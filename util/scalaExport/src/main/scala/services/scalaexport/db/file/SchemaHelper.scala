@@ -1,6 +1,6 @@
 package services.scalaexport.db.file
 
-import models.scalaexport.db.ExportModel
+import models.scalaexport.db.{ExportField, ExportModel}
 import models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
@@ -37,17 +37,55 @@ object SchemaHelper {
   }
 
   def addPrimaryKeyArguments(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    model.pkFields.foreach { pkField =>
-      val desc = s"Returns the ${model.title} matching the provided ${pkField.title}."
-      file.add(s"""val ${model.propertyName}${pkField.className}Arg = Argument("${pkField.propertyName}", ${pkField.graphQlArgType})""")
-    }
+    model.pkFields.foreach(addArgument(model, _, file))
     model.pkFields match {
-      case pkField :: Nil =>
-        val desc = s"Returns the ${model.plural} matching the provided primary keys."
-        val arg = s"""Argument("${pkField.propertyName}s", ${pkField.graphQlSeqArgType})"""
-        file.add(s"""val ${model.propertyName}${pkField.className}SeqArg = $arg""")
+      case pkField :: Nil => addSeqArgument(model, pkField, file)
       case _ => // noop
     }
     file.add()
+  }
+
+  def addIndexArguments(model: ExportModel, file: ScalaFile) = {
+    model.indexedFields.foreach { f =>
+      addArgument(model, f, file)
+      addSeqArgument(model, f, file)
+    }
+    if (model.indexedFields.nonEmpty) { file.add() }
+  }
+
+  def addArgument(model: ExportModel, field: ExportField, file: ScalaFile) = if (model.pkFields.nonEmpty) {
+    file.add(s"""val ${model.propertyName}${field.className}Arg = Argument("${field.propertyName}", ${field.graphQlArgType})""")
+  }
+
+  def addSeqArgument(model: ExportModel, field: ExportField, file: ScalaFile) = {
+    val desc = s"Returns the ${model.plural} matching the provided primary keys."
+    val arg = s"""Argument("${field.propertyName}s", ${field.graphQlSeqArgType})"""
+    file.add(s"""val ${model.propertyName}${field.className}SeqArg = $arg""")
+  }
+
+  def addIndexedFields(model: ExportModel, file: ScalaFile) = {
+    model.indexedFields.foreach { field =>
+      val comma = if (model.indexedFields.lastOption.contains(field)) { "" } else { "," }
+      val listType = s"ListType(${model.propertyName}Type)"
+      val arg = s"${model.propertyName}${field.className}Arg"
+      val seqArg = s"${model.propertyName}${field.className}SeqArg"
+
+      if (field.unique) {
+        val optType = s"OptionType(${model.propertyName}Type)"
+        file.add(s"""unitField(name = "${model.propertyName}By${field.className}", desc = None, t = $optType, f = (c, td) => {""", 1)
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"""}, $arg),""", -1)
+        file.add(s"""unitField(name = "${model.propertyName}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")
+        file.add(s"""}, $seqArg)$comma""", -1)
+      } else {
+        file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}", desc = None, t = $listType, f = (c, td) => {""", 1)
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"""}, $arg),""", -1)
+        file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")
+        file.add(s"""}, $seqArg)$comma""", -1)
+      }
+    }
   }
 }
