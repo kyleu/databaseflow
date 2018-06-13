@@ -40,10 +40,11 @@ object QueriesFile {
     file.add("}", -1)
     file.add()
 
-    file.add("def search(q: String, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
+    val searchArgs = "q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
+    file.add(s"def search($searchArgs) = {", 1)
     file.add("new Search(q, filters, orderBys, limit, offset)")
     file.add("}", -1)
-    file.add("def searchCount(q: String, filters: Seq[Filter] = Nil) = new SearchCount(q, filters)")
+    file.add("def searchCount(q: Option[String], filters: Seq[Filter] = Nil) = new SearchCount(q, filters)")
     file.add("def searchExact(q: String, orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]) = new SearchExact(q, orderBys, limit, offset)")
     file.add()
 
