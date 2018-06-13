@@ -4,10 +4,10 @@ import better.files._
 import controllers.BaseController
 import models.schema.Schema
 import services.connection.ConnectionSettingsService
-import models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault}
-import services.scalaexport.{ExportFiles, ExportHelper}
-import services.scalaexport.db.ScalaExportService
-import services.scalaexport.thrift.ThriftParseService
+import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault}
+import com.databaseflow.services.scalaexport.{ExportFiles, ExportHelper}
+import com.databaseflow.services.scalaexport.db.ScalaExportService
+import com.databaseflow.services.scalaexport.thrift.ThriftParseService
 import services.schema.SchemaService
 import util.ApplicationContext
 import util.FutureUtils.defaultContext

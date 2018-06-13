@@ -1,9 +1,9 @@
 @(
-    model: models.scalaexport.db.ExportModel,
-    ref: models.scalaexport.db.ExportModel.Reference,
-    tgt: models.scalaexport.db.ExportField,
-    srcModel: models.scalaexport.db.ExportModel,
-    srcField: models.scalaexport.db.ExportField
+    model: com.databaseflow.models.scalaexport.db.ExportModel,
+    ref: com.databaseflow.models.scalaexport.db.ExportModel.Reference,
+    tgt: com.databaseflow.models.scalaexport.db.ExportField,
+    srcModel: com.databaseflow.models.scalaexport.db.ExportModel,
+    srcField: com.databaseflow.models.scalaexport.db.ExportField
 )
 
 @chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
@@ -12,5 +12,5 @@
 <!-- Field form for [@model.className::@tgt.propertyName] -->
 <tr>
   <td>@tgt.columnName</td>
-  <td><input name="@{baseName}.propertyName" class="validate" value="@if(ref.propertyName.isEmpty) { @services.scalaexport.ExportHelper.toIdentifier(ref.name) } else { @ref.propertyName }" /></td>
+  <td><input name="@{baseName}.propertyName" class="validate" value="@if(ref.propertyName.isEmpty) { @com.databaseflow.services.scalaexport.ExportHelper.toIdentifier(ref.name) } else { @ref.propertyName }" /></td>
 </tr>

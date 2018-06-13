@@ -1,6 +1,6 @@
 import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
-import services.scalaexport.ScalaExport
+import com.databaseflow.services.scalaexport.ScalaExport
 import util.Logging
 
 object DatabaseFlow extends Logging {

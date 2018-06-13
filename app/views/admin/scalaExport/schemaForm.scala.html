@@ -1,4 +1,4 @@
-@(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: models.scalaexport.db.config.ExportConfiguration, schema: models.schema.Schema)(
+@(user: models.user.User, cs: models.connection.ConnectionSettings, cfg: com.databaseflow.models.scalaexport.db.config.ExportConfiguration, schema: models.schema.Schema)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )
 @chk(b: Boolean) = {@{if(b) { "checked=\"checked\"" } else { "" }}}
@@ -65,7 +65,7 @@
             @views.html.admin.scalaExport.modelForm(
               table = table,
               config = cfg,
-              model = cfg.getModelOptWithIgnored(table.name).getOrElse(models.scalaexport.db.config.ExportConfigurationDefault.loadModel(schema, table, cfg.enums))
+              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault.loadModel(schema, table, cfg.enums))
             )
           }
         </ul>

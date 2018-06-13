@@ -1,9 +1,9 @@
 package controllers.admin
 
 import models.schema._
-import models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
-import models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportConfigurationHelper}
-import services.scalaexport.ExportHelper
+import com.databaseflow.models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
+import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportConfigurationHelper}
+import com.databaseflow.services.scalaexport.ExportHelper
 
 import scala.util.control.NonFatal
 

@@ -3,7 +3,7 @@ package com.databaseflow.sbt
 import sbt._
 import sbt.Keys._
 import com.twitter.scrooge.ScroogeSBT.autoImport._
-import services.scalaexport.ExportFiles
+import com.databaseflow.services.scalaexport.ExportFiles
 
 object SbtEbenezer extends AutoPlugin {
   override def requires = com.twitter.scrooge.ScroogeSBT
