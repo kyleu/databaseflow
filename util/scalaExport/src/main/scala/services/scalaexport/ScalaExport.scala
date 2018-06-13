@@ -2,9 +2,11 @@ package services.scalaexport
 
 import better.files._
 import models.scalaexport.ScalaExportOptions
+import models.scalaexport.graphql.GraphQLExportConfig
+import services.scalaexport.graphql.GraphQLQueryParseService
 import services.scalaexport.thrift.ThriftParseService
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.control.NonFatal
 
 object ScalaExport {
@@ -13,7 +15,7 @@ object ScalaExport {
 
   private[this] def log(msg: String, x: Option[Throwable] = None) = {
     println(msg)
-    //x.foreach(_.printStackTrace())
+    x.foreach(_.printStackTrace())
   }
 
   def main(args: Array[String]): Unit = {
@@ -30,7 +32,21 @@ object ScalaExport {
   def run(opts: ScalaExportOptions) = opts.cmd match {
     case "help" => ScalaExportOptions.parser.showUsage()
     case "thrift" => exportThrift(opts.input, opts.output, Set("rest", "graphql", "simple"), configLocation = opts.config.getOrElse("core/src/main/thrift"))
+    case "graphql" => exportGraphQL(opts.input)
     case cmd => throw new IllegalStateException(s"Unhandled command [$cmd].")
+  }
+
+  def exportGraphQL(input: Option[String]) = {
+    val in = input.getOrElse("./tmp/graphql-export.json").toFile
+    if (!in.isRegularFile) {
+      throw new IllegalStateException(s"Cannot read input file [${in.pathAsString}].")
+    }
+    val cfg = {
+      import io.circe.parser._
+      import io.circe.syntax._
+      parse(in.contentAsString).right.get.asJson.as[GraphQLExportConfig].right.get
+    }
+    new GraphQLQueryParseService(cfg).export()
   }
 
   def exportThrift(input: Option[String], output: Option[String], flags: Set[String], configLocation: String) = {

@@ -26,7 +26,7 @@ object Utilities {
 
   lazy val scalaExport = (project in file("util/scalaExport")).settings(Shared.commonSettings: _*).settings(
     name := "databaseflow-export",
-    libraryDependencies ++= Seq(Utils.enumeratum, Utils.betterFiles, Utils.guava, Utils.thriftParser, Utils.scopts)
+    libraryDependencies ++= Seq(GraphQL.sangria, Utils.enumeratum, Utils.betterFiles, Utils.guava, Utils.thriftParser, Utils.scopts)
   ).dependsOn(Shared.sharedJvm)
 
   lazy val translation = (project in file("util/translation")).enablePlugins(SbtWeb, play.sbt.PlayScala).settings(Shared.commonSettings: _*).settings(
