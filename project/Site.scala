@@ -17,7 +17,9 @@ object Site {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Akka.actor, Akka.logging, Akka.testkit, Play.filters, Play.ws, Play.cache, Play.guice, Play.mailer, Play.mailerGuice, Play.test, Utils.betterFiles
+      Akka.actor, Akka.logging, Akka.testkit,
+      Play.filters, Play.ws, Play.cache, Play.guice, Play.mailer, Play.mailerGuice, Play.test,
+      Utils.betterFiles, Utils.enumeratumCirce
     ) ++ Serialization.circeProjects.map(c => "io.circe" %% c % Dependencies.Serialization.circeVersion)
   }
 
@@ -26,8 +28,6 @@ object Site {
 
     resolvers += Resolver.jcenterRepo,
     libraryDependencies ++= dependencies,
-
-    libraryDependencies ++= Seq(Dependencies.Utils.enumeratum),
 
     routesGenerator := InjectedRoutesGenerator,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),

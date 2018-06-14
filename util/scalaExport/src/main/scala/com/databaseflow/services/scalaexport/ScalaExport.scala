@@ -5,9 +5,14 @@ import com.databaseflow.models.scalaexport.ScalaExportOptions
 import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService
 import com.databaseflow.services.scalaexport.thrift.ThriftParseService
+import sangria.ast.Document
+import sangria.schema.Schema
+import sangria.marshalling.circe._
+import sangria.parser.QueryParser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.control.NonFatal
+import util.JsonSerializers._
 
 object ScalaExport {
   private[this] def green(str: String) = 27.toChar + "[32m" + str + 27.toChar + "[39m"
@@ -42,11 +47,12 @@ object ScalaExport {
       throw new IllegalStateException(s"Cannot read input file [${in.pathAsString}].")
     }
     val cfg = {
-      import io.circe.parser._
-      import io.circe.syntax._
-      parse(in.contentAsString).right.get.asJson.as[GraphQLExportConfig].right.get
+      parseJson(in.contentAsString).right.get.asJson.as[GraphQLExportConfig].right.get
     }
-    new GraphQLQueryParseService(cfg).export()
+    val schema = cfg.schema.map { s =>
+      Schema.buildFromAst(QueryParser.parse(s.toFile.contentAsString).toOption.getOrElse(throw new IllegalStateException("Cannot load schema.")))
+    }
+    new GraphQLQueryParseService(cfg, schema).export()
   }
 
   def exportThrift(input: Option[String], output: Option[String], flags: Set[String], configLocation: String) = {

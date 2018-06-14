@@ -90,7 +90,7 @@ object Dependencies {
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
-    val enumeratum = "com.beachape" %% "enumeratum" % enumeratumVersion
+    val enumeratumCirce = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.0"

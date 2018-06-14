@@ -6,12 +6,20 @@ import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import sangria.ast._
 import sangria.parser.QueryParser
 import com.databaseflow.services.scalaexport.ExportHelper
+import sangria.schema.Schema
 
-class GraphQLQueryParseService(cfg: GraphQLExportConfig) {
-  private[this] val classPrefix = "Class: "
-  private[this] val providedPrefix = "Provided: "
+object GraphQLQueryParseService {
+  val classPrefix = "Class: "
+  val providedPrefix = "Provided: "
+  case class ClassName(pkg: Array[String], cn: String, provided: Boolean)
 
-  private[this] case class ClassName(pkg: Array[String], cn: String, provided: Boolean)
+  def meaningfulComments(comments: Seq[Comment]) = comments.map(_.text.trim).filterNot { c =>
+    c.startsWith("#") || c.startsWith(classPrefix) || c.startsWith(providedPrefix)
+  }
+}
+
+class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_, _]]) {
+  import GraphQLQueryParseService._
 
   def export() = {
     val input = cfg.input.toFile
@@ -27,7 +35,9 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig) {
       fragStuff ++ opStuff
     }
 
-    val outFiles = filesFor(doc, nameMap)
+    val fragmentFiles = doc.fragments.flatMap(f => GraphQLFragmentService.fragmentFile(cfg, f._1, f._2, nameMap, schema))
+    val opFiles = doc.operations.flatMap(f => GraphQLOperationService.opFile(cfg, f._1.get, f._2, nameMap))
+    val outFiles = (fragmentFiles ++ opFiles).toSeq
 
     val output = cfg.output.toFile
     if (!output.isDirectory) {
@@ -50,48 +60,4 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig) {
       (t._1, ClassName(pkg, name, x.text.trim.startsWith(providedPrefix)))
     }.getOrElse(t._1 -> ClassName(cfg.pkgSeq ++ pkgSuffix, ExportHelper.toClassName(t._1), provided = false))
   }.toMap
-
-  private[this] def filesFor(doc: Document, nameMap: Map[String, ClassName]) = {
-    val fragmentFiles = doc.fragments.flatMap(f => fragmentFile(f._1, f._2, nameMap(f._1)))
-    val opFiles = doc.operations.flatMap(f => opFile(f._1.get, f._2, nameMap(f._1.get)))
-    (fragmentFiles ++ opFiles).toSeq
-  }
-
-  private[this] def fragmentFile(n: String, d: FragmentDefinition, cn: ClassName) = if (cn.provided) {
-    None
-  } else {
-    val file = ScalaFile(cn.pkg, cn.cn, Some(""))
-    file.addImport(cfg.rootPrefix + "util.JsonSerializers", "_")
-    file.addImport("io.circe", "Json")
-
-    d.comments.filterNot { c =>
-      c.text.startsWith("#") || c.text.trim.startsWith(classPrefix) || c.text.trim.startsWith(providedPrefix)
-    }.foreach(c => file.add("// " + c.text))
-
-    file.add(s"object ${cn.cn} {", 1)
-    file.add("}", -1)
-
-    file.add(s"case class ${cn.cn}(", 1)
-    GraphQLQueryHelper.addFields(file, d.selections)
-    file.add(")", -1)
-
-    Some(file)
-  }
-
-  private[this] def opFile(n: String, d: OperationDefinition, cn: ClassName) = {
-    val file = ScalaFile(cn.pkg, cn.cn, Some(""))
-    file.addImport(cfg.rootPrefix + "util.JsonSerializers", "_")
-    file.addImport("io.circe", "Json")
-
-    d.comments.filterNot { c =>
-      c.text.startsWith("#") || c.text.trim.startsWith(classPrefix) || c.text.trim.startsWith(providedPrefix)
-    }.foreach(c => file.add("// " + c.text))
-
-    file.add(s"object ${cn.cn} {", 1)
-    //GraphQLQueryHelper.addQuery(file, opDoc._2)
-    GraphQLQueryHelper.addVariables(cfg.rootPrefix, file, d.variables)
-    GraphQLQueryHelper.addData(file, d.selections)
-    file.add("}", -1)
-    Some(file)
-  }
 }
