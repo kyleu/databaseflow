@@ -36,7 +36,7 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_
     }
 
     val fragmentFiles = doc.fragments.flatMap(f => GraphQLFragmentService.fragmentFile(cfg, f._1, f._2, nameMap, schema))
-    val opFiles = doc.operations.flatMap(f => GraphQLOperationService.opFile(cfg, f._1.get, f._2, nameMap))
+    val opFiles = doc.operations.flatMap(f => GraphQLOperationService.opFile(cfg, f._1.get, f._2, nameMap, schema))
     val outFiles = (fragmentFiles ++ opFiles).toSeq
 
     val output = cfg.output.toFile

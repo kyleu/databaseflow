@@ -4,7 +4,7 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService.ClassName
 import com.databaseflow.services.scalaexport.graphql.GraphQLOutputTranslations.{scalaImport, scalaType}
 import sangria.ast._
-import sangria.schema.{ObjectType, ScalarType, Type => Typ}
+import sangria.schema.{ObjectType, OutputType, ScalarType, Type => Typ}
 
 object GraphQLQueryHelper {
   def addFields(
@@ -13,12 +13,19 @@ object GraphQLQueryHelper {
     selections.foreach { s =>
       val param = s match {
         case Field(alias, name, _, _, sels, _, _, _) =>
-          s"${alias.getOrElse(name)}: ${typeForSelections(rootPrefix, modelPackage, file, name, pkg, typ, sels, nameMap)}"
+          val t = typeForSelections(rootPrefix, modelPackage, file, name, pkg, typ, sels, nameMap)
+          s"${alias.getOrElse(name)}: $t"
         case x => s"/* $x */"
       }
       val comma = if (selections.lastOption.contains(s)) { "" } else { "," }
       file.add(param + comma)
     }
+  }
+
+  def monadsFor(fieldType: OutputType[_], cn: String): String = fieldType match {
+    case sangria.schema.ListType(x) => s"Seq[${monadsFor(x, cn)}]"
+    case sangria.schema.OptionType(x) => s"Option[${monadsFor(x, cn)}]"
+    case _ => cn
   }
 
   private[this] def typeForSelections(
@@ -39,14 +46,24 @@ object GraphQLQueryHelper {
         if (cn.pkg.toSeq != pkg) {
           file.addImport(cn.pkg.mkString("."), cn.cn)
         }
-        cn.cn
+        typ match {
+          case Some(t) => t match {
+            case o: ObjectType[_, _] => o.fields.find(_.name == name) match {
+              case Some(f) =>
+                val x = monadsFor(f.fieldType, cn.cn)
+                x
+              case None => throw new IllegalStateException(s"Cannot find field [${h.name}] on type [${t.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}].")
+            }
+            case x => throw new IllegalStateException(" ::: " + x)
+          }
+          case None => cn.cn
+        }
       case Nil if fields.isEmpty => typ match {
         case Some(t) => t match {
           case o: ObjectType[_, _] =>
-            val fieldType = o.fieldsFn().find(_.name == name).getOrElse(throw new IllegalStateException("Cannot find field [] in [].")).fieldType
+            val fieldType = o.fields.find(_.name == name).getOrElse(throw new IllegalStateException("Cannot find field [] in [].")).fieldType
             scalaImport(rootPrefix, modelPackage, fieldType).foreach(x => file.addImport(x._1, x._2))
             scalaType(fieldType)
-
           case _ => s"Json /* $t */"
         }
         case None =>

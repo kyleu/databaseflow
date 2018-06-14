@@ -73,7 +73,7 @@ object SchemaHelper {
       if (field.unique) {
         val optType = s"OptionType(${model.propertyName}Type)"
         file.add(s"""unitField(name = "${model.propertyName}By${field.className}", desc = None, t = $optType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, c.arg($arg))(td).map(_.headOption)""")
         file.add(s"""}, $arg),""", -1)
         file.add(s"""unitField(name = "${model.propertyName}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
         file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")
