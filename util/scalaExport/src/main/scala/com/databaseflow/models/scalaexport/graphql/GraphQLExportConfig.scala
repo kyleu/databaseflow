@@ -8,6 +8,7 @@ object GraphQLExportConfig {
   implicit val jsonDecoder: Decoder[GraphQLExportConfig] = deriveDecoder
 }
 
-case class GraphQLExportConfig(input: String, output: String, rootPrefix: String, pkg: String, schema: Option[String]) {
+case class GraphQLExportConfig(input: String, output: String, rootPrefix: String, pkg: String, modelPkg: String, schema: Option[String]) {
   def pkgSeq = pkg.split('.').map(_.trim).filter(_.nonEmpty)
+  def modelPkgSeq = modelPkg.split('.').map(_.trim).filter(_.nonEmpty)
 }

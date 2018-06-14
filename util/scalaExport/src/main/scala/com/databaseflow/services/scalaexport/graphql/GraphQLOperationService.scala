@@ -20,7 +20,7 @@ object GraphQLOperationService {
 
     file.add(s"""object ${cn.cn} {""", 1)
     addVariables(cfg.rootPrefix, file, d.variables)
-    addData(file, d.selections, nameMap)
+    addData(cfg.rootPrefix, cfg.modelPkg, file, cn.pkg, d.selections, nameMap)
     file.add(s"""val query = new GraphQLQuery[Data]("${cn.cn}")""")
     //addContent(file, d)
     file.add("}", -1)
@@ -28,11 +28,11 @@ object GraphQLOperationService {
   }
 
   private[this] def addVariables(rootPrefix: String, file: ScalaFile, variables: Seq[VariableDefinition]) = if (variables.nonEmpty) {
-    variables.foreach(v => GraphQLTranslations.scalaImport(rootPrefix, v.tpe).foreach(x => file.addImport(x._1, x._2)))
+    variables.foreach(v => GraphQLInputTranslations.scalaImport(rootPrefix, v.tpe).foreach(x => file.addImport(x._1, x._2)))
 
     val args = variables.map { v =>
-      val typ = GraphQLTranslations.scalaType(v.tpe)
-      s"${v.name}: $typ${GraphQLTranslations.defaultVal(typ)}"
+      val typ = GraphQLInputTranslations.scalaType(v.tpe)
+      s"${v.name}: $typ${GraphQLInputTranslations.defaultVal(typ)}"
     }.mkString(", ")
     val varsDecl = variables.map(v => s""""${v.name}" -> ${v.name}.asJson""").mkString(", ")
     file.add(s"def variables($args) = {", 1)
@@ -41,16 +41,19 @@ object GraphQLOperationService {
     file.add()
   }
 
-  private[this] def addData(file: ScalaFile, selections: Seq[Selection], nameMap: Map[String, GraphQLQueryParseService.ClassName]) = {
+  private[this] def addData(
+    rootPrefix: String, modelPackage: String, file: ScalaFile, pkg: Seq[String], selections: Seq[Selection], nameMap: Map[String, ClassName]
+  ) = {
     file.add(s"object Data {", 1)
     file.add(s"implicit val jsonDecoder: Decoder[Data] = deriveDecoder")
     file.add(s"}", -1)
 
     file.add(s"case class Data(", 1)
-    GraphQLQueryHelper.addFields(file, None, selections, nameMap)
+    GraphQLQueryHelper.addFields(rootPrefix, modelPackage, file, pkg, None, selections, nameMap)
     file.add(s")", -1)
     file.add()
   }
+
   private[this] def addContent(file: ScalaFile, op: OperationDefinition) = {
     file.add("override val content = \"\"\"", 1)
     Source.fromString(op.renderPretty).getLines.foreach(l => file.add("|" + l))

@@ -2,7 +2,7 @@ package com.databaseflow.services.scalaexport.graphql
 
 import sangria.ast.{ListType, NamedType, NotNullType, Type}
 
-object GraphQLTranslations {
+object GraphQLInputTranslations {
   def scalaType(typ: Type): String = typ match {
     case NotNullType(x, _) => scalaType(x)
     case ListType(x, _) => s"Seq[${scalaType(x)}]"

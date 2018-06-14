@@ -1,14 +1,19 @@
 package com.databaseflow.services.scalaexport.graphql
 
 import com.databaseflow.models.scalaexport.file.ScalaFile
+import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService.ClassName
+import com.databaseflow.services.scalaexport.graphql.GraphQLOutputTranslations.{scalaImport, scalaType}
 import sangria.ast._
-import sangria.schema.{Type => Typ}
+import sangria.schema.{ObjectType, ScalarType, Type => Typ}
 
 object GraphQLQueryHelper {
-  def addFields(file: ScalaFile, typ: Option[Typ], selections: Seq[Selection], nameMap: Map[String, GraphQLQueryParseService.ClassName]) = {
+  def addFields(
+    rootPrefix: String, modelPackage: String, file: ScalaFile, pkg: Seq[String], typ: Option[Typ], selections: Seq[Selection], nameMap: Map[String, ClassName]
+  ) = {
     selections.foreach { s =>
       val param = s match {
-        case Field(alias, name, _, _, sels, _, _, _) => s"${alias.getOrElse(name)}: ${typeForSelections(file, typ, sels, nameMap)}"
+        case Field(alias, name, _, _, sels, _, _, _) =>
+          s"${alias.getOrElse(name)}: ${typeForSelections(rootPrefix, modelPackage, file, name, pkg, typ, sels, nameMap)}"
         case x => s"/* $x */"
       }
       val comma = if (selections.lastOption.contains(s)) { "" } else { "," }
@@ -16,21 +21,41 @@ object GraphQLQueryHelper {
     }
   }
 
-  private[this] def typeForSelections(file: ScalaFile, typ: Option[Typ], sels: Vector[Selection], nameMap: Map[String, GraphQLQueryParseService.ClassName]) = {
+  private[this] def typeForSelections(
+    rootPrefix: String, modelPackage: String, file: ScalaFile, name: String, pkg: Seq[String], typ: Option[Typ], sels: Vector[Selection], nameMap: Map[String, ClassName]
+  ) = {
     val spreads = sels.flatMap {
       case x: FragmentSpread => Some(x)
+      case _: InlineFragment => throw new IllegalStateException("I don't know what an InlineFragment is.")
       case _ => None
     }
     val fields = sels.flatMap {
-      case _: FragmentSpread => None
-      case x => Some(x)
+      case x: Field => Some(x)
+      case _ => None
     }
     spreads.toList match {
       case h :: Nil if fields.isEmpty =>
         val cn = nameMap.getOrElse(h.name, throw new IllegalStateException(s"Cannot find fragment definition for [${h.name}]."))
-        file.addImport(cn.pkg.mkString("."), cn.cn)
+        if (cn.pkg.toSeq != pkg) {
+          file.addImport(cn.pkg.mkString("."), cn.cn)
+        }
         cn.cn
-      case _ => "Json"
+      case Nil if fields.isEmpty => typ match {
+        case Some(t) => t match {
+          case o: ObjectType[_, _] =>
+            val fieldType = o.fieldsFn().find(_.name == name).getOrElse(throw new IllegalStateException("Cannot find field [] in [].")).fieldType
+            scalaImport(rootPrefix, modelPackage, fieldType).foreach(x => file.addImport(x._1, x._2))
+            scalaType(fieldType)
+
+          case _ => s"Json /* $t */"
+        }
+        case None =>
+          file.addImport("io.circe", "Json")
+          "Json /* TODO */"
+      }
+      case _ =>
+        file.addImport("io.circe", "Json")
+        "Json"
     }
   }
 }
