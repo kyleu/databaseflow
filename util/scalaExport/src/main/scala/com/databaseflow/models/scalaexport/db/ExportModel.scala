@@ -45,7 +45,7 @@ case class ExportModel(
     case cols => "(" + cols.map(_.scalaType).mkString(", ") + ")"
   }
 
-  val indexedFields = fields.filter(_.indexed).filterNot(pkFields.contains).filterNot(_.t == ColumnType.TagsType)
+  val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
   val pkgString = pkg.mkString(".")

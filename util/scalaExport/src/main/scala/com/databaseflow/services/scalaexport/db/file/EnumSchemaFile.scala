@@ -6,10 +6,10 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 object EnumSchemaFile {
   def export(rootPrefix: String, enum: ExportEnum) = {
     val file = ScalaFile(enum.modelPackage, enum.className + "Schema", None)
-
-    file.addImport(rootPrefix + "graphql", "CommonSchema")
-    file.addImport(rootPrefix + "graphql", "GraphQLContext")
-    file.addImport(rootPrefix + "graphql", "GraphQLSchemaHelper")
+    val rp = if (rootPrefix.isEmpty) { "models." } else { rootPrefix }
+    file.addImport(rp + "graphql", "CommonSchema")
+    file.addImport(rp + "graphql", "GraphQLContext")
+    file.addImport(rp + "graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.schema", "EnumType")
     file.addImport("sangria.schema", "ListType")
     file.addImport("sangria.schema", "fields")

@@ -5,12 +5,14 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
   def addImports(rootPrefix: String, file: ScalaFile) = {
-    file.addImport(rootPrefix + "graphql", "GraphQLContext")
-    file.addImport(rootPrefix + "graphql", "GraphQLSchemaHelper")
+    val rp = if (rootPrefix.isEmpty) { "models." } else { rootPrefix }
+
+    file.addImport(rp + "graphql", "GraphQLContext")
+    file.addImport(rp + "graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
-    file.addImport(rootPrefix + "graphql.CommonSchema", "_")
-    file.addImport(rootPrefix + "graphql.DateTimeSchema", "_")
+    file.addImport(rp + "graphql.CommonSchema", "_")
+    file.addImport(rp + "graphql.DateTimeSchema", "_")
     file.addImport(rootPrefix + "models.result.filter.FilterSchema", "_")
     file.addImport(rootPrefix + "models.result.orderBy.OrderBySchema", "_")
     file.addImport(rootPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
@@ -37,20 +39,20 @@ object SchemaHelper {
   }
 
   def addPrimaryKeyArguments(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    model.pkFields.foreach(addArgument(model, _, file))
-    model.pkFields match {
-      case pkField :: Nil => addSeqArgument(model, pkField, file)
-      case _ => // noop
+    model.pkFields.foreach { f =>
+      addArgument(model, f, file)
+      addSeqArgument(model, f, file)
     }
     file.add()
   }
 
   def addIndexArguments(model: ExportModel, file: ScalaFile) = {
-    model.indexedFields.foreach { f =>
+    val filtered = model.indexedFields.filterNot(model.pkFields.contains)
+    filtered.foreach { f =>
       addArgument(model, f, file)
       addSeqArgument(model, f, file)
     }
-    if (model.indexedFields.nonEmpty) { file.add() }
+    if (filtered.nonEmpty) { file.add() }
   }
 
   def addArgument(model: ExportModel, field: ExportField, file: ScalaFile) = if (model.pkFields.nonEmpty) {

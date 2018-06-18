@@ -13,8 +13,9 @@ object GraphQLOperationService {
   def opFile(cfg: GraphQLExportConfig, n: String, d: OperationDefinition, nameMap: Map[String, ClassName], schema: Option[Schema[_, _]]) = {
     val cn = nameMap(n)
     val file = ScalaFile(cn.pkg, cn.cn, Some(""))
+    val rp = if (cfg.rootPrefix.isEmpty) { "models." } else { cfg.rootPrefix }
     file.addImport(cfg.rootPrefix + "util.JsonSerializers", "_")
-    file.addImport(cfg.rootPrefix + "graphql", "GraphQLQuery")
+    file.addImport(rp + "graphql", "GraphQLQuery")
 
     meaningfulComments(d.comments).foreach(c => file.add("// " + c))
 
