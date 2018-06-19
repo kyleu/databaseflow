@@ -15,7 +15,7 @@ object SchemaFile {
       file.addImport(enum.modelPackage.mkString(".") + "." + enum.className + "Schema", s"${enum.propertyName}EnumType")
     })
 
-    if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport("models.note", "NoteSchema") }
+    if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport(config.corePrefix + "models.note", "NoteSchema") }
     SchemaHelper.addImports(config.providedPrefix, file)
 
     file.add(s"""object ${model.className}Schema extends GraphQLSchemaHelper("${model.propertyName}") {""", 1)

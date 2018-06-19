@@ -23,7 +23,7 @@ object InjectExplore {
       )
     }
 
-    val schemaSourceFile = rootDir / "app" / "views" / "admin" / "layout" / "menu.scala.html"
+    val schemaSourceFile = rootDir / "app" / (result.config.pkgPrefix :+ "views").mkString("/") / "admin" / "layout" / "menu.scala.html"
     val newContent = queryFieldsFor(schemaSourceFile.contentAsString)
     schemaSourceFile.overwrite(newContent)
 
@@ -46,7 +46,7 @@ object InjectExplore {
       )
     }
 
-    val schemaSourceFile = rootDir / "app" / "views" / "admin" / "explore" / "explore.scala.html"
+    val schemaSourceFile = rootDir / "app" / (result.config.pkgPrefix :+ "views").mkString("/") / "admin" / "explore" / "explore.scala.html"
     val newContent = queryFieldsFor(schemaSourceFile.contentAsString)
     schemaSourceFile.overwrite(newContent)
 

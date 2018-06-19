@@ -40,7 +40,7 @@ object InjectSchema {
       InjectHelper.replaceBetween(original = s, start = "    // Start model fetchers", end = s"    // End model fetchers", newContent = newContent)
     }
 
-    val schemaSourceFile = rootDir / "app" / "models" / "graphql" / "Schema.scala"
+    val schemaSourceFile = rootDir / "app" / (result.config.pkgPrefix :+ "graphql").mkString("/") / "Schema.scala"
     val newContent = fetcherFieldsFor(enumQueryFieldsFor(modelQueryFieldsFor(mutationFieldsFor(schemaSourceFile.contentAsString))))
     schemaSourceFile.overwrite(newContent)
 

@@ -9,6 +9,7 @@ import com.databaseflow.services.scalaexport.db.file._
 
 object ExportFiles {
   var rootLocation = "./tmp/scalaexport"
+  var coreLocation = "./tmp/coreexport"
 
   def prepareRoot(remove: Boolean = true) = {
     val rootDir = rootLocation.toFile
@@ -18,27 +19,34 @@ object ExportFiles {
     if (!rootDir.exists) {
       rootDir.createDirectory()
     }
-    rootDir
+    val coreDir = coreLocation.toFile
+    if (coreDir.exists && remove) {
+      coreDir.delete()
+    }
+    if (!coreDir.exists) {
+      coreDir.createDirectory()
+    }
+    coreDir -> rootDir
   }
 
-  def persistThrift(result: ThriftParseResult, rootDir: File) = {
+  def persistThrift(result: ThriftParseResult, rootDir: (File, File)) = {
     result.allFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
-        rootDir / file.dir / file.filename
+        rootDir._2 / file.dir / file.filename
       } else {
-        rootDir / file.packageDir / file.filename
+        rootDir._2 / file.packageDir / file.filename
       }
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)
     }
   }
 
-  def persist(result: ExportResult, rootDir: File) = {
+  def persist(result: ExportResult, rootDir: (File, File)) = {
     result.enumFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
-        rootDir / file.dir / file.filename
+        rootDir._2 / file.dir / file.filename
       } else {
-        rootDir / file.packageDir / file.filename
+        rootDir._2 / file.packageDir / file.filename
       }
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)
@@ -46,9 +54,9 @@ object ExportFiles {
 
     result.sourceFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
-        rootDir / file.dir / file.filename
+        rootDir._2 / file.dir / file.filename
       } else {
-        rootDir / file.packageDir / file.filename
+        rootDir._2 / file.packageDir / file.filename
       }
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)
@@ -64,7 +72,7 @@ object ExportFiles {
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
     val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
     val rp = config.providedPrefix
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(rp, e), EnumSchemaFile.export(rp, e), EnumControllerFile.export(rp, e)) ++ gq ++ oq
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(rp, e), EnumSchemaFile.export(rp, e), EnumControllerFile.export(config, e)) ++ gq ++ oq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {

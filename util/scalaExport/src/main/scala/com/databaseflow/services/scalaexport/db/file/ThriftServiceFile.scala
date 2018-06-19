@@ -7,15 +7,15 @@ object ThriftServiceFile {
   private[this] val credsParam = "1: common.Credentials creds,"
 
   def export(model: ExportModel) = {
-    val file = ThriftFile(model.servicePackage, model.className + "Service")
+    val file = ThriftFile("services" +: model.pkg, model.className + "Service")
 
     file.add("namespace java " + model.servicePackage.mkString("."))
     file.add()
 
-    val parent = model.servicePackage.map(_ => "../").mkString
+    val parent = ("services" +: model.pkg).map(_ => "../").mkString
     file.add(s"""include "${parent}common.thrift"""")
     file.add(s"""include "${parent}result.thrift"""")
-    file.add(s"""include "../../${model.modelPackage.mkString("/")}/${model.className}.thrift"""")
+    file.add(s"""include "../../${("models" +: model.pkg).mkString("/")}/${model.className}.thrift"""")
     file.add()
 
     file.add(s"service ${model.className}Service {", 1)

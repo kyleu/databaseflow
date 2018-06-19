@@ -13,7 +13,7 @@ object InjectAuditRoutes {
       InjectHelper.replaceBetween(original = s, start = "    /* Start audit calls */", end = "    /* End audit calls */", newContent = newContent)
     }
 
-    val file = rootDir / "app" / "services" / "audit" / "AuditRoutes.scala"
+    val file = rootDir / "app" / (result.config.pkgPrefix :+ "services").mkString("/") / "audit" / "AuditRoutes.scala"
     val newContent = routeFieldsFor(file.contentAsString)
     file.overwrite(newContent)
 

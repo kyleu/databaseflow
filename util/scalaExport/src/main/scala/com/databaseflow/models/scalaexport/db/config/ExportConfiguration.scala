@@ -28,6 +28,8 @@ case class ExportConfiguration(
   def getModelOptWithIgnored(k: String) = models.find(m => m.tableName == k || m.propertyName == k || m.className == k)
 
   val providedPrefix = providedPackage.map(_ + ".").getOrElse("")
+  val pkgPrefix = corePackage.getOrElse("").split('.').filter(_.nonEmpty).toList
+  val corePrefix = corePackage.map(_ + ".").getOrElse("")
 
   lazy val packages = {
     val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)

@@ -62,7 +62,7 @@ object InjectSearch {
       }
     }
 
-    val searchSourceFile = rootDir / "app" / "controllers" / "admin" / "system" / "SearchController.scala"
+    val searchSourceFile = rootDir / "app" / (result.config.pkgPrefix :+ "controllers").mkString("/") / "admin" / "system" / "SearchController.scala"
 
     val newContent = searchFieldsFor(searchSourceFile.contentAsString)
     searchSourceFile.overwrite(newContent)

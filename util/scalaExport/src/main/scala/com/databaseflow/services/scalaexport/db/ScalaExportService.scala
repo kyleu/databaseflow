@@ -43,7 +43,7 @@ case class ScalaExportService(config: ExportConfiguration) {
     val enumFiles = ExportFiles.exportEnums(config)
     val models = config.models.filterNot(_.ignored)
     val modelFiles = models.map(model => ExportFiles.exportModel(config, model))
-    val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models)
+    val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models, config.pkgPrefix)
     Future.successful(db.ExportResult(config, modelFiles.map(_._1), enumFiles, modelFiles.flatMap(_._2), rootFiles))
   }
 }

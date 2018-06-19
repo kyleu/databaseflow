@@ -1,17 +1,16 @@
 package com.databaseflow.services.scalaexport.db.file
 
 import com.databaseflow.models.scalaexport.db.ExportModel
-import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.file.ThriftFile
 
 object ThriftModelFile {
   def export(model: ExportModel) = {
-    val file = ThriftFile(model.modelPackage, model.className)
+    val file = ThriftFile("models" +: model.pkg, model.className)
 
     file.add("namespace java " + model.modelPackage.mkString("."))
     file.add()
 
-    val parent = model.modelPackage.map(_ => "../").mkString
+    val parent = ("models" +: model.pkg).map(_ => "../").mkString
     file.add(s"""include "${parent}common.thrift"""")
     file.add(s"""include "${parent}result.thrift"""")
     file.add()

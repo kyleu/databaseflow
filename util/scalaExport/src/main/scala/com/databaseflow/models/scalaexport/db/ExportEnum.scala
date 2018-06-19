@@ -12,13 +12,14 @@ case class ExportEnum(
     pkg: List[String] = Nil,
     name: String,
     className: String,
+    pkgPrefix: List[String] = Nil,
     values: Seq[String],
     ignored: Boolean = false
 ) {
   val propertyName = ExportHelper.toIdentifier(className)
-  val modelPackage = "models" +: pkg
-  val tablePackage = "models" +: "table" +: pkg
-  val controllerPackage = "controllers" +: "admin" +: (if (pkg.isEmpty) { List("system") } else { pkg })
+  val modelPackage = pkgPrefix ++ List("models") ++ pkg
+  val tablePackage = pkgPrefix ++ List("models", "table") ++ pkg
+  val controllerPackage = pkgPrefix ++ List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
   val controllerClass = (controllerPackage :+ (className + "Controller")).mkString(".")
   val fullClassName = (modelPackage :+ className).mkString(".")
 }

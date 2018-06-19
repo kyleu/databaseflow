@@ -9,14 +9,14 @@ object TwirlListFile {
     val listFile = TwirlFile(model.viewPackage, model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
 
-    listFile.add(s"@(user: models.user.SystemUser, totalCount: Option[Int], modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
+    listFile.add(s"@(user: ${config.corePrefix}models.user.SystemUser, totalCount: Option[Int], modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.providedPrefix}util.tracing.TraceData")
     listFile.add(s")@traceData.logViewClass(getClass)", -2)
-    listFile.add("@views.html.admin.explore.list(", 1)
+    listFile.add(s"@${config.corePrefix}views.html.admin.explore.list(", 1)
     listFile.add("user = user,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")
-    listFile.add(s"icon = models.template.Icons.${model.propertyName},")
+    listFile.add(s"icon = ${config.providedPrefix}models.template.Icons.${model.propertyName},")
     listFile.add("cols = Seq(", 1)
     model.searchFields.foreach {
       case c if model.searchFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")

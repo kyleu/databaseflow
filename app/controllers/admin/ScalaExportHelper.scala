@@ -10,7 +10,7 @@ import scala.util.control.NonFatal
 object ScalaExportHelper {
   def merge(schema: Schema, config: ExportConfiguration) = {
     val enums = {
-      val schEnums = schema.enums.map(e => ExportEnum(Nil, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), e.values))
+      val schEnums = schema.enums.map(e => ExportEnum(Nil, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), config.pkgPrefix, e.values))
       (config.enums ++ schEnums).groupBy(_.className).map(_._2.head).toSeq
     }
     val models = schema.tables.map { t =>
@@ -33,11 +33,12 @@ object ScalaExportHelper {
     config.copy(models = models)
   }
 
-  def enumFor(e: EnumType, form: Map[String, String]) = try {
+  def enumFor(e: EnumType, form: Map[String, String], pkgPrefix: List[String]) = try {
     ExportEnum(
       pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
       name = e.key,
       className = form("className"),
+      pkgPrefix = pkgPrefix,
       values = e.values,
       ignored = form.get("ignored").contains("true")
     )
@@ -45,7 +46,7 @@ object ScalaExportHelper {
     case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for enum [${e.key}].", x)
   }
 
-  def modelForTable(schema: Schema, t: Table, form: Map[String, String], enums: Seq[ExportEnum]) = try {
+  def modelForTable(schema: Schema, t: Table, form: Map[String, String], enums: Seq[ExportEnum], pkgPrefix: List[String]) = try {
     ExportModel(
       tableName = t.name,
       pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
@@ -62,6 +63,7 @@ object ScalaExportHelper {
       references = ExportConfigurationHelper.references(schema, t, form),
       extendsClass = form.get("extendsClass").filter(_.nonEmpty),
       icon = form.get("icon").filter(_.nonEmpty),
+      pkgPrefix = pkgPrefix,
       scalaJs = form.get("scalaJs").contains("true"),
       ignored = form.get("ignored").contains("true"),
       audited = form.get("audited").contains("true"),

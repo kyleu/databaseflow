@@ -14,7 +14,7 @@ object InjectAuditLookup {
       InjectHelper.replaceBetween(original = s, start = "    /* Start registry lookups */", end = "    /* End registry lookups */", newContent = newContent)
     }
 
-    val file = rootDir / "app" / "services" / "audit" / "AuditLookup.scala"
+    val file = rootDir / "app" / (result.config.pkgPrefix :+ "services").mkString("/") / "audit" / "AuditLookup.scala"
     val newContent = serviceFieldsFor(file.contentAsString)
     file.overwrite(newContent)
 

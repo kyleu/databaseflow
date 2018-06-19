@@ -5,14 +5,12 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
   def addImports(providedPrefix: String, file: ScalaFile) = {
-    val rp = if (providedPrefix.isEmpty) { "models." } else { providedPrefix }
-
-    file.addImport(rp + "graphql", "GraphQLContext")
-    file.addImport(rp + "graphql", "GraphQLSchemaHelper")
+    file.addImport(providedPrefix + "graphql", "GraphQLContext")
+    file.addImport(providedPrefix + "graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
-    file.addImport(rp + "graphql.CommonSchema", "_")
-    file.addImport(rp + "graphql.DateTimeSchema", "_")
+    file.addImport(providedPrefix + "graphql.CommonSchema", "_")
+    file.addImport(providedPrefix + "graphql.DateTimeSchema", "_")
     file.addImport(providedPrefix + "models.result.filter.FilterSchema", "_")
     file.addImport(providedPrefix + "models.result.orderBy.OrderBySchema", "_")
     file.addImport(providedPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")

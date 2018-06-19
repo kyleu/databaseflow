@@ -9,11 +9,11 @@ object TwirlViewFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     val file = TwirlFile(model.viewPackage, model.propertyName + "View")
-    val audits = if (model.audited) { ", auditRecords: Seq[models.audit.AuditRecord]" } else { "" }
-    file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, notes: Seq[models.note.Note]$audits, debug: Boolean)(")
+    val audits = if (model.audited) { s", auditRecords: Seq[${config.corePrefix}models.audit.AuditRecord]" } else { "" }
+    file.add(s"@(user: ${config.corePrefix}models.user.SystemUser, model: ${model.modelClass}, notes: Seq[${config.corePrefix}models.note.Note]$audits, debug: Boolean)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.providedPrefix}util.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
-    file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
+    file.add(s""")@traceData.logViewClass(getClass)@${config.corePrefix}views.html.admin.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
     file.add("""<div class="collection with-header">""", 1)
     file.add("<div class=\"collection-header\">", 1)
@@ -66,9 +66,9 @@ object TwirlViewFile {
 
     if (model.pkFields.nonEmpty) {
       val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
-      file.add(s"""@views.html.admin.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
+      file.add(s"""@${config.corePrefix}views.html.admin.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
       if (model.audited) {
-        file.add(s"""@views.html.admin.audit.auditRecords(auditRecords, "${model.propertyName}", "${model.title}", $modelPks)""")
+        file.add(s"""@${config.corePrefix}views.html.admin.audit.auditRecords(auditRecords, "${model.propertyName}", "${model.title}", $modelPks)""")
       }
     }
     file.add("</div>", -1)
@@ -98,7 +98,7 @@ object TwirlViewFile {
       file.add("</li>", -1)
     }
     file.add("</ul>", -1)
-    file.add("@views.html.components.includeScalaJs(debug)")
+    file.add(s"@${config.corePrefix}views.html.components.includeScalaJs(debug)")
     file.add(s"""<script>$$(function() { new RelationService('@${model.routesClass}.relationCounts($args)') });</script>""")
   }
 }

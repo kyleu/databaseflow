@@ -13,7 +13,7 @@ object ExportConfigurationDefault {
         case "setting_key" => List("settings")
         case _ => Nil
       }
-      ExportEnum(pkg, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), e.values)
+      ExportEnum(pkg, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), Nil, e.values)
     }
     ExportConfiguration(
       key = key,

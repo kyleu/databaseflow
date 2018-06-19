@@ -11,9 +11,9 @@ object TwirlFormFile {
     val interpArgs = model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ")
     val viewArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
 
-    file.add(s"@(user: models.user.SystemUser, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
+    file.add(s"@(user: ${config.corePrefix}models.user.SystemUser, model: ${model.modelClass}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.providedPrefix}util.tracing.TraceData")
-    file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "explore", title) {""", 1)
+    file.add(s""")@traceData.logViewClass(getClass)@${config.corePrefix}views.html.admin.layout.page(user, "explore", title) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     file.add("""<div class="collection with-header">""", 1)
@@ -30,7 +30,7 @@ object TwirlFormFile {
 
     model.fields.foreach { field =>
       val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.columnName)).map(x => x -> config.getModel(x.targetTable))
-      TwirlFormFields.fieldFor(config.providedPrefix, model, field, file, autocomplete)
+      TwirlFormFields.fieldFor(config, model, field, file, autocomplete)
     }
 
     file.add("</tbody>", -1)
@@ -42,8 +42,8 @@ object TwirlFormFile {
 
     file.add("}", -1)
 
-    file.add("@views.html.components.includeScalaJs(debug)")
-    file.add("@views.html.components.includeAutocomplete(debug)")
+    file.add(s"@${config.corePrefix}views.html.components.includeScalaJs(debug)")
+    file.add(s"@${config.corePrefix}views.html.components.includeAutocomplete(debug)")
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
 
     file

@@ -31,6 +31,7 @@ case class ExportModel(
     references: List[ExportModel.Reference],
     extendsClass: Option[String] = None,
     icon: Option[String] = None,
+    pkgPrefix: List[String] = Nil,
     scalaJs: Boolean = false,
     ignored: Boolean = false,
     audited: Boolean = false,
@@ -48,19 +49,19 @@ case class ExportModel(
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
-  val pkgString = pkg.mkString(".")
+  val pkgString = (pkgPrefix ++ pkg).mkString(".")
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
 
-  val viewPackage = "views" +: "admin" +: pkg
-  val viewHtmlPackage = "views" +: "html" +: "admin" +: pkg
+  val viewPackage = pkgPrefix ++ Seq("views", "admin") ++ pkg
+  val viewHtmlPackage = pkgPrefix ++ Seq("views", "html", "admin") ++ pkg
 
-  val modelPackage = "models" +: pkg
+  val modelPackage = pkgPrefix ++ Seq("models") ++ pkg
   val modelClass = (modelPackage :+ className).mkString(".")
 
-  val queriesPackage = "models" +: "queries" +: pkg
-  val tablePackage = "models" +: "table" +: pkg
+  val queriesPackage = pkgPrefix ++ Seq("models", "queries") ++ pkg
+  val tablePackage = pkgPrefix ++ Seq("models", "table") ++ pkg
 
-  val servicePackage = "services" +: pkg
+  val servicePackage = pkgPrefix ++ Seq("services") ++ pkg
   val serviceDirectory = "app"
   val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
   val serviceReference = pkg match {
@@ -68,7 +69,7 @@ case class ExportModel(
     case _ => "services." + pkg.head + "Services." + propertyName + "Service"
   }
 
-  val controllerPackage = "controllers" +: "admin" +: (if (pkg.isEmpty) { List("system") } else { pkg })
+  val controllerPackage = pkgPrefix ++ Seq("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
   val controllerDirectory = "app"
   val controllerClass = (controllerPackage :+ (className + "Controller")).mkString(".")
   val truncatedController = tableName == "system_users"

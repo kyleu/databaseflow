@@ -32,7 +32,7 @@ object InjectBindables {
       InjectHelper.replaceBetween(original = s, start = startString, end = "  /* End model bindables */", newContent = newContent)
     }
 
-    val sourceFile = rootDir / "app" / "util" / "web" / "ModelBindables.scala"
+    val sourceFile = rootDir / "app" / (result.config.pkgPrefix :+ "util").mkString("/") / "web" / "ModelBindables.scala"
     val newContent = fieldsFor(sourceFile.contentAsString)
     sourceFile.overwrite(newContent)
 

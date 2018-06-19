@@ -50,8 +50,10 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
     ConnectionSettingsService.connFor(conn) match {
       case Some(cs) => SchemaService.getSchemaWithDetails(None, cs).flatMap { schema =>
+        val corePackage = form.get("project.corePackage").filter(_.nonEmpty)
+        val pkgPrefix = corePackage.getOrElse("").split('.').filter(_.nonEmpty).toList
         val enums = schema.enums.map { e =>
-          ScalaExportHelper.enumFor(e, form.filter(_._1.startsWith("enum." + e.key)).map(x => x._1.stripPrefix("enum." + e.key + ".") -> x._2))
+          ScalaExportHelper.enumFor(e, form.filter(_._1.startsWith("enum." + e.key)).map(x => x._1.stripPrefix("enum." + e.key + ".") -> x._2), pkgPrefix)
         }
         val config = ExportConfiguration(
           key = ExportHelper.toIdentifier(schema.id),
@@ -61,12 +63,12 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           enums = enums,
           models = schema.tables.map { t =>
             val prefix = s"model.${t.name}."
-            ScalaExportHelper.modelForTable(schema, t, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums)
+            ScalaExportHelper.modelForTable(schema, t, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums, pkgPrefix)
           },
           source = form("project.source"),
           projectLocation = form.get("project.location").filter(_.nonEmpty),
           providedPackage = form.get("project.providedPackage").filter(_.nonEmpty),
-          corePackage = form.get("project.corePackage").filter(_.nonEmpty),
+          corePackage = corePackage,
           coreLocation = form.get("project.coreLocation").filter(_.nonEmpty),
           modelLocationOverride = form.get("model.location").filter(_.nonEmpty),
           thriftLocationOverride = form.get("thrift.location").filter(_.nonEmpty)
