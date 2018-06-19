@@ -17,7 +17,9 @@ case class ExportConfiguration(
     models: Seq[ExportModel],
     source: String = "boilerplay",
     projectLocation: Option[String] = None,
-    defaultPackage: Option[String] = None,
+    providedPackage: Option[String] = None,
+    corePackage: Option[String] = None,
+    coreLocation: Option[String] = None,
     modelLocationOverride: Option[String] = None,
     thriftLocationOverride: Option[String] = None
 ) {
@@ -25,7 +27,7 @@ case class ExportConfiguration(
   def getModelOpt(k: String) = getModelOptWithIgnored(k).filterNot(_.ignored)
   def getModelOptWithIgnored(k: String) = models.find(m => m.tableName == k || m.propertyName == k || m.className == k)
 
-  val rootPrefix = defaultPackage.map(_ + ".").getOrElse("")
+  val providedPrefix = providedPackage.map(_ + ".").getOrElse("")
 
   lazy val packages = {
     val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)

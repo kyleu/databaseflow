@@ -1,22 +1,23 @@
 package com.databaseflow.services.scalaexport.db.file
 
 import com.databaseflow.models.scalaexport.db.ExportModel
+import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object ResultFile {
   private[this] val resultArgs = "paging = paging, filters = filters, orderBys = orderBys, totalCount = totalCount, results = results, durationMs = durationMs"
 
-  def export(rootPrefix: String, model: ExportModel, modelLocationOverride: Option[String]) = {
-    val root = modelLocationOverride.orElse(if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None })
+  def export(config: ExportConfiguration, model: ExportModel) = {
+    val root = config.modelLocationOverride.orElse(if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None })
     val file = ScalaFile(model.modelPackage, model.className + "Result", root = root)
 
     file.addImport("java.time", "LocalDateTime")
-    file.addImport(rootPrefix + "models.result", "BaseResult")
-    file.addImport(rootPrefix + "models.result.filter", "Filter")
-    file.addImport(rootPrefix + "models.result.orderBy", "OrderBy")
-    file.addImport(rootPrefix + "models.result.paging", "PagingOptions")
+    file.addImport(config.providedPrefix + "models.result", "BaseResult")
+    file.addImport(config.providedPrefix + "models.result.filter", "Filter")
+    file.addImport(config.providedPrefix + "models.result.orderBy", "OrderBy")
+    file.addImport(config.providedPrefix + "models.result.paging", "PagingOptions")
 
-    file.addImport(rootPrefix + "util.JsonSerializers", "_")
+    file.addImport(config.providedPrefix + "util.JsonSerializers", "_")
 
     file.add(s"final case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")
@@ -25,7 +26,7 @@ object ResultFile {
     file.add("override val paging: PagingOptions = PagingOptions(),")
     file.add(s"override val results: Seq[${model.className}] = Nil,")
     file.add("override val durationMs: Int = 0,")
-    file.add(s"override val occurred: LocalDateTime = ${rootPrefix}util.DateUtils.now")
+    file.add(s"override val occurred: LocalDateTime = ${config.providedPrefix}util.DateUtils.now")
     file.add(s") extends BaseResult[${model.className}]", -2)
 
     file.add()
@@ -39,7 +40,7 @@ object ResultFile {
     file.add(s"  startMs: Long, totalCount: Int, results: Seq[${model.className}]")
     file.add(") = {", 1)
     file.add("val paging = PagingOptions.from(totalCount, limit, offset)")
-    file.add(s"val durationMs = (${rootPrefix}util.DateUtils.nowMillis - startMs).toInt")
+    file.add(s"val durationMs = (${config.providedPrefix}util.DateUtils.nowMillis - startMs).toInt")
     file.add(s"${model.className}Result($resultArgs)")
     file.add("}", -1)
     file.add("}", -1)

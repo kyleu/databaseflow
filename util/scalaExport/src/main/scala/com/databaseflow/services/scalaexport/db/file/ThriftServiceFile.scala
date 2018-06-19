@@ -1,12 +1,12 @@
 package com.databaseflow.services.scalaexport.db.file
 
-import com.databaseflow.models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
+import com.databaseflow.models.scalaexport.db.{ExportField, ExportModel}
 import com.databaseflow.models.scalaexport.file.ThriftFile
 
 object ThriftServiceFile {
   private[this] val credsParam = "1: common.Credentials creds,"
 
-  def export(model: ExportModel, enums: Seq[ExportEnum]) = {
+  def export(model: ExportModel) = {
     val file = ThriftFile(model.servicePackage, model.className + "Service")
 
     file.add("namespace java " + model.servicePackage.mkString("."))

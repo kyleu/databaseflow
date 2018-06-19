@@ -18,7 +18,9 @@ object ExportFieldGraphQL {
 
     case DateType => "localDateType"
     case TimeType => "localTimeType"
+    case TimeTZType => "zonedTimeType"
     case TimestampType => "localDateTimeType"
+    case TimestampTZType => "zonedDateTimeType"
 
     case RefType => "StringType"
     case XmlType => "StringType"

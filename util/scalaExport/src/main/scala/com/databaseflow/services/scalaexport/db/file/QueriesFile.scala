@@ -1,19 +1,20 @@
 package com.databaseflow.services.scalaexport.db.file
 
 import com.databaseflow.models.scalaexport.db.ExportModel
+import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object QueriesFile {
-  def export(rootPrefix: String, model: ExportModel) = {
+  def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.queriesPackage, model.className + "Queries")
 
     file.addImport(model.modelPackage.mkString("."), model.className)
-    file.addImport(rootPrefix + "models.database", "Row")
-    file.addImport(rootPrefix + "models.database", "DatabaseField")
-    file.addImport(rootPrefix + "models.database.DatabaseFieldType", "_")
+    file.addImport(config.providedPrefix + "models.database", "Row")
+    file.addImport(config.providedPrefix + "models.database", "DatabaseField")
+    file.addImport(config.providedPrefix + "models.database.DatabaseFieldType", "_")
 
     if (model.pkg.nonEmpty) {
-      file.addImport(rootPrefix + "models.queries", "BaseQueries")
+      file.addImport(config.providedPrefix + "models.queries", "BaseQueries")
     }
 
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.tableName}") {""", 1)
@@ -32,7 +33,7 @@ object QueriesFile {
     }
     file.add()
 
-    file.addImport(rootPrefix + "models.result.filter", "Filter")
+    file.addImport(config.providedPrefix + "models.result.filter", "Filter")
     file.add("def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)")
 
     file.add("def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
@@ -50,12 +51,12 @@ object QueriesFile {
 
     writePkFields(file, model)
 
-    QueriesHelper.writeForeignKeys(rootPrefix, model, file)
+    QueriesHelper.writeForeignKeys(config.providedPrefix, model, file)
 
     file.add(s"def insert(model: ${model.className}) = new Insert(model)")
     file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
 
-    file.addImport(rootPrefix + "models.result.data", "DataField")
+    file.addImport(config.providedPrefix + "models.result.data", "DataField")
     file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
 
     if (model.pkFields.nonEmpty) {

@@ -24,8 +24,10 @@ object QueryTranslations extends Logging {
     case DOUBLE => DoubleType
     case BINARY | VARBINARY | LONGVARBINARY | BLOB => ByteArrayType
     case DATE => DateType
-    case TIME | TIME_WITH_TIMEZONE => TimeType
-    case TIMESTAMP | TIMESTAMP_WITH_TIMEZONE => TimestampType
+    case TIME => TimeType
+    case TIME_WITH_TIMEZONE => TimeTZType
+    case TIMESTAMP => TimestampType
+    case TIMESTAMP_WITH_TIMEZONE => TimestampTZType
     case REF | REF_CURSOR => RefType
     case SQLXML => XmlType
     case OTHER => n match {

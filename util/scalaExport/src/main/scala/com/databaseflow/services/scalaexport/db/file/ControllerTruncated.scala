@@ -8,12 +8,12 @@ object ControllerTruncated {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.controllerPackage, model.className + "Controller")
     val viewHtmlPackage = model.viewHtmlPackage.mkString(".")
-    file.addImport(config.rootPrefix + "models", "Application")
-    file.addImport(config.rootPrefix + "util.FutureUtils", "defaultContext")
+    file.addImport(config.providedPrefix + "models", "Application")
+    file.addImport(config.providedPrefix + "util.FutureUtils", "defaultContext")
     file.addImport("controllers.admin", "ServiceController")
     file.addImport("services.audit", "AuditRecordService")
-    file.addImport(config.rootPrefix + "util.JsonSerializers", "_")
-    file.addImport(config.rootPrefix + "util.ReftreeUtils", "_")
+    file.addImport(config.providedPrefix + "util.JsonSerializers", "_")
+    file.addImport(config.providedPrefix + "util.ReftreeUtils", "_")
     file.addImport("play.api.http", "MimeTypes")
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
 

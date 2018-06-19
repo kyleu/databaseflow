@@ -12,9 +12,9 @@ object GraphQLOutputTranslations {
     }
   }
 
-  def scalaImport(rootPrefix: String, modelPackage: String, t: Type): Option[(String, String)] = t match {
-    case OptionType(x) => scalaImport(rootPrefix, modelPackage, x)
-    case ListType(x) => scalaImport(rootPrefix, modelPackage, x)
+  def scalaImport(providedPrefix: String, modelPackage: String, t: Type): Option[(String, String)] = t match {
+    case OptionType(x) => scalaImport(providedPrefix, modelPackage, x)
+    case ListType(x) => scalaImport(providedPrefix, modelPackage, x)
     case EnumType(n, _, _, _, _) => Some(modelPackage -> n)
     case _ => t.namedType.name match {
       case "DateTime" | "Date" | "Time" => Some("java.time" -> ("Local" + t.namedType.name))

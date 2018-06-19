@@ -13,14 +13,14 @@ object GraphQLOperationService {
   def opFile(cfg: GraphQLExportConfig, n: String, d: OperationDefinition, nameMap: Map[String, ClassName], schema: Option[Schema[_, _]]) = {
     val cn = nameMap(n)
     val file = ScalaFile(cn.pkg, cn.cn, Some(""))
-    val rp = if (cfg.rootPrefix.isEmpty) { "models." } else { cfg.rootPrefix }
-    file.addImport(cfg.rootPrefix + "util.JsonSerializers", "_")
+    val rp = if (cfg.providedPrefix.isEmpty) { "models." } else { cfg.providedPrefix }
+    file.addImport(cfg.providedPrefix + "util.JsonSerializers", "_")
     file.addImport(rp + "graphql", "GraphQLQuery")
 
     meaningfulComments(d.comments).foreach(c => file.add("// " + c))
 
     file.add(s"""object ${cn.cn} {""", 1)
-    addVariables(cfg.rootPrefix, file, d.variables)
+    addVariables(cfg.providedPrefix, file, d.variables)
     val typ: Option[Typ] = if (d.operationType == OperationType.Query) {
       schema.map(_.query)
     } else if (d.operationType == OperationType.Mutation) {
@@ -28,15 +28,15 @@ object GraphQLOperationService {
     } else {
       throw new IllegalStateException(d.operationType.toString)
     }
-    addData(cfg.rootPrefix, cfg.modelPkg, typ, file, cn.pkg, d.selections, nameMap)
+    addData(cfg.providedPrefix, cfg.modelPkg, typ, file, cn.pkg, d.selections, nameMap)
     file.add(s"""val query = new GraphQLQuery[Data]("${cn.cn}")""")
     //addContent(file, d)
     file.add("}", -1)
     Some(file)
   }
 
-  private[this] def addVariables(rootPrefix: String, file: ScalaFile, variables: Seq[VariableDefinition]) = if (variables.nonEmpty) {
-    variables.foreach(v => GraphQLInputTranslations.scalaImport(rootPrefix, v.tpe).foreach(x => file.addImport(x._1, x._2)))
+  private[this] def addVariables(providedPrefix: String, file: ScalaFile, variables: Seq[VariableDefinition]) = if (variables.nonEmpty) {
+    variables.foreach(v => GraphQLInputTranslations.scalaImport(providedPrefix, v.tpe).foreach(x => file.addImport(x._1, x._2)))
 
     val args = variables.map { v =>
       val typ = GraphQLInputTranslations.scalaType(v.tpe)
@@ -51,14 +51,14 @@ object GraphQLOperationService {
   }
 
   private[this] def addData(
-    rootPrefix: String, modelPackage: String, typ: Option[Typ], file: ScalaFile, pkg: Seq[String], selections: Seq[Selection], nameMap: Map[String, ClassName]
+    providedPrefix: String, modelPackage: String, typ: Option[Typ], file: ScalaFile, pkg: Seq[String], selections: Seq[Selection], nameMap: Map[String, ClassName]
   ) = {
     file.add(s"object Data {", 1)
     file.add(s"implicit val jsonDecoder: Decoder[Data] = deriveDecoder")
     file.add(s"}", -1)
 
     file.add(s"case class Data(", 2)
-    GraphQLQueryHelper.addFields(rootPrefix, modelPackage, file, pkg, typ, selections, nameMap)
+    GraphQLQueryHelper.addFields(providedPrefix, modelPackage, file, pkg, typ, selections, nameMap)
     file.add(s")", -2)
     file.add()
   }

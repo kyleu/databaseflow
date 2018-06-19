@@ -14,13 +14,13 @@ object GraphQLInputTranslations {
     case _ => typ.toString
   }
 
-  def scalaImport(rootPrefix: String, t: Type): Option[(String, String)] = t match {
-    case NotNullType(x, _) => scalaImport(rootPrefix, x)
-    case ListType(x, _) => scalaImport(rootPrefix, x)
+  def scalaImport(providedPrefix: String, t: Type): Option[(String, String)] = t match {
+    case NotNullType(x, _) => scalaImport(providedPrefix, x)
+    case ListType(x, _) => scalaImport(providedPrefix, x)
     case _ => t.namedType.renderCompact match {
       case "UUID" => Some("java.util" -> "UUID")
-      case "FilterInput" => Some((rootPrefix + "models.result.filter") -> "Filter")
-      case "OrderByInput" => Some((rootPrefix + "models.result.orderBy") -> "OrderBy")
+      case "FilterInput" => Some((providedPrefix + "models.result.filter") -> "Filter")
+      case "OrderByInput" => Some((providedPrefix + "models.result.orderBy") -> "OrderBy")
       case _ => None
     }
   }

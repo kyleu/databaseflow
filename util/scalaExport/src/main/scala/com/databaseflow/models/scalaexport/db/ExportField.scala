@@ -10,7 +10,7 @@ object ExportField {
   implicit val jsonEncoder: Encoder[ExportField] = deriveEncoder
   implicit val jsonDecoder: Decoder[ExportField] = deriveDecoder
 
-  def getDefaultString(rootPrefix: String, t: ColumnType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
+  def getDefaultString(providedPrefix: String, t: ColumnType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
     case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
     case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
@@ -20,15 +20,15 @@ object ExportField {
     case DoubleType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0")
     case BigDecimalType => s"BigDecimal(${defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0")})"
 
-    case DateType => rootPrefix + "util.DateUtils.today"
-    case TimeType => rootPrefix + "util.DateUtils.currentTime"
-    case TimestampType => rootPrefix + "util.DateUtils.now"
+    case DateType => providedPrefix + "util.DateUtils.today"
+    case TimeType => providedPrefix + "util.DateUtils.currentTime"
+    case TimestampType => providedPrefix + "util.DateUtils.now"
 
     case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
 
     case JsonType => "Json.obj()"
     case ArrayType => "Seq.empty"
-    case TagsType => s"Seq.empty[${rootPrefix}models.tag.Tag]"
+    case TagsType => s"Seq.empty[${providedPrefix}models.tag.Tag]"
     case EnumType => enumOpt match {
       case Some(enum) => enum.className + "." + ExportHelper.toClassName(ExportHelper.toIdentifier(defaultValue.flatMap { d =>
         enum.values.find(_ == d)
@@ -89,7 +89,7 @@ case class ExportField(
     }
   }
 
-  def defaultString(rootPrefix: String) = ExportField.getDefaultString(rootPrefix, t, enumOpt, defaultValue)
+  def defaultString(providedPrefix: String) = ExportField.getDefaultString(providedPrefix, t, enumOpt, defaultValue)
 
   def fromString(s: String) = enumOpt.map { enum =>
     s"${enum.className}.withValue($s)"

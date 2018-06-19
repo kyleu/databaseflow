@@ -10,14 +10,14 @@ object ControllerFile {
   } else {
     val file = ScalaFile(model.controllerPackage, model.className + "Controller")
     val viewHtmlPackage = model.viewHtmlPackage.mkString(".")
-    file.addImport(config.rootPrefix + "models", "Application")
+    file.addImport(config.providedPrefix + "models", "Application")
     file.addImport("controllers.admin", "ServiceController")
     file.addImport("services.audit", "AuditRecordService")
     file.addImport("scala.concurrent", "Future")
-    file.addImport(config.rootPrefix + "models.result.orderBy", "OrderBy")
-    file.addImport(config.rootPrefix + "util.JsonSerializers", "_")
+    file.addImport(config.providedPrefix + "models.result.orderBy", "OrderBy")
+    file.addImport(config.providedPrefix + "util.JsonSerializers", "_")
     file.addImport("play.api.http", "MimeTypes")
-    file.addImport(config.rootPrefix + "util.ReftreeUtils", "_")
+    file.addImport(config.providedPrefix + "util.ReftreeUtils", "_")
     file.addImport(model.servicePackage.mkString("."), model.className + "Service")
     file.addImport(model.modelPackage.mkString("."), model.className + "Result")
 
@@ -57,7 +57,7 @@ object ControllerFile {
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
     file.add("""withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    file.add(s"val startMs = ${config.rootPrefix}util.DateUtils.nowMillis")
+    file.add(s"val startMs = ${config.providedPrefix}util.DateUtils.nowMillis")
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 

@@ -18,7 +18,7 @@ object QueriesHelper {
     file.add(")", -1)
   }
 
-  def writeForeignKeys(rootPrefix: String, model: ExportModel, file: ScalaFile) = {
+  def writeForeignKeys(providedPrefix: String, model: ExportModel, file: ScalaFile) = {
     val fkCols = model.foreignKeys.flatMap { fk =>
       fk.references match {
         case ref :: Nil => Some(ref.source)
@@ -26,12 +26,12 @@ object QueriesHelper {
       }
     }
     val cols = (fkCols ++ model.searchFields.map(_.columnName)).distinct.sorted
-    cols.foreach(col => addColQueriesToFile(rootPrefix, model, file, col))
+    cols.foreach(col => addColQueriesToFile(providedPrefix, model, file, col))
   }
 
-  private[this] def addColQueriesToFile(rootPrefix: String, model: ExportModel, file: ScalaFile, col: String) = {
-    file.addImport(rootPrefix + "models.result", "ResultFieldHelper")
-    file.addImport(rootPrefix + "models.result.orderBy", "OrderBy")
+  private[this] def addColQueriesToFile(providedPrefix: String, model: ExportModel, file: ScalaFile, col: String) = {
+    file.addImport(providedPrefix + "models.result", "ResultFieldHelper")
+    file.addImport(providedPrefix + "models.result.orderBy", "OrderBy")
 
     val field = model.fields.find(_.columnName == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]."))
     field.addImport(file)

@@ -4,7 +4,7 @@ import com.databaseflow.models.scalaexport.db.ExportModel
 import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object ServiceInserts {
-  def insertsFor(rootPrefix: String, model: ExportModel, queriesFilename: String, file: ScalaFile) = {
+  def insertsFor(providedPrefix: String, model: ExportModel, queriesFilename: String, file: ScalaFile) = {
     file.add("// Mutations")
     file.add(s"""def insert(creds: Credentials, model: ${model.className})(implicit trace: TraceData) = traceF("insert") { td =>""", 1)
     file.add(s"""ApplicationDatabase.executeF($queriesFilename.insert(model))(td).flatMap {""", 1)
@@ -15,7 +15,7 @@ object ServiceInserts {
         file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map {", 1)
         val audit = model.pkFields.map(f => "n." + f.propertyName + ".toString").mkString(", ")
         file.add("case Some(n) =>")
-        file.add(s"""  ${rootPrefix}services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), n.toDataFields, creds)""")
+        file.add(s"""  ${providedPrefix}services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), n.toDataFields, creds)""")
         file.add("  model")
         file.add(s"""case None => throw new IllegalStateException("Unable to find ${model.title}.")""")
         file.add("}", -1)
@@ -39,7 +39,7 @@ object ServiceInserts {
         val lookup = pk.map(k => k.fromString(s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
         if (model.audited) {
           val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
-          file.add(s"""${rootPrefix}services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), fields, creds)""")
+          file.add(s"""${providedPrefix}services.audit.AuditHelper.onInsert("${model.className}", Seq($audit), fields, creds)""")
         }
         file.add(s"getByPrimaryKey(creds, $lookup)")
     }

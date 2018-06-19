@@ -6,7 +6,7 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 object ServiceMutations {
   private[this] val trace = "(implicit trace: TraceData)"
 
-  def mutations(rootPrefix: String, model: ExportModel, file: ScalaFile) = {
+  def mutations(providedPrefix: String, model: ExportModel, file: ScalaFile) = {
     if (model.pkFields.nonEmpty) {
       model.pkFields.foreach(_.addImport(file))
       val sig = model.pkFields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
@@ -19,7 +19,7 @@ object ServiceMutations {
       file.add(s"case Some(current) =>", 1)
       if (model.audited) {
         val audit = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
-        file.add(s"""${rootPrefix}services.audit.AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields, creds)""")
+        file.add(s"""${providedPrefix}services.audit.AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields, creds)""")
       }
       file.add(s"ApplicationDatabase.executeF(${model.className}Queries.removeByPrimaryKey($call))(td).map(_ => current)")
       file.indent(-1)
@@ -39,7 +39,7 @@ object ServiceMutations {
         case f => s"""DataField("${f.propertyName}", ${f.propertyName}.map(_.toString))"""
       }.mkString(", ")
       if (model.audited) {
-        file.add(s"""${rootPrefix}services.audit.AuditHelper.onUpdate("${model.className}", Seq($ids), newModel.toDataFields, fields, creds)""")
+        file.add(s"""${providedPrefix}services.audit.AuditHelper.onUpdate("${model.className}", Seq($ids), newModel.toDataFields, fields, creds)""")
       }
       file.add(s"""newModel -> s"Updated [$${fields.size}] fields of ${model.title} [$interp]."""")
       file.indent(-1)

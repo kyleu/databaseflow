@@ -63,7 +63,7 @@ object ExportFiles {
     }
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
     val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
-    val rp = config.rootPrefix
+    val rp = config.providedPrefix
     Seq(EnumFile.export(e), EnumColumnTypeFile.export(rp, e), EnumSchemaFile.export(rp, e), EnumControllerFile.export(rp, e)) ++ gq ++ oq
   }
 
@@ -71,22 +71,23 @@ object ExportFiles {
     if (model.provided) {
       model -> Seq.empty
     } else {
-      val cls = ModelFile.export(config, model, config.modelLocationOverride)
-      val res = ResultFile.export(config.rootPrefix, model, config.modelLocationOverride)
-      val queries = QueriesFile.export(config.rootPrefix, model)
-      val svc = ServiceFile.export(config.rootPrefix, model)
-      val cntr = ControllerFile.export(config, model)
-      val sch = SchemaFile.export(config, model)
-      val table = TableFile.export(config.rootPrefix, model, config.enums)
+      val cls = ModelFile.export(config, model)
+      val res = ResultFile.export(config, model)
+      val queries = QueriesFile.export(config, model)
+      val table = TableFile.export(config, model)
+      val svc = ServiceFile.export(config, model)
 
-      val tm = ThriftModelFile.export(model, config.enums)
-      val ts = ThriftServiceFile.export(model, config.enums)
+      val sch = SchemaFile.export(config, model)
+      val cntr = ControllerFile.export(config, model)
+
+      val tm = ThriftModelFile.export(model)
+      val ts = ThriftServiceFile.export(model)
 
       val tdr = TwirlDataRowFile.export(config, model)
-      val tl = TwirlListFile.export(config.rootPrefix, model)
+      val tl = TwirlListFile.export(config, model)
       val tv = TwirlViewFile.export(config, model)
       val tf = TwirlFormFile.export(config, model)
-      val tsr = TwirlSearchResultFile.export(config.rootPrefix, model)
+      val tsr = TwirlSearchResultFile.export(config, model)
 
       val trs = TwirlRelationFiles.export(config, model)
 
@@ -98,7 +99,7 @@ object ExportFiles {
         Nil
       }
 
-      model -> (Seq(cls, res, queries, svc, cntr, sch, table, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ trs)
+      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ trs)
     }
   }
 }

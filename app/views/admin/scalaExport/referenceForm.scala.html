@@ -12,5 +12,5 @@
 <!-- Field form for [@model.className::@tgt.propertyName] -->
 <tr>
   <td>@tgt.columnName</td>
-  <td><input name="@{baseName}.propertyName" class="validate" value="@if(ref.propertyName.isEmpty) { @com.databaseflow.services.scalaexport.ExportHelper.toIdentifier(ref.name) } else { @ref.propertyName }" /></td>
+  <td><input name="@{baseName}.propertyName" class="validate" value="@{if(ref.propertyName.isEmpty) { com.databaseflow.services.scalaexport.ExportHelper.toIdentifier(ref.name) } else { ref.propertyName }}" /></td>
 </tr>

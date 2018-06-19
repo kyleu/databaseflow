@@ -8,12 +8,12 @@ import sangria.schema.{ObjectType, OutputType, ScalarType, Type => Typ}
 
 object GraphQLQueryHelper {
   def addFields(
-    rootPrefix: String, modelPackage: String, file: ScalaFile, pkg: Seq[String], typ: Option[Typ], selections: Seq[Selection], nameMap: Map[String, ClassName]
+    providedPrefix: String, modelPackage: String, file: ScalaFile, pkg: Seq[String], typ: Option[Typ], selections: Seq[Selection], nameMap: Map[String, ClassName]
   ) = {
     selections.foreach { s =>
       val param = s match {
         case Field(alias, name, _, _, sels, _, _, _) =>
-          val t = typeForSelections(rootPrefix, modelPackage, file, name, pkg, typ, sels, nameMap)
+          val t = typeForSelections(providedPrefix, modelPackage, file, name, pkg, typ, sels, nameMap)
           s"${alias.getOrElse(name)}: $t"
         case x => s"/* $x */"
       }
@@ -29,7 +29,7 @@ object GraphQLQueryHelper {
   }
 
   private[this] def typeForSelections(
-    rootPrefix: String, modelPackage: String, file: ScalaFile, name: String, pkg: Seq[String], typ: Option[Typ], sels: Vector[Selection], nameMap: Map[String, ClassName]
+    providedPrefix: String, modelPackage: String, file: ScalaFile, name: String, pkg: Seq[String], typ: Option[Typ], sels: Vector[Selection], nameMap: Map[String, ClassName]
   ) = {
     val spreads = sels.flatMap {
       case x: FragmentSpread => Some(x)
@@ -49,10 +49,10 @@ object GraphQLQueryHelper {
         typ match {
           case Some(t) => t match {
             case o: ObjectType[_, _] => o.fields.find(_.name == name) match {
-              case Some(f) =>
-                val x = monadsFor(f.fieldType, cn.cn)
-                x
-              case None => throw new IllegalStateException(s"Cannot find field [${h.name}] on type [${t.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}].")
+              case Some(f) => monadsFor(f.fieldType, cn.cn)
+              case None => throw new IllegalStateException(
+                s"Cannot find field [${h.name}] on type [${t.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}]."
+              )
             }
             case x => throw new IllegalStateException(" ::: " + x)
           }
@@ -61,8 +61,10 @@ object GraphQLQueryHelper {
       case Nil if fields.isEmpty => typ match {
         case Some(t) => t match {
           case o: ObjectType[_, _] =>
-            val fieldType = o.fields.find(_.name == name).getOrElse(throw new IllegalStateException("Cannot find field [] in [].")).fieldType
-            scalaImport(rootPrefix, modelPackage, fieldType).foreach(x => file.addImport(x._1, x._2))
+            val fieldType = o.fields.find(_.name == name).getOrElse {
+              throw new IllegalStateException(s"Cannot find field [$name] on type [${t.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}].")
+            }.fieldType
+            scalaImport(providedPrefix, modelPackage, fieldType).foreach(x => file.addImport(x._1, x._2))
             scalaType(fieldType)
           case _ => s"Json /* $t */"
         }

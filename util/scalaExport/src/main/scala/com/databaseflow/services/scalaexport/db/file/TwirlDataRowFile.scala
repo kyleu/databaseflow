@@ -30,12 +30,12 @@ object TwirlDataRowFile {
             file.add(s"@model.${c.propertyName}")
             if (c.notNull) {
               file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${c.propertyName})">""", 1)
-              file.add(tgt.iconHtml(config.rootPrefix))
+              file.add(tgt.iconHtml(config.providedPrefix))
               file.add("</a>", -1)
             } else {
               file.add(s"@model.${c.propertyName}.map { v =>", 1)
               file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(v)">""", 1)
-              file.add(tgt.iconHtml(config.rootPrefix))
+              file.add(tgt.iconHtml(config.providedPrefix))
               file.add("</a>", -1)
               file.add("}", -1)
             }

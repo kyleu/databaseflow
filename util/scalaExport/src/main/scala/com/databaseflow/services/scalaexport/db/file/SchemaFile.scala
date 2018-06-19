@@ -10,13 +10,13 @@ object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
-    file.addImport(config.rootPrefix + "util.FutureUtils", "graphQlContext")
+    file.addImport(config.providedPrefix + "util.FutureUtils", "graphQlContext")
     model.fields.foreach(_.enumOpt.foreach { enum =>
       file.addImport(enum.modelPackage.mkString(".") + "." + enum.className + "Schema", s"${enum.propertyName}EnumType")
     })
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport("models.note", "NoteSchema") }
-    SchemaHelper.addImports(config.rootPrefix, file)
+    SchemaHelper.addImports(config.providedPrefix, file)
 
     file.add(s"""object ${model.className}Schema extends GraphQLSchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(model, file)
@@ -25,7 +25,7 @@ object SchemaFile {
     SchemaForeignKey.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
-    SchemaMutationHelper.addMutationFields(config.rootPrefix, model, file)
+    SchemaMutationHelper.addMutationFields(config.providedPrefix, model, file)
     file.add()
     file.add(s"private[this] def toResult(r: GraphQLSchemaHelper.SearchResult[${model.className}]) = {", 1)
     file.add(s"${model.className}Result($resultArgs)")

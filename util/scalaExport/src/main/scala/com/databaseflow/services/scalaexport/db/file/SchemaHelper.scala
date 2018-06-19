@@ -4,8 +4,8 @@ import com.databaseflow.models.scalaexport.db.{ExportField, ExportModel}
 import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
-  def addImports(rootPrefix: String, file: ScalaFile) = {
-    val rp = if (rootPrefix.isEmpty) { "models." } else { rootPrefix }
+  def addImports(providedPrefix: String, file: ScalaFile) = {
+    val rp = if (providedPrefix.isEmpty) { "models." } else { providedPrefix }
 
     file.addImport(rp + "graphql", "GraphQLContext")
     file.addImport(rp + "graphql", "GraphQLSchemaHelper")
@@ -13,9 +13,9 @@ object SchemaHelper {
     file.addImport("sangria.schema", "_")
     file.addImport(rp + "graphql.CommonSchema", "_")
     file.addImport(rp + "graphql.DateTimeSchema", "_")
-    file.addImport(rootPrefix + "models.result.filter.FilterSchema", "_")
-    file.addImport(rootPrefix + "models.result.orderBy.OrderBySchema", "_")
-    file.addImport(rootPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
+    file.addImport(providedPrefix + "models.result.filter.FilterSchema", "_")
+    file.addImport(providedPrefix + "models.result.orderBy.OrderBySchema", "_")
+    file.addImport(providedPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
   }
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {

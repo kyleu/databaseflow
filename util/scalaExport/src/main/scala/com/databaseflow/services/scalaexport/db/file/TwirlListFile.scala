@@ -1,15 +1,16 @@
 package com.databaseflow.services.scalaexport.db.file
 
 import com.databaseflow.models.scalaexport.db.ExportModel
+import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.file.TwirlFile
 
 object TwirlListFile {
-  def export(rootPrefix: String, model: ExportModel) = {
+  def export(config: ExportConfiguration, model: ExportModel) = {
     val listFile = TwirlFile(model.viewPackage, model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
 
     listFile.add(s"@(user: models.user.SystemUser, totalCount: Option[Int], modelSeq: Seq[${model.modelClass}], $viewArgs)(", 2)
-    listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${rootPrefix}util.tracing.TraceData")
+    listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.providedPrefix}util.tracing.TraceData")
     listFile.add(s")@traceData.logViewClass(getClass)", -2)
     listFile.add("@views.html.admin.explore.list(", 1)
     listFile.add("user = user,")
@@ -26,7 +27,7 @@ object TwirlListFile {
     listFile.add(s"rows = modelSeq.map(model => ${model.viewHtmlPackage.mkString(".")}.${model.propertyName}DataRow(model)),")
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
-    listFile.add(s"calls = ${rootPrefix}models.result.web.ListCalls(", 1)
+    listFile.add(s"calls = ${config.providedPrefix}models.result.web.ListCalls(", 1)
     listFile.add(s"newCall = Some(${model.routesClass}.createForm()),")
     listFile.add(s"orderBy = Some(${model.routesClass}.list(q, _, _, Some(limit), Some(0))),")
     listFile.add(s"search = Some(${model.routesClass}.list(None, orderBy, orderAsc, Some(limit), None)),")

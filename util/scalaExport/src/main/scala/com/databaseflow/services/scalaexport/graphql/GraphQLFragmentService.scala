@@ -14,7 +14,7 @@ object GraphQLFragmentService {
     } else {
       val cn = nameMap(n)
       val file = ScalaFile(cn.pkg, cn.cn, Some(""))
-      file.addImport(cfg.rootPrefix + "util.JsonSerializers", "_")
+      file.addImport(cfg.providedPrefix + "util.JsonSerializers", "_")
 
       meaningfulComments(d.comments).foreach(c => file.add("// " + c))
 
@@ -25,7 +25,7 @@ object GraphQLFragmentService {
 
       file.add(s"case class ${cn.cn}(", 2)
       val typ = schema.flatMap(_.allTypes.get(d.typeCondition.name))
-      GraphQLQueryHelper.addFields(cfg.rootPrefix, cfg.modelPkg, file, cn.pkg, typ, d.selections, nameMap)
+      GraphQLQueryHelper.addFields(cfg.providedPrefix, cfg.modelPkg, file, cn.pkg, typ, d.selections, nameMap)
       file.add(")", -2)
 
       Some(file)
