@@ -10,7 +10,6 @@ object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(model.modelPackage, model.className + "Schema")
 
-    file.addImport(config.providedPrefix + "util.FutureUtils", "graphQlContext")
     model.fields.foreach(_.enumOpt.foreach { enum =>
       file.addImport(enum.modelPackage.mkString(".") + "." + enum.className + "Schema", s"${enum.propertyName}EnumType")
     })
@@ -38,15 +37,15 @@ object SchemaFile {
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
     val references = model.validReferences(config)
     if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && references.isEmpty) {
-      file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
+      file.add(s"implicit lazy val ${model.propertyName}Type: sangria.schema.ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
     } else {
-      file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
+      file.add(s"implicit lazy val ${model.propertyName}Type: sangria.schema.ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
       columnsDescriptions.foreach {
         case d if columnsDescriptions.lastOption.contains(d) && references.isEmpty => file.add(d)
         case d => file.add(d + ",")
       }
       if (model.pkColumns.nonEmpty || model.foreignKeys.nonEmpty || references.nonEmpty) {
-        file.add("AddFields(", 1)
+        file.add("sangria.macros.derive.AddFields(", 1)
       }
       SchemaReferencesHelper.writeFields(config, model, file)
       SchemaForeignKey.writeFields(config, model, file)
@@ -64,7 +63,7 @@ object SchemaFile {
       file.add(")", -1)
     }
     file.add()
-    file.add(s"implicit lazy val ${model.propertyName}ResultType: ObjectType[GraphQLContext, ${model.className}Result] = deriveObjectType()")
+    file.add(s"implicit lazy val ${model.propertyName}ResultType: sangria.schema.ObjectType[GraphQLContext, ${model.className}Result] = deriveObjectType()")
     file.add()
   }
 

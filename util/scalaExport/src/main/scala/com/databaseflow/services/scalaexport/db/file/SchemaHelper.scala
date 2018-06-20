@@ -6,15 +6,10 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
   def addImports(config: ExportConfiguration, file: ScalaFile) = {
+    file.addImport(config.providedPrefix + "graphql.GraphQLUtils", "_")
     file.addImport(config.corePrefix + "graphql", "GraphQLContext")
     file.addImport(config.corePrefix + "graphql", "GraphQLSchemaHelper")
-    file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
-    file.addImport(config.providedPrefix + "graphql.CommonSchema", "_")
-    file.addImport(config.providedPrefix + "graphql.DateTimeSchema", "_")
-    file.addImport(config.providedPrefix + "models.result.filter.FilterSchema", "_")
-    file.addImport(config.providedPrefix + "models.result.orderBy.OrderBySchema", "_")
-    file.addImport(config.providedPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
   }
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {

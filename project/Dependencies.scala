@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.13"
+    private[this] val version = "2.6.15"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.5.11"
+    private[this] val version = "2.5.13"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -27,7 +27,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "5.0.4"
+    private[this] val version = "5.0.5"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -78,22 +78,22 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.0"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.1"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.4"
+    val scapegoatVersion = "1.3.5"
     val enumeratumVersion = "1.5.13"
     val enumeratumCirceVersion = "1.5.17"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.4.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.5.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val enumeratumCirce = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.0"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
 
