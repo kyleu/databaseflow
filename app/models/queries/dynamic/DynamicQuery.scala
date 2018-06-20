@@ -11,8 +11,8 @@ import org.h2.jdbc.JdbcClob
 
 object DynamicQuery {
   case class Results(
-    cols: Seq[QueryResult.Col],
-    data: Seq[Seq[Option[String]]]
+      cols: Seq[QueryResult.Col],
+      data: Seq[Seq[Option[String]]]
   )
 
   def transform(x: Any) = x match {

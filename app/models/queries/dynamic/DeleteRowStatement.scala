@@ -5,7 +5,7 @@ import models.engine.DatabaseEngine
 import models.schema.Column
 
 case class DeleteRowStatement(
-  name: String, pk: Seq[(String, String)], columns: Seq[Column], engine: DatabaseEngine
+    name: String, pk: Seq[(String, String)], columns: Seq[Column], engine: DatabaseEngine
 ) extends Statement {
   private[this] def quote(s: String) = engine.cap.leftQuote + s + engine.cap.rightQuote
 

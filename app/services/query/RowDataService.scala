@@ -20,7 +20,7 @@ import scala.concurrent.Future
 
 object RowDataService extends Logging {
   case class Params(
-    queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], columns: Seq[String], options: RowDataOptions, resultId: UUID
+      queryId: UUID, t: String, name: String, pk: Option[PrimaryKey], keys: Seq[ForeignKey], columns: Seq[String], options: RowDataOptions, resultId: UUID
   )
   case class Config(queryId: UUID, name: String, columns: Seq[String], options: RowDataOptions, resultId: UUID, out: Option[ActorRef])
 

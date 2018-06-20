@@ -21,11 +21,11 @@ object GraphQLForm {
 }
 
 case class GraphQLForm(
-  id: Option[UUID],
-  connection: Option[UUID],
-  category: Option[String],
-  name: String,
-  query: String,
-  read: Permission,
-  edit: Permission
+    id: Option[UUID],
+    connection: Option[UUID],
+    category: Option[String],
+    name: String,
+    query: String,
+    read: Permission,
+    edit: Permission
 )
