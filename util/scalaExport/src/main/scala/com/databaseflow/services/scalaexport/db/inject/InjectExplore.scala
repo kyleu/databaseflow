@@ -16,7 +16,7 @@ object InjectExplore {
       val (roots, pkgGroups) = modelsFor(result)
 
       val newContent = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
-        s"""  <li><a href="@${model.routesClass}.list()">${model.iconHtml(result.config.providedPrefix)} ${model.title}</a></li>"""
+        s"""  <li><a href="@${model.routesClass}.list()">${model.iconHtml(result.config)} ${model.title}</a></li>"""
       }.mkString("\n")
       InjectHelper.replaceBetween(
         original = s, start = "  <!-- Start model list routes -->", end = "  <!-- End model list routes -->", newContent = newContent
@@ -36,7 +36,7 @@ object InjectExplore {
 
       val newContent = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
         s"""    <li class="collection-item">
-          |      <a class="theme-text" href="@${model.routesClass}.list()">${model.iconHtml(result.config.providedPrefix)} ${model.plural}</a>
+          |      <a class="theme-text" href="@${model.routesClass}.list()">${model.iconHtml(result.config)} ${model.plural}</a>
           |      <div><em>Manage the ${model.plural} of the system.</em></div>
           |    </li>""".stripMargin
       }.mkString("\n")

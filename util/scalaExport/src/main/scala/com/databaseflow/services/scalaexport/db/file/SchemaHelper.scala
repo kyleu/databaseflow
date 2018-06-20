@@ -1,19 +1,20 @@
 package com.databaseflow.services.scalaexport.db.file
 
+import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.db.{ExportField, ExportModel}
 import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object SchemaHelper {
-  def addImports(providedPrefix: String, file: ScalaFile) = {
-    file.addImport(providedPrefix + "graphql", "GraphQLContext")
-    file.addImport(providedPrefix + "graphql", "GraphQLSchemaHelper")
+  def addImports(config: ExportConfiguration, file: ScalaFile) = {
+    file.addImport(config.corePrefix + "graphql", "GraphQLContext")
+    file.addImport(config.corePrefix + "graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.macros.derive", "_")
     file.addImport("sangria.schema", "_")
-    file.addImport(providedPrefix + "graphql.CommonSchema", "_")
-    file.addImport(providedPrefix + "graphql.DateTimeSchema", "_")
-    file.addImport(providedPrefix + "models.result.filter.FilterSchema", "_")
-    file.addImport(providedPrefix + "models.result.orderBy.OrderBySchema", "_")
-    file.addImport(providedPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
+    file.addImport(config.providedPrefix + "graphql.CommonSchema", "_")
+    file.addImport(config.providedPrefix + "graphql.DateTimeSchema", "_")
+    file.addImport(config.providedPrefix + "models.result.filter.FilterSchema", "_")
+    file.addImport(config.providedPrefix + "models.result.orderBy.OrderBySchema", "_")
+    file.addImport(config.providedPrefix + "models.result.paging.PagingSchema", "pagingOptionsType")
   }
 
   def addPrimaryKey(model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {

@@ -16,7 +16,7 @@ object EnumControllerFile {
     file.addImport("play.twirl.api", "Html")
 
     file.add("@javax.inject.Singleton")
-    val constructorArgs = s"@javax.inject.Inject() (override val app: ${config.providedPrefix}models.Application)"
+    val constructorArgs = s"@javax.inject.Inject() (override val app: ${config.corePrefix}models.Application)"
     file.add(s"""class ${enum.className}Controller $constructorArgs extends BaseController("${enum.propertyName}") {""", 1)
     file.add("import app.contexts.webContext")
     file.add()

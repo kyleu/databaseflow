@@ -49,7 +49,7 @@ case class ExportModel(
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
-  val pkgString = (pkgPrefix ++ pkg).mkString(".")
+  val pkgString = pkg.mkString(".")
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
 
   val viewPackage = pkgPrefix ++ Seq("views", "admin") ++ pkg
@@ -76,7 +76,7 @@ case class ExportModel(
 
   val routesPackage = controllerPackage :+ "routes"
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
-  def iconHtml(providedPrefix: String) = s"""<i class="fa @${providedPrefix}models.template.Icons.$propertyName"></i>"""
+  def iconHtml(config: ExportConfiguration) = s"""<i class="fa @${config.corePrefix}models.template.Icons.$propertyName"></i>"""
 
   val pkArgs = pkFields.zipWithIndex.map(pkf => pkf._1.t match {
     case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"

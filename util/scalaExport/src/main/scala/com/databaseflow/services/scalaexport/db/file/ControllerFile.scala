@@ -10,7 +10,7 @@ object ControllerFile {
   } else {
     val file = ScalaFile(model.controllerPackage, model.className + "Controller")
     val viewHtmlPackage = model.viewHtmlPackage.mkString(".")
-    file.addImport(config.providedPrefix + "models", "Application")
+    file.addImport(config.corePrefix + "models", "Application")
     file.addImport(config.corePrefix + "controllers.admin", "ServiceController")
     file.addImport(config.corePrefix + "services.audit", "AuditRecordService")
     file.addImport("scala.concurrent", "Future")

@@ -71,8 +71,7 @@ object ExportFiles {
     }
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
     val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
-    val rp = config.providedPrefix
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(rp, e), EnumSchemaFile.export(rp, e), EnumControllerFile.export(config, e)) ++ gq ++ oq
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(config, e), EnumSchemaFile.export(config, e), EnumControllerFile.export(config, e)) ++ gq ++ oq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {

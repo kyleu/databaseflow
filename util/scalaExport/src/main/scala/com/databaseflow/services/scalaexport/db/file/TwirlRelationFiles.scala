@@ -20,7 +20,7 @@ object TwirlRelationFiles {
     listFile.add("user = user,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")
-    listFile.add(s"icon = ${config.providedPrefix}models.template.Icons.${model.propertyName},")
+    listFile.add(s"icon = ${config.corePrefix}models.template.Icons.${model.propertyName},")
     listFile.add("cols = Seq(", 1)
     model.searchFields.foreach {
       case c if model.searchFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
@@ -31,7 +31,7 @@ object TwirlRelationFiles {
     listFile.add("orderAsc = orderAsc,")
     listFile.add("totalCount = None,")
     listFile.add(s"rows = modelSeq.map(model => ${model.viewHtmlPackage.mkString(".")}.${model.propertyName}DataRow(model)),")
-    listFile.add(s"calls = ${config.providedPrefix}models.result.web.ListCalls(", 1)
+    listFile.add(s"calls = ${config.corePrefix}models.result.web.ListCalls(", 1)
     listFile.add(s"orderBy = Some($viewCall($refProps, _, _, Some(limit), Some(0))),")
     listFile.add(s"search = None,")
     listFile.add(s"next = $viewCall($refProps, orderBy, orderAsc, Some(limit), Some(offset + limit)),")

@@ -52,7 +52,7 @@ object TwirlFormFields {
     file.add(s"@${config.corePrefix}views.html.components.form.autocompleteField(", 1)
     file.add(argsFor(field) + ",")
     val url = s"${autocomplete._2.routesClass}.autocomplete()"
-    val icon = config.providedPrefix + s"models.template.Icons.${autocomplete._2.propertyName}"
+    val icon = config.corePrefix + s"models.template.Icons.${autocomplete._2.propertyName}"
     file.add(s"""call = $url, acType = ("${autocomplete._2.propertyName}", "${autocomplete._2.title}"), icon = $icon""")
     file.add(")", -1)
   }

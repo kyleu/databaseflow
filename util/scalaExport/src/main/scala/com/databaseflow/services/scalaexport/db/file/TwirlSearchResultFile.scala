@@ -11,7 +11,7 @@ object TwirlSearchResultFile {
     file.add(s"""@(model: ${model.modelClass}, hit: String)<div class="search-result">""", 1)
     file.add(s"""<div class="right">${model.title}</div>""")
     file.add("<div>", 1)
-    file.add(model.iconHtml(config.providedPrefix))
+    file.add(model.iconHtml(config))
     if (model.pkFields.isEmpty) {
       file.add("@model")
     } else {

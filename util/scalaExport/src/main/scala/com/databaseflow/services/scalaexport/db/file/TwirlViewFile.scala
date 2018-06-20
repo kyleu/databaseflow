@@ -23,7 +23,7 @@ object TwirlViewFile {
       file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@${model.routesClass}.remove($args)">Remove</a></div>""")
     }
     file.add("<h5>", 1)
-    file.add(s"""<a class="theme-text" href="@${model.routesClass}.list()">""" + model.iconHtml(config.providedPrefix) + "</a>")
+    file.add(s"""<a class="theme-text" href="@${model.routesClass}.list()">""" + model.iconHtml(config) + "</a>")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
     file.add(s"""${model.title} [$toTwirl]""")
     file.add("</h5>", -1)
@@ -48,10 +48,10 @@ object TwirlViewFile {
             file.add(s"@model.${field.propertyName}.getOrElse(${config.providedPrefix}util.NullUtils.str)")
           }
           if (field.notNull) {
-            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${field.propertyName})">${tgt.iconHtml(config.providedPrefix)}</a>""")
+            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(model.${field.propertyName})">${tgt.iconHtml(config)}</a>""")
           } else {
             file.add(s"@model.${field.propertyName}.map { v =>", 1)
-            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(v)">${tgt.iconHtml(config.providedPrefix)}</a>""")
+            file.add(s"""<a class="theme-text" href="@${tgt.routesClass}.view(v)">${tgt.iconHtml(config)}</a>""")
             file.add("}", -1)
           }
           file.add("</td>", -1)
@@ -91,7 +91,7 @@ object TwirlViewFile {
       val relUrl = src.routesClass + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
-      file.add(src.iconHtml(config.providedPrefix))
+      file.add(src.iconHtml(config))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add("</div>", -1)
       file.add(s"""<div class="collapsible-body"><span>Loading...</span></div>""")

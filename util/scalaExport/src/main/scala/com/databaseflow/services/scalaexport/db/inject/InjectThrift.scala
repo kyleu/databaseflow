@@ -13,8 +13,8 @@ object InjectThrift {
       val startString = s"/* Begin generated Thrift $key includes */"
       val startIndex = s.indexOf(startString)
       val newContent = result.models.filterNot(m => m.ignored || m.provided).map {
-        case m if key == "model" => s"""include "${m.modelPackage.mkString("/")}/${m.className}.thrift""""
-        case m if key == "service" => s"""include "${m.servicePackage.mkString("/")}/${m.className}Service.thrift""""
+        case m if key == "model" => s"""include "${("models" +: m.pkg).mkString("/")}/${m.className}.thrift""""
+        case m if key == "service" => s"""include "${("services" +: m.pkg).mkString("/")}/${m.className}Service.thrift""""
         case _ => throw new IllegalStateException(s"Invalid key [$key].")
       }.sorted.mkString("\n")
       InjectHelper.replaceBetween(original = s, start = startString, end = s"/* End generated Thrift $key includes */", newContent = newContent)

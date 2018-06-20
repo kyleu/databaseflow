@@ -16,7 +16,7 @@ object TwirlListFile {
     listFile.add("user = user,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")
-    listFile.add(s"icon = ${config.providedPrefix}models.template.Icons.${model.propertyName},")
+    listFile.add(s"icon = ${config.corePrefix}models.template.Icons.${model.propertyName},")
     listFile.add("cols = Seq(", 1)
     model.searchFields.foreach {
       case c if model.searchFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
@@ -27,7 +27,7 @@ object TwirlListFile {
     listFile.add(s"rows = modelSeq.map(model => ${model.viewHtmlPackage.mkString(".")}.${model.propertyName}DataRow(model)),")
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
-    listFile.add(s"calls = ${config.providedPrefix}models.result.web.ListCalls(", 1)
+    listFile.add(s"calls = ${config.corePrefix}models.result.web.ListCalls(", 1)
     listFile.add(s"newCall = Some(${model.routesClass}.createForm()),")
     listFile.add(s"orderBy = Some(${model.routesClass}.list(q, _, _, Some(limit), Some(0))),")
     listFile.add(s"search = Some(${model.routesClass}.list(None, orderBy, orderAsc, Some(limit), None)),")

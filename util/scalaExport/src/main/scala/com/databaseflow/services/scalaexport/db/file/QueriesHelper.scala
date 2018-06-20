@@ -37,13 +37,14 @@ object QueriesHelper {
     field.addImport(file)
     val propId = ExportReservedNames.getColumnPropertyId(field.propertyName)
     val propCls = field.className
-    file.add(s"""final case class CountBy$propCls($propId: ${field.scalaType}) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
+    val ft = field.scalaType.replaceAllLiterally("models.tag", providedPrefix + "models.tag")
+    file.add(s"""final case class CountBy$propCls($propId: $ft) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
     val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
-    file.add(s"""final case class GetBy$propCls($propId: ${field.scalaType}, $searchArgs) extends SeqQuery(""", 1)
+    file.add(s"""final case class GetBy$propCls($propId: $ft, $searchArgs) extends SeqQuery(""", 1)
     file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),""")
     file.add(s"limit = limit, offset = offset, values = Seq($propId)")
     file.add(")", -1)
-    val sig = s"GetBy${propCls}Seq(${propId}Seq: Seq[${field.scalaType}])"
+    val sig = s"GetBy${propCls}Seq(${propId}Seq: Seq[${ft}])"
     file.add(s"""final case class $sig extends ColSeqQuery(column = "${field.columnName}", values = ${propId}Seq)""")
     file.add()
   }

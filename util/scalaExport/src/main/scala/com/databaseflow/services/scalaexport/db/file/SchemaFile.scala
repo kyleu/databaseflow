@@ -16,7 +16,7 @@ object SchemaFile {
     })
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) { file.addImport(config.corePrefix + "models.note", "NoteSchema") }
-    SchemaHelper.addImports(config.providedPrefix, file)
+    SchemaHelper.addImports(config, file)
 
     file.add(s"""object ${model.className}Schema extends GraphQLSchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(model, file)
