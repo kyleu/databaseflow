@@ -28,6 +28,7 @@ object ColumnValueParser {
     case DateType => DateUtils.sqlDateFromString(s)
     case TimeType => DateUtils.sqlTimeFromString(s)
     case TimestampType => DateUtils.sqlDateTimeFromString(s)
+    case TimestampZonedType => DateUtils.sqlDateTimeFromString(s)
     case UuidType => UUID.fromString(s)
     case _ => s
   }

@@ -30,7 +30,7 @@ object ColumnNotNullGraphQL {
     case ColumnType.BigDecimalType | ColumnType.DoubleType => getTypedField[BigDecimal](name, description, cleanName, BigDecimalType, BigDecimal.apply)
 
     case ColumnType.DateType | ColumnType.TimeType | ColumnType.TimestampType => getDefaultField(name, description, cleanName)
-    case ColumnType.TimeTZType | ColumnType.TimestampTZType => getDefaultField(name, description, cleanName)
+    case ColumnType.TimestampZonedType => getDefaultField(name, description, cleanName)
 
     case ColumnType.RefType | ColumnType.XmlType => getDefaultField(name, description, cleanName)
     case ColumnType.UuidType => getTypedField[UUID](name, description, cleanName, CommonGraphQL.uuidType, UUID.fromString)

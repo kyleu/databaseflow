@@ -1,6 +1,6 @@
 package util
 
-import java.text.SimpleDateFormat
+import java.text.{DateFormat, SimpleDateFormat}
 
 import org.joda.time._
 
@@ -35,4 +35,7 @@ object DateUtils {
 
   private[this] val dtFmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
   def sqlDateTimeFromString(s: String) = new java.sql.Timestamp(dtFmt.parse(s).getTime)
+
+  private[this] val zonedDtFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZZ")
+  def sqlZonedDateTimeFromString(s: String) = new java.sql.Timestamp(dtFmt.parse(s).getTime)
 }

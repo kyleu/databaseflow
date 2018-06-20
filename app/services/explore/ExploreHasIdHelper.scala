@@ -34,6 +34,7 @@ object ExploreHasIdHelper {
               case DateType => HasId[QueryResultRow, java.sql.Date](x => DateUtils.sqlDateFromString(x.getRequiredCell(single)))
               case TimeType => HasId[QueryResultRow, java.sql.Time](x => DateUtils.sqlTimeFromString(x.getRequiredCell(single)))
               case TimestampType => HasId[QueryResultRow, java.sql.Timestamp](x => DateUtils.sqlDateTimeFromString(x.getRequiredCell(single)))
+              case TimestampZonedType => HasId[QueryResultRow, java.sql.Timestamp](x => DateUtils.sqlZonedDateTimeFromString(x.getRequiredCell(single)))
               case UuidType => HasId[QueryResultRow, UUID](x => UUID.fromString(x.getRequiredCell(single)))
               case _ => HasId[QueryResultRow, String](x => x.getRequiredCell(single))
             }
@@ -52,6 +53,7 @@ object ExploreHasIdHelper {
               case DateType => HasId[QueryResultRow, Option[java.sql.Date]](x => x.getCell(single).map(DateUtils.sqlDateFromString))
               case TimeType => HasId[QueryResultRow, Option[java.sql.Time]](x => x.getCell(single).map(DateUtils.sqlTimeFromString))
               case TimestampType => HasId[QueryResultRow, Option[java.sql.Timestamp]](x => x.getCell(single).map(DateUtils.sqlDateTimeFromString))
+              case TimestampZonedType => HasId[QueryResultRow, Option[java.sql.Timestamp]](x => x.getCell(single).map(DateUtils.sqlZonedDateTimeFromString))
               case UuidType => HasId[QueryResultRow, Option[UUID]](x => x.getCell(single).map(UUID.fromString))
               case _ => HasId[QueryResultRow, Option[String]](x => x.getCell(single))
             }

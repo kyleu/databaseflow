@@ -19,9 +19,8 @@ object ExportFieldThrift {
 
     case DateType => "common.LocalDate"
     case TimeType => "common.LocalTime"
-    case TimeTZType => "common.ZonedTime"
     case TimestampType => "common.LocalDateTime"
-    case TimestampTZType => "common.ZonedDateTime"
+    case TimestampZonedType => "common.ZonedDateTime"
 
     case RefType => "string"
     case XmlType => "string"

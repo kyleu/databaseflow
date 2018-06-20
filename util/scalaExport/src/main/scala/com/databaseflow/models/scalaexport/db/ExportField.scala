@@ -23,6 +23,7 @@ object ExportField {
     case DateType => providedPrefix + "util.DateUtils.today"
     case TimeType => providedPrefix + "util.DateUtils.currentTime"
     case TimestampType => providedPrefix + "util.DateUtils.now"
+    case TimestampZonedType => providedPrefix + "util.DateUtils.nowZoned"
 
     case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
 

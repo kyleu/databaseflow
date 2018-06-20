@@ -13,6 +13,7 @@ object DataOutputFormatter {
       case IntegerType => Html(s"""<span>$x</span>""")
       case ShortType => Html(s"""<span>$x</span>""")
       case TimestampType => Html(s"""<span>$x</span>""")
+      case TimestampZonedType => Html(s"""<span>$x</span>""")
       case BooleanType => Html(s"""<span>$x</span>""")
       case BigDecimalType => Html(s"""<span>$x</span>""")
       case LongType => Html(s"""<span>$x</span>""")

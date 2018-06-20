@@ -27,6 +27,7 @@ object EngineColumnParser {
     case DateType => s
     case TimeType => s
     case TimestampType => s
+    case TimestampZonedType => s
     case UuidType => UUID.fromString(s)
     case _ => s
   }

@@ -14,6 +14,7 @@ object TwirlFormFields {
       case ColumnType.DateType => timeField(config, field, file, "Date")
       case ColumnType.TimeType => timeField(config, field, file, "Time")
       case ColumnType.TimestampType => timeField(config, field, file, "DateTime")
+      case ColumnType.TimestampZonedType => zonedDateTimeField(config, field, file)
       case _ if autocomplete.isDefined => autocompleteField(config, field, autocomplete.get, file)
       case _ => file.add(s"@${config.corePrefix}views.html.components.form.textField(${argsFor(field)})")
     }
@@ -39,6 +40,13 @@ object TwirlFormFields {
     val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
     val opts = "Seq(" + enum.values.map(v => s"""("$v" -> "$v")""").mkString(", ") + ")"
     s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, options = $opts, nullable = ${field.nullable}, dataType = "${enum.name}""""
+  }
+
+  private[this] def zonedDateTimeField(config: ExportConfiguration, field: ExportField, file: OutputFile) = {
+    val prop = field.propertyName
+    val valString = if (field.notNull) { s"Some(model.$prop)" } else { s"""model.$prop""" }
+    val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}"""
+    file.add(s"@${config.corePrefix}views.html.components.form.zonedDateTimeField($args)")
   }
 
   private[this] def timeField(config: ExportConfiguration, field: ExportField, file: OutputFile, t: String) = {

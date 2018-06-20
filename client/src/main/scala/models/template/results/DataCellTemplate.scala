@@ -17,6 +17,7 @@ object DataCellTemplate {
         case IntegerType => span(x)
         case ShortType => span(x)
         case TimestampType => span(x)
+        case TimestampZonedType => span(x)
         case BooleanType => span(x)
         case BigDecimalType => span(x)
         case LongType => span(x)

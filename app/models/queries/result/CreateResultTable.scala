@@ -37,6 +37,7 @@ object CreateResultTable {
       case DateType => "date"
       case TimeType => "time"
       case TimestampType => "timestamp"
+      case TimestampZonedType => "timestamp"
       case RefType => "text"
       case XmlType => "text"
       case UuidType => "uuid"

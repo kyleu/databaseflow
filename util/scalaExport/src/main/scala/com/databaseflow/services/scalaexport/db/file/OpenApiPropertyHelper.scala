@@ -15,6 +15,9 @@ object OpenApiPropertyHelper {
     case ColumnType.TimestampType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"2018-01-01 00:00:00\"")
+    case ColumnType.TimestampZonedType =>
+      file.add("\"type\": \"string\",")
+      file.add("\"example\": \"2018-01-01 00:00:00+0\"")
     case ColumnType.TimeType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"00:00:00\"")

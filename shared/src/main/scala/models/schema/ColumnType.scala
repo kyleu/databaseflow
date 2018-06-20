@@ -35,9 +35,8 @@ object ColumnType extends StringEnum[ColumnType] with StringCirceEnum[ColumnType
 
   case object DateType extends ColumnType("date", "LocalDate", "util.DateUtils.fromDateString(xxx)", requiredImport = Some("java.time"))
   case object TimeType extends ColumnType("time", "LocalTime", "util.DateUtils.fromTimeString(xxx)", requiredImport = Some("java.time"))
-  case object TimeTZType extends ColumnType("timeTZ", "LocalTime", "util.DateUtils.fromTimeString(xxx)", requiredImport = Some("java.time"))
   case object TimestampType extends ColumnType("timestamp", "LocalDateTime", "util.DateUtils.fromIsoString(xxx)", requiredImport = Some("java.time"))
-  case object TimestampTZType extends ColumnType("timestampTZ", "LocalDateTime", "util.DateUtils.fromIsoString(xxx)", requiredImport = Some("java.time"))
+  case object TimestampZonedType extends ColumnType("timestamptz", "ZonedDateTime", "util.DateUtils.fromIsoStringZoned(xxx)", requiredImport = Some("java.time"))
 
   case object RefType extends ColumnType("ref", "String", "xxx")
   case object XmlType extends ColumnType("xml", "String", "xxx")
