@@ -42,21 +42,12 @@ object ExportFiles {
   }
 
   def persist(result: ExportResult, rootDir: (File, File)) = {
-    result.enumFiles.map { file =>
+    (result.enumFiles ++ result.sourceFiles).map { file =>
+      val d = if (file.core) { rootDir._1 } else { rootDir._2 }
       val f = if (file.pkg.isEmpty) {
-        rootDir._2 / file.dir / file.filename
+        d / file.dir / file.filename
       } else {
-        rootDir._2 / file.packageDir / file.filename
-      }
-      f.createIfNotExists(createParents = true)
-      f.writeText(file.rendered)
-    }
-
-    result.sourceFiles.map { file =>
-      val f = if (file.pkg.isEmpty) {
-        rootDir._2 / file.dir / file.filename
-      } else {
-        rootDir._2 / file.packageDir / file.filename
+        d / file.packageDir / file.filename
       }
       f.createIfNotExists(createParents = true)
       f.writeText(file.rendered)

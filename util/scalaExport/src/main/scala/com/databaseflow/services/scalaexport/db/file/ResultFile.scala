@@ -9,7 +9,7 @@ object ResultFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val root = config.modelLocationOverride.orElse(if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None })
-    val file = ScalaFile(model.modelPackage, model.className + "Result", root = root)
+    val file = ScalaFile(pkg = model.modelPackage, key = model.className + "Result", root = root, core = true)
 
     file.addImport("java.time", "LocalDateTime")
     file.addImport(config.providedPrefix + "models.result", "BaseResult")

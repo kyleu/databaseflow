@@ -5,7 +5,7 @@ import com.databaseflow.models.scalaexport.file.GraphQLFile
 
 object EnumGraphQLQueryFile {
   def export(enum: ExportEnum) = {
-    val file = GraphQLFile(enum.pkg, enum.className)
+    val file = GraphQLFile(pkg = enum.pkg, key = enum.className)
 
     file.add(s"# Retrieves the list of possible ${enum.className} values.")
     file.add(s"query ${enum.className} {", 1)

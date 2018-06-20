@@ -6,7 +6,7 @@ import com.databaseflow.services.scalaexport.ExportHelper
 
 object EnumFile {
   def export(enum: ExportEnum) = {
-    val file = ScalaFile(enum.modelPackage, enum.className)
+    val file = ScalaFile(pkg = enum.modelPackage, key = enum.className, core = true)
 
     file.addImport("enumeratum.values", "StringEnumEntry")
     file.addImport("enumeratum.values", "StringEnum")

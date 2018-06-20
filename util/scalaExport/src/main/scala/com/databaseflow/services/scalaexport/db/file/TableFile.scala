@@ -7,7 +7,7 @@ import models.schema.ColumnType
 
 object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(model.tablePackage, model.className + "Table")
+    val file = ScalaFile(pkg = model.tablePackage, key = model.className + "Table", core = true)
 
     file.addImport(config.providedPrefix + "services.database.SlickQueryService.imports", "_")
 

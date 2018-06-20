@@ -15,7 +15,7 @@ object ControllerReferences {
 
       file.add()
       file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", admin = true) { implicit request => implicit td =>""", 1)
-      file.add(s"val creds = ${config.providedPrefix}models.auth.Credentials.fromRequest(request)")
+      file.add(s"val creds = ${config.corePrefix}models.auth.Credentials.fromRequest(request)")
 
       refServices.foreach { r =>
         file.add(s"val ${r._2.propertyName}By${r._3.className}F = ${r._2.propertyName}S.countBy${r._3.className}(creds, $pkRefs)")

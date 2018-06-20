@@ -8,7 +8,7 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 object ModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val root = config.modelLocationOverride.orElse(if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None })
-    val file = ScalaFile(model.modelPackage, model.className, root = root)
+    val file = ScalaFile(pkg = model.modelPackage, key = model.className, root = root, core = true)
 
     file.addImport(config.providedPrefix + "models.result.data", "DataField")
     file.addImport(config.providedPrefix + "models.result.data", "DataSummary")

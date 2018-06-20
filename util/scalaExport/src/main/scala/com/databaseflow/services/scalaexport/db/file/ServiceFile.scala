@@ -10,7 +10,7 @@ object ServiceFile {
   private[this] val searchArgs = "filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(model.servicePackage, model.className + "Service")
+    val file = ScalaFile(pkg = model.servicePackage, key = model.className + "Service", core = true)
     val queriesFilename = model.className + "Queries"
 
     file.addImport(model.modelPackage.mkString("."), model.className)
@@ -19,7 +19,7 @@ object ServiceFile {
     file.addImport(config.providedPrefix + "services.database", "ApplicationDatabase")
     file.addImport(config.providedPrefix + "util.FutureUtils", "serviceContext")
     file.addImport(config.providedPrefix + "models.result.data", "DataField")
-    file.addImport(config.providedPrefix + "models.auth", "Credentials")
+    file.addImport(config.corePrefix + "models.auth", "Credentials")
     file.addImport(config.providedPrefix + "models.result.filter", "Filter")
     file.addImport(config.providedPrefix + "models.result.orderBy", "OrderBy")
 

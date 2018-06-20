@@ -75,7 +75,8 @@ object ThriftParseService {
           case Some(l) => l.toFile
           case None => s"./tmp/tempoutput".toFile
         }
-        ExportMerge.merge(None, "N/A", rootDir, Nil, s => println(s)) -> result.allFiles.map(f => f.path -> f.rendered)
+        val coreDir = rootDir
+        ExportMerge.mergeDirectories(None, "N/A", coreDir, rootDir, Nil, s => println(s)) -> result.allFiles.map(f => f.path -> f.rendered)
       } else {
         Map.empty[String, Int] -> result.allFiles.map(f => f.path -> f.rendered)
       }

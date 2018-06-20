@@ -4,14 +4,14 @@ import models.engine.functions._
 import models.engine.types._
 
 sealed abstract class EngineCapabilities(
-  val functions: Seq[String] = Nil,
-  val columnTypes: Seq[String] = Nil,
-  val leftQuote: String = "\"",
-  val rightQuote: String = "\"",
-  val explain: Option[(String) => String] = None,
-  val analyze: Option[(String) => String] = None,
-  val exampleUrl: String,
-  val transactionsSupported: Boolean = true
+    val functions: Seq[String] = Nil,
+    val columnTypes: Seq[String] = Nil,
+    val leftQuote: String = "\"",
+    val rightQuote: String = "\"",
+    val explain: Option[(String) => String] = None,
+    val analyze: Option[(String) => String] = None,
+    val exampleUrl: String,
+    val transactionsSupported: Boolean = true
 )
 
 case object DB2Capabilities extends EngineCapabilities(

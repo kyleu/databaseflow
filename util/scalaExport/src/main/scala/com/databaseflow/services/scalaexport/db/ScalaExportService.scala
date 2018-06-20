@@ -1,7 +1,6 @@
 package com.databaseflow.services.scalaexport.db
 
 import better.files._
-import com.databaseflow.models.scalaexport.db
 import com.databaseflow.models.scalaexport.db.ExportResult
 import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.services.scalaexport.ExportFiles
@@ -23,9 +22,15 @@ case class ScalaExportService(config: ExportConfiguration) {
         case None => s"./tmp/${result.config.key}".toFile
       }
 
-      val mergeResults = ExportMerge.merge(
+      val coreDir = config.coreLocation match {
+        case Some(l) => l.toFile
+        case None => rootDir
+      }
+
+      val mergeResults = ExportMerge.mergeDirectories(
         projectId = Some(result.config.projectId),
         projectTitle = result.config.projectTitle,
+        coreDir = coreDir,
         rootDir = rootDir,
         rootFiles = result.rootFiles,
         log = result.log,
@@ -44,6 +49,6 @@ case class ScalaExportService(config: ExportConfiguration) {
     val models = config.models.filterNot(_.ignored)
     val modelFiles = models.map(model => ExportFiles.exportModel(config, model))
     val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models, config.pkgPrefix)
-    Future.successful(db.ExportResult(config, modelFiles.map(_._1), enumFiles, modelFiles.flatMap(_._2), rootFiles))
+    Future.successful(ExportResult(config, modelFiles.map(_._1), enumFiles, modelFiles.flatMap(_._2), rootFiles))
   }
 }

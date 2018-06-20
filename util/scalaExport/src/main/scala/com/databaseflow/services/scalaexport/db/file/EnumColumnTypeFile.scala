@@ -6,7 +6,7 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object EnumColumnTypeFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
-    val file = ScalaFile(enum.tablePackage, enum.className + "ColumnType", None)
+    val file = ScalaFile(pkg = enum.tablePackage, key = enum.className + "ColumnType", root = None, core = true)
 
     file.addImport(enum.modelPackage.mkString("."), enum.className)
     file.addImport(config.providedPrefix + "services.database.SlickQueryService.imports", "_")

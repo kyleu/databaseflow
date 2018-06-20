@@ -6,7 +6,7 @@ import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object QueriesFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(model.queriesPackage, model.className + "Queries")
+    val file = ScalaFile(pkg = model.queriesPackage, key = model.className + "Queries", core = true)
 
     file.addImport(model.modelPackage.mkString("."), model.className)
     file.addImport(config.providedPrefix + "models.database", "Row")

@@ -2,7 +2,6 @@ package com.databaseflow.services.scalaexport.db
 
 import better.files._
 import com.databaseflow.models.scalaexport.file.OutputFile
-import com.databaseflow.services.scalaexport.ExportFiles
 import com.databaseflow.services.scalaexport.db.file.ReadmeFile
 
 object ExportMerge {
@@ -49,7 +48,10 @@ object ExportMerge {
     }
   }
 
-  def merge(projectId: Option[String], projectTitle: String, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay") = {
+  def mergeDirectories(
+    projectId: Option[String], projectTitle: String,
+    coreDir: File, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay"
+  ) = {
     if (rootDir.exists) {
       log(s"Overwriting existing project at [${rootDir.path}].")
     } else {
@@ -61,53 +63,12 @@ object ExportMerge {
       projectId.foreach(id => projectNameReplacements(id, projectTitle, rootDir))
     }
 
-    val src = ExportFiles.rootLocation.toFile
-    val srcResults = src.listRecursively.filter(_.isRegularFile).map { c =>
-      val p = c.pathAsString.substring(c.pathAsString.indexOf("scalaexport") + 12)
-      val tgt = rootDir / p
-      if (tgt.exists) {
-        val tgtContent = tgt.contentAsString
-        if (!tgtContent.contains("Generated File")) {
-          log(s"Skipping modified file [${tgt.pathAsString}].")
-          "modified"
-        } else if (tgtContent == c.contentAsString) {
-          "same-content"
-        } else {
-          c.copyTo(tgt, overwrite = true)
-          "overwrite"
-        }
-      } else {
-        tgt.createIfNotExists(createParents = true)
-        c.copyTo(tgt, overwrite = true)
-        "create"
-      }
-    }
-
-    val rootResults = rootFiles.map { rf =>
-      val f = rootDir / rf.packageDir / rf.filename
-      if (f.exists) {
-        val tgtContent = f.contentAsString
-        if (!tgtContent.contains("Generated File")) {
-          log(s"Skipping modified root file [${f.pathAsString}].")
-          "modified-root"
-        } else if (tgtContent == rf.rendered) {
-          // result.log(s"Skipping unchanged root file [${tgt.pathAsString}].")
-          "same-content-root"
-        } else {
-          f.delete(swallowIOExceptions = true)
-          f.createIfNotExists()
-          f.writeText(rf.rendered)
-          "overwrite-root"
-        }
-      } else {
-        f.parent.createDirectories()
-        f.writeText(rf.rendered)
-        "create-root"
-      }
-    }
+    val coreResults = ExportMergeHelper.writeCore(coreDir, log)
+    val srcResults = ExportMergeHelper.writeSource(rootDir, log)
+    val rootResults = ExportMergeHelper.writeRoot(rootDir, rootFiles, log)
 
     log("Merge complete.")
 
-    (srcResults.toSeq ++ rootResults).groupBy(x => x).map(x => x._1 -> x._2.size)
+    (coreResults ++ srcResults ++ rootResults).groupBy(x => x).map(x => x._1 -> x._2.size)
   }
 }

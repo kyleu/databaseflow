@@ -5,8 +5,8 @@ object ScalaFile {
 }
 
 case class ScalaFile(
-    override val pkg: Seq[String], override val key: String, root: Option[String] = None
-) extends OutputFile(dir = root.getOrElse("app"), pkg = pkg, key = key, filename = key + ".scala") {
+    override val pkg: Seq[String], override val key: String, root: Option[String] = None, override val core: Boolean = false
+) extends OutputFile(dir = root.getOrElse("app"), pkg = pkg, key = key, filename = key + ".scala", core) {
 
   private[this] var imports = Set.empty[(String, String)]
 
