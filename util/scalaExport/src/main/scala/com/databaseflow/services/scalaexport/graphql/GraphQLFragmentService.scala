@@ -25,7 +25,7 @@ object GraphQLFragmentService {
 
       file.add(s"case class ${cn.cn}(", 2)
       val typ = schema.flatMap(_.allTypes.get(d.typeCondition.name))
-      GraphQLQueryHelper.addFields(cfg.providedPrefix, cfg.modelPkg, file, cn.pkg, typ, d.selections, nameMap)
+      GraphQLQueryHelper.addFields(cfg, file, cn.pkg, typ, d.selections, nameMap)
       file.add(")", -2)
 
       Some(file)

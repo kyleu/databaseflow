@@ -24,7 +24,7 @@ object ScalaExportHelper {
               indexed = indexes.nonEmpty,
               unique = indexes.exists(_.unique),
               enums = enums
-            )).copy(t = c._1.columnType) // TODO REMOVE!
+            ))
           }
           m.copy(fields = fields.toList)
         case None => ExportConfigurationDefault.loadModel(schema, t, enums)

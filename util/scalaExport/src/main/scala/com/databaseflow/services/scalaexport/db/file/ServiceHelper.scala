@@ -43,6 +43,11 @@ object ServiceHelper {
         file.add(s"def getByPrimaryKey(creds: Credentials, $colProp: ${field.scalaType})$td = {", 1)
         file.add(s"""traceF("get.by.primary.key")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKey($colProp))(td))""")
         file.add("}", -1)
+
+        file.add(s"def getByPrimaryKeyRequired(creds: Credentials, $colProp: ${field.scalaType})$td = getByPrimaryKey(creds, $colProp).map { opt =>", 1)
+        file.add(s"""opt.getOrElse(throw new IllegalStateException(s"Cannot load ${model.propertyName} with $colProp [$$$colProp]."))""")
+        file.add("}", -1)
+
         val seqArgs = s"${colProp}Seq: Seq[${field.scalaType}]"
         file.add(s"def getByPrimaryKeySeq(creds: Credentials, $seqArgs)$td = {", 1)
         file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")

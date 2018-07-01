@@ -62,3 +62,17 @@ This creates the tables needed to support auditing, notes, and authentication.
 * Start the SBT task `run`, and point your browser to [localhost:9000](http://localhost:9000). 
 
 * Hit the admin section, and start exploring! You can re-run the export at any time, and it will preserve the changes you've made.
+
+
+## Work with an existing generated project
+
+* Clone https://github.com/KyleU/databaseflow
+* Launch sbt and type "run"
+* Wait for the world to compile, then hit http://localhost:4260
+* Once it loads, you'll need to create a local Database Flow account
+* Create a new connection, pointing to the database you wish to use
+* Add your stuff, make your database changes, then hit "Refresh Schema" from the query interface
+* (optional) Add a file `./tmp/locations.txt` with `key=dir` lines telling it where to load the config
+* Load http://localhost:4260/admin/status/projects then hit "Create Scala Project"
+* Find your newly created stuff, and make sure it in the right package and all info is correct
+* Export that thing.

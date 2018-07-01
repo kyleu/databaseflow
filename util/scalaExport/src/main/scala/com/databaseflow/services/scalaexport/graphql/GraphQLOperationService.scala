@@ -28,7 +28,7 @@ object GraphQLOperationService {
     } else {
       throw new IllegalStateException(d.operationType.toString)
     }
-    addData(cfg.providedPrefix, cfg.modelPkg, typ, file, cn.pkg, d.selections, nameMap)
+    addData(cfg, typ, file, cn.pkg, d.selections, nameMap)
     file.add(s"""val query = new GraphQLQuery[Data]("${cn.cn}")""")
     //addContent(file, d)
     file.add("}", -1)
@@ -51,14 +51,14 @@ object GraphQLOperationService {
   }
 
   private[this] def addData(
-    providedPrefix: String, modelPackage: String, typ: Option[Typ], file: ScalaFile, pkg: Seq[String], selections: Seq[Selection], nameMap: Map[String, ClassName]
+    cfg: GraphQLExportConfig, typ: Option[Typ], file: ScalaFile, pkg: Seq[String], selections: Seq[Selection], nameMap: Map[String, ClassName]
   ) = {
     file.add(s"object Data {", 1)
     file.add(s"implicit val jsonDecoder: Decoder[Data] = deriveDecoder")
     file.add(s"}", -1)
 
     file.add(s"case class Data(", 2)
-    GraphQLQueryHelper.addFields(providedPrefix, modelPackage, file, pkg, typ, selections, nameMap)
+    GraphQLQueryHelper.addFields(cfg, file, pkg, typ, selections, nameMap)
     file.add(s")", -2)
     file.add()
   }

@@ -23,10 +23,14 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_
 
   def export() = {
     val input = cfg.input.toFile
-    if (!input.isDirectory) {
+    val queryFiles = if (input.isDirectory) {
+      input.children.filter(_.isRegularFile).filter(_.name.endsWith(".graphql")).toSeq
+    } else if (input.isRegularFile) {
+      Seq(input)
+    } else {
       throw new IllegalStateException(s"Cannot load data input directory [${cfg.input}].")
     }
-    val queryFiles = input.children.filter(_.isRegularFile).filter(_.name.endsWith(".graphql"))
+
     val doc = queryFiles.foldLeft(Document.emptyStub)((d, f) => d.merge(QueryParser.parse(f.contentAsString).get))
 
     val nameMap = {

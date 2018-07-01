@@ -1,6 +1,7 @@
 package com.databaseflow.services.scalaexport.graphql
 
 import com.databaseflow.models.scalaexport.file.ScalaFile
+import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService.ClassName
 import com.databaseflow.services.scalaexport.graphql.GraphQLOutputTranslations.{scalaImport, scalaType}
 import sangria.ast._
@@ -8,12 +9,12 @@ import sangria.schema.{ObjectType, OutputType, ScalarType, Type => Typ}
 
 object GraphQLQueryHelper {
   def addFields(
-    providedPrefix: String, modelPackage: String, file: ScalaFile, pkg: Seq[String], typ: Option[Typ], selections: Seq[Selection], nameMap: Map[String, ClassName]
+    cfg: GraphQLExportConfig, file: ScalaFile, pkg: Seq[String], typ: Option[Typ], selections: Seq[Selection], nameMap: Map[String, ClassName]
   ) = {
     selections.foreach { s =>
       val param = s match {
         case Field(alias, name, _, _, sels, _, _, _) =>
-          val t = typeForSelections(providedPrefix, modelPackage, file, name, pkg, typ, sels, nameMap)
+          val t = typeForSelections(cfg, file, name, pkg, typ, sels, nameMap)
           s"${alias.getOrElse(name)}: $t"
         case x => s"/* $x */"
       }
@@ -29,7 +30,7 @@ object GraphQLQueryHelper {
   }
 
   private[this] def typeForSelections(
-    providedPrefix: String, modelPackage: String, file: ScalaFile, name: String, pkg: Seq[String], typ: Option[Typ], sels: Vector[Selection], nameMap: Map[String, ClassName]
+    cfg: GraphQLExportConfig, file: ScalaFile, name: String, pkg: Seq[String], typ: Option[Typ], sels: Vector[Selection], nameMap: Map[String, ClassName]
   ) = {
     val spreads = sels.flatMap {
       case x: FragmentSpread => Some(x)
@@ -64,7 +65,7 @@ object GraphQLQueryHelper {
             val fieldType = o.fields.find(_.name == name).getOrElse {
               throw new IllegalStateException(s"Cannot find field [$name] on type [${t.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}].")
             }.fieldType
-            scalaImport(providedPrefix, modelPackage, fieldType).foreach(x => file.addImport(x._1, x._2))
+            scalaImport(cfg, fieldType).foreach(x => file.addImport(x._1, x._2))
             scalaType(fieldType)
           case _ => s"Json /* $t */"
         }

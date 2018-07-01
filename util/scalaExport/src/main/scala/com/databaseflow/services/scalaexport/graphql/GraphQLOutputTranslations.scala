@@ -1,5 +1,6 @@
 package com.databaseflow.services.scalaexport.graphql
 
+import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import sangria.schema.{EnumType, ListType, OptionType, Type}
 
 object GraphQLOutputTranslations {
@@ -12,10 +13,10 @@ object GraphQLOutputTranslations {
     }
   }
 
-  def scalaImport(providedPrefix: String, modelPackage: String, t: Type): Option[(String, String)] = t match {
-    case OptionType(x) => scalaImport(providedPrefix, modelPackage, x)
-    case ListType(x) => scalaImport(providedPrefix, modelPackage, x)
-    case EnumType(n, _, _, _, _) => Some(modelPackage -> n)
+  def scalaImport(cfg: GraphQLExportConfig, t: Type): Option[(String, String)] = t match {
+    case OptionType(x) => scalaImport(cfg, x)
+    case ListType(x) => scalaImport(cfg, x)
+    case EnumType(n, _, _, _, _) => Some(cfg.pkgFor(n) -> n)
     case _ => t.namedType.name match {
       case "DateTime" | "Date" | "Time" => Some("java.time" -> ("Local" + t.namedType.name))
       case "UUID" => Some("java.util" -> t.namedType.name)
