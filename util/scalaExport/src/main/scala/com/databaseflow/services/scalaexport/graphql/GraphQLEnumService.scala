@@ -21,7 +21,7 @@ object GraphQLEnumService {
 
       file.add(s"sealed abstract class ${cn.cn}(override val value: String) extends StringEnumEntry")
       file.add()
-      file.add(s"object ${cn.cn} extends StringEnum[${cn.cn}] {", 1)
+      file.add(s"object ${cn.cn} extends StringEnum[${cn.cn}] with StringCirceEnum[${cn.cn}] {", 1)
       values.foreach { v =>
         file.add(s"""case object ${ExportHelper.toClassName(v.value.toString)} extends ${cn.cn}("${v.value}")""")
       }
