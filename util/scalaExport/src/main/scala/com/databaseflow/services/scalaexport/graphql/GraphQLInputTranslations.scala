@@ -1,5 +1,6 @@
 package com.databaseflow.services.scalaexport.graphql
 
+import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService.ClassName
 import sangria.ast.{ListType, NamedType, NotNullType, Type}
 
 object GraphQLInputTranslations {
@@ -14,14 +15,14 @@ object GraphQLInputTranslations {
     case _ => typ.toString
   }
 
-  def scalaImport(providedPrefix: String, t: Type): Option[(String, String)] = t match {
-    case NotNullType(x, _) => scalaImport(providedPrefix, x)
-    case ListType(x, _) => scalaImport(providedPrefix, x)
+  def scalaImport(providedPrefix: String, t: Type, nameMap: Map[String, ClassName]): Option[(String, String)] = t match {
+    case NotNullType(x, _) => scalaImport(providedPrefix, x, nameMap)
+    case ListType(x, _) => scalaImport(providedPrefix, x, nameMap)
     case _ => t.namedType.renderCompact match {
       case "UUID" => Some("java.util" -> "UUID")
       case "FilterInput" => Some((providedPrefix + "models.result.filter") -> "Filter")
       case "OrderByInput" => Some((providedPrefix + "models.result.orderBy") -> "OrderBy")
-      case _ => None
+      case x => nameMap.get(x).map(x => x.pkg.mkString(".") -> x.cn)
     }
   }
 

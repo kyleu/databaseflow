@@ -46,8 +46,9 @@ object ScalaExport {
     if (!in.isRegularFile) {
       throw new IllegalStateException(s"Cannot read input file [${in.pathAsString}].")
     }
-    val cfg = {
-      parseJson(in.contentAsString).right.get.asJson.as[GraphQLExportConfig].right.get
+    val cfg = parseJson(in.contentAsString) match {
+      case Right(foo) => foo.as[GraphQLExportConfig].right.get
+      case Left(x) => throw x
     }
     val schema = cfg.schema.map { s =>
       Schema.buildFromAst(QueryParser.parse(s.toFile.contentAsString).toOption.getOrElse(throw new IllegalStateException("Cannot load schema.")))

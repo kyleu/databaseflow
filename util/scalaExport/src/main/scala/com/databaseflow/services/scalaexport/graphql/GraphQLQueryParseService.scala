@@ -1,12 +1,11 @@
 package com.databaseflow.services.scalaexport.graphql
 
 import better.files._
-import com.databaseflow.models.scalaexport.file.ScalaFile
 import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import sangria.ast._
 import sangria.parser.QueryParser
 import com.databaseflow.services.scalaexport.ExportHelper
-import sangria.schema.Schema
+import sangria.schema.{EnumType, Schema}
 
 object GraphQLQueryParseService {
   val classPrefix = "Class: "
@@ -33,15 +32,31 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_
 
     val doc = queryFiles.foldLeft(Document.emptyStub)((d, f) => d.merge(QueryParser.parse(f.contentAsString).get))
 
+    val enumTypes = schema.map(s => s.allTypes.values.flatMap {
+      case EnumType(name, _, values, _, _) => Some(name -> values)
+      case _ => None
+    }).getOrElse(Nil).toSeq
+
     val nameMap = {
+      val enumStuff = calcNames(enumTypes.map(_._1 -> Nil), Seq("graphql", "enums"))
       val fragStuff = calcNames(doc.fragments.mapValues(_.comments).toSeq, Seq("graphql", "fragments"))
+      val inputStuff = calcNames(doc.definitions.collect { case x: InputObjectTypeDefinition => x }.map(x => x.name -> x.comments), Seq("graphql", "inputs"))
       val opStuff = calcNames(doc.operations.map(o => o._1.get -> o._2.comments).toSeq, Seq("graphql", "queries"))
-      fragStuff ++ opStuff
+      enumStuff ++ fragStuff ++ inputStuff ++ opStuff
     }
 
+    val enumFiles = enumTypes.flatMap(f => GraphQLEnumService.enumFile(cfg, f._1, f._2, nameMap))
+
     val fragmentFiles = doc.fragments.flatMap(f => GraphQLFragmentService.fragmentFile(cfg, f._1, f._2, nameMap, schema))
+
+    val inputFiles = doc.definitions.flatMap {
+      case x: InputObjectTypeDefinition => GraphQLInputService.inputFile(cfg, x, nameMap, schema)
+      case _ => None
+    }
+
     val opFiles = doc.operations.flatMap(f => GraphQLOperationService.opFile(cfg, f._1.get, f._2, nameMap, schema))
-    val outFiles = (fragmentFiles ++ opFiles).toSeq
+
+    val outFiles = (enumFiles ++ fragmentFiles ++ inputFiles ++ opFiles).toSeq
 
     val output = cfg.output.toFile
     if (!output.isDirectory) {

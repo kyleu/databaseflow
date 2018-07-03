@@ -20,7 +20,7 @@ object GraphQLOperationService {
     meaningfulComments(d.comments).foreach(c => file.add("// " + c))
 
     file.add(s"""object ${cn.cn} {""", 1)
-    addVariables(cfg.providedPrefix, file, d.variables)
+    addVariables(cfg.providedPrefix, file, d.variables, nameMap)
     val typ: Option[Typ] = if (d.operationType == OperationType.Query) {
       schema.map(_.query)
     } else if (d.operationType == OperationType.Mutation) {
@@ -35,8 +35,10 @@ object GraphQLOperationService {
     Some(file)
   }
 
-  private[this] def addVariables(providedPrefix: String, file: ScalaFile, variables: Seq[VariableDefinition]) = if (variables.nonEmpty) {
-    variables.foreach(v => GraphQLInputTranslations.scalaImport(providedPrefix, v.tpe).foreach(x => file.addImport(x._1, x._2)))
+  private[this] def addVariables(
+    providedPrefix: String, file: ScalaFile, variables: Seq[VariableDefinition], nameMap: Map[String, ClassName]
+  ) = if (variables.nonEmpty) {
+    variables.foreach(v => GraphQLInputTranslations.scalaImport(providedPrefix, v.tpe, nameMap).foreach(x => file.addImport(x._1, x._2)))
 
     val args = variables.map { v =>
       val typ = GraphQLInputTranslations.scalaType(v.tpe)

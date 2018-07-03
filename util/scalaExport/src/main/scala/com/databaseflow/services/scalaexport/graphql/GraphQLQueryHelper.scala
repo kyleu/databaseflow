@@ -5,7 +5,7 @@ import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService.ClassName
 import com.databaseflow.services.scalaexport.graphql.GraphQLOutputTranslations.{scalaImport, scalaType}
 import sangria.ast._
-import sangria.schema.{ObjectType, OutputType, ScalarType, Type => Typ}
+import sangria.schema.{ObjectType, OutputType, Type => Typ}
 
 object GraphQLQueryHelper {
   def addFields(
@@ -65,8 +65,8 @@ object GraphQLQueryHelper {
             val fieldType = o.fields.find(_.name == name).getOrElse {
               throw new IllegalStateException(s"Cannot find field [$name] on type [${t.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}].")
             }.fieldType
-            scalaImport(cfg, fieldType).foreach(x => file.addImport(x._1, x._2))
-            scalaType(fieldType)
+            scalaImport(cfg, fieldType, nameMap).foreach(x => file.addImport(x._1, x._2))
+            scalaType(fieldType, nameMap)
           case _ => s"Json /* $t */"
         }
         case None =>
