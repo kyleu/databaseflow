@@ -34,7 +34,7 @@ object GraphQLInputService {
     }
   }
 
-  def inputFile(cfg: GraphQLExportConfig, d: InputObjectTypeDefinition, nameMap: Map[String, ClassName], schema: Option[Schema[_, _]]) = {
+  def inputFile(cfg: GraphQLExportConfig, d: InputObjectTypeDefinition, nameMap: Map[String, ClassName], schema: Schema[_, _]) = {
     if (nameMap.get(d.name).exists(_.provided)) {
       None
     } else {

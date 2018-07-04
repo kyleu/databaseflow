@@ -5,9 +5,7 @@ import com.databaseflow.models.scalaexport.ScalaExportOptions
 import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService
 import com.databaseflow.services.scalaexport.thrift.ThriftParseService
-import sangria.ast.Document
 import sangria.schema.Schema
-import sangria.marshalling.circe._
 import sangria.parser.QueryParser
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,9 +48,8 @@ object ScalaExport {
       case Right(foo) => foo.as[GraphQLExportConfig].right.get
       case Left(x) => throw x
     }
-    val schema = cfg.schema.map { s =>
-      Schema.buildFromAst(QueryParser.parse(s.toFile.contentAsString).toOption.getOrElse(throw new IllegalStateException("Cannot load schema.")))
-    }
+    val schemaFile = cfg.schema.getOrElse(throw new IllegalStateException("No schema!")).toFile
+    val schema = Schema.buildFromAst(QueryParser.parse(schemaFile.contentAsString).toOption.getOrElse(throw new IllegalStateException("Cannot load schema.")))
     new GraphQLQueryParseService(cfg, schema).export()
   }
 

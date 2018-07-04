@@ -17,7 +17,7 @@ object GraphQLQueryParseService {
   }
 }
 
-class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_, _]]) {
+class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Schema[_, _]) {
   import GraphQLQueryParseService._
 
   def export() = {
@@ -32,10 +32,10 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_
 
     val doc = queryFiles.foldLeft(Document.emptyStub)((d, f) => d.merge(QueryParser.parse(f.contentAsString).get))
 
-    val enumTypes = schema.map(s => s.allTypes.values.flatMap {
+    val enumTypes = schema.allTypes.values.flatMap {
       case EnumType(name, _, values, _, _) => Some(name -> values)
       case _ => None
-    }).getOrElse(Nil).toSeq
+    }.toSeq
 
     val nameMap = {
       val enumStuff = calcNames(enumTypes.map(_._1 -> Nil), Seq("graphql", "enums"))
@@ -56,7 +56,7 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Option[Schema[_
 
     val opFiles = doc.operations.flatMap(f => GraphQLOperationService.opFile(cfg, f._1.get, f._2, nameMap, schema))
 
-    val outFiles = (enumFiles ++ fragmentFiles ++ inputFiles ++ opFiles).toSeq
+    val outFiles = enumFiles ++ fragmentFiles ++ inputFiles ++ opFiles
 
     val output = cfg.output.toFile
     if (!output.isDirectory) {

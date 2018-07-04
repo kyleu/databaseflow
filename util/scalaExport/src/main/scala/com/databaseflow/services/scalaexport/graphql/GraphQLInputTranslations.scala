@@ -12,7 +12,6 @@ object GraphQLInputTranslations {
       case "OrderByInput" => "OrderBy"
       case _ => name
     }
-    case _ => typ.toString
   }
 
   def scalaImport(providedPrefix: String, t: Type, nameMap: Map[String, ClassName]): Option[(String, String)] = t match {
