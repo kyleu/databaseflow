@@ -1,6 +1,5 @@
 GET         /                           controllers.admin.AdminController.index
 GET         /status                     controllers.admin.AdminController.status
-GET         /status/projects            controllers.admin.AdminController.projects
 GET         /metrics                    controllers.admin.MetricsController.showMetrics
 
 GET         /users/new                  controllers.admin.UserCreateController.newUser()

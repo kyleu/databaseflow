@@ -70,7 +70,7 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Schema[_, _]) {
         case x: ObjectTypeDefinition => x.directives.flatMap(_.arguments).map(_.value.renderCompact)
         case x => throw new IllegalStateException(s"Unhandled [$x].")
       }.distinct.sorted
-      println(referencedInputTypeNames)
+      // println(referencedInputTypeNames)
 
       val referencedInputTypes: Seq[InputObjectType[Any]] = referencedInputTypeNames.flatMap { tName =>
         schema.allTypes.get(tName) match {
