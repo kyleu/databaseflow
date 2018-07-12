@@ -18,6 +18,7 @@ object Icons {
   val starOpen = "fa-star-o"
 
   val edit = "fa-edit"
+  val generate = "fa-magic"
   val recycle = "fa-recycle"
 
   val feedback = "fa-at"

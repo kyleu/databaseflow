@@ -15,8 +15,8 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.2.2"
-    val scala = "2.12.4"
+    val app = "1.2.5"
+    val scala = "2.12.6"
   }
 
   val compileOptions = Seq(
@@ -38,6 +38,8 @@ object Shared {
 
     scalacOptions ++= compileOptions,
     scalacOptions in Test ++= Seq("-Yrangepos"),
+
+    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false).withWarnDirectEvictions(false),
 
     // Packaging
     publishMavenStyle := false,

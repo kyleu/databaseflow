@@ -2,20 +2,16 @@ package com.databaseflow.services.scalaexport.graphql
 
 import com.databaseflow.models.scalaexport.file.ScalaFile
 import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
-import sangria.ast._
-import sangria.schema.Schema
+import sangria.schema.{InputField, InputObjectType, InputType, ListInputType, OptionInputType, Schema}
 
-object GraphQLInputService {
+object GraphQLReferencedInputService {
   import GraphQLQueryParseService._
 
-  private[this] def typeForSelections(file: ScalaFile, typ: Type, nameMap: Map[String, ClassName]): String = {
+  private[this] def typeForSelections(file: ScalaFile, typ: InputType[_], nameMap: Map[String, ClassName]): String = {
     typ match {
-      case ListType(t, _) => s"Seq[${typeForSelections(file, t, nameMap)}]"
-      case NotNullType(t, _) => typeForSelections(file, t, nameMap) match {
-        case x if x.startsWith("Option") => x.stripPrefix("Option[").stripSuffix("]")
-        case x => x
-      }
-      case NamedType(n, _) => s"Option[" + (n match {
+      case ListInputType(t) => s"Seq[${typeForSelections(file, t, nameMap)}]"
+      case OptionInputType(t) => s"Option[${typeForSelections(file, t, nameMap)}]"
+      case n => n.namedType.name match {
         case "UUID" =>
           file.addImport("java.util", "UUID")
           "UUID"
@@ -23,31 +19,28 @@ object GraphQLInputService {
           file.addImport("java.time", "ZonedDateTime")
           "ZonedDateTime"
         case x => x
-      }) + "]"
-      case x => throw new IllegalStateException(s"Unhandled input type [$x].")
+      }
     }
   }
 
   private[this] def addInputFields(
-    cfg: GraphQLExportConfig, file: ScalaFile, pkg: Array[String], fields: Vector[InputValueDefinition], nameMap: Map[String, ClassName]
+    cfg: GraphQLExportConfig, file: ScalaFile, pkg: Array[String], fields: List[InputField[_]], nameMap: Map[String, ClassName]
   ) = {
     fields.foreach { f =>
-      val t = typeForSelections(file, f.valueType, nameMap)
+      val t = typeForSelections(file, f.fieldType, nameMap)
       val param = s"${f.name}: $t"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
       file.add(param + comma)
     }
   }
 
-  def inputFile(cfg: GraphQLExportConfig, d: InputObjectTypeDefinition, nameMap: Map[String, ClassName], schema: Schema[_, _]) = {
+  def inputFile(cfg: GraphQLExportConfig, d: InputObjectType[_], nameMap: Map[String, ClassName], schema: Schema[_, _]) = {
     if (nameMap.get(d.name).exists(_.provided)) {
       None
     } else {
       val cn = nameMap(d.name)
       val file = ScalaFile(cn.pkg, cn.cn, Some(""))
       file.addImport(cfg.providedPrefix + "util.JsonSerializers", "_")
-
-      meaningfulComments(d.comments).foreach(c => file.add("// " + c))
 
       file.add(s"object ${cn.cn} {", 1)
       file.add(s"implicit val jsonDecoder: Decoder[${cn.cn}] = deriveDecoder")

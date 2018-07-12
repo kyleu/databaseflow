@@ -30,7 +30,7 @@ addSbtPlugin("org.scala-native" % "sbt-scalajs-crossproject" % "0.2.2")
 addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.6" exclude("org.scala-js", "sbt-scalajs"))
 
 // Source Control
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // Publishing
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1") // show */*:pgpSecretRing

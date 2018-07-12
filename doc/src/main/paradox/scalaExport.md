@@ -45,7 +45,9 @@ This creates the tables needed to support auditing, notes, and authentication.
 
 * Download and run Database Flow, and add a connection to your PostgreSQL schema.
 
-* In the admin/settings section, head to "Status", then "Database Operations", and select the "Create Scala Project" button for your connection.
+* Add a "Project Location" in the connection settings.
+
+* On the home screen, select the "Generate" button for your connection.
 
 * Ok, this next page is important. It shows the full details of your database, with options for each table. Take some time to review the options available.
   * The top section lets you choose the output directory, which defaults to `./tmp/{projectId}`.
@@ -70,9 +72,8 @@ This creates the tables needed to support auditing, notes, and authentication.
 * Launch sbt and type "run"
 * Wait for the world to compile, then hit http://localhost:4260
 * Once it loads, you'll need to create a local Database Flow account
-* Create a new connection, pointing to the database you wish to use
+* Create a new connection, pointing to the database you wish to use, and adding a project location.
 * Add your stuff, make your database changes, then hit "Refresh Schema" from the query interface
-* (optional) Add a file `./tmp/locations.txt` with `key=dir` lines telling it where to load the config
-* Load http://localhost:4260/admin/status/projects then hit "Create Scala Project"
-* Find your newly created stuff, and make sure it in the right package and all info is correct
+* Open your project on the home screen, then hit "Generate"
+* Find your newly created stuff, make sure it's in the right package, and all info is correct
 * Export that thing.

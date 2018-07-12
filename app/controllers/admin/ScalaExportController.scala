@@ -22,7 +22,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     ConnectionSettingsService.connFor(conn) match {
       case Some(cs) => filename match {
         case Some(fn) => SchemaService.getSchemaWithDetails(None, cs).map { schema =>
-          val config = getConfig(schema)
+          val loc = cs.projectLocation.getOrElse(throw new IllegalStateException("Please configure a project location before exporting."))
+          val config = getConfig(loc, schema)
           ExportFiles.prepareRoot()
           val flags = Set("rest", "graphql", "extras")
           val result = ThriftParseService.exportThrift(
@@ -39,7 +40,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
   def exportForm(conn: String) = withAdminSession("export.form") { implicit request =>
     ConnectionSettingsService.connFor(conn) match {
       case Some(cs) => SchemaService.getSchemaWithDetails(None, cs).map { schema =>
-        Ok(views.html.admin.scalaExport.schemaForm(request.identity, cs, getConfig(schema), schema))
+        val loc = cs.projectLocation.getOrElse(throw new IllegalStateException("Please configure a project location before exporting."))
+        Ok(views.html.admin.scalaExport.schemaForm(request.identity, cs, getConfig(loc, schema), schema))
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")
     }
@@ -75,7 +77,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         )
 
         val x = config.asJson.spaces2
-        configFileFor(schema).overwrite(x)
+        val loc = cs.projectLocation.getOrElse(throw new IllegalStateException("Please configure a project location before exporting."))
+        (loc.toFile / "databaseflow.json").overwrite(x)
 
         ScalaExportService(config).export(persist = true).map { result =>
           Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
@@ -85,8 +88,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     }
   }
 
-  private[this] def getConfig(schema: Schema): ExportConfiguration = {
-    val f = configFileFor(schema)
+  private[this] def getConfig(projectLocation: String, schema: Schema): ExportConfiguration = {
+    val f = projectLocation.toFile / "databaseflow.json"
     if (f.exists) {
       ScalaExportHelper.merge(schema, decodeJson[ExportConfiguration](f.contentAsString) match {
         case Right(x) => x
@@ -95,16 +98,5 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
     } else {
       ExportConfigurationDefault.forSchema(schema)
     }
-  }
-
-  private[this] def configFileFor(schema: Schema) = {
-    val schemaId = ExportHelper.toIdentifier(schema.id)
-    val overrides = "./tmp/locations.txt".toFile.lines.map { l =>
-      l.split('=').toList match {
-        case h :: t :: Nil => h.trim -> t.trim
-        case _ => throw new IllegalStateException(s"Unhandled line [$l].")
-      }
-    }.toMap
-    (if (overrides.contains(schemaId)) { overrides(schemaId) + "/databaseflow.json" } else { s"./tmp/$schemaId.json" }).toFile
   }
 }

@@ -12,7 +12,8 @@ import util.JdbcUtils
 object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
   override protected val columns = Seq(
-    "id", "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
+    "id", "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name",
+    "extra", "url_override", "username", "password", "project_location"
   )
   override protected val searchColumns = columns
 
@@ -53,11 +54,11 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
 
   case class Update(cs: ConnectionSettings) extends Statement {
     override val sql = updateSql(Seq(
-      "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
+      "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password", "project_location"
     ))
     override val values = Seq(
       cs.name, cs.slug, cs.owner, cs.read.toString, cs.edit.toString, cs.description,
-      cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.id
+      cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.projectLocation, cs.id
     )
   }
 
@@ -75,11 +76,12 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     extra = row.asOpt[Any]("extra").map(JdbcUtils.extractString),
     urlOverride = row.asOpt[Any]("url_override").map(JdbcUtils.extractString),
     username = row.as[String]("username"),
-    password = JdbcUtils.extractString(row.as[Any]("password"))
+    password = JdbcUtils.extractString(row.as[Any]("password")),
+    projectLocation = row.asOpt[Any]("project_location").map(JdbcUtils.extractString)
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = Seq[Any](
     q.id, q.name, q.slug, q.owner, q.read.toString, q.edit.toString, q.description, q.engine.toString,
-    q.host, q.dbName, q.extra, q.urlOverride, q.username, q.password
+    q.host, q.dbName, q.extra, q.urlOverride, q.username, q.password, q.projectLocation
   )
 }

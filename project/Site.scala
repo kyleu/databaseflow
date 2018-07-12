@@ -31,6 +31,7 @@ object Site {
 
     routesGenerator := InjectedRoutesGenerator,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
+    PlayKeys.playInteractionMode := PlayUtils.NonBlockingInteractionMode,
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,

@@ -37,6 +37,7 @@ th.values = Values
 # Index Page
 index.no.connections = Add your first connection by clicking the link below.
 index.new.connection = New Connection
+generate.title = Generate
 
 # Registration
 registration.title = Register
@@ -100,7 +101,6 @@ permissions.user.text = by all registered users
 permissions.administrators.text = by administrators
 permissions.private.text = only by you
 
-
 # Connection Form
 connection.permissions.available.to = Available To
 connection.permissions.editable.by = Editable By
@@ -115,6 +115,7 @@ connection.port = Port
 connection.db.name = Database Name
 connection.jdbc.url = Jdbc URL
 connection.description = Description
+connection.projectLocation = Project Location
 connection.new.title = New Connection
 connection.permission.denied = You do not have permission to add a database connection.
 

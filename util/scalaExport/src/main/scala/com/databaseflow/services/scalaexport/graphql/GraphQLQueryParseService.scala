@@ -5,7 +5,9 @@ import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
 import sangria.ast._
 import sangria.parser.QueryParser
 import com.databaseflow.services.scalaexport.ExportHelper
-import sangria.schema.{EnumType, Schema}
+import sangria.schema.{EnumType, InputObjectType, ScalarAlias, ScalarType, Schema}
+
+import scala.collection.immutable
 
 object GraphQLQueryParseService {
   val classPrefix = "Class: "
@@ -54,9 +56,41 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Schema[_, _]) {
       case _ => None
     }
 
+    val referencedInputFiles = {
+      val referencedInputTypeNames: Seq[String] = doc.definitions.flatMap {
+        case x: InputObjectTypeDefinition => x.fields.map(_.valueType.namedType.name)
+        case x: OperationDefinition => x.selections.flatMap {
+          case f: Field => f.arguments.map(_.value.renderCompact)
+          case _ => Nil
+        }
+        case x: FragmentDefinition => x.selections.flatMap {
+          case f: Field => f.arguments.map(_.value.renderCompact)
+          case _ => Nil
+        }
+        case x: ObjectTypeDefinition => x.directives.flatMap(_.arguments).map(_.value.renderCompact)
+        case x => throw new IllegalStateException(s"Unhandled [$x].")
+      }.distinct.sorted
+      println(referencedInputTypeNames)
+
+      val referencedInputTypes: Seq[InputObjectType[Any]] = referencedInputTypeNames.flatMap { tName =>
+        schema.allTypes.get(tName) match {
+          case Some(t) => t match {
+            case iot: InputObjectType[Any @unchecked] => Seq(iot)
+            case _: ScalarType[_] => Nil
+            case _: ScalarAlias[_, _] => Nil
+            case x => throw new IllegalStateException(s"Unhandled [$x].")
+          }
+          case None => Nil
+        }
+      }
+      // println(referencedInputTypes)
+
+      referencedInputTypes.flatMap(ri => GraphQLReferencedInputService.inputFile(cfg, ri, nameMap, schema))
+    }
+
     val opFiles = doc.operations.flatMap(f => GraphQLOperationService.opFile(cfg, f._1.get, f._2, nameMap, schema))
 
-    val outFiles = enumFiles ++ fragmentFiles ++ inputFiles ++ opFiles
+    val outFiles = enumFiles ++ fragmentFiles ++ inputFiles ++ referencedInputFiles ++ opFiles
 
     val output = cfg.output.toFile
     if (!output.isDirectory) {

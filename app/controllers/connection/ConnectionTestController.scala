@@ -32,7 +32,8 @@ class ConnectionTestController @javax.inject.Inject() (override val ctx: Applica
           dbName = if (cf.isUrl) { None } else { cf.dbName },
           extra = if (cf.isUrl) { None } else { cf.extra },
           urlOverride = if (cf.isUrl) { cf.urlOverride } else { None },
-          username = cf.username
+          username = cf.username,
+          projectLocation = cf.projectLocation
         )
         val updated = if (cf.password.trim.isEmpty) {
           val connOpt = ConnectionSettingsService.getById(connectionId)

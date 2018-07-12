@@ -108,6 +108,14 @@
             <label for="form-description">@messages("connection.description")</label>
           </div>
         </div>
+
+        <!-- Project Location -->
+        <div class="row" style="margin-bottom: 0;">
+          <div class="input-field col s12">
+            <input id="form-projectLocation" name="projectLocation" type="text" value="@conn.projectLocation" />
+            <label for="form-projectLocation">@messages("connection.projectLocation")</label>
+          </div>
+        </div>
       </div>
       <div class="panel-action">
         <button class="right btn theme waves-effect waves-light" type="submit">@if(isNew) { Create } else { Save }</button>
