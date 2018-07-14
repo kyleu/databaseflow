@@ -1,8 +1,7 @@
 import Dependencies.Utils
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
-import sbtcrossproject.CrossPlugin.autoImport._
-import scalajscrossproject.ScalaJSCrossPlugin.autoImport.{toScalaJSGroupID => _, _}
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 import webscalajs.ScalaJSWeb
 import sbt.Keys._
