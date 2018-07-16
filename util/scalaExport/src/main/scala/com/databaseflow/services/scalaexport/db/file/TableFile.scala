@@ -39,7 +39,7 @@ object TableFile {
       file.addImport("slickless", "_")
 
       val fieldStr = model.fields.map(_.propertyName).mkString(" :: ")
-      file.add(s"override val * = ($fieldStr :: HNil).mappedWith(Generic[models.${model.fullClassName}])")
+      file.add(s"override val * = ($fieldStr :: HNil).mappedWith(Generic[${config.corePrefix}models.${model.fullClassName}])")
     } else {
       val propSeq = model.fields.map(_.propertyName).mkString(", ")
       file.add(s"override val * = ($propSeq) <> (", 1)
