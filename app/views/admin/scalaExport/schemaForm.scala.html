@@ -71,9 +71,14 @@
           @views.html.admin.scalaExport.enumForm(cfg.enums, schema.enums)
           @schema.tables.map { table =>
             @views.html.admin.scalaExport.modelForm(
-              table = table,
               config = cfg,
-              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault.loadModel(schema, table, cfg.enums))
+              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault.loadTableModel(schema, table, cfg.enums))
+            )
+          }
+          @schema.views.map { view =>
+            @views.html.admin.scalaExport.modelForm(
+              config = cfg,
+              model = cfg.getModelOptWithIgnored(view.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault.loadViewModel(schema, view, cfg.enums))
             )
           }
         </ul>

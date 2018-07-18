@@ -40,8 +40,10 @@ object ServiceFile {
     ServiceHelper.writeSearchFields(model, file, queriesFilename, "(implicit trace: TraceData)", searchArgs)
     ServiceHelper.writeForeignKeys(model, file)
 
-    ServiceInserts.insertsFor(config.providedPrefix, model, queriesFilename, file)
-    ServiceMutations.mutations(config.providedPrefix, model, file)
+    if (!model.readOnly) {
+      ServiceInserts.insertsFor(config.providedPrefix, model, queriesFilename, file)
+      ServiceMutations.mutations(config.providedPrefix, model, file)
+    }
 
     file.add()
     file.add(s"def csvFor(totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)

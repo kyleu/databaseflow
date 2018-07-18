@@ -66,6 +66,9 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           models = schema.tables.map { t =>
             val prefix = s"model.${t.name}."
             ScalaExportHelper.modelForTable(schema, t, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums, pkgPrefix)
+          } ++ schema.views.map { v =>
+            val prefix = s"model.${v.name}."
+            ScalaExportHelper.modelForView(schema, v, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums, pkgPrefix)
           },
           source = form("project.source"),
           projectLocation = form.get("project.location").filter(_.nonEmpty),

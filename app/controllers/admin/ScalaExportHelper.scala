@@ -27,7 +27,7 @@ object ScalaExportHelper {
             ))
           }
           m.copy(fields = fields.toList)
-        case None => ExportConfigurationDefault.loadModel(schema, t, enums)
+        case None => ExportConfigurationDefault.loadTableModel(schema, t, enums)
       }
     }
     config.copy(models = models)
@@ -67,10 +67,39 @@ object ScalaExportHelper {
       scalaJs = form.get("scalaJs").contains("true"),
       ignored = form.get("ignored").contains("true"),
       audited = form.get("audited").contains("true"),
-      provided = form.get("provided").contains("true")
+      provided = form.get("provided").contains("true"),
+      readOnly = form.get("readOnly").contains("true")
     )
   } catch {
     case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for table [${t.name}].", x)
+  }
+
+  def modelForView(schema: Schema, v: View, form: Map[String, String], enums: Seq[ExportEnum], pkgPrefix: List[String]) = try {
+    ExportModel(
+      tableName = v.name,
+      pkg = form("pkg").split('.').filter(_.nonEmpty).toList,
+      propertyName = form("propertyName"),
+      className = form("className"),
+      title = form("title"),
+      description = form.get("description").filter(_.nonEmpty),
+      plural = form("plural"),
+      fields = v.columns.zipWithIndex.map { col =>
+        fieldForColumn(col._1, col._2, form.filter(_._1.startsWith("field.")).map(x => x._1.stripPrefix("field.") -> x._2), Nil, enums)
+      }.toList,
+      pkColumns = Nil,
+      foreignKeys = Nil,
+      references = Nil,
+      extendsClass = form.get("extendsClass").filter(_.nonEmpty),
+      icon = form.get("icon").filter(_.nonEmpty),
+      pkgPrefix = pkgPrefix,
+      scalaJs = form.get("scalaJs").contains("true"),
+      ignored = form.get("ignored").contains("true"),
+      audited = form.get("audited").contains("true"),
+      provided = form.get("provided").contains("true"),
+      readOnly = true
+    )
+  } catch {
+    case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for view [${v.name}].", x)
   }
 
   def fieldForColumn(col: Column, idx: Int, form: Map[String, String], indexes: Seq[Index], enums: Seq[ExportEnum]) = {

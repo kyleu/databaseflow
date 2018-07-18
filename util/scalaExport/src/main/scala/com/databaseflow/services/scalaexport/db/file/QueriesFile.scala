@@ -53,11 +53,13 @@ object QueriesFile {
 
     QueriesHelper.writeForeignKeys(config.providedPrefix, model, file)
 
-    file.add(s"def insert(model: ${model.className}) = new Insert(model)")
-    file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
+    if (!model.readOnly) {
+      file.add(s"def insert(model: ${model.className}) = new Insert(model)")
+      file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
 
-    file.addImport(config.providedPrefix + "models.result.data", "DataField")
-    file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
+      file.addImport(config.providedPrefix + "models.result.data", "DataField")
+      file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
+    }
 
     if (model.pkFields.nonEmpty) {
       val sig = model.pkFields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")

@@ -33,26 +33,28 @@ object ControllerFile {
     file.indent()
     file.add("import app.contexts.webContext")
     file.add()
-    file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
-    file.add(s"val cancel = ${model.routesClass}.list()")
-    file.add(s"val call = ${model.routesClass}.create()")
-    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    file.add(s"""request.identity, ${model.modelClass}(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
-    file.add(")))", -1)
-    file.add("}", -1)
-    file.add()
-    file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
-    file.add("svc.create(request, modelForm(request.body)).map {", 1)
-    if (model.pkFields.isEmpty) {
-      file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
-    } else {
-      val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
-      file.add(s"case Some(model) => Redirect(${model.routesClass}.view($viewArgs))")
-    }
-    file.add(s"case None => Redirect(${model.routesClass}.list())")
+    if (!model.readOnly) {
+      file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
+      file.add(s"val cancel = ${model.routesClass}.list()")
+      file.add(s"val call = ${model.routesClass}.create()")
+      file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
+      file.add(s"""request.identity, ${model.modelClass}(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
+      file.add(")))", -1)
+      file.add("}", -1)
+      file.add()
+      file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
+      file.add("svc.create(request, modelForm(request.body)).map {", 1)
+      if (model.pkFields.isEmpty) {
+        file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
+      } else {
+        val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
+        file.add(s"case Some(model) => Redirect(${model.routesClass}.view($viewArgs))")
+      }
+      file.add(s"case None => Redirect(${model.routesClass}.list())")
 
-    file.add("}", -1)
-    file.add("}", -1)
+      file.add("}", -1)
+      file.add("}", -1)
+    }
     file.add()
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)

@@ -35,7 +35,8 @@ case class ExportModel(
     scalaJs: Boolean = false,
     ignored: Boolean = false,
     audited: Boolean = false,
-    provided: Boolean = false
+    provided: Boolean = false,
+    readOnly: Boolean = false
 ) {
   val fullClassName = (pkg :+ className).mkString(".")
   val propertyPlural = ExportHelper.toIdentifier(plural)
