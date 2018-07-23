@@ -31,7 +31,7 @@ object ServiceMutations {
       file.add(s"def update(creds: Credentials, $sig, fields: Seq[DataField])$trace = {", 1)
       file.add(s"""traceF("update")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add(s"""case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for ${model.title} [$interp].")""")
-      file.add(s"case Some(current) => ApplicationDatabase.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
+      file.add(s"case Some(_) => ApplicationDatabase.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
       file.add(s"getByPrimaryKey(creds, $call)(td).map {", 1)
       file.add("case Some(newModel) =>", 1)
       val ids = model.pkFields.map {
