@@ -40,7 +40,7 @@ object GraphQLFieldHelper {
     case x => throw new IllegalStateException(" ::: " + x)
   }
 
-  private[this] def typeForSelections(
+  def typeForSelections(
     cfg: GraphQLExportConfig, file: ScalaFile, name: String, pkg: Seq[String], typ: Typ, sels: Vector[Selection], nameMap: Map[String, ClassName]
   ) = {
     val (spreads, fields) = distribute(sels)

@@ -2,12 +2,10 @@ package com.databaseflow.services.scalaexport.graphql
 
 import better.files._
 import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
+import com.databaseflow.services.scalaexport.ExportHelper
 import sangria.ast._
 import sangria.parser.QueryParser
-import com.databaseflow.services.scalaexport.ExportHelper
-import sangria.schema.{EnumType, InputObjectType, ScalarAlias, ScalarType, Schema}
-
-import scala.collection.immutable
+import sangria.schema.{EnumType, InputObjectType, InputType, ScalarAlias, ScalarType, Schema}
 
 object GraphQLQueryParseService {
   val classPrefix = "Class: "
@@ -47,12 +45,14 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Schema[_, _]) {
       enumStuff ++ fragStuff ++ inputStuff ++ opStuff
     }
 
-    val enumFiles = enumTypes.flatMap(f => GraphQLEnumService.enumFile(cfg, f._1, f._2, nameMap))
+    val enumFiles = enumTypes.flatMap(f => GraphQLEnumService.enumFile(cfg, f._1, f._2.map(_.value.toString), nameMap))
 
     val fragmentFiles = doc.fragments.flatMap(f => GraphQLFragmentService.fragmentFile(cfg, f._1, f._2, nameMap, schema))
 
+    val enumNames = enumTypes.map(_._1)
+
     val inputFiles = doc.definitions.flatMap {
-      case x: InputObjectTypeDefinition => GraphQLInputService.inputFile(cfg, x, nameMap, schema)
+      case x: InputObjectTypeDefinition => GraphQLInputService.inputFile(cfg, x, nameMap, schema, enumNames)
       case _ => None
     }
 
@@ -68,16 +68,18 @@ class GraphQLQueryParseService(cfg: GraphQLExportConfig, schema: Schema[_, _]) {
           case _ => Nil
         }
         case x: ObjectTypeDefinition => x.directives.flatMap(_.arguments).map(_.value.renderCompact)
+        case x: EnumTypeDefinition => Seq(x.renderCompact)
         case x => throw new IllegalStateException(s"Unhandled [$x].")
       }.distinct.sorted
       // println(referencedInputTypeNames)
 
-      val referencedInputTypes: Seq[InputObjectType[Any]] = referencedInputTypeNames.flatMap { tName =>
+      val referencedInputTypes: Seq[InputType[_]] = referencedInputTypeNames.flatMap { tName =>
         schema.allTypes.get(tName) match {
           case Some(t) => t match {
             case iot: InputObjectType[Any @unchecked] => Seq(iot)
             case _: ScalarType[_] => Nil
             case _: ScalarAlias[_, _] => Nil
+            case et: EnumType[_] => Seq(et)
             case x => throw new IllegalStateException(s"Unhandled [$x].")
           }
           case None => Nil

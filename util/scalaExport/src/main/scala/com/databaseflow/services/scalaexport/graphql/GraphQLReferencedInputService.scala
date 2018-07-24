@@ -2,7 +2,7 @@ package com.databaseflow.services.scalaexport.graphql
 
 import com.databaseflow.models.scalaexport.file.ScalaFile
 import com.databaseflow.models.scalaexport.graphql.GraphQLExportConfig
-import sangria.schema.{InputField, InputObjectType, InputType, ListInputType, OptionInputType, Schema}
+import sangria.schema.{EnumType, InputField, InputObjectType, InputType, ListInputType, OptionInputType, Schema}
 
 object GraphQLReferencedInputService {
   import GraphQLQueryParseService._
@@ -34,13 +34,18 @@ object GraphQLReferencedInputService {
     }
   }
 
-  def inputFile(cfg: GraphQLExportConfig, d: InputObjectType[_], nameMap: Map[String, ClassName], schema: Schema[_, _]) = {
-    if (nameMap.get(d.name).exists(_.provided)) {
-      None
-    } else {
+  def inputFile(cfg: GraphQLExportConfig, it: InputType[_], nameMap: Map[String, ClassName], schema: Schema[_, _]) = it match {
+    case d: InputObjectType[_] if nameMap.get(d.name).exists(_.provided) => None
+    case d: InputObjectType[_] =>
       val cn = nameMap(d.name)
       val file = ScalaFile(cn.pkg, cn.cn, Some(""))
       file.addImport(cfg.providedPrefix + "util.JsonSerializers", "_")
+
+      d.fields.foreach(_.fieldType match {
+        case typ: EnumType[_] if cn.pkg.toSeq != nameMap(typ.namedType.name).pkg.toSeq =>
+          file.addImport(nameMap(typ.namedType.name).pkg.mkString("."), cn.cn)
+        case _ => // noop
+      })
 
       file.add(s"object ${cn.cn} {", 1)
       file.add(s"implicit val jsonDecoder: Decoder[${cn.cn}] = deriveDecoder")
@@ -52,6 +57,7 @@ object GraphQLReferencedInputService {
       file.add(")", -2)
 
       Some(file)
-    }
+    case e: EnumType[_] => GraphQLEnumService.enumFile(cfg, e.name, e.values.map(_.value.toString), nameMap)
+    case _ => None
   }
 }
