@@ -11,7 +11,10 @@ object TableColumnDetailTemplate {
   }
 
   def getRows(col: Column) = {
-    val defaultVal = col.defaultValue.getOrElse("")
+    val defaultVal = col.defaultValue.map {
+      case x if x.contains(':') => x.substring(0, x.indexOf(":"))
+      case x => x
+    }.getOrElse("")
     Seq(tr(
       td(ColumnTemplate.linkFor(col)),
       td(col.primaryKey.toString),

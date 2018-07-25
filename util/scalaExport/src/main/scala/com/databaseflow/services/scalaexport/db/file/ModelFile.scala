@@ -6,6 +6,8 @@ import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.file.ScalaFile
 
 object ModelFile {
+  val includeDefaults = false
+
   def export(config: ExportConfiguration, model: ExportModel) = {
     val root = config.modelLocationOverride.orElse(if (model.scalaJs) { Some(ScalaFile.sharedSrc) } else { None })
     val file = ScalaFile(pkg = model.modelPackage, key = model.className, root = root, core = true)
@@ -77,7 +79,9 @@ object ModelFile {
       case _ => field.scalaType
     }).replaceAllLiterally("util.", providedPrefix + "util.").replaceAllLiterally(s"Seq[${providedPrefix}models.tag", s"Seq[${providedPrefix}models.tag")
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
-    val propDefault = if (field.notNull) {
+    val propDefault = if (!includeDefaults) {
+      ""
+    } else if (field.notNull) {
       " = " + field.defaultString(providedPrefix)
     } else {
       " = None"
