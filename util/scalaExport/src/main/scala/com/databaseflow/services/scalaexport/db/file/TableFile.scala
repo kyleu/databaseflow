@@ -58,11 +58,12 @@ object TableFile {
     field.addImport(file)
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
+      case ColumnType.TagsType => s"Seq[${providedPrefix}models.tag.Tag]"
       case _ => field.scalaType
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
-    file.add(s"""val ${field.propertyName} = column[${propType.replaceAllLiterally("models.tag", providedPrefix + "models.tag")}]("${field.columnName}")""")
+    file.add(s"""val ${field.propertyName} = column[$propType]("${field.columnName}")""")
   }
 
   private[this] def addQueries(file: ScalaFile, model: ExportModel) = {

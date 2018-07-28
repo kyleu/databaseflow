@@ -48,7 +48,7 @@ object ColumnType extends StringEnum[ColumnType] with StringCirceEnum[ColumnType
 
   case object EnumType extends ColumnType("enum", "String", "xxx")
   case object CodeType extends ColumnType("code", "String", "xxx")
-  case object TagsType extends ColumnType("hstore", "Seq[models.tag.Tag]", "models.tag.Tag.seqFromString(xxx)")
+  case object TagsType extends ColumnType("hstore", "Seq[Tag]", "Tag.seqFromString(xxx)")
 
   case object ByteArrayType extends ColumnType("byteArray", "Array[Byte]", "xxx.split(\",\").map(_.toInt.toByte)")
   case object ArrayType extends ColumnType("array", "Array[Any]", "xxx.split(\",\")") {

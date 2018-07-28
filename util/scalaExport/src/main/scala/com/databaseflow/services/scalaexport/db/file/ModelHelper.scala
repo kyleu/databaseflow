@@ -10,10 +10,13 @@ object ModelHelper {
 
     val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
 
-    val colScala = (field.t match {
+    val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
+      case ColumnType.TagsType =>
+        file.addImport(providedPrefix + "models.tag", "Tag")
+        field.scalaType
       case _ => field.scalaType
-    }).replaceAllLiterally("util.", providedPrefix + "util.").replaceAllLiterally(s"Seq[${providedPrefix}models.tag", s"Seq[${providedPrefix}models.tag")
+    }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     val propDecl = s"$scalaJsPrefix${field.propertyName}: $propType"
     val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
@@ -25,10 +28,10 @@ object ModelHelper {
     val fieldStrings = model.fields.map { field =>
       field.addImport(file, model.modelPackage)
 
-      val colScala = (field.t match {
+      val colScala = field.t match {
         case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
         case _ => field.scalaType
-      }).replaceAllLiterally("util.", providedPrefix + "util.").replaceAllLiterally(s"Seq[${providedPrefix}models.tag", s"Seq[${providedPrefix}models.tag")
+      }
       val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
       val propDefault = if (field.notNull) {
         " = " + field.defaultString(providedPrefix)

@@ -3,6 +3,7 @@ package com.databaseflow.services.scalaexport.db.file
 import com.databaseflow.models.scalaexport.ExportReservedNames
 import com.databaseflow.models.scalaexport.db.ExportModel
 import com.databaseflow.models.scalaexport.file.ScalaFile
+import models.schema.ColumnType
 
 object QueriesHelper {
   def fromRow(model: ExportModel, file: ScalaFile) = {
@@ -37,14 +38,18 @@ object QueriesHelper {
     field.addImport(file)
     val propId = ExportReservedNames.getColumnPropertyId(field.propertyName)
     val propCls = field.className
-    val ft = field.scalaType.replaceAllLiterally("models.tag", providedPrefix + "models.tag")
+    field.t match {
+      case ColumnType.TagsType => file.addImport(providedPrefix + "models.tag", "Tag")
+      case _ => // noop
+    }
+    val ft = field.scalaType
     file.add(s"""final case class CountBy$propCls($propId: $ft) extends ColCount(column = "${field.columnName}", values = Seq($propId))""")
     val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
     file.add(s"""final case class GetBy$propCls($propId: $ft, $searchArgs) extends SeqQuery(""", 1)
     file.add(s"""whereClause = Some(quote("${field.columnName}") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),""")
     file.add(s"limit = limit, offset = offset, values = Seq($propId)")
     file.add(")", -1)
-    val sig = s"GetBy${propCls}Seq(${propId}Seq: Seq[${ft}])"
+    val sig = s"GetBy${propCls}Seq(${propId}Seq: Seq[$ft])"
     file.add(s"""final case class $sig extends ColSeqQuery(column = "${field.columnName}", values = ${propId}Seq)""")
     file.add()
   }
