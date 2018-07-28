@@ -24,6 +24,8 @@ object ModelFile {
     file.add(s"object ${model.className} {", 1)
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
+    file.add()
+    ModelHelper.addEmpty(config.providedPrefix, model, file)
     file.add("}", -1)
     file.add()
 
@@ -33,7 +35,7 @@ object ModelFile {
       file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
     file.add(s"final case class ${model.className}(", 2)
-    addFields(config.providedPrefix, model, file)
+    ModelHelper.addFields(config.providedPrefix, model, file)
     model.extendsClass match {
       case Some(x) => file.add(") extends " + x + " {", -2)
       case None => file.add(") extends DataFieldModel {", -2)
@@ -67,28 +69,5 @@ object ModelFile {
 
     file.add("}", -1)
     file
-  }
-
-  private[this] def addFields(providedPrefix: String, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
-    field.addImport(file, model.modelPackage)
-
-    val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
-
-    val colScala = (field.t match {
-      case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
-      case _ => field.scalaType
-    }).replaceAllLiterally("util.", providedPrefix + "util.").replaceAllLiterally(s"Seq[${providedPrefix}models.tag", s"Seq[${providedPrefix}models.tag")
-    val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
-    val propDefault = if (!includeDefaults) {
-      ""
-    } else if (field.notNull) {
-      " = " + field.defaultString(providedPrefix)
-    } else {
-      " = None"
-    }
-    val propDecl = s"$scalaJsPrefix${field.propertyName}: $propType$propDefault"
-    val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-    field.description.foreach(d => file.add("/** " + d + " */"))
-    file.add(propDecl + comma)
   }
 }
