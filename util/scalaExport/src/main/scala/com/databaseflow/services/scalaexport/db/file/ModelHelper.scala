@@ -35,9 +35,7 @@ object ModelHelper {
       } else {
         " = None"
       }
-      val propDecl = s"${field.propertyName}: $propType$propDefault"
-      val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-      propDecl + comma
+      s"${field.propertyName}: $propType$propDefault"
     }.mkString(", ")
     file.add(s"def empty($fieldStrings) = {", 1)
     file.add(s"${model.className}(${model.fields.map(_.propertyName).mkString(", ")})")
