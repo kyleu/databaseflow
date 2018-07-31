@@ -31,9 +31,11 @@ object ExportField {
     case ArrayType => "Seq.empty"
     case TagsType => s"Seq.empty[${providedPrefix}models.tag.Tag]"
     case EnumType => enumOpt match {
-      case Some(enum) => enum.className + "." + ExportHelper.toClassName(ExportHelper.toIdentifier(defaultValue.flatMap { d =>
-        enum.values.find(_ == d)
-      }.getOrElse(enum.values.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.name}].")))))
+      case Some(enum) =>
+        val (_, cn) = defaultValue.flatMap(d => enum.valuesWithClassNames.find(_._1 == d)).getOrElse {
+          enum.valuesWithClassNames.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.name}]."))
+        }
+        s"${enum.className}.$cn"
       case None => "\"" + defaultValue.getOrElse("") + "\""
     }
     case _ => "\"" + defaultValue.getOrElse("") + "\""

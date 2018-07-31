@@ -15,6 +15,7 @@
             <th>Package</th>
             <th>Class</th>
             <th>Ignored</th>
+            <th>Shared</th>
           </tr>
           @schemaEnums.map { enum =>
             @defining(configEnums.find(_.name == enum.key)) { configEnum =>
@@ -25,6 +26,10 @@
                 <td>
                   <input name="enum.@{enum.key}.ignored" id="enum.@{enum.key}.ignored" @chk(configEnum.exists(_.ignored)) type="checkbox" value="true" />
                   <label for="enum.@{enum.key}.ignored"></label>
+                </td>
+                <td>
+                  <input name="enum.@{enum.key}.shared" id="enum.@{enum.key}.shared" @chk(configEnum.exists(_.shared)) type="checkbox" value="true" />
+                  <label for="enum.@{enum.key}.shared"></label>
                 </td>
               </tr>
             }

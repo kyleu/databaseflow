@@ -14,8 +14,11 @@ case class ExportEnum(
     className: String,
     pkgPrefix: List[String] = Nil,
     values: Seq[String],
+    shared: Boolean = false,
     ignored: Boolean = false
 ) {
+  val valuesWithClassNames = values.map(v => v -> ExportHelper.toClassName(ExportHelper.toIdentifier(v.replaceAllLiterally(".", "_"))))
+
   val propertyName = ExportHelper.toIdentifier(className)
   val modelPackage = pkgPrefix ++ List("models") ++ pkg
   val tablePackage = pkgPrefix ++ List("models", "table") ++ pkg

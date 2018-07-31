@@ -40,7 +40,8 @@ object ScalaExportHelper {
       className = form("className"),
       pkgPrefix = pkgPrefix,
       values = e.values,
-      ignored = form.get("ignored").contains("true")
+      ignored = form.get("ignored").contains("true"),
+      shared = form.get("shared").contains("true")
     )
   } catch {
     case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for enum [${e.key}].", x)

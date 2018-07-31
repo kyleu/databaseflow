@@ -2,11 +2,10 @@ package com.databaseflow.services.scalaexport.db.file
 
 import com.databaseflow.models.scalaexport.db.ExportEnum
 import com.databaseflow.models.scalaexport.file.ScalaFile
-import com.databaseflow.services.scalaexport.ExportHelper
 
 object EnumFile {
   def export(enum: ExportEnum) = {
-    val file = ScalaFile(pkg = enum.modelPackage, key = enum.className, core = true)
+    val file = ScalaFile(pkg = enum.modelPackage, key = enum.className, core = true, root = if (enum.shared) { Some(ScalaFile.sharedSrc) } else { None })
 
     file.addImport("enumeratum.values", "StringEnumEntry")
     file.addImport("enumeratum.values", "StringEnum")
@@ -24,8 +23,7 @@ object EnumFile {
     file
   }
 
-  private[this] def addFields(model: ExportEnum, file: ScalaFile) = model.values.foreach { v =>
-    val cn = ExportHelper.toClassName(ExportHelper.toIdentifier(v))
-    file.add(s"""case object $cn extends ${model.className}("$v")""")
+  private[this] def addFields(model: ExportEnum, file: ScalaFile) = model.valuesWithClassNames.foreach { v =>
+    file.add(s"""case object ${v._2} extends ${model.className}("${v._1}")""")
   }
 }
