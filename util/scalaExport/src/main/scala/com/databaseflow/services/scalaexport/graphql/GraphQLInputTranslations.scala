@@ -5,12 +5,15 @@ import sangria.ast.{ListType, NamedType, NotNullType, Type}
 
 object GraphQLInputTranslations {
   def scalaType(typ: Type): String = typ match {
-    case NotNullType(x, _) => scalaType(x)
+    case NotNullType(x, _) => scalaType(x) match {
+      case t if t.startsWith("Option[") => t.stripPrefix("Option[").stripSuffix("]")
+      case t => t
+    }
     case ListType(x, _) => s"Seq[${scalaType(x)}]"
     case NamedType(name, _) => name match {
       case "FilterInput" => "Filter"
       case "OrderByInput" => "OrderBy"
-      case _ => name
+      case _ => "Option[" + name + "]"
     }
   }
 
