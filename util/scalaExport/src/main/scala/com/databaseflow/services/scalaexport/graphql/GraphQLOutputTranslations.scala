@@ -9,7 +9,7 @@ object GraphQLOutputTranslations {
     case OptionType(x) => s"Option[${scalaType(x, nameMap)}]"
     case ListType(x) => s"Seq[${scalaType(x, nameMap)}]"
     case _ => typ.namedType.name match {
-      case "DateTime" | "Date" | "Time" => "Local" + typ.namedType.name
+      case "DateTime" | "Date" | "Time" => "Zoned" + typ.namedType.name
       case x => nameMap.get(x).map(_.cn).getOrElse(x)
     }
   }
@@ -19,7 +19,7 @@ object GraphQLOutputTranslations {
     case ListType(x) => scalaImport(cfg, x, nameMap)
     case EnumType(n, _, _, _, _) => Some(nameMap.get(n).map(_.pkg.mkString(".")).getOrElse(cfg.pkgFor(n)) -> n)
     case _ => t.namedType.name match {
-      case "DateTime" | "Date" | "Time" => Some("java.time" -> ("Local" + t.namedType.name))
+      case "DateTime" | "Date" | "Time" => Some("java.time" -> ("Zoned" + t.namedType.name))
       case "UUID" => Some("java.util" -> t.namedType.name)
       case "BigDecimal" => None
       case _ => None
