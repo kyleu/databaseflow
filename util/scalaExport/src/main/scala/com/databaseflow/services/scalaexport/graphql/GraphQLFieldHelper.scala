@@ -6,7 +6,7 @@ import com.databaseflow.services.scalaexport.ExportHelper
 import com.databaseflow.services.scalaexport.graphql.GraphQLOutputTranslations.{scalaImport, scalaType}
 import com.databaseflow.services.scalaexport.graphql.GraphQLQueryParseService.ClassName
 import sangria.ast._
-import sangria.schema.{ObjectType, OutputType, Type => Typ}
+import sangria.schema.{ObjectType, Type => Typ}
 
 object GraphQLFieldHelper {
   def addFields(
@@ -45,13 +45,15 @@ object GraphQLFieldHelper {
   ) = {
     val (spreads, fields) = distribute(sels)
     spreads match {
-      case h :: Nil if fields.isEmpty =>
+      case (h: FragmentSpread) :: Nil if fields.isEmpty =>
         val cn = nameMap.getOrElse(h.name, throw new IllegalStateException(s"Cannot find fragment definition for [${h.name}]."))
         if (cn.pkg.toSeq != pkg) {
           file.addImport(cn.pkg.mkString("."), cn.cn)
         }
         extractFieldType(typ, name, h.name, cn)
-      case h :: Nil => throw new IllegalStateException("Fragment spread cannot be used with field listing.")
+      case (_: InlineFragment) :: Nil if fields.isEmpty => "Json /* inline spread */"
+      case h :: Nil if fields.forall(_.name == "__typename") => "Json /* __typename */"
+      case _ :: Nil => throw new IllegalStateException("Fragment spread cannot be used with field listing.")
       case Nil if fields.isEmpty => typ match {
         case o: ObjectType[_, _] =>
           val fieldType = o.fields.find(_.name == name).getOrElse {
@@ -63,7 +65,7 @@ object GraphQLFieldHelper {
       }
       case Nil =>
         val n = fields match {
-          case h :: Nil => ExportHelper.toClassName(name) + "Wrapper"
+          case _ :: Nil => ExportHelper.toClassName(name) + "Wrapper"
           case _ => ExportHelper.toClassName(name) + "Child"
         }
         val cn = ClassName(pkg = pkg.toArray, cn = n, provided = false)
@@ -75,7 +77,7 @@ object GraphQLFieldHelper {
   def distribute(sels: Vector[Selection]) = {
     val spreads = sels.flatMap {
       case x: FragmentSpread => Some(x)
-      case _: InlineFragment => throw new IllegalStateException("I don't know what an InlineFragment is.")
+      case x: InlineFragment => Some(x)
       case _ => None
     }
     val fields = sels.flatMap {
