@@ -22,7 +22,7 @@ object Shared {
 
   val compileOptions = Seq(
     "target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-    "–Xcheck-null", "-Xfatal-warnings", /* "-Xlint", */ "-Xcheckinit", "-Xfuture",
+    "–Xcheck-null", "-Xfatal-warnings", /* "-Xlint", */ "-Xcheckinit", "-Xfuture", "-Yrangepos", "-Ypartial-unification",
     "-Yno-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
   )
 
@@ -38,7 +38,8 @@ object Shared {
     scalaVersion := Shared.Versions.scala,
 
     scalacOptions ++= compileOptions,
-    scalacOptions in Test ++= Seq("-Yrangepos"),
+    scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
+    scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false).withWarnDirectEvictions(false),
 
@@ -65,8 +66,6 @@ object Shared {
       case "application.conf" => MergeStrategy.concat
       case x => (assemblyMergeStrategy in assembly).value(x)
     },
-
-    scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
     // Publish Settings
     publishMavenStyle := true,
