@@ -13,6 +13,8 @@ object SbtEbenezer extends AutoPlugin {
       "ebenezer",
       "Generate better code from Thrift files using Database Flow"
     )
+
+    val depPrefix = settingKey[String]("The package prefix for referenced classes.")
   }
 
   import autoImport._
@@ -34,7 +36,8 @@ object SbtEbenezer extends AutoPlugin {
         log(s"Processing [${thriftSources.mkString(", ")}]")
         val loc = IO.createTemporaryDirectory
         ExportFiles.rootLocation = outputFolder.getAbsolutePath
-        val result = compile(streamValue.log, outputFolder, thriftSources.toSet, thriftIncludes.toSet, thriftNamespaceMap)
+
+        val result = compile(streamValue.log, outputFolder, thriftSources.toSet, thriftIncludes.toSet, thriftNamespaceMap, depPrefix.value)
         log(s"Code generation completed in [${System.currentTimeMillis - startMs}ms]")
         log(s"Exported:")
         result.foreach(f => log("  - " + f))
@@ -54,16 +57,18 @@ object SbtEbenezer extends AutoPlugin {
     outputDir: File,
     thriftFiles: Set[File],
     thriftIncludes: Set[File],
-    namespaceMappings: Map[String, String]
+    namespaceMappings: Map[String, String],
+    depPrefix: String
   ) = {
     outputDir.mkdirs()
 
     val result = thriftFiles.toIndexedSeq.map { f =>
-      services.scalaexport.ScalaExport.exportThrift(
+      com.databaseflow.services.scalaexport.ScalaExport.exportThrift(
         input = Some(f.getAbsolutePath),
         output = Some(outputDir.getAbsolutePath),
         flags = Set("inplace", "simple", "enumObj"),
-        configLocation = f.getParentFile.getPath
+        configLocation = f.getParentFile.getPath,
+        depPrefix = depPrefix
       )
     }
 

@@ -11,9 +11,9 @@ object ThriftServiceFile {
     val file = ScalaFile(pkg = tgtPkg, key = svc.name, root = exportModelRoot)
 
     file.addImport("scala.concurrent", "Future")
-    file.addImport("util.tracing", "TraceData")
-    file.addImport("util.ThriftFutureUtils", "toScalaFuture")
-    file.addImport("util.thrift", "ThriftServiceHelper")
+    file.addImport(metadata.depPrefix + "util.tracing", "TraceData")
+    file.addImport(metadata.depPrefix + "util.ThriftFutureUtils", "toScalaFuture")
+    file.addImport(metadata.depPrefix + "util.thrift", "ThriftServiceHelper")
 
     file.addImport(s"${srcPkg.mkString(".")}.${svc.name}", "MethodPerEndpoint")
 

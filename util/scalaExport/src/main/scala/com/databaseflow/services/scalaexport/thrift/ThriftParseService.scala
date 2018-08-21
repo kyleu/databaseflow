@@ -11,7 +11,7 @@ import com.databaseflow.services.scalaexport.db.ExportMerge
 import scala.concurrent.ExecutionContext
 
 object ThriftParseService {
-  private[this] def parse(file: File, flags: Set[String], configLocation: String): ThriftParseResult = {
+  private[this] def parse(file: File, flags: Set[String], configLocation: String, depPrefix: String): ThriftParseResult = {
     import scala.collection.JavaConverters._
 
     val src = Files.asByteSource(file.toJava).asCharSource(Charsets.UTF_8)
@@ -27,10 +27,10 @@ object ThriftParseService {
     val included = includes.map { inc =>
       val f = file.parent / inc
       if (f.exists) {
-        parse(f, flags, configLocation)
+        parse(f, flags, configLocation, depPrefix)
       } else {
         val other = file.parent / (inc + ".include")
-        parse(other, flags, configLocation)
+        parse(other, flags, configLocation, depPrefix)
       }
     }
     ThriftParseResult(
@@ -40,12 +40,14 @@ object ThriftParseService {
       includes = included,
       lines = file.lines.toSeq,
       flags = flags,
-      configLocation = configLocation
+      configLocation = configLocation,
+      depPrefix = depPrefix
     )
   }
 
   def exportThrift(
-    filename: String, persist: Boolean = false, projectLocation: Option[String] = None, flags: Set[String] = Set.empty, configLocation: String
+    filename: String, persist: Boolean = false, projectLocation: Option[String] = None,
+    flags: Set[String] = Set.empty, configLocation: String, depPrefix: String
   )(implicit ec: ExecutionContext): (Map[String, Int], Seq[(String, String)]) = {
     if (filename == "all") {
       val root = File("./tmp/thrift")
@@ -54,10 +56,10 @@ object ThriftParseService {
       }
       val results = root.children.flatMap {
         case f if f.isDirectory => f.children.flatMap {
-          case c if c.name.endsWith(".thrift") => Some(exportThrift(c.pathAsString, persist, projectLocation, flags, configLocation))
+          case c if c.name.endsWith(".thrift") => Some(exportThrift(c.pathAsString, persist, projectLocation, flags, configLocation, depPrefix))
           case _ => None
         }
-        case f if f.name.endsWith(".thrift") => Seq(exportThrift(f.pathAsString, persist, projectLocation, flags, configLocation))
+        case f if f.name.endsWith(".thrift") => Seq(exportThrift(f.pathAsString, persist, projectLocation, flags, configLocation, depPrefix))
         case _ => Nil
       }.toSeq
 
@@ -67,7 +69,7 @@ object ThriftParseService {
       val seq = results.map(_._2).foldLeft(Seq.empty[(String, String)])((l, r) => l ++ r)
       map -> seq
     } else {
-      val result = parse(better.files.File(filename), flags, configLocation)
+      val result = parse(better.files.File(filename), flags, configLocation, depPrefix)
       ExportFiles.persistThrift(result, ExportFiles.prepareRoot(persist))
 
       if (persist) {

@@ -34,7 +34,10 @@ object ScalaExport {
 
   def run(opts: ScalaExportOptions) = opts.cmd match {
     case "help" => ScalaExportOptions.parser.showUsage()
-    case "thrift" => exportThrift(opts.input, opts.output, Set("rest", "graphql", "simple"), configLocation = opts.config.getOrElse("core/src/main/thrift"))
+    case "thrift" => exportThrift(
+      input = opts.input, output = opts.output, flags = Set("rest", "graphql", "simple"),
+      configLocation = opts.config.getOrElse("core/src/main/thrift"), depPrefix = opts.depPrefix
+    )
     case "graphql" => exportGraphQL(opts.input)
     case cmd => throw new IllegalStateException(s"Unhandled command [$cmd].")
   }
@@ -53,7 +56,7 @@ object ScalaExport {
     new GraphQLQueryParseService(cfg, schema).export()
   }
 
-  def exportThrift(input: Option[String], output: Option[String], flags: Set[String], configLocation: String) = {
+  def exportThrift(input: Option[String], output: Option[String], flags: Set[String], configLocation: String, depPrefix: String) = {
     val in = input.getOrElse("./tmp/thrift/test.thrift")
     if (!in.toFile.isRegularFile) {
       throw new IllegalStateException(s"Cannot read input file [$in].")
@@ -62,6 +65,8 @@ object ScalaExport {
     if (!out.toFile.isDirectory) {
       throw new IllegalStateException(s"Cannot read output directory [$in].")
     }
-    ThriftParseService.exportThrift(filename = in, persist = !flags("inplace"), projectLocation = Some(out), flags = flags, configLocation = configLocation)
+    ThriftParseService.exportThrift(
+      filename = in, persist = !flags("inplace"), projectLocation = Some(out), flags = flags,
+      configLocation = configLocation, depPrefix = depPrefix)
   }
 }

@@ -27,7 +27,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           ExportFiles.prepareRoot()
           val flags = Set("rest", "graphql", "extras")
           val result = ThriftParseService.exportThrift(
-            filename = fn, persist = true, projectLocation = config.projectLocation, flags = flags, configLocation = "./tmp/thrift"
+            filename = fn, persist = true, projectLocation = config.projectLocation, flags = flags, configLocation = "./tmp/thrift", depPrefix = ""
           )
           Ok(views.html.admin.scalaExport.exportThrift(request.identity, fn.substring(fn.lastIndexOf('/') + 1), result._1, result._2))
         }

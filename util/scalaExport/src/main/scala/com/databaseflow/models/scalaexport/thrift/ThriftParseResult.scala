@@ -12,7 +12,8 @@ case class ThriftParseResult(
     includes: Seq[ThriftParseResult],
     lines: Seq[String],
     flags: Set[String],
-    configLocation: String
+    configLocation: String,
+    depPrefix: String = ""
 ) {
   lazy val tgtPkg = srcPkg.dropRight(1)
   lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
@@ -55,7 +56,7 @@ case class ThriftParseResult(
   lazy val enumDefaults = (stringEnums.map(e => e.name -> ExportHelper.toClassName(e.values.head)) ++
     intEnums.map(e => e.name -> ExportHelper.toClassName(e.fields.head._1))).toMap
 
-  lazy val metadata = ThriftMetadata(typedefs, enumDefaults, pkgMap)
+  lazy val metadata = ThriftMetadata(depPrefix, typedefs, enumDefaults, pkgMap)
 
   lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.apply)
   lazy val structNames = structs.map(_.name)
