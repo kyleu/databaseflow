@@ -24,7 +24,7 @@ object EnumSchemaFile {
 
     file.add("val queryFields = fields(", 1)
     val r = s"""Future.successful(${enum.className}.values)"""
-    file.add(s"""unitField(name = "${enum.propertyName}", desc = None, t = ListType(${enum.propertyName}EnumType), f = (c, td) => $r)""")
+    file.add(s"""unitField(name = "${enum.propertyName}", desc = None, t = ListType(${enum.propertyName}EnumType), f = (_, _) => $r)""")
     file.add(")", -1)
     file.add("}", -1)
 
