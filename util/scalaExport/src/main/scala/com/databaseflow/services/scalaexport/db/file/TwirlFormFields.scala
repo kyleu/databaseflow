@@ -38,7 +38,7 @@ object TwirlFormFields {
     val enum = field.enumOpt.getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
     val prop = field.propertyName
     val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
-    val opts = "Seq(" + enum.values.map(v => s"""("$v" -> "$v")""").mkString(", ") + ")"
+    val opts = "Seq(" + enum.values.map(v => s""""$v" -> "$v"""").mkString(", ") + ")"
     s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, options = $opts, nullable = ${field.nullable}, dataType = "${enum.name}""""
   }
 

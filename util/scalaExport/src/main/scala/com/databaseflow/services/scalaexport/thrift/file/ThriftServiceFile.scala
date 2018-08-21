@@ -19,7 +19,7 @@ object ThriftServiceFile {
 
     overrides.imports.get(svc.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
 
-    file.add(s"object ${svc.name} extends util.thrift.ThriftService(", 1)
+    file.add(s"object ${svc.name} extends ${metadata.depPrefix}util.thrift.ThriftService(", 1)
     file.add(s"""key = "${svc.name}",""")
     file.add(s"""pkg = "${tgtPkg.mkString(".")}",""")
     file.add(s"""route = "/admin/thrift/${svc.identifier.stripSuffix("Service")}"""")
