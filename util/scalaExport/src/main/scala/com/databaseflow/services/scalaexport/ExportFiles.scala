@@ -17,14 +17,14 @@ object ExportFiles {
       rootDir.delete()
     }
     if (!rootDir.exists) {
-      rootDir.createDirectory()
+      rootDir.createDirectories()
     }
     val coreDir = coreLocation.toFile
     if (coreDir.exists && remove) {
       coreDir.delete()
     }
     if (!coreDir.exists) {
-      coreDir.createDirectory()
+      coreDir.createDirectories()
     }
     coreDir -> rootDir
   }
