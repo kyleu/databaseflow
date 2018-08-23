@@ -10,7 +10,9 @@ case class ScalaFile(
 
   private[this] var imports = Set.empty[(String, String)]
 
-  def addImport(p: String, c: String) = imports += (p -> c)
+  def addImport(p: String, c: String) = {
+    imports += (p -> c)
+  }
 
   override def prefix = {
     val importString = if (imports.isEmpty) {

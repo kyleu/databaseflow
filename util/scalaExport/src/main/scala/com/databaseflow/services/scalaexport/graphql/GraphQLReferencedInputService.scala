@@ -43,7 +43,7 @@ object GraphQLReferencedInputService {
 
       d.fields.foreach(_.fieldType match {
         case typ: EnumType[_] if cn.pkg.toSeq != nameMap(typ.namedType.name).pkg.toSeq =>
-          file.addImport(nameMap(typ.namedType.name).pkg.mkString("."), cn.cn)
+          file.addImport(nameMap(typ.namedType.name).pkg.mkString("."), nameMap(typ.namedType.name).cn)
         case _ => // noop
       })
 
