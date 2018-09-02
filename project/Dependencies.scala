@@ -8,7 +8,7 @@ object Dependencies {
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.6.6"
+    val json = "com.typesafe.play" %% "play-json" % "2.6.10"
     val test = "com.typesafe.play" %% "play-test" % version % "test"
 
     val mailer = "com.typesafe.play" %% "play-mailer" % "6.0.0"
@@ -16,7 +16,7 @@ object Dependencies {
   }
 
   object Akka {
-    private[this] val version = "2.5.14"
+    private[this] val version = "2.5.16"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
@@ -38,13 +38,13 @@ object Dependencies {
     val hikariCp = "com.zaxxer" % "HikariCP" % "3.2.0"
 
     val db2 = "dblibs/lib/db2-db2jcc4.jar"
-    val h2 = "com.h2database" % "h2" % "1.4.196"
+    val h2 = "com.h2database" % "h2" % "1.4.197"
     val informix = "dblibs/lib/informix-ifxjdbc.jar"
-    val mysql = "mysql" % "mysql-connector-java" % "5.1.43" // 6.0 is all different
-    val postgres = "org.postgresql" % "postgresql" % "42.2.4"
+    val mysql = "mysql" % "mysql-connector-java" % "5.1.47" // 6.0 is all different
+    val postgres = "org.postgresql" % "postgresql" % "42.2.5"
     val oracle = "dblibs/lib/oracle-ojdbc7.jar"
-    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.20.0"
-    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.2.1.jre8"
+    val sqlite = "org.xerial" % "sqlite-jdbc" % "3.23.1"
+    val sqlServer = "com.microsoft.sqlserver" % "mssql-jdbc" % "6.2.2.jre8"
   }
 
   object Hibernate {
@@ -78,7 +78,7 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.1"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
     val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
@@ -88,7 +88,7 @@ object Dependencies {
     val enumeratumVersion = "1.5.13"
     val enumeratumCirceVersion = "1.5.17"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.5.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val enumeratumCirce = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
