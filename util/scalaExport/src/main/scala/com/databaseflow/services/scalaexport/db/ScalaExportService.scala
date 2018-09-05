@@ -4,7 +4,7 @@ import better.files._
 import com.databaseflow.models.scalaexport.db.ExportResult
 import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.services.scalaexport.ExportFiles
-import com.databaseflow.services.scalaexport.db.file.{RoutesFiles, ServiceRegistryFiles}
+import com.databaseflow.services.scalaexport.db.file.{RoutesFiles, ServiceRegistryFiles, WikiFiles}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -27,12 +27,17 @@ case class ScalaExportService(config: ExportConfiguration) {
         case None => rootDir
       }
 
+      val wikiDir = config.wikiLocation match {
+        case Some(l) => l.toFile
+        case None => rootDir
+      }
+
       val mergeResults = ExportMerge.mergeDirectories(
         projectId = Some(result.config.projectId),
         projectTitle = result.config.projectTitle,
         coreDir = coreDir,
-        rootDir = rootDir,
-        rootFiles = result.rootFiles,
+        root = rootDir -> result.rootFiles,
+        wiki = wikiDir -> result.docFiles,
         log = result.log,
         source = result.config.source
       )
@@ -49,6 +54,9 @@ case class ScalaExportService(config: ExportConfiguration) {
     val models = config.models.filterNot(_.ignored)
     val modelFiles = models.map(model => ExportFiles.exportModel(config, model))
     val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models, config.pkgPrefix)
-    Future.successful(ExportResult(config, modelFiles.map(_._1), enumFiles, modelFiles.flatMap(_._2), rootFiles))
+    val docFiles = WikiFiles.export(config, models)
+    Future.successful(ExportResult(
+      config = config, models = modelFiles.map(_._1), enumFiles = enumFiles, sourceFiles = modelFiles.flatMap(_._2), rootFiles = rootFiles, docFiles = docFiles
+    ))
   }
 }

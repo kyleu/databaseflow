@@ -48,13 +48,19 @@
         @result.enumFiles.map { f =>
           <li class="collection-item">
             @f.pkg.mkString("/")/@f.filename
-          <pre>@f.rendered</pre>
+            <pre>@f.rendered</pre>
           </li>
         }
         @result.sourceFiles.map { f =>
           <li class="collection-item">
             @f.pkg.mkString("/")/@f.filename
-          <pre>@f.rendered</pre>
+            <pre>@f.rendered</pre>
+          </li>
+        }
+        @result.docFiles.map { f =>
+          <li class="collection-item">
+            @f.packageDir/@f.filename
+            <pre>@f.rendered</pre>
           </li>
         }
       </ul>

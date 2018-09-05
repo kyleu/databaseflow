@@ -20,6 +20,7 @@ case class ExportConfiguration(
     providedPackage: Option[String] = None,
     corePackage: Option[String] = None,
     coreLocation: Option[String] = None,
+    wikiLocation: Option[String] = None,
     modelLocationOverride: Option[String] = None,
     thriftLocationOverride: Option[String] = None
 ) {

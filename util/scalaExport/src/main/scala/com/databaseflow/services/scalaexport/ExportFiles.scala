@@ -3,13 +3,14 @@ package com.databaseflow.services.scalaexport
 import better.files._
 import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.models.scalaexport.db.{ExportModel, ExportResult}
-import com.databaseflow.models.scalaexport.file.OutputFile
+import com.databaseflow.models.scalaexport.file.{MarkdownFile, OutputFile}
 import com.databaseflow.models.scalaexport.thrift.ThriftParseResult
 import com.databaseflow.services.scalaexport.db.file._
 
 object ExportFiles {
   var rootLocation = "./tmp/scalaexport"
   var coreLocation = "./tmp/coreexport"
+  var wikiLocation = "./tmp/wikiexport"
 
   def prepareRoot(remove: Boolean = true) = {
     val rootDir = rootLocation.toFile
@@ -26,10 +27,17 @@ object ExportFiles {
     if (!coreDir.exists) {
       coreDir.createDirectories()
     }
-    coreDir -> rootDir
+    val wikiDir = wikiLocation.toFile
+    if (wikiDir.exists && remove) {
+      wikiDir.delete()
+    }
+    if (!wikiDir.exists) {
+      wikiDir.createDirectories()
+    }
+    (coreDir, rootDir, wikiDir)
   }
 
-  def persistThrift(result: ThriftParseResult, rootDir: (File, File)) = {
+  def persistThrift(result: ThriftParseResult, rootDir: (File, File, File)) = {
     result.allFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
         rootDir._2 / file.dir / file.filename
@@ -41,9 +49,15 @@ object ExportFiles {
     }
   }
 
-  def persist(result: ExportResult, rootDir: (File, File)) = {
+  def persist(result: ExportResult, rootDir: (File, File, File)) = {
     (result.enumFiles ++ result.sourceFiles).map { file =>
-      val d = if (file.core) { rootDir._1 } else { rootDir._2 }
+      val d = if (file.core) {
+        rootDir._1
+      } else if (file.isInstanceOf[MarkdownFile]) {
+        rootDir._3
+      } else {
+        rootDir._2
+      }
       val f = if (file.pkg.isEmpty) {
         d / file.dir / file.filename
       } else {
@@ -89,6 +103,8 @@ object ExportFiles {
 
       val trs = TwirlRelationFiles.export(config, model)
 
+      val w = WikiFiles.exportModel(config, model)
+
       val gq = if (config.flags("graphql")) { GraphQLQueryFiles.export(config, model) } else { Nil }
       val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [$model]."))
       val oq = if (config.flags("openapi")) {
@@ -97,7 +113,7 @@ object ExportFiles {
         Nil
       }
 
-      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ trs)
+      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ trs ++ w)
     }
   }
 }

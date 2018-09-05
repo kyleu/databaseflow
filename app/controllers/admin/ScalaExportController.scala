@@ -75,6 +75,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           providedPackage = form.get("project.providedPackage").filter(_.nonEmpty),
           corePackage = corePackage,
           coreLocation = form.get("project.coreLocation").filter(_.nonEmpty),
+          wikiLocation = form.get("wiki.location").filter(_.nonEmpty),
           modelLocationOverride = form.get("model.location").filter(_.nonEmpty),
           thriftLocationOverride = form.get("thrift.location").filter(_.nonEmpty)
         )

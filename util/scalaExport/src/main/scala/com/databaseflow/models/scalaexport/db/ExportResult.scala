@@ -8,7 +8,8 @@ case class ExportResult(
     models: Seq[ExportModel],
     enumFiles: Seq[OutputFile],
     sourceFiles: Seq[OutputFile],
-    rootFiles: Seq[OutputFile]
+    rootFiles: Seq[OutputFile],
+    docFiles: Seq[OutputFile]
 ) {
   private[this] val startTime = System.currentTimeMillis
   private[this] val logs = collection.mutable.ArrayBuffer.empty[(Int, String)]
@@ -20,6 +21,6 @@ case class ExportResult(
 
   def getMarkers(key: String) = sourceFiles.flatMap(_.markersFor(key)).distinct
 
-  val fileCount = enumFiles.size + sourceFiles.size + rootFiles.size
-  lazy val fileSizes = enumFiles.map(_.rendered.length).sum + sourceFiles.map(_.rendered.length).sum + rootFiles.map(_.rendered.length).sum
+  val fileCount = enumFiles.size + sourceFiles.size + rootFiles.size + docFiles.size
+  lazy val fileSizes = Seq(enumFiles, sourceFiles, rootFiles, docFiles).flatten.map(_.rendered.length).sum
 }

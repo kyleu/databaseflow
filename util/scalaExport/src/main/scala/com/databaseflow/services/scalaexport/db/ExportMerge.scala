@@ -50,25 +50,27 @@ object ExportMerge {
 
   def mergeDirectories(
     projectId: Option[String], projectTitle: String,
-    coreDir: File, rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit, source: String = "boilerplay"
+    coreDir: File, root: (File, Seq[OutputFile]), wiki: (File, Seq[OutputFile]),
+    log: String => Unit, source: String = "boilerplay"
   ) = {
-    if (rootDir.exists) {
-      log(s"Overwriting existing project at [${rootDir.path}].")
+    if (root._1.exists) {
+      log(s"Overwriting existing project at [${root._1.path}].")
     } else {
-      log(s"Creating initial project at [${rootDir.path}].")
-      rootDir.createDirectory()
-      getSrcDir(source, log).copyTo(rootDir)
-      (rootDir / "license").delete(swallowIOExceptions = true)
-      (rootDir / "readme.md").overwrite(ReadmeFile.content(projectTitle))
-      projectId.foreach(id => projectNameReplacements(id, projectTitle, rootDir))
+      log(s"Creating initial project at [${root._1.path}].")
+      root._1.createDirectory()
+      getSrcDir(source, log).copyTo(root._1)
+      (root._1 / "license").delete(swallowIOExceptions = true)
+      (root._1 / "readme.md").overwrite(ReadmeFile.content(projectTitle))
+      projectId.foreach(id => projectNameReplacements(id, projectTitle, root._1))
     }
 
     val coreResults = ExportMergeHelper.writeCore(coreDir, log)
-    val srcResults = ExportMergeHelper.writeSource(rootDir, log)
-    val rootResults = ExportMergeHelper.writeRoot(rootDir, rootFiles, log)
+    val srcResults = ExportMergeHelper.writeSource(root._1, log)
+    val rootResults = ExportMergeHelper.writeFiles(root._1, root._2, log)
+    val wikiResults = ExportMergeHelper.writeFiles(wiki._1, wiki._2, log)
 
     log("Merge complete.")
 
-    (coreResults ++ srcResults ++ rootResults).groupBy(x => x).map(x => x._1 -> x._2.size)
+    (coreResults ++ srcResults ++ rootResults ++ wikiResults).groupBy(x => x).map(x => x._1 -> x._2.size)
   }
 }

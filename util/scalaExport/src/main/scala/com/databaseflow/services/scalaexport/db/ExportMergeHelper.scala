@@ -53,8 +53,8 @@ object ExportMergeHelper {
     }.toSeq
   }
 
-  def writeRoot(rootDir: File, rootFiles: Seq[OutputFile], log: String => Unit) = rootFiles.map { rf =>
-    val f = rootDir / rf.packageDir / rf.filename
+  def writeFiles(dir: File, files: Seq[OutputFile], log: String => Unit) = files.map { rf =>
+    val f = dir / rf.packageDir / rf.filename
     if (f.exists) {
       val tgtContent = f.contentAsString
       if (!tgtContent.contains("Generated File")) {
