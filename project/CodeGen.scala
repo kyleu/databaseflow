@@ -4,7 +4,7 @@ import sbt.Project.projectToRef
 import sbt._
 
 object CodeGen {
-  private[this] val dependencies = Seq(Utils.commonsIo, Utils.betterFiles, Hibernate.core)
+  private[this] val dependencies = Seq(Utils.commonsIo, Utils.commonsLang, Utils.betterFiles, Hibernate.core)
 
   private[this] lazy val codegenSettings = Shared.commonSettings ++ Seq(name := "codegen", libraryDependencies ++= dependencies)
 
