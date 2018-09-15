@@ -31,6 +31,7 @@ object SchemaMutationHelper {
 
     file.add()
     val t = model.propertyName + "MutationType"
-    file.add(s"""val mutationFields = fields(unitField(name = "${model.propertyName}", desc = None, t = $t, f = (_, _) => scala.concurrent.Future.successful(())))""")
+    val f = "(_, _) => scala.concurrent.Future.successful(())"
+    file.add(s"""val mutationFields = fields(unitField(name = "${model.propertyName}", desc = None, t = $t, f = $f))""")
   }
 }

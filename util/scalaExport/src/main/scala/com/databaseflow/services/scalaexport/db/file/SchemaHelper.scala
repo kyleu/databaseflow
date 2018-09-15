@@ -64,19 +64,24 @@ object SchemaHelper {
       val comma = if (model.indexedFields.lastOption.contains(field)) { "" } else { "," }
       val listType = s"ListType(${model.propertyName}Type)"
       val arg = s"${model.propertyName}${field.className}Arg"
+      val argPull = if (field.notNull) {
+        s"c.arg($arg)"
+      } else {
+        s"""c.arg($arg).getOrElse(throw new IllegalStateException("No [${field.propertyName}] provided"))"""
+      }
       val seqArg = s"${model.propertyName}${field.className}SeqArg"
 
       if (field.unique) {
         val optType = s"OptionType(${model.propertyName}Type)"
         file.add(s"""unitField(name = "${model.propertyName}By${field.className}", desc = None, t = $optType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, c.arg($arg))(td).map(_.headOption)""")
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, $argPull)(td).map(_.headOption)""")
         file.add(s"""}, $arg),""", -1)
         file.add(s"""unitField(name = "${model.propertyName}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
         file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")
         file.add(s"""}, $seqArg)$comma""", -1)
       } else {
         file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}", desc = None, t = $listType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, $argPull)(td)""")
         file.add(s"""}, $arg),""", -1)
         file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
         file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")

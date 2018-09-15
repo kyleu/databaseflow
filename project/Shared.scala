@@ -16,7 +16,7 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.5.0"
+    val app = "1.5.1"
     val scala = "2.12.6"
   }
 

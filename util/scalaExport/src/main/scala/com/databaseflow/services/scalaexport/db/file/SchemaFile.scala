@@ -72,9 +72,14 @@ object SchemaFile {
 
     if (model.pkFields.nonEmpty) {
       file.add(s"""unitField(name = "${model.propertyName}", desc = None, t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
-      val args = model.pkFields.map(pkField => s"${model.propertyName}${pkField.className}Arg")
-      file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${args.map(a => s"c.arg($a)").mkString(", ")})(td)""")
-      file.add(s"}, ${args.mkString(", ")}),", -1)
+      val args = model.pkFields.map(pkField => pkField -> s"${model.propertyName}${pkField.className}Arg")
+      file.add(s"""c.ctx.${model.serviceReference}.getByPrimaryKey(c.ctx.creds, ${
+        args.map {
+          case a if a._1.notNull => s"c.arg(${a._2})"
+          case a => s"""c.arg(${a._2}).getOrElse(throw new IllegalStateException("No [${a._1.propertyName}] provided"))"""
+        }.mkString(", ")
+      })(td)""")
+      file.add(s"}, ${args.map(_._2).mkString(", ")}),", -1)
     }
 
     model.pkFields match {
