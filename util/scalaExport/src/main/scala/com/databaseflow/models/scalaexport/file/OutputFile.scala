@@ -1,6 +1,6 @@
 package com.databaseflow.models.scalaexport.file
 
-abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String, val filename: String, val core: Boolean = false) {
+abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String, val filename: String, val core: Boolean = false, val test: Boolean = false) {
   private[this] var hasRendered = false
   private[this] var currentIndent = 0
   private[this] val lines = collection.mutable.ArrayBuffer.empty[String]

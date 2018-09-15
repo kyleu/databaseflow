@@ -1,0 +1,31 @@
+package com.databaseflow.services.scalaexport.db.file
+
+import com.databaseflow.models.scalaexport.db.ExportModel
+import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
+import com.databaseflow.models.scalaexport.file.ScalaFile
+
+object DoobieTestsFile {
+  def export(config: ExportConfiguration, model: ExportModel) = {
+    val file = ScalaFile(pkg = model.doobiePackage, key = model.className + "DoobieTests", root = Some("."), test = true)
+
+    file.addImport("org.scalatest", "_")
+    file.addImport(model.modelPackage.mkString("."), model.className)
+    file.addImport(config.providedPrefix + "services.database.DoobieQueryService.Imports", "_")
+    file.addImport(config.providedPrefix + "models.doobie", "DoobieTestHelper")
+
+    file.add(s"class ${model.className}DoobieTest extends FlatSpec with Matchers {", 1)
+    file.add("import DoobieTestHelper.yolo._")
+
+    file.add()
+    file.add(s""""Doobie queries for [${model.className}]" should "typecheck" in {""", 1)
+    file.add(s"${model.className}Doobie.countFragment.query[Long].check.unsafeRunSync")
+    file.add(s"${model.className}Doobie.selectFragment.query[${model.className}].check.unsafeRunSync")
+    val search = s"""(${model.className}Doobie.selectFragment ++ whereAnd(${model.className}Doobie.searchFragment("...")))"""
+    file.add(s"$search.query[${model.className}].check.unsafeRunSync")
+    file.add("}", -1)
+
+    file.add("}", -1)
+
+    file
+  }
+}

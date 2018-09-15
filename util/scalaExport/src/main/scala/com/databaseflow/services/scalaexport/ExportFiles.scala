@@ -27,6 +27,13 @@ object ExportFiles {
     if (!coreDir.exists) {
       coreDir.createDirectories()
     }
+    val testDir = rootLocation.toFile / "test"
+    if (testDir.exists && remove) {
+      testDir.delete()
+    }
+    if (!testDir.exists) {
+      testDir.createDirectories()
+    }
     val wikiDir = wikiLocation.toFile
     if (wikiDir.exists && remove) {
       wikiDir.delete()
@@ -34,10 +41,10 @@ object ExportFiles {
     if (!wikiDir.exists) {
       wikiDir.createDirectories()
     }
-    (coreDir, rootDir, wikiDir)
+    (coreDir, rootDir, testDir, wikiDir)
   }
 
-  def persistThrift(result: ThriftParseResult, rootDir: (File, File, File)) = {
+  def persistThrift(result: ThriftParseResult, rootDir: (File, File, File, File)) = {
     result.allFiles.map { file =>
       val f = if (file.pkg.isEmpty) {
         rootDir._2 / file.dir / file.filename
@@ -49,12 +56,14 @@ object ExportFiles {
     }
   }
 
-  def persist(result: ExportResult, rootDir: (File, File, File)) = {
+  def persist(result: ExportResult, rootDir: (File, File, File, File)) = {
     (result.enumFiles ++ result.sourceFiles).map { file =>
-      val d = if (file.core) {
+      val d = if (file.test) {
+        rootDir._3
+      } else if (file.core) {
         rootDir._1
       } else if (file.isInstanceOf[MarkdownFile]) {
-        rootDir._3
+        rootDir._4
       } else {
         rootDir._2
       }
@@ -115,8 +124,11 @@ object ExportFiles {
       }
       val sq = if (config.flag(ExportFlag.Slick)) { Seq(TableFile.export(config, model)) } else { Nil }
       val dq = if (config.flag(ExportFlag.Doobie)) { Seq(DoobieFile.export(config, model)) } else { Nil }
+      val tq = if (config.flag(ExportFlag.Tests)) {
+        if (config.flag(ExportFlag.Doobie)) { Seq(DoobieTestsFile.export(config, model)) } else { Nil }
+      } else { Nil }
 
-      model -> (Seq(cls, res, queries, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ sq ++ dq ++ trs ++ w)
+      model -> (Seq(cls, res, queries, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ trs ++ w ++ gq ++ oq ++ sq ++ dq ++ tq)
     }
   }
 }

@@ -21,38 +21,47 @@
                   <tr>
                     <th>Project ID</th>
                     <td><input name="project.id" class="validate" value="@cfg.projectId" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="This is the core id used for many project references"></i></td>
                   </tr>
                   <tr>
                     <th>Project Title</th>
                     <td><input name="project.title" class="validate" value="@cfg.projectTitle" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="The name of the project"></i></td>
                   </tr>
                   <tr>
                     <th>Project Location</th>
                     <td><input name="project.location" class="validate" value="@cfg.projectLocation" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="Full or relative path to the project output directory"></i></td>
                   </tr>
                   <tr>
                     <th>Provided Package Override</th>
                     <td><input name="project.providedPackage" class="validate" value="@cfg.providedPackage" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="The package used for expected and dependent classes (defaults to root directory)"></i></td>
                   </tr>
                   <tr>
                     <th>Core Package</th>
                     <td><input name="project.corePackage" class="validate" value="@cfg.corePackage" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="Package of core files, such as models and serializers"></i></td>
                   </tr>
                   <tr>
                     <th>Core Location</th>
                     <td><input name="project.coreLocation" class="validate" value="@cfg.coreLocation" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="Full or relative path to the directory where core files are written"></i></td>
                   </tr>
                   <tr>
                     <th>Model Location Override</th>
                     <td><input name="model.location" class="validate" value="@cfg.modelLocationOverride" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="Splits the models from dependent files, writing them to this path"></i></td>
                   </tr>
                   <tr>
                     <th>Thrift Location Override</th>
                     <td><input name="thrift.location" class="validate" value="@cfg.thriftLocationOverride" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="Location of thrift output files"></i></td>
                   </tr>
                   <tr>
                     <th>Wiki Location</th>
                     <td><input name="wiki.location" class="validate" value="@cfg.wikiLocation" /></td>
+                    <td><i class="fa @models.template.Icons.help" title="Location to write the wiki Markdown files"></i></td>
                   </tr>
                   <tr>
                     <th>Flags</th>
@@ -61,6 +70,7 @@
                         <div>
                         <input name="project.flags" id="project.flags.@f" type="checkbox" value="@f.value" @chk(cfg.flag(f)) />
                         <label for="project.flags.@f">@f</label>
+                        <i class="fa @models.template.Icons.help" title="@f.description"></i>
                         </div>
                       }
                     </td>
@@ -74,6 +84,7 @@
                         <option value="boilerplay">Boilerplay</option>
                       }
                     </select></td>
+                    <td><i class="fa @models.template.Icons.help" title="Project to be checked out (only used for initial export)"></i></td>
                   </tr>
                 </tbody>
               </table>
