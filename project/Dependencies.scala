@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.18"
+    private[this] val version = "2.6.19"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
@@ -84,7 +84,7 @@ object Dependencies {
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.7"
+    val scapegoatVersion = "1.3.8"
     val enumeratumVersion = "1.5.13"
     val enumeratumCirceVersion = "1.5.17"
 

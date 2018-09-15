@@ -23,6 +23,8 @@ Holy shit it does *too* much. For each of your tables (and their relations), the
 
 * Async queries to retrieve your model by id or foreign key, insert or update models, and search. Batch and sequence queries are also available.
 
+* Slick tables and column types, and doobie queries including strong support for Json, enums, and `java.time` classes.
+
 * A search result model with binary and json serialization that allows paging, sorting, and filtering with strongly-typed parameters.
 
 * Dependency-injected service that provides (optionally audited) methods to search or change your models.
@@ -33,7 +35,7 @@ Holy shit it does *too* much. For each of your tables (and their relations), the
 
 * Play Framework controllers, integrated with authentication and admin security, providing results in HTML, JSON, or even freakin' CSV. 
 
-* Deep integration with Graphite/Promethus metrics, Zipkin tracing, system-wide auditing, authentication, a full admin site, docker publishing, just a whole bunch of stuff. 
+* Deep integration with Prometheus, OpenTracing, system-wide auditing, authentication, a full admin site, docker publishing, and just a whole bunch of stuff. 
 
 
 ## Do it yourself

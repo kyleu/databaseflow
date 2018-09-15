@@ -7,7 +7,7 @@ resolvers += Resolver.typesafeRepo("releases")
 resolvers += Resolver.url("jetbrains-bintray", url("http://dl.bintray.com/jetbrains/sbt-plugins/"))(Resolver.ivyStylePatterns)
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.18")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.19")
 
 // SBT-Web plugins
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.3")
@@ -31,7 +31,7 @@ addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.8-0.6" exclude("org.scala-
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // Publishing
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.1") // show */*:pgpSecretRing
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.2") // show */*:pgpSecretRing
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.0")
 
@@ -41,7 +41,7 @@ addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.4")
 addSbtPlugin("io.gatling" % "gatling-sbt" % "2.2.2")
 
 // App Packaging
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.5")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.9")
 
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.7")
 
@@ -66,7 +66,7 @@ addSbtPlugin("com.github.xuwei-k" % "sbt-class-diagram" % "0.2.1")
 // addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.10")
 
 // Documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.3.5")
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.4.2")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2" exclude("com.lightbend.paradox", "sbt-paradox"))
 

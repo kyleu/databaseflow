@@ -14,5 +14,6 @@ object Documentation {
     ParadoxPlugin, ParadoxSitePlugin, SiteScaladocPlugin, GhpagesPlugin).settings(Shared.commonSettings: _*).settings(
     paradoxTheme := Some(builtinParadoxTheme("generic")),
     sourceDirectory in Paradox := sourceDirectory.value / "main" / "paradox",
+    paradoxProperties += ("project.url" -> "https://kyleu.github.io/databaseflow/"),
     git.remoteRepo := "git@github.com:KyleU/databaseflow.git")
 }
