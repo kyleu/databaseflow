@@ -5,13 +5,9 @@ import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.packager.Keys._
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
-import com.typesafe.sbt.packager.debian.DebianPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.jdkpackager.JDKPackagerPlugin
-import com.typesafe.sbt.packager.linux.LinuxPlugin
-import com.typesafe.sbt.packager.rpm.RpmPlugin
 import com.typesafe.sbt.packager.universal.UniversalPlugin
-import com.typesafe.sbt.packager.windows.WindowsPlugin
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
@@ -60,6 +56,7 @@ object Server {
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
 
+    assemblyJarName in assembly := s"${Shared.projectId}.jar",
     fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
     mainClass in assembly := Some("DatabaseFlow"),
 
@@ -72,8 +69,7 @@ object Server {
       id = Shared.projectId,
       base = file(".")
     ).enablePlugins(
-      SbtWeb, play.sbt.PlayScala, JavaAppPackaging,
-      UniversalPlugin, LinuxPlugin, DebianPlugin, RpmPlugin, DockerPlugin, WindowsPlugin, JDKPackagerPlugin
+      SbtWeb, play.sbt.PlayScala, JavaAppPackaging, UniversalPlugin, DockerPlugin, JDKPackagerPlugin
     ).settings(serverSettings: _*).settings(Packaging.settings: _*)
 
     Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.scalaExport))

@@ -22,8 +22,6 @@ lazy val dblibs = Database.dblibs
 
 lazy val server = Server.server
 
-lazy val site = Site.site
-
 lazy val benchmarking = Utilities.benchmarking
 
 lazy val ebenezer = Utilities.ebenezer
