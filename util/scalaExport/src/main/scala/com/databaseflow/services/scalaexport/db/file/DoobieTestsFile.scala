@@ -13,6 +13,10 @@ object DoobieTestsFile {
     file.addImport(config.providedPrefix + "services.database.DoobieQueryService.Imports", "_")
     file.addImport(config.providedPrefix + "models.doobie", "DoobieTestHelper")
 
+    model.fields.foreach(_.enumOpt.foreach { e =>
+      file.addImport(s"${e.doobiePackage.mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")
+    })
+
     file.add(s"class ${model.className}DoobieTest extends FlatSpec with Matchers {", 1)
     file.add("import DoobieTestHelper.yolo._")
 
