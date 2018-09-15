@@ -23,15 +23,15 @@ object DoobieFile {
 
     file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.tableName}") {""", 1)
 
-    file.add(s"""override protected val countFragment = fr${tq}select count(*) from "${model.tableName}"$tq""")
-    file.add(s"""override protected val selectFragment = fr${tq}select $quotedCols from "${model.tableName}"$tq""")
+    file.add(s"""override val countFragment = fr${tq}select count(*) from "${model.tableName}"$tq""")
+    file.add(s"""override val selectFragment = fr${tq}select $quotedCols from "${model.tableName}"$tq""")
     file.add()
 
-    file.add(s"""override protected val columns = Seq(${cols.map("\"" + _ + "\"").mkString(", ")})""")
-    file.add(s"override protected val searchColumns = Seq(${model.searchFields.map("\"" + _.columnName + "\"").mkString(", ")})")
+    file.add(s"""override val columns = Seq(${cols.map("\"" + _ + "\"").mkString(", ")})""")
+    file.add(s"override val searchColumns = Seq(${model.searchFields.map("\"" + _.columnName + "\"").mkString(", ")})")
     file.add()
 
-    file.add("override protected def searchFragment(q: String) = {", 1)
+    file.add("override def searchFragment(q: String) = {", 1)
     file.add(s"""fr$tq${cols.map("\"" + _ + "\"::text = $q").mkString(" or ")}$tq""")
     file.add("}", -1)
 

@@ -56,7 +56,14 @@
                   </tr>
                   <tr>
                     <th>Flags</th>
-                    <td><input name="project.flags" class="validate" value="@cfg.flags.toSeq.sorted.mkString(",")" /></td>
+                    <td>
+                      @com.databaseflow.models.scalaexport.db.config.ExportFlag.values.map { f =>
+                        <div>
+                        <input name="project.flags" id="project.flags.@f" type="checkbox" value="@f.value" @chk(cfg.flag(f)) />
+                        <label for="project.flags.@f">@f</label>
+                        </div>
+                      }
+                    </td>
                   </tr>
                   <tr>
                     <th>Project Source</th>

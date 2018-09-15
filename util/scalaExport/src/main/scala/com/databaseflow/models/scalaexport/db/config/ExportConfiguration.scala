@@ -12,7 +12,7 @@ case class ExportConfiguration(
     key: String,
     projectId: String,
     projectTitle: String,
-    flags: Set[String],
+    flags: Seq[ExportFlag],
     enums: Seq[ExportEnum],
     models: Seq[ExportModel],
     source: String = "boilerplay",
@@ -31,6 +31,8 @@ case class ExportConfiguration(
   val providedPrefix = providedPackage.map(_ + ".").getOrElse("")
   val pkgPrefix = corePackage.getOrElse("").split('.').filter(_.nonEmpty).toList
   val corePrefix = corePackage.map(_ + ".").getOrElse("")
+
+  def flag(k: ExportFlag) = flags.contains(k)
 
   lazy val packages = {
     if (models.exists(_.pkg.isEmpty)) {

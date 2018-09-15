@@ -1,7 +1,7 @@
 package com.databaseflow.services.scalaexport
 
 import better.files._
-import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
+import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportFlag}
 import com.databaseflow.models.scalaexport.db.{ExportModel, ExportResult}
 import com.databaseflow.models.scalaexport.file.{MarkdownFile, OutputFile}
 import com.databaseflow.models.scalaexport.thrift.ThriftParseResult
@@ -74,10 +74,11 @@ object ExportFiles {
     if (config.models.exists(_.className == e.className)) {
       throw new IllegalStateException(s"Please rename the class of enum [${e.name}], the class name is already in use.")
     }
-    val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
-    val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
-    val dq = if (config.flags("doobie")) { Seq(EnumDoobieFile.export(config, e)) } else { Nil }
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(config, e), EnumSchemaFile.export(config, e), EnumControllerFile.export(config, e)) ++ gq ++ oq ++ dq
+    val gq = if (config.flag(ExportFlag.GraphQL)) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
+    val oq = if (config.flag(ExportFlag.OpenApi)) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
+    val sq = if (config.flag(ExportFlag.Slick)) { Seq(EnumColumnTypeFile.export(config, e)) } else { Nil }
+    val dq = if (config.flag(ExportFlag.Doobie)) { Seq(EnumDoobieFile.export(config, e)) } else { Nil }
+    Seq(EnumFile.export(e), EnumSchemaFile.export(config, e), EnumControllerFile.export(config, e)) ++ gq ++ oq ++ sq ++ dq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
@@ -87,7 +88,6 @@ object ExportFiles {
       val cls = ModelFile.export(config, model)
       val res = ResultFile.export(config, model)
       val queries = QueriesFile.export(config, model)
-      val table = TableFile.export(config, model)
       val svc = ServiceFile.export(config, model)
 
       val sch = SchemaFile.export(config, model)
@@ -106,16 +106,17 @@ object ExportFiles {
 
       val w = WikiFiles.exportModel(config, model)
 
-      val gq = if (config.flags("graphql")) { GraphQLQueryFiles.export(config, model) } else { Nil }
-      val oq = if (config.flags("openapi")) {
+      val gq = if (config.flag(ExportFlag.GraphQL)) { GraphQLQueryFiles.export(config, model) } else { Nil }
+      val oq = if (config.flag(ExportFlag.OpenApi)) {
         val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [${model.className}]."))
         Seq(OpenApiSchemaFile.export(model, config.enums), OpenApiPathsFile.export(model, config.enums, solo))
       } else {
         Nil
       }
-      val dq = if (config.flags("doobie")) { Seq(DoobieFile.export(config, model)) } else { Nil }
+      val sq = if (config.flag(ExportFlag.Slick)) { Seq(TableFile.export(config, model)) } else { Nil }
+      val dq = if (config.flag(ExportFlag.Doobie)) { Seq(DoobieFile.export(config, model)) } else { Nil }
 
-      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ dq ++ trs ++ w)
+      model -> (Seq(cls, res, queries, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ sq ++ dq ++ trs ++ w)
     }
   }
 }

@@ -4,7 +4,7 @@ import better.files._
 import controllers.BaseController
 import models.schema.Schema
 import services.connection.ConnectionSettingsService
-import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault}
+import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportFlag}
 import com.databaseflow.services.scalaexport.{ExportFiles, ExportHelper}
 import com.databaseflow.services.scalaexport.db.ScalaExportService
 import com.databaseflow.services.scalaexport.thrift.ThriftParseService
@@ -61,7 +61,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           key = ExportHelper.toIdentifier(schema.id),
           projectId = form("project.id"),
           projectTitle = form("project.title"),
-          flags = form.getOrElse("project.flags", "").split(',').map(_.trim).filterNot(_.isEmpty).toSet,
+          flags = form.getOrElse("project.flags", "").split(',').map(_.trim).filterNot(_.isEmpty).toSet.toList.sorted.map(ExportFlag.withValue),
           enums = enums,
           models = schema.tables.map { t =>
             val prefix = s"model.${t.name}."
