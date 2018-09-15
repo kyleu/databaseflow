@@ -61,6 +61,7 @@ case class ExportModel(
 
   val queriesPackage = pkgPrefix ++ Seq("models", "queries") ++ pkg
   val tablePackage = pkgPrefix ++ Seq("models", "table") ++ pkg
+  val doobiePackage = pkgPrefix ++ Seq("models", "doobie") ++ pkg
 
   val servicePackage = pkgPrefix ++ Seq("services") ++ pkg
   val serviceDirectory = "app"

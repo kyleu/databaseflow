@@ -48,14 +48,14 @@ object ColumnType extends StringEnum[ColumnType] with StringCirceEnum[ColumnType
 
   case object EnumType extends ColumnType("enum", "String", "xxx")
   case object CodeType extends ColumnType("code", "String", "xxx")
-  case object TagsType extends ColumnType("hstore", "Seq[Tag]", "Tag.seqFromString(xxx)")
+  case object TagsType extends ColumnType("hstore", "List[Tag]", "Tag.seqFromString(xxx)")
 
   case object ByteArrayType extends ColumnType("byteArray", "Array[Byte]", "xxx.split(\",\").map(_.toInt.toByte)")
   case object ArrayType extends ColumnType("array", "Array[Any]", "xxx.split(\",\")") {
     def valForSqlType(s: String) = s match {
-      case _ if s.startsWith("_int") => "Seq[Long]"
-      case _ if s.startsWith("_uuid") => "Seq[UUID]"
-      case _ => "Seq[String]"
+      case _ if s.startsWith("_int") => "List[Long]"
+      case _ if s.startsWith("_uuid") => "List[UUID]"
+      case _ => "List[String]"
     }
     def typForSqlType(s: String) = s match {
       case _ if s.startsWith("_int4") => "IntArrayType"

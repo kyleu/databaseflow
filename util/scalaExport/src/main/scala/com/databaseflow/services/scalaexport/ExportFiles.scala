@@ -76,7 +76,8 @@ object ExportFiles {
     }
     val gq = if (config.flags("graphql")) { Seq(EnumGraphQLQueryFile.export(e)) } else { Nil }
     val oq = if (config.flags("openapi")) { Seq(EnumOpenApiSchemaFile.export(e), EnumOpenApiPathsFile.export(e)) } else { Nil }
-    Seq(EnumFile.export(e), EnumColumnTypeFile.export(config, e), EnumSchemaFile.export(config, e), EnumControllerFile.export(config, e)) ++ gq ++ oq
+    val dq = if (config.flags("doobie")) { Seq(EnumDoobieFile.export(config, e)) } else { Nil }
+    Seq(EnumFile.export(e), EnumColumnTypeFile.export(config, e), EnumSchemaFile.export(config, e), EnumControllerFile.export(config, e)) ++ gq ++ oq ++ dq
   }
 
   def exportModel(config: ExportConfiguration, model: ExportModel): (ExportModel, Seq[OutputFile]) = {
@@ -106,14 +107,15 @@ object ExportFiles {
       val w = WikiFiles.exportModel(config, model)
 
       val gq = if (config.flags("graphql")) { GraphQLQueryFiles.export(config, model) } else { Nil }
-      val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [$model]."))
       val oq = if (config.flags("openapi")) {
+        val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [${model.className}]."))
         Seq(OpenApiSchemaFile.export(model, config.enums), OpenApiPathsFile.export(model, config.enums, solo))
       } else {
         Nil
       }
+      val dq = if (config.flags("doobie")) { Seq(DoobieFile.export(config, model)) } else { Nil }
 
-      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ trs ++ w)
+      model -> (Seq(cls, res, queries, table, svc, sch, cntr, tm, ts, tdr, tl, tv, tf, tsr) ++ gq ++ oq ++ dq ++ trs ++ w)
     }
   }
 }

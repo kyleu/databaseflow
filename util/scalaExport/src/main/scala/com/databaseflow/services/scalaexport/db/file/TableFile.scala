@@ -58,7 +58,7 @@ object TableFile {
     field.addImport(file)
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
-      case ColumnType.TagsType => s"Seq[${providedPrefix}models.tag.Tag]"
+      case ColumnType.TagsType => s"List[${providedPrefix}models.tag.Tag]"
       case _ => field.scalaType
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }

@@ -33,6 +33,11 @@ case class ExportConfiguration(
   val corePrefix = corePackage.map(_ + ".").getOrElse("")
 
   lazy val packages = {
+    if (models.exists(_.pkg.isEmpty)) {
+      val roots = models.filter(_.pkg.isEmpty).map(_.className)
+      throw new IllegalStateException(s"Each model must have a package defined, however [${roots.mkString(", ")}] do not specify one.")
+    }
+
     val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)
     val modelPackages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
@@ -49,5 +54,4 @@ case class ExportConfiguration(
       (p, ms, es, solo)
     }
   }
-
 }
