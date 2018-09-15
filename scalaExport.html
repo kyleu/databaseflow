@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="js/page.js"></script>
+<script type="text/javascript" src="js/warnOldVersion.js"></script>
 <script type="text/javascript" src="js/groups.js"></script>
 <link rel="stylesheet" type="text/css" href="lib/normalize.css/normalize.css"/>
 <link rel="stylesheet" type="text/css" href="lib/foundation/dist/foundation.min.css"/>
@@ -30,7 +31,7 @@
 <span class="home-icon">⌂</span>Scala Project Export
 </a>
 <div class="version-number">
-1.1.1
+1.4.3
 </div>
 </div>
 <div class="nav-toc">
@@ -66,7 +67,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <span class="home-icon">⌂</span>Scala Project Export
 </a>
 <div class="version-number">
-1.1.1
+1.4.3
 </div>
 </div>
 <div class="nav-toc">
@@ -79,6 +80,8 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="small-12 medium-9 large-10 column">
 <section class="site-content">
+
+<span id="version-warning"></span>
 
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
@@ -122,7 +125,9 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
   <li>
   <p>Download and run Database Flow, and add a connection to your PostgreSQL schema.</p></li>
   <li>
-  <p>In the admin/settings section, head to &ldquo;Status&rdquo;, then &ldquo;Database Operations&rdquo;, and select the &ldquo;Create Scala Project&rdquo; button for your connection.</p></li>
+  <p>Add a &ldquo;Project Location&rdquo; in the connection settings.</p></li>
+  <li>
+  <p>On the home screen, select the &ldquo;Generate&rdquo; button for your connection.</p></li>
   <li>
   <p>Ok, this next page is important. It shows the full details of your database, with options for each table. Take some time to review the options available.</p></li>
   <li>The top section lets you choose the output directory, which defaults to <code>./tmp/{projectId}</code>.</li>
@@ -140,6 +145,18 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
   <li>
   <p>Hit the admin section, and start exploring! You can re-run the export at any time, and it will preserve the changes you&rsquo;ve made.</p></li>
 </ul>
+<h2><a href="#work-with-an-existing-generated-project" name="work-with-an-existing-generated-project" class="anchor"><span class="anchor-link"></span></a>Work with an existing generated project</h2>
+<ul>
+  <li>Clone <a href="https://github.com/KyleU/databaseflow">https://github.com/KyleU/databaseflow</a></li>
+  <li>Launch sbt and type &ldquo;run&rdquo;</li>
+  <li>Wait for the world to compile, then hit <a href="http://localhost:4260">http://localhost:4260</a></li>
+  <li>Once it loads, you&rsquo;ll need to create a local Database Flow account</li>
+  <li>Create a new connection, pointing to the database you wish to use, and adding a project location.</li>
+  <li>Add your stuff, make your database changes, then hit &ldquo;Refresh Schema&rdquo; from the query interface</li>
+  <li>Open your project on the home screen, then hit &ldquo;Generate&rdquo;</li>
+  <li>Find your newly created stuff, make sure it&rsquo;s in the right package, and all info is correct</li>
+  <li>Export that thing.</li>
+</ul>
 <div class="source-github">
 The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/main/paradox/scalaExport.md">here</a>.
 </div>
@@ -156,6 +173,7 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
     <li><a href="scalaExport.html#the-pitch" class="header">The Pitch</a></li>
     <li><a href="scalaExport.html#features" class="header">Features</a></li>
     <li><a href="scalaExport.html#do-it-yourself" class="header">Do it yourself</a></li>
+    <li><a href="scalaExport.html#work-with-an-existing-generated-project" class="header">Work with an existing generated project</a></li>
   </ul></li>
 </ul>
 </div>
@@ -198,7 +216,7 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
 
 <!--
 <div class="copyright">
-<span class="text">&copy; 2017</span>
+<span class="text">&copy; 2018</span>
 <a href="https://www.example.com" class="logo">logo</a>
 </div>
 -->
@@ -223,5 +241,7 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
 <script type="text/javascript" src="lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.4.3', '')});</script>
+
 
 </html>
