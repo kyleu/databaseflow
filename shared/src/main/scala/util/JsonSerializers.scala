@@ -2,7 +2,7 @@ package util
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import io.circe.generic.extras.Configuration
+import io.circe.generic.extras
 import io.circe.generic.extras.decoding.ConfiguredDecoder
 import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
 import io.circe.java8.time._
@@ -23,7 +23,7 @@ object JsonSerializers {
   implicit def decodeLocalDate: Decoder[LocalDate] = io.circe.java8.time.decodeLocalDateDefault
   implicit def decodeLocalTime: Decoder[LocalTime] = io.circe.java8.time.decodeLocalTimeDefault
 
-  implicit val circeConfiguration: Configuration = Configuration.default.withDefaults
+  implicit val circeConfiguration: extras.Configuration = extras.Configuration.default.withDefaults
 
   def deriveDecoder[A](implicit decode: Lazy[ConfiguredDecoder[A]]) = io.circe.generic.extras.semiauto.deriveDecoder[A]
   def deriveEncoder[A](implicit decode: Lazy[ConfiguredObjectEncoder[A]]) = io.circe.generic.extras.semiauto.deriveEncoder[A]
