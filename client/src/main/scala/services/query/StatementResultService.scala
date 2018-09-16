@@ -6,7 +6,7 @@ import models.query.QueryResult
 import models.template.query.StatementResultsTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
-import util.TemplateUtils
+import util.TemplateHelper
 
 object StatementResultService {
   def handleNewStatementResults(resultId: UUID, index: Int, result: QueryResult, durationMs: Int): Unit = {
@@ -19,7 +19,7 @@ object StatementResultService {
     val panel = $(s"#$resultId", $(s"#workspace-${result.queryId}"))
     val sqlEl = $(".statement-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), _ => {
+    TemplateHelper.clickHandler($(".results-sql-link", panel), _ => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })

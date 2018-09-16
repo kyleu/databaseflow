@@ -5,7 +5,7 @@ import models.schema.Table
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.TableManager
-import util.{StringKeyUtils, TemplateUtils}
+import util.{StringKeyUtils, TemplateHelper}
 
 object TableUpdates {
   var tables: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -23,7 +23,7 @@ object TableUpdates {
       $("#table-list-toggle").css("display", "block")
       val tableList = $("#table-list")
       tableList.html(SidenavTemplate.tables(ts).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", tableList), jq => {
+      TemplateHelper.clickHandler($(".sidenav-link", tableList), jq => {
         val name = jq.data("key").toString
         TableManager.tableDetail(name, RowDataOptions.empty)
       })

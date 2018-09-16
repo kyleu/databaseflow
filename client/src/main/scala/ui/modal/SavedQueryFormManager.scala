@@ -6,7 +6,7 @@ import models.user.Permission
 import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
 import ui.query.{QueryManager, SavedQueryManager}
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 import scala.scalajs.js
 
@@ -20,8 +20,8 @@ object SavedQueryFormManager {
   private[this] val inputConnectionFalse = $("#input-query-connection-false", modal)
 
   def init() = {
-    TemplateUtils.clickHandler($("#input-query-cancel-link", modal), _ => modal.closeModal())
-    TemplateUtils.clickHandler($("#input-query-save-link", modal), _ => save())
+    TemplateHelper.clickHandler($("#input-query-cancel-link", modal), _ => modal.closeModal())
+    TemplateHelper.clickHandler($("#input-query-save-link", modal), _ => save())
   }
 
   def show(savedQuery: SavedQuery) = {

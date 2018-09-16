@@ -10,7 +10,7 @@ import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import services.NotificationService
 import ui.query._
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 object MetadataManager {
   private[this] var engine: Option[DatabaseEngine] = None
@@ -30,7 +30,7 @@ object MetadataManager {
       $("#saved-query-list-toggle").css("display", "block")
       val savedQueryList = $("#saved-query-list")
       savedQueryList.html(SidenavTemplate.savedQueries(sqs).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", savedQueryList), jq => {
+      TemplateHelper.clickHandler($(".sidenav-link", savedQueryList), jq => {
         val id = UUID.fromString(jq.data("key").toString)
         SavedQueryManager.savedQueryDetail(id)
       })
@@ -55,7 +55,7 @@ object MetadataManager {
       $("#shared-result-list-toggle").css("display", "block")
       val sharedResultList = $("#shared-result-list")
       sharedResultList.html(SidenavTemplate.sharedResults(srs).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", sharedResultList), jq => {
+      TemplateHelper.clickHandler($(".sidenav-link", sharedResultList), jq => {
         val id = UUID.fromString(jq.data("key").toString)
         SharedResultManager.sharedResultDetail(id)
       })

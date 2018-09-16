@@ -68,7 +68,7 @@ object ChartingService {
       val newV = v.copy(data = data)
       activeCharts = activeCharts + (id -> newV)
       ChartRenderService.render(newV)
-      util.Logging.info(s"Rendering [${data.length}] rows.")
+      util.LogUtils.info(s"Rendering [${data.length}] rows.")
     case None => throw new IllegalStateException(s"Cannot update data for unknown chart [$id].")
   }
 

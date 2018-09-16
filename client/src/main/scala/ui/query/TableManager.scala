@@ -13,7 +13,7 @@ import ui.metadata.MetadataManager
 import ui._
 import ui.modal.RowUpdateManager
 import ui.tabs.TabManager
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 object TableManager extends TableDetailHelper {
   private[this] var openTables = Map.empty[String, UUID]
@@ -48,7 +48,7 @@ object TableManager extends TableDetailHelper {
 
         QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-        TemplateUtils.clickHandler($(".view-data-link", queryPanel), _ => {
+        TemplateHelper.clickHandler($(".view-data-link", queryPanel), _ => {
           val newOptions = options.copy(
             offset = None,
             limit = Some(UserManager.rowsReturned),
@@ -59,12 +59,12 @@ object TableManager extends TableDetailHelper {
           )
           RowDataManager.showRowData(QueryResult.SourceType.Table, queryId, name, newOptions, UUID.randomUUID)
         })
-        TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
+        TemplateHelper.clickHandler($(".query-open-link", queryPanel), _ => {
           val (sql, _) = EngineQueries.selectFrom(name, Nil, options)(MetadataManager.getEngine)
           AdHocQueryManager.addAdHocQuery(UUID.randomUUID, name + " Data", sql)
         })
 
-        TemplateUtils.clickHandler($(".insert-data-link", queryPanel), _ => {
+        TemplateHelper.clickHandler($(".insert-data-link", queryPanel), _ => {
           val columns = MetadataManager.schema.flatMap(_.tables.find(_.name == name)).map(_.columns).getOrElse(Nil)
           RowUpdateManager.show(insert = true, name, Nil, columns, Map.empty)
         })

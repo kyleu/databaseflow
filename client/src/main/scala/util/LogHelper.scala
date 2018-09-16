@@ -2,12 +2,12 @@ package util
 
 import org.scalajs.dom
 import org.scalajs.dom.raw.Event
-import scribe.{Level, LogHandler, Logger, Logging}
+import scribe.{Level, LogHandler, Logger}
 import scribe.formatter.FormatterBuilder
 
 import scala.scalajs.js.Dynamic.global
 
-object LogHelper extends Logging {
+object LogHelper extends scribe.Logging {
   private[this] var initialized = false
 
   private[this] val format = FormatterBuilder().date().string(" ").level.string(" ").positionAbbreviated.newLine.string(" - ").message.newLine

@@ -4,7 +4,7 @@ import models.GetColumnDetail
 import models.schema.ColumnDetails
 import models.template.column.ColumnTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 import scala.scalajs.js
 
@@ -16,10 +16,10 @@ object ColumnDetailManager {
 
   private[this] var activeRequest: Option[(String, String)] = None
 
-  def init() = TemplateUtils.clickHandler(modalLink, _ => close())
+  def init() = TemplateHelper.clickHandler(modalLink, _ => close())
 
   def installHandlers(selector: JQuery, owner: String) = {
-    TemplateUtils.clickHandler(selector, jq => ColumnDetailManager.show(owner, jq.data("col").toString, jq.data("t").toString))
+    TemplateHelper.clickHandler(selector, jq => ColumnDetailManager.show(owner, jq.data("col").toString, jq.data("t").toString))
   }
 
   def show(owner: String, name: String, t: String) = {

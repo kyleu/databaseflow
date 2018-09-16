@@ -4,7 +4,7 @@ import models.query.TransactionState
 import models.{BeginTransaction, CommitTransaction, RollbackTransaction}
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
-import util.{NetworkMessage, NumberUtils, TemplateUtils}
+import util.{NetworkMessage, NumberUtils, TemplateHelper}
 
 import scalatags.Text.all._
 
@@ -55,13 +55,13 @@ object TransactionService {
     inTransaction = true
     val msg = div(
       "Transaction started ",
-      TemplateUtils.toTimeago(TemplateUtils.toIsoString(occurred)),
+      TemplateHelper.toTimeago(TemplateHelper.toIsoString(occurred)),
       ". Completed ",
       span(id := "tx-statement-count")("0"),
       " statements."
     )
     statusMessage.html(msg.toString)
-    TemplateUtils.relativeTime()
+    TemplateHelper.relativeTime()
   }
   private[this] def resetCounters() = {
     inTransaction = false

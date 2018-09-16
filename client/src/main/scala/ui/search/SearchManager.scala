@@ -3,7 +3,7 @@ package ui.search
 import models.template.Icons
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import ui.metadata.{MetadataManager, ProcedureUpdates, TableUpdates, ViewUpdates}
-import util.TemplateUtils
+import util.TemplateHelper
 
 object SearchManager {
   private[this] lazy val searchContainer = $(".search-wrapper")
@@ -23,7 +23,7 @@ object SearchManager {
       throw new IllegalStateException("Missing search input field.")
     }
 
-    TemplateUtils.clickHandler(searchIcon, _ => {
+    TemplateHelper.clickHandler(searchIcon, _ => {
       searchInput.value("")
       clearSearch()
       searchInput.trigger("focus")

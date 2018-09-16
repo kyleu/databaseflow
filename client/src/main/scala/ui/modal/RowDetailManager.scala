@@ -7,7 +7,7 @@ import models.query.QueryResult
 import models.template.tbl.RowDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
 import ui.metadata.MetadataManager
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 import scala.scalajs.js
 
@@ -24,9 +24,9 @@ object RowDetailManager {
   private[this] val linkEdit = $("#row-detail-edit-link", modal)
 
   def init() = {
-    TemplateUtils.clickHandler(linkDelete, _ => delete())
-    TemplateUtils.clickHandler(linkEdit, _ => edit())
-    TemplateUtils.clickHandler(linkOk, _ => close())
+    TemplateHelper.clickHandler(linkDelete, _ => delete())
+    TemplateHelper.clickHandler(linkEdit, _ => edit())
+    TemplateHelper.clickHandler(linkOk, _ => close())
   }
 
   def show(table: Option[String], pk: Seq[String], data: Seq[(QueryResult.Col, String)]) = {

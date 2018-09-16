@@ -1,7 +1,7 @@
 package models.template
 
 import models.audit.AuditRecord
-import util.{Messages, TemplateUtils}
+import util.{Messages, TemplateHelper}
 
 import scalatags.Text.all._
 
@@ -33,7 +33,7 @@ object HistoryTemplate {
               tr(id := s"history-${history.id}")(
                 td(history.status.toString),
                 td(pre(cls := "sql-pre")(history.sql)),
-                td(TemplateUtils.toTimeago(TemplateUtils.toIsoString(history.occurred))),
+                td(TemplateHelper.toTimeago(TemplateHelper.toIsoString(history.occurred))),
                 td(a(data("audit") := history.id.toString, href := "#", cls := "audit-remove theme-text", title := Messages("general.close"))(
                   i(cls := "fa " + Icons.close)
                 ))

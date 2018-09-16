@@ -6,7 +6,7 @@ import models.user.Permission
 import org.scalajs.jquery.{jQuery => $}
 import services.NotificationService
 import ui.query.SharedResultManager
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 import scala.scalajs.js
 
@@ -19,8 +19,8 @@ object SharedResultFormManager {
   private[this] val inputSql = $("#input-shared-result-sql", modal)
 
   def init() = {
-    TemplateUtils.clickHandler($("#input-shared-result-cancel-link", modal), _ => modal.closeModal())
-    TemplateUtils.clickHandler($("#input-shared-result-share-link", modal), _ => share())
+    TemplateHelper.clickHandler($("#input-shared-result-cancel-link", modal), _ => modal.closeModal())
+    TemplateHelper.clickHandler($("#input-shared-result-share-link", modal), _ => share())
   }
 
   def show(sharedResult: SharedResult) = {

@@ -11,15 +11,15 @@ import org.scalajs.jquery.{jQuery => $}
 import services.NavigationService
 import ui.UserManager
 import ui.query.TableManager
-import util.TemplateUtils
+import util.TemplateHelper
 
 object QueryEventHandlers {
   def wireLinks(panel: JQuery, result: QueryResult, chartId: UUID) = {
     val src = result.source.getOrElse(throw new IllegalStateException())
-    TemplateUtils.clickHandler($(".results-export-link", panel), _ => {
+    TemplateHelper.clickHandler($(".results-export-link", panel), _ => {
       QueryExportFormManager.show(result.queryId, src)
     })
-    TemplateUtils.clickHandler($(".results-share-link", panel), _ => {
+    TemplateHelper.clickHandler($(".results-share-link", panel), _ => {
       val chart = ChartService.getSettings(chartId).trim match {
         case x if x.isEmpty => None
         case x => Some(x)
@@ -32,7 +32,7 @@ object QueryEventHandlers {
         chart = chart
       ))
     })
-    TemplateUtils.changeHandler($(".results-chart-toggle", panel), jq => {
+    TemplateHelper.changeHandler($(".results-chart-toggle", panel), jq => {
       if (jq.prop("checked").toString == "true") {
         ChartService.showChart(chartId, result.columns, src, panel)
       } else {
@@ -42,7 +42,7 @@ object QueryEventHandlers {
   }
 
   def wireResults(e: JQuery, qr: QueryResult) = {
-    TemplateUtils.clickHandler($(".query-rel-link", e), jq => {
+    TemplateHelper.clickHandler($(".query-rel-link", e), jq => {
       val table = jq.data("rel-table").toString
       val col = jq.data("rel-col").toString
       val t = ColumnType.withValue(jq.data("rel-type").toString)
@@ -50,7 +50,7 @@ object QueryEventHandlers {
       TableManager.tableDetail(table, RowDataOptions(filters = Seq(QueryFilter(col = col, op = FilterOp.Equal, t = t, v = v))))
     })
 
-    TemplateUtils.clickHandler($(".view-row-link", e), jq => dataClickHandler(jq, qr))
+    TemplateHelper.clickHandler($(".view-row-link", e), jq => dataClickHandler(jq, qr))
   }
 
   private[this] def dataClickHandler(jq: JQuery, result: QueryResult) = {

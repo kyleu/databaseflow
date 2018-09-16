@@ -12,7 +12,7 @@ import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.metadata.MetadataManager
 import ui.tabs.TabManager
 import ui.{ProgressManager, UserManager, _}
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 object ViewManager extends ViewDetailHelper {
   var openViews = Map.empty[String, UUID]
@@ -46,14 +46,14 @@ object ViewManager extends ViewDetailHelper {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      TemplateUtils.clickHandler($(".view-data-link", queryPanel), _ => {
+      TemplateHelper.clickHandler($(".view-data-link", queryPanel), _ => {
         RowDataManager.showRowData(QueryResult.SourceType.View, queryId, name, RowDataOptions(limit = Some(UserManager.rowsReturned)), UUID.randomUUID)
       })
-      TemplateUtils.clickHandler($(".query-open-link", queryPanel), _ => {
+      TemplateHelper.clickHandler($(".query-open-link", queryPanel), _ => {
         AdHocQueryManager.addAdHocQuery(UUID.randomUUID, "Query Name", "select * from something")
       })
 
-      def wire(q: JQuery, action: String) = TemplateUtils.clickHandler(q, _ => {
+      def wire(q: JQuery, action: String) = TemplateHelper.clickHandler(q, _ => {
         val resultId = UUID.randomUUID
         val title = "Query Plan"
         ProgressManager.startProgress(queryId, resultId, title)

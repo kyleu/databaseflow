@@ -2,7 +2,7 @@ package models.template
 
 import models.query.{SavedQuery, SharedResult}
 import models.schema.{EnumType, Procedure, Table, View}
-import util.{StringKeyUtils, TemplateUtils}
+import util.{StringKeyUtils, TemplateHelper}
 import scalatags.Text.all._
 
 object SidenavTemplate {

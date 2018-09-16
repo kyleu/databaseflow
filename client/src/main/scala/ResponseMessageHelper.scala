@@ -5,7 +5,7 @@ import _root_.ui.modal.{ColumnDetailManager, RowUpdateManager}
 import _root_.ui.{HistoryManager, UserManager}
 import util.NetworkMessage
 
-trait ResponseMessageHelper { this: DatabaseFlow =>
+trait ResponseMessageHelper { this: DatabaseFlowApp =>
   protected[this] def handleMessage(rm: ResponseMessage) = rm match {
 
     case p: Pong => NetworkMessage.latencyMs = Some((System.currentTimeMillis - p.timestamp).toInt)

@@ -4,7 +4,7 @@ import models.schema.{EnumType, Procedure}
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.{EnumManager, ProcedureManager}
-import util.{StringKeyUtils, TemplateUtils}
+import util.{StringKeyUtils, TemplateHelper}
 
 object EnumUpdates {
   var enums: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -22,7 +22,7 @@ object EnumUpdates {
       $("#enum-list-toggle").css("display", "block")
       val enumList = $("#enum-list")
       enumList.html(SidenavTemplate.enums(es).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", enumList), jq => {
+      TemplateHelper.clickHandler($(".sidenav-link", enumList), jq => {
         val name = jq.data("key").toString
         EnumManager.enumDetail(name)
       })

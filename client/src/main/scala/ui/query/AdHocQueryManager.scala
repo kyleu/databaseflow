@@ -13,7 +13,7 @@ import ui.metadata.MetadataManager
 import ui.modal.SavedQueryFormManager
 import ui.UserManager
 import ui.tabs.TabManager
-import util.{Messages, NetworkMessage, TemplateUtils}
+import util.{Messages, NetworkMessage, TemplateHelper}
 
 import scala.util.Random
 
@@ -55,7 +55,7 @@ object AdHocQueryManager {
 
     val queryPanel = $(s"#panel-$queryId")
 
-    TemplateUtils.clickHandler($(".save-query-link", queryPanel), _ => {
+    TemplateHelper.clickHandler($(".save-query-link", queryPanel), _ => {
       val owner = UserManager.userId.getOrElse(throw new IllegalStateException())
       val params = ParameterManager.getParamsOpt(queryId).getOrElse(Seq.empty)
       val newSql = SqlManager.getSql(queryId)

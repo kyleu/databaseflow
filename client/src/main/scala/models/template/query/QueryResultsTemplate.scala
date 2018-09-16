@@ -5,7 +5,7 @@ import java.util.UUID
 import models.query.QueryResult
 import models.template.Icons
 import models.template.results.{ChartResultTemplate, DataFilterTemplate, DataTableTemplate}
-import util.{Messages, NumberUtils, TemplateUtils}
+import util.{Messages, NumberUtils, TemplateHelper}
 
 import scalatags.Text.all._
 
@@ -23,7 +23,7 @@ object QueryResultsTemplate {
         s"${NumberUtils.withCommas(qr.rowsAffected)} ",
         span(cls := "total-row-count"),
         " rows returned ",
-        TemplateUtils.toTimeago(dateIsoString),
+        TemplateHelper.toTimeago(dateIsoString),
         " in ",
         span(cls := "total-duration")(NumberUtils.withCommas(durationMs)),
         "ms"

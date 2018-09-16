@@ -2,7 +2,7 @@ package models.template.query
 
 import models.template.{Icons, StaticPanelTemplate}
 import models.{PlanErrorResponse, QueryErrorResponse}
-import util.{Messages, TemplateUtils}
+import util.{Messages, TemplateHelper}
 
 import scalatags.Text.all._
 
@@ -10,7 +10,7 @@ object QueryErrorTemplate {
   def forQueryError(qe: QueryErrorResponse, dateIsoString: String) = {
     val content = div(id := qe.id.toString)(
       a(href := "#", cls := "results-sql-link results-nav-link right theme-text")(Messages("th.sql")),
-      p("Error encountered ", TemplateUtils.toTimeago(dateIsoString), s" in [${qe.error.elapsedMs}ms]."),
+      p("Error encountered ", TemplateHelper.toTimeago(dateIsoString), s" in [${qe.error.elapsedMs}ms]."),
       div(cls := "z-depth-1 query-result-sql")(
         pre(cls := "pre-wrap")(qe.error.sql)
       ),
@@ -29,7 +29,7 @@ object QueryErrorTemplate {
   }
 
   def forPlanError(pe: PlanErrorResponse, dateIsoString: String) = {
-    val status = p("Executed ", TemplateUtils.toTimeago(dateIsoString), s" in [${pe.durationMs}ms].")
+    val status = p("Executed ", TemplateHelper.toTimeago(dateIsoString), s" in [${pe.durationMs}ms].")
     val content = div(id := pe.id.toString)(
       status,
       p(cls := "")(pe.error.message)

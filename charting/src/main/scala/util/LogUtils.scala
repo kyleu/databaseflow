@@ -2,7 +2,7 @@ package util
 
 import scala.scalajs.js.Dynamic.global
 
-object Logging {
+object LogUtils {
   def logJs(o: scalajs.js.Any) = {
     global.window.debug = o
     global.console.log(o)

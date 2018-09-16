@@ -7,7 +7,7 @@ import models.template.query.{QueryErrorTemplate, QueryPlanTemplate}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
 import ui.modal.PlanNodeDetailManager
-import util.TemplateUtils
+import util.TemplateHelper
 
 object QueryPlanService {
   def handlePlanResultResponse(pr: PlanResultResponse) = {
@@ -27,13 +27,13 @@ object QueryPlanService {
     val costs = pr.result.node.costs
     val total = costs.cost.map(Left(_)).getOrElse(Right(costs.duration.orElse(costs.actualRows.map(_.toDouble)).getOrElse(costs.estimatedRows.toDouble)))
     nodes.foreach { node =>
-      TemplateUtils.clickHandler($(s"#plan-node-${node.id}", panel), _ => PlanNodeDetailManager.show(node, total))
+      TemplateHelper.clickHandler($(s"#plan-node-${node.id}", panel), _ => PlanNodeDetailManager.show(node, total))
     }
 
     val planViewToggle = $(".plan-view-toggle", workspace)
     var showingChart = true
 
-    TemplateUtils.clickHandler(planViewToggle, _ => {
+    TemplateHelper.clickHandler(planViewToggle, _ => {
       if (showingChart) {
         planViewToggle.text("View Plan Chart")
         chart.hide()

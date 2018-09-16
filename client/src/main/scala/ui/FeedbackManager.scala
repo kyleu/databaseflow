@@ -8,7 +8,7 @@ import scribe.Logging
 import services.NotificationService
 import ui.query.QueryManager
 import ui.tabs.TabManager
-import util.TemplateUtils
+import util.TemplateHelper
 
 import scala.scalajs.js
 import scalatags.Text.all._
@@ -35,7 +35,7 @@ object FeedbackManager extends Logging {
 
       val queryPanel = $(s"#panel-$feedbackId")
 
-      TemplateUtils.clickHandler($(".submit-feedback", queryPanel), _ => {
+      TemplateHelper.clickHandler($(".submit-feedback", queryPanel), _ => {
         val email = $("#feedback-email-input", queryPanel).value().toString
         val content = $("#feedback-content-input", queryPanel).value().toString
         submitFeedback(email, content)

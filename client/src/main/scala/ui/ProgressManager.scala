@@ -5,7 +5,7 @@ import java.util.UUID
 import models.CancelQuery
 import models.template.ProgressTemplate
 import org.scalajs.jquery.{jQuery => $}
-import util.{TemplateUtils, NetworkMessage}
+import util.{TemplateHelper, NetworkMessage}
 
 import scala.scalajs.js.timers
 import scalatags.Text.TypedTag
@@ -36,7 +36,7 @@ object ProgressManager {
     }
 
     val cancelLink = $(".cancel-query-link", queryWorkspace)
-    TemplateUtils.clickHandler(cancelLink, _ => {
+    TemplateHelper.clickHandler(cancelLink, _ => {
       NetworkMessage.sendMessage(CancelQuery(queryId, resultId))
     })
 
@@ -74,7 +74,7 @@ object ProgressManager {
       existingResult.replaceWith(content.render)
     }
 
-    TemplateUtils.relativeTime()
+    TemplateHelper.relativeTime()
 
     activeQueries = activeQueries - queryId
   }

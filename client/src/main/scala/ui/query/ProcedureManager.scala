@@ -12,7 +12,7 @@ import services.NotificationService
 import ui.metadata.MetadataManager
 import ui.tabs.TabManager
 import ui.{ProgressManager, WorkspaceManager}
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 object ProcedureManager extends Logging {
   var openProcedures = Map.empty[String, UUID]
@@ -45,7 +45,7 @@ object ProcedureManager extends Logging {
 
       QueryManager.activeQueries = QueryManager.activeQueries :+ queryId
 
-      TemplateUtils.clickHandler($(".call-procedure-link", queryPanel), _ => {
+      TemplateHelper.clickHandler($(".call-procedure-link", queryPanel), _ => {
         MetadataManager.schema.flatMap(_.procedures.find(_.name == name)) match {
           case Some(procedure) => callProcedure(queryId, procedure)
           case None => NotificationService.info("Procedure Not Loaded", "Please retry in a moment.")

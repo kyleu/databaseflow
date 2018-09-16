@@ -4,7 +4,7 @@ import models.schema.Procedure
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ProcedureManager
-import util.{StringKeyUtils, TemplateUtils}
+import util.{StringKeyUtils, TemplateHelper}
 
 object ProcedureUpdates {
   var procedures: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -22,7 +22,7 @@ object ProcedureUpdates {
       $("#procedure-list-toggle").css("display", "block")
       val procedureList = $("#procedure-list")
       procedureList.html(SidenavTemplate.procedures(ps).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", procedureList), jq => {
+      TemplateHelper.clickHandler($(".sidenav-link", procedureList), jq => {
         val name = jq.data("key").toString
         ProcedureManager.procedureDetail(name)
       })

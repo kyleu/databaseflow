@@ -1,7 +1,7 @@
 package ui.modal
 
 import org.scalajs.jquery.{jQuery => $}
-import util.TemplateUtils
+import util.TemplateHelper
 
 import scala.scalajs.js
 
@@ -14,14 +14,14 @@ object ConfirmManager {
   private[this] val linkFalse = $("#confirm-false-link", modal)
 
   def init() = {
-    TemplateUtils.clickHandler(linkTrue, _ => {
+    TemplateHelper.clickHandler(linkTrue, _ => {
       activeCallback match {
         case Some(cb) => cb(true)
         case None => throw new IllegalStateException("No active callback.")
       }
     })
 
-    TemplateUtils.clickHandler(linkFalse, _ => activeCallback match {
+    TemplateHelper.clickHandler(linkFalse, _ => activeCallback match {
       case Some(cb) => cb(false)
       case None => throw new IllegalStateException("No active callback.")
     })

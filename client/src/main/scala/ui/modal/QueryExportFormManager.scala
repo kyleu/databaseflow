@@ -4,7 +4,7 @@ import java.util.UUID
 
 import models.query.QueryResult
 import org.scalajs.jquery.{jQuery => $}
-import util.TemplateUtils
+import util.TemplateHelper
 
 import scala.scalajs.js
 import util.JsonSerializers._
@@ -15,7 +15,7 @@ object QueryExportFormManager {
   private[this] val inputQueryId = $("#input-export-query-id", modal)
   private[this] val inputSource = $("#input-export-source", modal)
 
-  def init() = TemplateUtils.clickHandler($("#export-cancel-link", modal), _ => modal.closeModal())
+  def init() = TemplateHelper.clickHandler($("#export-cancel-link", modal), _ => modal.closeModal())
 
   def show(queryId: UUID, source: QueryResult.Source) = {
     inputQueryId.value(queryId.toString)

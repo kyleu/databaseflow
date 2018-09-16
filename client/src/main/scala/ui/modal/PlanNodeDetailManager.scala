@@ -3,7 +3,7 @@ package ui.modal
 import models.plan.PlanNode
 import models.template.query.QueryPlanNodeDetailTemplate
 import org.scalajs.jquery.{jQuery => $}
-import util.TemplateUtils
+import util.TemplateHelper
 
 import scala.scalajs.js
 
@@ -13,7 +13,7 @@ object PlanNodeDetailManager {
   private[this] val modalContent = $("#plan-node-modal-content", modal)
   private[this] val modalLink = $("#plan-node-ok-link", modal)
 
-  def init() = TemplateUtils.clickHandler(modalLink, _ => {
+  def init() = TemplateHelper.clickHandler(modalLink, _ => {
     close()
   })
 

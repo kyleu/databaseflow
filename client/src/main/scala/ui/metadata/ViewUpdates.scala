@@ -4,7 +4,7 @@ import models.schema.View
 import models.template.SidenavTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import ui.query.ViewManager
-import util.{StringKeyUtils, TemplateUtils}
+import util.{StringKeyUtils, TemplateHelper}
 
 object ViewUpdates {
   var views: Option[Seq[(String, JQuery, JQuery)]] = None
@@ -22,7 +22,7 @@ object ViewUpdates {
       $("#view-list-toggle").css("display", "block")
       val viewList = $("#view-list")
       viewList.html(SidenavTemplate.views(vs).mkString("\n"))
-      TemplateUtils.clickHandler($(".sidenav-link", viewList), jq => {
+      TemplateHelper.clickHandler($(".sidenav-link", viewList), jq => {
         val name = jq.data("key").toString
         ViewManager.viewDetail(name)
       })

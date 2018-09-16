@@ -6,17 +6,17 @@ import models.query.{QueryFilter, QueryResult}
 import models.query.QueryResult.Source
 import models.schema.{ColumnType, FilterOp}
 import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
-import util.{Config, TemplateUtils}
+import util.{Config, TemplateHelper}
 
 object FilterManager {
   def init(key: QueryResult.SourceType, queryId: UUID, name: String, panel: JQuery, src: Source, columns: Seq[QueryResult.Col], resultId: UUID) = {
     val filterContainer = $(".filter-container", panel)
     var filterShown = false
-    TemplateUtils.clickHandler($(".results-filter-link", panel), _ => {
+    TemplateHelper.clickHandler($(".results-filter-link", panel), _ => {
       if (filterShown) { filterContainer.hide() } else { filterContainer.show() }
       filterShown = !filterShown
     })
-    TemplateUtils.clickHandler($(".results-filter-cancel", panel), _ => {
+    TemplateHelper.clickHandler($(".results-filter-cancel", panel), _ => {
       $(".filter-container", panel).hide()
     })
 
@@ -45,7 +45,7 @@ object FilterManager {
       }
     }
 
-    TemplateUtils.clickHandler($(".results-filter-go", panel), _ => {
+    TemplateHelper.clickHandler($(".results-filter-go", panel), _ => {
       $(".filter-container", panel).hide()
 
       val column = $(":selected", colSelect).`val`().toString

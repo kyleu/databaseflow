@@ -6,7 +6,7 @@ import models.query.SavedQuery
 import models.template.query.QueryParametersTemplate
 import org.scalajs.jquery.{JQuery, jQuery => $}
 import scribe.Logging
-import util.TemplateUtils
+import util.TemplateHelper
 
 object ParameterManager extends ParameterChangeManager with Logging {
   def onChange(queryId: UUID, sql: String, forceRefresh: Boolean = false) = {
@@ -18,7 +18,7 @@ object ParameterManager extends ParameterChangeManager with Logging {
     if (hasChanged) {
       val panel = $(s"#panel-$queryId .sql-parameters")
       render(queryId, keys, panel)
-      TemplateUtils.changeHandler($("input", panel), jq => {
+      TemplateHelper.changeHandler($("input", panel), jq => {
         val k = jq.data("key").toString
         val t = jq.data("t").toString
         val v = jq.value().toString

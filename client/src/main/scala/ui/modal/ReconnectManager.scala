@@ -1,7 +1,7 @@
 package ui.modal
 
 import org.scalajs.jquery.{jQuery => $}
-import util.TemplateUtils
+import util.TemplateHelper
 
 import scala.scalajs.js
 
@@ -16,7 +16,7 @@ object ReconnectManager {
     throw new IllegalStateException("Missing reconnect link.")
   }
 
-  def init() = TemplateUtils.clickHandler(link, _ => {
+  def init() = TemplateHelper.clickHandler(link, _ => {
     activeCallback match {
       case Some(cb) => cb()
       case None => throw new IllegalStateException("No active callback.")

@@ -11,7 +11,7 @@ import scribe.Logging
 import ui.query.{FilterManager, RowDataManager}
 import ui.ProgressManager
 import ui.tabs.TabManager
-import util.{Config, TemplateUtils}
+import util.{Config, TemplateHelper}
 
 import scala.scalajs.js
 import scala.util.Random
@@ -38,7 +38,7 @@ object QueryResultService extends Logging {
 
     val sqlEl = $(".query-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), _ => {
+    TemplateHelper.clickHandler($(".results-sql-link", panel), _ => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })
@@ -61,20 +61,20 @@ object QueryResultService extends Logging {
     FilterManager.init(src.t, result.queryId, src.name, panel, src, result.columns, resultId)
 
     val options = src.asRowDataOptions(Some(Config.pageSize))
-    TemplateUtils.clickHandler($(".sorted-title", panel), (j) => {
+    TemplateHelper.clickHandler($(".sorted-title", panel), (j) => {
       val col = j.data("col").toString
       val asc = j.data("dir").toString == "asc"
       val newOptions = options.copy(orderByCol = Some(col), orderByAsc = Some(!asc))
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
-    TemplateUtils.clickHandler($(".filter-cancel-link", panel), _ => {
+    TemplateHelper.clickHandler($(".filter-cancel-link", panel), _ => {
       val newOptions = options.copy(filters = Nil)
       RowDataManager.showRowData(src.t, result.queryId, src.name, newOptions, resultId)
     })
 
     val appendRowsLink = $(".append-rows-link", panel)
-    TemplateUtils.clickHandler(appendRowsLink, _ => {
+    TemplateHelper.clickHandler(appendRowsLink, _ => {
       val limit = appendRowsLink.data("limit").toString.toInt
       val offset = appendRowsLink.data("offset").toString.toInt match {
         case 0 => 100

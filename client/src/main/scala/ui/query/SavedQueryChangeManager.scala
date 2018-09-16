@@ -12,7 +12,7 @@ import ui.metadata.MetadataManager
 import ui.modal.{ConfirmManager, SavedQueryFormManager}
 import ui.UserManager
 import ui.tabs.TabManager
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 trait SavedQueryChangeManager {
   var savedQueries = Map.empty[UUID, SavedQuery]
@@ -33,23 +33,23 @@ trait SavedQueryChangeManager {
     TabManager.addTab(savedQuery.id, "saved-query-" + savedQuery.id, savedQuery.name, Icons.savedQuery, close _)
 
     val queryPanel = $(s"#panel-${savedQuery.id}")
-    TemplateUtils.clickHandler($(".settings-query-link", queryPanel), _ => SavedQueryFormManager.show(savedQuery.copy(
+    TemplateHelper.clickHandler($(".settings-query-link", queryPanel), _ => SavedQueryFormManager.show(savedQuery.copy(
       sql = SqlManager.getSql(savedQuery.id)
     )))
-    TemplateUtils.clickHandler($(".save-as-query-link", queryPanel), _ => SavedQueryFormManager.show(savedQuery.copy(
+    TemplateHelper.clickHandler($(".save-as-query-link", queryPanel), _ => SavedQueryFormManager.show(savedQuery.copy(
       id = UUID.randomUUID,
       name = "Copy of " + savedQuery.name,
       sql = SqlManager.getSql(savedQuery.id),
       params = ParameterManager.getParamsOpt(savedQuery.id).getOrElse(Seq.empty)
     )))
-    TemplateUtils.clickHandler($(".save-query-link", queryPanel), _ => {
+    TemplateHelper.clickHandler($(".save-query-link", queryPanel), _ => {
       val newSavedQuery = savedQuery.copy(
         sql = SqlManager.getSql(savedQuery.id),
         params = ParameterManager.getParamsOpt(savedQuery.id).getOrElse(Seq.empty)
       )
       NetworkMessage.sendMessage(QuerySaveRequest(newSavedQuery))
     })
-    TemplateUtils.clickHandler($(".delete-query-link", queryPanel), _ => {
+    TemplateHelper.clickHandler($(".delete-query-link", queryPanel), _ => {
       def callback(b: Boolean): Unit = {
         if (b) {
           NetworkMessage.sendMessage(QueryDeleteRequest(savedQuery.id))

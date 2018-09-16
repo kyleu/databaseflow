@@ -3,14 +3,14 @@ package models.template.query
 import models.PlanResultResponse
 import models.plan.PlanNode
 import models.template.{Icons, StaticPanelTemplate}
-import util.{Messages, NumberUtils, TemplateUtils}
+import util.{Messages, NumberUtils, TemplateHelper}
 
 import scalatags.Text.all._
 
 object QueryPlanTemplate {
   def forPlan(pr: PlanResultResponse, dateIsoString: String) = {
     val content = div(id := pr.id.toString)(
-      em("Executed ", TemplateUtils.toTimeago(dateIsoString), s" in [${pr.durationMs}ms]"),
+      em("Executed ", TemplateHelper.toTimeago(dateIsoString), s" in [${pr.durationMs}ms]"),
       div(cls := "plan-chart")(
         div(id := "", cls := "tree-container")(
           div(cls := "tree") {

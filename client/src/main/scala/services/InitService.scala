@@ -15,7 +15,7 @@ import ui.modal._
 import ui.query._
 import ui.search.SearchManager
 import ui.tabs.TabManager
-import util.{LogHelper, NetworkMessage, TemplateUtils}
+import util.{LogHelper, NetworkMessage, TemplateHelper}
 
 import scala.scalajs.js
 
@@ -26,8 +26,8 @@ object InitService extends Logging {
     wireSideNav()
     installTimers()
 
-    TemplateUtils.clickHandler($("#commit-button"), _ => TransactionService.commitTransaction())
-    TemplateUtils.clickHandler($("#rollback-button"), _ => TransactionService.rollbackTransaction())
+    TemplateHelper.clickHandler($("#commit-button"), _ => TransactionService.commitTransaction())
+    TemplateHelper.clickHandler($("#rollback-button"), _ => TransactionService.rollbackTransaction())
 
     js.Dynamic.global.$("select").material_select()
 
@@ -49,13 +49,13 @@ object InitService extends Logging {
   }
 
   private[this] def wireSideNav() = {
-    TemplateUtils.clickHandler($("#begin-tx-link"), _ => TransactionService.beginTransaction())
-    TemplateUtils.clickHandler($("#new-query-link"), _ => AdHocQueryManager.addNewQuery())
-    TemplateUtils.clickHandler($(".show-list-link"), jq => ModelListManager.showList(jq.data("key").toString))
-    TemplateUtils.clickHandler($("#sidenav-help-link"), _ => HelpManager.show())
-    TemplateUtils.clickHandler($("#sidenav-feedback-link"), _ => FeedbackManager.show())
-    TemplateUtils.clickHandler($("#sidenav-refresh-link"), _ => MetadataManager.refreshSchema())
-    TemplateUtils.clickHandler($("#sidenav-history-link"), _ => HistoryManager.show())
+    TemplateHelper.clickHandler($("#begin-tx-link"), _ => TransactionService.beginTransaction())
+    TemplateHelper.clickHandler($("#new-query-link"), _ => AdHocQueryManager.addNewQuery())
+    TemplateHelper.clickHandler($(".show-list-link"), jq => ModelListManager.showList(jq.data("key").toString))
+    TemplateHelper.clickHandler($("#sidenav-help-link"), _ => HelpManager.show())
+    TemplateHelper.clickHandler($("#sidenav-feedback-link"), _ => FeedbackManager.show())
+    TemplateHelper.clickHandler($("#sidenav-refresh-link"), _ => MetadataManager.refreshSchema())
+    TemplateHelper.clickHandler($("#sidenav-history-link"), _ => HistoryManager.show())
     js.Dynamic.global.$(".button-collapse").sideNav()
   }
 
@@ -81,6 +81,6 @@ object InitService extends Logging {
   }
 
   def installTimers() = {
-    dom.window.setInterval(() => TemplateUtils.relativeTime(), 1000)
+    dom.window.setInterval(() => TemplateHelper.relativeTime(), 1000)
   }
 }

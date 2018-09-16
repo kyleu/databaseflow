@@ -7,8 +7,8 @@ import org.scalajs.jquery.{JQuery, JQueryEventObject, jQuery => $}
 import scalatags.Text.all._
 import scalatags.Text.tags2.time
 
-object TemplateUtils {
-  def map(jq: JQuery, f: (JQuery) => (String, String)) = jq.map { e: Element =>
+object TemplateHelper {
+  def map(jq: JQuery, f: JQuery => (String, String)) = jq.map { e: Element =>
     f($(e))
   }
 
@@ -17,7 +17,7 @@ object TemplateUtils {
     false
   }
 
-  def changeHandler(jq: JQuery, f: (JQuery) => Unit) = jq.change { e: JQueryEventObject =>
+  def changeHandler(jq: JQuery, f: JQuery => Unit) = jq.change { e: JQueryEventObject =>
     f($(e.currentTarget))
     false
   }

@@ -9,7 +9,7 @@ import services.TextChangeService
 import services.query.ChartService
 import ui.ProgressManager
 import ui.tabs.TabManager
-import util.{NetworkMessage, TemplateUtils}
+import util.{NetworkMessage, TemplateHelper}
 
 object QueryManager {
   var activeQueries = Seq.empty[UUID]
@@ -19,7 +19,7 @@ object QueryManager {
   def addQuery(queryId: UUID, title: String, queryPanel: JQuery, sql: String, params: Seq[SavedQuery.Param], onChange: (String) => Unit): Unit = {
     val sqlEditor = SqlManager.newEditor(queryId, onChange)
 
-    def wire(q: JQuery, action: String, sql: () => (String, Seq[SavedQuery.Param])) = TemplateUtils.clickHandler(q, _ => {
+    def wire(q: JQuery, action: String, sql: () => (String, Seq[SavedQuery.Param])) = TemplateHelper.clickHandler(q, _ => {
       val r = sql()
       if (r._1.trim.nonEmpty) {
         val resultId = UUID.randomUUID

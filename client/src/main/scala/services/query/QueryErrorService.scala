@@ -5,7 +5,7 @@ import models.{QueryCheckResponse, QueryErrorResponse}
 import org.scalajs.jquery.{jQuery => $}
 import ui.ProgressManager
 import ui.editor.EditorManager
-import util.TemplateUtils
+import util.TemplateHelper
 
 object QueryErrorService {
   def handleQueryErrorResponse(qer: QueryErrorResponse) = {
@@ -16,7 +16,7 @@ object QueryErrorService {
     val panel = $("#" + qer.id)
     val sqlEl = $(".query-result-sql", panel)
     var sqlShown = false
-    TemplateUtils.clickHandler($(".results-sql-link", panel), _ => {
+    TemplateHelper.clickHandler($(".results-sql-link", panel), _ => {
       if (sqlShown) { sqlEl.hide() } else { sqlEl.show() }
       sqlShown = !sqlShown
     })
