@@ -31,11 +31,16 @@
 <span class="home-icon">⌂</span>Database Flow
 </a>
 <div class="version-number">
-1.4.3
+1.5.1
 </div>
 </div>
 <div class="nav-toc">
 <ul>
+  <li><a href="feature/features.html" class="page">Features</a>
+  <ul>
+    <li><a href="feature/charting.html" class="page">Charting</a></li>
+  </ul></li>
+  <li><a href="todo.html" class="page">Documentation TODOs</a></li>
 </ul>
 </div>
 
@@ -67,11 +72,16 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <span class="home-icon">⌂</span>Database Flow
 </a>
 <div class="version-number">
-1.4.3
+1.5.1
 </div>
 </div>
 <div class="nav-toc">
 <ul>
+  <li><a href="feature/features.html" class="page">Features</a>
+  <ul>
+    <li><a href="feature/charting.html" class="page">Charting</a></li>
+  </ul></li>
+  <li><a href="todo.html" class="page">Documentation TODOs</a></li>
 </ul>
 </div>
 
@@ -91,35 +101,36 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
 <h1><a href="#database-flow" name="database-flow" class="anchor"><span class="anchor-link"></span></a>Database Flow</h1>
-<p><a href="https://databaseflow.com">https://databaseflow.com</a></p>
-<p>An opinionated modern database interface.</p>
-<p>Running locally or on a shared server, Database Flow helps you discover and search your database using SQL or GraphQL.</p>
+<p>Running locally or on a shared server, Database Flow helps you discover and search your database using SQL and GraphQL.</p>
+<p>You can also generate a full-featured Scala web project based on your database.</p>
 <h2><a href="#features" name="features" class="anchor"><span class="anchor-link"></span></a>Features</h2>
 <ul>
   <li>Supports MySQL, PostgreSQL, SQLite, Oracle, SQL Server, H2, DB2, and Informix.</li>
   <li>Rich SQL editor with auto-complete and live syntax checking based on your schema.</li>
-  <li>Explore tables, views and stored procedures and share saved results or sql queries.</li>
-  <li>A sophisticated GraphQL server, providing a detailed efficient graph for your schema and data.</li>
-  <li>Supports local single-user app installations, as well as a server mode to run for your whole team.</li>
+  <li>Explore tables, views, and stored procedures. Share saved results or sql queries.</li>
+  <li>A sophisticated GraphQL server, providing a detailed and efficient graph for your schema and data.</li>
+  <li>Supports local single-user app installations as well as a shared server mode for your whole team.</li>
 </ul>
 <h2><a href="#installation" name="installation" class="anchor"><span class="anchor-link"></span></a>Installation</h2>
 <ul>
-  <li>If you&rsquo;ve installed the universal jar, you&rsquo;ll need Java 8 installed. Then run &ldquo;java -jar DatabaseFlow.jar&rdquo;.</li>
-  <li>For macOS users, open the .dmg file and drag the app to your Applications folder.</li>
-  <li>For Windows users, unzip the downloaded file and run &ldquo;Database Flow.exe&rdquo; in the extracted folder.</li>
+  <li>Download the latest <code>databaseflow.jar</code> file from <a href="https://github.com/KyleU/databaseflow/releases">Github</a>.</li>
+  <li>Run <code>java -jar databaseflow.jar</code>; a new browser tab pointed to <code>http://localhost:4260</code> will open automatically.</li>
 </ul>
 <h2><a href="#configuration" name="configuration" class="anchor"><span class="anchor-link"></span></a>Configuration</h2>
 <ul>
   <li>If you&rsquo;re on Windows, config files are stored in <code>%APPDATA%\Database Flow</code>. For macOS and Linux, the configuration folder may be found in <code>~/.databaseflow</code>/</li>
   <li>The main configuation file is named <code>databaseflow.conf</code>.</li>
-  <li>You may change the configration for file path, mail setup, and storage locations.</li>
+  <li>You may change the configuration for file path, mail setup, and storage locations.</li>
 </ul>
 <h2><a href="#license" name="license" class="anchor"><span class="anchor-link"></span></a>License</h2>
 <p>This project is owned by Kyle Unverferth. All rights reserved for now.</p>
 <div class="source-github">
-The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/main/paradox/index.md">here</a>.
+The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/index.md">here</a>.
 </div>
 
+<div class="nav-next">
+<p><strong>Next:</strong> <a href="feature/features.html">Features</a></p>
+</div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
 <nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
@@ -200,7 +211,7 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
 <script type="text/javascript" src="lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
-<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.4.3', '')});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.5.1', 'https://kyleu.github.io/databaseflow/')});</script>
 
 
 </html>

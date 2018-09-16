@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+<title>Scala Project Export</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content='doc'/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../js/page.js"></script>
+<script type="text/javascript" src="../js/warnOldVersion.js"></script>
+<script type="text/javascript" src="../js/groups.js"></script>
+<link rel="stylesheet" type="text/css" href="../lib/normalize.css/normalize.css"/>
+<link rel="stylesheet" type="text/css" href="../lib/foundation/dist/foundation.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/page.css"/>
+
+<!--
+<link rel="shortcut icon" href="../images/favicon.ico" />
+-->
+</head>
+
+<body>
+<div class="off-canvas-wrapper">
+<div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+
+<div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
+<nav class="off-canvas-nav">
+<div class="nav-home">
+<a href="../export/databaseExport.html" class="active">
+<span class="home-icon">⌂</span>Scala Project Export
+</a>
+<div class="version-number">
+1.5.1
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="off-canvas-content" data-off-canvas-content>
+
+<header class="site-header expanded row">
+<div class="small-12 column">
+<a href="#" class="off-canvas-toggle hide-for-medium" data-toggle="off-canvas-menu"><svg class="svg-icon svg-icon-menu" version="1.1" id="Menu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"> <path class="svg-icon-menu-path" fill="#53CDEC" d="M16.4,9H3.6C3.048,9,3,9.447,3,10c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,9.447,16.952,9,16.4,9z M16.4,13
+H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
+C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
+</a>
+<div class="title"><a href="../export/databaseExport.html" class="active">Scala Project Export</a></div>
+
+<!--
+<a href="https://www.example.com" class="logo show-for-medium">logo</a>
+-->
+</div>
+</header>
+
+<div class="expanded row">
+
+<div class="medium-3 large-2 show-for-medium column">
+<nav class="site-nav">
+<div class="nav-home">
+<a href="../export/databaseExport.html" class="active">
+<span class="home-icon">⌂</span>Scala Project Export
+</a>
+<div class="version-number">
+1.5.1
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="small-12 medium-9 large-10 column">
+<section class="site-content">
+
+<span id="version-warning"></span>
+
+<div class="page-header row">
+<div class="medium-12 show-for-medium column">
+</div>
+</div>
+
+<div class="page-content row">
+<div class="small-12 large-9 column" id="docs">
+<h1><a href="#scala-project-export" name="scala-project-export" class="anchor"><span class="anchor-link"></span></a>Scala Project Export</h1>
+<p>This undocumented feature of Database Flow lets you generate a Scala project from your database schema.</p>
+<p>You can see an example of the project at <a href="https://chinook.databaseflow.com">chinook.databaseflow.com</a>.</p>
+<p>This is alpha-quality at best. It&rsquo;s never been used by anyone but me, and I&rsquo;ve only tried a few schemas.</p>
+<h2><a href="#the-pitch" name="the-pitch" class="anchor"><span class="anchor-link"></span></a>The Pitch</h2>
+<p>You&rsquo;ve got a PostgreSQL schema somewhere. You <em>make a local copy of that schema that can be destroyed without consequence if something breaks</em>. You load that schema in <a href="https://databaseflow.com">Database Flow</a>, the funkiest database client. You then hit the export option, making sure it sees your tables and picked the right names, then hit a big blue export button. You enjoy the newly-generated SBT project with loads of features, based on <a href="https://github.com/KyleU/boilerplay">Boilerplay</a>. </p>
+<h2><a href="#features" name="features" class="anchor"><span class="anchor-link"></span></a>Features</h2>
+<p>Holy shit it does <em>too</em> much. For each of your tables (and their relations), the export generates:</p>
+<ul>
+  <li>
+  <p>A case class representing your table row, available in Scala.js, along with JSON (via circe) and binary (via BooPickle) serialization macros.</p></li>
+  <li>
+  <p>Async queries to retrieve your model by id or foreign key, insert or update models, and search. Batch and sequence queries are also available.</p></li>
+  <li>
+  <p>Slick tables and column types, and doobie queries including strong support for Json, enums, and <code>java.time</code> classes.</p></li>
+  <li>
+  <p>A search result model with binary and json serialization that allows paging, sorting, and filtering with strongly-typed parameters.</p></li>
+  <li>
+  <p>Dependency-injected service that provides (optionally audited) methods to search or change your models.</p></li>
+  <li>
+  <p>A GraphQL schema (via Sangria) that provides methods to concurrently search, query, and mutate using GraphQL.</p></li>
+  <li>
+  <p>Twirl view templates for administration, including system-wide search, model forms, and foreign key relations.</p></li>
+  <li>
+  <p>Play Framework controllers, integrated with authentication and admin security, providing results in HTML, JSON, or even freakin&rsquo; CSV. </p></li>
+  <li>
+  <p>Deep integration with Prometheus, OpenTracing, system-wide auditing, authentication, a full admin site, docker publishing, and just a whole bunch of stuff. </p></li>
+</ul>
+<h2><a href="#do-it-yourself" name="do-it-yourself" class="anchor"><span class="anchor-link"></span></a>Do it yourself</h2>
+<ul>
+  <li>
+  <p>If you want to use a sample Postgres schema, grab one <a href="https://github.com/lerocha/chinook-database/blob/master/ChinookDatabase/DataSources/Chinook_PostgreSql.sql">here</a>.</p></li>
+  <li>
+  <p>Download <a href="https://github.com/KyleU/boilerplay">Boilerplay</a>, configure it to use your schema, and run it once. This creates the tables needed to support auditing, notes, and authentication. </p></li>
+  <li>
+  <p>Download and run Database Flow, and add a connection to your PostgreSQL schema.</p></li>
+  <li>
+  <p>Add a &ldquo;Project Location&rdquo; in the connection settings.</p></li>
+  <li>
+  <p>On the home screen, select the &ldquo;Generate&rdquo; button for your connection.</p></li>
+  <li>
+  <p>Ok, this next page is important. It shows the full details of your database, with options for each table. Take some time to review the options available.</p></li>
+  <li>The top section lets you choose the output directory, which defaults to <code>./tmp/{projectId}</code>.</li>
+  <li>Each table has a &ldquo;package&rdquo; setting, which helps you organize large projects with many tables.</li>
+  <li>The table can also be exported to Scala.js (or, by default, just the JVM), or ignored completely.</li>
+  <li>Each column can be renamed, included in search results, added to the summary, or ignored.</li>
+  <li>
+  <p>Once you&rsquo;re comfortable with the settings (make sure you set an output directory in the main database options), select &ldquo;Export Project&rdquo;.</p></li>
+  <li>
+  <p>The results page shows all of the generated code, as well as a summary of the decisions made.</p></li>
+  <li>
+  <p>Head to the output directory you configured, run &ldquo;sbt&rdquo;, try to compile the project, then open a github issue telling me where it all went wrong.</p></li>
+  <li>
+  <p>Start the SBT task <code>run</code>, and point your browser to <a href="http://localhost:9000">localhost:9000</a>. </p></li>
+  <li>
+  <p>Hit the admin section, and start exploring! You can re-run the export at any time, and it will preserve the changes you&rsquo;ve made.</p></li>
+</ul>
+<h2><a href="#work-with-an-existing-generated-project" name="work-with-an-existing-generated-project" class="anchor"><span class="anchor-link"></span></a>Work with an existing generated project</h2>
+<ul>
+  <li>Clone <a href="https://github.com/KyleU/databaseflow">https://github.com/KyleU/databaseflow</a></li>
+  <li>Launch sbt and type &ldquo;run&rdquo;</li>
+  <li>Wait for the world to compile, then hit <a href="http://localhost:4260">http://localhost:4260</a></li>
+  <li>Once it loads, you&rsquo;ll need to create a local Database Flow account</li>
+  <li>Create a new connection, pointing to the database you wish to use, and adding a project location.</li>
+  <li>Add your stuff, make your database changes, then hit &ldquo;Refresh Schema&rdquo; from the query interface</li>
+  <li>Open your project on the home screen, then hit &ldquo;Generate&rdquo;</li>
+  <li>Find your newly created stuff, make sure it&rsquo;s in the right package, and all info is correct</li>
+  <li>Export that thing.</li>
+</ul>
+<div class="source-github">
+The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/export/databaseExport.md">here</a>.
+</div>
+
+</div>
+<div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="../export/databaseExport.html#scala-project-export" class="header">Scala Project Export</a>
+  <ul>
+    <li><a href="../export/databaseExport.html#the-pitch" class="header">The Pitch</a></li>
+    <li><a href="../export/databaseExport.html#features" class="header">Features</a></li>
+    <li><a href="../export/databaseExport.html#do-it-yourself" class="header">Do it yourself</a></li>
+    <li><a href="../export/databaseExport.html#work-with-an-existing-generated-project" class="header">Work with an existing generated project</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
+</div>
+</div>
+
+</section>
+</div>
+
+</div>
+
+<footer class="site-footer">
+
+<section class="site-footer-nav">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 medium-4 large-3 text-center column">
+<div class="nav-links">
+<ul>
+<!-- <li><a href="https://www.example.com/products/">Products</a> -->
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+
+<section class="site-footer-base">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 text-center large-9 column">
+
+<!--
+<div class="copyright">
+<span class="text">&copy; 2018</span>
+<a href="https://www.example.com" class="logo">logo</a>
+</div>
+-->
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</footer>
+
+</div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript" src="../lib/foundation/dist/foundation.min.js"></script>
+<script type="text/javascript">jQuery(document).foundation();</script>
+<script type="text/javascript" src="../js/magellan.js"></script>
+
+<style type="text/css">@import "../lib/prettify/prettify.css";</style>
+<script type="text/javascript" src="../lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.5.1', 'https://kyleu.github.io/databaseflow/')});</script>
+
+
+</html>
