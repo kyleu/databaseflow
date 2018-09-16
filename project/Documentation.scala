@@ -25,8 +25,8 @@ object Documentation {
     sourceDirectory in Paradox := sourceDirectory.value,
     paradoxTheme := Some(builtinParadoxTheme("generic")),
     paradoxProperties ++= Map(
-      "project.url" -> "https://kyleu.github.io/databaseflow/",
-      "github.base_url" -> s"https://github.com/KyleU/databaseflow/tree/${version.value}",
+      "project.url" -> s"https://kyleu.github.io/${Shared.projectId}/",
+      "github.base_url" -> s"https://github.com/KyleU/${Shared.projectId}/tree/${version.value}",
       "scaladoc.base_url" -> s"https://kyleu.github.io/api/server",
       "scaladoc.akka.base_url" -> s"http://doc.akka.io/api/akka/${Dependencies.Akka.version}",
       "extref.rfc.base_url" -> "http://tools.ietf.org/html/rfc%s"
@@ -34,7 +34,7 @@ object Documentation {
 
     previewLaunchBrowser := false,
     previewFixedPort := Some(4265),
-    
+
     SiteScaladocPlugin.scaladocSettings(SharedScaladocConfig, mappings in (Compile, packageDoc) in Shared.sharedJvm, "api/shared"),
     SiteScaladocPlugin.scaladocSettings(ClientScaladocConfig, mappings in (Compile, packageDoc) in Client.client, "api/client"),
     SiteScaladocPlugin.scaladocSettings(ScalaExportScaladocConfig, mappings in (Compile, packageDoc) in Utilities.scalaExport, "api/scalaExport"),
