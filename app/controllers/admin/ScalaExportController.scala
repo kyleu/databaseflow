@@ -8,6 +8,7 @@ import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, Expor
 import com.databaseflow.services.scalaexport.{ExportFiles, ExportHelper}
 import com.databaseflow.services.scalaexport.db.ScalaExportService
 import com.databaseflow.services.scalaexport.thrift.ThriftParseService
+import models.connection.ConnectionSettings
 import services.schema.SchemaService
 import util.ApplicationContext
 import util.FutureUtils.defaultContext
@@ -80,11 +81,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           thriftLocationOverride = form.get("thrift.location").filter(_.nonEmpty)
         )
 
-        val x = config.asJson.spaces2
-        val loc = cs.projectLocation.getOrElse(throw new IllegalStateException("Please configure a project location before exporting."))
-        (loc.toFile / "databaseflow.json").overwrite(x)
-
         ScalaExportService(config).export(persist = true).map { result =>
+          writeConfig(cs, config)
           Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
         }
       }
@@ -100,7 +98,16 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
         case Left(x) => throw x
       })
     } else {
-      ExportConfigurationDefault.forSchema(schema)
+      ExportConfigurationDefault.forSchema(schema, Some(projectLocation))
     }
+  }
+
+  private[this] def writeConfig(cs: ConnectionSettings, config: ExportConfiguration) = {
+    val x = config.asJson.spaces2
+    val loc = cs.projectLocation.getOrElse(throw new IllegalStateException("Please configure a project location before exporting."))
+    if (!loc.toFile.exists) { throw new IllegalStateException(s"Cannot find output location [$loc]") }
+    val f = loc.toFile / "databaseflow.json"
+    if (!f.exists) { f.createFile() }
+    f.overwrite(x)
   }
 }

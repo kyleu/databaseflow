@@ -12,30 +12,37 @@
         <tr>
           <th>Package</th>
           <td><input name="model.@{model.tableName}.pkg" class="validate" value="@model.pkgString" /></td>
+          <td><i class="fa @models.template.Icons.help" title="This controls the location of output files such as 'user' or 'order', and is strongly recommended"></i></td>
         </tr>
         <tr>
           <th>Property Name</th>
           <td><input name="model.@{model.tableName}.propertyName" class="validate" value="@model.propertyName" /></td>
+          <td><i class="fa @models.template.Icons.help" title="The identifier used to refer to this object, in camelCase format"></i></td>
         </tr>
         <tr>
           <th>Class Name</th>
           <td><input name="model.@{model.tableName}.className" class="validate" value="@model.className" /></td>
+          <td><i class="fa @models.template.Icons.help" title="The identifier used to refer to this object, in CapsCase format"></i></td>
         </tr>
         <tr>
           <th>Title</th>
           <td><input name="model.@{model.tableName}.title" class="validate" value="@model.title" /></td>
+          <td><i class="fa @models.template.Icons.help" title="The title used to refer to this object for display"></i></td>
         </tr>
         <tr>
           <th>Plural</th>
           <td><input name="model.@{model.tableName}.plural" class="validate" value="@model.plural" /></td>
+          <td><i class="fa @models.template.Icons.help" title="The pluralized title used to refer to this object"></i></td>
         </tr>
         <tr>
           <th>Extends Class</th>
           <td><input name="model.@{model.tableName}.extendsClass" class="validate" value="@model.extendsClass" /></td>
+          <td><i class="fa @models.template.Icons.help" title="Allows overriding the base class for this model, usually not needed"></i></td>
         </tr>
         <tr>
           <th>Icon</th>
           <td><input name="model.@{model.tableName}.icon" class="validate" value="@model.icon" /></td>
+          <td><i class="fa @models.template.Icons.help" title="An icon string such as 'user' or 'check', matching an icon from Font Awesome. If not provided, a random icon will be chosen"></i></td>
         </tr>
         <tr>
           <th>Scala.js</th>
@@ -43,6 +50,7 @@
             <input name="model.@{model.tableName}.scalaJs" id="model.@{model.tableName}.scalaJs" type="checkbox" @if(model.scalaJs) { checked="checked" } value="true" />
             <label for="model.@{model.tableName}.scalaJs"></label>
           </td>
+          <td><i class="fa @models.template.Icons.help" title="If checked, Scala.js annotations will be emitted on the model, allowing usage from JavaScript"></i></td>
         </tr>
         <tr>
           <th>Audited</th>
@@ -50,6 +58,7 @@
             <input name="model.@{model.tableName}.audited" id="model.@{model.tableName}.audited" type="checkbox" @if(model.audited) { checked="checked" } value="true" />
             <label for="model.@{model.tableName}.audited"></label>
           </td>
+          <td><i class="fa @models.template.Icons.help" title="If checked, service CRUD methods will write audits to the database 'audit' table"></i></td>
         </tr>
         <tr>
           <th>Ignored</th>
@@ -57,6 +66,7 @@
             <input name="model.@{model.tableName}.ignored" id="model.@{model.tableName}.ignored" type="checkbox" @if(model.ignored) { checked="checked" } value="true" />
             <label for="model.@{model.tableName}.ignored"></label>
           </td>
+          <td><i class="fa @models.template.Icons.help" title="If checked, no files will be emitted for this model"></i></td>
         </tr>
         <tr>
           <th>Provided</th>
@@ -64,6 +74,7 @@
             <input name="model.@{model.tableName}.provided" id="model.@{model.tableName}.provided" type="checkbox" @if(model.provided) { checked="checked" } value="true" />
             <label for="model.@{model.tableName}.provided"></label>
           </td>
+          <td><i class="fa @models.template.Icons.help" title="If checked, core files will not be generated for this model"></i></td>
         </tr>
       </tbody>
     </table>
@@ -75,15 +86,15 @@
       <table class="">
         <thead>
           <tr>
-            <th>Column</th>
-            <th>Property</th>
-            <th>Title</th>
-            <th>FK Name</th>
-            <th>Type</th>
-            <th>Search</th>
-            <th>View</th>
-            <th>Summary</th>
-            <th>Ignored</th>
+            <th title="Database column name, for reference">Column</th>
+            <th title="Property name for this column, in camelCase format">Property</th>
+            <th title="English title to use for this column">Title</th>
+            <th title="If a foreign key is present, this will override the generated FK name">FK Name</th>
+            <th title="Usually detected correctly, this allows you to override the generated field type (list of options coming soon)">Type</th>
+            <th title="If checked, searches for this model will include this field, cast as a string">Search</th>
+            <th title="If checked, this field will be available in views and output">View</th>
+            <th title="If checked, this column will be included in string representations of this model">Summary</th>
+            <th title="If checked, this column will be completely excluded from all output">Ignored</th>
           </tr>
         </thead>
         <tbody>
@@ -101,13 +112,8 @@
       <table class="">
         <thead>
           <tr>
-            <th>Column</th>
-            <th>Property</th>
-            <th>Title</th>
-            <th>Type</th>
-            <th>Search</th>
-            <th>View</th>
-            <th>Ignored</th>
+            <th title="Database reference name">Column</th>
+            <th title="Property name for this reference, in camelCase format">Property</th>
           </tr>
         </thead>
         <tbody>

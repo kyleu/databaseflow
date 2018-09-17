@@ -10,6 +10,23 @@
       <h5>Scala Project Export</h5>
     </div>
     <div class="col s12">
+      <div class="z-depth-1" style="padding: 4px 12px 12px 12px; margin: 12px 0;">
+        <h5>Instructions</h5>
+
+        @if(cfg.isDefault) {
+          <p>
+            It looks like this is your first time exporting this project.
+            To proceed, set a package for each model listed below, and make sure the settings in the top section are correct.
+          </p>
+        }
+        <p>
+          Each icon and title in the list below is an expandable section.
+          The top section controls export settings, while the table and view sections are each clickable, allowing you to control how the object is exported.
+          Of particular note is "Package", which controls the location of output files, and "Plural", which controls plural identifiers.
+        </p>
+      </div>
+    </div>
+    <div class="col s12">
         <ul class="collapsible" data-collapsible="expandable">
           <li>
             <div class="collapsible-header">
@@ -94,13 +111,13 @@
           @schema.tables.map { table =>
             @views.html.admin.scalaExport.modelForm(
               config = cfg,
-              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault.loadTableModel(schema, table, cfg.enums))
+              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefaultTable.loadTableModel(schema, table, cfg.enums))
             )
           }
           @schema.views.map { view =>
             @views.html.admin.scalaExport.modelForm(
               config = cfg,
-              model = cfg.getModelOptWithIgnored(view.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault.loadViewModel(schema, view, cfg.enums))
+              model = cfg.getModelOptWithIgnored(view.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefaultView.loadViewModel(schema, view, cfg.enums))
             )
           }
         </ul>

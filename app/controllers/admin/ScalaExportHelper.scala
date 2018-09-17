@@ -2,7 +2,7 @@ package controllers.admin
 
 import models.schema._
 import com.databaseflow.models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
-import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportConfigurationHelper}
+import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportConfigurationDefaultTable, ExportConfigurationHelper}
 import com.databaseflow.services.scalaexport.ExportHelper
 
 import scala.util.control.NonFatal
@@ -27,7 +27,7 @@ object ScalaExportHelper {
             ))
           }
           m.copy(fields = fields.toList)
-        case None => ExportConfigurationDefault.loadTableModel(schema, t, enums)
+        case None => ExportConfigurationDefaultTable.loadTableModel(schema, t, enums)
       }
     }
     config.copy(models = models)

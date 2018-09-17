@@ -29,7 +29,7 @@ Holy shit it does *too* much. For each of your tables (and their relations), the
 
 * Dependency-injected service that provides (optionally audited) methods to search or change your models.
 
-* A GraphQL schema (via Sangria) that provides methods to concurrently search, query, and mutate using GraphQL.
+* A high-performance GraphQL schema (via Sangria) that provides methods to concurrently search, query, and mutate using GraphQL.
 
 * Twirl view templates for administration, including system-wide search, model forms, and foreign key relations.
 

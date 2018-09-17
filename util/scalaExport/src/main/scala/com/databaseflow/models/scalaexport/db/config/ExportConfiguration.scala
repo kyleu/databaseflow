@@ -34,6 +34,8 @@ case class ExportConfiguration(
 
   def flag(k: ExportFlag) = flags.contains(k)
 
+  val isDefault = !models.exists(_.pkg.nonEmpty)
+
   lazy val packages = {
     if (models.exists(_.pkg.isEmpty)) {
       val roots = models.filter(_.pkg.isEmpty).map(_.className)
