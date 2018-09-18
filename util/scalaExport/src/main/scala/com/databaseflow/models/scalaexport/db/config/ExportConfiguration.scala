@@ -35,6 +35,8 @@ case class ExportConfiguration(
   def flag(k: ExportFlag) = flags.contains(k)
 
   val isDefault = !models.exists(_.pkg.nonEmpty)
+  val isAuditSupported = models.exists(_.propertyName == "Audit")
+  val isUserSupported = models.exists(_.propertyName == "SystemUser")
 
   lazy val packages = {
     if (models.exists(_.pkg.isEmpty)) {

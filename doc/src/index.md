@@ -1,6 +1,7 @@
 @@@ index
 
-* [Features](feature/features.md)
+* [Features](feature/index.md)
+* [Contributing](contribute/index.md)
 * [Todo](todo.md)
 
 @@@

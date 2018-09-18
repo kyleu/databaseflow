@@ -41,6 +41,7 @@ object ExportMerge {
       if (!dir.exists) {
         "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
         (dir / ".git").delete()
+        (dir / "databaseflow.json").delete()
       }
       dir
     } else {
@@ -53,11 +54,11 @@ object ExportMerge {
     coreDir: File, root: (File, Seq[OutputFile]), wiki: (File, Seq[OutputFile]),
     log: String => Unit, source: String = "boilerplay"
   ) = {
-    if (root._1.exists) {
+    if ((root._1 / "readme.md").exists) {
       log(s"Overwriting existing project at [${root._1.path}].")
     } else {
       log(s"Creating initial project at [${root._1.path}].")
-      root._1.createDirectory()
+      root._1.createDirectoryIfNotExists()
       getSrcDir(source, log).copyTo(root._1)
       (root._1 / "license").delete(swallowIOExceptions = true)
       (root._1 / "readme.md").overwrite(ReadmeFile.content(projectTitle))

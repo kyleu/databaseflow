@@ -10,8 +10,14 @@ import scala.util.control.NonFatal
 object ScalaExportHelper {
   def merge(schema: Schema, config: ExportConfiguration) = {
     val enums = {
-      val schEnums = schema.enums.map(e => ExportEnum(Nil, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), config.pkgPrefix, e.values))
-      (config.enums ++ schEnums).groupBy(_.className).map(_._2.head).toSeq
+      val schEnums = schema.enums.map { e =>
+        val (name, pkg) = e.key match {
+          case "setting_key" => "SettingKey" -> List("settings")
+          case _ => ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)) -> Nil
+        }
+        ExportEnum(pkg = pkg, name = e.key, className = name, pkgPrefix = config.pkgPrefix, values = e.values)
+      }
+      (config.enums ++ schEnums).groupBy(_.name).map(_._2.head).toSeq
     }
     val models = schema.tables.map { t =>
       config.getModelOpt(t.name) match {
@@ -30,7 +36,7 @@ object ScalaExportHelper {
         case None => ExportConfigurationDefaultTable.loadTableModel(schema, t, enums)
       }
     }
-    config.copy(models = models)
+    config.copy(enums = enums, models = models)
   }
 
   def enumFor(e: EnumType, form: Map[String, String], pkgPrefix: List[String]) = try {

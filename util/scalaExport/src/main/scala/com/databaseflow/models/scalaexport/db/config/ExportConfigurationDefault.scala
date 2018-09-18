@@ -9,11 +9,11 @@ object ExportConfigurationDefault {
   def forSchema(schema: Schema, loc: Option[String]) = {
     val key = ExportHelper.toIdentifier(schema.id)
     val enums = schema.enums.map { e =>
-      val pkg = e.key match {
-        case "setting_key" => List("settings")
-        case _ => Nil
+      val (name, pkg) = e.key match {
+        case "setting_key" => "SettingKey" -> List("settings")
+        case _ => ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)) -> Nil
       }
-      ExportEnum(pkg, e.key, ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), Nil, e.values)
+      ExportEnum(pkg, e.key, name, Nil, e.values)
     }
     ExportConfiguration(
       key = key,
