@@ -1,11 +1,10 @@
-# Scala Project Export
+# Database Export
 
-This undocumented feature of Database Flow lets you generate a Scala project from your database schema.
+Database Flow lets you generate a Scala project based on [Boilerplay](https://github.com/KyleU/boilerplay) from your database schema.
 
-You can see an example of the project at [chinook.databaseflow.com](https://chinook.databaseflow.com).
+You can see an example of the generated project at [chinook.databaseflow.com](https://chinook.databaseflow.com), and view the source on [Github](https://github.com/KyleU/chinook).
 
-This is alpha-quality at best. It's never been used by anyone but me, and I've only tried a few schemas.
-
+This has never been used by anyone but myself and a few peers, and it has only been tested on a few schemas.
 
 ## The Pitch
 
@@ -42,24 +41,21 @@ Holy shit it does *too* much. For each of your tables (and their relations), the
 
 * If you want to use a sample Postgres schema, grab one [here](https://github.com/lerocha/chinook-database/blob/master/ChinookDatabase/DataSources/Chinook_PostgreSql.sql). 
 
-* Download [Boilerplay](https://github.com/KyleU/boilerplay), configure it to use your schema, and run it once. 
-This creates the tables needed to support auditing, notes, and authentication. 
-
 * Download and run Database Flow, and add a connection to your PostgreSQL schema.
 
-* Add a "Project Location" in the connection settings.
+* Add a "Project Location" in the connection settings, pointing to the directory that will store generated files.
 
 * On the home screen, select the "Generate" button for your connection.
 
 * Ok, this next page is important. It shows the full details of your database, with options for each table. Take some time to review the options available.
   * The top section lets you choose the output directory, which defaults to `./tmp/{projectId}`.
   * Each table has a "package" setting, which helps you organize large projects with many tables.
-  * The table can also be exported to Scala.js (or, by default, just the JVM), or ignored completely.
+  * The table can be exported to Scala.js (or, by default, just the JVM), or ignored completely.
   * Each column can be renamed, included in search results, added to the summary, or ignored.
 
-* Once you're comfortable with the settings (make sure you set an output directory in the main database options), select "Export Project".
+* Once you're comfortable with the settings (make sure you have the correct output directory in the main database options), select "Export Project".
 
-* The results page shows all of the generated code, as well as a summary of the decisions made.
+* The results page shows all of the generated code, as well as a summary of the decisions made. Or it may crash, it's a work in progress.
 
 * Head to the output directory you configured, run "sbt", try to compile the project, then open a github issue telling me where it all went wrong.
 

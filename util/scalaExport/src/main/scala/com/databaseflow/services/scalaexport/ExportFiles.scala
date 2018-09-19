@@ -117,8 +117,10 @@ object ExportFiles {
 
       val gq = if (config.flag(ExportFlag.GraphQL)) { GraphQLQueryFiles.export(config, model) } else { Nil }
       val oq = if (config.flag(ExportFlag.OpenApi)) {
-        val solo = config.packages.find(_._2.contains(model)).map(_._4).getOrElse(throw new IllegalStateException(s"Can't find model [${model.className}]."))
-        Seq(OpenApiSchemaFile.export(model, config.enums), OpenApiPathsFile.export(model, config.enums, solo))
+        config.packages.find(_._2.contains(model)).map(_._4) match {
+          case Some(solo) => Seq(OpenApiSchemaFile.export(model, config.enums), OpenApiPathsFile.export(model, config.enums, solo))
+          case None => Nil
+        }
       } else {
         Nil
       }

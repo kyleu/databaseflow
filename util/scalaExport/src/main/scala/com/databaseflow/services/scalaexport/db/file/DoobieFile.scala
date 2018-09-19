@@ -14,7 +14,9 @@ object DoobieFile {
 
     file.addImport("cats.data", "NonEmptyList")
     file.addImport(model.modelPackage.mkString("."), model.className)
-    file.addImport(config.providedPrefix + "models.doobie", "DoobieQueries")
+    if (model.pkg.nonEmpty) {
+      file.addImport(config.providedPrefix + "models.doobie", "DoobieQueries")
+    }
     file.addImport(config.providedPrefix + "services.database.DoobieQueryService.Imports", "_")
 
     model.fields.foreach(_.enumOpt.foreach { e =>

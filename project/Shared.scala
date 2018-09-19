@@ -16,7 +16,7 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.5.1"
+    val app = "1.6.0"
     val scala = "2.12.6"
   }
 
@@ -69,22 +69,11 @@ object Shared {
 
     // Publish Settings
     publishMavenStyle := true,
-    /*
-    publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
     pomIncludeRepository := { _ => false },
-    */
-    publishTo := {
-      val nexus = "http://nexus-1.fevo.com:8081/nexus"
-      val fevoSnapshotsRepo = "snapshots" at nexus + "/content/repositories/snapshots"
-      val fevoReleasesRepo = "releases" at nexus + "/content/repositories/releases"
-
-      if (isSnapshot.value) {
-        Some(fevoSnapshotsRepo)
-      } else {
-        Some(fevoReleasesRepo)
-      }
-    },
-
+    
+    publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
+    // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
+    
     publishArtifact in Test := false,
 
     // Code Quality

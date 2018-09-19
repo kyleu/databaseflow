@@ -22,7 +22,7 @@ object InjectServiceRegistry {
         val withoutPackages = result.models.filter(_.pkg.isEmpty).filter(!_.provided).flatMap { m =>
           s.indexOf(s"val ${m.propertyName}Service") match {
             case x if x > -1 && x > endIndex => None
-            case _ => Some(s"""  val ${m.propertyName}Service: ${result.config.pkgPrefix}services.${m.className}Service,""")
+            case _ => Some(s"""    val ${m.propertyName}Service: ${result.config.pkgPrefix.mkString(".")}services.${m.className}Service,""")
           }
         }.sorted.mkString("\n")
 

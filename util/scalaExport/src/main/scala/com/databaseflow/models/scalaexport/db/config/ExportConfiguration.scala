@@ -41,7 +41,7 @@ case class ExportConfiguration(
   lazy val packages = {
     if (models.exists(_.pkg.isEmpty)) {
       val roots = models.filter(_.pkg.isEmpty).map(_.className)
-      throw new IllegalStateException(s"Each model must have a package defined, however [${roots.mkString(", ")}] do not specify one.")
+      // throw new IllegalStateException(s"Each model must have a package defined, however [${roots.mkString(", ")}] do not specify one.")
     }
 
     val packageModels = models.filter(_.pkg.nonEmpty).filterNot(_.provided)

@@ -20,6 +20,7 @@ object SbtEbenezer extends AutoPlugin {
   import autoImport._
 
   val ebenezerSettings: Seq[Setting[_]] = Seq(
+    autoImport.depPrefix := "",
     ebenezer := {
       val startMs = System.currentTimeMillis
 

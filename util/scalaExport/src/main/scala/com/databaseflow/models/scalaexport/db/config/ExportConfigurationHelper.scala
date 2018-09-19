@@ -28,8 +28,12 @@ object ExportConfigurationHelper {
               case x => x
             }
 
-            val tgtCol = t.columns.find(_.name == ref.target).getOrElse(throw new IllegalStateException(s"Missing column [${ref.target}]."))
-            Seq(ExportModel.Reference(name = name, propertyName = propertyName, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull))
+            val tgtCol = t.columns.find(_.name == ref.target).getOrElse(
+              throw new IllegalStateException(s"Missing column [${ref.target}] in table [${t.name}].")
+            )
+            Seq(ExportModel.Reference(
+              name = name, propertyName = propertyName, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull
+            ))
           case _ => None // multiple refs
         }
       }
