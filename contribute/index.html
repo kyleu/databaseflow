@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Informix · Database Flow</title>
+<title>Contribute · Database Flow</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='doc'/>
@@ -54,7 +54,7 @@
     <li><a href="../database/sqlite.html" class="page">SQLite</a></li>
     <li><a href="../database/oracle.html" class="page">Oracle</a></li>
     <li><a href="../database/sqlserver.html" class="page">SQL Server</a></li>
-    <li><a href="../database/informix.html" class="active page">Informix</a></li>
+    <li><a href="../database/informix.html" class="page">Informix</a></li>
     <li><a href="../database/db2.html" class="page">DB/2</a></li>
   </ul></li>
   <li><a href="../export/index.html" class="page">Scala Export</a>
@@ -63,7 +63,7 @@
     <li><a href="../export/graphqlExport.html" class="page">GraphQL Export</a></li>
     <li><a href="../export/thriftExport.html" class="page">Thrift Export</a></li>
   </ul></li>
-  <li><a href="../contribute/index.html" class="page">Contribute</a>
+  <li><a href="../contribute/index.html" class="active page">Contribute</a>
   <ul>
     <li><a href="../contribute/sbtTasks.html" class="page">SBT Tasks</a></li>
     <li><a href="../contribute/packaging.html" class="page">Packaging</a></li>
@@ -124,7 +124,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
     <li><a href="../database/sqlite.html" class="page">SQLite</a></li>
     <li><a href="../database/oracle.html" class="page">Oracle</a></li>
     <li><a href="../database/sqlserver.html" class="page">SQL Server</a></li>
-    <li><a href="../database/informix.html" class="active page">Informix</a></li>
+    <li><a href="../database/informix.html" class="page">Informix</a></li>
     <li><a href="../database/db2.html" class="page">DB/2</a></li>
   </ul></li>
   <li><a href="../export/index.html" class="page">Scala Export</a>
@@ -133,7 +133,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
     <li><a href="../export/graphqlExport.html" class="page">GraphQL Export</a></li>
     <li><a href="../export/thriftExport.html" class="page">Thrift Export</a></li>
   </ul></li>
-  <li><a href="../contribute/index.html" class="page">Contribute</a>
+  <li><a href="../contribute/index.html" class="active page">Contribute</a>
   <ul>
     <li><a href="../contribute/sbtTasks.html" class="page">SBT Tasks</a></li>
     <li><a href="../contribute/packaging.html" class="page">Packaging</a></li>
@@ -156,8 +156,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="nav-breadcrumbs">
 <ul>
   <li><a href="../index.html">Database Flow</a></li>
-  <li><a href="../database/index.html">Supported Databases</a></li>
-  <li>Informix</li>
+  <li>Contribute</li>
 </ul>
 </div>
 </div>
@@ -165,18 +164,61 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#informix" name="informix" class="anchor"><span class="anchor-link"></span></a>Informix</h1>
-<p>Informix might be supported for queries and charting. </p>
-<p>We&rsquo;ve never been able to stand up an Informix server to test. Please let us know on <a href="https://github.com/KyleU/databaseflow">Github</a> if you find an issue.</p>
+<h1><a href="#contribute" name="contribute" class="anchor"><span class="anchor-link"></span></a>Contribute</h1>
+<p>Database Flow is a standard open source Scala SBT project, and can be run like any other SBT application. Many SBT plugins are provided to make development easier and safer. To get started, clone the git repo, and run <code>sbt</code> in the project&rsquo;s directory. Once the prompt appears, execute &ldquo;run&rdquo;, and the service will become available on port 4260.</p>
+<h2><a href="#project-documentation" name="project-documentation" class="anchor"><span class="anchor-link"></span></a>Project Documentation</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Project </th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="../api/shared/index.html">Shared</a> </td>
+      <td>Common code shared between JVM and JavaScript, mostly base schema definitions and support classes</td>
+    </tr>
+    <tr>
+      <td><a href="../api/client/index.html">Client</a> </td>
+      <td>ScalaJS classes that create the web user interface</td>
+    </tr>
+    <tr>
+      <td><a href="../api/scalaExport/index.html">Scala Export</a> </td>
+      <td>Logic to export your database to a full-featured Scala project</td>
+    </tr>
+    <tr>
+      <td><a href="../api/ebenezer/index.html">Ebenezer</a> </td>
+      <td>Generates Scala classes and translations for Thrift definitions</td>
+    </tr>
+    <tr>
+      <td><a href="../api/server/index.html">Server</a> </td>
+      <td>Main Database Flow server, handling all http requests and CLI arguments</td>
+    </tr>
+  </tbody>
+</table>
 <div class="source-github">
-The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/database/informix.md">here</a>.
+The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/contribute/index.md">here</a>.
 </div>
 
 <div class="nav-next">
-<p><strong>Next:</strong> <a href="../database/db2.html">DB/2</a></p>
+<p><strong>Next:</strong> <a href="../contribute/sbtTasks.html">SBT Tasks</a></p>
 </div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="../contribute/index.html#contribute" class="header">Contribute</a>
+  <ul>
+    <li><a href="../contribute/index.html#project-documentation" class="header">Project Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
 </div>
 </div>
 

@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Scala Project Export</title>
+<title>Database Export · Database Flow</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='doc'/>
@@ -27,15 +27,49 @@
 <div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
 <nav class="off-canvas-nav">
 <div class="nav-home">
-<a href="../export/databaseExport.html" class="active">
-<span class="home-icon">⌂</span>Scala Project Export
+<a href="../index.html" >
+<span class="home-icon">⌂</span>Database Flow
 </a>
 <div class="version-number">
-1.5.1
+1.6.0
 </div>
 </div>
 <div class="nav-toc">
 <ul>
+  <li><a href="../gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="../feature/index.html" class="page">Features</a>
+  <ul>
+    <li><a href="../feature/sqleditor.html" class="page">SQL Editor</a></li>
+    <li><a href="../feature/queryplan.html" class="page">Query Plan</a></li>
+    <li><a href="../feature/visualization.html" class="page">Visualization</a></li>
+    <li><a href="../feature/history.html" class="page">Query Activity</a></li>
+    <li><a href="../feature/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../feature/charting.html" class="page">Charting</a></li>
+  </ul></li>
+  <li><a href="../database/index.html" class="page">Supported Databases</a>
+  <ul>
+    <li><a href="../database/postgresql.html" class="page">PostgreSQL</a></li>
+    <li><a href="../database/mysql.html" class="page">MySQL</a></li>
+    <li><a href="../database/h2.html" class="page">H2</a></li>
+    <li><a href="../database/sqlite.html" class="page">SQLite</a></li>
+    <li><a href="../database/oracle.html" class="page">Oracle</a></li>
+    <li><a href="../database/sqlserver.html" class="page">SQL Server</a></li>
+    <li><a href="../database/informix.html" class="page">Informix</a></li>
+    <li><a href="../database/db2.html" class="page">DB/2</a></li>
+  </ul></li>
+  <li><a href="../export/index.html" class="page">Scala Export</a>
+  <ul>
+    <li><a href="../export/databaseExport.html" class="active page">Database Export</a></li>
+    <li><a href="../export/graphqlExport.html" class="page">GraphQL Export</a></li>
+    <li><a href="../export/thriftExport.html" class="page">Thrift Export</a></li>
+  </ul></li>
+  <li><a href="../contribute/index.html" class="page">Contribute</a>
+  <ul>
+    <li><a href="../contribute/sbtTasks.html" class="page">SBT Tasks</a></li>
+    <li><a href="../contribute/packaging.html" class="page">Packaging</a></li>
+    <li><a href="../contribute/technology.html" class="page">Technology</a></li>
+  </ul></li>
+  <li><a href="../todo.html" class="page">Documentation TODOs</a></li>
 </ul>
 </div>
 
@@ -50,7 +84,7 @@
 H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
 C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
 </a>
-<div class="title"><a href="../export/databaseExport.html" class="active">Scala Project Export</a></div>
+<div class="title"><a href="../index.html">Database Flow</a></div>
 
 <!--
 <a href="https://www.example.com" class="logo show-for-medium">logo</a>
@@ -63,15 +97,49 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="medium-3 large-2 show-for-medium column">
 <nav class="site-nav">
 <div class="nav-home">
-<a href="../export/databaseExport.html" class="active">
-<span class="home-icon">⌂</span>Scala Project Export
+<a href="../index.html" >
+<span class="home-icon">⌂</span>Database Flow
 </a>
 <div class="version-number">
-1.5.1
+1.6.0
 </div>
 </div>
 <div class="nav-toc">
 <ul>
+  <li><a href="../gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="../feature/index.html" class="page">Features</a>
+  <ul>
+    <li><a href="../feature/sqleditor.html" class="page">SQL Editor</a></li>
+    <li><a href="../feature/queryplan.html" class="page">Query Plan</a></li>
+    <li><a href="../feature/visualization.html" class="page">Visualization</a></li>
+    <li><a href="../feature/history.html" class="page">Query Activity</a></li>
+    <li><a href="../feature/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../feature/charting.html" class="page">Charting</a></li>
+  </ul></li>
+  <li><a href="../database/index.html" class="page">Supported Databases</a>
+  <ul>
+    <li><a href="../database/postgresql.html" class="page">PostgreSQL</a></li>
+    <li><a href="../database/mysql.html" class="page">MySQL</a></li>
+    <li><a href="../database/h2.html" class="page">H2</a></li>
+    <li><a href="../database/sqlite.html" class="page">SQLite</a></li>
+    <li><a href="../database/oracle.html" class="page">Oracle</a></li>
+    <li><a href="../database/sqlserver.html" class="page">SQL Server</a></li>
+    <li><a href="../database/informix.html" class="page">Informix</a></li>
+    <li><a href="../database/db2.html" class="page">DB/2</a></li>
+  </ul></li>
+  <li><a href="../export/index.html" class="page">Scala Export</a>
+  <ul>
+    <li><a href="../export/databaseExport.html" class="active page">Database Export</a></li>
+    <li><a href="../export/graphqlExport.html" class="page">GraphQL Export</a></li>
+    <li><a href="../export/thriftExport.html" class="page">Thrift Export</a></li>
+  </ul></li>
+  <li><a href="../contribute/index.html" class="page">Contribute</a>
+  <ul>
+    <li><a href="../contribute/sbtTasks.html" class="page">SBT Tasks</a></li>
+    <li><a href="../contribute/packaging.html" class="page">Packaging</a></li>
+    <li><a href="../contribute/technology.html" class="page">Technology</a></li>
+  </ul></li>
+  <li><a href="../todo.html" class="page">Documentation TODOs</a></li>
 </ul>
 </div>
 
@@ -85,15 +153,22 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
+<div class="nav-breadcrumbs">
+<ul>
+  <li><a href="../index.html">Database Flow</a></li>
+  <li><a href="../export/index.html">Scala Export</a></li>
+  <li>Database Export</li>
+</ul>
+</div>
 </div>
 </div>
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#scala-project-export" name="scala-project-export" class="anchor"><span class="anchor-link"></span></a>Scala Project Export</h1>
-<p>This undocumented feature of Database Flow lets you generate a Scala project from your database schema.</p>
-<p>You can see an example of the project at <a href="https://chinook.databaseflow.com">chinook.databaseflow.com</a>.</p>
-<p>This is alpha-quality at best. It&rsquo;s never been used by anyone but me, and I&rsquo;ve only tried a few schemas.</p>
+<h1><a href="#database-export" name="database-export" class="anchor"><span class="anchor-link"></span></a>Database Export</h1>
+<p>Database Flow lets you generate a Scala project based on <a href="https://github.com/KyleU/boilerplay">Boilerplay</a> from your database schema.</p>
+<p>You can see an example of the generated project at <a href="https://chinook.databaseflow.com">chinook.databaseflow.com</a>, and view the source on <a href="https://github.com/KyleU/chinook">Github</a>.</p>
+<p>This has never been used by anyone but myself and a few peers, and it has only been tested on a few schemas.</p>
 <h2><a href="#the-pitch" name="the-pitch" class="anchor"><span class="anchor-link"></span></a>The Pitch</h2>
 <p>You&rsquo;ve got a PostgreSQL schema somewhere. You <em>make a local copy of that schema that can be destroyed without consequence if something breaks</em>. You load that schema in <a href="https://databaseflow.com">Database Flow</a>, the funkiest database client. You then hit the export option, making sure it sees your tables and picked the right names, then hit a big blue export button. You enjoy the newly-generated SBT project with loads of features, based on <a href="https://github.com/KyleU/boilerplay">Boilerplay</a>. </p>
 <h2><a href="#features" name="features" class="anchor"><span class="anchor-link"></span></a>Features</h2>
@@ -110,7 +185,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
   <li>
   <p>Dependency-injected service that provides (optionally audited) methods to search or change your models.</p></li>
   <li>
-  <p>A GraphQL schema (via Sangria) that provides methods to concurrently search, query, and mutate using GraphQL.</p></li>
+  <p>A high-performance GraphQL schema (via Sangria) that provides methods to concurrently search, query, and mutate using GraphQL.</p></li>
   <li>
   <p>Twirl view templates for administration, including system-wide search, model forms, and foreign key relations.</p></li>
   <li>
@@ -123,23 +198,21 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
   <li>
   <p>If you want to use a sample Postgres schema, grab one <a href="https://github.com/lerocha/chinook-database/blob/master/ChinookDatabase/DataSources/Chinook_PostgreSql.sql">here</a>.</p></li>
   <li>
-  <p>Download <a href="https://github.com/KyleU/boilerplay">Boilerplay</a>, configure it to use your schema, and run it once. This creates the tables needed to support auditing, notes, and authentication. </p></li>
-  <li>
   <p>Download and run Database Flow, and add a connection to your PostgreSQL schema.</p></li>
   <li>
-  <p>Add a &ldquo;Project Location&rdquo; in the connection settings.</p></li>
+  <p>Add a &ldquo;Project Location&rdquo; in the connection settings, pointing to the directory that will store generated files.</p></li>
   <li>
   <p>On the home screen, select the &ldquo;Generate&rdquo; button for your connection.</p></li>
   <li>
   <p>Ok, this next page is important. It shows the full details of your database, with options for each table. Take some time to review the options available.</p></li>
   <li>The top section lets you choose the output directory, which defaults to <code>./tmp/{projectId}</code>.</li>
   <li>Each table has a &ldquo;package&rdquo; setting, which helps you organize large projects with many tables.</li>
-  <li>The table can also be exported to Scala.js (or, by default, just the JVM), or ignored completely.</li>
+  <li>The table can be exported to Scala.js (or, by default, just the JVM), or ignored completely.</li>
   <li>Each column can be renamed, included in search results, added to the summary, or ignored.</li>
   <li>
-  <p>Once you&rsquo;re comfortable with the settings (make sure you set an output directory in the main database options), select &ldquo;Export Project&rdquo;.</p></li>
+  <p>Once you&rsquo;re comfortable with the settings (make sure you have the correct output directory in the main database options), select &ldquo;Export Project&rdquo;.</p></li>
   <li>
-  <p>The results page shows all of the generated code, as well as a summary of the decisions made.</p></li>
+  <p>The results page shows all of the generated code, as well as a summary of the decisions made. Or it may crash, it&rsquo;s a work in progress.</p></li>
   <li>
   <p>Head to the output directory you configured, run &ldquo;sbt&rdquo;, try to compile the project, then open a github issue telling me where it all went wrong.</p></li>
   <li>
@@ -163,6 +236,9 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/export/databaseExport.md">here</a>.
 </div>
 
+<div class="nav-next">
+<p><strong>Next:</strong> <a href="../export/graphqlExport.html">GraphQL Export</a></p>
+</div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
 <nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
@@ -170,7 +246,7 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
 <div class="nav-title">On this page:</div>
 <div class="nav-toc">
 <ul>
-  <li><a href="../export/databaseExport.html#scala-project-export" class="header">Scala Project Export</a>
+  <li><a href="../export/databaseExport.html#database-export" class="header">Database Export</a>
   <ul>
     <li><a href="../export/databaseExport.html#the-pitch" class="header">The Pitch</a></li>
     <li><a href="../export/databaseExport.html#features" class="header">Features</a></li>
@@ -243,7 +319,7 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
 <script type="text/javascript" src="../lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
-<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.5.1', 'https://kyleu.github.io/databaseflow/')});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.6.0', 'https://kyleu.github.io/databaseflow/')});</script>
 
 
 </html>

@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Informix · Database Flow</title>
+<title>Scala Export · Database Flow</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='doc'/>
@@ -54,10 +54,10 @@
     <li><a href="../database/sqlite.html" class="page">SQLite</a></li>
     <li><a href="../database/oracle.html" class="page">Oracle</a></li>
     <li><a href="../database/sqlserver.html" class="page">SQL Server</a></li>
-    <li><a href="../database/informix.html" class="active page">Informix</a></li>
+    <li><a href="../database/informix.html" class="page">Informix</a></li>
     <li><a href="../database/db2.html" class="page">DB/2</a></li>
   </ul></li>
-  <li><a href="../export/index.html" class="page">Scala Export</a>
+  <li><a href="../export/index.html" class="active page">Scala Export</a>
   <ul>
     <li><a href="../export/databaseExport.html" class="page">Database Export</a></li>
     <li><a href="../export/graphqlExport.html" class="page">GraphQL Export</a></li>
@@ -124,10 +124,10 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
     <li><a href="../database/sqlite.html" class="page">SQLite</a></li>
     <li><a href="../database/oracle.html" class="page">Oracle</a></li>
     <li><a href="../database/sqlserver.html" class="page">SQL Server</a></li>
-    <li><a href="../database/informix.html" class="active page">Informix</a></li>
+    <li><a href="../database/informix.html" class="page">Informix</a></li>
     <li><a href="../database/db2.html" class="page">DB/2</a></li>
   </ul></li>
-  <li><a href="../export/index.html" class="page">Scala Export</a>
+  <li><a href="../export/index.html" class="active page">Scala Export</a>
   <ul>
     <li><a href="../export/databaseExport.html" class="page">Database Export</a></li>
     <li><a href="../export/graphqlExport.html" class="page">GraphQL Export</a></li>
@@ -156,8 +156,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="nav-breadcrumbs">
 <ul>
   <li><a href="../index.html">Database Flow</a></li>
-  <li><a href="../database/index.html">Supported Databases</a></li>
-  <li>Informix</li>
+  <li>Scala Export</li>
 </ul>
 </div>
 </div>
@@ -165,15 +164,19 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#informix" name="informix" class="anchor"><span class="anchor-link"></span></a>Informix</h1>
-<p>Informix might be supported for queries and charting. </p>
-<p>We&rsquo;ve never been able to stand up an Informix server to test. Please let us know on <a href="https://github.com/KyleU/databaseflow">Github</a> if you find an issue.</p>
+<h1><a href="#scala-export" name="scala-export" class="anchor"><span class="anchor-link"></span></a>Scala Export</h1>
+<p>Database Flow allows you to export your database schema, Thrift definitions, and GraphQL queries to idiomatic Scala. Three different export types are available:</p>
+<ul>
+  <li><a href="databaseExport.html">Database Export</a> - Exports your schema to a full-featured Scala web application, including an efficient GraphQL schema, admin UI, Slick/doobie mappings, and more.</li>
+  <li><a href="graphqlExport.html">GraphQL Export</a> - Turns a set of GraphQL queries into Scala classes with Circe serialization.</li>
+  <li><a href="thriftExport.html">Thrift Export</a> - Given a set of Thrift definitions, generates Scala wrappers around Scrooge-generated code, adding support for Scala Futures, UUIDs, and <code>java.time</code> classes</li>
+</ul>
 <div class="source-github">
-The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/database/informix.md">here</a>.
+The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/export/index.md">here</a>.
 </div>
 
 <div class="nav-next">
-<p><strong>Next:</strong> <a href="../database/db2.html">DB/2</a></p>
+<p><strong>Next:</strong> <a href="../export/databaseExport.html">Database Export</a></p>
 </div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>

@@ -175,6 +175,14 @@
                         <a href="" title="">ExportConfigurationDefault</a>
                       </li><li class="current-entities indented6">
                         <span class="separator"></span>
+                        <a class="object" href="ExportConfigurationDefaultTable$.html" title=""></a>
+                        <a href="ExportConfigurationDefaultTable$.html" title="">ExportConfigurationDefaultTable</a>
+                      </li><li class="current-entities indented6">
+                        <span class="separator"></span>
+                        <a class="object" href="ExportConfigurationDefaultView$.html" title=""></a>
+                        <a href="ExportConfigurationDefaultView$.html" title="">ExportConfigurationDefaultView</a>
+                      </li><li class="current-entities indented6">
+                        <span class="separator"></span>
                         <a class="object" href="ExportConfigurationHelper$.html" title=""></a>
                         <a href="ExportConfigurationHelper$.html" title="">ExportConfigurationHelper</a>
                       </li><li class="current-entities indented6">
@@ -409,9 +417,9 @@
               
         </dd></dl></div>
     </li><li name="com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault#forSchema" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="forSchema(schema:models.schema.Schema):com.databaseflow.models.scalaexport.db.config.ExportConfiguration"></a><a id="forSchema(Schema):ExportConfiguration"></a>
+      <a id="forSchema(schema:models.schema.Schema,loc:Option[String]):com.databaseflow.models.scalaexport.db.config.ExportConfiguration"></a><a id="forSchema(Schema,Option[String]):ExportConfiguration"></a>
       <span class="permalink">
-      <a href="../../../../../../com/databaseflow/models/scalaexport/db/config/ExportConfigurationDefault$.html#forSchema(schema:models.schema.Schema):com.databaseflow.models.scalaexport.db.config.ExportConfiguration" title="Permalink">
+      <a href="../../../../../../com/databaseflow/models/scalaexport/db/config/ExportConfigurationDefault$.html#forSchema(schema:models.schema.Schema,loc:Option[String]):com.databaseflow.models.scalaexport.db.config.ExportConfiguration" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -420,7 +428,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">forSchema</span><span class="params">(<span name="schema">schema: <span class="extype" name="models.schema.Schema">Schema</span></span>)</span><span class="result">: <a href="ExportConfiguration.html" class="extype" name="com.databaseflow.models.scalaexport.db.config.ExportConfiguration">ExportConfiguration</a></span>
+        <span class="name">forSchema</span><span class="params">(<span name="schema">schema: <span class="extype" name="models.schema.Schema">Schema</span></span>, <span name="loc">loc: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <a href="ExportConfiguration.html" class="extype" name="com.databaseflow.models.scalaexport.db.config.ExportConfiguration">ExportConfiguration</a></span>
       </span>
       
       
@@ -491,38 +499,6 @@
       </span>
       <span class="symbol">
         <span class="name">loadField</span><span class="params">(<span name="col">col: <span class="extype" name="models.schema.Column">Column</span></span>, <span name="idx">idx: <span class="extype" name="scala.Int">Int</span></span>, <span name="indexed">indexed: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="unique">unique: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="inSearch">inSearch: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="enums">enums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../ExportEnum.html" class="extype" name="com.databaseflow.models.scalaexport.db.ExportEnum">ExportEnum</a>]</span>)</span><span class="result">: <a href="../ExportField.html" class="extype" name="com.databaseflow.models.scalaexport.db.ExportField">ExportField</a></span>
-      </span>
-      
-      
-    </li><li name="com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault#loadTableModel" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="loadTableModel(schema:models.schema.Schema,t:models.schema.Table,enums:Seq[com.databaseflow.models.scalaexport.db.ExportEnum]):com.databaseflow.models.scalaexport.db.ExportModel"></a><a id="loadTableModel(Schema,Table,Seq[ExportEnum]):ExportModel"></a>
-      <span class="permalink">
-      <a href="../../../../../../com/databaseflow/models/scalaexport/db/config/ExportConfigurationDefault$.html#loadTableModel(schema:models.schema.Schema,t:models.schema.Table,enums:Seq[com.databaseflow.models.scalaexport.db.ExportEnum]):com.databaseflow.models.scalaexport.db.ExportModel" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">loadTableModel</span><span class="params">(<span name="schema">schema: <span class="extype" name="models.schema.Schema">Schema</span></span>, <span name="t">t: <span class="extype" name="models.schema.Table">Table</span></span>, <span name="enums">enums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../ExportEnum.html" class="extype" name="com.databaseflow.models.scalaexport.db.ExportEnum">ExportEnum</a>]</span>)</span><span class="result">: <a href="../ExportModel.html" class="extype" name="com.databaseflow.models.scalaexport.db.ExportModel">ExportModel</a></span>
-      </span>
-      
-      
-    </li><li name="com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefault#loadViewModel" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="loadViewModel(schema:models.schema.Schema,v:models.schema.View,enums:Seq[com.databaseflow.models.scalaexport.db.ExportEnum]):com.databaseflow.models.scalaexport.db.ExportModel"></a><a id="loadViewModel(Schema,View,Seq[ExportEnum]):ExportModel"></a>
-      <span class="permalink">
-      <a href="../../../../../../com/databaseflow/models/scalaexport/db/config/ExportConfigurationDefault$.html#loadViewModel(schema:models.schema.Schema,v:models.schema.View,enums:Seq[com.databaseflow.models.scalaexport.db.ExportEnum]):com.databaseflow.models.scalaexport.db.ExportModel" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">loadViewModel</span><span class="params">(<span name="schema">schema: <span class="extype" name="models.schema.Schema">Schema</span></span>, <span name="v">v: <span class="extype" name="models.schema.View">View</span></span>, <span name="enums">enums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../ExportEnum.html" class="extype" name="com.databaseflow.models.scalaexport.db.ExportEnum">ExportEnum</a>]</span>)</span><span class="result">: <a href="../ExportModel.html" class="extype" name="com.databaseflow.models.scalaexport.db.ExportModel">ExportModel</a></span>
       </span>
       
       

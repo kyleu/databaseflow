@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 
 <head>
-<title>Database Flow</title>
+<title>Getting Started · Database Flow</title>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content='doc'/>
@@ -27,7 +27,7 @@
 <div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
 <nav class="off-canvas-nav">
 <div class="nav-home">
-<a href="index.html" class="active">
+<a href="index.html" >
 <span class="home-icon">⌂</span>Database Flow
 </a>
 <div class="version-number">
@@ -36,7 +36,7 @@
 </div>
 <div class="nav-toc">
 <ul>
-  <li><a href="gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="gettingStarted.html" class="active page">Getting Started</a></li>
   <li><a href="feature/index.html" class="page">Features</a>
   <ul>
     <li><a href="feature/sqleditor.html" class="page">SQL Editor</a></li>
@@ -84,7 +84,7 @@
 H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
 C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
 </a>
-<div class="title"><a href="index.html" class="active">Database Flow</a></div>
+<div class="title"><a href="index.html">Database Flow</a></div>
 
 <!--
 <a href="https://www.example.com" class="logo show-for-medium">logo</a>
@@ -97,7 +97,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="medium-3 large-2 show-for-medium column">
 <nav class="site-nav">
 <div class="nav-home">
-<a href="index.html" class="active">
+<a href="index.html" >
 <span class="home-icon">⌂</span>Database Flow
 </a>
 <div class="version-number">
@@ -106,7 +106,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 </div>
 <div class="nav-toc">
 <ul>
-  <li><a href="gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="gettingStarted.html" class="active page">Getting Started</a></li>
   <li><a href="feature/index.html" class="page">Features</a>
   <ul>
     <li><a href="feature/sqleditor.html" class="page">SQL Editor</a></li>
@@ -153,39 +153,35 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 
 <div class="page-header row">
 <div class="medium-12 show-for-medium column">
+<div class="nav-breadcrumbs">
+<ul>
+  <li><a href="index.html">Database Flow</a></li>
+  <li>Getting Started</li>
+</ul>
+</div>
 </div>
 </div>
 
 <div class="page-content row">
 <div class="small-12 large-9 column" id="docs">
-<h1><a href="#database-flow" name="database-flow" class="anchor"><span class="anchor-link"></span></a>Database Flow</h1>
-<p>Running locally or on a shared server, Database Flow helps you discover and search your database using SQL and GraphQL. It provides a full-featured GraphQL server for your schema, a performance-oriented query interface, and optionally exports a custom Scala web application based on <a href="https://github.com/KyleU/boilerplay">Boilerplay</a>. </p>
-<h2><a href="#features" name="features" class="anchor"><span class="anchor-link"></span></a>Features</h2>
-<ul>
-  <li>Supports <a href="database/postgresql.html">PostgreSQL</a>, <a href="database/mysql.html">MySQL</a>, <a href="database/sqlite.html">SQLite</a>, <a href="database/oracle.html">Oracle</a>, <a href="database/sqlserver.html">SQL Server</a>, <a href="database/h2.html">H2</a>, <a href="database/db2.html">DB/2</a>, and <a href="database/informix.html">Informix</a>.</li>
-  <li>Rich <a href="feature/sqleditor.html">SQL editor</a> with auto-complete and live syntax checking based on your schema.</li>
-  <li>Explore tables, views, and stored procedures. Share saved results, <a href="feature/charting.html">charts</a>, or sql queries.</li>
-  <li>A sophisticated <a href="feature/graphql.html">GraphQL server</a>, providing a detailed and efficient graph for your schema and data.</li>
-  <li>Project <a href="export/index.html">export</a> facilities to create a web application designed to manage your database and grow with your schema.</li>
-  <li>Supports local single-user app installations as well as a shared server mode for your whole team.</li>
-</ul>
+<h1><a href="#getting-started" name="getting-started" class="anchor"><span class="anchor-link"></span></a>Getting Started</h1>
 <h2><a href="#installation" name="installation" class="anchor"><span class="anchor-link"></span></a>Installation</h2>
 <ul>
   <li>Download the latest <code>databaseflow.jar</code> file from <a href="https://github.com/KyleU/databaseflow/releases">Github</a>.</li>
-  <li>Run <code>java -jar databaseflow.jar</code>; a new browser tab pointed to <code>http://localhost:4260</code> will open automatically.</li>
+  <li>Run <code>java -jar databaseflow.jar</code> - a new browser tab pointed to <code>http://localhost:4260</code> will open automatically.</li>
 </ul>
-<h2><a href="#demo" name="demo" class="anchor"><span class="anchor-link"></span></a>Demo</h2>
-<p><a href="https://demo.databaseflow.com">https://demo.databaseflow.com</a></p>
-<h2><a href="#example-database-export" name="example-database-export" class="anchor"><span class="anchor-link"></span></a>Example Database Export</h2>
-<p><a href="https://chinook.databaseflow.com">https://chinook.databaseflow.com</a></p>
-<h2><a href="#license" name="license" class="anchor"><span class="anchor-link"></span></a>License</h2>
-<p>This project is owned by Kyle Unverferth. All rights reserved for now.</p>
+<h2><a href="#configuration" name="configuration" class="anchor"><span class="anchor-link"></span></a>Configuration</h2>
+<ul>
+  <li>If you&rsquo;re on Windows, config files are stored in <code>%APPDATA%\Database Flow</code>. For macOS and Linux, the configuration folder may be found in <code>~/.databaseflow</code>/</li>
+  <li>The main configuation file is named <code>databaseflow.conf</code>.</li>
+  <li>You may change the configuration for file path, mail setup, and storage locations.</li>
+</ul>
 <div class="source-github">
-The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/index.md">here</a>.
+The source code for this page can be found <a href="https://github.com/KyleU/databaseflow/tree/master/doc/src/gettingStarted.md">here</a>.
 </div>
 
 <div class="nav-next">
-<p><strong>Next:</strong> <a href="gettingStarted.html">Getting Started</a></p>
+<p><strong>Next:</strong> <a href="feature/index.html">Features</a></p>
 </div>
 </div>
 <div class="large-3 show-for-large column" data-sticky-container>
@@ -194,13 +190,10 @@ The source code for this page can be found <a href="https://github.com/KyleU/dat
 <div class="nav-title">On this page:</div>
 <div class="nav-toc">
 <ul>
-  <li><a href="index.html#database-flow" class="header">Database Flow</a>
+  <li><a href="gettingStarted.html#getting-started" class="header">Getting Started</a>
   <ul>
-    <li><a href="index.html#features" class="header">Features</a></li>
-    <li><a href="index.html#installation" class="header">Installation</a></li>
-    <li><a href="index.html#demo" class="header">Demo</a></li>
-    <li><a href="index.html#example-database-export" class="header">Example Database Export</a></li>
-    <li><a href="index.html#license" class="header">License</a></li>
+    <li><a href="gettingStarted.html#installation" class="header">Installation</a></li>
+    <li><a href="gettingStarted.html#configuration" class="header">Configuration</a></li>
   </ul></li>
 </ul>
 </div>
