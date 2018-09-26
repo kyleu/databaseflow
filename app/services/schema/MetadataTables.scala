@@ -18,7 +18,10 @@ object MetadataTables extends Logging {
   }
 
   def withTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table], enums: Seq[EnumType]) = {
-    tables.map(table => getTableDetails(db, conn, metadata, table, enums))
+    tables.zipWithIndex.map { table =>
+      if (table._2 > 0 && table._2 % 25 == 0) { log.info(s"Processed [${table._2}/${tables.size}] tables...") }
+      getTableDetails(db, conn, metadata, table._1, enums)
+    }
   }
 
   private[this] def getTableDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, table: Table, enums: Seq[EnumType]) = try {

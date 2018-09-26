@@ -1,5 +1,6 @@
 package com.databaseflow.models.scalaexport.db.config
 
+import better.files._
 import com.databaseflow.models.scalaexport.db.{ExportEnum, ExportModel}
 import util.JsonSerializers._
 
@@ -15,6 +16,7 @@ case class ExportConfiguration(
     flags: Seq[ExportFlag],
     enums: Seq[ExportEnum],
     models: Seq[ExportModel],
+    views: Seq[ExportModel],
     source: String = "boilerplay",
     projectLocation: Option[String] = None,
     providedPackage: Option[String] = None,
@@ -59,5 +61,20 @@ case class ExportConfiguration(
       val solo = ms.size == 1 && es.isEmpty
       (p, ms, es, solo)
     }
+  }
+
+  lazy val rootDir = projectLocation match {
+    case Some(l) => l.toFile
+    case None => s"./tmp/$key".toFile
+  }
+
+  lazy val coreDir = coreLocation match {
+    case Some(l) => l.toFile
+    case None => rootDir
+  }
+
+  lazy val wikiDir = wikiLocation match {
+    case Some(l) => l.toFile
+    case None => rootDir
   }
 }

@@ -43,7 +43,7 @@ object SchemaModelGraphQL {
       fieldType = resultType,
       arguments = resultArgs,
       resolve = c => {
-        val columns = Seq("*") // TODO
+        val columns = Seq("*")
         RowDataService.getRowData(c.ctx.user, c.value.connection, QueryResult.SourceType.Table, c.value.name, columns, rowDataOptionsFor(c))
       }
     ))

@@ -5,7 +5,7 @@ import org.scalajs.dom.raw._
 import scala.scalajs.js
 import scala.scalajs.js.JSON
 
-class NetworkSocket(onConnect: () => Unit, onMessage: (String) => Unit, onError: (String) => Unit, onClose: () => Unit) {
+class NetworkSocket(onConnect: () => Unit, onMessage: String => Unit, onError: String => Unit, onClose: () => Unit) {
   private[this] var connecting = false
   private[this] var connected = false
 
@@ -33,10 +33,10 @@ class NetworkSocket(onConnect: () => Unit, onMessage: (String) => Unit, onError:
   private[this] def openSocket(url: String) = {
     connecting = true
     val socket = new WebSocket(url)
-    socket.onopen = { (event: Event) => onConnectEvent(event) }
-    socket.onerror = { (event: ErrorEvent) => onErrorEvent(event) }
-    socket.onmessage = { (event: MessageEvent) => onMessageEvent(event) }
-    socket.onclose = { (event: Event) => onCloseEvent(event) }
+    socket.onopen = { event: Event => onConnectEvent(event) }
+    socket.onerror = { event: Event => onErrorEvent(event) }
+    socket.onmessage = { event: MessageEvent => onMessageEvent(event) }
+    socket.onclose = { event: Event => onCloseEvent(event) }
     ws = Some(socket)
   }
 
@@ -47,7 +47,7 @@ class NetworkSocket(onConnect: () => Unit, onMessage: (String) => Unit, onError:
     event
   }
 
-  private[this] def onErrorEvent(event: ErrorEvent) = {
+  private[this] def onErrorEvent(event: Event) = {
     onError("Websocket error: " + event)
     event
   }

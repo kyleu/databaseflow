@@ -70,7 +70,7 @@ class ApplicationContext @javax.inject.Inject() (
       new LocalDateTime().toString
     })
 
-    VersionService.upgradeIfNeeded(ws)
+    // TODO VersionService.upgradeIfNeeded(ws)
 
     startupComplete(config.debug)
   }

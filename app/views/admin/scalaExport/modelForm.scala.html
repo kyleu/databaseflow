@@ -1,10 +1,10 @@
-@(config: com.databaseflow.models.scalaexport.db.config.ExportConfiguration, model: com.databaseflow.models.scalaexport.db.ExportModel)
+@(config: com.databaseflow.models.scalaexport.db.config.ExportConfiguration, model: com.databaseflow.models.scalaexport.db.ExportModel, icon: String)
 <li>
   <div class="collapsible-header">
     <div class="right">
       @model.pkgString @if(model.provided) { <em>Provided</em> }@if(model.ignored) { <em>Ignored</em> }
     </div>
-    <i class="fa @models.template.Icons.table"></i> @model.tableName
+    <i class="fa @icon"></i> @model.tableName
   </div>
   <div class="collapsible-body with-padding">
     <table class="">

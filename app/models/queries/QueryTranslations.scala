@@ -42,6 +42,12 @@ object QueryTranslations extends Logging {
       case "record" => StringType
       case "citext" => StringType
       case "inet" => StringType
+      case "macaddr" => StringType
+      case "trigger" => StringType
+      case "interval" => StringType
+      case "cidr" => StringType
+      case "varbit" => StringType
+      case x if x.startsWith("gbtreekey") => StringType
       case x =>
         log.warn(s"Encountered unknown field type [$x]. ")
         UnknownType

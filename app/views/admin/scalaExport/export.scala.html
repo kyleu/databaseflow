@@ -1,4 +1,4 @@
-@(result: com.databaseflow.models.scalaexport.db.ExportResult, files: Map[String, Int], injected: Seq[(String, String)])(
+@(result: com.databaseflow.models.scalaexport.db.ExportResult, files: Map[String, Int], injected: Seq[(String, String)], validation: Seq[(String, String)])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, message: Messages
 )@layout.simple(user = None, title = s"Scala Export Result") {
   <div class="row">
@@ -12,7 +12,18 @@
             @util.NumberUtils.withCommas(result.fileSizes) characters.
           </em>
         </li>
+        @if(validation.nonEmpty) {
+          <li class="collection-item">
+            <h5>Orphaned Files</h5>
+            <ul>
+            @validation.sortBy(_._1).map { file =>
+              <li>@file._1: @file._2</li>
+            }
+            </ul>
+          </li>
+        }
         <li class="collection-item">
+          <h5>Output Files</h5>
           <ul>
           @files.toSeq.sortBy(_._1).map { file =>
             <li>@file._1: @file._2</li>
@@ -20,6 +31,7 @@
           </ul>
         </li>
         <li class="collection-item">
+          <h5>Models</h5>
           <ul>
           @result.models.map { model =>
             <li>@model.fullClassName</li>
@@ -27,6 +39,7 @@
           </ul>
         </li>
         <li class="collection-item">
+          <h5>Logs</h5>
           <table>
             <tbody>@result.getLogs.map { log =>
               <tr><td>+@{log._1}ms</td><td>@log._2</td></tr>

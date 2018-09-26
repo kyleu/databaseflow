@@ -17,8 +17,11 @@ object MetadataViews extends Logging {
     new Row.Iter(rs).map(row => fromRow(connectionId, row)).toList.sortBy(_.name)
   }
 
-  def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[View], enums: Seq[EnumType]) = views.map { view =>
-    getViewDetails(db, conn, metadata, view, enums)
+  def withViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, views: Seq[View], enums: Seq[EnumType]) = {
+    views.zipWithIndex.map { view =>
+      if (view._2 > 0 && view._2 % 25 == 0) { log.info(s"Processed [${view._2}/${views.size}] views...") }
+      getViewDetails(db, conn, metadata, view._1, enums)
+    }
   }
 
   private[this] def getViewDetails(db: DatabaseConnection, conn: Connection, metadata: DatabaseMetaData, view: View, enums: Seq[EnumType]) = try {

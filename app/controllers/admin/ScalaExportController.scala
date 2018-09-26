@@ -6,7 +6,7 @@ import models.schema.Schema
 import services.connection.ConnectionSettingsService
 import com.databaseflow.models.scalaexport.db.config.{ExportConfiguration, ExportConfigurationDefault, ExportFlag}
 import com.databaseflow.services.scalaexport.{ExportFiles, ExportHelper}
-import com.databaseflow.services.scalaexport.db.ScalaExportService
+import com.databaseflow.services.scalaexport.db.{ExportValidation, ScalaExportService}
 import com.databaseflow.services.scalaexport.thrift.ThriftParseService
 import models.connection.ConnectionSettings
 import services.schema.SchemaService
@@ -67,7 +67,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
           models = schema.tables.map { t =>
             val prefix = s"model.${t.name}."
             ScalaExportHelper.modelForTable(schema, t, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums, pkgPrefix)
-          } ++ schema.views.map { v =>
+          },
+          views = schema.views.map { v =>
             val prefix = s"model.${v.name}."
             ScalaExportHelper.modelForView(schema, v, form.filter(_._1.startsWith(prefix)).map(x => x._1.stripPrefix(prefix) -> x._2), enums, pkgPrefix)
           },
@@ -83,7 +84,8 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
         ScalaExportService(config).export(persist = true).map { result =>
           writeConfig(cs, config)
-          Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out))
+          val validation = ExportValidation.validate(config, result)
+          Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out, validation))
         }
       }
       case None => throw new IllegalStateException(s"Invalid connection [$conn].")

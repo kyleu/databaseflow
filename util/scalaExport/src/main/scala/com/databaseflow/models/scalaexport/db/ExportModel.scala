@@ -91,7 +91,7 @@ case class ExportModel(
   def transformedReferences(config: ExportConfiguration) = validReferences(config).flatMap { r =>
     val src = config.getModel(r.srcTable)
     getFieldOpt(r.tgt).flatMap(f => src.getFieldOpt(r.srcCol).map(tf => (r, f, src, tf)))
-  }
+  }.groupBy(_._1.name).values.map(_.head).toSeq.sortBy(_._1.name)
 
   def transformedReferencesDistinct(config: ExportConfiguration) = {
     transformedReferences(config).groupBy(x => x._2 -> x._3).toSeq.sortBy(_._1._2.className).map(_._2.head)

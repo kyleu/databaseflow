@@ -31,6 +31,8 @@ object SchemaRefreshService extends Logging {
           log.info(s"Refreshing schema [${schema.schemaName.getOrElse(schema.connectionId)}]: $refreshCount.")
           val enums = MetadataEnums.getEnums(db)
           val metadata = conn.getMetaData
+          log.info(s"Loading details for [${schema.tables.size}] tables, [${schema.views.size}] views, and [${schema.procedures.size}] procedures...")
+
           schema.copy(
             enums = enums,
             tables = MetadataTables.withTableDetails(db, conn, metadata, schema.tables, enums),

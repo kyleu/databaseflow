@@ -34,7 +34,7 @@ object LogHelper extends scribe.Logging {
   }
 
   private[this] def installErrorHandler() = {
-    dom.window.onerror = (e: Event, source: String, lineno: Int, colno: Int) => {
+    dom.window.onerror = (e: Event, source: String, lineno: Int, colno: Int, _: Any) => {
       logger.info(s"Script error [$e] encountered in [$source:$lineno:$colno]")
       logger.error(e.toString)
     }

@@ -22,5 +22,6 @@ case class ExportResult(
   def getMarkers(key: String) = sourceFiles.flatMap(_.markersFor(key)).distinct
 
   val fileCount = enumFiles.size + sourceFiles.size + rootFiles.size + docFiles.size
-  lazy val fileSizes = Seq(enumFiles, sourceFiles, rootFiles, docFiles).flatten.map(_.rendered.length).sum
+  lazy val files = Seq(enumFiles, sourceFiles, rootFiles, docFiles).flatten.distinct
+  lazy val fileSizes = files.map(_.rendered.length).sum
 }

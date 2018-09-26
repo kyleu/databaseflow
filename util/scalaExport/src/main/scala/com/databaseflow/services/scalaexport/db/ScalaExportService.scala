@@ -1,6 +1,5 @@
 package com.databaseflow.services.scalaexport.db
 
-import better.files._
 import com.databaseflow.models.scalaexport.db.ExportResult
 import com.databaseflow.models.scalaexport.db.config.ExportConfiguration
 import com.databaseflow.services.scalaexport.ExportFiles
@@ -17,31 +16,16 @@ case class ScalaExportService(config: ExportConfiguration) {
     val injected = if (persist) {
       ExportFiles.persist(result, ExportFiles.prepareRoot())
 
-      val rootDir = config.projectLocation match {
-        case Some(l) => l.toFile
-        case None => s"./tmp/${result.config.key}".toFile
-      }
-
-      val coreDir = config.coreLocation match {
-        case Some(l) => l.toFile
-        case None => rootDir
-      }
-
-      val wikiDir = config.wikiLocation match {
-        case Some(l) => l.toFile
-        case None => rootDir
-      }
-
       val mergeResults = ExportMerge.mergeDirectories(
         projectId = Some(result.config.projectId),
         projectTitle = result.config.projectTitle,
-        coreDir = coreDir,
-        root = rootDir -> result.rootFiles,
-        wiki = wikiDir -> result.docFiles,
+        coreDir = config.coreDir,
+        root = config.rootDir -> result.rootFiles,
+        wiki = config.wikiDir -> result.docFiles,
         log = result.log,
         source = result.config.source
       )
-      mergeResults -> ExportInject.inject(result, rootDir)
+      mergeResults -> ExportInject.inject(result, config.rootDir)
     } else {
       result.log("Test run completed.")
       Map.empty[String, Int] -> Nil

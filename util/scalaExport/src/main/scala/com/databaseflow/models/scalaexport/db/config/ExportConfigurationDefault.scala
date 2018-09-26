@@ -1,9 +1,9 @@
 package com.databaseflow.models.scalaexport.db.config
 
-import com.databaseflow.models.scalaexport.db.{ExportEnum, ExportField, ExportModel}
+import com.databaseflow.models.scalaexport.db.{ExportEnum, ExportField}
 import models.schema._
 import com.databaseflow.services.scalaexport.ExportHelper
-import com.databaseflow.services.scalaexport.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
+import com.databaseflow.services.scalaexport.ExportHelper.{toDefaultTitle, toIdentifier}
 
 object ExportConfigurationDefault {
   def forSchema(schema: Schema, loc: Option[String]) = {
@@ -22,6 +22,7 @@ object ExportConfigurationDefault {
       flags = ExportFlag.values,
       enums = enums,
       models = schema.tables.map(t => ExportConfigurationDefaultTable.loadTableModel(schema, t, enums)),
+      views = schema.views.map(v => ExportConfigurationDefaultView.loadViewModel(schema, v, enums)),
       projectLocation = loc
     )
   }

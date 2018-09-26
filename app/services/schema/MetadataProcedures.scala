@@ -16,7 +16,10 @@ object MetadataProcedures extends Logging {
   }
 
   def withProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedures: Seq[Procedure], enums: Seq[EnumType]) = {
-    procedures.map(p => getProcedureDetails(metadata, catalog, schema, p, enums))
+    procedures.zipWithIndex.map { p =>
+      if (p._2 > 0 && p._2 % 25 == 0) { log.info(s"Processed [${p._2}/${procedures.size}] procedures...") }
+      getProcedureDetails(metadata, catalog, schema, p._1, enums)
+    }
   }
 
   def getProcedureDetails(metadata: DatabaseMetaData, catalog: Option[String], schema: Option[String], procedure: Procedure, enums: Seq[EnumType]) = try {

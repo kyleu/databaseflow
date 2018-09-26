@@ -106,7 +106,9 @@ object ScalaExportHelper {
       readOnly = true
     )
   } catch {
-    case NonFatal(x) => throw new IllegalStateException(s"Unable to create model for view [${v.name}].", x)
+    case NonFatal(x) =>
+      val formKeys = form.keys.toSeq.sorted.mkString(", ")
+      throw new IllegalStateException(s"Unable to create model for view [${v.name}] from form keys [$formKeys].", x)
   }
 
   def fieldForColumn(col: Column, idx: Int, form: Map[String, String], indexes: Seq[Index], enums: Seq[ExportEnum]) = {

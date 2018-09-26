@@ -111,13 +111,15 @@
           @schema.tables.map { table =>
             @views.html.admin.scalaExport.modelForm(
               config = cfg,
-              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefaultTable.loadTableModel(schema, table, cfg.enums))
+              model = cfg.getModelOptWithIgnored(table.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefaultTable.loadTableModel(schema, table, cfg.enums)),
+              icon = models.template.Icons.table
             )
           }
           @schema.views.map { view =>
             @views.html.admin.scalaExport.modelForm(
               config = cfg,
-              model = cfg.getModelOptWithIgnored(view.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefaultView.loadViewModel(schema, view, cfg.enums))
+              model = cfg.getModelOptWithIgnored(view.name).getOrElse(com.databaseflow.models.scalaexport.db.config.ExportConfigurationDefaultView.loadViewModel(schema, view, cfg.enums)),
+              icon = models.template.Icons.view
             )
           }
         </ul>
