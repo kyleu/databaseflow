@@ -17,7 +17,7 @@ object Shared {
 
   object Versions {
     val app = "1.6.0"
-    val scala = "2.12.6"
+    val scala = "2.12.7"
   }
 
   val compileOptions = Seq(
@@ -70,10 +70,10 @@ object Shared {
     // Publish Settings
     publishMavenStyle := true,
     pomIncludeRepository := { _ => false },
-    
+
     publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
     // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
-    
+
     publishArtifact in Test := false,
 
     // Code Quality
