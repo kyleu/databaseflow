@@ -22,7 +22,8 @@ object Server {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Akka.actor, Akka.logging, Play.filters, Play.guice, Play.ws, Play.cache, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
+      Akka.actor, Akka.logging, Akka.stream, Akka.protobuf, 
+      Play.filters, Play.guice, Play.ws, Play.cache, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       Export.csv, Utils.scalaGuice, Utils.commonsIo, Utils.commonsLang, Utils.fastparse, Utils.betterFiles,
       Akka.testkit, Play.test, Testing.scalaTest

@@ -16,13 +16,15 @@ object Dependencies {
   }
 
   object Akka {
-    val version = "2.5.16"
+    val version = "2.5.17"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val remote = "com.typesafe.akka" %% "akka-remote" % version
     val logging = "com.typesafe.akka" %% "akka-slf4j" % version
     val cluster = "com.typesafe.akka" %% "akka-cluster" % version
     val clusterMetrics = "com.typesafe.akka" %% "akka-cluster-metrics" % version
     val clusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % version
+    val protobuf = "com.typesafe.akka" %% "akka-protobuf" % version
+    val stream = "com.typesafe.akka" %% "akka-stream" % version
     val testkit = "com.typesafe.akka" %% "akka-testkit" % version % "test"
   }
 
