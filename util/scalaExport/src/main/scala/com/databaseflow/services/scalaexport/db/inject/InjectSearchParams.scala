@@ -3,7 +3,9 @@ package com.databaseflow.services.scalaexport.db.inject
 import com.databaseflow.models.scalaexport.db.{ExportModel, ExportResult}
 
 object InjectSearchParams {
-  def fromString(exportResult: ExportResult, s: String) = InjectSearchParams(exportResult.getModel(s))
+  def fromString(exportResult: ExportResult, s: String) = InjectSearchParams(exportResult.getTable(s).orElse(exportResult.getView(s)).getOrElse {
+    throw new IllegalStateException()
+  })
 }
 
 case class InjectSearchParams(model: ExportModel) {

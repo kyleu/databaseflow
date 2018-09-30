@@ -36,11 +36,19 @@ case class ScalaExportService(config: ExportConfiguration) {
   private[this] def exportFiles() = {
     val enumFiles = ExportFiles.exportEnums(config)
     val models = config.models.filterNot(_.ignored)
+    val views = config.views.filterNot(_.ignored)
     val modelFiles = models.map(model => ExportFiles.exportModel(config, model))
+    val viewFiles = if (config.exportViews) { views.map(view => ExportFiles.exportModel(config, view)) } else { Nil }
     val rootFiles = RoutesFiles.files(config, models) ++ ServiceRegistryFiles.files(models, config.pkgPrefix)
     val docFiles = WikiFiles.export(config, models)
     Future.successful(ExportResult(
-      config = config, models = modelFiles.map(_._1), enumFiles = enumFiles, sourceFiles = modelFiles.flatMap(_._2), rootFiles = rootFiles, docFiles = docFiles
+      config = config,
+      models = modelFiles.map(_._1),
+      views = viewFiles.map(_._1),
+      enumFiles = enumFiles,
+      sourceFiles = modelFiles.flatMap(_._2) ++ viewFiles.flatMap(_._2),
+      rootFiles = rootFiles,
+      docFiles = docFiles
     ))
   }
 }

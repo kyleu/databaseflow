@@ -2,7 +2,6 @@ package com.databaseflow.services.scalaexport.db
 
 import better.files.File
 import com.databaseflow.models.scalaexport.db.ExportResult
-import com.databaseflow.models.scalaexport.db.config.ExportFlag
 import com.databaseflow.services.scalaexport.db.inject._
 
 object ExportInject {
@@ -22,7 +21,7 @@ object ExportInject {
 
     val thrift = InjectThrift.inject(result, rootDir)
 
-    val openapi = if (result.config.flag(ExportFlag.OpenApi)) {
+    val openapi = if (result.config.exportOpenApi) {
       Seq(InjectOpenApiSchema.inject(result, rootDir), InjectOpenApiPaths.inject(result, rootDir))
     } else {
       Nil

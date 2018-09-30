@@ -84,7 +84,7 @@ class ScalaExportController @javax.inject.Inject() (override val ctx: Applicatio
 
         ScalaExportService(config).export(persist = true).map { result =>
           writeConfig(cs, config)
-          val validation = ExportValidation.validate(config, result)
+          val validation = if (config.flag(ExportFlag.Validate)) { ExportValidation.validate(config, result) } else { Nil }
           Ok(views.html.admin.scalaExport.export(result.er, result.files, result.out, validation))
         }
       }

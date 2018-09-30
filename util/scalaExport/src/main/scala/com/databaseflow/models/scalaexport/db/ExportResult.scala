@@ -6,6 +6,7 @@ import com.databaseflow.models.scalaexport.file.OutputFile
 case class ExportResult(
     config: ExportConfiguration,
     models: Seq[ExportModel],
+    views: Seq[ExportModel],
     enumFiles: Seq[OutputFile],
     sourceFiles: Seq[OutputFile],
     rootFiles: Seq[OutputFile],
@@ -14,7 +15,8 @@ case class ExportResult(
   private[this] val startTime = System.currentTimeMillis
   private[this] val logs = collection.mutable.ArrayBuffer.empty[(Int, String)]
 
-  def getModel(id: String) = models.find(t => t.propertyName == id || t.tableName == id).getOrElse(throw new IllegalStateException(s"Missing table [$id]."))
+  def getTable(id: String) = models.find(t => t.propertyName == id || t.tableName == id)
+  def getView(id: String) = views.find(t => t.propertyName == id || t.tableName == id)
 
   def log(msg: String) = logs += ((System.currentTimeMillis - startTime).toInt -> msg)
   val getLogs: Seq[(Int, String)] = logs

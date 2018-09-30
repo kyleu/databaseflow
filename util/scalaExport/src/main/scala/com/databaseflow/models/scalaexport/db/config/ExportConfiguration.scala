@@ -36,6 +36,13 @@ case class ExportConfiguration(
 
   def flag(k: ExportFlag) = flags.contains(k)
 
+  val exportDoobie = flag(ExportFlag.Doobie)
+  val exportGraphQL = flag(ExportFlag.GraphQL)
+  val exportOpenApi = flag(ExportFlag.OpenApi)
+  val exportSlick = flag(ExportFlag.Slick)
+  val exportTests = flag(ExportFlag.Tests)
+  val exportViews = flag(ExportFlag.View)
+
   val isDefault = !models.exists(_.pkg.nonEmpty)
   val isAuditSupported = models.exists(_.propertyName == "Audit")
   val isUserSupported = models.exists(_.propertyName == "SystemUser")
