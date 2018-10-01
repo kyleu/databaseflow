@@ -11,4 +11,4 @@ rm -rf ./tmp/databaseflow
 unzip ./target/universal/databaseflow.zip -d ./target/universal/databaseflow
 mv ./target/universal/databaseflow ./tmp/
 
-rsync -zrv --delete ./tmp/databaseflow/* kyle@databaseflow.com:~/apps/demo.databaseflow.com
+rsync -zrv --delete ./tmp/databaseflow/* kyle@demo.databaseflow.com:~/apps/demo.databaseflow.com

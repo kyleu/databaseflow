@@ -20,6 +20,7 @@ object Packaging {
     packageSummary := description.value,
     packageDescription := description.value,
 
+    packageName in Universal := Shared.projectId,
     mappings in Universal := (mappings in Universal).value.filterNot(isConf),
 
     // Linux Settings
