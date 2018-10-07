@@ -11,11 +11,11 @@ object PostgresParseHelper {
 
   def getCosts(params: Map[String, Json]) = PlanNode.Costs(
     estimatedRows = params.get(keyPlanRows) match {
-      case Some(n) if n.isNumber => n.asNumber.get.toInt.get
+      case Some(n) if n.isNumber => n.asNumber.get.toDouble.toInt
       case _ => 0
     },
     actualRows = params.get(keyActualRows).map {
-      case n if n.isNumber => n.asNumber.get.toInt.get
+      case n if n.isNumber => n.asNumber.get.toDouble.toInt
       case _ => 0
     },
     duration = params.get(keyActualTotalTime).map {
@@ -23,7 +23,7 @@ object PostgresParseHelper {
       case _ => 0
     },
     cost = params.get(keyTotalCost).map {
-      case n if n.isNumber => n.asNumber.get.toInt.get
+      case n if n.isNumber => n.asNumber.get.toDouble.toInt
       case _ => 0
     }
   )

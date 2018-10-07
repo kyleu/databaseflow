@@ -25,7 +25,7 @@ object QueryCheckService extends Logging {
           } catch {
             case x: JdbcSQLException => QueryCheckResult(s._1, error = Some(x.getMessage))
             case x: SQLServerException => QueryCheckResult(s._1, error = Some(x.getMessage))
-            case x: PSQLException => QueryCheckResult(s._1, error = Some(x.getMessage), index = Some(x.getServerErrorMessage.getPosition))
+            case x: PSQLException => QueryCheckResult(s._1, error = Some(x.getMessage), index = Option(x.getServerErrorMessage).map(_.getPosition))
             case t: Throwable => QueryCheckResult(s._1, error = Some(t.getClass.getSimpleName + ": " + t.getMessage))
           }
         }

@@ -62,7 +62,7 @@ object MySqlQueryBlockParser {
     }
     val relation = props.get(MySqlParseKeys.keyAttachedCondition)
     val nodeType = props.get(MySqlParseKeys.keyAccessType).orElse(message).getOrElse("Table")
-    val rows = obj.get("rows").map(_.asNumber.get.toInt.get)
+    val rows = obj.get("rows").map(_.asNumber.get.toDouble.toInt)
 
     val children = subview.toSeq
 

@@ -11,7 +11,9 @@ object EnumFile {
     file.addImport("enumeratum.values", "StringEnum")
     file.addImport("enumeratum.values", "StringCirceEnum")
 
-    file.add(s"sealed abstract class ${enum.className}(override val value: String) extends StringEnumEntry")
+    file.add(s"sealed abstract class ${enum.className}(override val value: String) extends StringEnumEntry {", 1)
+    file.add("override def toString = value")
+    file.add("}", -1)
     file.add()
 
     file.add(s"object ${enum.className} extends StringEnum[${enum.className}] with StringCirceEnum[${enum.className}] {", 1)

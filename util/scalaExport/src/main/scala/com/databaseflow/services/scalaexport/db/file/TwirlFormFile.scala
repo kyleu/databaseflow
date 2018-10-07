@@ -43,7 +43,7 @@ object TwirlFormFile {
     file.add("}", -1)
 
     file.add(s"@${config.corePrefix}views.html.components.includeScalaJs(debug)")
-    file.add(s"@${config.corePrefix}views.html.components.includeAutocomplete(debug)")
+    // file.add(s"@${config.corePrefix}views.html.components.includeAutocomplete(debug)")
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
 
     file

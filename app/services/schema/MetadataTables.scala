@@ -72,7 +72,7 @@ object MetadataTables extends Logging {
       averageRowLength = rowStats.flatMap(_._4),
       dataLength = rowStats.flatMap(_._5),
       columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name, enums),
-      rowIdentifier = MetadataIndentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
+      rowIdentifier = MetadataIdentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
       indexes = MetadataIndexes.getIndexes(metadata, table),
