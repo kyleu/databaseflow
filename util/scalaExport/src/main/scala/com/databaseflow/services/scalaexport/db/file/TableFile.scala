@@ -9,7 +9,7 @@ object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(pkg = model.tablePackage, key = model.className + "Table", core = true)
 
-    file.addImport(config.providedPrefix + "services.database.SlickQueryService.imports", "_")
+    file.addImport(config.providedPrefix + "services.database.slick.SlickQueryService.imports", "_")
 
     model.fields.foreach(_.enumOpt.foreach(e => file.addImport(s"${e.tablePackage.mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")))
 

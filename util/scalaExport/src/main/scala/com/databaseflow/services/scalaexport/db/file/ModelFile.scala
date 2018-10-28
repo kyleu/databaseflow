@@ -44,15 +44,21 @@ object ModelFile {
     file.add("override def toDataFields = Seq(", 1)
     model.fields.foreach { field =>
       val x = if (field.notNull) {
-        val method = if (field.t == ColumnType.StringType || field.t == ColumnType.EncryptedStringType) { "" } else { ".toString" }
-        s"""DataField("${field.propertyName}", Some(${field.propertyName}$method))"""
+        val method = field.t match {
+          case ColumnType.StringType | ColumnType.EncryptedStringType => field.propertyName
+          case ColumnType.EnumType => s"${field.propertyName}.value"
+          case ColumnType.ArrayType => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
+          case _ => s"${field.propertyName}.toString"
+        }
+        s"""DataField("${field.propertyName}", Some($method))"""
       } else {
         val method = field.t match {
-          case ColumnType.StringType => ""
-          case ColumnType.EnumType => ".map(_.value)"
-          case _ => ".map(_.toString)"
+          case ColumnType.StringType | ColumnType.EncryptedStringType => field.propertyName
+          case ColumnType.EnumType => s"${field.propertyName}.map(_.value)"
+          case ColumnType.ArrayType => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
+          case _ => s"${field.propertyName}.map(_.toString)"
         }
-        s"""DataField("${field.propertyName}", ${field.propertyName}$method)"""
+        s"""DataField("${field.propertyName}", $method)"""
       }
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(x + comma)

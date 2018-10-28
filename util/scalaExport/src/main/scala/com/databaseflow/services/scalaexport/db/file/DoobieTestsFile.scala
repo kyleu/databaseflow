@@ -10,7 +10,7 @@ object DoobieTestsFile {
 
     file.addImport("org.scalatest", "_")
     file.addImport(model.modelPackage.mkString("."), model.className)
-    file.addImport(config.providedPrefix + "services.database.DoobieQueryService.Imports", "_")
+    file.addImport(config.providedPrefix + "services.database.doobie.DoobieQueryService.Imports", "_")
 
     model.fields.foreach(_.enumOpt.foreach { e =>
       file.addImport(s"${e.doobiePackage.mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")
