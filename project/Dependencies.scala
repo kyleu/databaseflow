@@ -58,7 +58,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val circeVersion = "0.10.0"
+    val circeVersion = "0.10.1"
     val circeProjects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
   }
 
@@ -83,14 +83,14 @@ object Dependencies {
 
   object GraphQL {
     val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
-    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
+    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.5"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
 
   object Utils {
     val scapegoatVersion = "1.3.8"
     val enumeratumVersion = "1.5.13"
-    val enumeratumCirceVersion = "1.5.17"
+    val enumeratumCirceVersion = "1.5.18"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"

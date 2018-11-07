@@ -35,9 +35,12 @@ object Server {
     maintainer := "Kyle Unverferth <kyle@databaseflow.com>",
     description := "Database Flow",
 
-    resolvers += Resolver.jcenterRepo,
-    resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/",
-    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+    resolvers ++= Seq(
+      Resolver.jcenterRepo,
+      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+      "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/",
+      "Atlassian Maven Repository" at "https://maven.atlassian.com/repository/public"
+    ),
 
     libraryDependencies ++= dependencies,
 
