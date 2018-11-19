@@ -16,7 +16,7 @@ object ThriftServiceSchemaFile {
     file.addImport("graphql", "GraphQLContext")
     file.addImport("graphql", "GraphQLSchemaHelper")
     file.addImport("sangria.schema", "_")
-    file.addImport(metadata.depPrefix + "util.FutureUtils", "graphQlContext")
+    file.addImport(metadata.depPrefix + "FutureUtils", "graphQlContext")
     file.addImport("sangria.marshalling.circe", "_")
 
     file.add(s"""object ${service.name}Schema extends GraphQLSchemaHelper("${service.name}") {""", 1)

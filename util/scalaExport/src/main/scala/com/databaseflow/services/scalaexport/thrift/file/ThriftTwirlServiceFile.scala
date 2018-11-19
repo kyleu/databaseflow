@@ -7,7 +7,7 @@ object ThriftTwirlServiceFile {
   def export(pkg: Seq[String], svc: ThriftService, metadata: ThriftMetadata) = {
     val file = TwirlFile(Seq("views", "admin", "thrift"), svc.identifier)
     file.add(s"@(user: models.user.SystemUser, debug: Boolean = false)(")
-    file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: util.tracing.TraceData")
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${metadata.depPrefix}tracing.TraceData")
     file.add(s""")@traceData.logViewClass(getClass)@views.html.admin.layout.page(user, "projects", "${svc.name}") {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)

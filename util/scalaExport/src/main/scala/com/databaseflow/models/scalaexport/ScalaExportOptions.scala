@@ -22,5 +22,5 @@ case class ScalaExportOptions(
     input: Option[String] = None,
     output: Option[String] = None,
     config: Option[String] = None,
-    depPrefix: String = ""
+    depPrefix: String = "util."
 )

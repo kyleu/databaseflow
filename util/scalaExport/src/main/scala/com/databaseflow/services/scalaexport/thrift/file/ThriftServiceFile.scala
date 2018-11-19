@@ -11,15 +11,15 @@ object ThriftServiceFile {
     val file = ScalaFile(pkg = tgtPkg, key = svc.name, root = exportModelRoot)
 
     file.addImport("scala.concurrent", "Future")
-    file.addImport(metadata.depPrefix + "util.tracing", "TraceData")
-    file.addImport(metadata.depPrefix + "util.ThriftFutureUtils", "toScalaFuture")
-    file.addImport(metadata.depPrefix + "util.thrift", "ThriftServiceHelper")
+    file.addImport(metadata.depPrefix + "tracing", "TraceData")
+    file.addImport(metadata.depPrefix + "ThriftFutureUtils", "toScalaFuture")
+    file.addImport(metadata.depPrefix + "thrift", "ThriftServiceHelper")
 
     file.addImport(s"${srcPkg.mkString(".")}.${svc.name}", "MethodPerEndpoint")
 
     overrides.imports.get(svc.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
 
-    file.add(s"object ${svc.name} extends ${metadata.depPrefix}util.thrift.ThriftService(", 1)
+    file.add(s"object ${svc.name} extends ${metadata.depPrefix}thrift.ThriftService(", 1)
     file.add(s"""key = "${svc.name}",""")
     file.add(s"""pkg = "${tgtPkg.mkString(".")}",""")
     file.add(s"""route = "/admin/thrift/${svc.identifier.stripSuffix("Service")}"""")
