@@ -16,7 +16,7 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.6.0"
+    val app = "1.6.2"
     val scala = "2.12.7"
   }
 
@@ -71,8 +71,8 @@ object Shared {
     publishMavenStyle := true,
     pomIncludeRepository := { _ => false },
 
-    publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
-    // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
+    // publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
+    publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
 
     publishArtifact in Test := false,
 
