@@ -13,8 +13,6 @@ import sbt._
 object Documentation {
   private[this] val SharedScaladocConfig = config("sharedScaladoc")
   private[this] val ClientScaladocConfig = config("clientScaladoc")
-  private[this] val EbenezerScaladocConfig = config("ebenezerScaladoc")
-  private[this] val ScalaExportScaladocConfig = config("scalaExportScaladoc")
   private[this] val ServerScaladocConfig = config("serverScaladoc")
 
   lazy val documentedDependencies = {
@@ -49,8 +47,6 @@ object Documentation {
 
     SiteScaladocPlugin.scaladocSettings(SharedScaladocConfig, mappings in (Compile, packageDoc) in Shared.sharedJvm, "api/shared"),
     SiteScaladocPlugin.scaladocSettings(ClientScaladocConfig, mappings in (Compile, packageDoc) in Client.client, "api/client"),
-    SiteScaladocPlugin.scaladocSettings(ScalaExportScaladocConfig, mappings in (Compile, packageDoc) in Utilities.scalaExport, "api/scalaExport"),
-    SiteScaladocPlugin.scaladocSettings(EbenezerScaladocConfig, mappings in (Compile, packageDoc) in Utilities.ebenezer, "api/ebenezer"),
     SiteScaladocPlugin.scaladocSettings(ServerScaladocConfig, mappings in (Compile, packageDoc) in Server.server, "api/server")
   )
 }

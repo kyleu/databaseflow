@@ -19,7 +19,5 @@ Project                                         | Description
 ------------------------------------------------|----------------------------------------------------------------------------------------------------
 [Shared](../api/shared/index.html)              | Common code shared between JVM and JavaScript, mostly base schema definitions and support classes
 [Client](../api/client/index.html)              | ScalaJS classes that create the web user interface
-[Scala Export](../api/scalaExport/index.html)   | Logic to export your database to a full-featured Scala project
-[Ebenezer](../api/ebenezer/index.html)          | Generates Scala classes and translations for Thrift definitions
 [Server](../api/server/index.html)              | Main Database Flow server, handling all http requests and CLI arguments
 

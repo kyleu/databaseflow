@@ -58,7 +58,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     ))
     override val values = Seq(
       cs.name, cs.slug, cs.owner, cs.read.toString, cs.edit.toString, cs.description,
-      cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.projectLocation, cs.id
+      cs.engine.id, cs.host, cs.dbName, cs.extra, cs.urlOverride, cs.username, cs.password, cs.id
     )
   }
 
@@ -76,12 +76,11 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
     extra = row.asOpt[Any]("extra").map(JdbcUtils.extractString),
     urlOverride = row.asOpt[Any]("url_override").map(JdbcUtils.extractString),
     username = row.as[String]("username"),
-    password = JdbcUtils.extractString(row.as[Any]("password")),
-    projectLocation = row.asOpt[Any]("project_location").map(JdbcUtils.extractString)
+    password = JdbcUtils.extractString(row.as[Any]("password"))
   )
 
   override protected def toDataSeq(q: ConnectionSettings) = Seq[Any](
     q.id, q.name, q.slug, q.owner, q.read.toString, q.edit.toString, q.description, q.engine.toString,
-    q.host, q.dbName, q.extra, q.urlOverride, q.username, q.password, q.projectLocation
+    q.host, q.dbName, q.extra, q.urlOverride, q.username, q.password
   )
 }

@@ -76,6 +76,6 @@ object Server {
       SbtWeb, play.sbt.PlayScala, JavaAppPackaging, UniversalPlugin, DockerPlugin, JDKPackagerPlugin
     ).settings(serverSettings: _*).settings(Packaging.settings: _*)
 
-    Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics, Utilities.scalaExport))
+    Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics))
   }
 }

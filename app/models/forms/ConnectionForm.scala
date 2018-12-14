@@ -22,8 +22,7 @@ object ConnectionForm {
       "databasePassword" -> text,
       "description" -> text,
       "read" -> nonEmptyText.transform(s => Permission.withName(s), (p: Permission) => p.toString),
-      "edit" -> nonEmptyText.transform(s => Permission.withName(s), (p: Permission) => p.toString),
-      "projectLocation" -> optional(text)
+      "edit" -> nonEmptyText.transform(s => Permission.withName(s), (p: Permission) => p.toString)
     )(ConnectionForm.apply)(ConnectionForm.unapply)
   )
 }
@@ -41,8 +40,7 @@ case class ConnectionForm(
     password: String,
     description: String,
     read: Permission,
-    edit: Permission,
-    projectLocation: Option[String]
+    edit: Permission
 ) {
   def isUrl = toggle == "url"
 
@@ -58,7 +56,6 @@ case class ConnectionForm(
     dbName = if (isUrl) { None } else { dbName },
     extra = if (isUrl) { None } else { extra },
     urlOverride = if (isUrl) { urlOverride } else { None },
-    username = username,
-    projectLocation = projectLocation
+    username = username
   )
 }

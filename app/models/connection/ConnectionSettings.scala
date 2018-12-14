@@ -25,8 +25,7 @@ case class ConnectionSettings(
     extra: Option[String] = None,
     urlOverride: Option[String] = None,
     username: String = "",
-    password: String = "",
-    projectLocation: Option[String] = None
+    password: String = ""
 ) {
   val url = urlOverride.getOrElse(engine.url(host, port, dbName, extra))
 }

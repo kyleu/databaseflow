@@ -3,7 +3,6 @@
 * [Getting Started](gettingStarted.md)
 * [Features](feature/index.md)
 * [Databases](database/index.md)
-* [Export](export/index.md)
 * [Contributing](contribute/index.md)
 * [Todo](todo.md)
 
@@ -12,7 +11,7 @@
 # Database Flow
 
 Running locally or on a shared server, Database Flow helps you discover and search your database using SQL and GraphQL. 
-It provides a full-featured GraphQL server for your schema, a performance-oriented query interface, and optionally exports a custom Scala web application based on [Boilerplay](https://github.com/KyleU/boilerplay).  
+It provides a full-featured GraphQL server for your schema and a performance-oriented query interface.  
 
 ## Features
 
@@ -20,7 +19,6 @@ It provides a full-featured GraphQL server for your schema, a performance-orient
 * Rich @ref:[SQL editor](feature/sqleditor.md) with auto-complete and live syntax checking based on your schema.
 * Explore tables, views, and stored procedures. Share saved results, @ref:[charts](feature/charting.md), or sql queries.
 * A sophisticated @ref:[GraphQL server](feature/graphql.md), providing a detailed and efficient graph for your schema and data.
-* Project @ref:[export](export/index.md) facilities to create a web application designed to manage your database and grow with your schema.
 * Supports local single-user app installations as well as a shared server mode for your whole team.   
 
 ## Installation

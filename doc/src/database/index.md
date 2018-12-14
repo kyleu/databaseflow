@@ -15,8 +15,8 @@
 
 Database                          | Support
 ----------------------------------|-------------------------------------------------
-[PostgreSQL](postgresql.md)       | All features supported, including Scala project export
-[MySQL](mysql.md)                 | All features except Scala project export
+[PostgreSQL](postgresql.md)       | All features supported
+[MySQL](mysql.md)                 | All features supported
 [H2](h2.md)                       | Query plan visualization, charting
 [SQLite](sqlite.md)               | Query plan visualization, charting
 [Oracle](oracle.md)               | Couldn't find a server to connect to, but should work
