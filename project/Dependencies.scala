@@ -69,7 +69,7 @@ object Dependencies {
     val enumeratumCirce = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
 
     val scribeVersion = "1.4.6"
