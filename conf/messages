@@ -198,7 +198,6 @@ admin.index.prompt = Use the menu above or the links below to get started!
 admin.status.link = Status
 admin.status.title = {0} Status
 admin.status.description = View system status.
-admin.status.metrics.title = System Metrics
 admin.status.connections = View statistics and perform maintenance on your database connections.
 admin.status.file.loaded = Loaded from {0}
 admin.status.db.loaded = {0} database, loaded from {1}

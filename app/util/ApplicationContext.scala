@@ -3,7 +3,6 @@ package util
 import java.util.{TimeZone, UUID}
 
 import akka.actor.{ActorSystem, Props}
-import com.codahale.metrics.SharedMetricRegistries
 import com.mohiva.play.silhouette.api.Silhouette
 import models.auth.AuthEnv
 import models.settings.SettingKey
@@ -16,9 +15,8 @@ import services.config.ConfigFileService
 import services.database.core.{MasterDatabase, ResultCacheDatabase}
 import services.database.{DatabaseRegistry, MasterDdl}
 import services.settings.SettingsService
-import services.supervisor.{ActorSupervisor, VersionService}
+import services.supervisor.ActorSupervisor
 import util.cache.CacheService
-import util.metrics.Instrumented
 
 import scala.concurrent.Future
 
@@ -53,9 +51,6 @@ class ApplicationContext @javax.inject.Inject() (
     DateTimeZone.setDefault(DateTimeZone.UTC)
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 
-    SharedMetricRegistries.remove("default")
-    SharedMetricRegistries.add("default", Instrumented.metricRegistry)
-
     ConfigFileService.init()
     ResultCacheDatabase.open()
 
@@ -70,14 +65,11 @@ class ApplicationContext @javax.inject.Inject() (
       new LocalDateTime().toString
     })
 
-    // TODO VersionService.upgradeIfNeeded(ws)
-
     startupComplete(config.debug)
   }
 
   private[this] def stop() = {
     DatabaseRegistry.close()
     CacheService.close()
-    SharedMetricRegistries.remove("default")
   }
 }

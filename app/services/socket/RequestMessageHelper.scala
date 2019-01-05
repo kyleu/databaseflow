@@ -2,7 +2,7 @@ package services.socket
 
 import java.util.UUID
 
-import akka.actor.ActorRef
+import akka.actor.{Actor, ActorRef}
 import models._
 import models.query.QueryResult.SourceType
 import models.query.{RowDataOptions, SavedQuery}
@@ -11,45 +11,44 @@ import services.database.core.ResultCacheDatabase
 import services.query._
 import services.result.{CachedResultService, ChartDataService}
 import util.Config
-import util.metrics.InstrumentedActor
 
-trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
-  override def receiveRequest = {
-    case mr: MalformedRequest => timeReceive(mr) { log.error(s"MalformedRequest:  [${mr.reason}]: [${mr.content}].") }
+trait RequestMessageHelper extends Actor { this: SocketService =>
+  override def receive = {
+    case mr: MalformedRequest => log.error(s"MalformedRequest:  [${mr.reason}]: [${mr.content}].")
 
-    case p: Ping => timeReceive(p) { out ! Pong(p.timestamp) }
-    case GetVersion => timeReceive(GetVersion) { out ! VersionResponse(Config.projectId, Config.projectName, Config.projectVersion) }
-    case dr: DebugInfo => timeReceive(dr) { handleDebugInfo(dr.data) }
+    case p: Ping => out ! Pong(p.timestamp)
+    case GetVersion => out ! VersionResponse(Config.projectId, Config.projectName, Config.projectVersion)
+    case dr: DebugInfo => handleDebugInfo(dr.data)
 
-    case RefreshSchema => timeReceive(RefreshSchema) { refreshSchema(true) }
-    case gtd: GetTableDetail => timeReceive(gtd) { handleGetTableDetail(gtd.name, schema.map(_.enums).getOrElse(Nil)) }
-    case gpd: GetProcedureDetail => timeReceive(gpd) { handleGetProcedureDetail(gpd.name, schema.map(_.enums).getOrElse(Nil)) }
-    case gvd: GetViewDetail => timeReceive(gvd) { handleGetViewDetail(gvd.name, schema.map(_.enums).getOrElse(Nil)) }
-    case gcd: GetColumnDetail => timeReceive(gcd) { handleGetColumnDetail(gcd.owner, gcd.name, gcd.t) }
+    case RefreshSchema => refreshSchema(true)
+    case gtd: GetTableDetail => handleGetTableDetail(gtd.name, schema.map(_.enums).getOrElse(Nil))
+    case gpd: GetProcedureDetail => handleGetProcedureDetail(gpd.name, schema.map(_.enums).getOrElse(Nil))
+    case gvd: GetViewDetail => handleGetViewDetail(gvd.name, schema.map(_.enums).getOrElse(Nil))
+    case gcd: GetColumnDetail => handleGetColumnDetail(gcd.owner, gcd.name, gcd.t)
 
-    case BeginTransaction => timeReceive(BeginTransaction) { handleBeginTransaction() }
-    case RollbackTransaction => timeReceive(RollbackTransaction) { handleRollbackTransaction() }
-    case CommitTransaction => timeReceive(CommitTransaction) { handleCommitTransaction() }
+    case BeginTransaction => handleBeginTransaction()
+    case RollbackTransaction => handleRollbackTransaction()
+    case CommitTransaction => handleCommitTransaction()
 
-    case cq: CheckQuery => timeReceive(cq) { QueryCheckService.handleCheckQuery(db, cq.queryId, cq.sql, out) }
-    case sq: SubmitQuery => timeReceive(sq) { handleSubmitQuery(sq.queryId, sq.sql, sq.params, sq.action.getOrElse("run"), sq.resultId) }
-    case grd: GetRowData => timeReceive(grd) { handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId, Some(out)) }
-    case cq: CancelQuery => timeReceive(cq) { QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out) }
-    case cq: CloseQuery => timeReceive(cq) { CachedResultService.removeCacheResults(user.id, cq.queryId) }
+    case cq: CheckQuery => QueryCheckService.handleCheckQuery(db, cq.queryId, cq.sql, out)
+    case sq: SubmitQuery => handleSubmitQuery(sq.queryId, sq.sql, sq.params, sq.action.getOrElse("run"), sq.resultId)
+    case grd: GetRowData => handleGetRowData(grd.key, grd.queryId, grd.name, grd.options, grd.resultId, Some(out))
+    case cq: CancelQuery => QueryExecutionService.handleCancelQuery(cq.queryId, cq.resultId, out)
+    case cq: CloseQuery => CachedResultService.removeCacheResults(user.id, cq.queryId)
 
-    case cdr: ChartDataRequest => timeReceive(cdr) { ChartDataService.handleChartDataRequest(cdr, user, connectionId, out, activeTransaction) }
+    case cdr: ChartDataRequest => ChartDataService.handleChartDataRequest(cdr, user, connectionId, out, activeTransaction)
 
-    case qsr: QuerySaveRequest => timeReceive(qsr) { QuerySaveService.handleQuerySaveRequest(user.id, qsr.query, out) }
-    case qdr: QueryDeleteRequest => timeReceive(qdr) { QuerySaveService.handleQueryDeleteRequest(user.id, qdr.id, out) }
+    case qsr: QuerySaveRequest => QuerySaveService.handleQuerySaveRequest(user.id, qsr.query, out)
+    case qdr: QueryDeleteRequest => QuerySaveService.handleQueryDeleteRequest(user.id, qdr.id, out)
 
-    case srsr: SharedResultSaveRequest => timeReceive(srsr) { SharedResultService.save(user.id, srsr.result, Some(out)) }
+    case srsr: SharedResultSaveRequest => SharedResultService.save(user.id, srsr.result, Some(out))
 
-    case cp: CallProcedure => timeReceive(cp) { ProcedureService.callProcedure(connectionId, user.id, cp.queryId, cp.name, cp.params, cp.resultId) }
-    case rd: RowDelete => timeReceive(rd) { RowUpdateService.delete(connectionId, user, rd.name, rd.pk, rd.resultId, out) }
-    case ru: RowUpdate => timeReceive(ru) { RowUpdateService.process(connectionId, user, ru.name, ru.pk, ru.params, ru.resultId, out) }
+    case cp: CallProcedure => ProcedureService.callProcedure(connectionId, user.id, cp.queryId, cp.name, cp.params, cp.resultId)
+    case rd: RowDelete => RowUpdateService.delete(connectionId, user, rd.name, rd.pk, rd.resultId, out)
+    case ru: RowUpdate => RowUpdateService.process(connectionId, user, ru.name, ru.pk, ru.params, ru.resultId, out)
 
-    case gqh: GetQueryHistory => timeReceive(gqh) { AuditRecordService.handleGetQueryHistory(db.connectionId, user.id, gqh, out) }
-    case rqh: RemoveAuditHistory => timeReceive(rqh) { AuditRecordService.handleRemoveAuditHistory(user.id, Some(connectionId), rqh, out) }
+    case gqh: GetQueryHistory => AuditRecordService.handleGetQueryHistory(db.connectionId, user.id, gqh, out)
+    case rqh: RemoveAuditHistory => AuditRecordService.handleRemoveAuditHistory(user.id, Some(connectionId), rqh, out)
 
     case im: InternalMessage => handleInternalMessage(im)
     case rm: ResponseMessage => out ! rm
@@ -72,8 +71,8 @@ trait RequestMessageHelper extends InstrumentedActor { this: SocketService =>
   }
 
   private[this] def handleInternalMessage(im: InternalMessage) = im match {
-    case ct: SendSocketTrace => timeReceive(ct) { handleSocketTrace() }
-    case ct: SendClientTrace => timeReceive(ct) { handleClientTrace() }
+    case ct: SendSocketTrace => handleSocketTrace()
+    case ct: SendClientTrace => handleClientTrace()
     case x => throw new IllegalArgumentException(s"Unhandled internal message [${x.getClass.getSimpleName}].")
   }
 }

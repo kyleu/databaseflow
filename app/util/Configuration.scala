@@ -2,26 +2,10 @@ package util
 
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticatorSettings
 import play.api.{Environment, Mode}
-import util.metrics.MetricsConfig
 
 @javax.inject.Singleton
 class Configuration @javax.inject.Inject() (val cnf: play.api.Configuration, env: Environment) {
   val debug = env.mode == Mode.Dev
-
-  val metrics: MetricsConfig = MetricsConfig(
-    jmxEnabled = cnf.get[Option[Boolean]]("metrics.jmx.enabled").getOrElse(true),
-    graphiteEnabled = cnf.get[Option[Boolean]]("metrics.graphite.enabled").getOrElse(false),
-    graphiteServer = Option(System.getenv("CARBON_RELAY_SERVICE_HOST")) match {
-      case Some(host) => host
-      case _ => cnf.get[String]("metrics.graphite.server")
-    },
-    graphitePort = Option(System.getenv("CARBON_RELAY_SERVICE_PORT")) match {
-      case Some(port) => port.toInt
-      case _ => cnf.get[Int]("metrics.graphite.port")
-    },
-    servletEnabled = cnf.get[Option[Boolean]]("metrics.servlet.enabled").getOrElse(true),
-    servletPort = cnf.get[Option[Int]]("metrics.servlet.port").getOrElse(9001)
-  )
 
   // Authentication
   val cookieAuthSettings = {

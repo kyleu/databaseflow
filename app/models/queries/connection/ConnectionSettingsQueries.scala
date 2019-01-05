@@ -13,7 +13,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
   override protected val tableName = "connections"
   override protected val columns = Seq(
     "id", "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name",
-    "extra", "url_override", "username", "password", "project_location"
+    "extra", "url_override", "username", "password"
   )
   override protected val searchColumns = columns
 

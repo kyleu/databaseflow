@@ -15,19 +15,6 @@ object Dependencies {
     val mailerGuice = "com.typesafe.play" %% "play-mailer-guice" % "6.0.0"
   }
 
-  object Akka {
-    val version = "2.5.17"
-    val actor = "com.typesafe.akka" %% "akka-actor" % version
-    val remote = "com.typesafe.akka" %% "akka-remote" % version
-    val logging = "com.typesafe.akka" %% "akka-slf4j" % version
-    val cluster = "com.typesafe.akka" %% "akka-cluster" % version
-    val clusterMetrics = "com.typesafe.akka" %% "akka-cluster-metrics" % version
-    val clusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % version
-    val protobuf = "com.typesafe.akka" %% "akka-protobuf" % version
-    val stream = "com.typesafe.akka" %% "akka-stream" % version
-    val testkit = "com.typesafe.akka" %% "akka-testkit" % version % "test"
-  }
-
   object Authentication {
     private[this] val version = "5.0.6"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
@@ -60,18 +47,6 @@ object Dependencies {
   object Serialization {
     val circeVersion = "0.10.1"
     val circeProjects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
-  }
-
-  object Metrics {
-    val version = "3.2.5"
-    val metrics = "nl.grons" %% "metrics-scala" % "3.5.9"
-    val jvm = "io.dropwizard.metrics" % "metrics-jvm" % version
-    val ehcache = "io.dropwizard.metrics" % "metrics-ehcache" % version intransitive()
-    val healthChecks = "io.dropwizard.metrics" % "metrics-healthchecks" % version intransitive()
-    val json = "io.dropwizard.metrics" % "metrics-json" % version exclude("com.fasterxml.jackson.core", "jackson-databind")
-    val jettyServlet = "org.eclipse.jetty" % "jetty-servlet" % "9.4.7.v20170914"
-    val servlets = "io.dropwizard.metrics" % "metrics-servlets" % version intransitive()
-    val graphite = "io.dropwizard.metrics" % "metrics-graphite" % version intransitive()
   }
 
   object ScalaJS {

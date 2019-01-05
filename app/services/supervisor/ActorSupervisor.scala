@@ -3,12 +3,11 @@ package services.supervisor
 import java.util.UUID
 
 import akka.actor.SupervisorStrategy.Stop
-import akka.actor.{ActorRef, OneForOneStrategy, SupervisorStrategy}
+import akka.actor.{Actor, ActorRef, OneForOneStrategy, SupervisorStrategy}
 import models._
 import models.user.User
 import org.joda.time.LocalDateTime
 import services.result.CachedResultActor
-import util.metrics.{InstrumentedActor, MetricsServletActor}
 import util.{ApplicationContext, DateUtils, Logging}
 
 object ActorSupervisor {
@@ -17,13 +16,10 @@ object ActorSupervisor {
   protected val sockets = collection.mutable.HashMap.empty[UUID, SocketRecord]
 }
 
-class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor with Logging {
+class ActorSupervisor(val ctx: ApplicationContext) extends Actor with Logging {
   import services.supervisor.ActorSupervisor._
 
-  protected[this] val socketsCounter = metrics.counter("active-connections")
-
   override def preStart() = {
-    context.actorOf(MetricsServletActor.props(ctx.config.metrics), "metrics-servlet")
     context.actorOf(CachedResultActor.props(), "result-cleanup")
   }
 
@@ -31,16 +27,16 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
     case _ => Stop
   }
 
-  override def receiveRequest = {
-    case ss: SocketStarted => timeReceive(ss) { handleSocketStarted(ss.user, ss.socketId, ss.conn) }
-    case ss: SocketStopped => timeReceive(ss) { handleSocketStopped(ss.socketId) }
+  override def receive = {
+    case ss: SocketStarted => handleSocketStarted(ss.user, ss.socketId, ss.conn)
+    case ss: SocketStopped => handleSocketStopped(ss.socketId)
 
-    case GetSystemStatus => timeReceive(GetSystemStatus) { handleGetSystemStatus() }
-    case ct: SendSocketTrace => timeReceive(ct) { handleSendSocketTrace(ct) }
-    case ct: SendClientTrace => timeReceive(ct) { handleSendClientTrace(ct) }
+    case GetSystemStatus => handleGetSystemStatus()
+    case ct: SendSocketTrace => handleSendSocketTrace(ct)
+    case ct: SendClientTrace => handleSendClientTrace(ct)
 
     case im: InternalMessage => log.warn(s"Unhandled internal message [${im.getClass.getSimpleName}] received.")
-    case x => log.warn(s"ActorSupervisor encountered unknown message: ${x.toString}")
+    case x => log.warn(s"ActorSupervisor encountered unknown message: $x")
   }
 
   private[this] def handleGetSystemStatus() = {
@@ -61,14 +57,11 @@ class ActorSupervisor(val ctx: ApplicationContext) extends InstrumentedActor wit
   protected[this] def handleSocketStarted(user: User, socketId: UUID, socket: ActorRef) = {
     log.debug(s"Socket [$socketId] registered to [${user.username}] with path [${socket.path}].")
     ActorSupervisor.sockets(socketId) = SocketRecord(user.id, user.username, socket, DateUtils.now)
-    socketsCounter.inc()
   }
 
   protected[this] def handleSocketStopped(id: UUID) = {
     ActorSupervisor.sockets.remove(id) match {
-      case Some(sock) =>
-        socketsCounter.dec()
-        log.debug(s"Connection [$id] [${sock.actorRef.path}] stopped.")
+      case Some(sock) => log.debug(s"Connection [$id] [${sock.actorRef.path}] stopped.")
       case None => log.warn(s"Socket [$id] stopped but is not registered.")
     }
   }

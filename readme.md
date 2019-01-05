@@ -3,7 +3,7 @@
 https://databaseflow.com
 
 Running locally or on a shared server, Database Flow helps you discover and search your database using SQL and GraphQL. 
-It provides a full-featured GraphQL server for your schema, a performance-oriented query interface, and optionally exports a custom Scala web application based on your database, built from [Boilerplay](https://github.com/KyleU/boilerplay).  
+It provides a full-featured GraphQL server for your schema and a performance-oriented SQL query interface.  
 
 ## Features
 
@@ -18,6 +18,10 @@ It provides a full-featured GraphQL server for your schema, a performance-orient
 * Grab the latest release from [the release list](https://github.com/KyleU/databaseflow/releases), you'll need Java 8 installed.
 * Run `java -jar databaseflow.jar`.
 * If you're a big ol' nerd, you can instead clone the repository and execute `sbt` in the project root.
+
+## Source
+
+https://github.com/KyleU/databaseflow
 
 ## Demo
 

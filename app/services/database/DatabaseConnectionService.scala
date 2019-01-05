@@ -6,7 +6,6 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import models.database.PoolSettings
 import models.engine.DatabaseEngine
 import services.database.ssl.SslInit
-import util.metrics.{Checked, Instrumented}
 
 object DatabaseConnectionService {
   private[this] var initialized = false
@@ -36,9 +35,6 @@ object DatabaseConnectionService {
       setConnectionTimeout(cs.maxWait)
       setMinimumIdle(1)
       setMaximumPoolSize(cs.maxSize)
-
-      setHealthCheckRegistry(Checked.healthCheckRegistry)
-      setMetricRegistry(Instrumented.metricRegistry)
 
       cs.connectionInitSql.foreach(setConnectionInitSql)
 

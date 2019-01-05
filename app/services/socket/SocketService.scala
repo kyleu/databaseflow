@@ -2,7 +2,7 @@ package services.socket
 
 import java.util.UUID
 
-import akka.actor.{ActorRef, Props}
+import akka.actor.{Actor, ActorRef, Props}
 import models._
 import models.audit.AuditType
 import models.query.SavedQuery
@@ -10,7 +10,6 @@ import models.schema.Schema
 import models.user.User
 import services.audit.AuditRecordService
 import services.database.core.MasterDatabase
-import util.metrics.InstrumentedActor
 
 object SocketService {
   type i18n = (String, Seq[Any]) => String
@@ -22,7 +21,7 @@ object SocketService {
 
 case class SocketService(
     id: UUID, supervisor: ActorRef, connectionId: UUID, user: User, out: ActorRef, sourceAddress: String, messages: SocketService.i18n
-) extends InstrumentedActor with StartHelper with RequestMessageHelper with TransactionHelper with DetailHelper {
+) extends Actor with StartHelper with RequestMessageHelper with TransactionHelper with DetailHelper {
 
   protected[this] val db = attemptConnect()
 

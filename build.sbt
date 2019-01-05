@@ -19,9 +19,3 @@ lazy val sharedJvm = Shared.sharedJvm
 lazy val dblibs = Database.dblibs
 
 lazy val server = Server.server
-
-lazy val benchmarking = Utilities.benchmarking
-
-lazy val metrics = Utilities.metrics
-
-lazy val translation = Utilities.translation

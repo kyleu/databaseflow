@@ -7,12 +7,6 @@
       <div class="col s12">
         <ul class="collection">
           <li class="collection-item">
-            <a href="@controllers.admin.routes.MetricsController.showMetrics()" class="theme-text">Configuration</a>
-            @defining(services.config.ConfigFileService.configDir) { c =>
-              <div>@messages("admin.status.file.loaded", c.path.toAbsolutePath)</div>
-            }
-          </li>
-          <li class="collection-item">
             @defining(services.database.core.MasterDatabase.settings.get) { c =>
               <a href="@controllers.query.routes.QueryController.main(c.slug)" class="theme-text">Master Database</a>
               <div>@messages("admin.status.db.loaded", c.engine.name, c.url)</div>

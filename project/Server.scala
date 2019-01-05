@@ -1,5 +1,4 @@
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
-import com.typesafe.sbt.digest.Import._
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.less.Import._
@@ -22,11 +21,10 @@ object Server {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Akka.actor, Akka.logging, Akka.stream, Akka.protobuf,
       Play.filters, Play.guice, Play.ws, Play.cache, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       Authentication.silhouette, Authentication.hasher, Authentication.persistence, Authentication.crypto,
       Export.csv, Utils.scalaGuice, Utils.commonsIo, Utils.commonsLang, Utils.fastparse, Utils.betterFiles,
-      Akka.testkit, Play.test, Testing.scalaTest
+      Testing.scalaTest
     )
   }
 
@@ -54,7 +52,7 @@ object Server {
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
 
     pipelineStages in Assets := Seq(scalaJSPipeline),
-    pipelineStages := Seq(digest, gzip),
+    pipelineStages := Seq(gzip),
 
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
@@ -76,6 +74,6 @@ object Server {
       SbtWeb, play.sbt.PlayScala, JavaAppPackaging, UniversalPlugin, DockerPlugin, JDKPackagerPlugin
     ).settings(serverSettings: _*).settings(Packaging.settings: _*)
 
-    Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs, Utilities.metrics))
+    Shared.withProjects(ret, Seq(Shared.sharedJvm, Database.dblibs))
   }
 }

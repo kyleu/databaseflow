@@ -16,8 +16,8 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.6.2"
-    val scala = "2.12.7"
+    val app = "1.7.0-SNAPSHOT"
+    val scala = "2.12.8"
   }
 
   val compileOptions = Seq(

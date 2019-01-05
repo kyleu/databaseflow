@@ -4,22 +4,17 @@ import java.sql.Connection
 import java.util.UUID
 import javax.sql.DataSource
 
-import com.codahale.metrics.MetricRegistry
 import com.zaxxer.hikari.HikariDataSource
 import models.database._
 import models.engine.DatabaseEngine
 import services.database.transaction.{TransactionManager, TransactionProvider}
-import util.metrics.Instrumented
 
 import scala.util.control.NonFatal
 
 case class DatabaseConnection(
     connectionId: UUID, name: String, source: DataSource, engine: DatabaseEngine, url: String, username: String
 ) extends Queryable {
-  private[this] def time[A](c: java.lang.Class[_])(f: => A) = {
-    val ctx = Instrumented.metricRegistry.timer(util.Config.projectId + "." + MetricRegistry.name(c)).time()
-    try { f } finally { ctx.stop }
-  }
+  private[this] def time[A](c: java.lang.Class[_])(f: => A) = f
 
   val transactionProvider: TransactionProvider = new TransactionManager
 
@@ -75,7 +70,7 @@ case class DatabaseConnection(
     source.unwrap(classOf[HikariDataSource]).close()
   }
 
-  def withConnection[T](f: (Connection) => T) = {
+  def withConnection[T](f: Connection => T) = {
     val conn = source.getConnection()
     try { f(conn) } finally { conn.close() }
   }
