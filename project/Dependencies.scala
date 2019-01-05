@@ -3,16 +3,12 @@ import sbt._
 object Dependencies {
   object Play {
     private[this] val version = "2.6.20"
-    val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.6.10"
     val test = "com.typesafe.play" %% "play-test" % version % "test"
 
-    val mailer = "com.typesafe.play" %% "play-mailer" % "6.0.0"
-    val mailerGuice = "com.typesafe.play" %% "play-mailer-guice" % "6.0.0"
   }
 
   object Authentication {
@@ -65,17 +61,16 @@ object Dependencies {
   object Utils {
     val scapegoatVersion = "1.3.8"
     val enumeratumVersion = "1.5.13"
-    val enumeratumCirceVersion = "1.5.18"
+    val enumeratumCirceVersion = "1.5.19"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val enumeratumCirce = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
-    val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
 
     val scribeVersion = "1.4.6"
   }

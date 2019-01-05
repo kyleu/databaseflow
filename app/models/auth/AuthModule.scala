@@ -67,9 +67,6 @@ class AuthModule extends AbstractModule with ScalaModule {
     new CookieAuthenticatorService(config.cookieAuthSettings, None, cookieSigner, encoding, authenticatorEncoder, fpg, idg, clock)
   }
 
-  // @Provides
-  // def provideAvatarService(httpLayer: HTTPLayer): AvatarService = new GravatarService(httpLayer)
-
   @Provides
   def provideCredentialsProvider(authInfoRepository: AuthInfoRepository, passwordHasher: PasswordHasher): CredentialsProvider = {
     val passwordHasherRegisty = PasswordHasherRegistry(passwordHasher)
