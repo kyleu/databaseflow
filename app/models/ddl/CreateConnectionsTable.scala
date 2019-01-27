@@ -15,8 +15,7 @@ object CreateConnectionsTable extends CreateTableStatement("connections") {
     "extra" varchar(2048),
     "url_override" text,
     "username" varchar(512) not null,
-    "password" varchar(2048) not null,
-    "project_location" varchar(1024)
+    "password" varchar(2048) not null
   );
 
   create unique index "${tableName}_name_idx" on "$tableName" ("name");

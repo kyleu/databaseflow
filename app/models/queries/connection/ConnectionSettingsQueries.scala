@@ -54,7 +54,7 @@ object ConnectionSettingsQueries extends BaseQueries[ConnectionSettings] {
 
   case class Update(cs: ConnectionSettings) extends Statement {
     override val sql = updateSql(Seq(
-      "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password", "project_location"
+      "name", "slug", "owner", "read", "edit", "description", "engine", "host", "db_name", "extra", "url_override", "username", "password"
     ))
     override val values = Seq(
       cs.name, cs.slug, cs.owner, cs.read.toString, cs.edit.toString, cs.description,

@@ -1,11 +1,8 @@
 package services.database
 
-import models.database.{Query, Queryable, Row, Statement}
+import models.database.Queryable
 import models.ddl._
-import sun.reflect.generics.reflectiveObjects.NotImplementedException
 import util.Logging
-
-import scala.util.control.NonFatal
 
 object MasterDdl extends Logging {
   val tables = Seq(
@@ -31,16 +28,6 @@ object MasterDdl extends Logging {
         log.info(s"Creating missing table [${t.tableName}].")
         q.executeUpdate(t)
       }
-    }
-    try {
-      q.query(new Query[Unit] {
-        override def sql = """select "project_location" from "connections""""
-        override def reduce(rows: Iterator[Row]) = ()
-      })
-    } catch {
-      case NonFatal(x) => q.executeUpdate(new Statement {
-        override def sql = """alter table "connections" add column "project_location" varchar(1024)"""
-      })
     }
   }
 
