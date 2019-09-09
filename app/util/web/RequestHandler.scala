@@ -4,6 +4,7 @@ import javax.inject.Inject
 import play.api.http._
 import play.api.mvc.RequestHeader
 import play.api.routing.Router
+import play.core.DefaultWebCommands
 import util.Logging
 
 class RequestHandler @Inject() (
@@ -11,7 +12,7 @@ class RequestHandler @Inject() (
     configuration: HttpConfiguration,
     filters: HttpFilters,
     router: Router
-) extends DefaultHttpRequestHandler(router, errorHandler, configuration, filters) with Logging {
+) extends DefaultHttpRequestHandler(new DefaultWebCommands, None, router, errorHandler, configuration, filters.filters) with Logging {
 
   override def routeRequest(request: RequestHeader) = {
     if (!Option(request.path).exists(_.startsWith("/assets"))) {

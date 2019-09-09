@@ -1,7 +1,5 @@
 // Database Flow build file. See `./project` for definitions.
 
-scapegoatVersion in ThisBuild := Dependencies.Utils.scapegoatVersion
-
 useGpg := true
 
 pgpSecretRing := file("/Users/kyle/.gnupg/pubring.kbx")

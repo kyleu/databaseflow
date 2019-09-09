@@ -1,5 +1,4 @@
 import Dependencies.Utils
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
@@ -13,8 +12,7 @@ object Client {
       "be.doeraene" %%% "scalajs-jquery" % Dependencies.ScalaJS.jQueryVersion,
       "com.lihaoyi" %%% "scalatags" % Dependencies.ScalaJS.scalaTagsVersion
     ),
-    testFrameworks += new TestFramework("utest.runner.Framework"),
-    scapegoatIgnoredFiles := Seq(".*/Messages.scala", ".*/JsonUtils.scala", ".*/JsonSerializers.scala")
+    testFrameworks += new TestFramework("utest.runner.Framework")
   )
 
   lazy val client = (project in file("client"))
@@ -27,8 +25,7 @@ object Client {
       "be.doeraene" %%% "scalajs-jquery" % Dependencies.ScalaJS.jQueryVersion,
       "com.lihaoyi" %%% "scalatags" % Dependencies.ScalaJS.scalaTagsVersion,
       "com.beachape" %%% "enumeratum" % Utils.enumeratumVersion
-    ),
-    scapegoatIgnoredFiles := Seq(".*/JsonUtils.scala", ".*/JsonSerializers.scala")
+    )
   )
 
   lazy val charting = (project in file("charting"))

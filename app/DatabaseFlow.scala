@@ -9,7 +9,7 @@ object DatabaseFlow extends Logging {
     val config: ServerConfig = ProdServerStart.readServerConfigSettings(process)
     val application: Application = {
       val environment = Environment(config.rootDir, process.classLoader, Mode.Prod)
-      val context = ApplicationLoader.createContext(environment)
+      val context = ApplicationLoader.Context.create(environment)
       val loader = ApplicationLoader(context)
       loader.load(context)
     }

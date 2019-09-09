@@ -67,6 +67,6 @@ class AuthenticationController @javax.inject.Inject() (
 
     AuditRecordService.create(AuditType.SignOut, request.identity.id, None)
     ctx.silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
-    ctx.silhouette.env.authenticatorService.discard(request.authenticator, result.clearingLang)
+    ctx.silhouette.env.authenticatorService.discard(request.authenticator, result.withoutLang)
   }
 }

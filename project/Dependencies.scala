@@ -12,7 +12,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "5.0.6"
+    private[this] val version = "6.1.0"
     val silhouette = "com.mohiva" %% "play-silhouette" % version
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version
@@ -37,7 +37,7 @@ object Dependencies {
   }
 
   object Export {
-    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
+    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.6"
   }
 
   object Serialization {
@@ -46,7 +46,7 @@ object Dependencies {
   }
 
   object ScalaJS {
-    val version = "0.6.25"
+    val version = "0.6.28"
 
     val scalaTagsVersion = "0.6.7"
     val jQueryVersion = "0.9.4"
@@ -59,17 +59,16 @@ object Dependencies {
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.8"
     val enumeratumVersion = "1.5.13"
     val enumeratumCirceVersion = "1.5.19"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.8.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
-    val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
+    val commonsLang = "org.apache.commons" % "commons-lang3" % "3.9"
     val enumeratumCirce = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val fastparse = "com.lihaoyi" %% "fastparse" % "1.0.0"
     val guava = "com.google.guava" % "guava" % "23.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.6"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
 
     val scribeVersion = "1.4.6"
@@ -77,7 +76,7 @@ object Dependencies {
 
   object Testing {
     val gatlingVersion = "2.2.3"
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.8" % "test"
     val gatlingCore = "io.gatling" % "gatling-test-framework" % gatlingVersion % "test"
     val gatlingCharts = "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion % "test"
   }

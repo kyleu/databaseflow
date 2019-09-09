@@ -1,4 +1,3 @@
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.less.Import._
@@ -33,12 +32,7 @@ object Server {
     maintainer := "Kyle Unverferth <kyle@databaseflow.com>",
     description := "Database Flow",
 
-    resolvers ++= Seq(
-      Resolver.jcenterRepo,
-      "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
-      "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/",
-      "Atlassian Maven Repository" at "https://maven.atlassian.com/repository/public"
-    ),
+    resolvers += "Atlassian Maven Repository" at "https://maven.atlassian.com/repository/public",
 
     libraryDependencies ++= dependencies,
 
@@ -60,10 +54,7 @@ object Server {
 
     assemblyJarName in assembly := s"${Shared.projectId}.jar",
     fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
-    mainClass in assembly := Some("DatabaseFlow"),
-
-    // Code Quality
-    scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/ReverseRoutes.scala", ".*/JavaScriptReverseRoutes.scala", ".*/*.template.scala")
+    mainClass in assembly := Some("DatabaseFlow")
   )
 
   lazy val server = {

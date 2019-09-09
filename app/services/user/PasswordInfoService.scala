@@ -10,6 +10,8 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class PasswordInfoService @javax.inject.Inject() () extends DelegableAuthInfoDAO[PasswordInfo] {
+  override val classTag = scala.reflect.ClassTag(classOf[PasswordInfo])
+
   def getByLoginInfo(loginInfo: LoginInfo) = MasterDatabase.query(PasswordInfoQueries.getById(Seq(loginInfo.providerID, loginInfo.providerKey)))
 
   override def find(loginInfo: LoginInfo) = {

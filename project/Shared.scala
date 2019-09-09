@@ -1,5 +1,4 @@
 import Dependencies._
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport._
 import com.typesafe.sbt.SbtScalariform.autoImport.scalariformAutoformat
 import net.virtualvoid.sbt.graph.DependencyGraphSettings.graphSettings
 import webscalajs.ScalaJSWeb
@@ -16,8 +15,8 @@ object Shared {
   val projectName = "Database Flow"
 
   object Versions {
-    val app = "1.7.0"
-    val scala = "2.12.8"
+    val app = "1.8.0"
+    val scala = "2.12.9"
   }
 
   val compileOptions = Seq(
@@ -71,15 +70,12 @@ object Shared {
     publishMavenStyle := true,
     pomIncludeRepository := { _ => false },
 
-    // publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
-    publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
+    publishTo := Some(xerial.sbt.Sonatype.autoImport.sonatypeDefaultResolver.value),
+    // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
 
     publishArtifact in Test := false,
 
     // Code Quality
-    scapegoatVersion := Utils.scapegoatVersion,
-    scapegoatDisabledInspections := Seq("MethodNames", "MethodReturningAny", "DuplicateImport"),
-    scapegoatIgnoredFiles := Seq(".*/JsonSerializers.scala"),
     scalariformAutoformat := true
   ) ++ graphSettings
 
